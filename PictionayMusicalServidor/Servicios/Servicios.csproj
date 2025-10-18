@@ -103,6 +103,7 @@
     <Compile Include="Contratos\DTOs\ReenviarCodigoDTO.cs" />
     <Compile Include="Contratos\DTOs\ReenviarCodigoVerificacionDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoInicioSesionDTO.cs" />
+    <Compile Include="Contratos\DTOs\ActualizarPerfilDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoOperacionDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoRegistroCuentaDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoSolicitudCodigoDTO.cs" />
