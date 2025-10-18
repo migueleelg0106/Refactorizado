@@ -125,8 +125,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.RegistroExitoso)
                 {
+                    string mensaje = MensajeServidorHelper.Localizar(resultado.Mensaje, Lang.errorTextoCodigoIncorrecto);
+                    resultado.Mensaje = mensaje;
                     MarcarCodigoInvalido?.Invoke(true);
-                    AvisoHelper.Mostrar(MensajeServidorHelper.Localizar(resultado.Mensaje, Lang.errorTextoCodigoIncorrecto));
+
+                    if (string.Equals(mensaje, Lang.avisoTextoCodigoExpirado, StringComparison.Ordinal))
+                    {
+                        VerificacionCompletada?.Invoke(resultado);
+                        return;
+                    }
+
+                    AvisoHelper.Mostrar(mensaje);
                     return;
                 }
 

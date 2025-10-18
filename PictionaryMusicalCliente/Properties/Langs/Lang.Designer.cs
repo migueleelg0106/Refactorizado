@@ -464,13 +464,13 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCodigoExpiradoSolicitarNuevo", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Busca una cadena traducida similar a El código ingresado no es correcto o ha expirado..
+        ///   Busca una cadena traducida similar a El código enviado expiró..
         /// </summary>
-        public static string errorTextoCodigoIncorrectoExpirado {
+        public static string avisoTextoCodigoExpirado {
             get {
-                return ResourceManager.GetString("errorTextoCodigoIncorrectoExpirado", resourceCulture);
+                return ResourceManager.GetString("avisoTextoCodigoExpirado", resourceCulture);
             }
         }
 
