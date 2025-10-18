@@ -69,7 +69,10 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 
             if (!resultadoVerificacion.RegistroExitoso)
             {
-                return ResultadoOperacion.Fallo(resultadoVerificacion.Mensaje ?? Lang.errorTextoCodigoIncorrectoExpirado);
+                string mensaje = string.IsNullOrWhiteSpace(resultadoVerificacion.Mensaje)
+                    ? Lang.errorTextoCodigoIncorrecto
+                    : resultadoVerificacion.Mensaje;
+                return ResultadoOperacion.Fallo(mensaje);
             }
 
             AvisoHelper.Mostrar(Lang.avisoTextoCodigoVerificadoCambio);

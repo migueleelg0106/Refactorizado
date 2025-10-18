@@ -473,8 +473,8 @@ aciertan o cuando se acaba el tiempo.
   <data name="errorTextoCampoObligatorio" xml:space="preserve">
     <value>El {0} es obligatorio.</value>
   </data>
-  <data name="errorTextoCodigoIncorrectoExpirado" xml:space="preserve">
-    <value>El código ingresado no es correcto o ha expirado.</value>
+  <data name="avisoTextoCodigoExpirado" xml:space="preserve">
+    <value>El código enviado expiró.</value>
   </data>
   <data name="errorTextoCodigoIncorrecto" xml:space="preserve">
     <value>El código ingresado es incorrecto.</value>

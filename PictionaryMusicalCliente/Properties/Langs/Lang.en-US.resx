@@ -471,8 +471,8 @@
   <data name="errorTextoCampoObligatorio" xml:space="preserve">
     <value>The {0} field is required.</value>
   </data>
-  <data name="errorTextoCodigoIncorrectoExpirado" xml:space="preserve">
-    <value>The code you entered is incorrect or has expired.</value>
+  <data name="avisoTextoCodigoExpirado" xml:space="preserve">
+    <value>The code sent has expired.</value>
   </data>
   <data name="errorTextoCodigoIncorrecto" xml:space="preserve">
     <value>The code you entered is incorrect.</value>
