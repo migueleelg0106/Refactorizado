@@ -296,7 +296,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             IniciarJuegoCommand?.NotificarPuedeEjecutar();
         }
 
-        private class OpcionEntero
+        public class OpcionEntero
         {
             public OpcionEntero(int valor)
             {
@@ -314,7 +314,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        private class OpcionTexto
+        public class OpcionTexto
         {
             public OpcionTexto(string clave, string descripcion)
             {
