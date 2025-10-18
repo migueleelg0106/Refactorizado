@@ -1,8 +1,8 @@
 using Servicios.Contratos;
 using System;
-using System.Linq;
 using log4net;
 using Servicios.Contratos.DTOs;
+using Datos.DAL.Implementaciones;
 using Datos.Modelo;
 using Datos.Utilidades;
 using BCryptNet = BCrypt.Net.BCrypt;
@@ -34,8 +34,13 @@ namespace Servicios.Servicios
                 using (var contexto = CrearContexto())
                 using (var transaccion = contexto.Database.BeginTransaction())
                 {
-                    bool usuarioRegistrado = contexto.Usuario.Any(u => u.Nombre_Usuario == nuevaCuenta.Usuario);
-                    bool correoRegistrado = contexto.Jugador.Any(j => j.Correo == nuevaCuenta.Correo);
+                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                    var jugadorRepositorio = new JugadorRepositorio(contexto);
+                    var clasificacionRepositorio = new ClasificacionRepositorio(contexto);
+                    var avatarRepositorio = new AvatarRepositorio(contexto);
+
+                    bool usuarioRegistrado = usuarioRepositorio.ExisteNombreUsuario(nuevaCuenta.Usuario);
+                    bool correoRegistrado = jugadorRepositorio.ExisteCorreo(nuevaCuenta.Correo);
 
                     if (usuarioRegistrado || correoRegistrado)
                     {
@@ -48,7 +53,7 @@ namespace Servicios.Servicios
                         };
                     }
 
-                    if (!contexto.Avatar.Any(a => a.idAvatar == nuevaCuenta.AvatarId))
+                    if (string.IsNullOrWhiteSpace(nuevaCuenta.AvatarRutaRelativa))
                     {
                         return new ResultadoRegistroCuentaDTO
                         {
@@ -57,33 +62,34 @@ namespace Servicios.Servicios
                         };
                     }
 
-                    var clasificacion = new Clasificacion
-                    {
-                        Puntos_Ganados = 0,
-                        Rondas_Ganadas = 0
-                    };
-                    contexto.Clasificacion.Add(clasificacion);
-                    contexto.SaveChanges();
+                    Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(nuevaCuenta.AvatarRutaRelativa);
 
-                    var jugador = new Jugador
+                    if (avatar == null)
+                    {
+                        return new ResultadoRegistroCuentaDTO
+                        {
+                            RegistroExitoso = false,
+                            Mensaje = "Avatar no válido."
+                        };
+                    }
+
+                    var clasificacion = clasificacionRepositorio.CrearClasificacionInicial();
+
+                    var jugador = jugadorRepositorio.CrearJugador(new Jugador
                     {
                         Nombre = nuevaCuenta.Nombre,
                         Apellido = nuevaCuenta.Apellido,
                         Correo = nuevaCuenta.Correo,
-                        Avatar_idAvatar = nuevaCuenta.AvatarId,
+                        Avatar_idAvatar = avatar.idAvatar,
                         Clasificacion_idClasificacion = clasificacion.idClasificacion
-                    };
-                    contexto.Jugador.Add(jugador);
-                    contexto.SaveChanges();
+                    });
 
-                    var usuario = new Usuario
+                    usuarioRepositorio.CrearUsuario(new Usuario
                     {
                         Nombre_Usuario = nuevaCuenta.Usuario,
                         Contrasena = BCryptNet.HashPassword(nuevaCuenta.Contrasena),
                         Jugador_idJugador = jugador.idJugador
-                    };
-                    contexto.Usuario.Add(usuario);
-                    contexto.SaveChanges();
+                    });
 
                     transaccion.Commit();
 

@@ -8,7 +8,7 @@ namespace PictionaryMusicalCliente.Modelo.Cuentas
 
         public string Apellido { get; set; }
 
-        public int AvatarId { get; set; }
+        public string AvatarRutaRelativa { get; set; }
 
         public string Instagram { get; set; }
 

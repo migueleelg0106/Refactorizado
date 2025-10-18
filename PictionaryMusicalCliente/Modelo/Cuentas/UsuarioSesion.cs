@@ -15,5 +15,7 @@ namespace PictionaryMusicalCliente.Modelo.Cuentas
         public string Correo { get; set; }
 
         public int AvatarId { get; set; }
+
+        public string AvatarRutaRelativa { get; set; }
     }
 }

@@ -16,6 +16,8 @@ namespace PictionaryMusicalCliente.Modelo
 
         public int AvatarId { get; set; }
 
+        public string AvatarRutaRelativa { get; set; }
+
         public string Instagram { get; set; }
 
         public string Facebook { get; set; }

@@ -33,8 +33,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private string _correo;
         private string _nombre;
         private string _apellido;
-        private int _avatarSeleccionadoId;
         private string _avatarSeleccionadoNombre;
+        private string _avatarSeleccionadoRutaRelativa;
         private ImageSource _avatarSeleccionadoImagen;
         private bool _estaProcesando;
         private bool _estaCambiandoContrasena;
@@ -83,16 +83,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             set => EstablecerPropiedad(ref _apellido, value);
         }
 
-        public int AvatarSeleccionadoId
-        {
-            get => _avatarSeleccionadoId;
-            private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value);
-        }
-
         public string AvatarSeleccionadoNombre
         {
             get => _avatarSeleccionadoNombre;
             private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value);
+        }
+
+        public string AvatarSeleccionadoRutaRelativa
+        {
+            get => _avatarSeleccionadoRutaRelativa;
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoRutaRelativa, value);
         }
 
         public ImageSource AvatarSeleccionadoImagen
@@ -180,7 +180,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private async Task SeleccionarAvatarAsync()
         {
             ObjetoAvatar avatar = await _seleccionarAvatarService
-                .SeleccionarAvatarAsync(AvatarSeleccionadoId).ConfigureAwait(true);
+                .SeleccionarAvatarAsync(AvatarSeleccionadoRutaRelativa).ConfigureAwait(true);
 
             if (avatar == null)
             {
@@ -217,9 +217,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     mensajeError = validacionApellido.Mensaje;
             }
 
-            if (AvatarSeleccionadoId <= 0)
+            if (string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa))
             {
-                camposInvalidos.Add(nameof(AvatarSeleccionadoId));
+                camposInvalidos.Add(nameof(AvatarSeleccionadoRutaRelativa));
                 if (mensajeError == null)
                     mensajeError = Lang.errorTextoSeleccionAvatarValido;
             }
@@ -249,7 +249,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 UsuarioId = _usuarioId,
                 Nombre = nombre,
                 Apellido = apellido,
-                AvatarId = AvatarSeleccionadoId,
+                AvatarRutaRelativa = AvatarSeleccionadoRutaRelativa,
                 Instagram = ObtenerIdentificador("Instagram"),
                 Facebook = ObtenerIdentificador("Facebook"),
                 X = ObtenerIdentificador("X"),
@@ -328,7 +328,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             Nombre = perfil.Nombre;
             Apellido = perfil.Apellido;
 
-            EstablecerAvatarDesdeId(perfil.AvatarId);
+            EstablecerAvatarDesdeRuta(perfil.AvatarRutaRelativa, perfil.AvatarId);
 
             EstablecerIdentificador("Instagram", perfil.Instagram);
             EstablecerIdentificador("Facebook", perfil.Facebook);
@@ -338,9 +338,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             ActualizarSesion(perfil);
         }
 
-        private void EstablecerAvatarDesdeId(int avatarId)
+        private void EstablecerAvatarDesdeRuta(string rutaRelativa, int avatarId)
         {
-            ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPorId(avatarId)
+            ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPorRuta(rutaRelativa)
+                ?? AvatarHelper.ObtenerAvatarPorId(avatarId)
                 ?? AvatarHelper.ObtenerAvatarPredeterminado();
 
             if (avatar != null)
@@ -356,8 +357,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            AvatarSeleccionadoId = avatar.Id;
             AvatarSeleccionadoNombre = avatar.Nombre;
+            AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
             AvatarSeleccionadoImagen = avatar.Imagen;
         }
 
@@ -450,7 +451,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             sesion.Nombre = Nombre;
             sesion.Apellido = Apellido;
-            sesion.AvatarId = AvatarSeleccionadoId;
+
+            ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPorRuta(AvatarSeleccionadoRutaRelativa);
+            sesion.AvatarId = avatar?.Id ?? 0;
+            sesion.AvatarRutaRelativa = AvatarSeleccionadoRutaRelativa;
         }
 
         private void ActualizarSesion(UsuarioAutenticado perfil)
@@ -463,7 +467,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 Nombre = perfil.Nombre,
                 Apellido = perfil.Apellido,
                 Correo = perfil.Correo,
-                AvatarId = perfil.AvatarId
+                AvatarId = perfil.AvatarId,
+                AvatarRutaRelativa = perfil.AvatarRutaRelativa
             };
 
             SesionUsuarioActual.Instancia.EstablecerUsuario(sesion);

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using PictionaryMusicalCliente;
 
@@ -10,17 +11,19 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 {
     public class SeleccionarAvatarDialogService : ISeleccionarAvatarService
     {
-        public Task<ObjetoAvatar> SeleccionarAvatarAsync(int? avatarSeleccionadoId = null)
+        public Task<ObjetoAvatar> SeleccionarAvatarAsync(string avatarSeleccionadoRutaRelativa = null)
         {
             var ventana = new SeleccionarAvatar();
             var avatares = CatalogoAvataresLocales.ObtenerAvatares();
             var vistaModelo = new SeleccionarAvatarVistaModelo(avatares);
             var finalizacion = new TaskCompletionSource<ObjetoAvatar>();
 
-            if (avatarSeleccionadoId.HasValue)
+            if (!string.IsNullOrWhiteSpace(avatarSeleccionadoRutaRelativa))
             {
                 vistaModelo.AvatarSeleccionado = vistaModelo.Avatares
-                    .FirstOrDefault(a => a.Id == avatarSeleccionadoId.Value);
+                    .FirstOrDefault(a => AvatarHelper.SonRutasEquivalentes(
+                        a.RutaRelativa,
+                        avatarSeleccionadoRutaRelativa));
             }
 
             vistaModelo.SeleccionConfirmada = avatar =>

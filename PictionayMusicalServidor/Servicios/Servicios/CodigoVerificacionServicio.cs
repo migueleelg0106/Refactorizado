@@ -219,7 +219,7 @@ namespace Servicios.Servicios
                     NombreUsuario = usuario.Nombre_Usuario,
                     Nombre = usuario.Jugador?.Nombre,
                     Apellido = usuario.Jugador?.Apellido,
-                    AvatarId = usuario.Jugador?.Avatar_idAvatar ?? 0,
+                    AvatarRutaRelativa = usuario.Jugador?.Avatar?.Avatar_Ruta,
                     Codigo = codigo,
                     Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo),
                     Confirmado = false
@@ -489,6 +489,7 @@ namespace Servicios.Servicios
         {
             var usuariosPorNombre = contexto.Usuario
                 .Include(u => u.Jugador)
+                .Include(u => u.Jugador.Avatar)
                 .Where(u => u.Nombre_Usuario == identificador)
                 .ToList();
 
@@ -502,6 +503,7 @@ namespace Servicios.Servicios
 
             var usuariosPorCorreo = contexto.Usuario
                 .Include(u => u.Jugador)
+                .Include(u => u.Jugador.Avatar)
                 .Where(u => u.Jugador.Correo == identificador)
                 .ToList();
 
@@ -523,7 +525,7 @@ namespace Servicios.Servicios
                 Apellido = pendiente.Apellido,
                 Correo = pendiente.Correo,
                 Contrasena = string.Empty,
-                AvatarId = pendiente.AvatarId
+                AvatarRutaRelativa = pendiente.AvatarRutaRelativa
             };
 
             return EnviarCorreoVerificacion(datos, codigo);
@@ -538,7 +540,7 @@ namespace Servicios.Servicios
                 Nombre = original.Nombre,
                 Apellido = original.Apellido,
                 Contrasena = original.Contrasena,
-                AvatarId = original.AvatarId
+                AvatarRutaRelativa = original.AvatarRutaRelativa
             };
         }
 
@@ -568,7 +570,7 @@ namespace Servicios.Servicios
 
             public string Apellido { get; set; }
 
-            public int AvatarId { get; set; }
+            public string AvatarRutaRelativa { get; set; }
 
             public string Codigo { get; set; }
 
