@@ -203,7 +203,7 @@ namespace Servicios.Servicios
                     {
                         CuentaEncontrada = false,
                         CodigoEnviado = false,
-                        Mensaje = "Cuenta no encontrada"
+                        Mensaje = "La cuenta o usuario no se encontró, verifique el dato ingresado."
                     };
                 }
 
