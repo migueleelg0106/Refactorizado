@@ -95,10 +95,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action Cancelado { get; set; }
 
+        public Action<bool> MarcarCodigoInvalido { get; set; }
+
         private async Task VerificarCodigoAsync()
         {
+            MarcarCodigoInvalido?.Invoke(false);
+
             if (string.IsNullOrWhiteSpace(CodigoVerificacion))
             {
+                MarcarCodigoInvalido?.Invoke(true);
                 AvisoHelper.Mostrar(Lang.errorTextoCodigoVerificacionRequerido);
                 return;
             }
@@ -112,20 +117,24 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado == null)
                 {
+                    MarcarCodigoInvalido?.Invoke(true);
                     AvisoHelper.Mostrar(Lang.errorTextoVerificarCodigo);
                     return;
                 }
 
                 if (!resultado.RegistroExitoso)
                 {
+                    MarcarCodigoInvalido?.Invoke(true);
                     AvisoHelper.Mostrar(resultado.Mensaje ?? Lang.errorTextoCodigoIncorrectoExpirado);
                     return;
                 }
 
+                MarcarCodigoInvalido?.Invoke(false);
                 VerificacionCompletada?.Invoke(resultado);
             }
             catch (ServicioException ex)
             {
+                MarcarCodigoInvalido?.Invoke(true);
                 AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoVerificarCodigo);
             }
             finally

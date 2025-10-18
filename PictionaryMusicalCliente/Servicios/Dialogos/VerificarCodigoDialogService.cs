@@ -35,7 +35,7 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
                 ventana.Close();
             };
 
-            ventana.DataContext = vistaModelo;
+            ventana.ConfigurarVistaModelo(vistaModelo);
 
             ventana.Closed += (_, __) =>
             {

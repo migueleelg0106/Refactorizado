@@ -6,14 +6,12 @@ using System.Windows.Input;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Sesiones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
     public class VentanaPrincipalVistaModelo : BaseVistaModelo
     {
-        private readonly IDialogService _dialogService;
         private string _nombreUsuario;
         private string _codigoSala;
         private ObservableCollection<OpcionEntero> _numeroRondasOpciones;
@@ -26,10 +24,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private OpcionTexto _dificultadSeleccionada;
         private ObservableCollection<string> _amigos;
 
-        public VentanaPrincipalVistaModelo(IDialogService dialogService)
+        public VentanaPrincipalVistaModelo()
         {
-            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-
             CargarDatosUsuario();
             CargarOpcionesPartida();
             CargarIdiomas();
@@ -181,6 +177,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action<ConfiguracionPartida> IniciarJuego { get; set; }
 
+        public Action<string> MostrarMensaje { get; set; }
+
         private void CargarDatosUsuario()
         {
             CodigoSala = string.Empty;
@@ -243,7 +241,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (string.IsNullOrWhiteSpace(codigo))
             {
-                _dialogService.Aviso(Lang.globalTextoIngreseCodigoPartida);
+                MostrarMensaje?.Invoke(Lang.globalTextoIngreseCodigoPartida);
                 return;
             }
 
@@ -253,7 +251,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
             else
             {
-                _dialogService.Aviso(Lang.errorTextoNoEncuentraPartida);
+                MostrarMensaje?.Invoke(Lang.errorTextoNoEncuentraPartida);
             }
         }
 
@@ -261,7 +259,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             if (!PuedeIniciarJuego())
             {
-                _dialogService.Aviso(Lang.errorTextoErrorProcesarSolicitud);
+                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
 
@@ -279,7 +277,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
             else
             {
-                _dialogService.Aviso(Lang.errorTextoErrorProcesarSolicitud);
+                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
             }
         }
 

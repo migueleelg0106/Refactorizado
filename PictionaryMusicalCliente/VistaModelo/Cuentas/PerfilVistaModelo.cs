@@ -139,6 +139,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action CerrarAccion { get; set; }
 
+        public Action<IList<string>> MostrarCamposInvalidos { get; set; }
+
         public async Task CargarPerfilAsync()
         {
             UsuarioSesion sesion = SesionUsuarioActual.Instancia.Usuario;
@@ -193,30 +195,48 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             string nombre = Nombre?.Trim();
             string apellido = Apellido?.Trim();
 
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
+            LimpiarErroresRedesSociales();
+
+            var camposInvalidos = new List<string>();
+            string mensajeError = null;
+
             ResultadoOperacion validacionNombre = ValidacionEntradaHelper.ValidarNombre(nombre);
             if (!validacionNombre.Exito)
             {
-                AvisoHelper.Mostrar(validacionNombre.Mensaje ?? Lang.errorTextoNombreObligatorioLongitud);
-                return;
+                camposInvalidos.Add(nameof(Nombre));
+                mensajeError ??= validacionNombre.Mensaje;
             }
 
             ResultadoOperacion validacionApellido = ValidacionEntradaHelper.ValidarApellido(apellido);
             if (!validacionApellido.Exito)
             {
-                AvisoHelper.Mostrar(validacionApellido.Mensaje ?? Lang.errorTextoApellidoObligatorioLongitud);
-                return;
+                camposInvalidos.Add(nameof(Apellido));
+                mensajeError ??= validacionApellido.Mensaje;
             }
 
             if (AvatarSeleccionadoId <= 0)
             {
-                AvisoHelper.Mostrar(Lang.errorTextoSeleccionAvatarValido);
-                return;
+                camposInvalidos.Add(nameof(AvatarSeleccionadoId));
+                mensajeError ??= Lang.errorTextoSeleccionAvatarValido;
             }
 
             ResultadoOperacion validacionRedes = ValidarRedesSociales();
             if (!validacionRedes.Exito)
             {
-                AvisoHelper.Mostrar(validacionRedes.Mensaje ?? Lang.errorTextoIdentificadorRedSocialLongitud);
+                camposInvalidos.Add("RedesSociales");
+                mensajeError ??= validacionRedes.Mensaje;
+            }
+
+            if (camposInvalidos.Count > 0)
+            {
+                if (camposInvalidos.Count > 1)
+                {
+                    mensajeError = Lang.errorTextoCamposInvalidosGenerico;
+                }
+
+                MostrarCamposInvalidos?.Invoke(camposInvalidos);
+                AvisoHelper.Mostrar(mensajeError ?? Lang.errorTextoCamposInvalidosGenerico);
                 return;
             }
 
@@ -358,6 +378,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private ResultadoOperacion ValidarRedesSociales()
         {
+            bool algunaInvalida = false;
+            string mensaje = null;
+
             foreach (RedSocialItem item in RedesSociales)
             {
                 string valor = item.Identificador;
@@ -369,16 +392,28 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 string normalizado = valor.Trim();
                 if (normalizado.Length > LongitudMaximaRedSocial)
                 {
-                    string mensaje = string.Format(
+                    item.TieneError = true;
+                    algunaInvalida = true;
+
+                    mensaje ??= string.Format(
                         CultureInfo.CurrentCulture,
                         Lang.errorTextoIdentificadorRedSocialLongitud,
                         item.Nombre,
                         LongitudMaximaRedSocial);
-                    return ResultadoOperacion.Fallo(mensaje);
                 }
             }
 
-            return ResultadoOperacion.Exitoso();
+            return algunaInvalida
+                ? ResultadoOperacion.Fallo(mensaje ?? Lang.errorTextoIdentificadorRedSocialLongitud)
+                : ResultadoOperacion.Exitoso();
+        }
+
+        private void LimpiarErroresRedesSociales()
+        {
+            foreach (RedSocialItem redSocial in RedesSociales)
+            {
+                redSocial.TieneError = false;
+            }
         }
 
         private ObservableCollection<RedSocialItem> CrearRedesSociales()
@@ -430,6 +465,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public class RedSocialItem : BaseVistaModelo
         {
             private string _identificador;
+            private bool _tieneError;
 
             public RedSocialItem(string nombre, ImageSource icono)
             {
@@ -445,6 +481,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 get => _identificador;
                 set => EstablecerPropiedad(ref _identificador, value);
+            }
+
+            public bool TieneError
+            {
+                get => _tieneError;
+                set => EstablecerPropiedad(ref _tieneError, value);
             }
         }
     }

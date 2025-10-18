@@ -1,4 +1,6 @@
 using System.Windows;
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Cuentas;
 
 namespace PictionaryMusicalCliente
 {
@@ -7,6 +9,29 @@ namespace PictionaryMusicalCliente
         public VerificarCodigo()
         {
             InitializeComponent();
+        }
+
+        public void ConfigurarVistaModelo(VerificarCodigoVistaModelo vistaModelo)
+        {
+            if (vistaModelo == null)
+            {
+                return;
+            }
+
+            vistaModelo.MarcarCodigoInvalido = MarcarCodigoInvalido;
+            DataContext = vistaModelo;
+        }
+
+        private void MarcarCodigoInvalido(bool invalido)
+        {
+            if (invalido)
+            {
+                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoCodigoVerificacion);
+            }
+            else
+            {
+                ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoCodigoVerificacion);
+            }
         }
     }
 }

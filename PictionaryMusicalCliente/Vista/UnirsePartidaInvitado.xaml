@@ -19,7 +19,8 @@
 
                 <TextBox x:Name="bloqueTextoCodigoPartida"
                          Height="30" Margin="0,12,0,16"
-                         FontFamily="Comic Sans MS" HorizontalAlignment="Center" Width="186"/>
+                         FontFamily="Comic Sans MS" HorizontalAlignment="Center" Width="186"
+                         MaxLength="6"/>
 
                 <Button x:Name="botonUnirsePartida"
                         Content="{x:Static language:Lang.globalTextoUnirse}"

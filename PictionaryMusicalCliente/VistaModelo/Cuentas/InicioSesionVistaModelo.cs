@@ -135,10 +135,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.InicioSesionExitoso)
                 {
-                    string mensaje = resultado.Mensaje
-                        ?? (resultado.CuentaNoEncontrada
-                            ? Lang.errorTextoCuentaNoRegistrada
-                            : Lang.errorTextoCredencialesIncorrectas);
+                    string mensaje = resultado.Mensaje ?? Lang.errorTextoCredencialesIncorrectas;
                     AvisoHelper.Mostrar(mensaje);
                     return;
                 }

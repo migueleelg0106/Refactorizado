@@ -90,6 +90,7 @@
                         <TextBox Grid.Row="2"
                                  Height="25"
                                  FontFamily="Comic Sans MS"
+                                 MaxLength="6"
                                  Text="{Binding CodigoSala, UpdateSourceTrigger=PropertyChanged}"/>
                         <Button Grid.Row="3"
                                 Content="{x:Static language:Lang.globalTextoUnirse}"

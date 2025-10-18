@@ -110,14 +110,12 @@
     <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IClasificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\ICuentaService.cs" />
-    <Compile Include="Servicios\Abstracciones\IDialogService.cs" />
     <Compile Include="Servicios\Abstracciones\IInicioSesionService.cs" />
     <Compile Include="Servicios\Abstracciones\IRecuperacionCuentaDialogService.cs" />
     <Compile Include="Servicios\Abstracciones\ISeleccionarAvatarService.cs" />
     <Compile Include="Servicios\Abstracciones\IVerificarCodigoDialogService.cs" />
     <Compile Include="Servicios\Abstracciones\IPerfilService.cs" />
     <Compile Include="Servicios\Abstracciones\IVerificarCodigoService.cs" />
-    <Compile Include="Servicios\Dialogos\DialogService.cs" />
     <Compile Include="Servicios\Dialogos\RecuperacionCuentaDialogService.cs" />
     <Compile Include="Servicios\Dialogos\SeleccionarAvatarDialogService.cs" />
     <Compile Include="Servicios\Dialogos\VerificarCodigoDialogService.cs" />

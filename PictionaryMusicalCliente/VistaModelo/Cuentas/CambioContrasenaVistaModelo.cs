@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Comandos;
@@ -61,11 +62,28 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action Cancelado { get; set; }
 
+        public Action<IList<string>> MostrarCamposInvalidos { get; set; }
+
         private async Task ConfirmarAsync()
         {
-            if (string.IsNullOrWhiteSpace(NuevaContrasena) || string.IsNullOrWhiteSpace(ConfirmacionContrasena))
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
+
+            var camposInvalidos = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(NuevaContrasena))
+            {
+                camposInvalidos.Add(nameof(NuevaContrasena));
+            }
+
+            if (string.IsNullOrWhiteSpace(ConfirmacionContrasena))
+            {
+                camposInvalidos.Add(nameof(ConfirmacionContrasena));
+            }
+
+            if (camposInvalidos.Count > 0)
             {
                 AvisoHelper.Mostrar(Lang.errorTextoConfirmacionContrasenaRequerida);
+                MostrarCamposInvalidos?.Invoke(camposInvalidos);
                 return;
             }
 
@@ -73,14 +91,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             if (!validacion.Exito)
             {
                 AvisoHelper.Mostrar(validacion.Mensaje ?? Lang.errorTextoContrasenaFormato);
+                MostrarCamposInvalidos?.Invoke(new[] { nameof(NuevaContrasena) });
                 return;
             }
 
             if (!string.Equals(NuevaContrasena, ConfirmacionContrasena, StringComparison.Ordinal))
             {
                 AvisoHelper.Mostrar(Lang.errorTextoContrasenasNoCoinciden);
+                MostrarCamposInvalidos?.Invoke(new[] { nameof(NuevaContrasena), nameof(ConfirmacionContrasena) });
                 return;
             }
+
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
 
             EstaProcesando = true;
 

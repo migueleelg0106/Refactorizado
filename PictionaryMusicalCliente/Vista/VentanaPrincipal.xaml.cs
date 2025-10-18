@@ -1,23 +1,18 @@
 using System;
 using System.Windows;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Servicios.Dialogos;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 
 namespace PictionaryMusicalCliente
 {
     public partial class VentanaPrincipal : Window
     {
-        private readonly IDialogService _dialogService;
-
         public VentanaPrincipal()
         {
             InitializeComponent();
 
-            _dialogService = new DialogService();
-
-            var vistaModelo = new VentanaPrincipalVistaModelo(_dialogService)
+            var vistaModelo = new VentanaPrincipalVistaModelo
             {
                 AbrirPerfil = () => MostrarDialogo(new Perfil()),
                 AbrirAjustes = () => MostrarDialogo(new Ajustes()),
@@ -28,8 +23,10 @@ namespace PictionaryMusicalCliente
                 AbrirEliminarAmigo = () => MostrarDialogo(new EliminarAmigo()),
                 AbrirInvitaciones = () => MostrarDialogo(new Invitaciones()),
                 IniciarJuego = _ => MostrarVentanaJuego(),
-                UnirseSala = _ => _dialogService.Aviso(Lang.errorTextoNoEncuentraPartida)
+                UnirseSala = _ => AvisoHelper.Mostrar(Lang.errorTextoNoEncuentraPartida)
             };
+
+            vistaModelo.MostrarMensaje = AvisoHelper.Mostrar;
 
             DataContext = vistaModelo;
         }
