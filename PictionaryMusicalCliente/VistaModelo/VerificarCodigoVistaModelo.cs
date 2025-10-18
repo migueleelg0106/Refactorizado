@@ -7,6 +7,7 @@ using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
@@ -125,7 +126,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 if (!resultado.RegistroExitoso)
                 {
                     MarcarCodigoInvalido?.Invoke(true);
-                    AvisoHelper.Mostrar(resultado.Mensaje ?? Lang.errorTextoCodigoIncorrectoExpirado);
+                    AvisoHelper.Mostrar(MensajeServidorHelper.Localizar(resultado.Mensaje, Lang.errorTextoCodigoIncorrecto));
                     return;
                 }
 
