@@ -4,6 +4,8 @@ namespace Datos.DAL.Interfaces
 
     public interface IUsuarioRepositorio
     {
+        bool ExisteNombreUsuario(string nombreUsuario);
 
+        Usuario CrearUsuario(Usuario usuario);
     }
 }
