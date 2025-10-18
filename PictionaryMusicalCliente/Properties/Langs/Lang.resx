@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="crearCuentaTextoDatosSolicitados" xml:space="preserve">
+    <value>Complete los datos solicitados:</value>
+  </data>
+  <data name="crearCuentaTextoExitosoMensaje" xml:space="preserve">
+    <value>¡Cuenta creada exitosamente!</value>
+  </data>
+  <data name="crearCuentaTextoExitosoTitulo" xml:space="preserve">
+    <value>Registro completo</value>
+  </data>
+  <data name="errorTextoBaseDeDatosTitulo" xml:space="preserve">
+    <value>Error de base de datos</value>
+  </data>
+  <data name="errorTextoBaseDeDatosMensaje" xml:space="preserve">
+    <value>Ocurrió un error al guardar los datos:</value>
+  </data>
+  <data name="errorTextoCorreoEnUso" xml:space="preserve">
+    <value>Correo electrónico en uso</value>
+  </data>
+  <data name="errorTextoCorreoRecuperacion" xml:space="preserve">
+    <value>Es necesario ingresar el correo para su recuperación</value>
+  </data>
+  <data name="errorTextoCuentaRelacionada" xml:space="preserve">
+    <value>No existe una cuenta con esas credenciales</value>
+  </data>
+  <data name="errorTextoUsuarioEnUso" xml:space="preserve">
+    <value>Nombre de usuario en uso</value>
+  </data>
+  <data name="globalTextoApellido" xml:space="preserve">
+    <value>Apellido</value>
+  </data>
+  <data name="globalTextoCancelar" xml:space="preserve">
+    <value>CANCELAR</value>
+  </data>
+  <data name="globalTextoContrasena" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="globalTextoCorreo" xml:space="preserve">
+    <value>Correo electrónico</value>
+  </data>
+  <data name="globalTextoCrearCuenta" xml:space="preserve">
+    <value>CREAR CUENTA</value>
+  </data>
+  <data name="globalTextoEspecificaContrasena" xml:space="preserve">
+    <value>La contraseña debe tener mínimo 8 caracteres y máximo 15, así como contener mínimo una mayúscula, un número y un carácter especial</value>
+  </data>
+  <data name="globalTextoNombre" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="globalTextoRedSocial" xml:space="preserve">
+    <value>Red social</value>
+  </data>
+  <data name="globalTextoSeleccionarAvatar" xml:space="preserve">
+    <value>Seleccionar un avatar</value>
+  </data>
+  <data name="globalTextoUsuario" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="idiomaTextoEspañol" xml:space="preserve">
+    <value>Español</value>
+  </data>
+  <data name="idiomaTextoIdioma" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="idiomaTextoIngles" xml:space="preserve">
+    <value>Inglés</value>
+  </data>
+  <data name="inicioSesionTextoCorreoUsuario" xml:space="preserve">
+    <value>Correo electrónico / Usuario</value>
+  </data>
+  <data name="inicioSesionTextoEntrar" xml:space="preserve">
+    <value>ENTRAR</value>
+  </data>
+  <data name="inicioSesionTextoEntrarInvitado" xml:space="preserve">
+    <value>ENTRAR COMO INVITADO</value>
+  </data>
+  <data name="inicioSesionTextoOlvidasteContrasena" xml:space="preserve">
+    <value>¿Olvidaste tu contraseña?</value>
+  </data>
+  <data name="TagEspañol" xml:space="preserve">
+    <value>en-MX</value>
+  </data>
+  <data name="TagIngles" xml:space="preserve">
+    <value>en-US</value>
+  </data>
+  <data name="tituloTextoInicioSesion" xml:space="preserve">
+    <value>Inicio de Sesión</value>
+  </data>
+  <data name="tituloTextoMusical" xml:space="preserve">
+    <value>MUSICAL</value>
+  </data>
+  <data name="tituloTextoPictionary" xml:space="preserve">
+    <value>PICTIONARY</value>
+  </data>
+  <data name="tituloTextoRegistroUsuarios" xml:space="preserve">
+    <value>Crear Cuenta</value>
+  </data>
+  <data name="tituloTextoVentanaPrincipal" xml:space="preserve">
+    <value>Sala</value>
+  </data>
+  <data name="errorTextoCredencialesTitulo" xml:space="preserve">
+    <value>No se pudo iniciar sesión</value>
+  </data>
+  <data name="globalTextoAjustes" xml:space="preserve">
+    <value>AJUSTES</value>
+  </data>
+  <data name="globalTextoIngreseCodigoPartida" xml:space="preserve">
+    <value>Ingrese el código de la partida:</value>
+  </data>
+  <data name="globalTextoUnirse" xml:space="preserve">
+    <value>¡UNIRSE!</value>
+  </data>
+  <data name="globalTextoComoJugar" xml:space="preserve">
+    <value>¿CÓMO JUGAR?</value>
+  </data>
+  <data name="globalTextoClasificacion" xml:space="preserve">
+    <value>CLASIFICACIÓN</value>
+  </data>
+  <data name="principalTextoJugar" xml:space="preserve">
+    <value>¡JUGAR!</value>
+  </data>
+  <data name="principalTextoCrearSala" xml:space="preserve">
+    <value>CREAR UNA SALA</value>
+  </data>
+  <data name="principalTextoAmigos" xml:space="preserve">
+    <value>AMIGOS</value>
+  </data>
+  <data name="globalTextoBuscarAmigo" xml:space="preserve">
+    <value>BUSCAR UN AMIGO</value>
+  </data>
+  <data name="globalTextoSolicitudes" xml:space="preserve">
+    <value>SOLICITUDES</value>
+  </data>
+  <data name="eliminarAmigoTextoEliminar" xml:space="preserve">
+    <value>ELIMINAR AMIGO</value>
+  </data>
+  <data name="globalTextoInvitaciones" xml:space="preserve">
+    <value>INVITACIONES</value>
+  </data>
+  <data name="principalTextoNumeroRondas" xml:space="preserve">
+    <value>Número de rondas:</value>
+  </data>
+  <data name="principalTextoTiempoRonda" xml:space="preserve">
+    <value>Tiempo de la ronda (segundos)</value>
+  </data>
+  <data name="principalTextoIdiomaCanciones" xml:space="preserve">
+    <value>Idioma de las canciones</value>
+  </data>
+  <data name="principalTextoMixto" xml:space="preserve">
+    <value>Mixto</value>
+  </data>
+  <data name="principalTextoDificil" xml:space="preserve">
+    <value>Difícil</value>
+  </data>
+  <data name="principalTextoDificultad" xml:space="preserve">
+    <value>Dificultad:</value>
+  </data>
+  <data name="principalTextoFacil" xml:space="preserve">
+    <value>Fácil</value>
+  </data>
+  <data name="principalTextoMedia" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="globalTextoUnirseASala" xml:space="preserve">
+    <value>UNIRSE A UNA SALA</value>
+  </data>
+  <data name="eliminarAmigoTextoConfirmacion" xml:space="preserve">
+    <value>¿Está seguro de querer eliminar de su lista de amigos a </value>
+  </data>
+  <data name="errorTextoNoEncuentraPartida" xml:space="preserve">
+    <value>No se encontró la partida</value>
+  </data>
+  <data name="principalTextoTitulo" xml:space="preserve">
+    <value>Ventana Principal</value>
+  </data>
+  <data name="buscarAmigoTextoIngreseUsuario" xml:space="preserve">
+    <value>Ingrese el usuario:</value>
+  </data>
+  <data name="buscarAmigoTextoEnviaSolicitud" xml:space="preserve">
+    <value>ENVIAR SOLICITUD</value>
+  </data>
+  <data name="globalTextoRegresar" xml:space="preserve">
+    <value>REGRESAR</value>
+  </data>
+  <data name="globalTextoAceptar" xml:space="preserve">
+    <value>ACEPTAR</value>
+  </data>
+  <data name="globalTextoEliminar" xml:space="preserve">
+    <value>ELIMINAR</value>
+  </data>
+  <data name="invitacionTextoInvitado" xml:space="preserve">
+    <value> te invitó a unirse a su partida!</value>
+  </data>
+  <data name="globalTextoVolumenCanciones" xml:space="preserve">
+    <value>Volumen de las canciones</value>
+  </data>
+  <data name="globalTextoEfectosSonido" xml:space="preserve">
+    <value>Efectos de sonido</value>
+  </data>
+  <data name="ajustesPrincipalTextoCerrarSesion" xml:space="preserve">
+    <value>CERRAR SESIÓN</value>
+  </data>
+  <data name="globalTextoConfirmar" xml:space="preserve">
+    <value>CONFIRMAR</value>
+  </data>
+  <data name="comoJugarTextoInstrucciones" xml:space="preserve">
+    <value>1. Dibuja sin usar palabras.</value>
+  </data>
+  <data name="cerrarSesionTextoConfirmacion" xml:space="preserve">
+    <value>¿Está seguro de querer cerrar la sesión?</value>
+  </data>
+  <data name="clasificacionTextoTotalRondas" xml:space="preserve">
+    <value>Total de rondas ganadas</value>
+  </data>
+  <data name="clasificacionTextoTotalPuntos" xml:space="preserve">
+    <value>Total de puntos</value>
+  </data>
+  <data name="clasificacionTextoOrdenarRondas" xml:space="preserve">
+    <value>Ordenar por rondas</value>
+  </data>
+  <data name="clasificacionTextoOrdenarPuntos" xml:space="preserve">
+    <value>Ordenar por puntos</value>
+  </data>
+  <data name="perfilTextoMiPerfil" xml:space="preserve">
+    <value>MI PERFIL</value>
+  </data>
+  <data name="perfilTextoRedesSociales" xml:space="preserve">
+    <value>Agrega alguna red social:</value>
+  </data>
+  <data name="perfilTextoCambiarContrasena" xml:space="preserve">
+    <value>CAMBIAR CONTRASEÑA</value>
+  </data>
+  <data name="perfilTextoGuardarCambios" xml:space="preserve">
+    <value>GUARDAR CAMBIOS</value>
+  </data>
+  <data name="cambiarContrasenaTextoIngresaNuevaContrasena" xml:space="preserve">
+    <value>Ingrese la nueva contraseña: </value>
+  </data>
+  <data name="cambiarContrasenaTextoConfirmeContrasena" xml:space="preserve">
+    <value>Confirme su contraseña</value>
+  </data>
+  <data name="cambiarContrasenaTextoCodigoVerificacion" xml:space="preserve">
+    <value>Ingrese el código de verificación enviado a su correo:</value>
+  </data>
+  <data name="cambiarContrasenaTextoVerificar" xml:space="preserve">
+    <value>VERIFICAR</value>
+  </data>
+  <data name="cambiarContrasenaTextoReenviarCodigo" xml:space="preserve">
+    <value>REENVIAR CÓDIGO</value>
+  </data>
+  <data name="partidaAdminTextoIniciarPartida" xml:space="preserve">
+    <value>¡INICIAR PARTIDA!</value>
+  </data>
+  <data name="globalTextoInvitar" xml:space="preserve">
+    <value>INVITAR</value>
+  </data>
+  <data name="partidaTextoChat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="partidaTextoCodigo" xml:space="preserve">
+    <value>Código:</value>
+  </data>
+  <data name="partidaAdminTextoInvitarCorreo" xml:space="preserve">
+    <value>INVITAR AL CORREO</value>
+  </data>
+  <data name="partidaTextoRonda" xml:space="preserve">
+    <value>Ronda:</value>
+  </data>
+  <data name="expulsarTextoExpulsarJugador" xml:space="preserve">
+    <value>EXPULSAR JUGADOR</value>
+  </data>
+  <data name="expulsarTextoConfirmacion" xml:space="preserve">
+    <value>¿Está seguro de querer expulsar a ?</value>
+  </data>
+  <data name="expulsarTextoExpulsar" xml:space="preserve">
+    <value>EXPULSAR</value>
+  </data>
+  <data name="expulsarTextoRazonExpulsion" xml:space="preserve">
+    <value>Añade la razón de la expulsión…</value>
+  </data>
+  <data name="invitarAmigosTextoInvitarAmigos" xml:space="preserve">
+    <value>INVITAR AMIGOS</value>
+  </data>
+  <data name="invitarAmigosTextoInvitado" xml:space="preserve">
+    <value>INVITADO</value>
+  </data>
+  <data name="ajustesPartidaTextoSalirPartida" xml:space="preserve">
+    <value>SALIR DE LA PARTIDA</value>
+  </data>
+  <data name="salirPartidaTextoConfirmación" xml:space="preserve">
+    <value>¿Está seguro de querer salir de la partida?</value>
+  </data>
+  <data name="partidaTextoPartidaEnCurso" xml:space="preserve">
+    <value>Partida en curso</value>
+  </data>
+  <data name="alertaTextoAviso" xml:space="preserve">
+    <value>ADVERTENCIA</value>
+  </data>
+  <data name="avisoTextoCodigoDescripcionCambio" xml:space="preserve">
+    <value>Ingresa el código que enviamos para confirmar el cambio de contraseña.</value>
+  </data>
+  <data name="avisoTextoCodigoDescripcionCorreo" xml:space="preserve">
+    <value>Ingresa el código de verificación enviado a {0}.</value>
+  </data>
+  <data name="avisoTextoCodigoDescripcionGenerica" xml:space="preserve">
+    <value>Ingresa el código de verificación que enviamos a tu correo.</value>
+  </data>
+  <data name="avisoTextoCodigoDescripcionRecuperacion" xml:space="preserve">
+    <value>Ingresa el código que enviamos para restablecer tu contraseña.</value>
+  </data>
+  <data name="avisoTextoCodigoReenviado" xml:space="preserve">
+    <value>Se envió un nuevo código a su correo electrónico.</value>
+  </data>
+  <data name="avisoTextoCodigoVerificadoCorrecto" xml:space="preserve">
+    <value>Código verificado correctamente.</value>
+  </data>
+  <data name="avisoTextoContrasenaActualizada" xml:space="preserve">
+    <value>La contraseña se actualizó correctamente.</value>
+  </data>
+  <data name="avisoTextoPerfilActualizado" xml:space="preserve">
+    <value>Los datos del perfil se actualizaron correctamente.</value>
+  </data>
+  <data name="avisoTextoReenvioCodigoNoDisponible" xml:space="preserve">
+    <value>No es posible reenviar el código todavía.</value>
+  </data>
+  <data name="avisoTextoRegistroCompletado" xml:space="preserve">
+    <value>Registro completado exitosamente.</value>
+  </data>
+  <data name="avisoTextoServidorTiempoSesion" xml:space="preserve">
+    <value>El servidor tardó demasiado en responder. Se mostrarán los datos actuales de la sesión.</value>
+  </data>
+  <data name="avisoTextoComunicacionServidorSesion" xml:space="preserve">
+    <value>Ocurrió un problema de comunicación con el servidor. Se mostrarán los datos actuales de la sesión.</value>
+  </data>
+  <data name="errorTextoActualizarContrasena" xml:space="preserve">
+    <value>No se pudo actualizar la contraseña. Intente nuevamente.</value>
+  </data>
+  <data name="errorTextoActualizarPerfil" xml:space="preserve">
+    <value>No se pudo actualizar el perfil. Intente nuevamente.</value>
+  </data>
+  <data name="errorTextoCampoLongitudMaxima" xml:space="preserve">
+    <value>El {0} no debe superar {1} caracteres.</value>
+  </data>
+  <data name="errorTextoCampoObligatorio" xml:space="preserve">
+    <value>El {0} es obligatorio.</value>
+  </data>
+  <data name="errorTextoCodigoIncorrectoExpirado" xml:space="preserve">
+    <value>El código ingresado no es correcto o ha expirado.</value>
+  </data>
+  <data name="errorTextoCodigoVerificacionRequerido" xml:space="preserve">
+    <value>Ingrese el código de verificación enviado a su correo.</value>
+  </data>
+  <data name="errorTextoContrasenaFormato" xml:space="preserve">
+    <value>La contraseña debe tener de 8 a 15 caracteres con al menos una mayúscula, un número y un carácter especial.</value>
+  </data>
+  <data name="errorTextoConfirmacionContrasenaRequerida" xml:space="preserve">
+    <value>Ingrese y confirme la nueva contraseña.</value>
+  </data>
+  <data name="errorTextoContrasenasNoCoinciden" xml:space="preserve">
+    <value>Las contraseñas no coinciden.</value>
+  </data>
+  <data name="errorTextoCorreoInvalido" xml:space="preserve">
+    <value>Ingrese un correo electrónico válido.</value>
+  </data>
+  <data name="errorTextoCuentaNoEncontradaSesion" xml:space="preserve">
+    <value>No se encontró la cuenta asociada a la sesión actual.</value>
+  </data>
+  <data name="errorTextoCuentaNoRegistrada" xml:space="preserve">
+    <value>No se encontró una cuenta con el usuario o correo proporcionado.</value>
+  </data>
+  <data name="errorTextoDeterminarUsuarioCambioContrasena" xml:space="preserve">
+    <value>No se pudo determinar el usuario actual para cambiar la contraseña.</value>
+  </data>
+  <data name="errorTextoEnvioCodigoVerificacionDatos" xml:space="preserve">
+    <value>No se pudo enviar el código de verificación. Verifique la información e intente de nuevo.</value>
+  </data>
+  <data name="errorTextoEnvioCodigoVerificacionMasTarde" xml:space="preserve">
+    <value>No fue posible enviar el código de verificación. Intente más tarde.</value>
+  </data>
+  <data name="errorTextoProcesarSolicitudVerificacion" xml:space="preserve">
+    <value>No fue posible procesar la solicitud de verificación.</value>
+  </data>
+  <data name="avisoTextoCodigoEnviado" xml:space="preserve">
+    <value>Se envió un código de verificación a tu correo electrónico.</value>
+  </data>
+  <data name="errorTextoSolicitudVerificacionActiva" xml:space="preserve">
+    <value>No se encontró una solicitud de verificación activa.</value>
+  </data>
+  <data name="errorTextoSolicitudVerificacionVigente" xml:space="preserve">
+    <value>No hay una solicitud de verificación vigente.</value>
+  </data>
+  <data name="errorTextoCuentaDatosNoDisponibles" xml:space="preserve">
+    <value>Los datos de la cuenta no están disponibles.</value>
+  </data>
+  <data name="errorTextoRegistrarCuentaMasTarde" xml:space="preserve">
+    <value>No se pudo registrar la cuenta. Intente más tarde.</value>
+  </data>
+  <data name="errorTextoCredencialesIncorrectas" xml:space="preserve">
+    <value>Credenciales incorrectas.</value>
+  </data>
+  <data name="errorTextoSolicitudRecuperacionInvalida" xml:space="preserve">
+    <value>La solicitud de recuperación no es válida.</value>
+  </data>
+  <data name="errorTextoSolicitudRecuperacionActiva" xml:space="preserve">
+    <value>No se encontró una solicitud de recuperación activa.</value>
+  </data>
+  <data name="errorTextoCodigoExpiradoSolicitarNuevo" xml:space="preserve">
+    <value>El código de verificación ha expirado. Solicite uno nuevo.</value>
+  </data>
+  <data name="avisoTextoCodigoVerificadoCambio" xml:space="preserve">
+    <value>Código verificado correctamente. Continúe con el cambio de contraseña.</value>
+  </data>
+  <data name="errorTextoSolicitudRecuperacionVigente" xml:space="preserve">
+    <value>No hay una solicitud de recuperación vigente.</value>
+  </data>
+  <data name="errorTextoSolicitudActualizacionObligatoria" xml:space="preserve">
+    <value>La solicitud de actualización es obligatoria.</value>
+  </data>
+  <data name="errorTextoIdentificadorUsuarioInvalido" xml:space="preserve">
+    <value>El identificador de usuario es inválido.</value>
+  </data>
+  <data name="errorTextoNombreObligatorioLongitud" xml:space="preserve">
+    <value>El nombre es obligatorio y no debe exceder 50 caracteres.</value>
+  </data>
+  <data name="errorTextoApellidoObligatorioLongitud" xml:space="preserve">
+    <value>El apellido es obligatorio y no debe exceder 50 caracteres.</value>
+  </data>
+  <data name="errorTextoUsuarioNoEncontrado" xml:space="preserve">
+    <value>No se encontró el usuario especificado.</value>
+  </data>
+  <data name="errorTextoJugadorNoExiste" xml:space="preserve">
+    <value>No existe un jugador asociado al usuario especificado.</value>
+  </data>
+  <data name="errorTextoAvatarNoExiste" xml:space="preserve">
+    <value>El avatar seleccionado no existe.</value>
+  </data>
+  <data name="errorTextoErrorProcesarSolicitud" xml:space="preserve">
+    <value>Ocurrió un problema al procesar la solicitud.</value>
+  </data>
+  <data name="errorTextoIdentificarAvatar" xml:space="preserve">
+    <value>No se pudo identificar el avatar seleccionado. Intente nuevamente.</value>
+  </data>
+  <data name="errorTextoIdentificadorRecuperacionRequerido" xml:space="preserve">
+    <value>Ingrese el usuario o correo registrado para recuperar la contraseña.</value>
+  </data>
+  <data name="errorTextoIdentificadorRedSocialLongitud" xml:space="preserve">
+    <value>El identificador de {0} no debe exceder {1} caracteres.</value>
+  </data>
+  <data name="errorTextoIniciarCambioContrasena" xml:space="preserve">
+    <value>No se pudo iniciar el proceso de cambio de contraseña. Intente nuevamente.</value>
+  </data>
+  <data name="errorTextoIniciarRecuperacion" xml:space="preserve">
+    <value>No se pudo iniciar la recuperación de contraseña. Intente nuevamente.</value>
+  </data>
+  <data name="errorTextoPerfilActualizarInformacion" xml:space="preserve">
+    <value>No fue posible obtener la información actualizada del perfil.</value>
+  </data>
+  <data name="errorTextoPrepararSolicitudCambioContrasena" xml:space="preserve">
+    <value>Ocurrió un error al preparar la solicitud de cambio de contraseña.</value>
+  </data>
+  <data name="errorTextoSeleccionAvatarValido" xml:space="preserve">
+    <value>Selecciona un avatar válido antes de guardar los cambios.</value>
+  </data>
+  <data name="errorTextoServidorActualizarContrasena" xml:space="preserve">
+    <value>El servidor reportó un error al actualizar la contraseña.</value>
+  </data>
+  <data name="errorTextoServidorActualizarPerfil" xml:space="preserve">
+    <value>El servidor reportó un error al actualizar el perfil.</value>
+  </data>
+  <data name="errorTextoServidorCodigoVerificacion" xml:space="preserve">
+    <value>El servidor reportó un error al solicitar el código de verificación.</value>
+  </data>
+  <data name="errorTextoServidorInformacionAvatar" xml:space="preserve">
+    <value>No se pudo obtener la información del avatar seleccionado.</value>
+  </data>
+  <data name="errorTextoServidorInicioRecuperacion" xml:space="preserve">
+    <value>El servidor reportó un error al iniciar la recuperación de contraseña.</value>
+  </data>
+  <data name="errorTextoServidorInicioSesion" xml:space="preserve">
+    <value>El servidor reportó un error al iniciar sesión.</value>
+  </data>
+  <data name="errorTextoServidorNoDisponible" xml:space="preserve">
+    <value>Ocurrió un problema de comunicación con el servidor. Intente más tarde.</value>
+  </data>
+  <data name="errorTextoServidorObtenerPerfil" xml:space="preserve">
+    <value>El servidor reportó un error al obtener la información del perfil.</value>
+  </data>
+  <data name="errorTextoServidorReenviarCodigo" xml:space="preserve">
+    <value>El servidor reportó un error al reenviar el código.</value>
+  </data>
+  <data name="errorTextoServidorSolicitudCambioContrasena" xml:space="preserve">
+    <value>El servidor reportó un error al solicitar el cambio de contraseña.</value>
+  </data>
+  <data name="errorTextoServidorTiempoAgotado" xml:space="preserve">
+    <value>El servidor tardó demasiado tiempo en responder. Intente más tarde.</value>
+  </data>
+  <data name="errorTextoServidorValidarCodigo" xml:space="preserve">
+    <value>El servidor reportó un error al validar el código.</value>
+  </data>
+  <data name="errorTextoSolicitarNuevoCodigo" xml:space="preserve">
+    <value>No se pudo solicitar un nuevo código. Intente nuevamente.</value>
+  </data>
+  <data name="errorTextoTokenCodigoObligatorio" xml:space="preserve">
+    <value>El token del código es obligatorio.</value>
+  </data>
+  <data name="errorTextoTiempoEsperaCodigo" xml:space="preserve">
+    <value>Debe esperar {0} segundos para solicitar un nuevo código.</value>
+  </data>
+  <data name="errorTextoVerificarCodigo" xml:space="preserve">
+    <value>No se pudo verificar el código. Intente nuevamente.</value>
+  </data>
+  <data name="errorTextoValidacionCodigoNoDisponible" xml:space="preserve">
+    <value>La validación del código no está disponible en este momento.</value>
+  </data>
+  <data name="errorTextoSolicitudVerificacionInvalida" xml:space="preserve">
+    <value>La solicitud de verificación no es válida. Intente nuevamente.</value>
+  </data>
+  <data name="errorTextoCamposInvalidosGenerico" xml:space="preserve">
+    <value>Hay datos inválidos o campos vacíos, por favor verifique sus datos.</value>
+  </data>
+</root>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="bd0119ed-379e-4b31-89df-afe52b32abc1" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8086/Pictionary/InicioSesion" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="InicioSesion.disco" MetadataType="Disco" ID="cb788a12-5545-4fab-8270-96a1b785a42d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?disco" />
+    <MetadataFile FileName="InicioSesionManejador.wsdl" MetadataType="Wsdl" ID="39a57a93-8abc-478a-9b2d-6751110edd58" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?wsdl" />
+    <MetadataFile FileName="InicioSesion.xsd" MetadataType="Schema" ID="43949c43-87f8-4360-b011-09452613c233" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?xsd=xsd1" />
+    <MetadataFile FileName="InicioSesion1.xsd" MetadataType="Schema" ID="3bf0510b-43d5-4f67-ac47-80885162f3ea" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?xsd=xsd0" />
+    <MetadataFile FileName="InicioSesion2.xsd" MetadataType="Schema" ID="2420de9f-2b1e-41c1-aa92-da53287a5109" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="b2cb2a4e-354d-4d97-8d7f-8471e5944d1f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8086/Pictionary/Perfil" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Perfil.xsd" MetadataType="Schema" ID="27827356-82cd-4210-acf2-1e16cb42f142" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?xsd=xsd0" />
+    <MetadataFile FileName="Perfil.disco" MetadataType="Disco" ID="96093ae9-9e43-4ffd-b926-6a42ebac9565" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?disco" />
+    <MetadataFile FileName="PerfilManejador.wsdl" MetadataType="Wsdl" ID="6730e332-25c9-426c-bad5-d9402ea878ce" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?wsdl" />
+    <MetadataFile FileName="Perfil1.xsd" MetadataType="Schema" ID="3c2e0ef0-b8aa-45a7-b96e-2a925a8869aa" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?xsd=xsd1" />
+    <MetadataFile FileName="Perfil2.xsd" MetadataType="Schema" ID="0ab0b154-9889-4e91-8544-0ca67872d8e0" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{320DC5C2-0C94-4A41-90FF-87B2A82FAACA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>PictionaryMusicalCliente</RootNamespace>
+    <AssemblyName>PictionaryMusicalCliente</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Comandos\Comando.cs" />
+    <Compile Include="Comandos\ComandoAsincrono.cs" />
+    <Compile Include="Comandos\ComandoDelegado.cs" />
+    <Compile Include="Comandos\IComandoAsincrono.cs" />
+    <Compile Include="Comandos\IComandoNotificable.cs" />
+    <Compile Include="Connected Services\PictionaryServidorServicioCambioContrasena\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioClasificacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioInicioSesion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioPerfil\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Convertidores\ConvertidorBooleanoInverso.cs" />
+    <Compile Include="Convertidores\ConvertidorBooleanoVisibilidad.cs" />
+    <Compile Include="Convertidores\ConvertidorCadenaVaciaVisibilidad.cs" />
+    <Compile Include="Modelo\Catalogos\CatalogoAvataresLocales.cs" />
+    <Compile Include="Modelo\Catalogos\CatalogoImagenesPerfilLocales.cs" />
+    <Compile Include="Modelo\ObjetoAvatar.cs" />
+    <Compile Include="Modelo\ResultadoOperacion.cs" />
+    <Compile Include="Modelo\UsuarioAutenticado.cs" />
+    <Compile Include="Modelo\Cuentas\ResultadoSolicitudCodigo.cs" />
+    <Compile Include="Modelo\Cuentas\SolicitudRegistroCuenta.cs" />
+    <Compile Include="Modelo\Cuentas\ActualizarPerfilSolicitud.cs" />
+    <Compile Include="Modelo\Cuentas\VerificacionCodigoResultados.cs" />
+    <Compile Include="Servicios\Abstracciones\IAvatarService.cs" />
+    <Compile Include="Servicios\Abstracciones\ICambioContrasenaService.cs" />
+    <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
+    <Compile Include="Servicios\Abstracciones\IClasificacionService.cs" />
+    <Compile Include="Servicios\Abstracciones\IDialogService.cs" />
+    <Compile Include="Servicios\Abstracciones\IInicioSesionService.cs" />
+    <Compile Include="Servicios\Abstracciones\IRecuperacionCuentaDialogService.cs" />
+    <Compile Include="Servicios\Abstracciones\ISeleccionarAvatarService.cs" />
+    <Compile Include="Servicios\Abstracciones\IVerificarCodigoDialogService.cs" />
+    <Compile Include="Servicios\Abstracciones\IPerfilService.cs" />
+    <Compile Include="Servicios\Abstracciones\IVerificarCodigoService.cs" />
+    <Compile Include="Servicios\Dialogos\DialogService.cs" />
+    <Compile Include="Servicios\Dialogos\RecuperacionCuentaDialogService.cs" />
+    <Compile Include="Servicios\Dialogos\SeleccionarAvatarDialogService.cs" />
+    <Compile Include="Servicios\Dialogos\VerificarCodigoDialogService.cs" />
+    <Compile Include="Servicios\ServicioException.cs" />
+    <Compile Include="Servicios\Wcf\AvatarService.cs" />
+    <Compile Include="Servicios\Wcf\CambioContrasenaService.cs" />
+    <Compile Include="Servicios\Wcf\ClasificacionService.cs" />
+    <Compile Include="Servicios\Wcf\CodigoVerificacionService.cs" />
+    <Compile Include="Servicios\Wcf\InicioSesionService.cs" />
+    <Compile Include="Servicios\Wcf\PerfilService.cs" />
+    <Compile Include="Servicios\Wcf\VerificarCodigoService.cs" />
+    <Compile Include="Sesiones\SesionUsuarioActual.cs" />
+    <Compile Include="Utilidades\AvatarHelper.cs" />
+    <Compile Include="Utilidades\AvisoHelper.cs" />
+    <Compile Include="Utilidades\ControlVisualHelper.cs" />
+    <Compile Include="Utilidades\ValidacionEntradaHelper.cs" />
+    <Compile Include="Servicios\Wcf\Helpers\AvatarRutaHelper.cs" />
+    <Compile Include="Servicios\Wcf\Helpers\AvatarServicioHelper.cs" />
+    <Compile Include="Servicios\Wcf\Helpers\CodigoVerificacionServicioHelper.cs" />
+    <Compile Include="Servicios\Wcf\Helpers\ErrorServicioHelper.cs" />
+    <Compile Include="Servicios\Wcf\Helpers\MensajeServidorHelper.cs" />
+    <Compile Include="Servicios\Wcf\Helpers\UsuarioMapper.cs" />
+    <Compile Include="Servicios\Wcf\Helpers\WcfClientHelper.cs" />
+    <Compile Include="VistaModelo\BaseVistaModelo.cs" />
+    <Compile Include="Connected Services\PictionaryServidorServicioAvatares\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioCuenta\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioCuenta\VerificacionExtensions.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VistaModelo\Cuentas\CambioContrasenaVistaModelo.cs" />
+    <Compile Include="VistaModelo\Cuentas\ClasificacionVistaModelo.cs" />
+    <Compile Include="VistaModelo\Cuentas\InicioSesionVistaModelo.cs" />
+    <Compile Include="VistaModelo\Cuentas\PerfilVistaModelo.cs" />
+    <Compile Include="VistaModelo\Cuentas\SeleccionarAvatarVistaModelo.cs" />
+    <Compile Include="VistaModelo\Cuentas\CrearCuentaVistaModelo.cs" />
+    <Compile Include="VistaModelo\Cuentas\VentanaPrincipalVistaModelo.cs" />
+    <Compile Include="VistaModelo\Cuentas\VerificarCodigoVistaModelo.cs" />
+    <Compile Include="Vista\Ajustes.xaml.cs">
+      <DependentUpon>Ajustes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\AjustesPartida.xaml.cs">
+      <DependentUpon>AjustesPartida.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\Avisos.xaml.cs">
+      <DependentUpon>Avisos.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\BuscarAmigo.xaml.cs">
+      <DependentUpon>BuscarAmigo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\CambioContrasena.xaml.cs">
+      <DependentUpon>CambioContrasena.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\CerrarSesion.xaml.cs">
+      <DependentUpon>CerrarSesion.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\Clasificacion.xaml.cs">
+      <DependentUpon>Clasificacion.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\ComoJugar.xaml.cs">
+      <DependentUpon>ComoJugar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\ConfirmacionSalirPartida.xaml.cs">
+      <DependentUpon>ConfirmacionSalirPartida.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\CrearCuenta.xaml.cs">
+      <DependentUpon>CrearCuenta.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\EliminarAmigo.xaml.cs">
+      <DependentUpon>EliminarAmigo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\ExpulsarJugador.xaml.cs">
+      <DependentUpon>ExpulsarJugador.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\InicioSesion.xaml.cs">
+      <DependentUpon>InicioSesion.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\Invitaciones.xaml.cs">
+      <DependentUpon>Invitaciones.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\InvitarAmigos.xaml.cs">
+      <DependentUpon>InvitarAmigos.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\Perfil.xaml.cs">
+      <DependentUpon>Perfil.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\SeleccionarAvatar.xaml.cs">
+      <DependentUpon>SeleccionarAvatar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\Solicitudes.xaml.cs">
+      <DependentUpon>Solicitudes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\UnirsePartidaInvitado.xaml.cs">
+      <DependentUpon>UnirsePartidaInvitado.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\VentanaJuego.xaml.cs">
+      <DependentUpon>VentanaJuego.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\VentanaPrincipal.xaml.cs">
+      <DependentUpon>VentanaPrincipal.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Vista\VerificarCodigo.xaml.cs">
+      <DependentUpon>VerificarCodigo.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Langs\Lang.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Langs\Lang.en-US.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Langs\Lang.es-MX.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Langs\Lang.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\CatalogoAvatares.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\PictionaryMusicalCliente.PictionaryServidorServicioAvatares.AvatarDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambiarContrasena.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambiarContrasena1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambiarContrasena2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambiarContrasenaManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena.ResultadoOperacionDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena.ResultadoSolicitudCodigoDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena.ResultadoSolicitudRecuperacionDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\ClasificacionManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\PictionaryMusicalCliente.PictionaryServidorServicioClasificacion.ClasificacionUsuarioDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacionManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoRegistroCuentaDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudCodigoDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\CuentaManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesion.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesion1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesion2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesionManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\PictionaryMusicalCliente.PictionaryServidorServicioInicioSesion.ResultadoInicioSesionDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\PerfilManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\PictionaryMusicalCliente.PictionaryServidorServicioPerfil.ResultadoOperacionDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\PictionaryMusicalCliente.PictionaryServidorServicioPerfil.UsuarioDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\ReenviarCodigoVerificacionManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\ReenvioCodigoVerificacion.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\ReenvioCodigoVerificacion1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\ReenvioCodigoVerificacion2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Recursos\discord.png" />
+    <Resource Include="Recursos\facebook.png" />
+    <Resource Include="Recursos\instagram.png" />
+    <Resource Include="Recursos\x_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Recursos\ACDC.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Recursos\Drake.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAvatares\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCambioContrasena\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioClasificacion\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCuenta\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioInicioSesion\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioPerfil\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Recursos\Aleks_Syntek.jpg" />
+    <Resource Include="Recursos\Anuel_AA.jpg" />
+    <Resource Include="Recursos\Bad_Bunny.jpg" />
+    <Resource Include="Recursos\Britney_Spears.jpg" />
+    <Resource Include="Recursos\Bruno_Mars.jpg" />
+    <Resource Include="Recursos\Guns_N_Roses.jpg" />
+    <Resource Include="Recursos\Jose_Jose.jpg" />
+    <Resource Include="Recursos\J_Balvin.jpg" />
+    <Resource Include="Recursos\Kanye_West.jpg" />
+    <Resource Include="Recursos\Luis_Miguel.jpg" />
+    <Resource Include="Recursos\Mariah_Carey.jpg" />
+    <Resource Include="Recursos\Taylor_Swift.jpg" />
+    <Resource Include="Recursos\The_Weeknd.jpg" />
+    <Resource Include="Recursos\Travis_Scott.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\ReenvioCodigoVerificacion.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioReenvioCodigoVerificacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesion.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambiarContrasena.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Vista\Ajustes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\AjustesPartida.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Avisos.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\BuscarAmigo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\CambioContrasena.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\CerrarSesion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Clasificacion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\ComoJugar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\ConfirmacionSalirPartida.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\CrearCuenta.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\EliminarAmigo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\ExpulsarJugador.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\InicioSesion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Invitaciones.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\InvitarAmigos.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Perfil.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\SeleccionarAvatar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Solicitudes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\UnirsePartidaInvitado.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\VentanaJuego.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\VentanaPrincipal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\VerificarCodigo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,35 @@
+﻿<Window x:Class="PictionaryMusicalCliente.InvitarAmigos"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
+        Title="{x:Static language:Lang.invitarAmigosTextoInvitarAmigos}"
+        Height="380" Width="340"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True" WindowStyle="None" Background="Transparent">
+
+    <Grid>
+        <Border Background="White" BorderBrush="Gray" BorderThickness="2"
+                Padding="20" CornerRadius="3"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Width="280" VerticalAlignment="Center">
+
+                <TextBlock Text="{x:Static language:Lang.invitarAmigosTextoInvitarAmigos}"
+                           FontFamily="Comic Sans MS" FontSize="22" FontWeight="Bold"
+                           TextAlignment="Center" Margin="0,0,0,12"/>
+
+                <!-- Lista de amigos (estática por ahora) -->
+                <ListBox x:Name="listaAmigos" BorderThickness="0" Height="212" />
+
+                <!-- Botón regresar -->
+                <Button x:Name="botonRegresarInvitarAmigos"
+                        Content="{x:Static language:Lang.globalTextoRegresar}"
+                        Margin="0,14,0,0" Height="40" Width="180"
+                        HorizontalAlignment="Center"
+                        FontFamily="Comic Sans MS" FontWeight="Bold"
+                        Background="White" BorderBrush="Black"
+                        Click="BotonRegresarInvitarAmigos"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
+

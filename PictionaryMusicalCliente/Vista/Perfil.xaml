@@ -1,0 +1,164 @@
+<Window x:Class="PictionaryMusicalCliente.Perfil"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
+        xmlns:convertidores="clr-namespace:PictionaryMusicalCliente.Convertidores"
+        Title="{x:Static language:Lang.perfilTextoMiPerfil}" Height="500" Width="700"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True" WindowStyle="None" Background="Transparent"
+        Loaded="Perfil_Loaded">
+    <Window.Resources>
+        <Style x:Key="RedSocialToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.85" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.75" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <convertidores:ConvertidorBooleanoInverso x:Key="BooleanoInverso" />
+    </Window.Resources>
+    <Grid>
+        <Border Background="White" BorderBrush="Gray" BorderThickness="2"
+                Padding="20" CornerRadius="3"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Width="475" Margin="82,10,0,0">
+            <StackPanel>
+                <!-- Título y Avatar -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="{x:Static language:Lang.perfilTextoMiPerfil}"
+                               FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold"
+                               VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                        <Ellipse x:Name="ellipseAvatarNuevo" Width="60" Height="60" Stroke="Black" StrokeThickness="1" Margin="0,5,0,0">
+                            <Ellipse.Fill>
+                                <ImageBrush x:Name="imagenAvatarNuevo" Stretch="UniformToFill"
+                                             ImageSource="{Binding AvatarSeleccionadoImagen}"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock x:Name="textoNombreAvatarNuevo" FontFamily="Comic Sans MS"
+                                   HorizontalAlignment="Center" Margin="0,5,0,0"
+                                   Text="{Binding AvatarSeleccionadoNombre}"/>
+                        <Label Content="{x:Static language:Lang.globalTextoSeleccionarAvatar}"
+                               Foreground="Blue" Cursor="Hand"
+                               FontFamily="Comic Sans MS" HorizontalAlignment="Center">
+                            <Label.InputBindings>
+                                <MouseBinding Gesture="LeftClick" Command="{Binding SeleccionarAvatarCommand}"/>
+                            </Label.InputBindings>
+                        </Label>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Campos de datos -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Usuario y Nombre -->
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
+                        <TextBlock Text="{x:Static language:Lang.globalTextoUsuario}" FontFamily="Comic Sans MS" FontWeight="Bold"/>
+                        <TextBox x:Name="bloqueTextoUsuario" Text="{Binding Usuario, Mode=OneWay}" IsReadOnly="True" Height="25" FontFamily="Comic Sans MS"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0,0,10">
+                        <TextBlock Text="{x:Static language:Lang.globalTextoNombre}" FontFamily="Comic Sans MS" FontWeight="Bold"/>
+                        <TextBox x:Name="bloqueTextoNombre" Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged}" Height="25" FontFamily="Comic Sans MS" MaxLength="50"/>
+                    </StackPanel>
+
+                    <!-- Apellido y Correo -->
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,10">
+                        <TextBlock Text="{x:Static language:Lang.globalTextoApellido}" FontFamily="Comic Sans MS" FontWeight="Bold"/>
+                        <TextBox x:Name="bloqueTextoApellido" Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged}" Height="25" FontFamily="Comic Sans MS" MaxLength="50"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,10">
+                        <TextBlock Text="{x:Static language:Lang.globalTextoCorreo}" FontFamily="Comic Sans MS" FontWeight="Bold"/>
+                        <TextBox x:Name="bloqueTextoCorreo" Text="{Binding Correo, Mode=OneWay}" IsReadOnly="True" Height="25" FontFamily="Comic Sans MS"/>
+                    </StackPanel>
+
+                    <!-- Redes Sociales y Cambiar Contraseña -->
+                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,10,10,0">
+                        <TextBlock Text="{x:Static language:Lang.perfilTextoRedesSociales}" FontFamily="Comic Sans MS" Foreground="Blue"/>
+                        <ItemsControl ItemsSource="{Binding RedesSociales}" Margin="0,5,0,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,2,0">
+                                        <ToggleButton x:Name="toggleRedSocial"
+                                                      Style="{StaticResource RedSocialToggleButtonStyle}"
+                                                      Width="50" Height="50"
+                                                      ToolTip="{Binding Nombre}">
+                                            <Image Source="{Binding RutaIcono}" Width="56" Height="56" />
+                                        </ToggleButton>
+                                        <Popup PlacementTarget="{Binding ElementName=toggleRedSocial}"
+                                               Placement="Top"
+                                               AllowsTransparency="True"
+                                               PopupAnimation="Fade"
+                                               StaysOpen="False"
+                                               IsOpen="{Binding IsChecked, ElementName=toggleRedSocial, Mode=TwoWay}"
+                                               Opened="PopupRedSocial_Opened">
+                                            <Border Background="White" BorderBrush="Gray" BorderThickness="1" CornerRadius="6"
+                                                    Padding="8" MinWidth="160">
+                                                <TextBox x:Name="textoRedSocial"
+                                                         MinWidth="140"
+                                                         Text="{Binding Identificador, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         MaxLength="50"
+                                                         Tag="{Binding ElementName=toggleRedSocial}"
+                                                         KeyDown="RedSocialTextBox_KeyDown" />
+                                            </Border>
+                                        </Popup>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <Button Grid.Row="2" Grid.Column="1" Content="{x:Static language:Lang.perfilTextoCambiarContrasena}"
+                            FontFamily="Comic Sans MS" Margin="10,0,0,0"
+                            Background="White" BorderBrush="Black" Height="45" VerticalAlignment="Bottom"
+                            Command="{Binding CambiarContrasenaCommand}"
+                            IsEnabled="{Binding EstaCambiandoContrasena, Converter={StaticResource BooleanoInverso}}"/>
+                </Grid>
+
+                <!-- Botones de Acción -->
+                <Button Content="{x:Static language:Lang.perfilTextoGuardarCambios}" Margin="0,25,0,5" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold" Background="White" BorderBrush="Black"
+                        Command="{Binding GuardarCambiosCommand}"
+                        IsEnabled="{Binding EstaProcesando, Converter={StaticResource BooleanoInverso}}"/>
+                <Button Content="{x:Static language:Lang.globalTextoRegresar}" Margin="0,5,0,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold" Background="White" BorderBrush="Black"
+                        Command="{Binding CerrarCommand}"/>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

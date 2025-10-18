@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ba8256f36f2447f3b484521cfa7bfd68" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.Artista" Width="1.5" PointX="7.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.Avatar" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.Cancion" Width="1.5" PointX="10" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.Clasificacion" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.Expulsion" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.Genero" Width="1.5" PointX="7.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.Jugador" Width="1.5" PointX="3" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.RedSocial" Width="1.5" PointX="5.25" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.sysdiagrams" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.Usuario" Width="1.5" PointX="5.125" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaseDatosPruebaModel.Solicitud" Width="1.5" PointX="3.25" PointY="9.5" IsExpanded="true" />
+        <AssociationConnector Association="BaseDatosPruebaModel.FK_Cancion_Artista" ManuallyRouted="false" />
+        <AssociationConnector Association="BaseDatosPruebaModel.FK_Jugador_Avatar" ManuallyRouted="false" />
+        <AssociationConnector Association="BaseDatosPruebaModel.FK_Cancion_Genero" ManuallyRouted="false" />
+        <AssociationConnector Association="BaseDatosPruebaModel.FK_Jugador_Clasificacion" ManuallyRouted="false" />
+        <AssociationConnector Association="BaseDatosPruebaModel.FK_Expulsion_Jugador" ManuallyRouted="false" />
+        <AssociationConnector Association="BaseDatosPruebaModel.FK_RedSocial_Jugador" ManuallyRouted="false" />
+        <AssociationConnector Association="BaseDatosPruebaModel.FK_Solicitud_Jugador" ManuallyRouted="false" />
+        <AssociationConnector Association="BaseDatosPruebaModel.FK_Solicitud_Jugador1" ManuallyRouted="false" />
+        <AssociationConnector Association="BaseDatosPruebaModel.FK_Usuario_Jugador" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

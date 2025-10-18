@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="37ae96cf-e0c5-4337-8d32-27284d57700b" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8086/Pictionary/Clasificacion" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Clasificacion.xsd" MetadataType="Schema" ID="35722f68-b79c-4df7-93be-8b39598355ea" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion?xsd=xsd0" />
+    <MetadataFile FileName="Clasificacion.disco" MetadataType="Disco" ID="0fa95b6d-cafd-42c5-80db-30f1c1825bb1" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion?disco" />
+    <MetadataFile FileName="Clasificacion1.xsd" MetadataType="Schema" ID="0f683baa-bfc8-4d2f-bbf7-18b7d9fea610" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion?xsd=xsd1" />
+    <MetadataFile FileName="Clasificacion2.xsd" MetadataType="Schema" ID="d7c7a8f2-7a5a-40b9-a2dd-7584987e48b4" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion?xsd=xsd2" />
+    <MetadataFile FileName="ClasificacionManejador.wsdl" MetadataType="Wsdl" ID="4fa45c56-acfd-4d6a-b294-02a347b19453" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

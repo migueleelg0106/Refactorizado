@@ -1,0 +1,24 @@
+﻿<Window x:Class="PictionaryMusicalCliente.ComoJugar"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
+        Title="{x:Static language:Lang.globalTextoComoJugar}" Height="532" Width="641"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True" WindowStyle="None" Background="Transparent">
+    <Grid>
+        <Border Background="White" BorderBrush="Gray" BorderThickness="2" Padding="30" CornerRadius="3" Margin="28,78,29,78">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{x:Static language:Lang.globalTextoComoJugar}" FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+                <TextBlock Grid.Row="0" Text="{x:Static language:Lang.comoJugarTextoInstrucciones}" FontFamily="Comic Sans MS" FontSize="14" HorizontalAlignment="Left" Margin="10,66,0,30" Grid.RowSpan="2"/>
+
+                <Button Grid.Row="2" Content="{x:Static language:Lang.globalTextoRegresar}" Margin="0,20,0,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold" Background="White" BorderBrush="Black" Click="BotonRegresar"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,126 @@
+<Window x:Class="PictionaryMusicalCliente.InicioSesion"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
+        xmlns:convertidores="clr-namespace:PictionaryMusicalCliente.Convertidores"
+        Title="{x:Static language:Lang.tituloTextoInicioSesion}" Height="559" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Background="White">
+
+    <Window.Resources>
+        <convertidores:ConvertidorBooleanoInverso x:Key="BooleanoInverso"/>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Fondo cuadriculado -->
+        <Grid.Background>
+            <VisualBrush TileMode="Tile" Viewport="0,0,40,40" ViewportUnits="Absolute"
+                         Viewbox="0,0,40,40" ViewboxUnits="Absolute">
+                <VisualBrush.Visual>
+                    <Rectangle Stroke="LightGray" StrokeThickness="0.5" Width="40" Height="40"/>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Grid.Background>
+
+        <!-- Título -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
+            <TextBlock Text="{x:Static language:Lang.tituloTextoPictionary}"
+                       FontSize="28" FontWeight="Bold" Foreground="Blue"
+                       FontFamily="Comic Sans MS" TextAlignment="Center"/>
+            <TextBlock Text="{x:Static language:Lang.tituloTextoMusical}"
+                       FontSize="42" FontWeight="Bold" Foreground="Blue"
+                       FontFamily="Times New Roman" TextAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Selector de Idioma -->
+        <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="0,10,20,0">
+            <Label Content="{x:Static language:Lang.idiomaTextoIdioma}"
+               ContentStringFormat="{}{0}:"
+               FontSize="12" FontFamily="Comic Sans MS"
+               VerticalAlignment="Center"
+               Margin="0,0,5,0"/>
+            <ComboBox x:Name="cuadroCombinadoLenguaje" Width="160" FontFamily="Comic Sans MS"
+                      ItemsSource="{Binding IdiomasDisponibles}" DisplayMemberPath="Descripcion"
+                      SelectedItem="{Binding IdiomaSeleccionado, Mode=TwoWay}"/>
+        </StackPanel>
+
+        <!-- Panel central -->
+        <Border Background="White" BorderBrush="Gray" BorderThickness="2"
+                Padding="20" CornerRadius="3"
+                HorizontalAlignment="Center" VerticalAlignment="Top"
+                Height="346" Width="460" Margin="0,140,0,0">
+
+            <!-- Usamos Grid con filas bien definidas -->
+            <Grid Cursor="">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Usuario label -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Usuario textbox -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Contraseña label -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Contraseña box -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Olvidaste contraseña -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Botón entrar -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Botones inferiores -->
+                </Grid.RowDefinitions>
+
+                <!-- Usuario -->
+                <Label Content="{x:Static language:Lang.inicioSesionTextoCorreoUsuario}"
+                       ContentStringFormat="{}{0}:"
+                       FontSize="12" FontWeight="Bold" FontFamily="Comic Sans MS" Grid.Row="0"/>
+                <TextBox x:Name="bloqueTextoUsuario" Height="30" FontFamily="Comic Sans MS" Grid.Row="1"
+                         Text="{Binding Identificador, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <!-- Contraseña -->
+                <Label Content="{x:Static language:Lang.globalTextoContrasena}"
+                       ContentStringFormat="{}{0}:"
+                       FontSize="12" FontWeight="Bold" FontFamily="Comic Sans MS" Grid.Row="2" Margin="0,10,0,0"/>
+                <PasswordBox x:Name="bloqueContrasenaContrasena" Height="30" FontFamily="Comic Sans MS" Grid.Row="3"
+                             PasswordChanged="PasswordBoxChanged"/>
+
+                <!-- Olvidaste contraseña -->
+                <Label Content="{x:Static language:Lang.inicioSesionTextoOlvidasteContrasena}"
+                       FontFamily="Comic Sans MS"
+                       Foreground="Blue" FontSize="12" Cursor="Hand" Grid.Row="5" Margin="0,10,257,54">
+                    <Label.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding RecuperarCuentaCommand}"/>
+                    </Label.InputBindings>
+                </Label>
+
+                <Button Content="{x:Static language:Lang.inicioSesionTextoEntrar}"
+                FontFamily="Comic Sans MS"
+                FontWeight="Bold" Background="White" BorderBrush="Black"
+                Grid.Row="5" Height="45" Margin="0,46,0,0"
+                Command="{Binding IniciarSesionCommand}"
+                IsEnabled="{Binding EstaProcesando, Converter={StaticResource BooleanoInverso}}"/>
+
+                <!-- Botones inferiores -->
+                <Grid Grid.Row="6" Margin="0,20,0,-80">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Content="{x:Static language:Lang.inicioSesionTextoEntrarInvitado}"
+                    FontFamily="Comic Sans MS"
+                    Background="White" BorderBrush="Black"
+                    Grid.Column="0" Margin="5,0,0,0"
+                    Command="{Binding IniciarSesionInvitadoCommand}"/>
+
+                    <Button Content="{x:Static language:Lang.globalTextoCrearCuenta}"
+                    FontFamily="Comic Sans MS"
+                    Background="White" BorderBrush="Black"
+                    Grid.Column="1" Margin="16,0,0,0"
+                    Command="{Binding AbrirCrearCuentaCommand}"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

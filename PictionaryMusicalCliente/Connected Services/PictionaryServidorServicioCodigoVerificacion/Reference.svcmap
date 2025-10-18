@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="635db9cd-58f9-4be6-b948-c505cb9d1638" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8086/Pictionary/CodigoVerificacion" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CodigoVerificacion.xsd" MetadataType="Schema" ID="6c4122d7-1204-4de7-a6d6-ff55865a703d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion?xsd=xsd0" />
+    <MetadataFile FileName="CodigoVerificacionManejador.wsdl" MetadataType="Wsdl" ID="bb8a1340-7e2a-4c67-ab62-62dd292c5705" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion?wsdl" />
+    <MetadataFile FileName="CodigoVerificacion.disco" MetadataType="Disco" ID="61b7fc56-bc1a-4acc-b559-ce59c43767a7" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion?disco" />
+    <MetadataFile FileName="CodigoVerificacion1.xsd" MetadataType="Schema" ID="e6a3dcab-48ca-410c-8a0c-ddd35e6274d8" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion?xsd=xsd1" />
+    <MetadataFile FileName="CodigoVerificacion2.xsd" MetadataType="Schema" ID="f8538fe3-726a-4043-a61e-c4d540f01b26" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

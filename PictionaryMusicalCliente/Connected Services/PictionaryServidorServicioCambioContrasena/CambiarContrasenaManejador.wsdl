@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="CambiarContrasenaManejador" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="NetTcpBinding_ICambiarContrasenaManejador_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <msf:WindowsTransportSecurity xmlns:msf="http://schemas.microsoft.com/ws/2006/05/framing/policy">
+                  <msf:ProtectionLevel>EncryptAndSign</msf:ProtectionLevel>
+                </msf:WindowsTransportSecurity>
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:8086/Pictionary/CambiarContrasena?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:8086/Pictionary/CambiarContrasena?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8086/Pictionary/CambiarContrasena?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ICambiarContrasenaManejador_SolicitarCodigoRecuperacion_InputMessage">
+    <wsdl:part name="parameters" element="tns:SolicitarCodigoRecuperacion" />
+  </wsdl:message>
+  <wsdl:message name="ICambiarContrasenaManejador_SolicitarCodigoRecuperacion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SolicitarCodigoRecuperacionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICambiarContrasenaManejador_ReenviarCodigoRecuperacion_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReenviarCodigoRecuperacion" />
+  </wsdl:message>
+  <wsdl:message name="ICambiarContrasenaManejador_ReenviarCodigoRecuperacion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReenviarCodigoRecuperacionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICambiarContrasenaManejador_ConfirmarCodigoRecuperacion_InputMessage">
+    <wsdl:part name="parameters" element="tns:ConfirmarCodigoRecuperacion" />
+  </wsdl:message>
+  <wsdl:message name="ICambiarContrasenaManejador_ConfirmarCodigoRecuperacion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConfirmarCodigoRecuperacionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICambiarContrasenaManejador_ActualizarContrasena_InputMessage">
+    <wsdl:part name="parameters" element="tns:ActualizarContrasena" />
+  </wsdl:message>
+  <wsdl:message name="ICambiarContrasenaManejador_ActualizarContrasena_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ActualizarContrasenaResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ICambiarContrasenaManejador">
+    <wsdl:operation name="SolicitarCodigoRecuperacion">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICambiarContrasenaManejador/SolicitarCodigoRecuperacion" message="tns:ICambiarContrasenaManejador_SolicitarCodigoRecuperacion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICambiarContrasenaManejador/SolicitarCodigoRecuperacionResponse" message="tns:ICambiarContrasenaManejador_SolicitarCodigoRecuperacion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReenviarCodigoRecuperacion">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICambiarContrasenaManejador/ReenviarCodigoRecuperacion" message="tns:ICambiarContrasenaManejador_ReenviarCodigoRecuperacion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICambiarContrasenaManejador/ReenviarCodigoRecuperacionResponse" message="tns:ICambiarContrasenaManejador_ReenviarCodigoRecuperacion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmarCodigoRecuperacion">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICambiarContrasenaManejador/ConfirmarCodigoRecuperacion" message="tns:ICambiarContrasenaManejador_ConfirmarCodigoRecuperacion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICambiarContrasenaManejador/ConfirmarCodigoRecuperacionResponse" message="tns:ICambiarContrasenaManejador_ConfirmarCodigoRecuperacion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ActualizarContrasena">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICambiarContrasenaManejador/ActualizarContrasena" message="tns:ICambiarContrasenaManejador_ActualizarContrasena_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICambiarContrasenaManejador/ActualizarContrasenaResponse" message="tns:ICambiarContrasenaManejador_ActualizarContrasena_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ICambiarContrasenaManejador" type="tns:ICambiarContrasenaManejador">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SolicitarCodigoRecuperacion">
+      <soap:operation soapAction="http://tempuri.org/ICambiarContrasenaManejador/SolicitarCodigoRecuperacion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReenviarCodigoRecuperacion">
+      <soap:operation soapAction="http://tempuri.org/ICambiarContrasenaManejador/ReenviarCodigoRecuperacion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmarCodigoRecuperacion">
+      <soap:operation soapAction="http://tempuri.org/ICambiarContrasenaManejador/ConfirmarCodigoRecuperacion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ActualizarContrasena">
+      <soap:operation soapAction="http://tempuri.org/ICambiarContrasenaManejador/ActualizarContrasena" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="NetTcpBinding_ICambiarContrasenaManejador" type="tns:ICambiarContrasenaManejador">
+    <wsp:PolicyReference URI="#NetTcpBinding_ICambiarContrasenaManejador_policy" />
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="SolicitarCodigoRecuperacion">
+      <soap12:operation soapAction="http://tempuri.org/ICambiarContrasenaManejador/SolicitarCodigoRecuperacion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReenviarCodigoRecuperacion">
+      <soap12:operation soapAction="http://tempuri.org/ICambiarContrasenaManejador/ReenviarCodigoRecuperacion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmarCodigoRecuperacion">
+      <soap12:operation soapAction="http://tempuri.org/ICambiarContrasenaManejador/ConfirmarCodigoRecuperacion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ActualizarContrasena">
+      <soap12:operation soapAction="http://tempuri.org/ICambiarContrasenaManejador/ActualizarContrasena" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CambiarContrasenaManejador">
+    <wsdl:port name="BasicHttpBinding_ICambiarContrasenaManejador" binding="tns:BasicHttpBinding_ICambiarContrasenaManejador">
+      <soap:address location="http://localhost:8086/Pictionary/CambiarContrasena/CambiarContrasena" />
+    </wsdl:port>
+    <wsdl:port name="NetTcpBinding_ICambiarContrasenaManejador" binding="tns:NetTcpBinding_ICambiarContrasenaManejador">
+      <soap12:address location="net.tcp://localhost:8096/Pictionary/CambiarContrasena/CambiarContrasena" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:8096/Pictionary/CambiarContrasena/CambiarContrasena</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Upn>PC-1\migue</Upn>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

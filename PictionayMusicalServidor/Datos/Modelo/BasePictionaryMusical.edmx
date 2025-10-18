@@ -1,0 +1,691 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BaseDatosPruebaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Artista">
+          <Key>
+            <PropertyRef Name="idArtista" />
+          </Key>
+          <Property Name="idArtista" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre_Artista" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Avatar">
+          <Key>
+            <PropertyRef Name="idAvatar" />
+          </Key>
+          <Property Name="idAvatar" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Avatar_Ruta" Type="varchar(max)" />
+          <Property Name="Nombre_Avatar" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Cancion">
+          <Key>
+            <PropertyRef Name="idCancion" />
+          </Key>
+          <Property Name="idCancion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cancion_Ruta" Type="varchar(max)" Nullable="false" />
+          <Property Name="Idioma" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Artista_idArtista" Type="int" Nullable="false" />
+          <Property Name="Genero_idGenero" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Clasificacion">
+          <Key>
+            <PropertyRef Name="idClasificacion" />
+          </Key>
+          <Property Name="idClasificacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Puntos_Ganados" Type="int" />
+          <Property Name="Rondas_Ganadas" Type="int" />
+        </EntityType>
+        <EntityType Name="Expulsion">
+          <Key>
+            <PropertyRef Name="idExpulsion" />
+          </Key>
+          <Property Name="idExpulsion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Causa" Type="varchar(max)" Nullable="false" />
+          <Property Name="Fecha" Type="date" Nullable="false" />
+          <Property Name="Jugador_idJugador" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Genero">
+          <Key>
+            <PropertyRef Name="idGenero" />
+          </Key>
+          <Property Name="idGenero" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre_Genero" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Jugador">
+          <Key>
+            <PropertyRef Name="idJugador" />
+          </Key>
+          <Property Name="idJugador" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Apellido" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Avatar_idAvatar" Type="int" Nullable="false" />
+          <Property Name="Clasificacion_idClasificacion" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RedSocial">
+          <Key>
+            <PropertyRef Name="idRedSocial" />
+          </Key>
+          <Property Name="idRedSocial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Jugador_idJugador" Type="int" Nullable="false" />
+          <Property Name="Instagram" Type="varchar" MaxLength="50" />
+          <Property Name="discord" Type="varchar" MaxLength="50" />
+          <Property Name="facebook" Type="varchar" MaxLength="50" />
+          <Property Name="x" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="Solicitud">
+          <Key>
+            <PropertyRef Name="Jugador_idJugador" />
+            <PropertyRef Name="Jugador_idJugador1" />
+          </Key>
+          <Property Name="Estado" Type="binary" MaxLength="1" />
+          <Property Name="Jugador_idJugador" Type="int" Nullable="false" />
+          <Property Name="Jugador_idJugador1" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="idUsuario" />
+          </Key>
+          <Property Name="idUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre_Usuario" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Contrasena" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="Jugador_idJugador" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Cancion_Artista">
+          <End Role="Artista" Type="Self.Artista" Multiplicity="1" />
+          <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artista">
+              <PropertyRef Name="idArtista" />
+            </Principal>
+            <Dependent Role="Cancion">
+              <PropertyRef Name="Artista_idArtista" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cancion_Genero">
+          <End Role="Genero" Type="Self.Genero" Multiplicity="1" />
+          <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genero">
+              <PropertyRef Name="idGenero" />
+            </Principal>
+            <Dependent Role="Cancion">
+              <PropertyRef Name="Genero_idGenero" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expulsion_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Expulsion" Type="Self.Expulsion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Expulsion">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Jugador_Avatar">
+          <End Role="Avatar" Type="Self.Avatar" Multiplicity="1" />
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Avatar">
+              <PropertyRef Name="idAvatar" />
+            </Principal>
+            <Dependent Role="Jugador">
+              <PropertyRef Name="Avatar_idAvatar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Jugador_Clasificacion">
+          <End Role="Clasificacion" Type="Self.Clasificacion" Multiplicity="1" />
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clasificacion">
+              <PropertyRef Name="idClasificacion" />
+            </Principal>
+            <Dependent Role="Jugador">
+              <PropertyRef Name="Clasificacion_idClasificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RedSocial_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="RedSocial" Type="Self.RedSocial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="RedSocial">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Solicitud_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Solicitud" Type="Self.Solicitud" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Solicitud">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Solicitud_Jugador1">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Solicitud" Type="Self.Solicitud" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Solicitud">
+              <PropertyRef Name="Jugador_idJugador1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BaseDatosPruebaModelStoreContainer">
+          <EntitySet Name="Artista" EntityType="Self.Artista" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Avatar" EntityType="Self.Avatar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cancion" EntityType="Self.Cancion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Clasificacion" EntityType="Self.Clasificacion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Expulsion" EntityType="Self.Expulsion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Genero" EntityType="Self.Genero" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Jugador" EntityType="Self.Jugador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RedSocial" EntityType="Self.RedSocial" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Solicitud" EntityType="Self.Solicitud" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Solicitud].[Estado] AS [Estado], 
+    [Solicitud].[Jugador_idJugador] AS [Jugador_idJugador], 
+    [Solicitud].[Jugador_idJugador1] AS [Jugador_idJugador1]
+    FROM [dbo].[Solicitud] AS [Solicitud]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Cancion_Artista" Association="Self.FK_Cancion_Artista">
+            <End Role="Artista" EntitySet="Artista" />
+            <End Role="Cancion" EntitySet="Cancion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cancion_Genero" Association="Self.FK_Cancion_Genero">
+            <End Role="Genero" EntitySet="Genero" />
+            <End Role="Cancion" EntitySet="Cancion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expulsion_Jugador" Association="Self.FK_Expulsion_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Expulsion" EntitySet="Expulsion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Jugador_Avatar" Association="Self.FK_Jugador_Avatar">
+            <End Role="Avatar" EntitySet="Avatar" />
+            <End Role="Jugador" EntitySet="Jugador" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Jugador_Clasificacion" Association="Self.FK_Jugador_Clasificacion">
+            <End Role="Clasificacion" EntitySet="Clasificacion" />
+            <End Role="Jugador" EntitySet="Jugador" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RedSocial_Jugador" Association="Self.FK_RedSocial_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="RedSocial" EntitySet="RedSocial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Solicitud_Jugador" Association="Self.FK_Solicitud_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Solicitud" EntitySet="Solicitud" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Solicitud_Jugador1" Association="Self.FK_Solicitud_Jugador1">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Solicitud" EntitySet="Solicitud" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Jugador" Association="Self.FK_Usuario_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BaseDatosPruebaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Artista">
+          <Key>
+            <PropertyRef Name="idArtista" />
+          </Key>
+          <Property Name="idArtista" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre_Artista" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Cancion" Relationship="Self.FK_Cancion_Artista" FromRole="Artista" ToRole="Cancion" />
+        </EntityType>
+        <EntityType Name="Avatar">
+          <Key>
+            <PropertyRef Name="idAvatar" />
+          </Key>
+          <Property Name="idAvatar" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Avatar_Ruta" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Nombre_Avatar" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_Jugador_Avatar" FromRole="Avatar" ToRole="Jugador" />
+        </EntityType>
+        <EntityType Name="Cancion">
+          <Key>
+            <PropertyRef Name="idCancion" />
+          </Key>
+          <Property Name="idCancion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cancion_Ruta" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Idioma" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Artista_idArtista" Type="Int32" Nullable="false" />
+          <Property Name="Genero_idGenero" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Artista" Relationship="Self.FK_Cancion_Artista" FromRole="Cancion" ToRole="Artista" />
+          <NavigationProperty Name="Genero" Relationship="Self.FK_Cancion_Genero" FromRole="Cancion" ToRole="Genero" />
+        </EntityType>
+        <EntityType Name="Clasificacion">
+          <Key>
+            <PropertyRef Name="idClasificacion" />
+          </Key>
+          <Property Name="idClasificacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Puntos_Ganados" Type="Int32" />
+          <Property Name="Rondas_Ganadas" Type="Int32" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_Jugador_Clasificacion" FromRole="Clasificacion" ToRole="Jugador" />
+        </EntityType>
+        <EntityType Name="Expulsion">
+          <Key>
+            <PropertyRef Name="idExpulsion" />
+          </Key>
+          <Property Name="idExpulsion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Causa" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Jugador_idJugador" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_Expulsion_Jugador" FromRole="Expulsion" ToRole="Jugador" />
+        </EntityType>
+        <EntityType Name="Genero">
+          <Key>
+            <PropertyRef Name="idGenero" />
+          </Key>
+          <Property Name="idGenero" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre_Genero" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Cancion" Relationship="Self.FK_Cancion_Genero" FromRole="Genero" ToRole="Cancion" />
+        </EntityType>
+        <EntityType Name="Jugador">
+          <Key>
+            <PropertyRef Name="idJugador" />
+          </Key>
+          <Property Name="idJugador" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Apellido" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Avatar_idAvatar" Type="Int32" Nullable="false" />
+          <Property Name="Clasificacion_idClasificacion" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Avatar" Relationship="Self.FK_Jugador_Avatar" FromRole="Jugador" ToRole="Avatar" />
+          <NavigationProperty Name="Clasificacion" Relationship="Self.FK_Jugador_Clasificacion" FromRole="Jugador" ToRole="Clasificacion" />
+          <NavigationProperty Name="Expulsion" Relationship="Self.FK_Expulsion_Jugador" FromRole="Jugador" ToRole="Expulsion" />
+          <NavigationProperty Name="RedSocial" Relationship="Self.FK_RedSocial_Jugador" FromRole="Jugador" ToRole="RedSocial" />
+          <NavigationProperty Name="Solicitud" Relationship="Self.FK_Solicitud_Jugador" FromRole="Jugador" ToRole="Solicitud" />
+          <NavigationProperty Name="Solicitud1" Relationship="Self.FK_Solicitud_Jugador1" FromRole="Jugador" ToRole="Solicitud" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Jugador" FromRole="Jugador" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="RedSocial">
+          <Key>
+            <PropertyRef Name="idRedSocial" />
+          </Key>
+          <Property Name="idRedSocial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Jugador_idJugador" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_RedSocial_Jugador" FromRole="RedSocial" ToRole="Jugador" />
+          <Property Name="Instagram" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="discord" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="facebook" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="x" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="idUsuario" />
+          </Key>
+          <Property Name="idUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre_Usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Contrasena" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Jugador_idJugador" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_Usuario_Jugador" FromRole="Usuario" ToRole="Jugador" />
+        </EntityType>
+        <EntityType Name="Solicitud">
+          <Key>
+            <PropertyRef Name="Jugador_idJugador" />
+            <PropertyRef Name="Jugador_idJugador1" />
+          </Key>
+          <Property Name="Estado" Type="Binary" MaxLength="1" FixedLength="true" />
+          <Property Name="Jugador_idJugador" Type="Int32" Nullable="false" />
+          <Property Name="Jugador_idJugador1" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_Solicitud_Jugador" FromRole="Solicitud" ToRole="Jugador" />
+          <NavigationProperty Name="Jugador1" Relationship="Self.FK_Solicitud_Jugador1" FromRole="Solicitud" ToRole="Jugador" />
+        </EntityType>
+        <Association Name="FK_Cancion_Artista">
+          <End Role="Artista" Type="Self.Artista" Multiplicity="1" />
+          <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artista">
+              <PropertyRef Name="idArtista" />
+            </Principal>
+            <Dependent Role="Cancion">
+              <PropertyRef Name="Artista_idArtista" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Jugador_Avatar">
+          <End Role="Avatar" Type="Self.Avatar" Multiplicity="1" />
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Avatar">
+              <PropertyRef Name="idAvatar" />
+            </Principal>
+            <Dependent Role="Jugador">
+              <PropertyRef Name="Avatar_idAvatar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cancion_Genero">
+          <End Role="Genero" Type="Self.Genero" Multiplicity="1" />
+          <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genero">
+              <PropertyRef Name="idGenero" />
+            </Principal>
+            <Dependent Role="Cancion">
+              <PropertyRef Name="Genero_idGenero" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Jugador_Clasificacion">
+          <End Role="Clasificacion" Type="Self.Clasificacion" Multiplicity="1" />
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clasificacion">
+              <PropertyRef Name="idClasificacion" />
+            </Principal>
+            <Dependent Role="Jugador">
+              <PropertyRef Name="Clasificacion_idClasificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expulsion_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Expulsion" Type="Self.Expulsion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Expulsion">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RedSocial_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="RedSocial" Type="Self.RedSocial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="RedSocial">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Solicitud_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Solicitud" Type="Self.Solicitud" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Solicitud">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Solicitud_Jugador1">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Solicitud" Type="Self.Solicitud" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Solicitud">
+              <PropertyRef Name="Jugador_idJugador1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BaseDatosPruebaEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Artista" EntityType="Self.Artista" />
+          <EntitySet Name="Avatar" EntityType="Self.Avatar" />
+          <EntitySet Name="Cancion" EntityType="Self.Cancion" />
+          <EntitySet Name="Clasificacion" EntityType="Self.Clasificacion" />
+          <EntitySet Name="Expulsion" EntityType="Self.Expulsion" />
+          <EntitySet Name="Genero" EntityType="Self.Genero" />
+          <EntitySet Name="Jugador" EntityType="Self.Jugador" />
+          <EntitySet Name="RedSocial" EntityType="Self.RedSocial" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+          <EntitySet Name="Solicitud" EntityType="Self.Solicitud" />
+          <AssociationSet Name="FK_Cancion_Artista" Association="Self.FK_Cancion_Artista">
+            <End Role="Artista" EntitySet="Artista" />
+            <End Role="Cancion" EntitySet="Cancion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Jugador_Avatar" Association="Self.FK_Jugador_Avatar">
+            <End Role="Avatar" EntitySet="Avatar" />
+            <End Role="Jugador" EntitySet="Jugador" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cancion_Genero" Association="Self.FK_Cancion_Genero">
+            <End Role="Genero" EntitySet="Genero" />
+            <End Role="Cancion" EntitySet="Cancion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Jugador_Clasificacion" Association="Self.FK_Jugador_Clasificacion">
+            <End Role="Clasificacion" EntitySet="Clasificacion" />
+            <End Role="Jugador" EntitySet="Jugador" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expulsion_Jugador" Association="Self.FK_Expulsion_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Expulsion" EntitySet="Expulsion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RedSocial_Jugador" Association="Self.FK_RedSocial_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="RedSocial" EntitySet="RedSocial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Solicitud_Jugador" Association="Self.FK_Solicitud_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Solicitud" EntitySet="Solicitud" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Solicitud_Jugador1" Association="Self.FK_Solicitud_Jugador1">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Solicitud" EntitySet="Solicitud" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Jugador" Association="Self.FK_Usuario_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BaseDatosPruebaModelStoreContainer" CdmEntityContainer="BaseDatosPruebaEntities1">
+          <EntitySetMapping Name="Artista">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Artista">
+              <MappingFragment StoreEntitySet="Artista">
+                <ScalarProperty Name="idArtista" ColumnName="idArtista" />
+                <ScalarProperty Name="Nombre_Artista" ColumnName="Nombre_Artista" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Avatar">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Avatar">
+              <MappingFragment StoreEntitySet="Avatar">
+                <ScalarProperty Name="idAvatar" ColumnName="idAvatar" />
+                <ScalarProperty Name="Avatar_Ruta" ColumnName="Avatar_Ruta" />
+                <ScalarProperty Name="Nombre_Avatar" ColumnName="Nombre_Avatar" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cancion">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Cancion">
+              <MappingFragment StoreEntitySet="Cancion">
+                <ScalarProperty Name="idCancion" ColumnName="idCancion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Cancion_Ruta" ColumnName="Cancion_Ruta" />
+                <ScalarProperty Name="Idioma" ColumnName="Idioma" />
+                <ScalarProperty Name="Artista_idArtista" ColumnName="Artista_idArtista" />
+                <ScalarProperty Name="Genero_idGenero" ColumnName="Genero_idGenero" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Clasificacion">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Clasificacion">
+              <MappingFragment StoreEntitySet="Clasificacion">
+                <ScalarProperty Name="idClasificacion" ColumnName="idClasificacion" />
+                <ScalarProperty Name="Puntos_Ganados" ColumnName="Puntos_Ganados" />
+                <ScalarProperty Name="Rondas_Ganadas" ColumnName="Rondas_Ganadas" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Expulsion">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Expulsion">
+              <MappingFragment StoreEntitySet="Expulsion">
+                <ScalarProperty Name="idExpulsion" ColumnName="idExpulsion" />
+                <ScalarProperty Name="Causa" ColumnName="Causa" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Jugador_idJugador" ColumnName="Jugador_idJugador" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Genero">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Genero">
+              <MappingFragment StoreEntitySet="Genero">
+                <ScalarProperty Name="idGenero" ColumnName="idGenero" />
+                <ScalarProperty Name="Nombre_Genero" ColumnName="Nombre_Genero" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jugador">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Jugador">
+              <MappingFragment StoreEntitySet="Jugador">
+                <ScalarProperty Name="idJugador" ColumnName="idJugador" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Apellido" ColumnName="Apellido" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Avatar_idAvatar" ColumnName="Avatar_idAvatar" />
+                <ScalarProperty Name="Clasificacion_idClasificacion" ColumnName="Clasificacion_idClasificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RedSocial">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.RedSocial">
+              <MappingFragment StoreEntitySet="RedSocial">
+                <ScalarProperty Name="x" ColumnName="x" />
+                <ScalarProperty Name="facebook" ColumnName="facebook" />
+                <ScalarProperty Name="discord" ColumnName="discord" />
+                <ScalarProperty Name="Instagram" ColumnName="Instagram" />
+                <ScalarProperty Name="idRedSocial" ColumnName="idRedSocial" />
+                <ScalarProperty Name="Jugador_idJugador" ColumnName="Jugador_idJugador" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuario">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="Nombre_Usuario" ColumnName="Nombre_Usuario" />
+                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+                <ScalarProperty Name="Jugador_idJugador" ColumnName="Jugador_idJugador" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Solicitud">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Solicitud">
+              <MappingFragment StoreEntitySet="Solicitud">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Jugador_idJugador" ColumnName="Jugador_idJugador" />
+                <ScalarProperty Name="Jugador_idJugador1" ColumnName="Jugador_idJugador1" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

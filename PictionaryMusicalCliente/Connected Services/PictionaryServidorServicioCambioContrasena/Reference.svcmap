@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="cdb06e37-9d6f-40b2-a517-78c2c45c84f1" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8086/Pictionary/CambiarContrasena" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CambiarContrasena.disco" MetadataType="Disco" ID="370b85a4-cdbb-4eca-b581-077b006d7a25" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?disco" />
+    <MetadataFile FileName="CambiarContrasena.xsd" MetadataType="Schema" ID="6fb4e74b-6fba-4b73-ba65-aa1d8e92488f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?xsd=xsd0" />
+    <MetadataFile FileName="CambiarContrasena1.xsd" MetadataType="Schema" ID="7d4a6ca7-680f-4e58-ba00-d4d0e298bd5e" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?xsd=xsd2" />
+    <MetadataFile FileName="CambiarContrasenaManejador.wsdl" MetadataType="Wsdl" ID="36dba903-6a28-43f5-b651-17d089e1579f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?wsdl" />
+    <MetadataFile FileName="CambiarContrasena2.xsd" MetadataType="Schema" ID="48b779d7-777b-4638-bce2-b96428befb7c" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

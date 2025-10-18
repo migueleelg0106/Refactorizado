@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="8811c1b7-ae18-4c98-bb35-f684087c96bc" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8086/Pictionary/ReenvioCodigoVerificacion" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ReenviarCodigoVerificacionManejador.wsdl" MetadataType="Wsdl" ID="07c4b627-abfb-4520-82a0-0aa30fc622e0" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ReenvioCodigoVerificacion?wsdl" />
+    <MetadataFile FileName="ReenvioCodigoVerificacion.xsd" MetadataType="Schema" ID="d79eeff0-a5f9-4314-9ce4-ccf609bc757e" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ReenvioCodigoVerificacion?xsd=xsd1" />
+    <MetadataFile FileName="ReenvioCodigoVerificacion1.xsd" MetadataType="Schema" ID="926a1c00-110a-477a-9acc-5f91c306ff8b" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ReenvioCodigoVerificacion?xsd=xsd2" />
+    <MetadataFile FileName="ReenvioCodigoVerificacion2.xsd" MetadataType="Schema" ID="7ae1d520-9234-4194-9e20-1f4d4ddf1984" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ReenvioCodigoVerificacion?xsd=xsd0" />
+    <MetadataFile FileName="ReenvioCodigoVerificacion.disco" MetadataType="Disco" ID="85dc015d-15b6-42c3-88b1-800569eecabc" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ReenvioCodigoVerificacion?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
