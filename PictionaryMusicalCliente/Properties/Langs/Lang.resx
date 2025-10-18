@@ -465,6 +465,9 @@
   <data name="errorTextoCodigoIncorrectoExpirado" xml:space="preserve">
     <value>El código ingresado no es correcto o ha expirado.</value>
   </data>
+  <data name="errorTextoCodigoIncorrecto" xml:space="preserve">
+    <value>El código ingresado es incorrecto.</value>
+  </data>
   <data name="errorTextoCodigoVerificacionRequerido" xml:space="preserve">
     <value>Ingrese el código de verificación enviado a su correo.</value>
   </data>

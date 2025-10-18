@@ -473,7 +473,16 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCodigoIncorrectoExpirado", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a El código ingresado es incorrecto..
+        /// </summary>
+        public static string errorTextoCodigoIncorrecto {
+            get {
+                return ResourceManager.GetString("errorTextoCodigoIncorrecto", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Busca una cadena traducida similar a Ingrese el código de verificación enviado a su correo..
         /// </summary>

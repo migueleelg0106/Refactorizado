@@ -29,6 +29,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
                 ["No hay una solicitud de verificación vigente."] = () => LangResources.Lang.errorTextoSolicitudVerificacionVigente,
                 ["El código de verificación ha expirado."] = () => LangResources.Lang.errorTextoCodigoIncorrectoExpirado,
                 ["El código ingresado no es correcto."] = () => LangResources.Lang.errorTextoCodigoIncorrectoExpirado,
+                ["Código incorrecto"] = () => LangResources.Lang.errorTextoCodigoIncorrecto,
                 ["Los datos de la cuenta están incompletos."] = () => LangResources.Lang.errorTextoEnvioCodigoVerificacionDatos,
                 ["El correo y el usuario ya están registrados."] = () => string.Concat(
                     LangResources.Lang.errorTextoCorreoEnUso,

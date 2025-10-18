@@ -474,6 +474,9 @@
   <data name="errorTextoCodigoIncorrectoExpirado" xml:space="preserve">
     <value>The code you entered is incorrect or has expired.</value>
   </data>
+  <data name="errorTextoCodigoIncorrecto" xml:space="preserve">
+    <value>The code you entered is incorrect.</value>
+  </data>
   <data name="errorTextoCodigoVerificacionRequerido" xml:space="preserve">
     <value>Enter the verification code that was sent to your e-mail.</value>
   </data>
