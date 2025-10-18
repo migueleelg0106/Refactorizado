@@ -2,7 +2,6 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.ServiceModel;
-using System.Text.RegularExpressions;
 using Datos.Modelo;
 using Datos.Utilidades;
 using Servicios.Contratos;
@@ -14,8 +13,6 @@ namespace Servicios.Servicios
     public class PerfilManejador : IPerfilManejador
     {
         private const int LongitudMaximaRedSocial = 50;
-        private static readonly Regex PatronNombre = new Regex(@"^[\p{L}\s'-]+$", RegexOptions.Compiled);
-        private static readonly Regex PatronRedSocial = new Regex(@"^[A-Za-z0-9_.-]+$", RegexOptions.Compiled);
         private static readonly ILog Logger = LogManager.GetLogger(typeof(PerfilManejador));
 
         public UsuarioDTO ObtenerPerfil(int idUsuario)
@@ -92,20 +89,10 @@ namespace Servicios.Servicios
                 return CrearResultadoFallo("El nombre es obligatorio y no debe exceder 50 caracteres.");
             }
 
-            if (!EsNombreValido(nombre))
-            {
-                return CrearResultadoFallo("El nombre solo puede contener letras, espacios, apóstrofes y guiones.");
-            }
-
             string apellido = solicitud.Apellido?.Trim();
             if (string.IsNullOrWhiteSpace(apellido) || apellido.Length > 50)
             {
                 return CrearResultadoFallo("El apellido es obligatorio y no debe exceder 50 caracteres.");
-            }
-
-            if (!EsNombreValido(apellido))
-            {
-                return CrearResultadoFallo("El apellido solo puede contener letras, espacios, apóstrofes y guiones.");
             }
 
             if (solicitud.AvatarId <= 0)
@@ -226,12 +213,6 @@ namespace Servicios.Servicios
                     $"El identificador de {nombre} no debe exceder {LongitudMaximaRedSocial} caracteres.");
             }
 
-            if (!PatronRedSocial.IsMatch(normalizado))
-            {
-                return CrearResultadoFallo(
-                    $"El identificador de {nombre} solo puede contener letras, números, puntos, guiones y guiones bajos.");
-            }
-
             return ResultadoOperacionExitoso();
         }
 
@@ -261,11 +242,6 @@ namespace Servicios.Servicios
             {
                 OperacionExitosa = true
             };
-        }
-
-        private static bool EsNombreValido(string valor)
-        {
-            return PatronNombre.IsMatch(valor);
         }
     }
 }
