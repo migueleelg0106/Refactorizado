@@ -205,27 +205,31 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             if (!validacionNombre.Exito)
             {
                 camposInvalidos.Add(nameof(Nombre));
-                mensajeError ??= validacionNombre.Mensaje;
+                if (mensajeError == null)
+                    mensajeError = validacionNombre.Mensaje;
             }
 
             ResultadoOperacion validacionApellido = ValidacionEntradaHelper.ValidarApellido(apellido);
             if (!validacionApellido.Exito)
             {
                 camposInvalidos.Add(nameof(Apellido));
-                mensajeError ??= validacionApellido.Mensaje;
+                if (mensajeError == null)
+                    mensajeError = validacionApellido.Mensaje;
             }
 
             if (AvatarSeleccionadoId <= 0)
             {
                 camposInvalidos.Add(nameof(AvatarSeleccionadoId));
-                mensajeError ??= Lang.errorTextoSeleccionAvatarValido;
+                if (mensajeError == null)
+                    mensajeError = Lang.errorTextoSeleccionAvatarValido;
             }
 
             ResultadoOperacion validacionRedes = ValidarRedesSociales();
             if (!validacionRedes.Exito)
             {
                 camposInvalidos.Add("RedesSociales");
-                mensajeError ??= validacionRedes.Mensaje;
+                if (mensajeError == null)
+                    mensajeError = validacionRedes.Mensaje;
             }
 
             if (camposInvalidos.Count > 0)
@@ -395,11 +399,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     item.TieneError = true;
                     algunaInvalida = true;
 
-                    mensaje ??= string.Format(
-                        CultureInfo.CurrentCulture,
-                        Lang.errorTextoIdentificadorRedSocialLongitud,
-                        item.Nombre,
-                        LongitudMaximaRedSocial);
+                    if (mensaje == null)
+                    {
+                        mensaje = string.Format(
+                            CultureInfo.CurrentCulture,
+                            Lang.errorTextoIdentificadorRedSocialLongitud,
+                            item.Nombre,
+                            LongitudMaximaRedSocial);
+                    }
                 }
             }
 
