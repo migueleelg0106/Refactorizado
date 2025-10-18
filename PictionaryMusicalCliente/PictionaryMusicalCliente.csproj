@@ -101,6 +101,7 @@
     <Compile Include="Modelo\ResultadoOperacion.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
     <Compile Include="Modelo\Cuentas\ResultadoSolicitudCodigo.cs" />
+    <Compile Include="Modelo\Cuentas\ResultadoRegistroCuenta.cs" />
     <Compile Include="Modelo\Cuentas\SolicitudRegistroCuenta.cs" />
     <Compile Include="Modelo\Cuentas\ActualizarPerfilSolicitud.cs" />
     <Compile Include="Modelo\Cuentas\VerificacionCodigoResultados.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Servicios\Wcf\CambioContrasenaService.cs" />
     <Compile Include="Servicios\Wcf\ClasificacionService.cs" />
     <Compile Include="Servicios\Wcf\CodigoVerificacionService.cs" />
+    <Compile Include="Servicios\Wcf\CuentaService.cs" />
     <Compile Include="Servicios\Wcf\InicioSesionService.cs" />
     <Compile Include="Servicios\Wcf\PerfilService.cs" />
     <Compile Include="Servicios\Wcf\VerificarCodigoService.cs" />
