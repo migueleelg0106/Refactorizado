@@ -18,16 +18,37 @@ namespace Servicios.Servicios.Utilidades
                 return false;
             }
 
-            string remitente = ConfigurationManager.AppSettings["CorreoRemitente"];
-            string contrasena = ConfigurationManager.AppSettings["CorreoPassword"];
-            string host = ConfigurationManager.AppSettings["CorreoHost"];
-            string puertoConfigurado = ConfigurationManager.AppSettings["CorreoPuerto"];
-            string asunto = ConfigurationManager.AppSettings["CorreoAsunto"] ?? AsuntoPredeterminado;
-            bool.TryParse(ConfigurationManager.AppSettings["CorreoSsl"], out bool habilitarSsl);
+            string remitente = ObtenerConfiguracion(
+                "CorreoRemitente",
+                "Correo.Remitente.Direccion");
+            string contrasena = ObtenerConfiguracion(
+                "CorreoPassword",
+                "Correo.Smtp.Contrasena");
+            string host = ObtenerConfiguracion(
+                "CorreoHost",
+                "Correo.Smtp.Host");
+            string usuarioSmtp = ObtenerConfiguracion(
+                "CorreoUsuario",
+                "Correo.Smtp.Usuario");
+            string puertoConfigurado = ObtenerConfiguracion(
+                "CorreoPuerto",
+                "Correo.Smtp.Puerto");
+            string asunto = ObtenerConfiguracion(
+                "CorreoAsunto",
+                "Correo.Codigo.Asunto") ?? AsuntoPredeterminado;
+
+            bool.TryParse(
+                ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"),
+                out bool habilitarSsl);
 
             if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
             {
                 return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(usuarioSmtp))
+            {
+                usuarioSmtp = remitente;
             }
 
             if (!int.TryParse(puertoConfigurado, out int puerto))
@@ -49,7 +70,7 @@ namespace Servicios.Servicios.Utilidades
 
                         if (!string.IsNullOrWhiteSpace(contrasena))
                         {
-                            cliente.Credentials = new NetworkCredential(remitente, contrasena);
+                            cliente.Credentials = new NetworkCredential(usuarioSmtp, contrasena);
                         }
 
                         await cliente.SendMailAsync(mensaje).ConfigureAwait(false);
@@ -62,6 +83,30 @@ namespace Servicios.Servicios.Utilidades
             {
                 return false;
             }
+        }
+
+        private static string ObtenerConfiguracion(params string[] claves)
+        {
+            if (claves == null)
+            {
+                return null;
+            }
+
+            foreach (string clave in claves)
+            {
+                if (string.IsNullOrWhiteSpace(clave))
+                {
+                    continue;
+                }
+
+                string valor = ConfigurationManager.AppSettings[clave];
+                if (!string.IsNullOrWhiteSpace(valor))
+                {
+                    return valor;
+                }
+            }
+
+            return null;
         }
 
         private static string ConstruirCuerpoMensaje(string usuarioDestino, string codigo)
