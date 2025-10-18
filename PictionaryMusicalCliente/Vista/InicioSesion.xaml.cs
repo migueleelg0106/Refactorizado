@@ -6,6 +6,7 @@ using PictionaryMusicalCliente.Servicios.Dialogos;
 using PictionaryMusicalCliente.Servicios.Wcf;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using PictionaryMusicalCliente.Servicios.Idiomas;
 
 namespace PictionaryMusicalCliente
 {
@@ -20,11 +21,13 @@ namespace PictionaryMusicalCliente
             IVerificarCodigoDialogService verificarCodigoDialogService = new VerificarCodigoDialogService();
             IRecuperacionCuentaDialogService recuperacionCuentaDialogService =
                 new RecuperacionCuentaDialogService(verificarCodigoDialogService);
+            ILocalizacionService localizacionService = LocalizacionService.Instancia;
 
             var vistaModelo = new InicioSesionVistaModelo(
                 inicioSesionService,
                 cambioContrasenaService,
-                recuperacionCuentaDialogService)
+                recuperacionCuentaDialogService,
+                localizacionService)
             {
                 AbrirCrearCuenta = () =>
                 {

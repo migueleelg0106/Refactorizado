@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Comandos;
@@ -20,6 +21,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly IInicioSesionService _inicioSesionService;
         private readonly ICambioContrasenaService _cambioContrasenaService;
         private readonly IRecuperacionCuentaDialogService _recuperacionCuentaDialogService;
+        private readonly ILocalizacionService _localizacionService;
 
         public const string CampoContrasena = "Contrasena";
 
@@ -32,11 +34,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public InicioSesionVistaModelo(
             IInicioSesionService inicioSesionService,
             ICambioContrasenaService cambioContrasenaService,
-            IRecuperacionCuentaDialogService recuperacionCuentaDialogService)
+            IRecuperacionCuentaDialogService recuperacionCuentaDialogService,
+            ILocalizacionService localizacionService)
         {
             _inicioSesionService = inicioSesionService ?? throw new ArgumentNullException(nameof(inicioSesionService));
             _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
             _recuperacionCuentaDialogService = recuperacionCuentaDialogService ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogService));
+            _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
 
             IniciarSesionCommand = new ComandoAsincrono(_ => IniciarSesionAsync(), _ => !EstaProcesando);
             RecuperarCuentaCommand = new ComandoAsincrono(_ => RecuperarCuentaAsync(), _ => !EstaProcesando);
@@ -65,10 +69,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _idiomaSeleccionado, value) && value != null)
                 {
-                    CultureInfo cultura = new CultureInfo(value.Codigo);
-                    Lang.Culture = cultura;
-                    CultureInfo.DefaultThreadCurrentCulture = cultura;
-                    CultureInfo.DefaultThreadCurrentUICulture = cultura;
+                    _localizacionService.EstablecerIdioma(value.Codigo);
                 }
             }
         }
@@ -236,7 +237,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 new IdiomaOpcion("en-US", "English")
             };
 
-            IdiomaSeleccionado = IdiomasDisponibles[0];
+            string culturaActual = _localizacionService.CulturaActual?.Name
+                ?? CultureInfo.CurrentUICulture?.Name;
+
+            IdiomaSeleccionado = IdiomasDisponibles
+                .FirstOrDefault(i => string.Equals(i.Codigo, culturaActual, StringComparison.OrdinalIgnoreCase))
+                ?? IdiomasDisponibles.FirstOrDefault();
         }
     }
 }
