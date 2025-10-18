@@ -554,7 +554,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCredencialesTitulo", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Busca una cadena traducida similar a Los datos de la cuenta no están disponibles..
         /// </summary>
@@ -563,7 +563,16 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCuentaDatosNoDisponibles", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a La cuenta o usuario no se encontró, verifique el dato ingresado..
+        /// </summary>
+        public static string errorTextoCuentaNoEncontradaInicioSesion {
+            get {
+                return ResourceManager.GetString("errorTextoCuentaNoEncontradaInicioSesion", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Busca una cadena traducida similar a No se encontró la cuenta asociada a la sesión actual..
         /// </summary>

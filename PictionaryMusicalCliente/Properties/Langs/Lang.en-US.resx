@@ -489,6 +489,9 @@
   <data name="errorTextoCorreoInvalido" xml:space="preserve">
     <value>Enter a valid e-mail address.</value>
   </data>
+  <data name="errorTextoCuentaNoEncontradaInicioSesion" xml:space="preserve">
+    <value>The account or username was not found. Please verify the information entered.</value>
+  </data>
   <data name="errorTextoCuentaNoEncontradaSesion" xml:space="preserve">
     <value>The account associated with the current session was not found.</value>
   </data>

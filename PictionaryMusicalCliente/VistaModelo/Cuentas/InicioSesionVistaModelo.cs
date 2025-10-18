@@ -161,7 +161,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.InicioSesionExitoso)
                 {
-                    string mensaje = resultado.Mensaje;
+                    string mensaje = resultado.CuentaNoEncontrada
+                        ? Lang.errorTextoCuentaNoEncontradaInicioSesion
+                        : resultado.Mensaje;
 
                     if (string.IsNullOrWhiteSpace(mensaje) && credencialesCapturadas)
                     {
