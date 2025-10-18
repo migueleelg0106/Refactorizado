@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly IInicioSesionService _inicioSesionService;
         private readonly ICambioContrasenaService _cambioContrasenaService;
         private readonly IRecuperacionCuentaDialogService _recuperacionCuentaDialogService;
+
+        public const string CampoContrasena = "Contrasena";
 
         private string _identificador;
         private string _contrasena;
@@ -99,6 +102,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action CerrarAccion { get; set; }
 
+        public Action<IList<string>> MostrarCamposInvalidos { get; set; }
+
         public void EstablecerContrasena(string contrasena)
         {
             _contrasena = contrasena;
@@ -107,12 +112,32 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private async Task IniciarSesionAsync()
         {
             string identificador = Identificador?.Trim();
+            bool identificadorIngresado = !string.IsNullOrWhiteSpace(identificador);
+            bool contrasenaIngresada = !string.IsNullOrWhiteSpace(_contrasena);
 
-            if (string.IsNullOrWhiteSpace(identificador) || string.IsNullOrWhiteSpace(_contrasena))
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
+
+            List<string> camposInvalidos = null;
+
+            if (!identificadorIngresado)
             {
-                AvisoHelper.Mostrar(Lang.errorTextoCredencialesIncorrectas);
+                camposInvalidos ??= new List<string>();
+                camposInvalidos.Add(nameof(Identificador));
+            }
+
+            if (!contrasenaIngresada)
+            {
+                camposInvalidos ??= new List<string>();
+                camposInvalidos.Add(CampoContrasena);
+            }
+
+            if (camposInvalidos != null)
+            {
+                MostrarCamposInvalidos?.Invoke(camposInvalidos);
                 return;
             }
+
+            bool credencialesCapturadas = identificadorIngresado && contrasenaIngresada;
 
             EstaProcesando = true;
 
@@ -135,8 +160,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.InicioSesionExitoso)
                 {
-                    string mensaje = resultado.Mensaje ?? Lang.errorTextoCredencialesIncorrectas;
-                    AvisoHelper.Mostrar(mensaje);
+                    string mensaje = resultado.Mensaje;
+
+                    if (string.IsNullOrWhiteSpace(mensaje) && credencialesCapturadas)
+                    {
+                        mensaje = Lang.errorTextoCredencialesIncorrectas;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(mensaje))
+                    {
+                        AvisoHelper.Mostrar(mensaje);
+                    }
+
                     return;
                 }
 
