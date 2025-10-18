@@ -28,7 +28,7 @@ namespace PictionaryMusicalCliente
         private void BotonAceptar(object sender, RoutedEventArgs e)
         {
             InicioSesion inicio = new InicioSesion();
-            SesionUsuarioActual.Instancia.Limpiar();
+            SesionUsuarioActual.Instancia.CerrarSesion();
             Application.Current.MainWindow = inicio;
             inicio.Show();
 

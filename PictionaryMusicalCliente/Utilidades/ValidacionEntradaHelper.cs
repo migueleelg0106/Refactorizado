@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using PictionaryMusicalCliente.Modelo;
-using LangResources = PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Properties.Langs;
 
 namespace PictionaryMusicalCliente.Utilidades
 {
@@ -20,27 +20,28 @@ namespace PictionaryMusicalCliente.Utilidades
 
         public static ResultadoOperacion ValidarUsuario(string usuario)
         {
-            return ValidarCampoObligatorio(usuario, LangResources.errorTextoCampoObligatorio,
-                LangResources.errorTextoCampoLongitudMaxima, LongitudMaximaCampo);
+
+            return ValidarCampoObligatorio(usuario, Lang.errorTextoCampoObligatorio,
+                Lang.errorTextoCampoLongitudMaxima, LongitudMaximaCampo);
         }
 
         public static ResultadoOperacion ValidarNombre(string nombre)
         {
-            return ValidarCampoObligatorio(nombre, LangResources.errorTextoNombreObligatorioLongitud,
-                LangResources.errorTextoCampoLongitudMaxima, LongitudMaximaCampo);
+            return ValidarCampoObligatorio(nombre, Lang.errorTextoNombreObligatorioLongitud,
+                Lang.errorTextoCampoLongitudMaxima, LongitudMaximaCampo);
         }
 
         public static ResultadoOperacion ValidarApellido(string apellido)
         {
-            return ValidarCampoObligatorio(apellido, LangResources.errorTextoApellidoObligatorioLongitud,
-                LangResources.errorTextoCampoLongitudMaxima, LongitudMaximaCampo);
+            return ValidarCampoObligatorio(apellido, Lang.errorTextoApellidoObligatorioLongitud,
+                Lang.errorTextoCampoLongitudMaxima, LongitudMaximaCampo);
         }
 
         public static ResultadoOperacion ValidarCorreo(string correo)
         {
             ResultadoOperacion resultado = ValidarCampoObligatorio(correo,
-                LangResources.errorTextoCorreoInvalido,
-                LangResources.errorTextoCampoLongitudMaxima,
+                Lang.errorTextoCorreoInvalido,
+                Lang.errorTextoCampoLongitudMaxima,
                 LongitudMaximaCampo);
 
             if (!resultado.Exito)
@@ -52,7 +53,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (!CorreoRegex.IsMatch(correoNormalizado))
             {
-                return ResultadoOperacion.Fallo(LangResources.errorTextoCorreoInvalido);
+                return ResultadoOperacion.Fallo(Lang.errorTextoCorreoInvalido);
             }
 
             return ResultadoOperacion.Exitoso();
@@ -62,19 +63,19 @@ namespace PictionaryMusicalCliente.Utilidades
         {
             if (string.IsNullOrWhiteSpace(contrasena))
             {
-                return ResultadoOperacion.Fallo(LangResources.errorTextoCampoObligatorio);
+                return ResultadoOperacion.Fallo(Lang.errorTextoCampoObligatorio);
             }
 
             string contrasenaNormalizada = contrasena.Trim();
 
             if (contrasenaNormalizada.Length > LongitudMaximaContrasena)
             {
-                return ResultadoOperacion.Fallo(LangResources.errorTextoCampoLongitudMaxima);
+                return ResultadoOperacion.Fallo(Lang.errorTextoCampoLongitudMaxima);
             }
 
             if (!ContrasenaRegex.IsMatch(contrasenaNormalizada))
             {
-                return ResultadoOperacion.Fallo(LangResources.errorTextoContrasenaFormato);
+                return ResultadoOperacion.Fallo(Lang.errorTextoContrasenaFormato);
             }
 
             return ResultadoOperacion.Exitoso();
