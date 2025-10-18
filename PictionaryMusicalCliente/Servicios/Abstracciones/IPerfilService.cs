@@ -7,6 +7,10 @@ namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface IPerfilService
     {
+        Task<UsuarioAutenticado> ObtenerPerfilAsync(int usuarioId);
 
+        Task<ResultadoOperacion> ActualizarPerfilAsync(ActualizarPerfilSolicitud solicitud);
+
+        Task<IReadOnlyList<ObjetoAvatar>> ObtenerAvataresDisponiblesAsync();
     }
 }
