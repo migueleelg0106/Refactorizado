@@ -158,7 +158,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 if (resultado?.CodigoEnviado == true)
                 {
                     IniciarTemporizadorReenvio();
-                    AvisoHelper.Mostrar(Lang.cambiarContrasenaTextoReenviarCodigo);
                 }
                 else
                 {
