@@ -60,5 +60,39 @@ namespace Servicios.Servicios
                 };
             }
         }
+
+        public ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(SolicitudRecuperarCuentaDTO solicitud)
+        {
+            try
+            {
+                return CodigoVerificacionServicio.SolicitarCodigoRecuperacion(solicitud);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error al solicitar código de recuperación", ex);
+                return new ResultadoSolicitudRecuperacionDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = ex.Message
+                };
+            }
+        }
+
+        public ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmarCodigoDTO confirmacion)
+        {
+            try
+            {
+                return CodigoVerificacionServicio.ConfirmarCodigoRecuperacion(confirmacion);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error al confirmar el código de recuperación", ex);
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = ex.Message
+                };
+            }
+        }
     }
 }

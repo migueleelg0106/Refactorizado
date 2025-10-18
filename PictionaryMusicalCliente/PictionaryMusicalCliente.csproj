@@ -100,9 +100,14 @@
     <Compile Include="Modelo\ObjetoAvatar.cs" />
     <Compile Include="Modelo\ResultadoOperacion.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
+    <Compile Include="Modelo\Cuentas\ResultadoInicioSesion.cs" />
     <Compile Include="Modelo\Cuentas\ResultadoSolicitudCodigo.cs" />
     <Compile Include="Modelo\Cuentas\ResultadoRegistroCuenta.cs" />
+    <Compile Include="Modelo\Cuentas\ResultadoSolicitudRecuperacion.cs" />
+    <Compile Include="Modelo\Cuentas\SolicitudInicioSesion.cs" />
     <Compile Include="Modelo\Cuentas\SolicitudRegistroCuenta.cs" />
+    <Compile Include="Modelo\Cuentas\UsuarioSesion.cs" />
+    <Compile Include="Modelo\IdiomaOpcion.cs" />
     <Compile Include="Modelo\Cuentas\ActualizarPerfilSolicitud.cs" />
     <Compile Include="Modelo\Cuentas\VerificacionCodigoResultados.cs" />
     <Compile Include="Servicios\Abstracciones\IAvatarService.cs" />

@@ -14,5 +14,11 @@ namespace Servicios.Contratos
 
         [OperationContract]
         ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmarCodigoDTO confirmacion);
+
+        [OperationContract]
+        ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(SolicitudRecuperarCuentaDTO solicitud);
+
+        [OperationContract]
+        ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmarCodigoDTO confirmacion);
     }
 }
