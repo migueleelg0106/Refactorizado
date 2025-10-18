@@ -245,7 +245,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioPerfil {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ApellidoField;
-        
+
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AvatarRutaRelativaField;
+
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int AvatarIdField;
         
@@ -302,7 +305,20 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioPerfil {
                 }
             }
         }
-        
+
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AvatarRutaRelativa {
+            get {
+                return this.AvatarRutaRelativaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AvatarRutaRelativaField, value) != true)) {
+                    this.AvatarRutaRelativaField = value;
+                    this.RaisePropertyChanged("AvatarRutaRelativa");
+                }
+            }
+        }
+
         [System.Runtime.Serialization.DataMemberAttribute()]
         public string Discord {
             get {
