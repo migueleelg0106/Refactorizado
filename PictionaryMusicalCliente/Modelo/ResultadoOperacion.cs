@@ -17,6 +17,11 @@ namespace PictionaryMusicalCliente.Modelo
             return new ResultadoOperacion(true, null);
         }
 
+        public static ResultadoOperacion Exitoso(string mensaje)
+        {
+            return new ResultadoOperacion(true, mensaje);
+        }
+
         public static ResultadoOperacion Fallo(string mensaje)
         {
             return new ResultadoOperacion(false, mensaje);

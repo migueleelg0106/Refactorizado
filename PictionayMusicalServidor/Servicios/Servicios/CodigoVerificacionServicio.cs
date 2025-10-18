@@ -5,6 +5,7 @@ using Datos.Modelo;
 using Datos.Utilidades;
 using Servicios.Contratos.DTOs;
 using Servicios.Servicios.Utilidades;
+using System.Data.Entity;
 
 namespace Servicios.Servicios
 {
@@ -17,6 +18,9 @@ namespace Servicios.Servicios
 
         private static readonly ConcurrentDictionary<string, byte> VerificacionesConfirmadas =
             new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase);
+
+        private static readonly ConcurrentDictionary<string, SolicitudRecuperacionPendiente> SolicitudesRecuperacion =
+            new ConcurrentDictionary<string, SolicitudRecuperacionPendiente>();
 
         private static ICodigoVerificacionNotificador _notificador = new CorreoCodigoVerificacionNotificador();
 
@@ -147,6 +151,226 @@ namespace Servicios.Servicios
             };
         }
 
+        public static ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(SolicitudRecuperarCuentaDTO solicitud)
+        {
+            if (solicitud == null)
+            {
+                throw new ArgumentNullException(nameof(solicitud));
+            }
+
+            string identificador = solicitud.Identificador?.Trim();
+            if (string.IsNullOrWhiteSpace(identificador))
+            {
+                return new ResultadoSolicitudRecuperacionDTO
+                {
+                    CuentaEncontrada = false,
+                    CodigoEnviado = false,
+                    Mensaje = "Identificador requerido"
+                };
+            }
+
+            using (var contexto = CrearContexto())
+            {
+                Usuario usuario = BuscarUsuarioPorIdentificador(contexto, identificador);
+
+                if (usuario == null)
+                {
+                    return new ResultadoSolicitudRecuperacionDTO
+                    {
+                        CuentaEncontrada = false,
+                        CodigoEnviado = false,
+                        Mensaje = "Cuenta no encontrada"
+                    };
+                }
+
+                LimpiarSolicitudesRecuperacion(usuario.idUsuario);
+
+                string token = TokenGenerator.GenerarToken();
+                string codigo = CodigoVerificacionGenerator.GenerarCodigo();
+
+                var pendiente = new SolicitudRecuperacionPendiente
+                {
+                    UsuarioId = usuario.idUsuario,
+                    Correo = usuario.Jugador?.Correo,
+                    NombreUsuario = usuario.Nombre_Usuario,
+                    Nombre = usuario.Jugador?.Nombre,
+                    Apellido = usuario.Jugador?.Apellido,
+                    AvatarId = usuario.Jugador?.Avatar_idAvatar ?? 0,
+                    Codigo = codigo,
+                    Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo),
+                    Confirmado = false
+                };
+
+                SolicitudesRecuperacion[token] = pendiente;
+
+                EnviarCorreoRecuperacion(pendiente, codigo);
+
+                return new ResultadoSolicitudRecuperacionDTO
+                {
+                    CuentaEncontrada = true,
+                    CodigoEnviado = true,
+                    CorreoDestino = pendiente.Correo,
+                    TokenCodigo = token
+                };
+            }
+        }
+
+        public static ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(ReenviarCodigoDTO solicitud)
+        {
+            if (solicitud == null)
+            {
+                throw new ArgumentNullException(nameof(solicitud));
+            }
+
+            if (!SolicitudesRecuperacion.TryGetValue(solicitud.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
+            {
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = "Solicitud no encontrada"
+                };
+            }
+
+            if (pendiente.Expira < DateTime.UtcNow)
+            {
+                SolicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = "Código expirado"
+                };
+            }
+
+            string nuevoCodigo = CodigoVerificacionGenerator.GenerarCodigo();
+            pendiente.Codigo = nuevoCodigo;
+            pendiente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
+            pendiente.Confirmado = false;
+
+            EnviarCorreoRecuperacion(pendiente, nuevoCodigo);
+
+            return new ResultadoSolicitudCodigoDTO
+            {
+                CodigoEnviado = true,
+                TokenCodigo = solicitud.TokenCodigo
+            };
+        }
+
+        public static ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmarCodigoDTO confirmacion)
+        {
+            if (confirmacion == null)
+            {
+                throw new ArgumentNullException(nameof(confirmacion));
+            }
+
+            if (!SolicitudesRecuperacion.TryGetValue(confirmacion.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "Solicitud no encontrada"
+                };
+            }
+
+            if (pendiente.Expira < DateTime.UtcNow)
+            {
+                SolicitudesRecuperacion.TryRemove(confirmacion.TokenCodigo, out _);
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "Código expirado"
+                };
+            }
+
+            if (!string.Equals(pendiente.Codigo, confirmacion.CodigoIngresado, StringComparison.OrdinalIgnoreCase))
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "Código incorrecto"
+                };
+            }
+
+            pendiente.Confirmado = true;
+            pendiente.Codigo = null;
+            pendiente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
+
+            return new ResultadoOperacionDTO
+            {
+                OperacionExitosa = true
+            };
+        }
+
+        public static ResultadoOperacionDTO ActualizarContrasena(ActualizarContrasenaDTO solicitud)
+        {
+            if (solicitud == null)
+            {
+                throw new ArgumentNullException(nameof(solicitud));
+            }
+
+            if (!SolicitudesRecuperacion.TryGetValue(solicitud.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "Solicitud no encontrada"
+                };
+            }
+
+            if (!pendiente.Confirmado)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "Código no confirmado"
+                };
+            }
+
+            if (pendiente.Expira < DateTime.UtcNow)
+            {
+                SolicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "Solicitud expirada"
+                };
+            }
+
+            try
+            {
+                using (var contexto = CrearContexto())
+                {
+                    Usuario usuario = contexto.Usuario.FirstOrDefault(u => u.idUsuario == pendiente.UsuarioId);
+
+                    if (usuario == null)
+                    {
+                        return new ResultadoOperacionDTO
+                        {
+                            OperacionExitosa = false,
+                            Mensaje = "Usuario no encontrado"
+                        };
+                    }
+
+                    usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(solicitud.NuevaContrasena);
+                    contexto.SaveChanges();
+                }
+
+                SolicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
+
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = ex.Message
+                };
+            }
+        }
+
         public static bool EstaVerificacionConfirmada(NuevaCuentaDTO nuevaCuenta)
         {
             if (nuevaCuenta == null)
@@ -190,6 +414,62 @@ namespace Servicios.Servicios
                 : new BaseDatosPruebaEntities1(conexion);
         }
 
+        private static void LimpiarSolicitudesRecuperacion(int usuarioId)
+        {
+            var registros = SolicitudesRecuperacion
+                .Where(pair => pair.Value.UsuarioId == usuarioId)
+                .ToList();
+
+            foreach (var registro in registros)
+            {
+                SolicitudesRecuperacion.TryRemove(registro.Key, out _);
+            }
+        }
+
+        private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities1 contexto, string identificador)
+        {
+            var usuariosPorNombre = contexto.Usuario
+                .Include(u => u.Jugador)
+                .Where(u => u.Nombre_Usuario == identificador)
+                .ToList();
+
+            Usuario usuario = usuariosPorNombre
+                .FirstOrDefault(u => string.Equals(u.Nombre_Usuario, identificador, StringComparison.Ordinal));
+
+            if (usuario != null)
+            {
+                return usuario;
+            }
+
+            var usuariosPorCorreo = contexto.Usuario
+                .Include(u => u.Jugador)
+                .Where(u => u.Jugador.Correo == identificador)
+                .ToList();
+
+            return usuariosPorCorreo
+                .FirstOrDefault(u => string.Equals(u.Jugador?.Correo, identificador, StringComparison.Ordinal));
+        }
+
+        private static void EnviarCorreoRecuperacion(SolicitudRecuperacionPendiente pendiente, string codigo)
+        {
+            if (pendiente == null)
+            {
+                return;
+            }
+
+            var datos = new NuevaCuentaDTO
+            {
+                Usuario = pendiente.NombreUsuario,
+                Nombre = pendiente.Nombre,
+                Apellido = pendiente.Apellido,
+                Correo = pendiente.Correo,
+                Contrasena = string.Empty,
+                AvatarId = pendiente.AvatarId
+            };
+
+            EnviarCorreoVerificacionAsync(datos, codigo);
+        }
+
         private static NuevaCuentaDTO CopiarCuenta(NuevaCuentaDTO original)
         {
             return new NuevaCuentaDTO
@@ -215,6 +495,27 @@ namespace Servicios.Servicios
             public string Codigo { get; set; }
 
             public DateTime Expira { get; set; }
+        }
+
+        private class SolicitudRecuperacionPendiente
+        {
+            public int UsuarioId { get; set; }
+
+            public string Correo { get; set; }
+
+            public string NombreUsuario { get; set; }
+
+            public string Nombre { get; set; }
+
+            public string Apellido { get; set; }
+
+            public int AvatarId { get; set; }
+
+            public string Codigo { get; set; }
+
+            public DateTime Expira { get; set; }
+
+            public bool Confirmado { get; set; }
         }
     }
 }
