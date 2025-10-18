@@ -18,7 +18,6 @@ namespace HostServidor
 
             using (var hostCuenta = new ServiceHost(typeof(Servicios.Servicios.CuentaManejador)))
             using (var hostCodigo = new ServiceHost(typeof(Servicios.Servicios.CodigoVerificacionManejador)))
-            using (var hostReenvio = new ServiceHost(typeof(Servicios.Servicios.ReenviarCodigoVerificacionManejador)))
             using (var hostAvatares = new ServiceHost(typeof(Servicios.Servicios.CatalogoAvatares)))
             using (var hostInicioSesion = new ServiceHost(typeof(Servicios.Servicios.InicioSesionManejador)))
             using (var hostCambioContrasena = new ServiceHost(typeof(Servicios.Servicios.CambiarContrasenaManejador)))
@@ -39,13 +38,6 @@ namespace HostServidor
                     foreach (var ep in hostCodigo.Description.Endpoints)
                     {
                         Bitacora.Info($"Código -> {ep.Address} ({ep.Binding.Name})");
-                    }
-
-                    hostReenvio.Open();
-                    Bitacora.Info("Servicio Reenvío Código iniciado.");
-                    foreach (var ep in hostReenvio.Description.Endpoints)
-                    {
-                        Bitacora.Info($"Reenvío -> {ep.Address} ({ep.Binding.Name})");
                     }
 
                     hostAvatares.Open();
@@ -105,7 +97,6 @@ namespace HostServidor
                 finally
                 {
                     CerrarFormaSegura(hostAvatares);
-                    CerrarFormaSegura(hostReenvio);
                     CerrarFormaSegura(hostCodigo);
                     CerrarFormaSegura(hostCuenta);
                     CerrarFormaSegura(hostInicioSesion);
