@@ -38,7 +38,7 @@
                     Content="{Binding NombreUsuario}"
                     FontWeight="Bold"
                     FontSize="14"
-                    Padding="10,5"
+                    Padding="20,10"
                     Background="White"
                     BorderBrush="Black"
                     FontFamily="Comic Sans MS"
