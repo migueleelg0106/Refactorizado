@@ -35,12 +35,19 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     return null;
                 }
 
+                string mensaje = resultadoDto.Mensaje;
+
+                if (!string.IsNullOrWhiteSpace(mensaje))
+                {
+                    mensaje = MensajeServidorHelper.Localizar(mensaje, mensaje);
+                }
+
                 return new ResultadoInicioSesion
                 {
                     InicioSesionExitoso = resultadoDto.InicioSesionExitoso,
                     CuentaNoEncontrada = resultadoDto.CuentaNoEncontrada,
                     ContrasenaIncorrecta = resultadoDto.ContrasenaIncorrecta,
-                    Mensaje = resultadoDto.Mensaje,
+                    Mensaje = mensaje,
                     Usuario = MapearUsuario(resultadoDto.Usuario)
                 };
             }
