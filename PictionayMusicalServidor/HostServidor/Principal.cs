@@ -61,12 +61,12 @@ namespace HostServidor
                         Bitacora.Info($"CambioContraseña -> {ep.Address} ({ep.Binding.Name})");
                     }
 
-                   // hostClasificacion.Open();
-                  //  Bitacora.Info("Servicio Clasificación iniciado.");
-                 //   foreach (var ep in hostClasificacion.Description.Endpoints)
-                 //   {
-                 //       Bitacora.Info($"Clasificacion -> {ep.Address} ({ep.Binding.Name})");
-                  //  }
+                    hostClasificacion.Open();
+                    Bitacora.Info("Servicio Clasificación iniciado.");
+                    foreach (var ep in hostClasificacion.Description.Endpoints)
+                    {
+                        Bitacora.Info($"Clasificacion -> {ep.Address} ({ep.Binding.Name})");
+                    }
 
                     hostPerfil.Open();
                     Bitacora.Info("Servicio Perfil iniciado.");
@@ -101,7 +101,7 @@ namespace HostServidor
                     CerrarFormaSegura(hostCuenta);
                     CerrarFormaSegura(hostInicioSesion);
                     CerrarFormaSegura(hostCambioContrasena);
-                 //   CerrarFormaSegura(hostClasificacion);
+                    CerrarFormaSegura(hostClasificacion);
                     CerrarFormaSegura(hostPerfil);
                     Bitacora.Info("Host detenido.");
                 }
