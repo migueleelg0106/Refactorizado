@@ -26,8 +26,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioPerfil {
         private string ApellidoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int AvatarIdField;
-        
+        private string AvatarRutaRelativaField;
+
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AvatarRutaRelativaField;
+
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CorreoField;
         
@@ -79,18 +82,31 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioPerfil {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int AvatarId {
+        public string AvatarRutaRelativa {
             get {
-                return this.AvatarIdField;
+                return this.AvatarRutaRelativaField;
             }
             set {
-                if ((this.AvatarIdField.Equals(value) != true)) {
-                    this.AvatarIdField = value;
-                    this.RaisePropertyChanged("AvatarId");
+                if ((object.ReferenceEquals(this.AvatarRutaRelativaField, value) != true)) {
+                    this.AvatarRutaRelativaField = value;
+                    this.RaisePropertyChanged("AvatarRutaRelativa");
                 }
             }
         }
-        
+
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AvatarRutaRelativa {
+            get {
+                return this.AvatarRutaRelativaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AvatarRutaRelativaField, value) != true)) {
+                    this.AvatarRutaRelativaField = value;
+                    this.RaisePropertyChanged("AvatarRutaRelativa");
+                }
+            }
+        }
+
         [System.Runtime.Serialization.DataMemberAttribute()]
         public string Correo {
             get {

@@ -53,7 +53,18 @@ namespace Servicios.Servicios
                         };
                     }
 
-                    if (!avatarRepositorio.ExisteAvatar(nuevaCuenta.AvatarId))
+                    if (string.IsNullOrWhiteSpace(nuevaCuenta.AvatarRutaRelativa))
+                    {
+                        return new ResultadoRegistroCuentaDTO
+                        {
+                            RegistroExitoso = false,
+                            Mensaje = "Avatar no válido."
+                        };
+                    }
+
+                    Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(nuevaCuenta.AvatarRutaRelativa);
+
+                    if (avatar == null)
                     {
                         return new ResultadoRegistroCuentaDTO
                         {
@@ -69,7 +80,7 @@ namespace Servicios.Servicios
                         Nombre = nuevaCuenta.Nombre,
                         Apellido = nuevaCuenta.Apellido,
                         Correo = nuevaCuenta.Correo,
-                        Avatar_idAvatar = nuevaCuenta.AvatarId,
+                        Avatar_idAvatar = avatar.idAvatar,
                         Clasificacion_idClasificacion = clasificacion.idClasificacion
                     });
 

@@ -7,6 +7,6 @@ namespace PictionaryMusicalCliente.Modelo.Cuentas
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Contrasena { get; set; }
-        public int AvatarId { get; set; }
+        public string AvatarRutaRelativa { get; set; }
     }
 }

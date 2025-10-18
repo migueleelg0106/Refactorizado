@@ -82,7 +82,8 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 Nombre = dto.Nombre,
                 Apellido = dto.Apellido,
                 Correo = dto.Correo,
-                AvatarId = dto.AvatarId
+                AvatarId = dto.AvatarId,
+                AvatarRutaRelativa = dto.AvatarRutaRelativa
             };
         }
     }

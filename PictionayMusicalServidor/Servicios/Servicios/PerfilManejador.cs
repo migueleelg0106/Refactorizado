@@ -2,6 +2,7 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.ServiceModel;
+using Datos.DAL.Implementaciones;
 using Datos.Modelo;
 using Datos.Utilidades;
 using Servicios.Contratos;
@@ -27,6 +28,7 @@ namespace Servicios.Servicios
                 using (BaseDatosPruebaEntities1 contexto = CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
+                        .Include(u => u.Jugador.Avatar)
                         .Include(u => u.Jugador.RedSocial)
                         .FirstOrDefault(u => u.idUsuario == idUsuario);
 
@@ -53,6 +55,7 @@ namespace Servicios.Servicios
                         Apellido = jugador.Apellido,
                         Correo = jugador.Correo,
                         AvatarId = jugador.Avatar_idAvatar,
+                        AvatarRutaRelativa = jugador.Avatar?.Avatar_Ruta,
                         Instagram = redSocial?.Instagram,
                         Facebook = redSocial?.facebook,
                         X = redSocial?.x,
@@ -95,7 +98,8 @@ namespace Servicios.Servicios
                 return CrearResultadoFallo("El apellido es obligatorio y no debe exceder 50 caracteres.");
             }
 
-            if (solicitud.AvatarId <= 0)
+            string rutaAvatar = solicitud.AvatarRutaRelativa?.Trim();
+            if (string.IsNullOrWhiteSpace(rutaAvatar))
             {
                 return CrearResultadoFallo("Selecciona un avatar válido.");
             }
@@ -126,7 +130,8 @@ namespace Servicios.Servicios
                         return CrearResultadoFallo("No existe un jugador asociado al usuario especificado.");
                     }
 
-                    Avatar avatar = contexto.Avatar.FirstOrDefault(a => a.idAvatar == solicitud.AvatarId);
+                    var avatarRepositorio = new AvatarRepositorio(contexto);
+                    Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(rutaAvatar);
                     if (avatar == null)
                     {
                         return CrearResultadoFallo("El avatar seleccionado no existe.");

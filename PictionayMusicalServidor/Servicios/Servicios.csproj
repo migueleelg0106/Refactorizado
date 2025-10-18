@@ -111,6 +111,7 @@
     <Compile Include="Contratos\DTOs\ResultadoSolicitudRecuperacionDTO.cs" />
     <Compile Include="Contratos\DTOs\SolicitudRecuperarCuentaDTO.cs" />
     <Compile Include="Contratos\DTOs\UsuarioDTO.cs" />
+    <Compile Include="Contratos\DTOs\AvatarDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\CatalogoAvatares.cs" />
     <Compile Include="Servicios\ClasificacionManejador.cs" />

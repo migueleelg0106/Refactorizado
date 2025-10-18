@@ -82,7 +82,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     UsuarioId = solicitud.UsuarioId,
                     Nombre = solicitud.Nombre,
                     Apellido = solicitud.Apellido,
-                    AvatarId = solicitud.AvatarId,
+                    AvatarRutaRelativa = solicitud.AvatarRutaRelativa,
                     Instagram = solicitud.Instagram,
                     Facebook = solicitud.Facebook,
                     X = solicitud.X,

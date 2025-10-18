@@ -7,6 +7,8 @@ namespace PictionaryMusicalCliente.Modelo.Catalogos
 {
     public static class CatalogoAvataresLocales
     {
+        private const string CarpetaRecursos = "Recursos";
+
         private static readonly IReadOnlyList<ObjetoAvatar> Avatares = new List<ObjetoAvatar>
         {
             Crear(1, "AC/DC", "ACDC.jpg"),
@@ -34,9 +36,10 @@ namespace PictionaryMusicalCliente.Modelo.Catalogos
 
         private static ObjetoAvatar Crear(int id, string nombre, string archivo)
         {
-            var uri = new Uri($"pack://application:,,,/Recursos/{archivo}", UriKind.Absolute);
+            string rutaRelativa = $"{CarpetaRecursos}/{archivo}";
+            var uri = new Uri($"pack://application:,,,/{rutaRelativa}", UriKind.Absolute);
             var imagen = new BitmapImage(uri);
-            return new ObjetoAvatar(id, nombre, imagen);
+            return new ObjetoAvatar(id, nombre, imagen, rutaRelativa, null);
         }
     }
 }

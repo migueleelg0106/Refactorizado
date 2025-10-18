@@ -31,7 +31,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     Nombre = solicitud.Nombre,
                     Apellido = solicitud.Apellido,
                     Contrasena = solicitud.Contrasena,
-                    AvatarId = solicitud.AvatarId
+                    AvatarRutaRelativa = solicitud.AvatarRutaRelativa
                 };
 
                 CuentaSrv.ResultadoRegistroCuentaDTO resultado = await WcfClientHelper.UsarAsync(

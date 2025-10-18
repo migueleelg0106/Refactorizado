@@ -21,6 +21,7 @@ namespace Servicios.Contratos.DTOs
         public string Contrasena { get; set; }
 
         [DataMember(IsRequired = true)]
-        public int AvatarId { get; set; }
+        public string AvatarRutaRelativa { get; set; }
+
     }
 }

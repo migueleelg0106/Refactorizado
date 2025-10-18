@@ -27,6 +27,9 @@ namespace Servicios.Contratos.DTOs
         public int AvatarId { get; set; }
 
         [DataMember]
+        public string AvatarRutaRelativa { get; set; }
+
+        [DataMember]
         public string Instagram { get; set; }
 
         [DataMember]

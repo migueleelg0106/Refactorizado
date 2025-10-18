@@ -23,6 +23,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
                 Apellido = ObtenerValor(dto, nameof(UsuarioAutenticado.Apellido), string.Empty),
                 Correo = ObtenerValor(dto, nameof(UsuarioAutenticado.Correo), string.Empty),
                 AvatarId = ObtenerValor(dto, nameof(UsuarioAutenticado.AvatarId), 0),
+                AvatarRutaRelativa = ObtenerValor(dto, nameof(UsuarioAutenticado.AvatarRutaRelativa), string.Empty),
                 Instagram = ObtenerValor(dto, nameof(UsuarioAutenticado.Instagram), string.Empty),
                 Facebook = ObtenerValor(dto, nameof(UsuarioAutenticado.Facebook), string.Empty),
                 X = ObtenerValor(dto, nameof(UsuarioAutenticado.X), string.Empty),

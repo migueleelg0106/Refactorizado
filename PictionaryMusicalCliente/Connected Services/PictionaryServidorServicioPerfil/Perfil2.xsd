@@ -4,6 +4,7 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="Apellido" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="AvatarId" type="xs:int" />
+      <xs:element minOccurs="0" name="AvatarRutaRelativa" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Correo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Discord" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Facebook" nillable="true" type="xs:string" />
@@ -19,7 +20,7 @@
   <xs:complexType name="ActualizarPerfilDTO">
     <xs:sequence>
       <xs:element minOccurs="0" name="Apellido" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="AvatarId" type="xs:int" />
+      <xs:element minOccurs="0" name="AvatarRutaRelativa" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Discord" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Facebook" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Instagram" nillable="true" type="xs:string" />

@@ -26,7 +26,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private string _correo;
         private string _contrasena;
         private ImageSource _avatarSeleccionadoImagen;
-        private int _avatarSeleccionadoId;
+        private string _avatarSeleccionadoRutaRelativa;
         private bool _mostrarErrorUsuario;
         private bool _mostrarErrorCorreo;
         private bool _estaProcesando;
@@ -85,10 +85,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value);
         }
 
-        public int AvatarSeleccionadoId
+        public string AvatarSeleccionadoRutaRelativa
         {
-            get => _avatarSeleccionadoId;
-            private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value);
+            get => _avatarSeleccionadoRutaRelativa;
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoRutaRelativa, value);
         }
 
         public bool MostrarErrorUsuario
@@ -194,7 +194,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
             }
 
-            if (AvatarSeleccionadoId <= 0)
+            if (string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa))
             {
                 camposInvalidos.Add("Avatar");
                 if (mensajeError == null)
@@ -222,7 +222,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 Apellido = Apellido,
                 Correo = Correo,
                 Contrasena = Contrasena,
-                AvatarId = AvatarSeleccionadoId
+                AvatarRutaRelativa = AvatarSeleccionadoRutaRelativa
             };
 
             try
@@ -330,14 +330,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private async Task SeleccionarAvatarAsync()
         {
             ObjetoAvatar avatar = await _seleccionarAvatarService
-                .SeleccionarAvatarAsync(AvatarSeleccionadoId).ConfigureAwait(true);
+                .SeleccionarAvatarAsync(AvatarSeleccionadoRutaRelativa).ConfigureAwait(true);
 
             if (avatar == null)
             {
                 return;
             }
 
-            AvatarSeleccionadoId = avatar.Id;
+            AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
             AvatarSeleccionadoImagen = avatar.Imagen;
         }
 
@@ -346,7 +346,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPredeterminado();
             if (avatar != null)
             {
-                AvatarSeleccionadoId = avatar.Id;
+                AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
                 AvatarSeleccionadoImagen = avatar.Imagen;
             }
         }
