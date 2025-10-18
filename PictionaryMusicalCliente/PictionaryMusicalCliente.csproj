@@ -14,7 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -157,14 +157,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VistaModelo\Cuentas\CambioContrasenaVistaModelo.cs" />
-    <Compile Include="VistaModelo\Cuentas\ClasificacionVistaModelo.cs" />
-    <Compile Include="VistaModelo\Cuentas\InicioSesionVistaModelo.cs" />
-    <Compile Include="VistaModelo\Cuentas\PerfilVistaModelo.cs" />
-    <Compile Include="VistaModelo\Cuentas\SeleccionarAvatarVistaModelo.cs" />
-    <Compile Include="VistaModelo\Cuentas\CrearCuentaVistaModelo.cs" />
-    <Compile Include="VistaModelo\Cuentas\VentanaPrincipalVistaModelo.cs" />
-    <Compile Include="VistaModelo\Cuentas\VerificarCodigoVistaModelo.cs" />
+    <Compile Include="VistaModelo\CambioContrasenaVistaModelo.cs" />
+    <Compile Include="VistaModelo\ClasificacionVistaModelo.cs" />
+    <Compile Include="VistaModelo\InicioSesionVistaModelo.cs" />
+    <Compile Include="VistaModelo\PerfilVistaModelo.cs" />
+    <Compile Include="VistaModelo\SeleccionarAvatarVistaModelo.cs" />
+    <Compile Include="VistaModelo\CrearCuentaVistaModelo.cs" />
+    <Compile Include="VistaModelo\VentanaPrincipalVistaModelo.cs" />
+    <Compile Include="VistaModelo\VerificarCodigoVistaModelo.cs" />
     <Compile Include="Vista\Ajustes.xaml.cs">
       <DependentUpon>Ajustes.xaml</DependentUpon>
     </Compile>
