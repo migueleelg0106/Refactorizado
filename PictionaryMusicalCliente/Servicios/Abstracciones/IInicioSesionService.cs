@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
-using InicioSesionSrv = PictionaryMusicalCliente.PictionaryServidorServicioInicioSesion;
+using PictionaryMusicalCliente.Modelo.Cuentas;
 
 namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface IInicioSesionService
     {
+        Task<ResultadoInicioSesion> IniciarSesionAsync(SolicitudInicioSesion solicitud);
     }
 }
