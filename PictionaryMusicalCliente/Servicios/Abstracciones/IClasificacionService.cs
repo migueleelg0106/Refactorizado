@@ -6,5 +6,6 @@ namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface IClasificacionService
     {
+        Task<IReadOnlyList<ClasificacionSrv.ClasificacionUsuarioDTO>> ObtenerTopJugadoresAsync();
     }
 }
