@@ -49,9 +49,7 @@ namespace Servicios.Servicios
                         CodigoEnviado = false,
                         UsuarioYaRegistrado = usuarioRegistrado,
                         CorreoYaRegistrado = correoRegistrado,
-                        Mensaje = usuarioRegistrado || correoRegistrado
-                            ? "Usuario o correo ya registrados"
-                            : null
+                        Mensaje = null
                     };
                 }
             }
@@ -203,7 +201,7 @@ namespace Servicios.Servicios
                     {
                         CuentaEncontrada = false,
                         CodigoEnviado = false,
-                        Mensaje = "La cuenta o usuario no se encontró, verifique el dato ingresado."
+                        Mensaje = null
                     };
                 }
 
