@@ -38,12 +38,18 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 
             if (!resultadoSolicitud.CuentaEncontrada)
             {
-                return ResultadoOperacion.Fallo(resultadoSolicitud.Mensaje ?? Lang.errorTextoCuentaNoRegistrada);
+                string mensaje = string.IsNullOrWhiteSpace(resultadoSolicitud.Mensaje)
+                    ? Lang.errorTextoCuentaNoRegistrada
+                    : resultadoSolicitud.Mensaje;
+                return ResultadoOperacion.Fallo(mensaje);
             }
 
             if (!resultadoSolicitud.CodigoEnviado)
             {
-                return ResultadoOperacion.Fallo(resultadoSolicitud.Mensaje ?? Lang.errorTextoServidorSolicitudCambioContrasena);
+                string mensaje = string.IsNullOrWhiteSpace(resultadoSolicitud.Mensaje)
+                    ? Lang.errorTextoServidorSolicitudCambioContrasena
+                    : resultadoSolicitud.Mensaje;
+                return ResultadoOperacion.Fallo(mensaje);
             }
 
             AvisoHelper.Mostrar(Lang.avisoTextoCodigoEnviado);

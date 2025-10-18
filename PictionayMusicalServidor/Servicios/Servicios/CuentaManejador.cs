@@ -49,7 +49,7 @@ namespace Servicios.Servicios
                             RegistroExitoso = false,
                             UsuarioYaRegistrado = usuarioRegistrado,
                             CorreoYaRegistrado = correoRegistrado,
-                            Mensaje = "Usuario o correo ya registrados."
+                            Mensaje = null
                         };
                     }
 

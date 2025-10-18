@@ -248,13 +248,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     MostrarErrorCorreo = true;
                 }
 
-                if (!resultadoSolicitud.CodigoEnviado)
-                {
-                    MostrarMensaje?.Invoke(resultadoSolicitud.Mensaje ?? Lang.errorTextoRegistrarCuentaMasTarde);
-                    return;
-                }
+                bool tieneDuplicados = resultadoSolicitud.UsuarioYaRegistrado || resultadoSolicitud.CorreoYaRegistrado;
 
-                if (resultadoSolicitud.UsuarioYaRegistrado || resultadoSolicitud.CorreoYaRegistrado)
+                if (tieneDuplicados)
                 {
                     var duplicados = new List<string>();
                     if (resultadoSolicitud.UsuarioYaRegistrado)
@@ -272,7 +268,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                         MostrarCamposInvalidos?.Invoke(duplicados);
                     }
 
-                    MostrarMensaje?.Invoke(resultadoSolicitud.Mensaje ?? Lang.errorTextoCamposInvalidosGenerico);
+                    return;
+                }
+
+                if (!resultadoSolicitud.CodigoEnviado)
+                {
+                    MostrarMensaje?.Invoke(string.IsNullOrWhiteSpace(resultadoSolicitud.Mensaje)
+                        ? Lang.errorTextoRegistrarCuentaMasTarde
+                        : resultadoSolicitud.Mensaje);
                     return;
                 }
 
@@ -305,7 +308,31 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 {
                     MostrarErrorUsuario = resultadoRegistro.UsuarioYaRegistrado;
                     MostrarErrorCorreo = resultadoRegistro.CorreoYaRegistrado;
-                    MostrarMensaje?.Invoke(resultadoRegistro.Mensaje ?? Lang.errorTextoRegistrarCuentaMasTarde);
+
+                    if (resultadoRegistro.UsuarioYaRegistrado || resultadoRegistro.CorreoYaRegistrado)
+                    {
+                        var duplicados = new List<string>();
+                        if (resultadoRegistro.UsuarioYaRegistrado)
+                        {
+                            duplicados.Add(nameof(Usuario));
+                        }
+
+                        if (resultadoRegistro.CorreoYaRegistrado)
+                        {
+                            duplicados.Add(nameof(Correo));
+                        }
+
+                        if (duplicados.Count > 0)
+                        {
+                            MostrarCamposInvalidos?.Invoke(duplicados);
+                        }
+
+                        return;
+                    }
+
+                    MostrarMensaje?.Invoke(string.IsNullOrWhiteSpace(resultadoRegistro.Mensaje)
+                        ? Lang.errorTextoRegistrarCuentaMasTarde
+                        : resultadoRegistro.Mensaje);
                     return;
                 }
 

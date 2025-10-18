@@ -44,7 +44,7 @@ namespace Servicios.Servicios
                         return new ResultadoInicioSesionDTO
                         {
                             CuentaNoEncontrada = true,
-                            Mensaje = "La cuenta o usuario no se encontró, verifique el dato ingresado."
+                            Mensaje = null
                         };
                     }
 
@@ -53,7 +53,7 @@ namespace Servicios.Servicios
                         return new ResultadoInicioSesionDTO
                         {
                             ContrasenaIncorrecta = true,
-                            Mensaje = "Contraseña incorrecta"
+                            Mensaje = null
                         };
                     }
 
