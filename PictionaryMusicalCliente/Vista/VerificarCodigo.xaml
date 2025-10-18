@@ -25,6 +25,7 @@
                 <TextBox x:Name="bloqueTextoCodigoVerificacion"
                          Height="30" Margin="0,12,0,16" FontFamily="Comic Sans MS"
                          HorizontalAlignment="Center" Width="237"
+                         MaxLength="6"
                          Text="{Binding CodigoVerificacion, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <Button Content="{x:Static language:Lang.cambiarContrasenaTextoVerificar}"

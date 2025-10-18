@@ -12,7 +12,7 @@
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="{x:Static language:Lang.globalTextoBuscarAmigo}" FontFamily="Comic Sans MS" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <TextBlock Text="{x:Static language:Lang.buscarAmigoTextoIngreseUsuario}" FontFamily="Comic Sans MS" FontSize="14" Margin="0,15,0,5"/>
-                <TextBox Height="30" FontFamily="Comic Sans MS"/>
+                <TextBox Height="30" FontFamily="Comic Sans MS" MaxLength="50"/>
 
                 <Grid Margin="0,20,0,0">
                     <Grid.ColumnDefinitions>

@@ -27,7 +27,7 @@
             <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3">
                 <StackPanel Margin="8">
                     <TextBlock Text="{x:Static language:Lang.globalTextoCorreo}" FontWeight="Bold" Margin="0,0,0,6" HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
-                    <TextBox Height="28" Margin="0,0,0,6"/>
+                    <TextBox Height="28" Margin="0,0,0,6" MaxLength="50"/>
                     <Button Content="{x:Static language:Lang.partidaAdminTextoInvitarCorreo}" Background="LightGreen" FontFamily="Comic Sans MS" Click="BotonInvitarCorreo"/>
                 </StackPanel>
             </Border>
@@ -172,7 +172,7 @@
                 <StackPanel x:Name="ChatPanel" Margin="6"/>
             </ScrollViewer>
 
-            <TextBox Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1"/>
+            <TextBox Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1" MaxLength="200"/>
         </Grid>
     </Grid>
 </Window>

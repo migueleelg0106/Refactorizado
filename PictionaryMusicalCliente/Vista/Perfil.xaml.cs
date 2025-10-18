@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -33,6 +34,8 @@ namespace PictionaryMusicalCliente
                 CerrarAccion = Close
             };
 
+            vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
+
             DataContext = vistaModelo;
         }
 
@@ -62,6 +65,27 @@ namespace PictionaryMusicalCliente
                     toggle.IsChecked = false;
                     e.Handled = true;
                 }
+            }
+        }
+
+        private void MarcarCamposInvalidos(IList<string> camposInvalidos)
+        {
+            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoNombre);
+            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoApellido);
+
+            if (camposInvalidos == null)
+            {
+                return;
+            }
+
+            if (camposInvalidos.Contains(nameof(PerfilVistaModelo.Nombre)))
+            {
+                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoNombre);
+            }
+
+            if (camposInvalidos.Contains(nameof(PerfilVistaModelo.Apellido)))
+            {
+                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoApellido);
             }
         }
     }

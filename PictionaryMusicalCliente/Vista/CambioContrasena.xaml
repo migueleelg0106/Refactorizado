@@ -23,6 +23,7 @@
 
                 <PasswordBox x:Name="bloqueContrasenaNueva"
                              Height="28" Margin="0,8,0,10" FontFamily="Comic Sans MS"
+                             MaxLength="15"
                              PasswordChanged="ContrasenaNuevaPasswordChanged"/>
 
                 <TextBlock Text="{x:Static language:Lang.cambiarContrasenaTextoConfirmeContrasena}"
@@ -31,6 +32,7 @@
 
                 <PasswordBox x:Name="bloqueContrasenaConfirmacion"
                              Height="28" Margin="0,6,0,16" FontFamily="Comic Sans MS"
+                             MaxLength="15"
                              PasswordChanged="ContrasenaConfirmacionPasswordChanged"/>
 
                 <Button x:Name="botonConfirmarContrasena"

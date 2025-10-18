@@ -76,6 +76,7 @@
                        ContentStringFormat="{}{0}:"
                        FontSize="12" FontWeight="Bold" FontFamily="Comic Sans MS" Grid.Row="0"/>
                 <TextBox x:Name="bloqueTextoUsuario" Height="30" FontFamily="Comic Sans MS" Grid.Row="1"
+                         MaxLength="50"
                          Text="{Binding Identificador, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <!-- Contraseña -->
@@ -83,6 +84,7 @@
                        ContentStringFormat="{}{0}:"
                        FontSize="12" FontWeight="Bold" FontFamily="Comic Sans MS" Grid.Row="2" Margin="0,10,0,0"/>
                 <PasswordBox x:Name="bloqueContrasenaContrasena" Height="30" FontFamily="Comic Sans MS" Grid.Row="3"
+                             MaxLength="15"
                              PasswordChanged="PasswordBoxChanged"/>
 
                 <!-- Olvidaste contraseña -->

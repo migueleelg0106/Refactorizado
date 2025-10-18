@@ -138,6 +138,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             Correo = Correo?.Trim();
             Contrasena = Contrasena?.Trim();
 
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
+
             IList<string> camposInvalidos = new List<string>();
 
             string mensajeError = null;
@@ -201,14 +203,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
             }
 
+            if (camposInvalidos.Count > 1)
+            {
+                mensajeError = Lang.errorTextoCamposInvalidosGenerico;
+            }
+
             if (camposInvalidos.Count > 0)
             {
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
                 MostrarMensaje?.Invoke(mensajeError ?? Lang.errorTextoCamposInvalidosGenerico);
                 return;
             }
-
-            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
 
             var solicitud = new SolicitudRegistroCuenta
             {
