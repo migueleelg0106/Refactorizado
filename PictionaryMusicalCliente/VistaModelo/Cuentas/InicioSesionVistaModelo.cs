@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly IInicioSesionService _inicioSesionService;
         private readonly ICambioContrasenaService _cambioContrasenaService;
         private readonly IRecuperacionCuentaDialogService _recuperacionCuentaDialogService;
+
+        public const string CampoContrasena = "Contrasena";
 
         private string _identificador;
         private string _contrasena;
@@ -99,6 +102,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action CerrarAccion { get; set; }
 
+        public Action<IList<string>> MostrarCamposInvalidos { get; set; }
+
         public void EstablecerContrasena(string contrasena)
         {
             _contrasena = contrasena;
@@ -108,9 +113,25 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             string identificador = Identificador?.Trim();
 
-            if (string.IsNullOrWhiteSpace(identificador) || string.IsNullOrWhiteSpace(_contrasena))
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
+
+            List<string> camposInvalidos = null;
+
+            if (string.IsNullOrWhiteSpace(identificador))
             {
-                AvisoHelper.Mostrar(Lang.errorTextoCredencialesIncorrectas);
+                camposInvalidos ??= new List<string>();
+                camposInvalidos.Add(nameof(Identificador));
+            }
+
+            if (string.IsNullOrWhiteSpace(_contrasena))
+            {
+                camposInvalidos ??= new List<string>();
+                camposInvalidos.Add(CampoContrasena);
+            }
+
+            if (camposInvalidos != null)
+            {
+                MostrarCamposInvalidos?.Invoke(camposInvalidos);
                 return;
             }
 
