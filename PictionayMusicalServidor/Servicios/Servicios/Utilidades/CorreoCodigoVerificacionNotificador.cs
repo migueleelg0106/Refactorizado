@@ -1,3 +1,4 @@
+using System;
 using System.Configuration;
 using System.Net;
 using System.Net.Mail;
@@ -10,11 +11,11 @@ namespace Servicios.Servicios.Utilidades
     {
         private const string AsuntoPredeterminado = "Código de verificación";
 
-        public async Task NotificarAsync(string correoDestino, string codigo, string usuarioDestino)
+        public async Task<bool> NotificarAsync(string correoDestino, string codigo, string usuarioDestino)
         {
             if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigo))
             {
-                return;
+                return false;
             }
 
             string remitente = ConfigurationManager.AppSettings["CorreoRemitente"];
@@ -26,7 +27,7 @@ namespace Servicios.Servicios.Utilidades
 
             if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
             {
-                return;
+                return false;
             }
 
             if (!int.TryParse(puertoConfigurado, out int puerto))
@@ -36,21 +37,30 @@ namespace Servicios.Servicios.Utilidades
 
             string cuerpo = ConstruirCuerpoMensaje(usuarioDestino, codigo);
 
-            using (var mensaje = new MailMessage(remitente, correoDestino, asunto, cuerpo))
+            try
             {
-                mensaje.IsBodyHtml = false;
-
-                using (var cliente = new SmtpClient(host, puerto))
+                using (var mensaje = new MailMessage(remitente, correoDestino, asunto, cuerpo))
                 {
-                    cliente.EnableSsl = habilitarSsl;
+                    mensaje.IsBodyHtml = false;
 
-                    if (!string.IsNullOrWhiteSpace(contrasena))
+                    using (var cliente = new SmtpClient(host, puerto))
                     {
-                        cliente.Credentials = new NetworkCredential(remitente, contrasena);
-                    }
+                        cliente.EnableSsl = habilitarSsl;
 
-                    await cliente.SendMailAsync(mensaje).ConfigureAwait(false);
+                        if (!string.IsNullOrWhiteSpace(contrasena))
+                        {
+                            cliente.Credentials = new NetworkCredential(remitente, contrasena);
+                        }
+
+                        await cliente.SendMailAsync(mensaje).ConfigureAwait(false);
+                    }
                 }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 

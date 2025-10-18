@@ -12,6 +12,7 @@ namespace Servicios.Servicios
     internal static class CodigoVerificacionServicio
     {
         private const int MinutosExpiracionCodigo = 10;
+        private const string MensajeErrorEnvioCodigo = "No fue posible enviar el código de verificación.";
 
         private static readonly ConcurrentDictionary<string, SolicitudCodigoPendiente> Solicitudes =
             new ConcurrentDictionary<string, SolicitudCodigoPendiente>();
@@ -57,17 +58,26 @@ namespace Servicios.Servicios
 
             string token = TokenGenerator.GenerarToken();
             string codigo = CodigoVerificacionGenerator.GenerarCodigo();
+            NuevaCuentaDTO datosCuenta = CopiarCuenta(nuevaCuenta);
+
+            bool enviado = EnviarCorreoVerificacion(datosCuenta, codigo);
+            if (!enviado)
+            {
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = MensajeErrorEnvioCodigo
+                };
+            }
 
             var solicitud = new SolicitudCodigoPendiente
             {
-                DatosCuenta = CopiarCuenta(nuevaCuenta),
+                DatosCuenta = datosCuenta,
                 Codigo = codigo,
                 Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo)
             };
 
             Solicitudes[token] = solicitud;
-
-            EnviarCorreoVerificacionAsync(nuevaCuenta, codigo);
 
             return new ResultadoSolicitudCodigoDTO
             {
@@ -92,11 +102,25 @@ namespace Servicios.Servicios
                 };
             }
 
+            string codigoAnterior = existente.Codigo;
+            DateTime expiracionAnterior = existente.Expira;
+
             string nuevoCodigo = CodigoVerificacionGenerator.GenerarCodigo();
             existente.Codigo = nuevoCodigo;
             existente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
 
-            EnviarCorreoVerificacionAsync(existente.DatosCuenta, nuevoCodigo);
+            bool enviado = EnviarCorreoVerificacion(existente.DatosCuenta, nuevoCodigo);
+            if (!enviado)
+            {
+                existente.Codigo = codigoAnterior;
+                existente.Expira = expiracionAnterior;
+
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = MensajeErrorEnvioCodigo
+                };
+            }
 
             return new ResultadoSolicitudCodigoDTO
             {
@@ -201,9 +225,18 @@ namespace Servicios.Servicios
                     Confirmado = false
                 };
 
-                SolicitudesRecuperacion[token] = pendiente;
+                bool enviado = EnviarCorreoRecuperacion(pendiente, codigo);
+                if (!enviado)
+                {
+                    return new ResultadoSolicitudRecuperacionDTO
+                    {
+                        CuentaEncontrada = true,
+                        CodigoEnviado = false,
+                        Mensaje = MensajeErrorEnvioCodigo
+                    };
+                }
 
-                EnviarCorreoRecuperacion(pendiente, codigo);
+                SolicitudesRecuperacion[token] = pendiente;
 
                 return new ResultadoSolicitudRecuperacionDTO
                 {
@@ -241,12 +274,28 @@ namespace Servicios.Servicios
                 };
             }
 
+            string codigoAnterior = pendiente.Codigo;
+            DateTime expiracionAnterior = pendiente.Expira;
+            bool confirmadoAnterior = pendiente.Confirmado;
+
             string nuevoCodigo = CodigoVerificacionGenerator.GenerarCodigo();
             pendiente.Codigo = nuevoCodigo;
             pendiente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
             pendiente.Confirmado = false;
 
-            EnviarCorreoRecuperacion(pendiente, nuevoCodigo);
+            bool enviado = EnviarCorreoRecuperacion(pendiente, nuevoCodigo);
+            if (!enviado)
+            {
+                pendiente.Codigo = codigoAnterior;
+                pendiente.Expira = expiracionAnterior;
+                pendiente.Confirmado = confirmadoAnterior;
+
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = MensajeErrorEnvioCodigo
+                };
+            }
 
             return new ResultadoSolicitudCodigoDTO
             {
@@ -393,16 +442,26 @@ namespace Servicios.Servicios
             VerificacionesConfirmadas.TryRemove(clave, out _);
         }
 
-        private static void EnviarCorreoVerificacionAsync(NuevaCuentaDTO nuevaCuenta, string codigo)
+        private static bool EnviarCorreoVerificacion(NuevaCuentaDTO nuevaCuenta, string codigo)
         {
+            if (nuevaCuenta == null || string.IsNullOrWhiteSpace(codigo))
+            {
+                return false;
+            }
+
             try
             {
-                _notificador?.NotificarAsync(nuevaCuenta.Correo, codigo, nuevaCuenta.Usuario).Wait();
+                var tarea = _notificador?.NotificarAsync(nuevaCuenta.Correo, codigo, nuevaCuenta.Usuario);
+                if (tarea == null)
+                {
+                    return false;
+                }
+
+                return tarea.GetAwaiter().GetResult();
             }
             catch
             {
-                // Si el envío falla, dejamos que la verificación continúe para permitir
-                // que el cliente informe del error usando el mensaje de resultado.
+                return false;
             }
         }
 
@@ -450,11 +509,11 @@ namespace Servicios.Servicios
                 .FirstOrDefault(u => string.Equals(u.Jugador?.Correo, identificador, StringComparison.Ordinal));
         }
 
-        private static void EnviarCorreoRecuperacion(SolicitudRecuperacionPendiente pendiente, string codigo)
+        private static bool EnviarCorreoRecuperacion(SolicitudRecuperacionPendiente pendiente, string codigo)
         {
             if (pendiente == null)
             {
-                return;
+                return false;
             }
 
             var datos = new NuevaCuentaDTO
@@ -467,7 +526,7 @@ namespace Servicios.Servicios
                 AvatarId = pendiente.AvatarId
             };
 
-            EnviarCorreoVerificacionAsync(datos, codigo);
+            return EnviarCorreoVerificacion(datos, codigo);
         }
 
         private static NuevaCuentaDTO CopiarCuenta(NuevaCuentaDTO original)
