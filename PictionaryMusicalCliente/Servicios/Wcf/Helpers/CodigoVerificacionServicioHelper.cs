@@ -1,14 +1,16 @@
 using System;
 using System.Threading.Tasks;
+using CambioContrasenaSrv = PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena;
 using CodigoVerificacionSrv = PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion;
-using ReenvioSrv = PictionaryMusicalCliente.PictionaryServidorServicioReenvioCodigoVerificacion;
+using CuentaSrv = PictionaryMusicalCliente.PictionaryServidorServicioCuenta;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
 {
     internal static class CodigoVerificacionServicioHelper
     {
         private const string CodigoVerificacionEndpoint = "BasicHttpBinding_ICodigoVerificacionManejador";
-        private const string ReenvioCodigoEndpoint = "BasicHttpBinding_IReenviarCodigoVerificacionManejador";
+        private const string CuentaEndpoint = "BasicHttpBinding_ICuentaManejador";
+        private const string CambioContrasenaEndpoint = "BasicHttpBinding_ICambiarContrasenaManejador";
 
         public static Task<CodigoVerificacionSrv.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(
             CodigoVerificacionSrv.NuevaCuentaDTO solicitud)
@@ -62,10 +64,10 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
             return WcfClientHelper.UsarAsync(cliente, c => c.ConfirmarCodigoRecuperacionAsync(solicitud));
         }
 
-        public static Task<ReenvioSrv.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
+        public static Task<CuentaSrv.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
         {
-            var cliente = new ReenvioSrv.ReenviarCodigoVerificacionManejadorClient(ReenvioCodigoEndpoint);
-            var solicitud = new ReenvioSrv.ReenviarCodigoDTO
+            var cliente = new CuentaSrv.CuentaManejadorClient(CuentaEndpoint);
+            var solicitud = new CuentaSrv.ReenviarCodigoVerificacionDTO
             {
                 TokenCodigo = tokenCodigo?.Trim()
             };
@@ -73,10 +75,10 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
             return WcfClientHelper.UsarAsync(cliente, c => c.ReenviarCodigoVerificacionAsync(solicitud));
         }
 
-        public static Task<ReenvioSrv.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(string tokenCodigo)
+        public static Task<CambioContrasenaSrv.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(string tokenCodigo)
         {
-            var cliente = new ReenvioSrv.ReenviarCodigoVerificacionManejadorClient(ReenvioCodigoEndpoint);
-            var solicitud = new ReenvioSrv.ReenviarCodigoDTO
+            var cliente = new CambioContrasenaSrv.CambiarContrasenaManejadorClient(CambioContrasenaEndpoint);
+            var solicitud = new CambioContrasenaSrv.ReenviarCodigoDTO
             {
                 TokenCodigo = tokenCodigo?.Trim()
             };

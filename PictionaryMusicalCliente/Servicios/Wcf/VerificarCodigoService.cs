@@ -6,7 +6,7 @@ using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using CodigoVerificacionSrv = PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion;
-using ReenvioSrv = PictionaryMusicalCliente.PictionaryServidorServicioReenvioCodigoVerificacion;
+using CuentaSrv = PictionaryMusicalCliente.PictionaryServidorServicioCuenta;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf
 {
@@ -38,7 +38,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 throw new ArgumentException(Lang.errorTextoTokenCodigoObligatorio, nameof(tokenCodigo));
             }
 
-            ReenvioSrv.ResultadoSolicitudCodigoDTO resultado = await EjecutarOperacionAsync(
+            CuentaSrv.ResultadoSolicitudCodigoDTO resultado = await EjecutarOperacionAsync(
                 () => CodigoVerificacionServicioHelper.ReenviarCodigoRegistroAsync(tokenCodigo),
                 Lang.errorTextoServidorReenviarCodigo).ConfigureAwait(false);
 

@@ -8,7 +8,6 @@ using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using CambioContrasenaSrv = PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena;
 using CodigoVerificacionSrv = PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion;
-using ReenvioSrv = PictionaryMusicalCliente.PictionaryServidorServicioReenvioCodigoVerificacion;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf
 {
@@ -74,7 +73,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                ReenvioSrv.ResultadoSolicitudCodigoDTO resultado = await CodigoVerificacionServicioHelper
+                CambioContrasenaSrv.ResultadoSolicitudCodigoDTO resultado = await CodigoVerificacionServicioHelper
                     .ReenviarCodigoRecuperacionAsync(tokenCodigo).ConfigureAwait(false);
 
                 if (resultado == null)
