@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
@@ -38,6 +39,7 @@ namespace PictionaryMusicalCliente
                 CerrarAccion = Close
             };
 
+            vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
             vistaModelo.InicioSesionCompletado = _ =>
             {
                 var ventanaPrincipal = new VentanaPrincipal();
@@ -52,6 +54,30 @@ namespace PictionaryMusicalCliente
             if (DataContext is InicioSesionVistaModelo vistaModelo && sender is PasswordBox passwordBox)
             {
                 vistaModelo.EstablecerContrasena(passwordBox.Password);
+            }
+        }
+
+        private void MarcarCamposInvalidos(IList<string> camposInvalidos)
+        {
+            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoUsuario);
+            ControlVisualHelper.RestablecerEstadoCampo(bloqueContrasenaContrasena);
+
+            if (camposInvalidos == null)
+            {
+                return;
+            }
+
+            foreach (string campo in camposInvalidos)
+            {
+                switch (campo)
+                {
+                    case nameof(InicioSesionVistaModelo.Identificador):
+                        ControlVisualHelper.MarcarCampoInvalido(bloqueTextoUsuario);
+                        break;
+                    case InicioSesionVistaModelo.CampoContrasena:
+                        ControlVisualHelper.MarcarCampoInvalido(bloqueContrasenaContrasena);
+                        break;
+                }
             }
         }
     }
