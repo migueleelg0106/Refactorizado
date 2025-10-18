@@ -40,12 +40,12 @@ namespace HostServidor
                         Bitacora.Info($"Código -> {ep.Address} ({ep.Binding.Name})");
                     }
 
-                   // hostAvatares.Open();
-                    //Bitacora.Info("Servicio Avatares iniciado.");
-                   // foreach (var ep in hostAvatares.Description.Endpoints)
-                   // {
-                    //    Bitacora.Info($"Avatares -> {ep.Address} ({ep.Binding.Name})");
-                  //  }
+                    hostAvatares.Open();
+                    Bitacora.Info("Servicio Avatares iniciado.");
+                    foreach (var ep in hostAvatares.Description.Endpoints)
+                    {
+                        Bitacora.Info($"Avatares -> {ep.Address} ({ep.Binding.Name})");
+                    }
 
                     hostInicioSesion.Open();
                     Bitacora.Info("Servicio Inicio sesion.");
@@ -96,7 +96,7 @@ namespace HostServidor
                 }
                 finally
                 {
-                  //  CerrarFormaSegura(hostAvatares);
+                    CerrarFormaSegura(hostAvatares);
                     CerrarFormaSegura(hostCodigo);
                     CerrarFormaSegura(hostCuenta);
                     CerrarFormaSegura(hostInicioSesion);
