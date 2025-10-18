@@ -14,7 +14,9 @@ namespace PictionaryMusicalCliente
     {
         public InicioSesion()
         {
+            Resources["Localizacion"] = new Utilidades.Idiomas.LocalizacionContexto();
             InitializeComponent();
+
 
             IInicioSesionService inicioSesionService = new InicioSesionService();
             ICambioContrasenaService cambioContrasenaService = new CambioContrasenaService();

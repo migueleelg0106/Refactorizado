@@ -9,7 +9,6 @@
 
     <Window.Resources>
         <convertidores:ConvertidorBooleanoInverso x:Key="BooleanoInverso"/>
-        <localizacion:LocalizacionContexto x:Key="Localizacion"/>
     </Window.Resources>
 
     <Grid>
@@ -121,7 +120,7 @@
                     FontFamily="Comic Sans MS"
                     Background="White" BorderBrush="Black"
                     Grid.Column="1" Margin="16,0,0,0"
-                    Command="{Binding AbrirCrearCuentaCommand}"/>
+                    Command="{Binding AbrirCrearCuentaCommand}" Cursor=""/>
                 </Grid>
             </Grid>
         </Border>
