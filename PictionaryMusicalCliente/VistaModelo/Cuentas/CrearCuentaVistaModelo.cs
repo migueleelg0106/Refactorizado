@@ -146,41 +146,59 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             if (!resultadoUsuario.Exito)
             {
                 camposInvalidos.Add(nameof(Usuario));
-                mensajeError ??= resultadoUsuario.Mensaje;
+                if (mensajeError == null)
+                {
+                    mensajeError = resultadoUsuario.Mensaje;
+                }
             }
 
             ResultadoOperacion resultadoNombre = ValidacionEntradaHelper.ValidarNombre(Nombre);
             if (!resultadoNombre.Exito)
             {
                 camposInvalidos.Add(nameof(Nombre));
-                mensajeError ??= resultadoNombre.Mensaje;
+                if (mensajeError == null)
+                {
+                    mensajeError = resultadoNombre.Mensaje;
+                }
             }
 
             ResultadoOperacion resultadoApellido = ValidacionEntradaHelper.ValidarApellido(Apellido);
             if (!resultadoApellido.Exito)
             {
                 camposInvalidos.Add(nameof(Apellido));
-                mensajeError ??= resultadoApellido.Mensaje;
+                if (mensajeError == null)
+                {
+                    mensajeError = resultadoApellido.Mensaje;
+                }
             }
 
             ResultadoOperacion resultadoCorreo = ValidacionEntradaHelper.ValidarCorreo(Correo);
             if (!resultadoCorreo.Exito)
             {
                 camposInvalidos.Add(nameof(Correo));
-                mensajeError ??= resultadoCorreo.Mensaje;
+                if (mensajeError == null)
+                {
+                    mensajeError = resultadoCorreo.Mensaje;
+                }
             }
 
             ResultadoOperacion resultadoContrasena = ValidacionEntradaHelper.ValidarContrasena(Contrasena);
             if (!resultadoContrasena.Exito)
             {
                 camposInvalidos.Add(nameof(Contrasena));
-                mensajeError ??= resultadoContrasena.Mensaje;
+                if (mensajeError == null)
+                {
+                    mensajeError = resultadoContrasena.Mensaje;
+                }
             }
 
             if (AvatarSeleccionadoId <= 0)
             {
                 camposInvalidos.Add("Avatar");
-                mensajeError ??= Lang.errorTextoSeleccionAvatarValido;
+                if (mensajeError == null)
+                {
+                    mensajeError = Lang.errorTextoSeleccionAvatarValido;
+                }
             }
 
             if (camposInvalidos.Count > 0)

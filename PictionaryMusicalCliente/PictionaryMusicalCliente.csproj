@@ -109,6 +109,7 @@
     <Compile Include="Servicios\Abstracciones\ICambioContrasenaService.cs" />
     <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IClasificacionService.cs" />
+    <Compile Include="Servicios\Abstracciones\ICuentaService.cs" />
     <Compile Include="Servicios\Abstracciones\IDialogService.cs" />
     <Compile Include="Servicios\Abstracciones\IInicioSesionService.cs" />
     <Compile Include="Servicios\Abstracciones\IRecuperacionCuentaDialogService.cs" />
