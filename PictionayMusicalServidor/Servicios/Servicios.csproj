@@ -97,6 +97,7 @@
     <Compile Include="Contratos\ISalasManejador.cs" />
     <Compile Include="Contratos\ISalirSalaManager.cs" />
     <Compile Include="Contratos\DTOs\ActualizarContrasenaDTO.cs" />
+    <Compile Include="Contratos\DTOs\ClasificacionUsuarioDTO.cs" />
     <Compile Include="Contratos\DTOs\ConfirmarCodigoDTO.cs" />
     <Compile Include="Contratos\DTOs\CredencialesInicioSesionDTO.cs" />
     <Compile Include="Contratos\DTOs\NuevaCuentaDTO.cs" />
