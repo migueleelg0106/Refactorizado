@@ -7,6 +7,8 @@ using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Sesiones;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Idiomas;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -24,8 +26,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private OpcionTexto _dificultadSeleccionada;
         private ObservableCollection<string> _amigos;
 
+        private readonly ILocalizacionService _localizacionService;
+
         public VentanaPrincipalVistaModelo()
+            : this(LocalizacionService.Instancia)
         {
+        }
+
+        public VentanaPrincipalVistaModelo(ILocalizacionService localizacionService)
+        {
+            _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
+
             CargarDatosUsuario();
             CargarOpcionesPartida();
             CargarIdiomas();
@@ -103,11 +114,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _idiomaSeleccionado, value) && value != null)
                 {
-                    CultureInfo cultura = new CultureInfo(value.Codigo);
-                    Lang.Culture = cultura;
-                    CultureInfo.DefaultThreadCurrentCulture = cultura;
-                    CultureInfo.DefaultThreadCurrentUICulture = cultura;
-
+                    _localizacionService.EstablecerIdioma(value.Codigo);
                     ActualizarEstadoIniciarJuego();
                 }
             }
@@ -228,7 +235,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 new IdiomaOpcion("en-US", "English")
             };
 
-            string culturaActual = Lang.Culture?.Name ?? CultureInfo.CurrentUICulture?.Name;
+            string culturaActual = _localizacionService.CulturaActual?.Name
+                ?? CultureInfo.CurrentUICulture?.Name;
 
             IdiomaSeleccionado = IdiomasDisponibles
                 .FirstOrDefault(i => string.Equals(i.Codigo, culturaActual, StringComparison.OrdinalIgnoreCase))

@@ -111,6 +111,7 @@
     <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IClasificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\ICuentaService.cs" />
+    <Compile Include="Servicios\Abstracciones\ILocalizacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IInicioSesionService.cs" />
     <Compile Include="Servicios\Abstracciones\IRecuperacionCuentaDialogService.cs" />
     <Compile Include="Servicios\Abstracciones\ISeleccionarAvatarService.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Servicios\Dialogos\RecuperacionCuentaDialogService.cs" />
     <Compile Include="Servicios\Dialogos\SeleccionarAvatarDialogService.cs" />
     <Compile Include="Servicios\Dialogos\VerificarCodigoDialogService.cs" />
+    <Compile Include="Servicios\Idiomas\LocalizacionService.cs" />
     <Compile Include="Servicios\ServicioException.cs" />
     <Compile Include="Servicios\Wcf\AvatarService.cs" />
     <Compile Include="Servicios\Wcf\CambioContrasenaService.cs" />
@@ -133,6 +135,7 @@
     <Compile Include="Utilidades\AvatarHelper.cs" />
     <Compile Include="Utilidades\AvisoHelper.cs" />
     <Compile Include="Utilidades\ControlVisualHelper.cs" />
+    <Compile Include="Utilidades\Idiomas\LocalizacionContexto.cs" />
     <Compile Include="Utilidades\ValidacionEntradaHelper.cs" />
     <Compile Include="Servicios\Wcf\Helpers\AvatarRutaHelper.cs" />
     <Compile Include="Servicios\Wcf\Helpers\AvatarServicioHelper.cs" />
