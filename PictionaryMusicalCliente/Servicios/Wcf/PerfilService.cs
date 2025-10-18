@@ -98,11 +98,9 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     return null;
                 }
 
-                return new ResultadoOperacion
-                {
-                    OperacionExitosa = resultado.OperacionExitosa,
-                    Mensaje = resultado.Mensaje
-                };
+                return resultado.OperacionExitosa
+                    ? ResultadoOperacion.Exitoso(resultado.Mensaje)
+                    : ResultadoOperacion.Fallo(resultado.Mensaje);
             }
             catch (FaultException ex)
             {

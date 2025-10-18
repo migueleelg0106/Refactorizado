@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using PictionaryMusicalCliente.Modelo;
 using LangResources = PictionaryMusicalCliente.Properties.Langs;
 
 namespace PictionaryMusicalCliente.Utilidades

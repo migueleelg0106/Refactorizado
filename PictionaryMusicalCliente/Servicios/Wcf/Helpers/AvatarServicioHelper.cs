@@ -31,13 +31,12 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
                 return null;
             }
 
-            return new ObjetoAvatar
-            {
-                Id = dto.Id,
-                Nombre = dto.Nombre,
-                RutaRelativa = dto.RutaRelativa,
-                ImagenUriAbsoluta = ObtenerRutaAbsoluta(dto.RutaRelativa)
-            };
+            return new ObjetoAvatar(
+                dto.Id,
+                dto.Nombre,
+                imagen: null,
+                rutaRelativa: dto.RutaRelativa,
+                imagenUriAbsoluta: ObtenerRutaAbsoluta(dto.RutaRelativa));
         }
 
         private static string ObtenerRutaAbsoluta(string rutaRelativa)
