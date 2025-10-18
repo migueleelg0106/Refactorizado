@@ -53,7 +53,7 @@ namespace Servicios.Servicios
                         return new ResultadoInicioSesionDTO
                         {
                             ContrasenaIncorrecta = true,
-                            Mensaje = null
+                            Mensaje = "Credenciales incorrectas."
                         };
                     }
 
