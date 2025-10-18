@@ -1,15 +1,64 @@
-using Datos.DAL.Implementaciones;
-using Datos.DAL.Interfaces;
 using Servicios.Contratos;
-using Servicios.Servicios.Utilidades;
 using System;
-using System.Data;
 using log4net;
+using Servicios.Contratos.DTOs;
+using Servicios.Servicios.Utilidades;
 
 namespace Servicios.Servicios
 {
     public class CodigoVerificacionManejador : ICodigoVerificacionManejador
     {
-        
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(CodigoVerificacionManejador));
+
+        public ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(NuevaCuentaDTO nuevaCuenta)
+        {
+            try
+            {
+                return CodigoVerificacionServicio.SolicitarCodigo(nuevaCuenta);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error al solicitar código de verificación", ex);
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = ex.Message
+                };
+            }
+        }
+
+        public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenviarCodigoVerificacionDTO solicitud)
+        {
+            try
+            {
+                return CodigoVerificacionServicio.ReenviarCodigo(solicitud);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error al reenviar código de verificación", ex);
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = ex.Message
+                };
+            }
+        }
+
+        public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmarCodigoDTO confirmacion)
+        {
+            try
+            {
+                return CodigoVerificacionServicio.ConfirmarCodigo(confirmacion);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error al confirmar el código de verificación", ex);
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    Mensaje = ex.Message
+                };
+            }
+        }
     }
 }

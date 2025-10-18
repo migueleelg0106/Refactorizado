@@ -87,6 +87,11 @@
     <Compile Include="Contratos\IReenviarCodigoVerificacionManejador.cs" />
     <Compile Include="Contratos\ISalasManejador.cs" />
     <Compile Include="Contratos\ISalirSalaManager.cs" />
+    <Compile Include="Contratos\DTOs\ConfirmarCodigoDTO.cs" />
+    <Compile Include="Contratos\DTOs\NuevaCuentaDTO.cs" />
+    <Compile Include="Contratos\DTOs\ReenviarCodigoVerificacionDTO.cs" />
+    <Compile Include="Contratos\DTOs\ResultadoRegistroCuentaDTO.cs" />
+    <Compile Include="Contratos\DTOs\ResultadoSolicitudCodigoDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\CatalogoAvatares.cs" />
     <Compile Include="Servicios\ClasificacionManejador.cs" />

@@ -5,5 +5,6 @@ namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface ISeleccionarAvatarService
     {
+        Task<ObjetoAvatar> SeleccionarAvatarAsync(int? avatarSeleccionadoId = null);
     }
 }
