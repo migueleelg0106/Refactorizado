@@ -112,18 +112,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private async Task IniciarSesionAsync()
         {
             string identificador = Identificador?.Trim();
+            bool identificadorIngresado = !string.IsNullOrWhiteSpace(identificador);
+            bool contrasenaIngresada = !string.IsNullOrWhiteSpace(_contrasena);
 
             MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
 
             List<string> camposInvalidos = null;
 
-            if (string.IsNullOrWhiteSpace(identificador))
+            if (!identificadorIngresado)
             {
                 camposInvalidos ??= new List<string>();
                 camposInvalidos.Add(nameof(Identificador));
             }
 
-            if (string.IsNullOrWhiteSpace(_contrasena))
+            if (!contrasenaIngresada)
             {
                 camposInvalidos ??= new List<string>();
                 camposInvalidos.Add(CampoContrasena);
@@ -134,6 +136,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
                 return;
             }
+
+            bool credencialesCapturadas = identificadorIngresado && contrasenaIngresada;
 
             EstaProcesando = true;
 
@@ -156,8 +160,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.InicioSesionExitoso)
                 {
-                    string mensaje = resultado.Mensaje ?? Lang.errorTextoCredencialesIncorrectas;
-                    AvisoHelper.Mostrar(mensaje);
+                    string mensaje = resultado.Mensaje;
+
+                    if (string.IsNullOrWhiteSpace(mensaje) && credencialesCapturadas)
+                    {
+                        mensaje = Lang.errorTextoCredencialesIncorrectas;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(mensaje))
+                    {
+                        AvisoHelper.Mostrar(mensaje);
+                    }
+
                     return;
                 }
 
