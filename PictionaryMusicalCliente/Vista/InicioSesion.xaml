@@ -120,7 +120,7 @@
                     FontFamily="Comic Sans MS"
                     Background="White" BorderBrush="Black"
                     Grid.Column="1" Margin="16,0,0,0"
-                    Command="{Binding AbrirCrearCuentaCommand}" Cursor=""/>
+                    Command="{Binding AbrirCrearCuentaCommand}"/>
                 </Grid>
             </Grid>
         </Border>
