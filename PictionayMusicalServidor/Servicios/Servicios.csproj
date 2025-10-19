@@ -112,6 +112,7 @@
     <Compile Include="Contratos\DTOs\ResultadoSolicitudRecuperacionDTO.cs" />
     <Compile Include="Contratos\DTOs\RespuestaSolicitudAmistadNotificacionDTO.cs" />
     <Compile Include="Contratos\DTOs\SolicitudAmistadNotificacionDTO.cs" />
+    <Compile Include="Contratos\DTOs\ListaAmigosDTO.cs" />
     <Compile Include="Contratos\DTOs\SolicitudRecuperarCuentaDTO.cs" />
     <Compile Include="Contratos\DTOs\UsuarioDTO.cs" />
     <Compile Include="Contratos\DTOs\AvatarDTO.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Servicios\InicioSesionManejador.cs" />
     <Compile Include="Servicios\CambiarContrasenaManejador.cs" />
     <Compile Include="Servicios\PerfilManejador.cs" />
+    <Compile Include="Servicios\ListaAmigosManejador.cs" />
     <Compile Include="Servicios\Utilidades\CorreoCodigoVerificacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\ICodigoVerificacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\CodigoVerificacionGenerator.cs" />

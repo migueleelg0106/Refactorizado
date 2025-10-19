@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Datos.DAL.Interfaces;
@@ -70,6 +71,17 @@ namespace Datos.DAL.Implementaciones
 
             contexto.Solicitud.Remove(solicitud);
             contexto.SaveChanges();
+        }
+
+        public IEnumerable<Jugador> ObtenerAmigosDe(int jugadorId)
+        {
+            return contexto.Solicitud
+                .Where(s =>
+                    (s.Jugador_idJugador == jugadorId || s.Jugador_idJugador1 == jugadorId) &&
+                    s.Estado != null && s.Estado.Length > 0 && s.Estado[0] != 0)
+                .Select(s => s.Jugador_idJugador == jugadorId ? s.Jugador1 : s.Jugador)
+                .Include(j => j.Usuario)
+                .ToList();
         }
 
         private static byte[] CrearEstado(bool aceptada)

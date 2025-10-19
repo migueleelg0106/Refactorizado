@@ -132,6 +132,10 @@ namespace Servicios.Servicios
                 }
 
                 NotificarRespuestaSolicitud(nombreUsuarioRemitente, nombreUsuarioReceptor, aceptada);
+                if (aceptada)
+                {
+                    ListaAmigosManejador.NotificarActualizacionAmigos(nombreUsuarioRemitente, nombreUsuarioReceptor);
+                }
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = true,
@@ -187,6 +191,7 @@ namespace Servicios.Servicios
                 }
 
                 NotificarEliminacionAmistad(nombreUsuarioRemitente, nombreUsuarioReceptor);
+                ListaAmigosManejador.NotificarActualizacionAmigos(nombreUsuarioRemitente, nombreUsuarioReceptor);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = true,
