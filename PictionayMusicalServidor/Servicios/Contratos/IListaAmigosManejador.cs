@@ -1,14 +1,13 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
+using Servicios.Contratos.DTOs;
 
 namespace Servicios.Contratos
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IAmigosCallback))]
     public interface IListaAmigosManejador
     {
+        [OperationContract]
+        IList<AmigoDTO> ObtenerListaAmigos(int jugadorId);
     }
 }

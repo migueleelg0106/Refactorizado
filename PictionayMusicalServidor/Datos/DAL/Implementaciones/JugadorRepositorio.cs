@@ -1,4 +1,5 @@
 using System;
+using System.Data.Entity;
 using System.Linq;
 using Datos.DAL.Interfaces;
 using Datos.Modelo;
@@ -29,6 +30,13 @@ namespace Datos.DAL.Implementaciones
             var entidad = contexto.Jugador.Add(jugador);
             contexto.SaveChanges();
             return entidad;
+        }
+
+        public Jugador ObtenerJugadorConAvatar(int jugadorId)
+        {
+            return contexto.Jugador
+                .Include(j => j.Avatar)
+                .FirstOrDefault(j => j.idJugador == jugadorId);
         }
     }
 }

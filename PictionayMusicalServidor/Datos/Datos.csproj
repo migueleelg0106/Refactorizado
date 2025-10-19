@@ -56,10 +56,12 @@
     <Compile Include="DAL\Implementaciones\AvatarRepositorio.cs" />
     <Compile Include="DAL\Implementaciones\ClasificacionRepositorio.cs" />
     <Compile Include="DAL\Implementaciones\JugadorRepositorio.cs" />
+    <Compile Include="DAL\Implementaciones\SolicitudRepositorio.cs" />
     <Compile Include="DAL\Implementaciones\UsuarioRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IAvatarRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IClasificacionRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IJugadorRepositorio.cs" />
+    <Compile Include="DAL\Interfaces\ISolicitudRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IUsuarioRepositorio.cs" />
     <Compile Include="Modelo\Artista.cs">
       <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
