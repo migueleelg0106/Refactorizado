@@ -162,6 +162,7 @@
     <Compile Include="Servicios\Wcf\Helpers\WcfClientHelper.cs" />
     <Compile Include="VistaModelo\BaseVistaModelo.cs" />
     <Compile Include="VistaModelo\BuscarAmigoVistaModelo.cs" />
+    <Compile Include="VistaModelo\SolicitudesVistaModelo.cs" />
     <Compile Include="Connected Services\PictionaryServidorServicioAvatares\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
