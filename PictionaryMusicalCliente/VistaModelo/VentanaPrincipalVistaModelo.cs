@@ -1,18 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Modelo.Amigos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Idiomas;
+using PictionaryMusicalCliente.Servicios.Wcf;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
-    public class VentanaPrincipalVistaModelo : BaseVistaModelo
+    public class VentanaPrincipalVistaModelo : BaseVistaModelo, IDisposable
     {
         private string _nombreUsuario;
         private string _codigoSala;
@@ -25,17 +30,24 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private ObservableCollection<OpcionTexto> _dificultadesDisponibles;
         private OpcionTexto _dificultadSeleccionada;
         private ObservableCollection<string> _amigos;
+        private string _amigoSeleccionado;
 
         private readonly ILocalizacionService _localizacionService;
+        private readonly IListaAmigosService _listaAmigosService;
 
         public VentanaPrincipalVistaModelo()
-            : this(LocalizacionService.Instancia)
+            : this(LocalizacionService.Instancia, new ListaAmigosService())
         {
         }
 
-        public VentanaPrincipalVistaModelo(ILocalizacionService localizacionService)
+        public VentanaPrincipalVistaModelo(
+            ILocalizacionService localizacionService,
+            IListaAmigosService listaAmigosService)
         {
             _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
+            _listaAmigosService = listaAmigosService ?? throw new ArgumentNullException(nameof(listaAmigosService));
+
+            _listaAmigosService.ListaActualizada += ListaAmigosService_ListaActualizada;
 
             CargarDatosUsuario();
             CargarOpcionesPartida();
@@ -47,10 +59,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             AbrirClasificacionCommand = new ComandoDelegado(_ => AbrirClasificacion?.Invoke());
             AbrirBuscarAmigoCommand = new ComandoDelegado(_ => AbrirBuscarAmigo?.Invoke());
             AbrirSolicitudesCommand = new ComandoDelegado(_ => AbrirSolicitudes?.Invoke());
-            AbrirEliminarAmigoCommand = new ComandoDelegado(_ => AbrirEliminarAmigo?.Invoke());
+            AbrirEliminarAmigoCommand = new ComandoDelegado(
+                _ => AbrirEliminarAmigo?.Invoke(AmigoSeleccionado),
+                _ => !string.IsNullOrWhiteSpace(AmigoSeleccionado));
             AbrirInvitacionesCommand = new ComandoDelegado(_ => AbrirInvitaciones?.Invoke());
             UnirseSalaCommand = new ComandoDelegado(_ => UnirseSalaInterno());
             IniciarJuegoCommand = new ComandoDelegado(_ => IniciarJuegoInterno(), _ => PuedeIniciarJuego());
+
+            _ = RecargarAmigosAsync();
         }
 
         public string NombreUsuario
@@ -144,6 +160,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             private set => EstablecerPropiedad(ref _amigos, value);
         }
 
+        public string AmigoSeleccionado
+        {
+            get => _amigoSeleccionado;
+            set
+            {
+                if (EstablecerPropiedad(ref _amigoSeleccionado, value)
+                    && AbrirEliminarAmigoCommand is IComandoNotificable notificable)
+                {
+                    notificable.NotificarPuedeEjecutar();
+                }
+            }
+        }
+
         public ICommand AbrirPerfilCommand { get; }
 
         public ICommand AbrirAjustesCommand { get; }
@@ -176,7 +205,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action AbrirSolicitudes { get; set; }
 
-        public Action AbrirEliminarAmigo { get; set; }
+        public Action<string> AbrirEliminarAmigo { get; set; }
 
         public Action AbrirInvitaciones { get; set; }
 
@@ -191,6 +220,95 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             CodigoSala = string.Empty;
             Amigos = new ObservableCollection<string>();
             NombreUsuario = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
+        }
+
+        public async Task RecargarAmigosAsync()
+        {
+            string nombreUsuario = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario;
+
+            if (string.IsNullOrWhiteSpace(nombreUsuario))
+            {
+                ActualizarListaAmigos(Array.Empty<string>());
+                return;
+            }
+
+            try
+            {
+                ListaAmigosResultado resultado = await _listaAmigosService
+                    .ObtenerListaAmigosAsync(nombreUsuario)
+                    .ConfigureAwait(true);
+
+                if (resultado == null)
+                {
+                    MostrarMensaje?.Invoke(Lang.amigosTextoListaNoDisponible);
+                    ActualizarListaAmigos(Array.Empty<string>());
+                    return;
+                }
+
+                if (!resultado.Exito)
+                {
+                    if (!string.IsNullOrWhiteSpace(resultado.Mensaje))
+                    {
+                        MostrarMensaje?.Invoke(resultado.Mensaje);
+                    }
+
+                    ActualizarListaAmigos(resultado.Amigos);
+                    return;
+                }
+
+                ActualizarListaAmigos(resultado.Amigos);
+            }
+            catch (ServicioException ex)
+            {
+                MostrarMensaje?.Invoke(ex.Message ?? Lang.amigosTextoListaNoDisponible);
+                ActualizarListaAmigos(Array.Empty<string>());
+            }
+            catch (ArgumentException)
+            {
+                ActualizarListaAmigos(Array.Empty<string>());
+            }
+        }
+
+        private void ListaAmigosService_ListaActualizada(object sender, ListaAmigosResultado resultado)
+        {
+            if (resultado == null)
+            {
+                return;
+            }
+
+            if (!resultado.Exito && !string.IsNullOrWhiteSpace(resultado.Mensaje))
+            {
+                MostrarMensaje?.Invoke(resultado.Mensaje);
+            }
+
+            ActualizarListaAmigos(resultado.Amigos);
+        }
+
+        private void ActualizarListaAmigos(IEnumerable<string> amigos)
+        {
+            IEnumerable<string> lista = amigos ?? Array.Empty<string>();
+            Amigos = new ObservableCollection<string>(lista);
+
+            if (string.IsNullOrWhiteSpace(AmigoSeleccionado))
+            {
+                return;
+            }
+
+            bool existe = lista.Any(a => string.Equals(a, AmigoSeleccionado, StringComparison.OrdinalIgnoreCase));
+
+            if (!existe)
+            {
+                AmigoSeleccionado = null;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_listaAmigosService != null)
+            {
+                _listaAmigosService.ListaActualizada -= ListaAmigosService_ListaActualizada;
+                _listaAmigosService.Dispose();
+            }
         }
 
         private void CargarOpcionesPartida()

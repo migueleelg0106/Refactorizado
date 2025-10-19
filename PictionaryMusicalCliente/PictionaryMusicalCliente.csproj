@@ -103,6 +103,10 @@
     <Compile Include="Convertidores\ConvertidorCadenaVaciaVisibilidad.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoAvataresLocales.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoImagenesPerfilLocales.cs" />
+    <Compile Include="Modelo\Amigos\ListaAmigosResultado.cs" />
+    <Compile Include="Modelo\Amigos\AmistadEliminadaNotificacion.cs" />
+    <Compile Include="Modelo\Amigos\RespuestaSolicitudAmistadNotificacion.cs" />
+    <Compile Include="Modelo\Amigos\SolicitudAmistadNotificacion.cs" />
     <Compile Include="Modelo\ObjetoAvatar.cs" />
     <Compile Include="Modelo\ResultadoOperacion.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
@@ -120,9 +124,11 @@
     <Compile Include="Servicios\Abstracciones\ICambioContrasenaService.cs" />
     <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IClasificacionService.cs" />
+    <Compile Include="Servicios\Abstracciones\IAmigosService.cs" />
     <Compile Include="Servicios\Abstracciones\ICuentaService.cs" />
     <Compile Include="Servicios\Abstracciones\ILocalizacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IInicioSesionService.cs" />
+    <Compile Include="Servicios\Abstracciones\IListaAmigosService.cs" />
     <Compile Include="Servicios\Abstracciones\IRecuperacionCuentaDialogService.cs" />
     <Compile Include="Servicios\Abstracciones\ISeleccionarAvatarService.cs" />
     <Compile Include="Servicios\Abstracciones\IVerificarCodigoDialogService.cs" />
@@ -138,6 +144,8 @@
     <Compile Include="Servicios\Wcf\ClasificacionService.cs" />
     <Compile Include="Servicios\Wcf\CodigoVerificacionService.cs" />
     <Compile Include="Servicios\Wcf\CuentaService.cs" />
+    <Compile Include="Servicios\Wcf\AmigosService.cs" />
+    <Compile Include="Servicios\Wcf\ListaAmigosService.cs" />
     <Compile Include="Servicios\Wcf\InicioSesionService.cs" />
     <Compile Include="Servicios\Wcf\PerfilService.cs" />
     <Compile Include="Servicios\Wcf\VerificarCodigoService.cs" />

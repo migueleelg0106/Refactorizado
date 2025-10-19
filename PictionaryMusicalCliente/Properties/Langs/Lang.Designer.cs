@@ -358,6 +358,96 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a No puedes enviarte una solicitud de amistad a ti mismo..
+        /// </summary>
+        public static string amigosTextoAutoSolicitud {
+            get {
+                return ResourceManager.GetString("amigosTextoAutoSolicitud", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Amigo eliminado correctamente..
+        /// </summary>
+        public static string amigosTextoEliminacionExitosa {
+            get {
+                return ResourceManager.GetString("amigosTextoEliminacionExitosa", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No se pudo obtener la lista de amigos. Intente de nuevo más tarde..
+        /// </summary>
+        public static string amigosTextoListaNoDisponible {
+            get {
+                return ResourceManager.GetString("amigosTextoListaNoDisponible", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ingrese el nombre de usuario del amigo..
+        /// </summary>
+        public static string amigosTextoNombreVacio {
+            get {
+                return ResourceManager.GetString("amigosTextoNombreVacio", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Seleccione un amigo de la lista..
+        /// </summary>
+        public static string amigosTextoNoSeleccionado {
+            get {
+                return ResourceManager.GetString("amigosTextoNoSeleccionado", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Solicitud de amistad enviada..
+        /// </summary>
+        public static string amigosTextoSolicitudEnviada {
+            get {
+                return ResourceManager.GetString("amigosTextoSolicitudEnviada", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Tu lista de amigos ha sido actualizada..
+        /// </summary>
+        public static string amigosTextoListaActualizada {
+            get {
+                return ResourceManager.GetString("amigosTextoListaActualizada", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Has recibido una solicitud de amistad de {0}..
+        /// </summary>
+        public static string amigosTextoNotificacionSolicitudRecibida {
+            get {
+                return ResourceManager.GetString("amigosTextoNotificacionSolicitudRecibida", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} ha aceptado tu solicitud de amistad..
+        /// </summary>
+        public static string amigosTextoNotificacionSolicitudAceptada {
+            get {
+                return ResourceManager.GetString("amigosTextoNotificacionSolicitudAceptada", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} ha rechazado tu solicitud de amistad..
+        /// </summary>
+        public static string amigosTextoNotificacionSolicitudRechazada {
+            get {
+                return ResourceManager.GetString("amigosTextoNotificacionSolicitudRechazada", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Busca una cadena traducida similar a ¿Está seguro de querer eliminar de su lista de amigos a .
         /// </summary>
         public static string eliminarAmigoTextoConfirmacion {

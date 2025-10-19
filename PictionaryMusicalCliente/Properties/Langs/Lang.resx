@@ -285,6 +285,36 @@
   <data name="eliminarAmigoTextoConfirmacion" xml:space="preserve">
     <value>¿Está seguro de querer eliminar de su lista de amigos a </value>
   </data>
+  <data name="amigosTextoAutoSolicitud" xml:space="preserve">
+    <value>No puedes enviarte una solicitud de amistad a ti mismo.</value>
+  </data>
+  <data name="amigosTextoEliminacionExitosa" xml:space="preserve">
+    <value>Amigo eliminado correctamente.</value>
+  </data>
+  <data name="amigosTextoListaNoDisponible" xml:space="preserve">
+    <value>No se pudo obtener la lista de amigos. Intente de nuevo más tarde.</value>
+  </data>
+  <data name="amigosTextoNombreVacio" xml:space="preserve">
+    <value>Ingrese el nombre de usuario del amigo.</value>
+  </data>
+  <data name="amigosTextoNoSeleccionado" xml:space="preserve">
+    <value>Seleccione un amigo de la lista.</value>
+  </data>
+  <data name="amigosTextoSolicitudEnviada" xml:space="preserve">
+    <value>Solicitud de amistad enviada.</value>
+  </data>
+  <data name="amigosTextoListaActualizada" xml:space="preserve">
+    <value>Tu lista de amigos ha sido actualizada.</value>
+  </data>
+  <data name="amigosTextoNotificacionSolicitudRecibida" xml:space="preserve">
+    <value>Has recibido una solicitud de amistad de {0}.</value>
+  </data>
+  <data name="amigosTextoNotificacionSolicitudAceptada" xml:space="preserve">
+    <value>{0} ha aceptado tu solicitud de amistad.</value>
+  </data>
+  <data name="amigosTextoNotificacionSolicitudRechazada" xml:space="preserve">
+    <value>{0} ha rechazado tu solicitud de amistad.</value>
+  </data>
   <data name="errorTextoNoEncuentraPartida" xml:space="preserve">
     <value>No se encontró la partida</value>
   </data>

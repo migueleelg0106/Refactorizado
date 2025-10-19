@@ -286,6 +286,36 @@
   <data name="eliminarAmigoTextoConfirmacion" xml:space="preserve">
     <value>Are you sure you want to remove </value>
   </data>
+  <data name="amigosTextoAutoSolicitud" xml:space="preserve">
+    <value>You cannot send a friend request to yourself.</value>
+  </data>
+  <data name="amigosTextoEliminacionExitosa" xml:space="preserve">
+    <value>Friend removed successfully.</value>
+  </data>
+  <data name="amigosTextoListaNoDisponible" xml:space="preserve">
+    <value>The friends list could not be retrieved. Please try again later.</value>
+  </data>
+  <data name="amigosTextoNombreVacio" xml:space="preserve">
+    <value>Enter the friend's username.</value>
+  </data>
+  <data name="amigosTextoNoSeleccionado" xml:space="preserve">
+    <value>Select a friend from the list.</value>
+  </data>
+  <data name="amigosTextoSolicitudEnviada" xml:space="preserve">
+    <value>Friend request sent.</value>
+  </data>
+  <data name="amigosTextoListaActualizada" xml:space="preserve">
+    <value>Your friends list has been updated.</value>
+  </data>
+  <data name="amigosTextoNotificacionSolicitudRecibida" xml:space="preserve">
+    <value>You have received a friend request from {0}.</value>
+  </data>
+  <data name="amigosTextoNotificacionSolicitudAceptada" xml:space="preserve">
+    <value>{0} accepted your friend request.</value>
+  </data>
+  <data name="amigosTextoNotificacionSolicitudRechazada" xml:space="preserve">
+    <value>{0} rejected your friend request.</value>
+  </data>
   <data name="errorTextoNoEncuentraPartida" xml:space="preserve">
     <value>The game was not found</value>
   </data>
