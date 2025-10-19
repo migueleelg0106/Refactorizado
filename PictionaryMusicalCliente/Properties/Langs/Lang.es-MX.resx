@@ -653,4 +653,13 @@ aciertan o cuando se acaba el tiempo.
   <data name="errorTextoCamposInvalidosGenerico" xml:space="preserve">
     <value>Hay datos inválidos o campos vacíos, por favor verifique sus datos.</value>
   </data>
+  <data name="amigosTextoSolicitudEnviada" xml:space="preserve">
+    <value>Solicitud de amistad enviada correctamente</value>
+  </data>
+  <data name="amigosTextoAmigoEliminado" xml:space="preserve">
+    <value>Amigo eliminado de la lista</value>
+  </data>
+  <data name="amigosTextoSeleccioneAmigo" xml:space="preserve">
+    <value>Seleccione un amigo de la lista.</value>
+  </data>
 </root>

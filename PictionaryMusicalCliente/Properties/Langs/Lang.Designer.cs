@@ -88,6 +88,33 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Amigo eliminado de la lista.
+        /// </summary>
+        public static string amigosTextoAmigoEliminado {
+            get {
+                return ResourceManager.GetString("amigosTextoAmigoEliminado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Seleccione un amigo de la lista.
+        /// </summary>
+        public static string amigosTextoSeleccioneAmigo {
+            get {
+                return ResourceManager.GetString("amigosTextoSeleccioneAmigo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Solicitud de amistad enviada correctamente.
+        /// </summary>
+        public static string amigosTextoSolicitudEnviada {
+            get {
+                return ResourceManager.GetString("amigosTextoSolicitudEnviada", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Ingresa el código que enviamos para confirmar el cambio de contraseña..
         /// </summary>
         public static string avisoTextoCodigoDescripcionCambio {
@@ -129,6 +156,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string avisoTextoCodigoEnviado {
             get {
                 return ResourceManager.GetString("avisoTextoCodigoEnviado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El código enviado expiró..
+        /// </summary>
+        public static string avisoTextoCodigoExpirado {
+            get {
+                return ResourceManager.GetString("avisoTextoCodigoExpirado", resourceCulture);
             }
         }
         
@@ -437,7 +473,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCampoLongitudMaxima", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a El {0} es obligatorio..
         /// </summary>
@@ -446,7 +482,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCampoObligatorio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a Hay datos inválidos o campos vacíos, por favor verifique sus datos..
         /// </summary>
@@ -464,16 +500,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCodigoExpiradoSolicitarNuevo", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Busca una cadena traducida similar a El código enviado expiró..
-        /// </summary>
-        public static string avisoTextoCodigoExpirado {
-            get {
-                return ResourceManager.GetString("avisoTextoCodigoExpirado", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a El código ingresado es incorrecto..
         /// </summary>
@@ -482,7 +509,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCodigoIncorrecto", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a Ingrese el código de verificación enviado a su correo..
         /// </summary>
@@ -563,7 +590,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCredencialesTitulo", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a Los datos de la cuenta no están disponibles..
         /// </summary>
@@ -572,7 +599,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCuentaDatosNoDisponibles", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a La cuenta o usuario no se encontró, verifique el dato ingresado..
         /// </summary>
@@ -581,7 +608,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoCuentaNoEncontradaInicioSesion", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a No se encontró la cuenta asociada a la sesión actual..
         /// </summary>
@@ -1202,7 +1229,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("globalTextoNombre", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a Red social.
         /// </summary>
@@ -1211,7 +1238,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("globalTextoRedSocial", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a REGRESAR.
         /// </summary>

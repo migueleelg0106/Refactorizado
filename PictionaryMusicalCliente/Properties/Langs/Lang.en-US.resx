@@ -651,4 +651,13 @@
   <data name="errorTextoCamposInvalidosGenerico" xml:space="preserve">
     <value>There are invalid or empty fields, please verify your information.</value>
   </data>
+  <data name="amigosTextoSolicitudEnviada" xml:space="preserve">
+    <value>Friend request sent successfully</value>
+  </data>
+  <data name="amigosTextoAmigoEliminado" xml:space="preserve">
+    <value>Friend removed from your list</value>
+  </data>
+  <data name="amigosTextoSeleccioneAmigo" xml:space="preserve">
+    <value>Select a friend from the list</value>
+  </data>
 </root>

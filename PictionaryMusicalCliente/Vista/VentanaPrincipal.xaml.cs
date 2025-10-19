@@ -20,7 +20,7 @@ namespace PictionaryMusicalCliente
                 AbrirClasificacion = () => MostrarDialogo(new Clasificacion()),
                 AbrirBuscarAmigo = () => MostrarDialogo(new BuscarAmigo()),
                 AbrirSolicitudes = () => MostrarDialogo(new Solicitudes()),
-                AbrirEliminarAmigo = () => MostrarDialogo(new EliminarAmigo()),
+                AbrirEliminarAmigo = amigo => MostrarDialogo(new EliminarAmigo(amigo)),
                 AbrirInvitaciones = () => MostrarDialogo(new Invitaciones()),
                 IniciarJuego = _ => MostrarVentanaJuego(),
                 UnirseSala = _ => AvisoHelper.Mostrar(Lang.errorTextoNoEncuentraPartida)
