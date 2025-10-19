@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
+using Servicios.Contratos.DTOs;
 
 namespace Servicios.Contratos
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IListaAmigosManejadorCallback))]
     public interface IListaAmigosManejador
     {
+        [OperationContract]
+        ListaAmigosDTO ObtenerListaAmigos(string nombreUsuario);
+    }
+
+    [ServiceContract]
+    public interface IListaAmigosManejadorCallback
+    {
+        [OperationContract(IsOneWay = true)]
+        void ListaAmigosActualizada(ListaAmigosDTO lista);
     }
 }
