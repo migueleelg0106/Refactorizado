@@ -106,6 +106,9 @@
     <Compile Include="Modelo\ObjetoAvatar.cs" />
     <Compile Include="Modelo\ResultadoOperacion.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
+    <Compile Include="Modelo\Amigos\Amigo.cs" />
+    <Compile Include="Modelo\Amigos\OperacionAmistad.cs" />
+    <Compile Include="Modelo\Amigos\SolicitudAmistad.cs" />
     <Compile Include="Modelo\Cuentas\ResultadoInicioSesion.cs" />
     <Compile Include="Modelo\Cuentas\ResultadoSolicitudCodigo.cs" />
     <Compile Include="Modelo\Cuentas\ResultadoRegistroCuenta.cs" />
@@ -121,6 +124,8 @@
     <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IClasificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\ICuentaService.cs" />
+    <Compile Include="Servicios\Abstracciones\IAmigosService.cs" />
+    <Compile Include="Servicios\Abstracciones\IListaAmigosService.cs" />
     <Compile Include="Servicios\Abstracciones\ILocalizacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IInicioSesionService.cs" />
     <Compile Include="Servicios\Abstracciones\IRecuperacionCuentaDialogService.cs" />
@@ -139,22 +144,28 @@
     <Compile Include="Servicios\Wcf\CodigoVerificacionService.cs" />
     <Compile Include="Servicios\Wcf\CuentaService.cs" />
     <Compile Include="Servicios\Wcf\InicioSesionService.cs" />
+    <Compile Include="Servicios\Wcf\AmigosService.cs" />
+    <Compile Include="Servicios\Wcf\ListaAmigosService.cs" />
     <Compile Include="Servicios\Wcf\PerfilService.cs" />
     <Compile Include="Servicios\Wcf\VerificarCodigoService.cs" />
     <Compile Include="Sesiones\SesionUsuarioActual.cs" />
     <Compile Include="Utilidades\AvatarHelper.cs" />
     <Compile Include="Utilidades\AvisoHelper.cs" />
     <Compile Include="Utilidades\ControlVisualHelper.cs" />
+    <Compile Include="Utilidades\ConstantesUi.cs" />
     <Compile Include="Utilidades\Idiomas\LocalizacionContexto.cs" />
     <Compile Include="Utilidades\ValidacionEntradaHelper.cs" />
     <Compile Include="Servicios\Wcf\Helpers\AvatarRutaHelper.cs" />
     <Compile Include="Servicios\Wcf\Helpers\AvatarServicioHelper.cs" />
+    <Compile Include="Servicios\Wcf\Helpers\AmigosMapper.cs" />
     <Compile Include="Servicios\Wcf\Helpers\CodigoVerificacionServicioHelper.cs" />
     <Compile Include="Servicios\Wcf\Helpers\ErrorServicioHelper.cs" />
     <Compile Include="Servicios\Wcf\Helpers\MensajeServidorHelper.cs" />
     <Compile Include="Servicios\Wcf\Helpers\UsuarioMapper.cs" />
     <Compile Include="Servicios\Wcf\Helpers\WcfClientHelper.cs" />
     <Compile Include="VistaModelo\BaseVistaModelo.cs" />
+    <Compile Include="VistaModelo\Amigos\BuscarAmigoVistaModelo.cs" />
+    <Compile Include="VistaModelo\Amigos\EliminarAmigoVistaModelo.cs" />
     <Compile Include="Connected Services\PictionaryServidorServicioAvatares\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -221,6 +221,96 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("buscarAmigoTextoEnviaSolicitud", resourceCulture);
             }
         }
+
+        public static string avisoTextoSolicitudAmistadEnviada {
+            get {
+                return ResourceManager.GetString("avisoTextoSolicitudAmistadEnviada", resourceCulture);
+            }
+        }
+
+        public static string avisoTextoSolicitudAmistadAceptada {
+            get {
+                return ResourceManager.GetString("avisoTextoSolicitudAmistadAceptada", resourceCulture);
+            }
+        }
+
+        public static string avisoTextoSolicitudAmistadRechazada {
+            get {
+                return ResourceManager.GetString("avisoTextoSolicitudAmistadRechazada", resourceCulture);
+            }
+        }
+
+        public static string avisoTextoAmistadEliminada {
+            get {
+                return ResourceManager.GetString("avisoTextoAmistadEliminada", resourceCulture);
+            }
+        }
+
+        public static string errorTextoAmistadAutoSolicitud {
+            get {
+                return ResourceManager.GetString("errorTextoAmistadAutoSolicitud", resourceCulture);
+            }
+        }
+
+        public static string errorTextoAmistadYaSonAmigos {
+            get {
+                return ResourceManager.GetString("errorTextoAmistadYaSonAmigos", resourceCulture);
+            }
+        }
+
+        public static string errorTextoAmistadSolicitudDuplicada {
+            get {
+                return ResourceManager.GetString("errorTextoAmistadSolicitudDuplicada", resourceCulture);
+            }
+        }
+
+        public static string errorTextoAmistadSolicitudPendiente {
+            get {
+                return ResourceManager.GetString("errorTextoAmistadSolicitudPendiente", resourceCulture);
+            }
+        }
+
+        public static string errorTextoJugadoresNoEncontrados {
+            get {
+                return ResourceManager.GetString("errorTextoJugadoresNoEncontrados", resourceCulture);
+            }
+        }
+
+        public static string errorTextoSolicitudAmistadNoExiste {
+            get {
+                return ResourceManager.GetString("errorTextoSolicitudAmistadNoExiste", resourceCulture);
+            }
+        }
+
+        public static string errorTextoAmistadEnviar {
+            get {
+                return ResourceManager.GetString("errorTextoAmistadEnviar", resourceCulture);
+            }
+        }
+
+        public static string errorTextoAmistadActualizar {
+            get {
+                return ResourceManager.GetString("errorTextoAmistadActualizar", resourceCulture);
+            }
+        }
+
+        public static string errorTextoAmistadEliminarPropio {
+            get {
+                return ResourceManager.GetString("errorTextoAmistadEliminarPropio", resourceCulture);
+            }
+        }
+
+        public static string errorTextoAmistadNoRegistrada {
+            get {
+                return ResourceManager.GetString("errorTextoAmistadNoRegistrada", resourceCulture);
+            }
+        }
+
+        public static string errorTextoAmistadEliminar {
+            get {
+                return ResourceManager.GetString("errorTextoAmistadEliminar", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Busca una cadena traducida similar a Ingrese el usuario:.

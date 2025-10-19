@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
         xmlns:convertidores="clr-namespace:PictionaryMusicalCliente.Convertidores"
+        xmlns:utilidades="clr-namespace:PictionaryMusicalCliente.Utilidades"
         Title="{x:Static language:Lang.tituloTextoRegistroUsuarios}" Height="500" Width="500"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent">
@@ -65,7 +66,7 @@
                         <Label Content="{x:Static language:Lang.globalTextoUsuario}"
                                ContentStringFormat="{}{0}:" FontWeight="Bold" FontFamily="Comic Sans MS"/>
                         <TextBox x:Name="bloqueTextoUsuario" Height="25" FontFamily="Comic Sans MS"
-                                 MaxLength="50"
+                                 MaxLength="{x:Static utilidades:ConstantesUi.LongitudMaximaNombreUsuario}"
                                  Text="{Binding Usuario, UpdateSourceTrigger=PropertyChanged}"/>
                         <Label Content="{x:Static language:Lang.errorTextoUsuarioEnUso}" Foreground="Red"
                                Visibility="{Binding MostrarErrorUsuario, Converter={StaticResource BooleanoVisibilidadConverter}}"/>

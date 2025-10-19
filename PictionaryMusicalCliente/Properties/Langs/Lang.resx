@@ -297,6 +297,51 @@
   <data name="buscarAmigoTextoEnviaSolicitud" xml:space="preserve">
     <value>ENVIAR SOLICITUD</value>
   </data>
+  <data name="avisoTextoSolicitudAmistadEnviada" xml:space="preserve">
+    <value>Solicitud de amistad enviada correctamente.</value>
+  </data>
+  <data name="avisoTextoSolicitudAmistadAceptada" xml:space="preserve">
+    <value>Solicitud de amistad aceptada.</value>
+  </data>
+  <data name="avisoTextoSolicitudAmistadRechazada" xml:space="preserve">
+    <value>Solicitud de amistad rechazada.</value>
+  </data>
+  <data name="avisoTextoAmistadEliminada" xml:space="preserve">
+    <value>Amigo eliminado correctamente.</value>
+  </data>
+  <data name="errorTextoAmistadAutoSolicitud" xml:space="preserve">
+    <value>No puedes enviarte una solicitud de amistad.</value>
+  </data>
+  <data name="errorTextoAmistadYaSonAmigos" xml:space="preserve">
+    <value>Los jugadores ya son amigos.</value>
+  </data>
+  <data name="errorTextoAmistadSolicitudDuplicada" xml:space="preserve">
+    <value>Ya enviaste una solicitud a este jugador.</value>
+  </data>
+  <data name="errorTextoAmistadSolicitudPendiente" xml:space="preserve">
+    <value>Tienes una solicitud pendiente de este jugador.</value>
+  </data>
+  <data name="errorTextoJugadoresNoEncontrados" xml:space="preserve">
+    <value>No se encontró alguno de los jugadores especificados.</value>
+  </data>
+  <data name="errorTextoSolicitudAmistadNoExiste" xml:space="preserve">
+    <value>La solicitud de amistad no existe.</value>
+  </data>
+  <data name="errorTextoAmistadEnviar" xml:space="preserve">
+    <value>No fue posible enviar la solicitud de amistad.</value>
+  </data>
+  <data name="errorTextoAmistadActualizar" xml:space="preserve">
+    <value>No fue posible actualizar la solicitud de amistad.</value>
+  </data>
+  <data name="errorTextoAmistadEliminarPropio" xml:space="preserve">
+    <value>No puedes eliminarte como amigo.</value>
+  </data>
+  <data name="errorTextoAmistadNoRegistrada" xml:space="preserve">
+    <value>Los jugadores no tienen una amistad registrada.</value>
+  </data>
+  <data name="errorTextoAmistadEliminar" xml:space="preserve">
+    <value>No fue posible eliminar al amigo.</value>
+  </data>
   <data name="globalTextoRegresar" xml:space="preserve">
     <value>REGRESAR</value>
   </data>

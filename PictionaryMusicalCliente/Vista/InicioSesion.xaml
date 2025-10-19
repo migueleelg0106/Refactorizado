@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:convertidores="clr-namespace:PictionaryMusicalCliente.Convertidores"
         xmlns:localizacion="clr-namespace:PictionaryMusicalCliente.Utilidades.Idiomas"
+        xmlns:utilidades="clr-namespace:PictionaryMusicalCliente.Utilidades"
         Title="{Binding [tituloTextoInicioSesion], Source={StaticResource Localizacion}}" Height="559" Width="800"
         WindowStartupLocation="CenterScreen"
         Background="White">
@@ -76,7 +77,7 @@
                        ContentStringFormat="{}{0}:"
                        FontSize="12" FontWeight="Bold" FontFamily="Comic Sans MS" Grid.Row="0"/>
                 <TextBox x:Name="bloqueTextoUsuario" Height="30" FontFamily="Comic Sans MS" Grid.Row="1"
-                         MaxLength="50"
+                         MaxLength="{x:Static utilidades:ConstantesUi.LongitudMaximaNombreUsuario}"
                          Text="{Binding Identificador, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <!-- Contraseña -->

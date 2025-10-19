@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
         xmlns:convertidores="clr-namespace:PictionaryMusicalCliente.Convertidores"
+        xmlns:utilidades="clr-namespace:PictionaryMusicalCliente.Utilidades"
         Title="{x:Static language:Lang.perfilTextoMiPerfil}" Height="500" Width="700"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent"
@@ -86,7 +87,8 @@
                     <!-- Usuario y Nombre -->
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
                         <TextBlock Text="{x:Static language:Lang.globalTextoUsuario}" FontFamily="Comic Sans MS" FontWeight="Bold"/>
-                        <TextBox x:Name="bloqueTextoUsuario" Text="{Binding Usuario, Mode=OneWay}" IsReadOnly="True" Height="25" FontFamily="Comic Sans MS"/>
+                        <TextBox x:Name="bloqueTextoUsuario" Text="{Binding Usuario, Mode=OneWay}" IsReadOnly="True" Height="25" FontFamily="Comic Sans MS"
+                                 MaxLength="{x:Static utilidades:ConstantesUi.LongitudMaximaNombreUsuario}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0,0,10">
                         <TextBlock Text="{x:Static language:Lang.globalTextoNombre}" FontFamily="Comic Sans MS" FontWeight="Bold"/>

@@ -1,14 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Modelo.Amigos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Sesiones;
+using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Idiomas;
+using PictionaryMusicalCliente.Servicios.Wcf;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -24,18 +29,31 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private IdiomaOpcion _idiomaSeleccionado;
         private ObservableCollection<OpcionTexto> _dificultadesDisponibles;
         private OpcionTexto _dificultadSeleccionada;
-        private ObservableCollection<string> _amigos;
+        private ObservableCollection<Amigo> _amigos;
+        private Amigo _amigoSeleccionado;
 
         private readonly ILocalizacionService _localizacionService;
+        private readonly IListaAmigosService _listaAmigosService;
+        private readonly IComandoNotificable _abrirEliminarAmigoCommand;
 
         public VentanaPrincipalVistaModelo()
-            : this(LocalizacionService.Instancia)
+            : this(LocalizacionService.Instancia, new ListaAmigosService(), new AmigosService())
         {
         }
 
         public VentanaPrincipalVistaModelo(ILocalizacionService localizacionService)
+            : this(localizacionService, new ListaAmigosService(), new AmigosService())
+        {
+        }
+
+        public VentanaPrincipalVistaModelo(
+            ILocalizacionService localizacionService,
+            IListaAmigosService listaAmigosService,
+            IAmigosService amigosService)
         {
             _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
+            _listaAmigosService = listaAmigosService ?? throw new ArgumentNullException(nameof(listaAmigosService));
+            _ = amigosService ?? throw new ArgumentNullException(nameof(amigosService));
 
             CargarDatosUsuario();
             CargarOpcionesPartida();
@@ -47,7 +65,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             AbrirClasificacionCommand = new ComandoDelegado(_ => AbrirClasificacion?.Invoke());
             AbrirBuscarAmigoCommand = new ComandoDelegado(_ => AbrirBuscarAmigo?.Invoke());
             AbrirSolicitudesCommand = new ComandoDelegado(_ => AbrirSolicitudes?.Invoke());
-            AbrirEliminarAmigoCommand = new ComandoDelegado(_ => AbrirEliminarAmigo?.Invoke());
+            _abrirEliminarAmigoCommand = new ComandoDelegado(
+                _ => AbrirEliminarAmigo?.Invoke(AmigoSeleccionado),
+                _ => AmigoSeleccionado != null);
+            AbrirEliminarAmigoCommand = (ICommand)_abrirEliminarAmigoCommand;
             AbrirInvitacionesCommand = new ComandoDelegado(_ => AbrirInvitaciones?.Invoke());
             UnirseSalaCommand = new ComandoDelegado(_ => UnirseSalaInterno());
             IniciarJuegoCommand = new ComandoDelegado(_ => IniciarJuegoInterno(), _ => PuedeIniciarJuego());
@@ -138,10 +159,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        public ObservableCollection<string> Amigos
+        public ObservableCollection<Amigo> Amigos
         {
             get => _amigos;
             private set => EstablecerPropiedad(ref _amigos, value);
+        }
+
+        public Amigo AmigoSeleccionado
+        {
+            get => _amigoSeleccionado;
+            set
+            {
+                if (EstablecerPropiedad(ref _amigoSeleccionado, value))
+                {
+                    _abrirEliminarAmigoCommand?.NotificarPuedeEjecutar();
+                }
+            }
         }
 
         public ICommand AbrirPerfilCommand { get; }
@@ -176,7 +209,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action AbrirSolicitudes { get; set; }
 
-        public Action AbrirEliminarAmigo { get; set; }
+        public Action<Amigo> AbrirEliminarAmigo { get; set; }
 
         public Action AbrirInvitaciones { get; set; }
 
@@ -186,10 +219,51 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action<string> MostrarMensaje { get; set; }
 
+        public async Task CargarAmigosAsync()
+        {
+            UsuarioSesion usuario = SesionUsuarioActual.Instancia.Usuario;
+            if (usuario == null || usuario.JugadorId <= 0)
+            {
+                Amigos = new ObservableCollection<Amigo>();
+                return;
+            }
+
+            try
+            {
+                IReadOnlyList<Amigo> amigos = await _listaAmigosService
+                    .ObtenerAmigosAsync(usuario.JugadorId)
+                    .ConfigureAwait(true);
+
+                Amigos = amigos == null
+                    ? new ObservableCollection<Amigo>()
+                    : new ObservableCollection<Amigo>(amigos);
+
+                AmigoSeleccionado = null;
+            }
+            catch (ServicioException ex)
+            {
+                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoServidorNoDisponible);
+            }
+        }
+
+        public void EliminarAmigoLocal(Amigo amigo)
+        {
+            if (amigo == null || Amigos == null)
+            {
+                return;
+            }
+
+            Amigo existente = Amigos.FirstOrDefault(a => a?.JugadorId == amigo.JugadorId);
+            if (existente != null)
+            {
+                Amigos.Remove(existente);
+            }
+        }
+
         private void CargarDatosUsuario()
         {
             CodigoSala = string.Empty;
-            Amigos = new ObservableCollection<string>();
+            Amigos = new ObservableCollection<Amigo>();
             NombreUsuario = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
         }
 

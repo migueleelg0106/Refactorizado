@@ -298,6 +298,51 @@
   <data name="buscarAmigoTextoEnviaSolicitud" xml:space="preserve">
     <value>SEND REQUEST</value>
   </data>
+  <data name="avisoTextoSolicitudAmistadEnviada" xml:space="preserve">
+    <value>Friend request sent successfully.</value>
+  </data>
+  <data name="avisoTextoSolicitudAmistadAceptada" xml:space="preserve">
+    <value>Friend request accepted.</value>
+  </data>
+  <data name="avisoTextoSolicitudAmistadRechazada" xml:space="preserve">
+    <value>Friend request declined.</value>
+  </data>
+  <data name="avisoTextoAmistadEliminada" xml:space="preserve">
+    <value>Friend removed successfully.</value>
+  </data>
+  <data name="errorTextoAmistadAutoSolicitud" xml:space="preserve">
+    <value>You cannot send a friend request to yourself.</value>
+  </data>
+  <data name="errorTextoAmistadYaSonAmigos" xml:space="preserve">
+    <value>The players are already friends.</value>
+  </data>
+  <data name="errorTextoAmistadSolicitudDuplicada" xml:space="preserve">
+    <value>You have already sent a request to this player.</value>
+  </data>
+  <data name="errorTextoAmistadSolicitudPendiente" xml:space="preserve">
+    <value>You have a pending request from this player.</value>
+  </data>
+  <data name="errorTextoJugadoresNoEncontrados" xml:space="preserve">
+    <value>One or more specified players could not be found.</value>
+  </data>
+  <data name="errorTextoSolicitudAmistadNoExiste" xml:space="preserve">
+    <value>The friend request does not exist.</value>
+  </data>
+  <data name="errorTextoAmistadEnviar" xml:space="preserve">
+    <value>The friend request could not be sent.</value>
+  </data>
+  <data name="errorTextoAmistadActualizar" xml:space="preserve">
+    <value>The friend request could not be updated.</value>
+  </data>
+  <data name="errorTextoAmistadEliminarPropio" xml:space="preserve">
+    <value>You cannot remove yourself as a friend.</value>
+  </data>
+  <data name="errorTextoAmistadNoRegistrada" xml:space="preserve">
+    <value>The players do not have a registered friendship.</value>
+  </data>
+  <data name="errorTextoAmistadEliminar" xml:space="preserve">
+    <value>The friend could not be removed.</value>
+  </data>
   <data name="globalTextoRegresar" xml:space="preserve">
     <value>BACK</value>
   </data>
