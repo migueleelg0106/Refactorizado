@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 
 namespace PictionaryMusicalCliente
 {
@@ -19,24 +12,35 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class Solicitudes : Window
     {
+        private readonly SolicitudesVistaModelo _vistaModelo;
+
         public Solicitudes()
+            : this(AmigosService.Instancia)
         {
+        }
+
+        public Solicitudes(IAmigosService amigosService)
+        {
+            if (amigosService == null)
+            {
+                throw new ArgumentNullException(nameof(amigosService));
+            }
+
             InitializeComponent();
+
+            _vistaModelo = new SolicitudesVistaModelo(amigosService)
+            {
+                CerrarAccion = Close,
+                MostrarMensaje = AvisoHelper.Mostrar
+            };
+
+            DataContext = _vistaModelo;
         }
 
-        private void BotonAceptar(object sender, RoutedEventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
-
-        }
-
-        private void BotonCancelar(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void BotonRegresar(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+            base.OnClosed(e);
+            _vistaModelo?.Dispose();
         }
     }
 }
