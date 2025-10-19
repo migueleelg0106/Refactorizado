@@ -200,6 +200,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             LimpiarErroresRedesSociales();
 
             var camposInvalidos = new List<string>();
+
+            bool nombreVacio = string.IsNullOrWhiteSpace(nombre);
+            bool apellidoVacio = string.IsNullOrWhiteSpace(apellido);
+
+            if (nombreVacio || apellidoVacio)
+            {
+                if (nombreVacio) camposInvalidos.Add(nameof(Nombre));
+                if (apellidoVacio) camposInvalidos.Add(nameof(Apellido));
+
+                MostrarCamposInvalidos?.Invoke(camposInvalidos);
+                AvisoHelper.Mostrar(Lang.errorTextoCamposInvalidosGenerico);
+                return;
+            }
+
             string mensajeError = null;
 
             ResultadoOperacion validacionNombre = ValidacionEntradaHelper.ValidarNombre(nombre);
