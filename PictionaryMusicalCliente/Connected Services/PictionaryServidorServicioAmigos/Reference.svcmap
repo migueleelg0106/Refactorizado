@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="f144a305-5b91-4696-becb-2908faa5bdb1" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8086/Pictionary/Amigos" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="AmigosManejador.wsdl" MetadataType="Wsdl" ID="2b8b2def-10e5-424f-a0f7-650444014cee" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?wsdl" />
+    <MetadataFile FileName="Amigos.xsd" MetadataType="Schema" ID="9732062f-05b1-4777-8f26-d2487746718f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd0" />
+    <MetadataFile FileName="Amigos.disco" MetadataType="Disco" ID="efe1161e-7ab7-4f1c-8d33-ebf76d0cec73" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?disco" />
+    <MetadataFile FileName="Amigos1.xsd" MetadataType="Schema" ID="a6bffba4-f171-4ea0-8271-5a197869bafd" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd2" />
+    <MetadataFile FileName="Amigos2.xsd" MetadataType="Schema" ID="9a0a33da-0539-49cd-9932-61895507fdc6" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

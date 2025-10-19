@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="9bcbc677-96a9-4e7c-a01b-e487e7627f74" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8086/Pictionary/ListaAmigos" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ListaAmigosManejador.wsdl" MetadataType="Wsdl" ID="0f575e82-1e80-4c9c-88a2-5a89bfea240d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos?wsdl" />
+    <MetadataFile FileName="ListaAmigos.xsd" MetadataType="Schema" ID="fc5068c9-59c5-416c-a402-4aa43fad2515" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos?xsd=xsd2" />
+    <MetadataFile FileName="ListaAmigos1.xsd" MetadataType="Schema" ID="3d69f459-3bee-4368-b839-9732c2300e41" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos?xsd=xsd0" />
+    <MetadataFile FileName="ListaAmigos.disco" MetadataType="Disco" ID="6839010c-5e2d-4589-825f-7ad989deb37d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos?disco" />
+    <MetadataFile FileName="ListaAmigos2.xsd" MetadataType="Schema" ID="f47eb710-479d-458e-9416-c66d8f252755" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -63,10 +63,6 @@ namespace Servicios.Servicios.Utilidades
             {
                 Suscriptores.TryRemove(jugadorId, out _);
             }
-            catch (FaultException)
-            {
-                Suscriptores.TryRemove(jugadorId, out _);
-            }
             catch (Exception)
             {
                 Suscriptores.TryRemove(jugadorId, out _);
