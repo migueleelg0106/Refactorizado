@@ -333,7 +333,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     return;
                 }
 
-                if (resultado.Resultado.OperacionExitosa)
+                if (resultado.Resultado.Exito)
                 {
                     ActualizarAmigos(resultado.Amigos);
                 }
