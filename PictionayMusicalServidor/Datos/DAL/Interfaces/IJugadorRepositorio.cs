@@ -7,5 +7,7 @@ namespace Datos.DAL.Interfaces
         bool ExisteCorreo(string correo);
 
         Jugador CrearJugador(Jugador jugador);
+
+        Jugador ObtenerJugadorConAvatar(int jugadorId);
     }
 }

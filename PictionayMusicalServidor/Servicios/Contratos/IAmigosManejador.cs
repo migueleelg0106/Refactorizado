@@ -1,14 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
+using Servicios.Contratos.DTOs;
 
 namespace Servicios.Contratos
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IAmigosCallback))]
     public interface IAmigosManejador
     {
+        [OperationContract]
+        ResultadoOperacionDTO EnviarSolicitudAmistad(SolicitudAmistadDTO solicitud);
+
+        [OperationContract]
+        ResultadoOperacionDTO ResponderSolicitudAmistad(RespuestaSolicitudAmistadDTO respuesta);
+
+        [OperationContract]
+        ResultadoOperacionDTO EliminarAmigo(OperacionAmistadDTO solicitud);
     }
 }
