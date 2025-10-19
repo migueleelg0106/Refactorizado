@@ -15,6 +15,7 @@ using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -271,12 +272,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.Exito)
                 {
-                    AvisoHelper.Mostrar(resultado.Mensaje ?? Lang.errorTextoActualizarPerfil);
+                    mensajeError = MensajeServidorHelper.Localizar(
+                        resultado.Mensaje,
+                        Lang.errorTextoActualizarPerfil);
+                    AvisoHelper.Mostrar(mensajeError);
                     return;
                 }
 
                 ActualizarSesion();
-                AvisoHelper.Mostrar(resultado.Mensaje ?? Lang.avisoTextoPerfilActualizado);
+                string mensajeExito = MensajeServidorHelper.Localizar(
+                    resultado.Mensaje,
+                    Lang.avisoTextoPerfilActualizado);
+                AvisoHelper.Mostrar(mensajeExito);
             }
             catch (ServicioException ex)
             {
