@@ -11,7 +11,7 @@ namespace Servicios.Servicios
 {
     internal static class CodigoVerificacionServicio
     {
-        private const int MinutosExpiracionCodigo = 10;
+        private const int MinutosExpiracionCodigo = 5;
         private const string MensajeErrorEnvioCodigo = "No fue posible enviar el código de verificación.";
 
         private static readonly ConcurrentDictionary<string, SolicitudCodigoPendiente> Solicitudes =

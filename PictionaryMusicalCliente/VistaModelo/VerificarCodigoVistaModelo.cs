@@ -15,10 +15,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
     public class VerificarCodigoVistaModelo : BaseVistaModelo
     {
         private const int SegundosEsperaReenvio = 30;
+        private static readonly TimeSpan TiempoExpiracionCodigo = TimeSpan.FromMinutes(5);
 
         private readonly ICodigoVerificacionService _codigoVerificacionService;
-        private readonly string _tokenCodigo;
+        private string _tokenCodigo;
         private readonly DispatcherTimer _temporizadorReenvio;
+        private readonly DispatcherTimer _temporizadorExpiracion;
 
         private string _codigoVerificacion;
         private bool _estaVerificando;
@@ -45,7 +47,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             };
             _temporizadorReenvio.Tick += TemporizadorReenvioTick;
 
+            _temporizadorExpiracion = new DispatcherTimer
+            {
+                Interval = TiempoExpiracionCodigo
+            };
+            _temporizadorExpiracion.Tick += TemporizadorExpiracionTick;
+
             IniciarTemporizadorReenvio();
+            IniciarTemporizadorExpiracion();
         }
 
         public string Descripcion { get; }
@@ -131,6 +140,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                     if (string.Equals(mensaje, Lang.avisoTextoCodigoExpirado, StringComparison.Ordinal))
                     {
+                        DetenerTemporizadores();
                         VerificacionCompletada?.Invoke(resultado);
                         return;
                     }
@@ -140,6 +150,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
 
                 MarcarCodigoInvalido?.Invoke(false);
+                DetenerTemporizadores();
                 VerificacionCompletada?.Invoke(resultado);
             }
             catch (ServicioException ex)
@@ -167,7 +178,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado?.CodigoEnviado == true)
                 {
+                    if (!string.IsNullOrWhiteSpace(resultado.TokenCodigo))
+                    {
+                        _tokenCodigo = resultado.TokenCodigo;
+                    }
                     IniciarTemporizadorReenvio();
+                    IniciarTemporizadorExpiracion();
                 }
                 else
                 {
@@ -182,6 +198,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void Cancelar()
         {
+            DetenerTemporizadores();
             Cancelado?.Invoke();
         }
 
@@ -191,6 +208,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             _segundosRestantes = SegundosEsperaReenvio;
             ActualizarTextoReenvio();
             _temporizadorReenvio.Start();
+        }
+
+        private void IniciarTemporizadorExpiracion()
+        {
+            _temporizadorExpiracion.Stop();
+            _temporizadorExpiracion.Start();
         }
 
         private void TemporizadorReenvioTick(object sender, EventArgs e)
@@ -207,12 +230,26 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             ActualizarTextoReenvio();
         }
 
+        private void TemporizadorExpiracionTick(object sender, EventArgs e)
+        {
+            _temporizadorExpiracion.Stop();
+            AvisoHelper.Mostrar(Lang.avisoTextoCodigoExpirado);
+            DetenerTemporizadores();
+            Cancelado?.Invoke();
+        }
+
         private void ActualizarTextoReenvio()
         {
             TextoBotonReenviar = string.Format(
                 "{0} ({1})",
                 Lang.cambiarContrasenaTextoReenviarCodigo,
                 _segundosRestantes);
+        }
+
+        private void DetenerTemporizadores()
+        {
+            _temporizadorReenvio.Stop();
+            _temporizadorExpiracion.Stop();
         }
     }
 }

@@ -123,7 +123,6 @@ namespace Servicios.Servicios.Utilidades
             }
 
             builder.AppendLine();
-            builder.AppendLine("Gracias por registrarte en Pictionary Musical.");
             builder.AppendLine($"Tu código de verificación es: {codigo}");
             builder.AppendLine();
             builder.AppendLine("Si no solicitaste este código puedes ignorar este mensaje.");
