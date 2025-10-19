@@ -97,6 +97,7 @@
     <Compile Include="Contratos\ISalasManejador.cs" />
     <Compile Include="Contratos\ISalirSalaManager.cs" />
     <Compile Include="Contratos\DTOs\ActualizarContrasenaDTO.cs" />
+    <Compile Include="Contratos\DTOs\AmistadEliminadaNotificacionDTO.cs" />
     <Compile Include="Contratos\DTOs\ClasificacionUsuarioDTO.cs" />
     <Compile Include="Contratos\DTOs\ConfirmarCodigoDTO.cs" />
     <Compile Include="Contratos\DTOs\CredencialesInicioSesionDTO.cs" />
@@ -109,11 +110,14 @@
     <Compile Include="Contratos\DTOs\ResultadoRegistroCuentaDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoSolicitudCodigoDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoSolicitudRecuperacionDTO.cs" />
+    <Compile Include="Contratos\DTOs\RespuestaSolicitudAmistadNotificacionDTO.cs" />
+    <Compile Include="Contratos\DTOs\SolicitudAmistadNotificacionDTO.cs" />
     <Compile Include="Contratos\DTOs\SolicitudRecuperarCuentaDTO.cs" />
     <Compile Include="Contratos\DTOs\UsuarioDTO.cs" />
     <Compile Include="Contratos\DTOs\AvatarDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\CatalogoAvatares.cs" />
+    <Compile Include="Servicios\AmigosManejador.cs" />
     <Compile Include="Servicios\ClasificacionManejador.cs" />
     <Compile Include="Servicios\CodigoVerificacionManejador.cs" />
     <Compile Include="Servicios\CodigoVerificacionServicio.cs" />

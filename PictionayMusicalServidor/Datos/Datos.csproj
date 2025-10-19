@@ -55,10 +55,12 @@
   <ItemGroup>
     <Compile Include="DAL\Implementaciones\AvatarRepositorio.cs" />
     <Compile Include="DAL\Implementaciones\ClasificacionRepositorio.cs" />
+    <Compile Include="DAL\Implementaciones\SolicitudAmistadRepositorio.cs" />
     <Compile Include="DAL\Implementaciones\JugadorRepositorio.cs" />
     <Compile Include="DAL\Implementaciones\UsuarioRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IAvatarRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IClasificacionRepositorio.cs" />
+    <Compile Include="DAL\Interfaces\ISolicitudAmistadRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IJugadorRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IUsuarioRepositorio.cs" />
     <Compile Include="Modelo\Artista.cs">
