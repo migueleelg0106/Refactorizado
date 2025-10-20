@@ -149,8 +149,9 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             {
                 var args = (ListaAmigosActualizadaEventArgs)state;
                 ListaActualizada?.Invoke(this, args);
-            }, new ListaAmigosActualizadaEventArgs(amigos?.ToList().AsReadOnly()
-                 ?? new ReadOnlyCollection<string>(Array.Empty<string>()), mensajeError));
+            }, new ListaAmigosActualizadaEventArgs(
+                amigos?.ToList()?.AsReadOnly() ?? new ReadOnlyCollection<string>(Array.Empty<string>()),
+                mensajeError));
         }
 
         private static IReadOnlyList<string> ConvertirLista(ListaAmigosSrv.ListaAmigosDTO lista)
