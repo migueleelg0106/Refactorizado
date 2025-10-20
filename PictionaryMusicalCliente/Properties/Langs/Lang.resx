@@ -297,6 +297,21 @@
   <data name="buscarAmigoTextoEnviaSolicitud" xml:space="preserve">
     <value>ENVIAR SOLICITUD</value>
   </data>
+  <data name="buscarAmigoErrorEnviarSolicitud" xml:space="preserve">
+    <value>No fue posible enviar la solicitud de amistad.</value>
+  </data>
+  <data name="buscarAmigoErrorSolicitudMismoUsuario" xml:space="preserve">
+    <value>No puedes enviarte una solicitud de amistad a ti mismo.</value>
+  </data>
+  <data name="buscarAmigoErrorSolicitudPendiente" xml:space="preserve">
+    <value>Ya existe una solicitud de amistad pendiente con este usuario.</value>
+  </data>
+  <data name="buscarAmigoErrorYaAmigos" xml:space="preserve">
+    <value>Este usuario ya es tu amigo.</value>
+  </data>
+  <data name="buscarAmigoTextoSolicitudEnviada" xml:space="preserve">
+    <value>Solicitud de amistad enviada correctamente.</value>
+  </data>
   <data name="globalTextoRegresar" xml:space="preserve">
     <value>REGRESAR</value>
   </data>

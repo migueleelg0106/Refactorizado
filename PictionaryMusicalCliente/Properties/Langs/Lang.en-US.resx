@@ -298,6 +298,21 @@
   <data name="buscarAmigoTextoEnviaSolicitud" xml:space="preserve">
     <value>SEND REQUEST</value>
   </data>
+  <data name="buscarAmigoErrorEnviarSolicitud" xml:space="preserve">
+    <value>The friend request could not be sent.</value>
+  </data>
+  <data name="buscarAmigoErrorSolicitudMismoUsuario" xml:space="preserve">
+    <value>You cannot send a friend request to yourself.</value>
+  </data>
+  <data name="buscarAmigoErrorSolicitudPendiente" xml:space="preserve">
+    <value>There is already a pending friend request with this user.</value>
+  </data>
+  <data name="buscarAmigoErrorYaAmigos" xml:space="preserve">
+    <value>This user is already your friend.</value>
+  </data>
+  <data name="buscarAmigoTextoSolicitudEnviada" xml:space="preserve">
+    <value>Friend request sent successfully.</value>
+  </data>
   <data name="globalTextoRegresar" xml:space="preserve">
     <value>BACK</value>
   </data>

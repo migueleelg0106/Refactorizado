@@ -221,7 +221,52 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("buscarAmigoTextoEnviaSolicitud", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible enviar la solicitud de amistad..
+        /// </summary>
+        public static string buscarAmigoErrorEnviarSolicitud {
+            get {
+                return ResourceManager.GetString("buscarAmigoErrorEnviarSolicitud", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No puedes enviarte una solicitud de amistad a ti mismo..
+        /// </summary>
+        public static string buscarAmigoErrorSolicitudMismoUsuario {
+            get {
+                return ResourceManager.GetString("buscarAmigoErrorSolicitudMismoUsuario", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ya existe una solicitud de amistad pendiente con este usuario..
+        /// </summary>
+        public static string buscarAmigoErrorSolicitudPendiente {
+            get {
+                return ResourceManager.GetString("buscarAmigoErrorSolicitudPendiente", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Este usuario ya es tu amigo..
+        /// </summary>
+        public static string buscarAmigoErrorYaAmigos {
+            get {
+                return ResourceManager.GetString("buscarAmigoErrorYaAmigos", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Solicitud de amistad enviada correctamente..
+        /// </summary>
+        public static string buscarAmigoTextoSolicitudEnviada {
+            get {
+                return ResourceManager.GetString("buscarAmigoTextoSolicitudEnviada", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Busca una cadena traducida similar a Ingrese el usuario:.
         /// </summary>

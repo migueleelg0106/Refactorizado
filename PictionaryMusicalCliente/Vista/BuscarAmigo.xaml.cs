@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Cuentas;
 
 namespace PictionaryMusicalCliente
 {
@@ -22,16 +14,30 @@ namespace PictionaryMusicalCliente
         public BuscarAmigo()
         {
             InitializeComponent();
+
+            IAmigosService amigosService = new AmigosService();
+
+            var vistaModelo = new BuscarAmigoVistaModelo(amigosService)
+            {
+                CerrarAccion = Close
+            };
+
+            vistaModelo.MostrarMensaje = AvisoHelper.Mostrar;
+            vistaModelo.MarcarUsuarioInvalido = MarcarUsuarioInvalido;
+
+            DataContext = vistaModelo;
         }
 
-        private void BotonEnviarSolicitud(object sender, RoutedEventArgs e)
+        private void MarcarUsuarioInvalido(bool invalido)
         {
-
-        }
-
-        private void BotonCancelar(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+            if (invalido)
+            {
+                ControlVisualHelper.MarcarCampoInvalido(campoUsuario);
+            }
+            else
+            {
+                ControlVisualHelper.RestablecerEstadoCampo(campoUsuario);
+            }
         }
     }
 }
