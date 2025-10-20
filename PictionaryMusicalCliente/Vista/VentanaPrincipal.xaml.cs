@@ -1,6 +1,9 @@
 using System;
 using System.Windows;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Idiomas;
+using PictionaryMusicalCliente.Servicios.Wcf;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 
@@ -8,27 +11,60 @@ namespace PictionaryMusicalCliente
 {
     public partial class VentanaPrincipal : Window
     {
+        private readonly IListaAmigosService _listaAmigosService;
+        private readonly IAmigosService _amigosService;
+        private readonly VentanaPrincipalVistaModelo _vistaModelo;
+
         public VentanaPrincipal()
         {
             InitializeComponent();
 
-            var vistaModelo = new VentanaPrincipalVistaModelo
+            _listaAmigosService = new ListaAmigosService();
+            _amigosService = new AmigosService();
+
+            _vistaModelo = new VentanaPrincipalVistaModelo(LocalizacionService.Instancia, _listaAmigosService, _amigosService)
             {
                 AbrirPerfil = () => MostrarDialogo(new Perfil()),
                 AbrirAjustes = () => MostrarDialogo(new Ajustes()),
                 AbrirComoJugar = () => MostrarDialogo(new ComoJugar()),
                 AbrirClasificacion = () => MostrarDialogo(new Clasificacion()),
-                AbrirBuscarAmigo = () => MostrarDialogo(new BuscarAmigo()),
+                AbrirBuscarAmigo = () => MostrarDialogo(new BuscarAmigo(_amigosService)),
                 AbrirSolicitudes = () => MostrarDialogo(new Solicitudes()),
-                AbrirEliminarAmigo = () => MostrarDialogo(new EliminarAmigo()),
+                AbrirEliminarAmigo = amigo => MostrarDialogo(new EliminarAmigo(amigo, _amigosService)),
                 AbrirInvitaciones = () => MostrarDialogo(new Invitaciones()),
                 IniciarJuego = _ => MostrarVentanaJuego(),
                 UnirseSala = _ => AvisoHelper.Mostrar(Lang.errorTextoNoEncuentraPartida)
             };
 
-            vistaModelo.MostrarMensaje = AvisoHelper.Mostrar;
+            _vistaModelo.MostrarMensaje = AvisoHelper.Mostrar;
 
-            DataContext = vistaModelo;
+            DataContext = _vistaModelo;
+
+            Loaded += VentanaPrincipal_Loaded;
+            Closed += VentanaPrincipal_Closed;
+        }
+
+        private async void VentanaPrincipal_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (_vistaModelo != null)
+            {
+                await _vistaModelo.InicializarAsync().ConfigureAwait(true);
+            }
+        }
+
+        private async void VentanaPrincipal_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_vistaModelo != null)
+                {
+                    await _vistaModelo.CerrarAsync().ConfigureAwait(true);
+                }
+            }
+            finally
+            {
+                (_amigosService as IDisposable)?.Dispose();
+            }
         }
 
         private void MostrarDialogo(Window ventana)
