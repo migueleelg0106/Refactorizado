@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
         mc:Ignorable="d"
+        Loaded="VentanaPrincipal_Loaded"
         Title="{x:Static language:Lang.principalTextoTitulo}"
         Height="550" Width="1000"
         WindowStartupLocation="CenterScreen">

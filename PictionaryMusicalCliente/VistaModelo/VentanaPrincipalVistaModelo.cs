@@ -1,14 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Sesiones;
+using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Idiomas;
+using PictionaryMusicalCliente.Servicios.Wcf;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -27,15 +31,24 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private ObservableCollection<string> _amigos;
 
         private readonly ILocalizacionService _localizacionService;
+        private readonly IListaAmigosService _listaAmigosService;
 
         public VentanaPrincipalVistaModelo()
-            : this(LocalizacionService.Instancia)
+            : this(LocalizacionService.Instancia, new ListaAmigosService())
         {
         }
 
         public VentanaPrincipalVistaModelo(ILocalizacionService localizacionService)
+            : this(localizacionService, new ListaAmigosService())
+        {
+        }
+
+        public VentanaPrincipalVistaModelo(
+            ILocalizacionService localizacionService,
+            IListaAmigosService listaAmigosService)
         {
             _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
+            _listaAmigosService = listaAmigosService ?? throw new ArgumentNullException(nameof(listaAmigosService));
 
             CargarDatosUsuario();
             CargarOpcionesPartida();
@@ -185,6 +198,40 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public Action<ConfiguracionPartida> IniciarJuego { get; set; }
 
         public Action<string> MostrarMensaje { get; set; }
+
+        public async Task CargarAmigosAsync()
+        {
+            string usuario = NombreUsuario;
+
+            if (string.IsNullOrWhiteSpace(usuario))
+            {
+                Amigos = new ObservableCollection<string>();
+                return;
+            }
+
+            try
+            {
+                IReadOnlyList<string> amigos = await _listaAmigosService
+                    .ObtenerListaAmigosAsync(usuario)
+                    .ConfigureAwait(true);
+
+                IEnumerable<string> amigosOrdenados = amigos?
+                    .Where(nombre => !string.IsNullOrWhiteSpace(nombre))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .OrderBy(nombre => nombre, StringComparer.CurrentCultureIgnoreCase)
+                    ?? Enumerable.Empty<string>();
+
+                Amigos = new ObservableCollection<string>(amigosOrdenados);
+            }
+            catch (ServicioException ex)
+            {
+                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+            }
+            catch (Exception)
+            {
+                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+            }
+        }
 
         private void CargarDatosUsuario()
         {

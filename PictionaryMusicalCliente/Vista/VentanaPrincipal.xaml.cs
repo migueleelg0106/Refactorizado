@@ -31,6 +31,14 @@ namespace PictionaryMusicalCliente
             DataContext = vistaModelo;
         }
 
+        private async void VentanaPrincipal_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is VentanaPrincipalVistaModelo vistaModelo)
+            {
+                await vistaModelo.CargarAmigosAsync().ConfigureAwait(true);
+            }
+        }
+
         private void MostrarDialogo(Window ventana)
         {
             if (ventana == null)

@@ -123,6 +123,7 @@
     <Compile Include="Servicios\Abstracciones\ICuentaService.cs" />
     <Compile Include="Servicios\Abstracciones\ILocalizacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IInicioSesionService.cs" />
+    <Compile Include="Servicios\Abstracciones\IListaAmigosService.cs" />
     <Compile Include="Servicios\Abstracciones\IRecuperacionCuentaDialogService.cs" />
     <Compile Include="Servicios\Abstracciones\ISeleccionarAvatarService.cs" />
     <Compile Include="Servicios\Abstracciones\IVerificarCodigoDialogService.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Servicios\Wcf\CodigoVerificacionService.cs" />
     <Compile Include="Servicios\Wcf\CuentaService.cs" />
     <Compile Include="Servicios\Wcf\InicioSesionService.cs" />
+    <Compile Include="Servicios\Wcf\ListaAmigosService.cs" />
     <Compile Include="Servicios\Wcf\PerfilService.cs" />
     <Compile Include="Servicios\Wcf\VerificarCodigoService.cs" />
     <Compile Include="Sesiones\SesionUsuarioActual.cs" />
