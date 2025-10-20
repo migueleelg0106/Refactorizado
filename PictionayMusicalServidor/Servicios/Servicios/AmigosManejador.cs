@@ -19,8 +19,6 @@ namespace Servicios.Servicios
 
         public ResultadoOperacionDTO EnviarSolicitudAmistad(string nombreUsuarioRemitente, string nombreUsuarioReceptor)
         {
-            ObtenerCanalCallback(nombreUsuarioRemitente);
-
             nombreUsuarioRemitente = nombreUsuarioRemitente?.Trim();
             nombreUsuarioReceptor = nombreUsuarioReceptor?.Trim();
 
@@ -28,6 +26,8 @@ namespace Servicios.Servicios
             {
                 return CrearResultadoFallo("Se requiere el nombre de usuario del remitente y del receptor.");
             }
+
+            ObtenerCanalCallback(nombreUsuarioRemitente);
 
             if (string.Equals(nombreUsuarioRemitente, nombreUsuarioReceptor, StringComparison.OrdinalIgnoreCase))
             {
@@ -82,8 +82,6 @@ namespace Servicios.Servicios
 
         public ResultadoOperacionDTO ResponderSolicitudAmistad(string nombreUsuarioRemitente, string nombreUsuarioReceptor, bool aceptada)
         {
-            ObtenerCanalCallback(nombreUsuarioReceptor);
-
             nombreUsuarioRemitente = nombreUsuarioRemitente?.Trim();
             nombreUsuarioReceptor = nombreUsuarioReceptor?.Trim();
 
@@ -91,6 +89,8 @@ namespace Servicios.Servicios
             {
                 return CrearResultadoFallo("Se requiere el nombre de usuario del remitente y del receptor.");
             }
+
+            ObtenerCanalCallback(nombreUsuarioReceptor);
 
             try
             {
@@ -153,8 +153,6 @@ namespace Servicios.Servicios
 
         public ResultadoOperacionDTO EliminarAmigo(string nombreUsuarioRemitente, string nombreUsuarioReceptor)
         {
-            ObtenerCanalCallback(nombreUsuarioRemitente);
-
             nombreUsuarioRemitente = nombreUsuarioRemitente?.Trim();
             nombreUsuarioReceptor = nombreUsuarioReceptor?.Trim();
 
@@ -162,6 +160,8 @@ namespace Servicios.Servicios
             {
                 return CrearResultadoFallo("Se requiere el nombre de usuario de ambos jugadores.");
             }
+
+            ObtenerCanalCallback(nombreUsuarioRemitente);
 
             try
             {
@@ -234,22 +234,43 @@ namespace Servicios.Servicios
 
         private static IAmigosManejadorCallback ObtenerCanalCallback(string nombreUsuario)
         {
-            OperationContext contextoOperacion = OperationContext.Current;
-            if (contextoOperacion == null)
+            if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
                 return null;
             }
 
-            IAmigosManejadorCallback callback = contextoOperacion.GetCallbackChannel<IAmigosManejadorCallback>();
-            if (!string.IsNullOrWhiteSpace(nombreUsuario) && callback != null)
+            try
             {
-                ClientesConectados[nombreUsuario] = callback;
-                IContextChannel canal = contextoOperacion.Channel;
-                canal.Faulted += (sender, args) => ClientesConectados.TryRemove(nombreUsuario, out _);
-                canal.Closed += (sender, args) => ClientesConectados.TryRemove(nombreUsuario, out _);
-            }
+                OperationContext contextoOperacion = OperationContext.Current;
+                if (contextoOperacion == null)
+                {
+                    return null;
+                }
 
-            return callback;
+                IAmigosManejadorCallback callback = contextoOperacion.GetCallbackChannel<IAmigosManejadorCallback>();
+                if (callback == null)
+                {
+                    return null;
+                }
+
+                string clave = nombreUsuario.Trim();
+                if (clave.Length == 0)
+                {
+                    return null;
+                }
+
+                ClientesConectados[clave] = callback;
+                IContextChannel canal = contextoOperacion.Channel;
+                canal.Faulted += (sender, args) => ClientesConectados.TryRemove(clave, out _);
+                canal.Closed += (sender, args) => ClientesConectados.TryRemove(clave, out _);
+
+                return callback;
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn($"No fue posible registrar el canal de callbacks para {nombreUsuario}", ex);
+                return null;
+            }
         }
 
         private static void NotificarSolicitudEnviada(string remitente, string receptor)

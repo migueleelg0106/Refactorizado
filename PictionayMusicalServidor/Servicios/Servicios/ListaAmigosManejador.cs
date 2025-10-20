@@ -27,10 +27,10 @@ namespace Servicios.Servicios
                 return CrearResultadoFallo("Se requiere el nombre de usuario para obtener la lista de amigos.", nombreUsuario);
             }
 
-            ObtenerCanalCallback(nombreUsuario);
-
             try
             {
+                ObtenerCanalCallback(nombreUsuario);
+
                 using (BaseDatosPruebaEntities1 contexto = CrearContexto())
                 {
                     var repositorio = new SolicitudAmistadRepositorio(contexto);
@@ -119,10 +119,14 @@ namespace Servicios.Servicios
 
         private static ListaAmigosDTO CrearResultadoExitoso(string nombreUsuario, SolicitudAmistadRepositorio repositorio, Jugador jugador)
         {
-            IEnumerable<Jugador> amigos = repositorio.ObtenerAmigosDe(jugador.idJugador);
-            List<string> nombresAmigos = amigos
-                .Select(j => j.Usuario.Select(u => u.Nombre_Usuario).FirstOrDefault())
-                .Where(nombre => !string.IsNullOrWhiteSpace(nombre) && !string.Equals(nombre, nombreUsuario, StringComparison.OrdinalIgnoreCase))
+            IEnumerable<string> nombresUsuarios = repositorio
+                .ObtenerNombresAmigosDe(jugador.idJugador)
+                ?? Enumerable.Empty<string>();
+
+            List<string> nombresAmigos = nombresUsuarios
+                .Select(nombre => nombre?.Trim())
+                .Where(nombre => !string.IsNullOrWhiteSpace(nombre)
+                    && !string.Equals(nombre, nombreUsuario, StringComparison.OrdinalIgnoreCase))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
@@ -156,22 +160,40 @@ namespace Servicios.Servicios
 
         private static void ObtenerCanalCallback(string nombreUsuario)
         {
-            OperationContext contextoOperacion = OperationContext.Current;
-            if (contextoOperacion == null)
+            if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
                 return;
             }
 
-            IListaAmigosManejadorCallback callback = contextoOperacion.GetCallbackChannel<IListaAmigosManejadorCallback>();
-            if (callback == null)
+            try
             {
-                return;
-            }
+                OperationContext contextoOperacion = OperationContext.Current;
+                if (contextoOperacion == null)
+                {
+                    return;
+                }
 
-            Suscriptores[nombreUsuario] = callback;
-            IContextChannel canal = contextoOperacion.Channel;
-            canal.Faulted += (sender, args) => Suscriptores.TryRemove(nombreUsuario, out _);
-            canal.Closed += (sender, args) => Suscriptores.TryRemove(nombreUsuario, out _);
+                IListaAmigosManejadorCallback callback = contextoOperacion.GetCallbackChannel<IListaAmigosManejadorCallback>();
+                if (callback == null)
+                {
+                    return;
+                }
+
+                string clave = nombreUsuario.Trim();
+                if (clave.Length == 0)
+                {
+                    return;
+                }
+
+                Suscriptores[clave] = callback;
+                IContextChannel canal = contextoOperacion.Channel;
+                canal.Faulted += (sender, args) => Suscriptores.TryRemove(clave, out _);
+                canal.Closed += (sender, args) => Suscriptores.TryRemove(clave, out _);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn($"No fue posible registrar el canal de callbacks para {nombreUsuario}", ex);
+            }
         }
 
         private static void NotificarCallback(string nombreUsuario, Action<IListaAmigosManejadorCallback> accion)

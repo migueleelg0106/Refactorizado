@@ -84,6 +84,33 @@ namespace Datos.DAL.Implementaciones
                 .ToList();
         }
 
+        public IEnumerable<string> ObtenerNombresAmigosDe(int jugadorId)
+        {
+            if (jugadorId <= 0)
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            IQueryable<int> amigosIds = contexto.Solicitud
+                .Where(s =>
+                    (s.Jugador_idJugador == jugadorId || s.Jugador_idJugador1 == jugadorId)
+                    && s.Estado != null
+                    && s.Estado.Length > 0
+                    && s.Estado[0] != 0)
+                .Select(s => s.Jugador_idJugador == jugadorId ? s.Jugador_idJugador1 : s.Jugador_idJugador)
+                .Where(id => id > 0 && id != jugadorId)
+                .Distinct();
+
+            return contexto.Usuario
+                .Where(u =>
+                    amigosIds.Contains(u.Jugador_idJugador)
+                    && u.Nombre_Usuario != null
+                    && u.Nombre_Usuario != "")
+                .Select(u => u.Nombre_Usuario)
+                .Distinct()
+                .ToList();
+        }
+
         private static byte[] CrearEstado(bool aceptada)
         {
             return new[] { aceptada ? (byte)1 : (byte)0 };
