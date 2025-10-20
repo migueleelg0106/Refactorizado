@@ -662,4 +662,67 @@ aciertan o cuando se acaba el tiempo.
   <data name="amigosTextoSeleccioneAmigo" xml:space="preserve">
     <value>Seleccione un amigo de la lista.</value>
   </data>
+  <data name="amigosErrorRemitenteReceptorRequeridos" xml:space="preserve">
+    <value>Debes proporcionar el nombre de usuario del remitente y del receptor.</value>
+  </data>
+  <data name="amigosErrorSolicitudPropia" xml:space="preserve">
+    <value>No puedes enviarte una solicitud de amistad a ti mismo.</value>
+  </data>
+  <data name="amigosErrorRemitenteNoEncontrado" xml:space="preserve">
+    <value>No se encontró al remitente especificado.</value>
+  </data>
+  <data name="amigosErrorReceptorNoEncontrado" xml:space="preserve">
+    <value>No se encontró al receptor especificado.</value>
+  </data>
+  <data name="amigosErrorJugadoresYaAmigos" xml:space="preserve">
+    <value>Los jugadores ya son amigos.</value>
+  </data>
+  <data name="amigosErrorSolicitudPendiente" xml:space="preserve">
+    <value>Ya existe una solicitud de amistad pendiente entre los jugadores.</value>
+  </data>
+  <data name="amigosErrorSolicitudInexistente" xml:space="preserve">
+    <value>No existe una solicitud de amistad pendiente entre los jugadores.</value>
+  </data>
+  <data name="amigosErrorSolicitudAtendida" xml:space="preserve">
+    <value>La solicitud de amistad ya fue atendida.</value>
+  </data>
+  <data name="amigosErrorEnviarSolicitud" xml:space="preserve">
+    <value>No fue posible enviar la solicitud de amistad.</value>
+  </data>
+  <data name="amigosErrorProcesarRespuesta" xml:space="preserve">
+    <value>No fue posible procesar la respuesta a la solicitud de amistad.</value>
+  </data>
+  <data name="amigosErrorNombresRequeridos" xml:space="preserve">
+    <value>Debes proporcionar el nombre de usuario de ambos jugadores.</value>
+  </data>
+  <data name="amigosErrorJugadorNoEncontrado" xml:space="preserve">
+    <value>No se encontró al jugador especificado.</value>
+  </data>
+  <data name="amigosErrorAmigoNoEncontrado" xml:space="preserve">
+    <value>No se encontró al amigo especificado.</value>
+  </data>
+  <data name="amigosErrorSinRelacion" xml:space="preserve">
+    <value>Los jugadores no tienen una relación de amistad registrada.</value>
+  </data>
+  <data name="amigosErrorEliminarAmistad" xml:space="preserve">
+    <value>No fue posible eliminar la amistad.</value>
+  </data>
+  <data name="amigosTextoAmistadEliminada" xml:space="preserve">
+    <value>Amistad eliminada correctamente.</value>
+  </data>
+  <data name="amigosTextoSolicitudAceptada" xml:space="preserve">
+    <value>Solicitud de amistad aceptada correctamente.</value>
+  </data>
+  <data name="amigosTextoSolicitudRechazada" xml:space="preserve">
+    <value>Solicitud de amistad rechazada.</value>
+  </data>
+  <data name="amigosErrorListaNombreRequerido" xml:space="preserve">
+    <value>Debes proporcionar tu nombre de usuario para obtener la lista de amigos.</value>
+  </data>
+  <data name="amigosErrorListaNoDisponible" xml:space="preserve">
+    <value>No fue posible obtener la lista de amigos.</value>
+  </data>
+  <data name="amigosTextoListaObtenida" xml:space="preserve">
+    <value>Lista de amigos obtenida correctamente.</value>
+  </data>
 </root>

@@ -660,4 +660,67 @@
   <data name="amigosTextoSeleccioneAmigo" xml:space="preserve">
     <value>Select a friend from the list</value>
   </data>
+  <data name="amigosErrorRemitenteReceptorRequeridos" xml:space="preserve">
+    <value>You must provide the sender and receiver usernames.</value>
+  </data>
+  <data name="amigosErrorSolicitudPropia" xml:space="preserve">
+    <value>You cannot send a friend request to yourself.</value>
+  </data>
+  <data name="amigosErrorRemitenteNoEncontrado" xml:space="preserve">
+    <value>The specified sender was not found.</value>
+  </data>
+  <data name="amigosErrorReceptorNoEncontrado" xml:space="preserve">
+    <value>The specified receiver was not found.</value>
+  </data>
+  <data name="amigosErrorJugadoresYaAmigos" xml:space="preserve">
+    <value>The players are already friends.</value>
+  </data>
+  <data name="amigosErrorSolicitudPendiente" xml:space="preserve">
+    <value>There is already a pending friend request between the players.</value>
+  </data>
+  <data name="amigosErrorSolicitudInexistente" xml:space="preserve">
+    <value>There is no pending friend request between the players.</value>
+  </data>
+  <data name="amigosErrorSolicitudAtendida" xml:space="preserve">
+    <value>The friend request has already been processed.</value>
+  </data>
+  <data name="amigosErrorEnviarSolicitud" xml:space="preserve">
+    <value>The friend request could not be sent.</value>
+  </data>
+  <data name="amigosErrorProcesarRespuesta" xml:space="preserve">
+    <value>The friend request response could not be processed.</value>
+  </data>
+  <data name="amigosErrorNombresRequeridos" xml:space="preserve">
+    <value>You must provide both usernames.</value>
+  </data>
+  <data name="amigosErrorJugadorNoEncontrado" xml:space="preserve">
+    <value>The specified player was not found.</value>
+  </data>
+  <data name="amigosErrorAmigoNoEncontrado" xml:space="preserve">
+    <value>The specified friend was not found.</value>
+  </data>
+  <data name="amigosErrorSinRelacion" xml:space="preserve">
+    <value>The players do not have a registered friendship.</value>
+  </data>
+  <data name="amigosErrorEliminarAmistad" xml:space="preserve">
+    <value>The friendship could not be removed.</value>
+  </data>
+  <data name="amigosTextoAmistadEliminada" xml:space="preserve">
+    <value>Friendship removed successfully.</value>
+  </data>
+  <data name="amigosTextoSolicitudAceptada" xml:space="preserve">
+    <value>Friend request accepted successfully.</value>
+  </data>
+  <data name="amigosTextoSolicitudRechazada" xml:space="preserve">
+    <value>Friend request rejected.</value>
+  </data>
+  <data name="amigosErrorListaNombreRequerido" xml:space="preserve">
+    <value>You must provide your username to retrieve the friends list.</value>
+  </data>
+  <data name="amigosErrorListaNoDisponible" xml:space="preserve">
+    <value>The friends list could not be retrieved.</value>
+  </data>
+  <data name="amigosTextoListaObtenida" xml:space="preserve">
+    <value>Friends list retrieved successfully.</value>
+  </data>
 </root>
