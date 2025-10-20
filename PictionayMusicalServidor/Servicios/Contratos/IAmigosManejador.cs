@@ -1,14 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
+using Servicios.Contratos.DTOs;
 
 namespace Servicios.Contratos
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IAmigosManejadorCallback))]
     public interface IAmigosManejador
     {
+        [OperationContract]
+        void Suscribirse(string nombreUsuario);
+
+        [OperationContract]
+        void Desuscribirse(string nombreUsuario);
+
+        [OperationContract]
+        ResultadoOperacionDTO EnviarSolicitudAmistad(string nombreUsuarioEmisor, string nombreUsuarioReceptor);
+
+        [OperationContract]
+        ResultadoOperacionDTO ResponderSolicitudAmistad(string nombreUsuarioEmisor, string nombreUsuarioReceptor, bool aceptarSolicitud);
+
+        [OperationContract]
+        ResultadoOperacionDTO EliminarAmigo(string nombreUsuarioA, string nombreUsuarioB);
     }
 }
