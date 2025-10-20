@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Sesiones;
+using PictionaryMusicalCliente.Servicios;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente
 {
@@ -19,19 +15,82 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class EliminarAmigo : Window
     {
-        public EliminarAmigo()
+        private readonly IAmigosService _amigosService;
+        private readonly string _amigo;
+
+        public EliminarAmigo(string amigo)
+            : this(amigo, new AmigosService())
         {
+        }
+
+        public EliminarAmigo(string amigo, IAmigosService amigosService)
+        {
+            if (string.IsNullOrWhiteSpace(amigo))
+            {
+                throw new ArgumentException("El amigo es obligatorio", nameof(amigo));
+            }
+
+            _amigosService = amigosService ?? throw new ArgumentNullException(nameof(amigosService));
+            _amigo = amigo;
+
             InitializeComponent();
+
+            bloqueTextoMensaje.Text = string.Concat(Lang.eliminarAmigoTextoConfirmacion, _amigo, "?");
         }
 
         private void BotonAceptar(object sender, RoutedEventArgs e)
         {
-
+            _ = EliminarAmigoAsync();
         }
 
         private void BotonCancelar(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
+        }
+
+        private async System.Threading.Tasks.Task EliminarAmigoAsync()
+        {
+            string usuarioActual = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario;
+
+            if (string.IsNullOrWhiteSpace(usuarioActual))
+            {
+                AvisoHelper.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
+                return;
+            }
+
+            try
+            {
+                ResultadoOperacion resultado = await _amigosService
+                    .EliminarAmigoAsync(usuarioActual, _amigo)
+                    .ConfigureAwait(true);
+
+                if (resultado == null)
+                {
+                    AvisoHelper.Mostrar(Lang.errorTextoServidorNoDisponible);
+                    return;
+                }
+
+                string mensaje = string.IsNullOrWhiteSpace(resultado.Mensaje)
+                    ? (resultado.Exito ? Lang.eliminarAmigoTextoEliminar : Lang.errorTextoErrorProcesarSolicitud)
+                    : resultado.Mensaje;
+
+                AvisoHelper.Mostrar(mensaje);
+
+                if (resultado.Exito)
+                {
+                    Close();
+                }
+            }
+            catch (ServicioException ex)
+            {
+                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoServidorNoDisponible);
+            }
+            catch (Exception ex)
+            {
+                AvisoHelper.Mostrar(string.IsNullOrWhiteSpace(ex.Message)
+                    ? Lang.errorTextoServidorNoDisponible
+                    : ex.Message);
+            }
         }
     }
 }
