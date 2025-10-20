@@ -41,7 +41,8 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                ListaSrv.ListaAmigosDTO lista = await Task.Run(() => cliente.ObtenerListaAmigos(jugador))
+                ListaSrv.ListaAmigosDTO lista = await cliente
+                    .ObtenerListaAmigosAsync(jugador)
                     .ConfigureAwait(false);
 
                 return ConvertirResultado(lista);

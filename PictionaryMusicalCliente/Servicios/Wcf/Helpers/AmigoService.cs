@@ -47,8 +47,8 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                AmigosSrv.ResultadoOperacionDTO resultado = await Task.Run(() =>
-                    cliente.EnviarSolicitudAmistad(remitente, nombreUsuarioReceptor.Trim()))
+                AmigosSrv.ResultadoOperacionDTO resultado = await cliente
+                    .EnviarSolicitudAmistadAsync(remitente, nombreUsuarioReceptor.Trim())
                     .ConfigureAwait(false);
 
                 return ConvertirResultado(resultado, Lang.errorTextoErrorProcesarSolicitud);
@@ -93,8 +93,8 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                AmigosSrv.ResultadoOperacionDTO resultado = await Task.Run(() =>
-                    cliente.ResponderSolicitudAmistad(nombreUsuarioRemitente.Trim(), receptor, aceptada))
+                AmigosSrv.ResultadoOperacionDTO resultado = await cliente
+                    .ResponderSolicitudAmistadAsync(nombreUsuarioRemitente.Trim(), receptor, aceptada)
                     .ConfigureAwait(false);
 
                 return ConvertirResultado(resultado, Lang.errorTextoErrorProcesarSolicitud);
@@ -139,8 +139,8 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                AmigosSrv.ResultadoOperacionDTO resultado = await Task.Run(() =>
-                    cliente.EliminarAmigo(remitente, nombreUsuarioAmigo.Trim()))
+                AmigosSrv.ResultadoOperacionDTO resultado = await cliente
+                    .EliminarAmigoAsync(remitente, nombreUsuarioAmigo.Trim())
                     .ConfigureAwait(false);
 
                 return ConvertirResultado(resultado, Lang.errorTextoErrorProcesarSolicitud);
