@@ -252,6 +252,9 @@
   <data name="eliminarAmigoTextoEliminar" xml:space="preserve">
     <value>ELIMINAR AMIGO</value>
   </data>
+  <data name="eliminarAmigoTextoExito" xml:space="preserve">
+    <value>Amigo eliminado correctamente.</value>
+  </data>
   <data name="globalTextoInvitaciones" xml:space="preserve">
     <value>INVITACIONES</value>
   </data>

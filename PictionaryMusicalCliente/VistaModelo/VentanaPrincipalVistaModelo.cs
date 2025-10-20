@@ -29,6 +29,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private ObservableCollection<OpcionTexto> _dificultadesDisponibles;
         private OpcionTexto _dificultadSeleccionada;
         private ObservableCollection<string> _amigos;
+        private string _amigoSeleccionado;
 
         private readonly ILocalizacionService _localizacionService;
         private readonly IListaAmigosService _listaAmigosService;
@@ -60,7 +61,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             AbrirClasificacionCommand = new ComandoDelegado(_ => AbrirClasificacion?.Invoke());
             AbrirBuscarAmigoCommand = new ComandoDelegado(_ => AbrirBuscarAmigo?.Invoke());
             AbrirSolicitudesCommand = new ComandoDelegado(_ => AbrirSolicitudes?.Invoke());
-            AbrirEliminarAmigoCommand = new ComandoDelegado(_ => AbrirEliminarAmigo?.Invoke());
+            AbrirEliminarAmigoCommand = new ComandoDelegado(
+                () => AbrirEliminarAmigoInterno(),
+                () => PuedeAbrirEliminarAmigo());
             AbrirInvitacionesCommand = new ComandoDelegado(_ => AbrirInvitaciones?.Invoke());
             UnirseSalaCommand = new ComandoDelegado(_ => UnirseSalaInterno());
             IniciarJuegoCommand = new ComandoDelegado(_ => IniciarJuegoInterno(), _ => PuedeIniciarJuego());
@@ -157,6 +160,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             private set => EstablecerPropiedad(ref _amigos, value);
         }
 
+        public string AmigoSeleccionado
+        {
+            get => _amigoSeleccionado;
+            set
+            {
+                if (EstablecerPropiedad(ref _amigoSeleccionado, value))
+                {
+                    ActualizarEstadoEliminarAmigo();
+                }
+            }
+        }
+
         public ICommand AbrirPerfilCommand { get; }
 
         public ICommand AbrirAjustesCommand { get; }
@@ -169,7 +184,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public ICommand AbrirSolicitudesCommand { get; }
 
-        public ICommand AbrirEliminarAmigoCommand { get; }
+        public IComandoNotificable AbrirEliminarAmigoCommand { get; }
 
         public ICommand AbrirInvitacionesCommand { get; }
 
@@ -189,7 +204,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action AbrirSolicitudes { get; set; }
 
-        public Action AbrirEliminarAmigo { get; set; }
+        public Action<string> AbrirEliminarAmigo { get; set; }
 
         public Action AbrirInvitaciones { get; set; }
 
@@ -206,6 +221,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             if (string.IsNullOrWhiteSpace(usuario))
             {
                 Amigos = new ObservableCollection<string>();
+                AmigoSeleccionado = null;
                 return;
             }
 
@@ -222,6 +238,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     ?? Enumerable.Empty<string>();
 
                 Amigos = new ObservableCollection<string>(amigosOrdenados);
+                AmigoSeleccionado = null;
             }
             catch (ServicioException ex)
             {
@@ -233,11 +250,64 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
+        public void RemoverAmigo(string nombreAmigo)
+        {
+            if (Amigos == null || string.IsNullOrWhiteSpace(nombreAmigo))
+            {
+                return;
+            }
+
+            string amigoExistente = Amigos
+                .FirstOrDefault(nombre => string.Equals(nombre, nombreAmigo, StringComparison.OrdinalIgnoreCase));
+
+            if (amigoExistente != null)
+            {
+                Amigos.Remove(amigoExistente);
+            }
+
+            if (!string.IsNullOrWhiteSpace(AmigoSeleccionado)
+                && string.Equals(AmigoSeleccionado, nombreAmigo, StringComparison.OrdinalIgnoreCase))
+            {
+                AmigoSeleccionado = null;
+            }
+        }
+
         private void CargarDatosUsuario()
         {
             CodigoSala = string.Empty;
             Amigos = new ObservableCollection<string>();
             NombreUsuario = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
+            AmigoSeleccionado = null;
+        }
+
+        private void AbrirEliminarAmigoInterno()
+        {
+            string amigo = AmigoSeleccionado;
+
+            if (string.IsNullOrWhiteSpace(amigo))
+            {
+                MostrarMensaje?.Invoke(Lang.errorTextoCamposInvalidosGenerico);
+                return;
+            }
+
+            if (AbrirEliminarAmigo != null)
+            {
+                AbrirEliminarAmigo.Invoke(amigo);
+            }
+            else
+            {
+                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+            }
+        }
+
+        private bool PuedeAbrirEliminarAmigo()
+        {
+            return !string.IsNullOrWhiteSpace(AmigoSeleccionado);
+        }
+
+        private void ActualizarEstadoEliminarAmigo()
+        {
+            AbrirEliminarAmigoCommand?.NotificarPuedeEjecutar();
         }
 
         private void CargarOpcionesPartida()

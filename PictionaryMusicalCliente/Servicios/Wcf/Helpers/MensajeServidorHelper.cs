@@ -56,6 +56,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
                 ["Los jugadores ya son amigos."] = () => LangResources.Lang.buscarAmigoErrorYaAmigos,
                 ["Ya existe una solicitud de amistad pendiente entre los jugadores."] = () => LangResources.Lang.buscarAmigoErrorSolicitudPendiente,
                 ["Solicitud de amistad enviada correctamente."] = () => LangResources.Lang.buscarAmigoTextoSolicitudEnviada,
+                ["Amistad eliminada correctamente."] = () => LangResources.Lang.eliminarAmigoTextoExito,
                 ["No fue posible enviar la solicitud de amistad."] = () => LangResources.Lang.buscarAmigoErrorEnviarSolicitud,
                 ["Código verificado correctamente. Continúe con el cambio de contraseña."] = () => LangResources.Lang.avisoTextoCodigoVerificadoCambio,
                 ["La solicitud de actualización de contraseña no es válida."] = () => LangResources.Lang.errorTextoPrepararSolicitudCambioContrasena,
