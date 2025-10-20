@@ -135,6 +135,9 @@
     <Compile Include="Servicios\Dialogos\VerificarCodigoDialogService.cs" />
     <Compile Include="Servicios\Idiomas\LocalizacionService.cs" />
     <Compile Include="Servicios\ListaAmigosActualizadaEventArgs.cs" />
+    <Compile Include="Servicios\SolicitudAmistadRecibidaEventArgs.cs" />
+    <Compile Include="Servicios\RespuestaSolicitudAmistadEventArgs.cs" />
+    <Compile Include="Servicios\AmistadEliminadaEventArgs.cs" />
     <Compile Include="Servicios\ServicioException.cs" />
     <Compile Include="Servicios\Wcf\AmigosService.cs" />
     <Compile Include="Servicios\Wcf\AvatarService.cs" />
