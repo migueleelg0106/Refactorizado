@@ -8,11 +8,13 @@ namespace PictionaryMusicalCliente
 {
     public partial class VentanaPrincipal : Window
     {
+        private readonly VentanaPrincipalVistaModelo _vistaModelo;
+
         public VentanaPrincipal()
         {
             InitializeComponent();
 
-            var vistaModelo = new VentanaPrincipalVistaModelo
+            _vistaModelo = new VentanaPrincipalVistaModelo
             {
                 AbrirPerfil = () => MostrarDialogo(new Perfil()),
                 AbrirAjustes = () => MostrarDialogo(new Ajustes()),
@@ -20,22 +22,22 @@ namespace PictionaryMusicalCliente
                 AbrirClasificacion = () => MostrarDialogo(new Clasificacion()),
                 AbrirBuscarAmigo = () => MostrarDialogo(new BuscarAmigo()),
                 AbrirSolicitudes = () => MostrarDialogo(new Solicitudes()),
-                AbrirEliminarAmigo = () => MostrarDialogo(new EliminarAmigo()),
+                AbrirEliminarAmigo = nombre => MostrarDialogoEliminarAmigo(nombre),
                 AbrirInvitaciones = () => MostrarDialogo(new Invitaciones()),
                 IniciarJuego = _ => MostrarVentanaJuego(),
                 UnirseSala = _ => AvisoHelper.Mostrar(Lang.errorTextoNoEncuentraPartida)
             };
 
-            vistaModelo.MostrarMensaje = AvisoHelper.Mostrar;
+            _vistaModelo.MostrarMensaje = AvisoHelper.Mostrar;
 
-            DataContext = vistaModelo;
+            DataContext = _vistaModelo;
         }
 
         private async void VentanaPrincipal_Loaded(object sender, RoutedEventArgs e)
         {
-            if (DataContext is VentanaPrincipalVistaModelo vistaModelo)
+            if (_vistaModelo != null)
             {
-                await vistaModelo.CargarAmigosAsync().ConfigureAwait(true);
+                await _vistaModelo.CargarAmigosAsync().ConfigureAwait(true);
             }
         }
 
@@ -58,6 +60,21 @@ namespace PictionaryMusicalCliente
             };
 
             ventana.Show();
+        }
+
+        private void MostrarDialogoEliminarAmigo(string nombreAmigo)
+        {
+            if (string.IsNullOrWhiteSpace(nombreAmigo))
+            {
+                AvisoHelper.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
+                return;
+            }
+
+            var ventana = new EliminarAmigo(
+                nombreAmigo,
+                eliminado => _vistaModelo?.RemoverAmigo(eliminado));
+
+            MostrarDialogo(ventana);
         }
     }
 }

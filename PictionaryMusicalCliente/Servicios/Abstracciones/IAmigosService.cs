@@ -8,5 +8,9 @@ namespace PictionaryMusicalCliente.Servicios.Abstracciones
         Task<ResultadoOperacion> EnviarSolicitudAmistadAsync(
             string nombreUsuarioRemitente,
             string nombreUsuarioReceptor);
+
+        Task<ResultadoOperacion> EliminarAmigoAsync(
+            string nombreUsuarioRemitente,
+            string nombreUsuarioReceptor);
     }
 }

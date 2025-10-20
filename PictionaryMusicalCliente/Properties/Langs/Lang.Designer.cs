@@ -421,6 +421,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Amigo eliminado correctamente..
+        /// </summary>
+        public static string eliminarAmigoTextoExito {
+            get {
+                return ResourceManager.GetString("eliminarAmigoTextoExito", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a No se pudo actualizar la contraseña. Intente nuevamente..
         /// </summary>
         public static string errorTextoActualizarContrasena {

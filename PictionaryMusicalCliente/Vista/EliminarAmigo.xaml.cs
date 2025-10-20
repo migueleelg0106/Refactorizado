@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Cuentas;
 
 namespace PictionaryMusicalCliente
 {
@@ -19,19 +12,26 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class EliminarAmigo : Window
     {
-        public EliminarAmigo()
+        public EliminarAmigo(string nombreAmigo, Action<string> amigoEliminado = null)
         {
+            if (string.IsNullOrWhiteSpace(nombreAmigo))
+            {
+                throw new ArgumentException("El nombre del amigo es obligatorio.", nameof(nombreAmigo));
+            }
+
             InitializeComponent();
-        }
 
-        private void BotonAceptar(object sender, RoutedEventArgs e)
-        {
+            IAmigosService amigosService = new AmigosService();
 
-        }
+            var vistaModelo = new EliminarAmigoVistaModelo(nombreAmigo, amigosService)
+            {
+                CerrarAccion = Close,
+                AmigoEliminado = amigoEliminado
+            };
 
-        private void BotonCancelar(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+            vistaModelo.MostrarMensaje = AvisoHelper.Mostrar;
+
+            DataContext = vistaModelo;
         }
     }
 }
