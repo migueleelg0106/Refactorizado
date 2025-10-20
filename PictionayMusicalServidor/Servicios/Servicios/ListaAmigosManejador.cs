@@ -119,10 +119,24 @@ namespace Servicios.Servicios
 
         private static ListaAmigosDTO CrearResultadoExitoso(string nombreUsuario, SolicitudAmistadRepositorio repositorio, Jugador jugador)
         {
-            IEnumerable<Jugador> amigos = repositorio.ObtenerAmigosDe(jugador.idJugador);
-            List<string> nombresAmigos = amigos
-                .Select(j => j.Usuario.Select(u => u.Nombre_Usuario).FirstOrDefault())
-                .Where(nombre => !string.IsNullOrWhiteSpace(nombre) && !string.Equals(nombre, nombreUsuario, StringComparison.OrdinalIgnoreCase))
+            IEnumerable<Jugador> amigos = repositorio.ObtenerAmigosDe(jugador.idJugador)
+                ?? Enumerable.Empty<Jugador>();
+
+            List<int> idsAmigos = amigos
+                .Where(amigo => amigo != null)
+                .Select(amigo => amigo.idJugador)
+                .Where(id => id > 0 && id != jugador.idJugador)
+                .Distinct()
+                .ToList();
+
+            IEnumerable<string> nombresUsuarios = repositorio
+                .ObtenerNombresUsuariosDe(idsAmigos)
+                ?? Enumerable.Empty<string>();
+
+            List<string> nombresAmigos = nombresUsuarios
+                .Select(nombre => nombre?.Trim())
+                .Where(nombre => !string.IsNullOrWhiteSpace(nombre)
+                    && !string.Equals(nombre, nombreUsuario, StringComparison.OrdinalIgnoreCase))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
