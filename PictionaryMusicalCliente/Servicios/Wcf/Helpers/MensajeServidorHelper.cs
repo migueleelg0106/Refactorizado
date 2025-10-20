@@ -114,7 +114,29 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
                 ["Los datos proporcionados no son válidos para iniciar sesión."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
                 ["No fue posible completar el inicio de sesión."] = () => LangResources.Lang.errorTextoServidorInicioSesion,
                 ["Ocurrió un problema al iniciar sesión."] = () => LangResources.Lang.errorTextoServidorInicioSesion,
-                ["Ocurrió un error inesperado al iniciar sesión."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud
+                ["Ocurrió un error inesperado al iniciar sesión."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
+                ["Se requiere el nombre de usuario del remitente y del receptor."] = () => LangResources.Lang.amigosErrorRemitenteReceptorRequeridos,
+                ["No es posible enviarse una solicitud de amistad a sí mismo."] = () => LangResources.Lang.amigosErrorSolicitudPropia,
+                ["No se encontró al remitente especificado."] = () => LangResources.Lang.amigosErrorRemitenteNoEncontrado,
+                ["No se encontró al receptor especificado."] = () => LangResources.Lang.amigosErrorReceptorNoEncontrado,
+                ["Los jugadores ya son amigos."] = () => LangResources.Lang.amigosErrorJugadoresYaAmigos,
+                ["Ya existe una solicitud de amistad pendiente entre los jugadores."] = () => LangResources.Lang.amigosErrorSolicitudPendiente,
+                ["Solicitud de amistad enviada correctamente."] = () => LangResources.Lang.amigosTextoSolicitudEnviada,
+                ["No fue posible enviar la solicitud de amistad."] = () => LangResources.Lang.amigosErrorEnviarSolicitud,
+                ["No existe una solicitud de amistad pendiente entre los jugadores."] = () => LangResources.Lang.amigosErrorSolicitudInexistente,
+                ["La solicitud de amistad ya fue atendida."] = () => LangResources.Lang.amigosErrorSolicitudAtendida,
+                ["Solicitud de amistad aceptada correctamente."] = () => LangResources.Lang.amigosTextoSolicitudAceptada,
+                ["Solicitud de amistad rechazada."] = () => LangResources.Lang.amigosTextoSolicitudRechazada,
+                ["No fue posible procesar la respuesta a la solicitud de amistad."] = () => LangResources.Lang.amigosErrorProcesarRespuesta,
+                ["Se requiere el nombre de usuario de ambos jugadores."] = () => LangResources.Lang.amigosErrorNombresRequeridos,
+                ["No se encontró al jugador especificado."] = () => LangResources.Lang.amigosErrorJugadorNoEncontrado,
+                ["No se encontró al amigo especificado."] = () => LangResources.Lang.amigosErrorAmigoNoEncontrado,
+                ["Los jugadores no tienen una relación de amistad registrada."] = () => LangResources.Lang.amigosErrorSinRelacion,
+                ["Amistad eliminada correctamente."] = () => LangResources.Lang.amigosTextoAmistadEliminada,
+                ["No fue posible eliminar la amistad."] = () => LangResources.Lang.amigosErrorEliminarAmistad,
+                ["Se requiere el nombre de usuario para obtener la lista de amigos."] = () => LangResources.Lang.amigosErrorListaNombreRequerido,
+                ["No fue posible obtener la lista de amigos."] = () => LangResources.Lang.amigosErrorListaNoDisponible,
+                ["Lista de amigos obtenida correctamente."] = () => LangResources.Lang.amigosTextoListaObtenida
             };
 
         public static string Localizar(string mensaje, string mensajePredeterminado)
