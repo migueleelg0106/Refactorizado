@@ -80,6 +80,7 @@ namespace Datos.DAL.Implementaciones
                     (s.Jugador_idJugador == jugadorId || s.Jugador_idJugador1 == jugadorId) &&
                     s.Estado != null && s.Estado.Length > 0 && s.Estado[0] != 0)
                 .Select(s => s.Jugador_idJugador == jugadorId ? s.Jugador1 : s.Jugador)
+                .Where(j => j != null)
                 .Include(j => j.Usuario)
                 .ToList();
         }
