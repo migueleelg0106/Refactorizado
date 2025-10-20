@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 
 namespace PictionaryMusicalCliente
 {
@@ -20,18 +12,26 @@ namespace PictionaryMusicalCliente
     public partial class BuscarAmigo : Window
     {
         public BuscarAmigo()
+            : this(AmigosService.Instancia)
         {
-            InitializeComponent();
         }
 
-        private void BotonEnviarSolicitud(object sender, RoutedEventArgs e)
+        public BuscarAmigo(IAmigosService amigosService)
         {
+            InitializeComponent();
 
+            var vistaModelo = new BuscarAmigoVistaModelo(amigosService)
+            {
+                CerrarAccion = Close,
+                MostrarMensaje = AvisoHelper.Mostrar
+            };
+
+            DataContext = vistaModelo;
         }
 
         private void BotonCancelar(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

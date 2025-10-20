@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 
 namespace PictionaryMusicalCliente
 {
@@ -19,24 +11,51 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class Solicitudes : Window
     {
+        private readonly SolicitudesVistaModelo _vistaModelo;
+
         public Solicitudes()
+            : this(AmigosService.Instancia)
+        {
+        }
+
+        public Solicitudes(IAmigosService amigosService)
         {
             InitializeComponent();
+
+            _vistaModelo = new SolicitudesVistaModelo(amigosService)
+            {
+                CerrarAccion = Close,
+                MostrarMensaje = AvisoHelper.Mostrar
+            };
+
+            DataContext = _vistaModelo;
+            Loaded += Solicitudes_Loaded;
+            Closed += Solicitudes_Closed;
+        }
+
+        private void Solicitudes_Loaded(object sender, RoutedEventArgs e)
+        {
+            _vistaModelo.CargarSolicitudes();
+        }
+
+        private void Solicitudes_Closed(object sender, System.EventArgs e)
+        {
+            _vistaModelo.Liberar();
         }
 
         private void BotonAceptar(object sender, RoutedEventArgs e)
         {
-
+            Close();
         }
 
         private void BotonCancelar(object sender, RoutedEventArgs e)
         {
-
+            Close();
         }
 
         private void BotonRegresar(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

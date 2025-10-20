@@ -98,6 +98,12 @@
     <Compile Include="Convertidores\ConvertidorCadenaVaciaVisibilidad.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoAvataresLocales.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoImagenesPerfilLocales.cs" />
+    <Compile Include="Modelo\Amigos\AmistadEliminada.cs" />
+    <Compile Include="Modelo\Amigos\AmistadEliminadaEventArgs.cs" />
+    <Compile Include="Modelo\Amigos\RespuestaSolicitudAmistad.cs" />
+    <Compile Include="Modelo\Amigos\RespuestaSolicitudAmistadEventArgs.cs" />
+    <Compile Include="Modelo\Amigos\SolicitudAmistad.cs" />
+    <Compile Include="Modelo\Amigos\SolicitudAmistadEventArgs.cs" />
     <Compile Include="Modelo\ObjetoAvatar.cs" />
     <Compile Include="Modelo\ResultadoOperacion.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
@@ -113,6 +119,7 @@
     <Compile Include="Modelo\Cuentas\VerificacionCodigoResultados.cs" />
     <Compile Include="Servicios\Abstracciones\IAvatarService.cs" />
     <Compile Include="Servicios\Abstracciones\ICambioContrasenaService.cs" />
+    <Compile Include="Servicios\Abstracciones\IAmigosService.cs" />
     <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IClasificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\ICuentaService.cs" />
@@ -129,6 +136,7 @@
     <Compile Include="Servicios\Idiomas\LocalizacionService.cs" />
     <Compile Include="Servicios\ServicioException.cs" />
     <Compile Include="Servicios\Wcf\AvatarService.cs" />
+    <Compile Include="Servicios\Wcf\AmigosService.cs" />
     <Compile Include="Servicios\Wcf\CambioContrasenaService.cs" />
     <Compile Include="Servicios\Wcf\ClasificacionService.cs" />
     <Compile Include="Servicios\Wcf\CodigoVerificacionService.cs" />
@@ -166,6 +174,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VistaModelo\CambioContrasenaVistaModelo.cs" />
+    <Compile Include="VistaModelo\Amigos\BuscarAmigoVistaModelo.cs" />
+    <Compile Include="VistaModelo\Amigos\EliminarAmigoVistaModelo.cs" />
+    <Compile Include="VistaModelo\Amigos\SolicitudesVistaModelo.cs" />
     <Compile Include="VistaModelo\ClasificacionVistaModelo.cs" />
     <Compile Include="VistaModelo\InicioSesionVistaModelo.cs" />
     <Compile Include="VistaModelo\PerfilVistaModelo.cs" />

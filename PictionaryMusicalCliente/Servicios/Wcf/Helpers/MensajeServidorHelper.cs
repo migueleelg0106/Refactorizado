@@ -114,7 +114,29 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
                 ["Los datos proporcionados no son válidos para iniciar sesión."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
                 ["No fue posible completar el inicio de sesión."] = () => LangResources.Lang.errorTextoServidorInicioSesion,
                 ["Ocurrió un problema al iniciar sesión."] = () => LangResources.Lang.errorTextoServidorInicioSesion,
-                ["Ocurrió un error inesperado al iniciar sesión."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud
+                ["Ocurrió un error inesperado al iniciar sesión."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
+                ["Solicitud de amistad enviada correctamente."] = () => LangResources.Lang.amigosTextoSolicitudEnviada,
+                ["No fue posible enviar la solicitud de amistad."] = () => LangResources.Lang.amigosTextoSolicitudEnviarFallo,
+                ["No puedes enviarte una solicitud de amistad a ti mismo."] = () => LangResources.Lang.amigosTextoSolicitudNoPosibleMismoUsuario,
+                ["Ya existe una solicitud o amistad entre los usuarios indicados."] = () => LangResources.Lang.amigosTextoSolicitudRelacionExistente,
+                ["No se encontró alguno de los usuarios especificados."] = () => LangResources.Lang.amigosTextoSolicitudUsuariosNoEncontrados,
+                ["Solicitud de amistad aceptada correctamente."] = () => LangResources.Lang.amigosTextoSolicitudAceptarExito,
+                ["La solicitud de amistad ya había sido aceptada anteriormente."] = () => LangResources.Lang.amigosTextoSolicitudYaAceptada,
+                ["No es posible rechazar una solicitud de amistad que ya fue aceptada."] = () => LangResources.Lang.amigosTextoSolicitudRechazarNoPosible,
+                ["No existe una solicitud de amistad pendiente entre los usuarios indicados."] = () => LangResources.Lang.amigosTextoSolicitudNoPendiente,
+                ["Solo el destinatario original de la solicitud puede responderla."] = () => LangResources.Lang.amigosTextoSolicitudSoloDestinatario,
+                ["Solicitud de amistad rechazada correctamente."] = () => LangResources.Lang.amigosTextoSolicitudRechazada,
+                ["No fue posible rechazar la solicitud de amistad."] = () => LangResources.Lang.amigosTextoSolicitudRechazarFallo,
+                ["No fue posible responder la solicitud de amistad."] = () => LangResources.Lang.amigosTextoSolicitudResponderFallo,
+                ["Amistad eliminada correctamente."] = () => LangResources.Lang.amigosTextoAmistadEliminada,
+                ["No existe una amistad registrada entre los usuarios indicados."] = () => LangResources.Lang.amigosTextoAmistadNoExiste,
+                ["No fue posible eliminar la amistad."] = () => LangResources.Lang.amigosTextoAmistadNoEliminar,
+                ["No es posible eliminar una amistad consigo mismo."] = () => LangResources.Lang.amigosTextoAmistadMismoUsuario,
+                ["Los nombres de usuario son obligatorios."] = () => LangResources.Lang.amigosTextoUsuariosObligatorios,
+                ["Debes proporcionar dos usuarios distintos."] = () => LangResources.Lang.amigosTextoUsuariosDistintos,
+                ["La solicitud de amistad debe involucrar a dos usuarios distintos."] = () => LangResources.Lang.amigosTextoUsuariosDistintos,
+                ["El nombre de usuario es obligatorio para suscribirse a las notificaciones de amistad."] = () => LangResources.Lang.amigosTextoSuscripcionUsuarioObligatorio,
+                ["No fue posible completar la suscripción a las notificaciones de amistad."] = () => LangResources.Lang.errorTextoAmigosSuscripcion
             };
 
         public static string Localizar(string mensaje, string mensajePredeterminado)
