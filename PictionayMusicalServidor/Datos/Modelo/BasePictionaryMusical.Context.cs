@@ -33,8 +33,8 @@ namespace Datos.Modelo
         public virtual DbSet<Genero> Genero { get; set; }
         public virtual DbSet<Jugador> Jugador { get; set; }
         public virtual DbSet<RedSocial> RedSocial { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
+        public virtual DbSet<Amigo> Amigo { get; set; }
         public virtual DbSet<Solicitud> Solicitud { get; set; }
     }
 }
