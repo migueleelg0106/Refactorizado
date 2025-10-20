@@ -268,6 +268,51 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
 
         /// <summary>
+        ///   Busca una cadena traducida similar a Solicitud de amistad aceptada..
+        /// </summary>
+        public static string solicitudesTextoSolicitudAceptada {
+            get {
+                return ResourceManager.GetString("solicitudesTextoSolicitudAceptada", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Solicitud de amistad rechazada..
+        /// </summary>
+        public static string solicitudesTextoSolicitudRechazada {
+            get {
+                return ResourceManager.GetString("solicitudesTextoSolicitudRechazada", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No existe una solicitud de amistad pendiente..
+        /// </summary>
+        public static string solicitudesErrorSolicitudNoPendiente {
+            get {
+                return ResourceManager.GetString("solicitudesErrorSolicitudNoPendiente", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a La solicitud de amistad ya fue atendida..
+        /// </summary>
+        public static string solicitudesErrorSolicitudAtendida {
+            get {
+                return ResourceManager.GetString("solicitudesErrorSolicitudAtendida", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible procesar la respuesta a la solicitud de amistad..
+        /// </summary>
+        public static string solicitudesErrorProcesarRespuesta {
+            get {
+                return ResourceManager.GetString("solicitudesErrorProcesarRespuesta", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Busca una cadena traducida similar a Ingrese el usuario:.
         /// </summary>
         public static string buscarAmigoTextoIngreseUsuario {
