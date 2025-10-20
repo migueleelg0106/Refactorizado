@@ -116,6 +116,7 @@
     <Compile Include="Modelo\IdiomaOpcion.cs" />
     <Compile Include="Modelo\Cuentas\ActualizarPerfilSolicitud.cs" />
     <Compile Include="Modelo\Cuentas\VerificacionCodigoResultados.cs" />
+    <Compile Include="Servicios\Abstracciones\IAmigosService.cs" />
     <Compile Include="Servicios\Abstracciones\IAvatarService.cs" />
     <Compile Include="Servicios\Abstracciones\ICambioContrasenaService.cs" />
     <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Servicios\Dialogos\VerificarCodigoDialogService.cs" />
     <Compile Include="Servicios\Idiomas\LocalizacionService.cs" />
     <Compile Include="Servicios\ServicioException.cs" />
+    <Compile Include="Servicios\Wcf\AmigosService.cs" />
     <Compile Include="Servicios\Wcf\AvatarService.cs" />
     <Compile Include="Servicios\Wcf\CambioContrasenaService.cs" />
     <Compile Include="Servicios\Wcf\ClasificacionService.cs" />
@@ -172,6 +174,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="VistaModelo\BuscarAmigoVistaModelo.cs" />
     <Compile Include="VistaModelo\CambioContrasenaVistaModelo.cs" />
     <Compile Include="VistaModelo\ClasificacionVistaModelo.cs" />
     <Compile Include="VistaModelo\InicioSesionVistaModelo.cs" />
