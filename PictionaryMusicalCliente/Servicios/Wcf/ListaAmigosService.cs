@@ -15,7 +15,11 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 {
     public class ListaAmigosService : IListaAmigosService
     {
-        private const string ListaAmigosEndpoint = "WSDualHttpBinding_IListaAmigosManejador";
+        private static readonly string[] EndpointsPreferidos =
+        {
+            "NetTcpBinding_IListaAmigosManejador",
+            "WSDualHttpBinding_IListaAmigosManejador"
+        };
 
         private readonly SynchronizationContext _contexto;
         private ListaAmigosSrv.ListaAmigosManejadorClient _cliente;
@@ -37,60 +41,51 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             await CancelarSuscripcionAsync().ConfigureAwait(false);
 
-            _callback = new ListaAmigosCallback(ProcesarActualizacion);
-            var contexto = new InstanceContext(_callback);
-            var cliente = new ListaAmigosSrv.ListaAmigosManejadorClient(contexto, ListaAmigosEndpoint);
+            Exception ultimoError = null;
+            TipoErrorServicio? tipoUltimoError = null;
 
-            try
+            foreach (string endpoint in EndpointsPreferidos)
             {
-                ListaAmigosSrv.ListaAmigosDTO listaDto = await cliente
-                    .ObtenerListaAmigosAsync(nombreUsuario)
-                    .ConfigureAwait(false);
+                try
+                {
+                    IReadOnlyList<string> amigos = await SuscribirseEnEndpointAsync(nombreUsuario, endpoint)
+                        .ConfigureAwait(false);
 
-                IReadOnlyList<string> amigos = ConvertirLista(listaDto);
+                    return amigos;
+                }
+                catch (ServicioException)
+                {
+                    throw;
+                }
+                catch (FaultException ex)
+                {
+                    string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorNoDisponible);
+                    throw new ServicioException(TipoErrorServicio.FallaServicio, mensaje, ex);
+                }
+                catch (EndpointNotFoundException ex)
+                {
+                    ultimoError = ex;
+                    tipoUltimoError = TipoErrorServicio.Comunicacion;
+                }
+                catch (TimeoutException ex)
+                {
+                    ultimoError = ex;
+                    tipoUltimoError = TipoErrorServicio.TiempoAgotado;
+                }
+                catch (CommunicationException ex)
+                {
+                    ultimoError = ex;
+                    tipoUltimoError = TipoErrorServicio.Comunicacion;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ultimoError = ex;
+                    tipoUltimoError = TipoErrorServicio.OperacionInvalida;
+                }
+            }
 
-                _cliente = cliente;
-
-                NotificarLista(amigos, null);
-
-                return amigos;
-            }
-            catch (FaultException ex)
-            {
-                CerrarCliente(cliente);
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorNoDisponible);
-                throw new ServicioException(TipoErrorServicio.FallaServicio, mensaje, ex);
-            }
-            catch (EndpointNotFoundException ex)
-            {
-                CerrarCliente(cliente);
-                throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
-            }
-            catch (TimeoutException ex)
-            {
-                CerrarCliente(cliente);
-                throw new ServicioException(TipoErrorServicio.TiempoAgotado, Lang.avisoTextoServidorTiempoSesion, ex);
-            }
-            catch (CommunicationException ex)
-            {
-                CerrarCliente(cliente);
-                throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                CerrarCliente(cliente);
-                throw new ServicioException(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
-            }
-            catch (ServicioException)
-            {
-                CerrarCliente(cliente);
-                throw;
-            }
-            catch
-            {
-                CerrarCliente(cliente);
-                throw;
-            }
+            string mensaje = ObtenerMensajePredeterminado(tipoUltimoError);
+            throw new ServicioException(tipoUltimoError ?? TipoErrorServicio.Comunicacion, mensaje, ultimoError);
         }
 
         public Task CancelarSuscripcionAsync()
@@ -154,7 +149,8 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             {
                 var args = (ListaAmigosActualizadaEventArgs)state;
                 ListaActualizada?.Invoke(this, args);
-            }, new ListaAmigosActualizadaEventArgs(amigos?.ToList().AsReadOnly() ?? new ReadOnlyCollection<string>(Array.Empty<string>()), mensajeError));
+            }, new ListaAmigosActualizadaEventArgs(amigos?.ToList().AsReadOnly()
+                 ?? new ReadOnlyCollection<string>(Array.Empty<string>()), mensajeError));
         }
 
         private static IReadOnlyList<string> ConvertirLista(ListaAmigosSrv.ListaAmigosDTO lista)
@@ -213,6 +209,47 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             catch (InvalidOperationException)
             {
                 cliente.Abort();
+            }
+        }
+
+        private async Task<IReadOnlyList<string>> SuscribirseEnEndpointAsync(string nombreUsuario, string endpoint)
+        {
+            var callback = new ListaAmigosCallback(ProcesarActualizacion);
+            var contexto = new InstanceContext(callback);
+            var cliente = new ListaAmigosSrv.ListaAmigosManejadorClient(contexto, endpoint);
+
+            try
+            {
+                ListaAmigosSrv.ListaAmigosDTO listaDto = await cliente
+                    .ObtenerListaAmigosAsync(nombreUsuario)
+                    .ConfigureAwait(false);
+
+                IReadOnlyList<string> amigos = ConvertirLista(listaDto);
+
+                _callback = callback;
+                _cliente = cliente;
+
+                NotificarLista(amigos, null);
+
+                return amigos;
+            }
+            catch
+            {
+                CerrarCliente(cliente);
+                throw;
+            }
+        }
+
+        private static string ObtenerMensajePredeterminado(TipoErrorServicio? tipoError)
+        {
+            switch (tipoError)
+            {
+                case TipoErrorServicio.TiempoAgotado:
+                    return Lang.avisoTextoServidorTiempoSesion;
+                case TipoErrorServicio.OperacionInvalida:
+                    return Lang.errorTextoErrorProcesarSolicitud;
+                default:
+                    return Lang.errorTextoServidorNoDisponible;
             }
         }
 

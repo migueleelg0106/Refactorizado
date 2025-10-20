@@ -13,7 +13,11 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 {
     public class AmigosService : IAmigosService
     {
-        private const string AmigosEndpoint = "WSDualHttpBinding_IAmigosManejador";
+        private static readonly string[] EndpointsPreferidos =
+        {
+            "NetTcpBinding_IAmigosManejador",
+            "WSDualHttpBinding_IAmigosManejador"
+        };
 
         private readonly SynchronizationContext _contexto;
 
@@ -42,38 +46,9 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 throw new ArgumentException("El receptor es obligatorio", nameof(nombreUsuarioReceptor));
             }
 
-            AmigosCallback callback = CrearCallback();
-            var cliente = new AmigosSrv.AmigosManejadorClient(new InstanceContext(callback), AmigosEndpoint);
-
-            try
-            {
-                AmigosSrv.ResultadoOperacionDTO resultado = await WcfClientHelper
-                    .UsarAsync(cliente, c => c.EnviarSolicitudAmistadAsync(nombreUsuarioRemitente, nombreUsuarioReceptor))
-                    .ConfigureAwait(false);
-
-                return ConvertirResultado(resultado);
-            }
-            catch (FaultException ex)
-            {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorNoDisponible);
-                throw new ServicioException(TipoErrorServicio.FallaServicio, mensaje, ex);
-            }
-            catch (EndpointNotFoundException ex)
-            {
-                throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
-            }
-            catch (TimeoutException ex)
-            {
-                throw new ServicioException(TipoErrorServicio.TiempoAgotado, Lang.avisoTextoServidorTiempoSesion, ex);
-            }
-            catch (CommunicationException ex)
-            {
-                throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new ServicioException(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
-            }
+            return await EjecutarOperacionAsync(
+                c => c.EnviarSolicitudAmistadAsync(nombreUsuarioRemitente, nombreUsuarioReceptor))
+                .ConfigureAwait(false);
         }
 
         public async Task<ResultadoOperacion> EliminarAmigoAsync(string nombreUsuario, string nombreAmigo)
@@ -88,38 +63,9 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 throw new ArgumentException("El amigo es obligatorio", nameof(nombreAmigo));
             }
 
-            AmigosCallback callback = CrearCallback();
-            var cliente = new AmigosSrv.AmigosManejadorClient(new InstanceContext(callback), AmigosEndpoint);
-
-            try
-            {
-                AmigosSrv.ResultadoOperacionDTO resultado = await WcfClientHelper
-                    .UsarAsync(cliente, c => c.EliminarAmigoAsync(nombreUsuario, nombreAmigo))
-                    .ConfigureAwait(false);
-
-                return ConvertirResultado(resultado);
-            }
-            catch (FaultException ex)
-            {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorNoDisponible);
-                throw new ServicioException(TipoErrorServicio.FallaServicio, mensaje, ex);
-            }
-            catch (EndpointNotFoundException ex)
-            {
-                throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
-            }
-            catch (TimeoutException ex)
-            {
-                throw new ServicioException(TipoErrorServicio.TiempoAgotado, Lang.avisoTextoServidorTiempoSesion, ex);
-            }
-            catch (CommunicationException ex)
-            {
-                throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new ServicioException(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
-            }
+            return await EjecutarOperacionAsync(
+                c => c.EliminarAmigoAsync(nombreUsuario, nombreAmigo))
+                .ConfigureAwait(false);
         }
 
         private static ResultadoOperacion ConvertirResultado(AmigosSrv.ResultadoOperacionDTO resultado)
@@ -136,12 +82,81 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     : resultado.Mensaje);
         }
 
+        private async Task<ResultadoOperacion> EjecutarOperacionAsync(
+            Func<AmigosSrv.AmigosManejadorClient, Task<AmigosSrv.ResultadoOperacionDTO>> operacion)
+        {
+            if (operacion == null)
+            {
+                throw new ArgumentNullException(nameof(operacion));
+            }
+
+            Exception ultimoError = null;
+            TipoErrorServicio? tipoUltimoError = null;
+
+            foreach (string endpoint in EndpointsPreferidos)
+            {
+                AmigosCallback callback = CrearCallback();
+                var contexto = new InstanceContext(callback);
+                var cliente = new AmigosSrv.AmigosManejadorClient(contexto, endpoint);
+
+                try
+                {
+                    AmigosSrv.ResultadoOperacionDTO resultado = await WcfClientHelper
+                        .UsarAsync(cliente, operacion)
+                        .ConfigureAwait(false);
+
+                    return ConvertirResultado(resultado);
+                }
+                catch (FaultException ex)
+                {
+                    string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorNoDisponible);
+                    throw new ServicioException(TipoErrorServicio.FallaServicio, mensaje, ex);
+                }
+                catch (EndpointNotFoundException ex)
+                {
+                    ultimoError = ex;
+                    tipoUltimoError = TipoErrorServicio.Comunicacion;
+                }
+                catch (TimeoutException ex)
+                {
+                    ultimoError = ex;
+                    tipoUltimoError = TipoErrorServicio.TiempoAgotado;
+                }
+                catch (CommunicationException ex)
+                {
+                    ultimoError = ex;
+                    tipoUltimoError = TipoErrorServicio.Comunicacion;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ultimoError = ex;
+                    tipoUltimoError = TipoErrorServicio.OperacionInvalida;
+                }
+            }
+
+            string mensaje = ObtenerMensajePredeterminado(tipoUltimoError);
+            throw new ServicioException(tipoUltimoError ?? TipoErrorServicio.Comunicacion, mensaje, ultimoError);
+        }
+
         private AmigosCallback CrearCallback()
         {
             return new AmigosCallback(
                 ProcesarSolicitudAmistadRecibida,
                 ProcesarSolicitudAmistadRespondida,
                 ProcesarAmistadEliminada);
+        }
+
+        private static string ObtenerMensajePredeterminado(TipoErrorServicio? tipoError)
+        {
+            switch (tipoError)
+            {
+                case TipoErrorServicio.TiempoAgotado:
+                    return Lang.avisoTextoServidorTiempoSesion;
+                case TipoErrorServicio.OperacionInvalida:
+                    return Lang.errorTextoErrorProcesarSolicitud;
+                default:
+                    return Lang.errorTextoServidorNoDisponible;
+            }
         }
 
         private void ProcesarSolicitudAmistadRecibida(AmigosSrv.SolicitudAmistadNotificacionDTO notificacion)

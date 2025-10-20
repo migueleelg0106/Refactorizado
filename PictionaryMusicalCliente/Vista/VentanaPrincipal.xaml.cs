@@ -12,6 +12,7 @@ namespace PictionaryMusicalCliente
     public partial class VentanaPrincipal : Window
     {
         private readonly IListaAmigosService _listaAmigosService;
+        private readonly IAmigosService _amigosService;
         private readonly VentanaPrincipalVistaModelo _vistaModelo;
 
         public VentanaPrincipal()
@@ -19,16 +20,17 @@ namespace PictionaryMusicalCliente
             InitializeComponent();
 
             _listaAmigosService = new ListaAmigosService();
+            _amigosService = new AmigosService();
 
-            _vistaModelo = new VentanaPrincipalVistaModelo(LocalizacionService.Instancia, _listaAmigosService)
+            _vistaModelo = new VentanaPrincipalVistaModelo(LocalizacionService.Instancia, _listaAmigosService, _amigosService)
             {
                 AbrirPerfil = () => MostrarDialogo(new Perfil()),
                 AbrirAjustes = () => MostrarDialogo(new Ajustes()),
                 AbrirComoJugar = () => MostrarDialogo(new ComoJugar()),
                 AbrirClasificacion = () => MostrarDialogo(new Clasificacion()),
-                AbrirBuscarAmigo = () => MostrarDialogo(new BuscarAmigo()),
+                AbrirBuscarAmigo = () => MostrarDialogo(new BuscarAmigo(_amigosService)),
                 AbrirSolicitudes = () => MostrarDialogo(new Solicitudes()),
-                AbrirEliminarAmigo = amigo => MostrarDialogo(new EliminarAmigo(amigo)),
+                AbrirEliminarAmigo = amigo => MostrarDialogo(new EliminarAmigo(amigo, _amigosService)),
                 AbrirInvitaciones = () => MostrarDialogo(new Invitaciones()),
                 IniciarJuego = _ => MostrarVentanaJuego(),
                 UnirseSala = _ => AvisoHelper.Mostrar(Lang.errorTextoNoEncuentraPartida)
@@ -52,9 +54,16 @@ namespace PictionaryMusicalCliente
 
         private async void VentanaPrincipal_Closed(object sender, EventArgs e)
         {
-            if (_vistaModelo != null)
+            try
             {
-                await _vistaModelo.CerrarAsync().ConfigureAwait(true);
+                if (_vistaModelo != null)
+                {
+                    await _vistaModelo.CerrarAsync().ConfigureAwait(true);
+                }
+            }
+            finally
+            {
+                (_amigosService as IDisposable)?.Dispose();
             }
         }
 
