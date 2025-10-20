@@ -345,6 +345,72 @@
   <data name="clasificacionTextoOrdenarPuntos" xml:space="preserve">
     <value>Sort by points</value>
   </data>
+  <data name="errorTextoAmigosSuscripcion" xml:space="preserve">
+    <value>Unable to complete the friends notifications subscription.</value>
+  </data>
+  <data name="errorTextoAmigosOperacion" xml:space="preserve">
+    <value>There was a problem processing the friend request.</value>
+  </data>
+  <data name="amigosTextoSolicitudEnviada" xml:space="preserve">
+    <value>Friend request sent successfully.</value>
+  </data>
+  <data name="amigosTextoSolicitudEnviarFallo" xml:space="preserve">
+    <value>The friend request could not be sent.</value>
+  </data>
+  <data name="amigosTextoSolicitudNoPosibleMismoUsuario" xml:space="preserve">
+    <value>You cannot send a friend request to yourself.</value>
+  </data>
+  <data name="amigosTextoSolicitudRelacionExistente" xml:space="preserve">
+    <value>A friend request or friendship already exists between the selected users.</value>
+  </data>
+  <data name="amigosTextoSolicitudUsuariosNoEncontrados" xml:space="preserve">
+    <value>One of the specified users could not be found.</value>
+  </data>
+  <data name="amigosTextoSolicitudAceptarExito" xml:space="preserve">
+    <value>Friend request accepted successfully.</value>
+  </data>
+  <data name="amigosTextoSolicitudYaAceptada" xml:space="preserve">
+    <value>The friend request had already been accepted.</value>
+  </data>
+  <data name="amigosTextoSolicitudRechazarNoPosible" xml:space="preserve">
+    <value>It is not possible to reject a friend request that has already been accepted.</value>
+  </data>
+  <data name="amigosTextoSolicitudNoPendiente" xml:space="preserve">
+    <value>There is no pending friend request between the specified users.</value>
+  </data>
+  <data name="amigosTextoSolicitudSoloDestinatario" xml:space="preserve">
+    <value>Only the original recipient of the request can respond to it.</value>
+  </data>
+  <data name="amigosTextoSolicitudRechazada" xml:space="preserve">
+    <value>Friend request rejected successfully.</value>
+  </data>
+  <data name="amigosTextoSolicitudRechazarFallo" xml:space="preserve">
+    <value>The friend request could not be rejected.</value>
+  </data>
+  <data name="amigosTextoSolicitudResponderFallo" xml:space="preserve">
+    <value>The friend request could not be answered.</value>
+  </data>
+  <data name="amigosTextoAmistadEliminada" xml:space="preserve">
+    <value>Friendship removed successfully.</value>
+  </data>
+  <data name="amigosTextoAmistadNoExiste" xml:space="preserve">
+    <value>There is no friendship registered between the specified users.</value>
+  </data>
+  <data name="amigosTextoAmistadNoEliminar" xml:space="preserve">
+    <value>The friendship could not be removed.</value>
+  </data>
+  <data name="amigosTextoAmistadMismoUsuario" xml:space="preserve">
+    <value>It is not possible to remove a friendship with yourself.</value>
+  </data>
+  <data name="amigosTextoUsuariosObligatorios" xml:space="preserve">
+    <value>User names are required.</value>
+  </data>
+  <data name="amigosTextoUsuariosDistintos" xml:space="preserve">
+    <value>You must provide two different users.</value>
+  </data>
+  <data name="amigosTextoSuscripcionUsuarioObligatorio" xml:space="preserve">
+    <value>The user name is required to subscribe to friend notifications.</value>
+  </data>
   <data name="perfilTextoMiPerfil" xml:space="preserve">
     <value>MY PROFILE</value>
   </data>

@@ -339,6 +339,72 @@
   <data name="clasificacionTextoOrdenarPuntos" xml:space="preserve">
     <value>Ordenar por puntos</value>
   </data>
+  <data name="errorTextoAmigosSuscripcion" xml:space="preserve">
+    <value>No fue posible completar la suscripción a las notificaciones de amistad.</value>
+  </data>
+  <data name="errorTextoAmigosOperacion" xml:space="preserve">
+    <value>Ocurrió un problema al procesar la solicitud de amistad.</value>
+  </data>
+  <data name="amigosTextoSolicitudEnviada" xml:space="preserve">
+    <value>Solicitud de amistad enviada correctamente.</value>
+  </data>
+  <data name="amigosTextoSolicitudEnviarFallo" xml:space="preserve">
+    <value>No fue posible enviar la solicitud de amistad.</value>
+  </data>
+  <data name="amigosTextoSolicitudNoPosibleMismoUsuario" xml:space="preserve">
+    <value>No puedes enviarte una solicitud de amistad a ti mismo.</value>
+  </data>
+  <data name="amigosTextoSolicitudRelacionExistente" xml:space="preserve">
+    <value>Ya existe una solicitud o amistad entre los usuarios indicados.</value>
+  </data>
+  <data name="amigosTextoSolicitudUsuariosNoEncontrados" xml:space="preserve">
+    <value>No se encontró alguno de los usuarios especificados.</value>
+  </data>
+  <data name="amigosTextoSolicitudAceptarExito" xml:space="preserve">
+    <value>Solicitud de amistad aceptada correctamente.</value>
+  </data>
+  <data name="amigosTextoSolicitudYaAceptada" xml:space="preserve">
+    <value>La solicitud de amistad ya había sido aceptada anteriormente.</value>
+  </data>
+  <data name="amigosTextoSolicitudRechazarNoPosible" xml:space="preserve">
+    <value>No es posible rechazar una solicitud de amistad que ya fue aceptada.</value>
+  </data>
+  <data name="amigosTextoSolicitudNoPendiente" xml:space="preserve">
+    <value>No existe una solicitud de amistad pendiente entre los usuarios indicados.</value>
+  </data>
+  <data name="amigosTextoSolicitudSoloDestinatario" xml:space="preserve">
+    <value>Solo el destinatario original de la solicitud puede responderla.</value>
+  </data>
+  <data name="amigosTextoSolicitudRechazada" xml:space="preserve">
+    <value>Solicitud de amistad rechazada correctamente.</value>
+  </data>
+  <data name="amigosTextoSolicitudRechazarFallo" xml:space="preserve">
+    <value>No fue posible rechazar la solicitud de amistad.</value>
+  </data>
+  <data name="amigosTextoSolicitudResponderFallo" xml:space="preserve">
+    <value>No fue posible responder la solicitud de amistad.</value>
+  </data>
+  <data name="amigosTextoAmistadEliminada" xml:space="preserve">
+    <value>Amistad eliminada correctamente.</value>
+  </data>
+  <data name="amigosTextoAmistadNoExiste" xml:space="preserve">
+    <value>No existe una amistad registrada entre los usuarios indicados.</value>
+  </data>
+  <data name="amigosTextoAmistadNoEliminar" xml:space="preserve">
+    <value>No fue posible eliminar la amistad.</value>
+  </data>
+  <data name="amigosTextoAmistadMismoUsuario" xml:space="preserve">
+    <value>No es posible eliminar una amistad consigo mismo.</value>
+  </data>
+  <data name="amigosTextoUsuariosObligatorios" xml:space="preserve">
+    <value>Los nombres de usuario son obligatorios.</value>
+  </data>
+  <data name="amigosTextoUsuariosDistintos" xml:space="preserve">
+    <value>Debes proporcionar dos usuarios distintos.</value>
+  </data>
+  <data name="amigosTextoSuscripcionUsuarioObligatorio" xml:space="preserve">
+    <value>El nombre de usuario es obligatorio para suscribirse a las notificaciones de amistad.</value>
+  </data>
   <data name="perfilTextoMiPerfil" xml:space="preserve">
     <value>MI PERFIL</value>
   </data>

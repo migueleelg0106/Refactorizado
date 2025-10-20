@@ -19,7 +19,8 @@
                 <TextBlock Grid.Row="0" Text="{x:Static language:Lang.globalTextoSolicitudes}" FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" Width="202"/>
 
                 <!-- Utiliza un ItemsControl para mostrar la lista de solicitudes -->
-                <ItemsControl Margin="0,59,0,0" Grid.RowSpan="2">
+                <ItemsControl Margin="0,59,0,0" Grid.RowSpan="2"
+                              ItemsSource="{Binding Solicitudes}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="0,5">
@@ -30,20 +31,19 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{Binding NombreUsuario}" VerticalAlignment="Center" FontFamily="Comic Sans MS" FontSize="16"/>
                                 <!-- Botones para Aceptar y Rechazar -->
-                                <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" Margin="10,0" Cursor="Hand">
+                                <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" Margin="10,0" Cursor="Hand"
+                                        Command="{Binding DataContext.AceptarSolicitudCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}">
                                     <Image Source="/Resources/aceptar.png" Width="24" Height="24"/>
                                 </Button>
-                                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" Cursor="Hand">
+                                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" Cursor="Hand"
+                                        Command="{Binding DataContext.RechazarSolicitudCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}">
                                     <Image Source="/Resources/rechazar.png" Width="24" Height="24"/>
                                 </Button>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                    <!-- Aquí añadirías los items desde el code-behind. Estos son ejemplos visuales. -->
-                    <ItemsControl.Items>
-                        <TextBlock Text="" Margin="0,5" VerticalAlignment="Center" FontFamily="Comic Sans MS" FontSize="16"/>
-                        <TextBlock Text="" Margin="0,5" VerticalAlignment="Center" FontFamily="Comic Sans MS" FontSize="16"/>
-                    </ItemsControl.Items>
                 </ItemsControl>
 
                 <Button Grid.Row="2" Content="{x:Static language:Lang.globalTextoAceptar}" Margin="10,32,168,54" FontFamily="Comic Sans MS" FontWeight="Bold" Background="White" BorderBrush="Black" Click="BotonAceptar"/>
