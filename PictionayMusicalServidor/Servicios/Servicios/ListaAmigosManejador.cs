@@ -122,10 +122,19 @@ namespace Servicios.Servicios
             IEnumerable<Jugador> amigos = repositorio.ObtenerAmigosDe(jugador.idJugador)
                 ?? Enumerable.Empty<Jugador>();
 
-            List<string> nombresAmigos = amigos
+            List<int> idsAmigos = amigos
                 .Where(amigo => amigo != null)
-                .SelectMany(amigo => amigo.Usuario ?? Enumerable.Empty<Usuario>())
-                .Select(usuario => usuario?.Nombre_Usuario)
+                .Select(amigo => amigo.idJugador)
+                .Where(id => id > 0 && id != jugador.idJugador)
+                .Distinct()
+                .ToList();
+
+            IEnumerable<string> nombresUsuarios = repositorio
+                .ObtenerNombresUsuariosDe(idsAmigos)
+                ?? Enumerable.Empty<string>();
+
+            List<string> nombresAmigos = nombresUsuarios
+                .Select(nombre => nombre?.Trim())
                 .Where(nombre => !string.IsNullOrWhiteSpace(nombre)
                     && !string.Equals(nombre, nombreUsuario, StringComparison.OrdinalIgnoreCase))
                 .Distinct(StringComparer.OrdinalIgnoreCase)

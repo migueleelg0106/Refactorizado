@@ -85,6 +85,29 @@ namespace Datos.DAL.Implementaciones
                 .ToList();
         }
 
+        public IEnumerable<string> ObtenerNombresUsuariosDe(IEnumerable<int> jugadoresIds)
+        {
+            if (jugadoresIds == null)
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            List<int> ids = jugadoresIds
+                .Where(id => id > 0)
+                .Distinct()
+                .ToList();
+
+            if (ids.Count == 0)
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            return contexto.Usuario
+                .Where(u => ids.Contains(u.Jugador_idJugador) && !string.IsNullOrEmpty(u.Nombre_Usuario))
+                .Select(u => u.Nombre_Usuario)
+                .ToList();
+        }
+
         private static byte[] CrearEstado(bool aceptada)
         {
             return new[] { aceptada ? (byte)1 : (byte)0 };

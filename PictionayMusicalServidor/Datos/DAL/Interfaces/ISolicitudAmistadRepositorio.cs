@@ -16,5 +16,7 @@ namespace Datos.DAL.Interfaces
         void EliminarSolicitud(Solicitud solicitud);
 
         IEnumerable<Jugador> ObtenerAmigosDe(int jugadorId);
+
+        IEnumerable<string> ObtenerNombresUsuariosDe(IEnumerable<int> jugadoresIds);
     }
 }
