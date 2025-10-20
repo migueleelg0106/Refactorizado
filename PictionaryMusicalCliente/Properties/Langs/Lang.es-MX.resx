@@ -316,6 +316,21 @@
   <data name="buscarAmigoTextoSolicitudEnviada" xml:space="preserve">
     <value>Solicitud de amistad enviada correctamente.</value>
   </data>
+  <data name="solicitudesTextoSolicitudAceptada" xml:space="preserve">
+    <value>Solicitud de amistad aceptada.</value>
+  </data>
+  <data name="solicitudesTextoSolicitudRechazada" xml:space="preserve">
+    <value>Solicitud de amistad rechazada.</value>
+  </data>
+  <data name="solicitudesErrorSolicitudNoPendiente" xml:space="preserve">
+    <value>No existe una solicitud de amistad pendiente.</value>
+  </data>
+  <data name="solicitudesErrorSolicitudAtendida" xml:space="preserve">
+    <value>La solicitud de amistad ya fue atendida.</value>
+  </data>
+  <data name="solicitudesErrorProcesarRespuesta" xml:space="preserve">
+    <value>No fue posible procesar la respuesta a la solicitud de amistad.</value>
+  </data>
   <data name="globalTextoRegresar" xml:space="preserve">
     <value>REGRESAR</value>
   </data>

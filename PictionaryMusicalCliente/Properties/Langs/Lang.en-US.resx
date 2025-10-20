@@ -316,6 +316,21 @@
   <data name="buscarAmigoTextoSolicitudEnviada" xml:space="preserve">
     <value>Friend request sent successfully.</value>
   </data>
+  <data name="solicitudesTextoSolicitudAceptada" xml:space="preserve">
+    <value>Friend request accepted.</value>
+  </data>
+  <data name="solicitudesTextoSolicitudRechazada" xml:space="preserve">
+    <value>Friend request rejected.</value>
+  </data>
+  <data name="solicitudesErrorSolicitudNoPendiente" xml:space="preserve">
+    <value>No pending friend request was found.</value>
+  </data>
+  <data name="solicitudesErrorSolicitudAtendida" xml:space="preserve">
+    <value>The friend request has already been handled.</value>
+  </data>
+  <data name="solicitudesErrorProcesarRespuesta" xml:space="preserve">
+    <value>Unable to process the friend request response.</value>
+  </data>
   <data name="globalTextoRegresar" xml:space="preserve">
     <value>BACK</value>
   </data>

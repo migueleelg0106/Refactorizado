@@ -179,6 +179,93 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
         }
 
+        public async Task<ResultadoOperacion> ResponderSolicitudAmistadAsync(
+            string nombreUsuarioRemitente,
+            string nombreUsuarioReceptor,
+            bool aceptada)
+        {
+            if (string.IsNullOrWhiteSpace(nombreUsuarioRemitente))
+            {
+                throw new ArgumentException(
+                    "El nombre de usuario remitente es obligatorio.",
+                    nameof(nombreUsuarioRemitente));
+            }
+
+            if (string.IsNullOrWhiteSpace(nombreUsuarioReceptor))
+            {
+                throw new ArgumentException(
+                    "El nombre de usuario receptor es obligatorio.",
+                    nameof(nombreUsuarioReceptor));
+            }
+
+            var contexto = new InstanceContext(this);
+            var cliente = new AmigosSrv.AmigosManejadorClient(contexto, AmigosEndpoint);
+
+            try
+            {
+                AmigosSrv.ResultadoOperacionDTO resultado = await WcfClientHelper
+                    .UsarAsync(
+                        cliente,
+                        c => c.ResponderSolicitudAmistadAsync(
+                            nombreUsuarioRemitente,
+                            nombreUsuarioReceptor,
+                            aceptada))
+                    .ConfigureAwait(false);
+
+                if (resultado == null)
+                {
+                    return ResultadoOperacion.Fallo(Lang.errorTextoErrorProcesarSolicitud);
+                }
+
+                string mensaje = MensajeServidorHelper.Localizar(
+                    resultado.Mensaje,
+                    resultado.OperacionExitosa
+                        ? (aceptada
+                            ? Lang.solicitudesTextoSolicitudAceptada
+                            : Lang.solicitudesTextoSolicitudRechazada)
+                        : Lang.solicitudesErrorProcesarRespuesta);
+
+                return resultado.OperacionExitosa
+                    ? ResultadoOperacion.Exitoso(mensaje)
+                    : ResultadoOperacion.Fallo(mensaje);
+            }
+            catch (FaultException ex)
+            {
+                string mensaje = ErrorServicioHelper.ObtenerMensaje(
+                    ex,
+                    Lang.solicitudesErrorProcesarRespuesta);
+                throw new ServicioException(TipoErrorServicio.FallaServicio, mensaje, ex);
+            }
+            catch (EndpointNotFoundException ex)
+            {
+                throw new ServicioException(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
+            }
+            catch (TimeoutException ex)
+            {
+                throw new ServicioException(
+                    TipoErrorServicio.TiempoAgotado,
+                    Lang.errorTextoServidorTiempoAgotado,
+                    ex);
+            }
+            catch (CommunicationException ex)
+            {
+                throw new ServicioException(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new ServicioException(
+                    TipoErrorServicio.OperacionInvalida,
+                    Lang.errorTextoErrorProcesarSolicitud,
+                    ex);
+            }
+        }
+
         public void SolicitudAmistadRecibida(AmigosSrv.SolicitudAmistadNotificacionDTO notificacion)
         {
             // No se requiere manejo de notificaciones en esta vista.
