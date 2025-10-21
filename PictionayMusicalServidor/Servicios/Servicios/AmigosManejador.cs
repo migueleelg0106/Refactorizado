@@ -33,6 +33,73 @@ namespace Servicios.Servicios
                 canal.Closed += (_, __) => RemoverSuscripcion(nombreUsuario);
                 canal.Faulted += (_, __) => RemoverSuscripcion(nombreUsuario);
             }
+
+            try
+            {
+                using (var contexto = CrearContexto())
+                {
+                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                    Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
+
+                    if (usuario == null)
+                    {
+                        RemoverSuscripcion(nombreUsuario);
+                        throw new FaultException("El usuario especificado no existe.");
+                    }
+
+                    var amigoRepositorio = new AmigoRepositorio(contexto);
+                    var solicitudesPendientes = amigoRepositorio.ObtenerSolicitudesPendientes(usuario.idUsuario);
+
+                    if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
+                    {
+                        return;
+                    }
+
+                    foreach (var solicitud in solicitudesPendientes)
+                    {
+                        string emisor = solicitud.Usuario?.Nombre_Usuario;
+                        string receptor = solicitud.Usuario1?.Nombre_Usuario;
+
+                        if (string.IsNullOrWhiteSpace(emisor) || string.IsNullOrWhiteSpace(receptor))
+                        {
+                            continue;
+                        }
+
+                        var dto = new SolicitudAmistadDTO
+                        {
+                            UsuarioEmisor = emisor,
+                            UsuarioReceptor = receptor,
+                            SolicitudAceptada = solicitud.Estado
+                        };
+
+                        NotificarSolicitud(nombreUsuario, dto);
+                    }
+                }
+            }
+            catch (FaultException)
+            {
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                Logger.Warn("Datos inválidos al recuperar las solicitudes pendientes de amistad", ex);
+                throw new FaultException(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Estado inválido al recuperar las solicitudes pendientes de amistad", ex);
+                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
+            }
+            catch (DataException ex)
+            {
+                Logger.Error("Error de datos al recuperar las solicitudes pendientes de amistad", ex);
+                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error inesperado al recuperar las solicitudes pendientes de amistad", ex);
+                throw new FaultException("Ocurrió un error al recuperar las solicitudes de amistad.");
+            }
         }
 
         public void CancelarSuscripcion(string nombreUsuario)

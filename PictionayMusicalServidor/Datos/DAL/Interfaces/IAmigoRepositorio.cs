@@ -11,6 +11,8 @@ namespace Datos.DAL.Interfaces
 
         Amigo ObtenerRelacion(int usuarioAId, int usuarioBId);
 
+        IList<Amigo> ObtenerSolicitudesPendientes(int usuarioId);
+
         void ActualizarEstado(Amigo relacion, bool estado);
 
         void EliminarRelacion(Amigo relacion);
