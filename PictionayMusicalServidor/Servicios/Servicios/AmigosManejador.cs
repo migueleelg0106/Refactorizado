@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.ServiceModel;
 using Datos.DAL.Implementaciones;
@@ -54,9 +55,24 @@ namespace Servicios.Servicios
             {
                 throw;
             }
-            catch (Exception ex)
+            catch (CommunicationException ex)
             {
-                Logger.Error("Error al suscribir el usuario a las notificaciones de amistad", ex);
+                Logger.Error("Error de comunicación al suscribir el usuario a las notificaciones de amistad", ex);
+                throw new FaultException("Se produjo un error de comunicación al suscribirse a las notificaciones de amistad.");
+            }
+            catch (TimeoutException ex)
+            {
+                Logger.Error("La suscripción a las notificaciones de amistad excedió el tiempo de espera", ex);
+                throw new FaultException("La suscripción a las notificaciones de amistad excedió el tiempo de espera.");
+            }
+            catch (DataException ex)
+            {
+                Logger.Error("Error de base de datos al suscribir el usuario a las notificaciones de amistad", ex);
+                throw new FaultException("Ocurrió un error al acceder a la base de datos durante la suscripción a las notificaciones de amistad.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Operación inválida al suscribir el usuario a las notificaciones de amistad", ex);
                 throw new FaultException("No fue posible completar la suscripción a las notificaciones de amistad.");
             }
         }
@@ -82,9 +98,21 @@ namespace Servicios.Servicios
                     RemoverClientePorId(usuario.idUsuario);
                 }
             }
-            catch (Exception ex)
+            catch (CommunicationException ex)
             {
-                Logger.Warn("Error al desuscribir al usuario de las notificaciones de amistad", ex);
+                Logger.Warn("Error de comunicación al desuscribir al usuario de las notificaciones de amistad", ex);
+            }
+            catch (TimeoutException ex)
+            {
+                Logger.Warn("La desuscripción de las notificaciones de amistad excedió el tiempo de espera", ex);
+            }
+            catch (DataException ex)
+            {
+                Logger.Warn("Error de base de datos al desuscribir al usuario de las notificaciones de amistad", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Warn("Operación inválida al desuscribir al usuario de las notificaciones de amistad", ex);
             }
         }
 
@@ -137,10 +165,20 @@ namespace Servicios.Servicios
                     return CrearResultadoExitoso("Solicitud de amistad enviada correctamente.");
                 }
             }
-            catch (Exception ex)
+            catch (DataException ex)
             {
-                Logger.Error("Error al enviar la solicitud de amistad", ex);
-                return CrearResultadoFallo("No fue posible enviar la solicitud de amistad.");
+                Logger.Error("Error de base de datos al enviar la solicitud de amistad", ex);
+                return CrearResultadoFallo("No fue posible enviar la solicitud de amistad debido a un error de base de datos.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Operación inválida al enviar la solicitud de amistad", ex);
+                return CrearResultadoFallo("No fue posible enviar la solicitud de amistad debido a un estado inesperado del sistema.");
+            }
+            catch (TimeoutException ex)
+            {
+                Logger.Error("La solicitud de amistad excedió el tiempo de espera", ex);
+                return CrearResultadoFallo("No fue posible enviar la solicitud de amistad porque la operación excedió el tiempo de espera.");
             }
         }
 
@@ -233,10 +271,20 @@ namespace Servicios.Servicios
                     }
                 }
             }
-            catch (Exception ex)
+            catch (DataException ex)
             {
-                Logger.Error("Error al responder la solicitud de amistad", ex);
-                return CrearResultadoFallo("No fue posible responder la solicitud de amistad.");
+                Logger.Error("Error de base de datos al responder la solicitud de amistad", ex);
+                return CrearResultadoFallo("No fue posible responder la solicitud de amistad debido a un error de base de datos.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Operación inválida al responder la solicitud de amistad", ex);
+                return CrearResultadoFallo("No fue posible responder la solicitud de amistad debido a un estado inesperado del sistema.");
+            }
+            catch (TimeoutException ex)
+            {
+                Logger.Error("La respuesta a la solicitud de amistad excedió el tiempo de espera", ex);
+                return CrearResultadoFallo("No fue posible responder la solicitud de amistad porque la operación excedió el tiempo de espera.");
             }
         }
 
@@ -288,10 +336,20 @@ namespace Servicios.Servicios
                     return CrearResultadoExitoso("Amistad eliminada correctamente.");
                 }
             }
-            catch (Exception ex)
+            catch (DataException ex)
             {
-                Logger.Error("Error al eliminar la amistad", ex);
-                return CrearResultadoFallo("No fue posible eliminar la amistad.");
+                Logger.Error("Error de base de datos al eliminar la amistad", ex);
+                return CrearResultadoFallo("No fue posible eliminar la amistad debido a un error de base de datos.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Operación inválida al eliminar la amistad", ex);
+                return CrearResultadoFallo("No fue posible eliminar la amistad debido a un estado inesperado del sistema.");
+            }
+            catch (TimeoutException ex)
+            {
+                Logger.Error("La eliminación de la amistad excedió el tiempo de espera", ex);
+                return CrearResultadoFallo("No fue posible eliminar la amistad porque la operación excedió el tiempo de espera.");
             }
         }
 
