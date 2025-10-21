@@ -9,6 +9,7 @@ using PictionaryMusicalCliente.Modelo.Amigos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
