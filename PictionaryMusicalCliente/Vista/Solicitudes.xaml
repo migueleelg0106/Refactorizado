@@ -36,12 +36,12 @@
                                         Visibility="{Binding PuedeAceptar, Converter={StaticResource ConvertidorVisibilidad}}"
                                         Command="{Binding DataContext.AceptarSolicitudCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                         CommandParameter="{Binding}">
-                                    <Image Source="/Resources/aceptar.png" Width="24" Height="24"/>
+                                    <Image Source="/Recursos/Aceptar.png" Width="24" Height="24"/>
                                 </Button>
                                 <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" Cursor="Hand"
                                         Command="{Binding DataContext.RechazarSolicitudCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                         CommandParameter="{Binding}">
-                                    <Image Source="/Resources/rechazar.png" Width="24" Height="24"/>
+                                    <Image Source="/Recursos/Rechazar.png" Width="24" Height="24"/>
                                 </Button>
                             </Grid>
                         </DataTemplate>
