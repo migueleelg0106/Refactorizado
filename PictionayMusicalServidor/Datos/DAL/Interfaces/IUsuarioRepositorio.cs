@@ -7,5 +7,7 @@ namespace Datos.DAL.Interfaces
         bool ExisteNombreUsuario(string nombreUsuario);
 
         Usuario CrearUsuario(Usuario usuario);
+
+        Usuario ObtenerPorNombreUsuario(string nombreUsuario);
     }
 }
