@@ -155,10 +155,6 @@ namespace Servicios.Servicios
                     NotificarSolicitud(nombreUsuarioReceptor, solicitud);
                 }
             }
-            catch (FaultException)
-            {
-                throw;
-            }
             catch (ArgumentException ex)
             {
                 Logger.Warn("Datos inválidos al enviar la solicitud de amistad", ex);
