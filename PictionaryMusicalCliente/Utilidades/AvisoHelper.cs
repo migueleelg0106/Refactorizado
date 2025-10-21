@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.Utilidades
@@ -6,17 +7,21 @@ namespace PictionaryMusicalCliente.Utilidades
     {
         public static void Mostrar(string mensaje)
         {
-            Cursor cursorAnterior = Mouse.OverrideCursor;
-            Mouse.OverrideCursor = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Cursor cursorAnterior = Mouse.OverrideCursor;
+                Mouse.OverrideCursor = null;
 
-            try
-            {
-                new Avisos(mensaje).ShowDialog();
-            }
-            finally
-            {
-                Mouse.OverrideCursor = cursorAnterior;
-            }
+                try
+                {
+                    new Avisos(mensaje).ShowDialog();
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = cursorAnterior;
+                }
+            });
         }
     }
 }
+
