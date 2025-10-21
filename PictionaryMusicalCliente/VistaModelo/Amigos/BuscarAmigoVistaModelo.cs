@@ -60,14 +60,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             string usuarioBusqueda = NombreUsuarioBusqueda?.Trim();
             if (string.IsNullOrWhiteSpace(usuarioBusqueda))
             {
-                MostrarMensaje?.Invoke(Lang.amigosTextoUsuariosObligatorios);
+                MostrarMensaje?.Invoke("Validación: nombre de usuario a buscar vacío.");
                 return;
             }
 
             string usuarioActual = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario;
             if (string.IsNullOrWhiteSpace(usuarioActual))
             {
-                MostrarMensaje?.Invoke(Lang.errorTextoAmigosOperacion);
+                MostrarMensaje?.Invoke("Validación: usuario actual no disponible en la sesión.");
                 return;
             }
 
@@ -81,12 +81,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
                 if (resultado == null)
                 {
-                    MostrarMensaje?.Invoke(Lang.errorTextoAmigosOperacion);
+                    MostrarMensaje?.Invoke("Error: el servicio devolvió un resultado nulo.");
                     return;
                 }
 
                 string mensaje = string.IsNullOrWhiteSpace(resultado.Mensaje)
-                    ? (resultado.Exito ? Lang.amigosTextoSolicitudEnviada : Lang.errorTextoAmigosOperacion)
+                    ? (resultado.Exito ? "Operación exitosa sin mensaje." : "Error: operación fallida sin detalle.")
                     : resultado.Mensaje;
 
                 MostrarMensaje?.Invoke(mensaje);
@@ -99,7 +99,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (ServicioException ex)
             {
-                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoAmigosOperacion);
+                string mensaje = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Excepción de servicio sin mensaje."
+                    : $"ServicioException: {ex.Message}";
+                MostrarMensaje?.Invoke(mensaje);
+            }
+            catch (Exception ex)
+            {
+                string mensaje = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Excepción inesperada sin mensaje."
+                    : $"Excepción inesperada: {ex.Message}";
+                MostrarMensaje?.Invoke(mensaje);
             }
             finally
             {
