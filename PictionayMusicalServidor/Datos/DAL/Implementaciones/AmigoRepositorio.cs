@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using Datos.DAL.Interfaces;
 using Datos.Modelo;
@@ -41,6 +42,20 @@ namespace Datos.DAL.Implementaciones
             return contexto.Amigo.FirstOrDefault(a =>
                 (a.UsuarioEmisor == usuarioAId && a.UsuarioReceptor == usuarioBId) ||
                 (a.UsuarioEmisor == usuarioBId && a.UsuarioReceptor == usuarioAId));
+        }
+
+        public IList<Amigo> ObtenerSolicitudesPendientes(int usuarioId)
+        {
+            if (usuarioId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(usuarioId), "El identificador del usuario debe ser positivo.");
+            }
+
+            return contexto.Amigo
+                .Where(a => !a.Estado && (a.UsuarioEmisor == usuarioId || a.UsuarioReceptor == usuarioId))
+                .Include(a => a.Usuario)
+                .Include(a => a.Usuario1)
+                .ToList();
         }
 
         public void ActualizarEstado(Amigo relacion, bool estado)
