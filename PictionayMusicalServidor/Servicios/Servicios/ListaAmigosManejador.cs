@@ -16,7 +16,8 @@ namespace Servicios.Servicios
     public class ListaAmigosManejador : IListaAmigosManejador
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(ListaAmigosManejador));
-        private static readonly ConcurrentDictionary<string, IListaAmigosManejadorCallback> Suscripciones = new ConcurrentDictionary<string, IListaAmigosManejadorCallback>(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, IListaAmigosManejadorCallback> Suscripciones =
+            new ConcurrentDictionary<string, IListaAmigosManejadorCallback>(StringComparer.OrdinalIgnoreCase);
 
         public void Suscribir(string nombreUsuario)
         {
@@ -31,14 +32,14 @@ namespace Servicios.Servicios
             {
                 throw;
             }
-            catch (ArgumentException ex)
-            {
-                Logger.Warn("Datos inválidos al suscribirse a la lista de amigos", ex);
-                throw new FaultException(ex.Message);
-            }
             catch (ArgumentOutOfRangeException ex)
             {
                 Logger.Warn("Identificador inválido al suscribirse a la lista de amigos", ex);
+                throw new FaultException(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                Logger.Warn("Datos inválidos al suscribirse a la lista de amigos", ex);
                 throw new FaultException(ex.Message);
             }
             catch (DataException ex)
@@ -83,14 +84,14 @@ namespace Servicios.Servicios
             {
                 throw;
             }
-            catch (ArgumentException ex)
-            {
-                Logger.Warn("Datos inválidos al obtener la lista de amigos", ex);
-                throw new FaultException(ex.Message);
-            }
             catch (ArgumentOutOfRangeException ex)
             {
                 Logger.Warn("Identificador inválido al obtener la lista de amigos", ex);
+                throw new FaultException(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                Logger.Warn("Datos inválidos al obtener la lista de amigos", ex);
                 throw new FaultException(ex.Message);
             }
             catch (DataException ex)
@@ -162,14 +163,14 @@ namespace Servicios.Servicios
                 Logger.Warn($"No se pudo obtener la lista de amigos del usuario {nombreUsuario} para notificar", ex);
                 RemoverSuscripcion(nombreUsuario);
             }
-            catch (ArgumentException ex)
-            {
-                Logger.Warn($"Datos inválidos al actualizar la lista de amigos del usuario {nombreUsuario}", ex);
-                RemoverSuscripcion(nombreUsuario);
-            }
             catch (ArgumentOutOfRangeException ex)
             {
                 Logger.Warn($"Identificador inválido al actualizar la lista de amigos del usuario {nombreUsuario}", ex);
+                RemoverSuscripcion(nombreUsuario);
+            }
+            catch (ArgumentException ex)
+            {
+                Logger.Warn($"Datos inválidos al actualizar la lista de amigos del usuario {nombreUsuario}", ex);
                 RemoverSuscripcion(nombreUsuario);
             }
             catch (DataException ex)

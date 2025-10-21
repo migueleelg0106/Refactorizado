@@ -63,6 +63,11 @@
     <Compile Include="Comandos\ComandoDelegado.cs" />
     <Compile Include="Comandos\IComandoAsincrono.cs" />
     <Compile Include="Comandos\IComandoNotificable.cs" />
+    <Compile Include="Connected Services\PictionaryServidorServicioAmigos\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioCambioContrasena\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -79,6 +84,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioInicioSesion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioListaAmigos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -269,6 +279,16 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\AmigosManejador.wsdl" />
     <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -353,6 +373,19 @@
     <None Include="Connected Services\PictionaryServidorServicioInicioSesion\PictionaryMusicalCliente.PictionaryServidorServicioInicioSesion.ResultadoInicioSesionDTO.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigosManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos.AmigoDTO.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -393,12 +426,14 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAmigos\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAvatares\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCambioContrasena\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioClasificacion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCuenta\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioInicioSesion\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioListaAmigos\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioPerfil\" />
   </ItemGroup>
   <ItemGroup>
@@ -606,6 +641,35 @@
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
