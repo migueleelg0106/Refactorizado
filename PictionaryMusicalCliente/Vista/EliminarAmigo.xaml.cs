@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 
 namespace PictionaryMusicalCliente
 {
@@ -19,19 +9,41 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class EliminarAmigo : Window
     {
-        public EliminarAmigo()
+        private readonly EliminarAmigoVistaModelo _vistaModelo;
+
+        public EliminarAmigo(string nombreAmigo)
+            : this(new EliminarAmigoVistaModelo(nombreAmigo))
         {
+        }
+
+        public EliminarAmigo(EliminarAmigoVistaModelo vistaModelo)
+        {
+            _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));
+
             InitializeComponent();
+
+            DataContext = _vistaModelo;
+
+            _vistaModelo.Cerrar += VistaModelo_Cerrar;
+            Closed += EliminarAmigo_Closed;
         }
 
-        private void BotonAceptar(object sender, RoutedEventArgs e)
+        private void VistaModelo_Cerrar(bool? resultado)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => VistaModelo_Cerrar(resultado));
+                return;
+            }
 
+            DialogResult = resultado;
+            Close();
         }
 
-        private void BotonCancelar(object sender, RoutedEventArgs e)
+        private void EliminarAmigo_Closed(object sender, EventArgs e)
         {
-            this.Close();
+            Closed -= EliminarAmigo_Closed;
+            _vistaModelo.Cerrar -= VistaModelo_Cerrar;
         }
     }
 }

@@ -23,10 +23,10 @@
                            HorizontalAlignment="Center"/>
 
                 
-                <TextBlock x:Name="bloqueTextoMensaje" 
-                           TextWrapping="Wrap" TextAlignment="Center"
-                           FontFamily="Comic Sans MS" FontSize="16" 
-                           Margin="0,15,0,20"/>
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center"
+                           FontFamily="Comic Sans MS" FontSize="16"
+                           Margin="0,15,0,20"
+                           Text="{Binding MensajeConfirmacion}"/>
 
                 <!-- Botones de Acción -->
                 <Grid>
@@ -35,17 +35,17 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Content="{x:Static language:Lang.globalTextoAceptar}" 
-                            Grid.Column="0" Margin="0,0,5,0" Height="40" 
-                            FontFamily="Comic Sans MS" FontWeight="Bold" 
+                    <Button Content="{x:Static language:Lang.globalTextoAceptar}"
+                            Grid.Column="0" Margin="0,0,5,0" Height="40"
+                            FontFamily="Comic Sans MS" FontWeight="Bold"
                             Background="White" BorderBrush="Black"
-                            Click="BotonAceptar"/>
+                            Command="{Binding AceptarCommand}"/>
 
-                    <Button Content="{x:Static language:Lang.globalTextoCancelar}" 
-                            Grid.Column="1" Margin="5,0,0,0" Height="40" 
-                            FontFamily="Comic Sans MS" FontWeight="Bold" 
+                    <Button Content="{x:Static language:Lang.globalTextoCancelar}"
+                            Grid.Column="1" Margin="5,0,0,0" Height="40"
+                            FontFamily="Comic Sans MS" FontWeight="Bold"
                             Background="White" BorderBrush="Black"
-                            Click="BotonCancelar"/>
+                            Command="{Binding CancelarCommand}"/>
                 </Grid>
             </StackPanel>
         </Border>

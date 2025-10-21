@@ -253,6 +253,18 @@
   <data name="eliminarAmigoTextoEliminar" xml:space="preserve">
     <value>ELIMINAR AMIGO</value>
   </data>
+  <data name="amigosTextoSolicitudEnviada" xml:space="preserve">
+    <value>Solicitud de amistad enviada.</value>
+  </data>
+  <data name="amigosTextoSolicitudAceptada" xml:space="preserve">
+    <value>Solicitud de amistad aceptada.</value>
+  </data>
+  <data name="amigosTextoSolicitudCancelada" xml:space="preserve">
+    <value>Solicitud de amistad cancelada.</value>
+  </data>
+  <data name="amigosTextoAmigoEliminado" xml:space="preserve">
+    <value>Se eliminó al amigo de tu lista.</value>
+  </data>
   <data name="globalTextoInvitaciones" xml:space="preserve">
     <value>INVITACIONES</value>
   </data>

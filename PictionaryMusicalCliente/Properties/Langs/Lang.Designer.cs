@@ -374,7 +374,43 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("eliminarAmigoTextoEliminar", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Solicitud de amistad enviada..
+        /// </summary>
+        public static string amigosTextoSolicitudEnviada {
+            get {
+                return ResourceManager.GetString("amigosTextoSolicitudEnviada", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Solicitud de amistad aceptada..
+        /// </summary>
+        public static string amigosTextoSolicitudAceptada {
+            get {
+                return ResourceManager.GetString("amigosTextoSolicitudAceptada", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Solicitud de amistad cancelada..
+        /// </summary>
+        public static string amigosTextoSolicitudCancelada {
+            get {
+                return ResourceManager.GetString("amigosTextoSolicitudCancelada", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Se eliminó al amigo de tu lista..
+        /// </summary>
+        public static string amigosTextoAmigoEliminado {
+            get {
+                return ResourceManager.GetString("amigosTextoAmigoEliminado", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Busca una cadena traducida similar a No se pudo actualizar la contraseña. Intente nuevamente..
         /// </summary>
