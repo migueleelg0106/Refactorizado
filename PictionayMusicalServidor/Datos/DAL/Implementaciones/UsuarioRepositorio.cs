@@ -30,5 +30,15 @@ namespace Datos.DAL.Implementaciones
             contexto.SaveChanges();
             return entidad;
         }
+
+        public Usuario ObtenerPorNombreUsuario(string nombreUsuario)
+        {
+            if (string.IsNullOrWhiteSpace(nombreUsuario))
+            {
+                throw new ArgumentException("El nombre de usuario es obligatorio.", nameof(nombreUsuario));
+            }
+
+            return contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreUsuario);
+        }
     }
 }
