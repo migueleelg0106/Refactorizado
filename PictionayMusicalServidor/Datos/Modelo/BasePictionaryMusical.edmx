@@ -4,7 +4,16 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BaseDatosPruebaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="BaseDatosPruebaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Amigo">
+          <Key>
+            <PropertyRef Name="UsuarioEmisor" />
+            <PropertyRef Name="UsuarioReceptor" />
+          </Key>
+          <Property Name="Estado" Type="bit" Nullable="false" />
+          <Property Name="UsuarioEmisor" Type="int" Nullable="false" />
+          <Property Name="UsuarioReceptor" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Artista">
           <Key>
             <PropertyRef Name="idArtista" />
@@ -88,16 +97,6 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           <Property Name="Jugador_idJugador" Type="int" Nullable="false" />
           <Property Name="Jugador_idJugador1" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
         <EntityType Name="Usuario">
           <Key>
             <PropertyRef Name="idUsuario" />
@@ -107,6 +106,30 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           <Property Name="Contrasena" Type="varchar" MaxLength="60" Nullable="false" />
           <Property Name="Jugador_idJugador" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Amigo_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Amigo" Type="Self.Amigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Amigo">
+              <PropertyRef Name="UsuarioEmisor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Amigo_Usuario1">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Amigo" Type="Self.Amigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Amigo">
+              <PropertyRef Name="UsuarioReceptor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Cancion_Artista">
           <End Role="Artista" Type="Self.Artista" Multiplicity="1" />
           <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
@@ -216,6 +239,7 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BaseDatosPruebaModelStoreContainer">
+          <EntitySet Name="Amigo" EntityType="Self.Amigo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Artista" EntityType="Self.Artista" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Avatar" EntityType="Self.Avatar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cancion" EntityType="Self.Cancion" Schema="dbo" store:Type="Tables" />
@@ -224,7 +248,6 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           <EntitySet Name="Genero" EntityType="Self.Genero" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Jugador" EntityType="Self.Jugador" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RedSocial" EntityType="Self.RedSocial" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Solicitud" EntityType="Self.Solicitud" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -233,6 +256,14 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
     [Solicitud].[Jugador_idJugador1] AS [Jugador_idJugador1]
     FROM [dbo].[Solicitud] AS [Solicitud]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_Amigo_Usuario" Association="Self.FK_Amigo_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Amigo" EntitySet="Amigo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Amigo_Usuario1" Association="Self.FK_Amigo_Usuario1">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Amigo" EntitySet="Amigo" />
+          </AssociationSet>
           <AssociationSet Name="FK_Cancion_Artista" Association="Self.FK_Cancion_Artista">
             <End Role="Artista" EntitySet="Artista" />
             <End Role="Cancion" EntitySet="Cancion" />
@@ -270,10 +301,22 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
             <End Role="Usuario" EntitySet="Usuario" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BaseDatosPruebaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Amigo">
+          <Key>
+            <PropertyRef Name="UsuarioEmisor" />
+            <PropertyRef Name="UsuarioReceptor" />
+          </Key>
+          <Property Name="Estado" Type="Boolean" Nullable="false" />
+          <Property Name="UsuarioEmisor" Type="Int32" Nullable="false" />
+          <Property Name="UsuarioReceptor" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Amigo_Usuario" FromRole="Amigo" ToRole="Usuario" />
+          <NavigationProperty Name="Usuario1" Relationship="Self.FK_Amigo_Usuario1" FromRole="Amigo" ToRole="Usuario" />
+        </EntityType>
         <EntityType Name="Artista">
           <Key>
             <PropertyRef Name="idArtista" />
@@ -355,21 +398,11 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           </Key>
           <Property Name="idRedSocial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Jugador_idJugador" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Jugador" Relationship="Self.FK_RedSocial_Jugador" FromRole="RedSocial" ToRole="Jugador" />
           <Property Name="Instagram" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="discord" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="facebook" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="x" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_RedSocial_Jugador" FromRole="RedSocial" ToRole="Jugador" />
         </EntityType>
         <EntityType Name="Usuario">
           <Key>
@@ -379,6 +412,8 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           <Property Name="Nombre_Usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Contrasena" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Jugador_idJugador" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Amigo" Relationship="Self.FK_Amigo_Usuario" FromRole="Usuario" ToRole="Amigo" />
+          <NavigationProperty Name="Amigo1" Relationship="Self.FK_Amigo_Usuario1" FromRole="Usuario" ToRole="Amigo" />
           <NavigationProperty Name="Jugador" Relationship="Self.FK_Usuario_Jugador" FromRole="Usuario" ToRole="Jugador" />
         </EntityType>
         <EntityType Name="Solicitud">
@@ -392,6 +427,30 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           <NavigationProperty Name="Jugador" Relationship="Self.FK_Solicitud_Jugador" FromRole="Solicitud" ToRole="Jugador" />
           <NavigationProperty Name="Jugador1" Relationship="Self.FK_Solicitud_Jugador1" FromRole="Solicitud" ToRole="Jugador" />
         </EntityType>
+        <Association Name="FK_Amigo_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Amigo" Type="Self.Amigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Amigo">
+              <PropertyRef Name="UsuarioEmisor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Amigo_Usuario1">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Amigo" Type="Self.Amigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Amigo">
+              <PropertyRef Name="UsuarioReceptor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Cancion_Artista">
           <End Role="Artista" Type="Self.Artista" Multiplicity="1" />
           <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
@@ -501,6 +560,7 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BaseDatosPruebaEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Amigo" EntityType="Self.Amigo" />
           <EntitySet Name="Artista" EntityType="Self.Artista" />
           <EntitySet Name="Avatar" EntityType="Self.Avatar" />
           <EntitySet Name="Cancion" EntityType="Self.Cancion" />
@@ -509,9 +569,16 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           <EntitySet Name="Genero" EntityType="Self.Genero" />
           <EntitySet Name="Jugador" EntityType="Self.Jugador" />
           <EntitySet Name="RedSocial" EntityType="Self.RedSocial" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" />
           <EntitySet Name="Solicitud" EntityType="Self.Solicitud" />
+          <AssociationSet Name="FK_Amigo_Usuario" Association="Self.FK_Amigo_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Amigo" EntitySet="Amigo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Amigo_Usuario1" Association="Self.FK_Amigo_Usuario1">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Amigo" EntitySet="Amigo" />
+          </AssociationSet>
           <AssociationSet Name="FK_Cancion_Artista" Association="Self.FK_Cancion_Artista">
             <End Role="Artista" EntitySet="Artista" />
             <End Role="Cancion" EntitySet="Cancion" />
@@ -555,6 +622,15 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BaseDatosPruebaModelStoreContainer" CdmEntityContainer="BaseDatosPruebaEntities1">
+          <EntitySetMapping Name="Amigo">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Amigo">
+              <MappingFragment StoreEntitySet="Amigo">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="UsuarioEmisor" ColumnName="UsuarioEmisor" />
+                <ScalarProperty Name="UsuarioReceptor" ColumnName="UsuarioReceptor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Artista">
             <EntityTypeMapping TypeName="BaseDatosPruebaModel.Artista">
               <MappingFragment StoreEntitySet="Artista">
@@ -626,23 +702,12 @@ advertencia 6002: La tabla o vista 'BaseDatosPrueba.dbo.Solicitud' no tiene defi
           <EntitySetMapping Name="RedSocial">
             <EntityTypeMapping TypeName="BaseDatosPruebaModel.RedSocial">
               <MappingFragment StoreEntitySet="RedSocial">
-                <ScalarProperty Name="x" ColumnName="x" />
-                <ScalarProperty Name="facebook" ColumnName="facebook" />
-                <ScalarProperty Name="discord" ColumnName="discord" />
-                <ScalarProperty Name="Instagram" ColumnName="Instagram" />
                 <ScalarProperty Name="idRedSocial" ColumnName="idRedSocial" />
                 <ScalarProperty Name="Jugador_idJugador" ColumnName="Jugador_idJugador" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="BaseDatosPruebaModel.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="Instagram" ColumnName="Instagram" />
+                <ScalarProperty Name="discord" ColumnName="discord" />
+                <ScalarProperty Name="facebook" ColumnName="facebook" />
+                <ScalarProperty Name="x" ColumnName="x" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

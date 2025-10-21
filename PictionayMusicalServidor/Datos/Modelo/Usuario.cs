@@ -14,11 +14,22 @@ namespace Datos.Modelo
     
     public partial class Usuario
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Usuario()
+        {
+            this.Amigo = new HashSet<Amigo>();
+            this.Amigo1 = new HashSet<Amigo>();
+        }
+    
         public int idUsuario { get; set; }
         public string Nombre_Usuario { get; set; }
         public string Contrasena { get; set; }
         public int Jugador_idJugador { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Amigo> Amigo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Amigo> Amigo1 { get; set; }
         public virtual Jugador Jugador { get; set; }
     }
 }

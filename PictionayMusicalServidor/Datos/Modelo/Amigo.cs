@@ -12,12 +12,13 @@ namespace Datos.Modelo
     using System;
     using System.Collections.Generic;
     
-    public partial class sysdiagrams
+    public partial class Amigo
     {
-        public string name { get; set; }
-        public int principal_id { get; set; }
-        public int diagram_id { get; set; }
-        public Nullable<int> version { get; set; }
-        public byte[] definition { get; set; }
+        public bool Estado { get; set; }
+        public int UsuarioEmisor { get; set; }
+        public int UsuarioReceptor { get; set; }
+    
+        public virtual Usuario Usuario { get; set; }
+        public virtual Usuario Usuario1 { get; set; }
     }
 }
