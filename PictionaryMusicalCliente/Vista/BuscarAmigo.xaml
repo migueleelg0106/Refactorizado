@@ -12,15 +12,16 @@
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="{x:Static language:Lang.globalTextoBuscarAmigo}" FontFamily="Comic Sans MS" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <TextBlock Text="{x:Static language:Lang.buscarAmigoTextoIngreseUsuario}" FontFamily="Comic Sans MS" FontSize="14" Margin="0,15,0,5"/>
-                <TextBox Height="30" FontFamily="Comic Sans MS" MaxLength="50"/>
+                <TextBox Height="30" FontFamily="Comic Sans MS" MaxLength="50"
+                         Text="{Binding NombreUsuarioBusqueda, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <Grid Margin="0,20,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="{x:Static language:Lang.buscarAmigoTextoEnviaSolicitud}" Margin="0,0,5,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold" Background="White" BorderBrush="Black" Click="BotonEnviarSolicitud"/>
-                    <Button Grid.Column="1" Content="{x:Static language:Lang.globalTextoCancelar}" Margin="5,0,0,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold" Background="White" BorderBrush="Black" Click="BotonCancelar" HorizontalAlignment="Left" Width="76"/>
+                    <Button Grid.Column="0" Content="{x:Static language:Lang.buscarAmigoTextoEnviaSolicitud}" Margin="0,0,5,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold" Background="White" BorderBrush="Black" Command="{Binding EnviarSolicitudCommand}"/>
+                    <Button Grid.Column="1" Content="{x:Static language:Lang.globalTextoCancelar}" Margin="5,0,0,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold" Background="White" BorderBrush="Black" Command="{Binding CancelarCommand}" HorizontalAlignment="Left" Width="76"/>
                 </Grid>
             </StackPanel>
         </Border>

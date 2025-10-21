@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 
 namespace PictionaryMusicalCliente
 {
@@ -19,24 +11,46 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class Solicitudes : Window
     {
+        private readonly SolicitudesVistaModelo _vistaModelo;
+
         public Solicitudes()
+            : this(new SolicitudesVistaModelo(new AmigosService()))
         {
+        }
+
+        public Solicitudes(IAmigosService amigosService)
+            : this(new SolicitudesVistaModelo(amigosService))
+        {
+        }
+
+        public Solicitudes(SolicitudesVistaModelo vistaModelo)
+        {
+            _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));
+
             InitializeComponent();
+
+            DataContext = _vistaModelo;
+
+            _vistaModelo.Cerrar += VistaModelo_Cerrar;
+            Closed += Solicitudes_Closed;
         }
 
-        private void BotonAceptar(object sender, RoutedEventArgs e)
+        private void VistaModelo_Cerrar()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(VistaModelo_Cerrar);
+                return;
+            }
 
+            Close();
         }
 
-        private void BotonCancelar(object sender, RoutedEventArgs e)
+        private void Solicitudes_Closed(object sender, EventArgs e)
         {
-
-        }
-
-        private void BotonRegresar(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+            Closed -= Solicitudes_Closed;
+            _vistaModelo.Cerrar -= VistaModelo_Cerrar;
+            _vistaModelo.Dispose();
         }
     }
 }

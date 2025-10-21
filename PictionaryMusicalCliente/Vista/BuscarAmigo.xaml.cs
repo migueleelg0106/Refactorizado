@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 
 namespace PictionaryMusicalCliente
 {
@@ -19,19 +11,58 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class BuscarAmigo : Window
     {
+        private readonly BuscarAmigoVistaModelo _vistaModelo;
+
         public BuscarAmigo()
+            : this(new BuscarAmigoVistaModelo(new AmigosService()))
         {
+        }
+
+        public BuscarAmigo(IAmigosService amigosService)
+            : this(new BuscarAmigoVistaModelo(amigosService))
+        {
+        }
+
+        public BuscarAmigo(BuscarAmigoVistaModelo vistaModelo)
+        {
+            _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));
+
             InitializeComponent();
+
+            DataContext = _vistaModelo;
+
+            _vistaModelo.SolicitudEnviada += VistaModelo_SolicitudEnviada;
+            _vistaModelo.Cancelado += VistaModelo_Cancelado;
+            Closed += BuscarAmigo_Closed;
         }
 
-        private void BotonEnviarSolicitud(object sender, RoutedEventArgs e)
+        private void VistaModelo_SolicitudEnviada()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(VistaModelo_SolicitudEnviada);
+                return;
+            }
 
+            Close();
         }
 
-        private void BotonCancelar(object sender, RoutedEventArgs e)
+        private void VistaModelo_Cancelado()
         {
-            this.Close();
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(VistaModelo_Cancelado);
+                return;
+            }
+
+            Close();
+        }
+
+        private void BuscarAmigo_Closed(object sender, EventArgs e)
+        {
+            Closed -= BuscarAmigo_Closed;
+            _vistaModelo.SolicitudEnviada -= VistaModelo_SolicitudEnviada;
+            _vistaModelo.Cancelado -= VistaModelo_Cancelado;
         }
     }
 }

@@ -103,6 +103,8 @@
     <Compile Include="Convertidores\ConvertidorCadenaVaciaVisibilidad.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoAvataresLocales.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoImagenesPerfilLocales.cs" />
+    <Compile Include="Modelo\Amigos\Amigo.cs" />
+    <Compile Include="Modelo\Amigos\SolicitudAmistad.cs" />
     <Compile Include="Modelo\ObjetoAvatar.cs" />
     <Compile Include="Modelo\ResultadoOperacion.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
@@ -118,6 +120,8 @@
     <Compile Include="Modelo\Cuentas\VerificacionCodigoResultados.cs" />
     <Compile Include="Servicios\Abstracciones\IAvatarService.cs" />
     <Compile Include="Servicios\Abstracciones\ICambioContrasenaService.cs" />
+    <Compile Include="Servicios\Abstracciones\IAmigosService.cs" />
+    <Compile Include="Servicios\Abstracciones\IListaAmigosService.cs" />
     <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\IClasificacionService.cs" />
     <Compile Include="Servicios\Abstracciones\ICuentaService.cs" />
@@ -138,6 +142,8 @@
     <Compile Include="Servicios\Wcf\ClasificacionService.cs" />
     <Compile Include="Servicios\Wcf\CodigoVerificacionService.cs" />
     <Compile Include="Servicios\Wcf\CuentaService.cs" />
+    <Compile Include="Servicios\Wcf\AmigosService.cs" />
+    <Compile Include="Servicios\Wcf\ListaAmigosService.cs" />
     <Compile Include="Servicios\Wcf\InicioSesionService.cs" />
     <Compile Include="Servicios\Wcf\PerfilService.cs" />
     <Compile Include="Servicios\Wcf\VerificarCodigoService.cs" />
@@ -170,6 +176,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="VistaModelo\Amigos\BuscarAmigoVistaModelo.cs" />
+    <Compile Include="VistaModelo\Amigos\EliminarAmigoVistaModelo.cs" />
+    <Compile Include="VistaModelo\Amigos\SolicitudesVistaModelo.cs" />
     <Compile Include="VistaModelo\CambioContrasenaVistaModelo.cs" />
     <Compile Include="VistaModelo\ClasificacionVistaModelo.cs" />
     <Compile Include="VistaModelo\InicioSesionVistaModelo.cs" />
