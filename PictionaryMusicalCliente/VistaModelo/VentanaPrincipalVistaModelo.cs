@@ -14,6 +14,7 @@ using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Idiomas;
+using PictionaryMusicalCliente.Servicios.Wcf;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -32,6 +33,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private ObservableCollection<string> _amigos;
         private string _amigoSeleccionado;
 
+        // Campos readonly (no se modifican fuera del constructor)
         private readonly string _nombreUsuarioSesion;
         private readonly ILocalizacionService _localizacionService;
         private readonly IListaAmigosService _listaAmigosService;
@@ -54,6 +56,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             _amigosService = amigosService ?? throw new ArgumentNullException(nameof(amigosService));
 
             _listaAmigosService.ListaActualizada += ListaAmigosService_ListaActualizada;
+
+            // ✅ Asignar el usuario de sesión aquí (donde sí se permite)
+            _nombreUsuarioSesion = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
 
             CargarDatosUsuario();
             CargarOpcionesPartida();
@@ -175,58 +180,32 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         }
 
         public ICommand AbrirPerfilCommand { get; }
-
         public ICommand AbrirAjustesCommand { get; }
-
         public ICommand AbrirComoJugarCommand { get; }
-
         public ICommand AbrirClasificacionCommand { get; }
-
         public ICommand AbrirBuscarAmigoCommand { get; }
-
         public ICommand AbrirSolicitudesCommand { get; }
-
         public IComandoAsincrono AbrirEliminarAmigoCommand { get; }
-
         public ICommand AbrirInvitacionesCommand { get; }
-
         public ICommand UnirseSalaCommand { get; }
-
         public IComandoNotificable IniciarJuegoCommand { get; }
 
         public Action AbrirPerfil { get; set; }
-
         public Action AbrirAjustes { get; set; }
-
         public Action AbrirComoJugar { get; set; }
-
         public Action AbrirClasificacion { get; set; }
-
         public Action AbrirBuscarAmigo { get; set; }
-
         public Action AbrirSolicitudes { get; set; }
-
         public Func<string, bool?> ConfirmarEliminarAmigo { get; set; }
-
         public Action AbrirInvitaciones { get; set; }
-
         public Action<string> UnirseSala { get; set; }
-
         public Action<ConfiguracionPartida> IniciarJuego { get; set; }
-
         public Action<string> MostrarMensaje { get; set; }
 
         public async Task InicializarAsync()
         {
-            if (_suscripcionActiva)
-            {
+            if (_suscripcionActiva || string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
                 return;
-            }
-
-            if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
-            {
-                return;
-            }
 
             try
             {
@@ -235,7 +214,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 _suscripcionActiva = true;
 
                 IReadOnlyList<Amigo> listaActual = _listaAmigosService.ListaActual;
-                ActualizarAmigos(listaActual);
+                EjecutarEnDispatcher(() => ActualizarAmigos(listaActual));
+
             }
             catch (ServicioException ex)
             {
@@ -248,9 +228,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             _listaAmigosService.ListaActualizada -= ListaAmigosService_ListaActualizada;
 
             if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
-            {
                 return;
-            }
 
             try
             {
@@ -259,7 +237,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
             catch (ServicioException)
             {
-                // Ignorado: se está cerrando la sesión del usuario.
+                // Ignorado
             }
             finally
             {
@@ -271,31 +249,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             CodigoSala = string.Empty;
             Amigos = new ObservableCollection<string>();
-
-            _nombreUsuarioSesion = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
-            NombreUsuario = _nombreUsuarioSesion ?? string.Empty;
+            NombreUsuario = _nombreUsuarioSesion; // ✅ ahora solo se usa, no se reasigna
         }
 
         private void CargarOpcionesPartida()
         {
             NumeroRondasOpciones = new ObservableCollection<OpcionEntero>(
-                new[]
-                {
-                    new OpcionEntero(3),
-                    new OpcionEntero(5),
-                    new OpcionEntero(7)
-                });
-
+                new[] { new OpcionEntero(3), new OpcionEntero(5), new OpcionEntero(7) });
             NumeroRondasSeleccionada = NumeroRondasOpciones.FirstOrDefault();
 
             TiempoRondaOpciones = new ObservableCollection<OpcionEntero>(
-                new[]
-                {
-                    new OpcionEntero(60),
-                    new OpcionEntero(90),
-                    new OpcionEntero(120)
-                });
-
+                new[] { new OpcionEntero(60), new OpcionEntero(90), new OpcionEntero(120) });
             TiempoRondaSeleccionada = TiempoRondaOpciones.FirstOrDefault();
 
             DificultadesDisponibles = new ObservableCollection<OpcionTexto>(
@@ -306,7 +270,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     new OpcionTexto("dificil", Lang.principalTextoDificil),
                     new OpcionTexto("mixto", Lang.principalTextoMixto)
                 });
-
             DificultadSeleccionada = DificultadesDisponibles.FirstOrDefault();
         }
 
@@ -318,8 +281,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 new IdiomaOpcion("en-US", "English")
             };
 
-            string culturaActual = _localizacionService.CulturaActual?.Name
-                ?? CultureInfo.CurrentUICulture?.Name;
+            string culturaActual = _localizacionService.CulturaActual?.Name ?? CultureInfo.CurrentUICulture?.Name;
 
             IdiomaSeleccionado = IdiomasDisponibles
                 .FirstOrDefault(i => string.Equals(i.Codigo, culturaActual, StringComparison.OrdinalIgnoreCase))
@@ -334,9 +296,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private void ActualizarAmigos(IReadOnlyList<Amigo> amigos)
         {
             if (Amigos == null)
-            {
                 Amigos = new ObservableCollection<string>();
-            }
 
             Amigos.Clear();
 
@@ -344,12 +304,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 foreach (var amigo in amigos)
                 {
-                    if (amigo == null || string.IsNullOrWhiteSpace(amigo.NombreUsuario))
-                    {
-                        continue;
-                    }
-
-                    Amigos.Add(amigo.NombreUsuario);
+                    if (!string.IsNullOrWhiteSpace(amigo?.NombreUsuario))
+                        Amigos.Add(amigo.NombreUsuario);
                 }
             }
 
@@ -362,38 +318,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private static void EjecutarEnDispatcher(Action accion)
         {
-            if (accion == null)
-            {
-                return;
-            }
-
+            if (accion == null) return;
             var dispatcher = Application.Current?.Dispatcher;
 
             if (dispatcher == null || dispatcher.CheckAccess())
-            {
                 accion();
-            }
             else
-            {
                 dispatcher.BeginInvoke(accion);
-            }
         }
 
         private async Task EliminarAmigoAsync()
         {
             string amigo = AmigoSeleccionado;
 
-            if (string.IsNullOrWhiteSpace(amigo))
-            {
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(amigo)) return;
 
             bool? confirmar = ConfirmarEliminarAmigo?.Invoke(amigo);
-
-            if (confirmar != true)
-            {
-                return;
-            }
+            if (confirmar != true) return;
 
             if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
             {
@@ -415,7 +356,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private void UnirseSalaInterno()
         {
             string codigo = CodigoSala?.Trim();
-
             if (string.IsNullOrWhiteSpace(codigo))
             {
                 MostrarMensaje?.Invoke(Lang.globalTextoIngreseCodigoPartida);
@@ -423,13 +363,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
 
             if (UnirseSala != null)
-            {
                 UnirseSala.Invoke(codigo);
-            }
             else
-            {
                 MostrarMensaje?.Invoke(Lang.errorTextoNoEncuentraPartida);
-            }
         }
 
         private void IniciarJuegoInterno()
@@ -449,13 +385,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             };
 
             if (IniciarJuego != null)
-            {
                 IniciarJuego.Invoke(configuracion);
-            }
             else
-            {
                 MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
-            }
         }
 
         private bool PuedeIniciarJuego()
@@ -480,13 +412,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
 
             public int Valor { get; }
-
             public string Descripcion { get; }
-
-            public override string ToString()
-            {
-                return Descripcion;
-            }
+            public override string ToString() => Descripcion;
         }
 
         public class OpcionTexto
@@ -498,24 +425,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
 
             public string Clave { get; }
-
             public string Descripcion { get; }
-
-            public override string ToString()
-            {
-                return Descripcion;
-            }
+            public override string ToString() => Descripcion;
         }
     }
 
     public class ConfiguracionPartida
     {
         public int NumeroRondas { get; set; }
-
         public int TiempoPorRondaSegundos { get; set; }
-
         public string IdiomaCanciones { get; set; }
-
         public string Dificultad { get; set; }
     }
 }
