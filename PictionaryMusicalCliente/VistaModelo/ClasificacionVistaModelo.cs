@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
 using ClasificacionSrv = PictionaryMusicalCliente.PictionaryServidorServicioClasificacion;
 

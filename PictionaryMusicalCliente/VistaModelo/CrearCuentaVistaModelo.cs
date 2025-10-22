@@ -5,11 +5,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
