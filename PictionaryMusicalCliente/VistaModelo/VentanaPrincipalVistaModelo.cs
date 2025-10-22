@@ -15,6 +15,7 @@ using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Idiomas;
 using PictionaryMusicalCliente.Servicios.Wcf;
 using DTOs = global::Servicios.Contratos.DTOs;
+using PictionaryMusicalCliente.ClienteServicios.Wcf;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {

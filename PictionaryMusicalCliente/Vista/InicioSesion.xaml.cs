@@ -7,6 +7,8 @@ using PictionaryMusicalCliente.Servicios.Wcf;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using PictionaryMusicalCliente.Servicios.Idiomas;
+using PictionaryMusicalCliente.ClienteServicios.Wcf;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 
 namespace PictionaryMusicalCliente
 {
