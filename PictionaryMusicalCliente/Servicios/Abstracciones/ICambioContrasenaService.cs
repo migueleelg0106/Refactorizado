@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Cuentas;
+using Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface ICambioContrasenaService
     {
-        Task<ResultadoSolicitudRecuperacion> SolicitarCodigoRecuperacionAsync(string identificador);
+        Task<ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(string identificador);
 
-        Task<ResultadoSolicitudCodigo> ReenviarCodigoRecuperacionAsync(string tokenCodigo);
+        Task<ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(string tokenCodigo);
 
         Task<ResultadoOperacion> ConfirmarCodigoRecuperacionAsync(string tokenCodigo, string codigoIngresado);
 

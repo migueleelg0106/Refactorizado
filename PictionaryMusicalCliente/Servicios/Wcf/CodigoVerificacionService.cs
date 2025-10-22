@@ -1,10 +1,10 @@
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using Servicios.Contratos.DTOs;
 using CodigoVerificacionSrv = PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion;
 using CuentaSrv = PictionaryMusicalCliente.PictionaryServidorServicioCuenta;
 
@@ -14,7 +14,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
     {
         private const string CodigoVerificacionEndpoint = "BasicHttpBinding_ICodigoVerificacionManejador";
 
-        public async Task<ResultadoSolicitudCodigo> SolicitarCodigoRegistroAsync(SolicitudRegistroCuenta solicitud)
+        public async Task<ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(NuevaCuentaDTO solicitud)
         {
             if (solicitud == null)
             {
@@ -44,7 +44,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     return null;
                 }
 
-                return new ResultadoSolicitudCodigo
+                return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = resultado.CodigoEnviado,
                     UsuarioYaRegistrado = resultado.UsuarioYaRegistrado,
@@ -76,7 +76,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
         }
 
-        public async Task<ResultadoSolicitudCodigo> ReenviarCodigoRegistroAsync(string tokenCodigo)
+        public async Task<ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
         {
             if (string.IsNullOrWhiteSpace(tokenCodigo))
             {
@@ -101,7 +101,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     return null;
                 }
 
-                return new ResultadoSolicitudCodigo
+                return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = resultado.CodigoEnviado,
                     UsuarioYaRegistrado = resultado.UsuarioYaRegistrado,
@@ -133,7 +133,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
         }
 
-        public async Task<ResultadoRegistroCuenta> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
+        public async Task<ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
         {
             if (string.IsNullOrWhiteSpace(tokenCodigo))
             {
@@ -164,7 +164,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     return null;
                 }
 
-                return new ResultadoRegistroCuenta
+                return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = resultado.RegistroExitoso,
                     UsuarioYaRegistrado = resultado.UsuarioYaRegistrado,

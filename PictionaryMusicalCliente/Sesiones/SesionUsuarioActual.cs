@@ -1,5 +1,5 @@
 using System;
-using PictionaryMusicalCliente.Modelo.Cuentas;
+using Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Sesiones
 {
@@ -14,11 +14,11 @@ namespace PictionaryMusicalCliente.Sesiones
 
         public static SesionUsuarioActual Instancia => InstanciaInterna.Value;
 
-        public UsuarioSesion Usuario { get; private set; }
+        public UsuarioDTO Usuario { get; private set; }
 
         public bool EstaAutenticado => Usuario != null;
 
-        public void EstablecerUsuario(UsuarioSesion usuario)
+        public void EstablecerUsuario(UsuarioDTO usuario)
         {
             Usuario = usuario ?? throw new ArgumentNullException(nameof(usuario));
         }

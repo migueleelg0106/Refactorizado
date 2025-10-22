@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Modelo.Cuentas;
+using Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface ICuentaService
     {
-        Task<ResultadoRegistroCuenta> RegistrarCuentaAsync(SolicitudRegistroCuenta solicitud);
+        Task<ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(NuevaCuentaDTO solicitud);
     }
 }

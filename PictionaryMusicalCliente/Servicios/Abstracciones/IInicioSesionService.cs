@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Modelo.Cuentas;
+using Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface IInicioSesionService
     {
-        Task<ResultadoInicioSesion> IniciarSesionAsync(SolicitudInicioSesion solicitud);
+        Task<ResultadoInicioSesionDTO> IniciarSesionAsync(CredencialesInicioSesionDTO solicitud);
     }
 }

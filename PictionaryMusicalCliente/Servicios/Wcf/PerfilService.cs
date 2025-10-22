@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using Servicios.Contratos.DTOs;
 using AvataresSrv = PictionaryMusicalCliente.PictionaryServidorServicioAvatares;
 using PerfilSrv = PictionaryMusicalCliente.PictionaryServidorServicioPerfil;
 
@@ -66,7 +66,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
         }
 
-        public async Task<ResultadoOperacion> ActualizarPerfilAsync(ActualizarPerfilSolicitud solicitud)
+        public async Task<ResultadoOperacion> ActualizarPerfilAsync(ActualizarPerfilDTO solicitud)
         {
             if (solicitud == null)
             {

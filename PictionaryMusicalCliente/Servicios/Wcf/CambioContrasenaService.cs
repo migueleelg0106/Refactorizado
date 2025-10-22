@@ -2,10 +2,10 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using Servicios.Contratos.DTOs;
 using CambioContrasenaSrv = PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena;
 using CodigoVerificacionSrv = PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion;
 
@@ -15,7 +15,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
     {
         private const string Endpoint = "BasicHttpBinding_ICambiarContrasenaManejador";
 
-        public async Task<ResultadoSolicitudRecuperacion> SolicitarCodigoRecuperacionAsync(string identificador)
+        public async Task<ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(string identificador)
         {
             if (string.IsNullOrWhiteSpace(identificador))
             {
@@ -32,14 +32,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     return null;
                 }
 
-                return new ResultadoSolicitudRecuperacion
-                {
-                    CuentaEncontrada = resultado.CuentaEncontrada,
-                    CodigoEnviado = resultado.CodigoEnviado,
-                    CorreoDestino = resultado.CorreoDestino,
-                    Mensaje = resultado.Mensaje,
-                    TokenCodigo = resultado.TokenCodigo
-                };
+                return resultado;
             }
             catch (FaultException ex)
             {
@@ -64,7 +57,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
         }
 
-        public async Task<ResultadoSolicitudCodigo> ReenviarCodigoRecuperacionAsync(string tokenCodigo)
+        public async Task<ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(string tokenCodigo)
         {
             if (string.IsNullOrWhiteSpace(tokenCodigo))
             {
@@ -81,12 +74,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     return null;
                 }
 
-                return new ResultadoSolicitudCodigo
-                {
-                    CodigoEnviado = resultado.CodigoEnviado,
-                    Mensaje = resultado.Mensaje,
-                    TokenCodigo = resultado.TokenCodigo
-                };
+                return resultado;
             }
             catch (FaultException ex)
             {

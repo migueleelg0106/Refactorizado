@@ -1,17 +1,17 @@
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using Servicios.Contratos.DTOs;
 using InicioSesionSrv = PictionaryMusicalCliente.PictionaryServidorServicioInicioSesion;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf
 {
     public class InicioSesionService : IInicioSesionService
     {
-        public async Task<ResultadoInicioSesion> IniciarSesionAsync(SolicitudInicioSesion solicitud)
+        public async Task<ResultadoInicioSesionDTO> IniciarSesionAsync(CredencialesInicioSesionDTO solicitud)
         {
             if (solicitud == null)
             {
@@ -42,7 +42,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     mensaje = MensajeServidorHelper.Localizar(mensaje, mensaje);
                 }
 
-                return new ResultadoInicioSesion
+                return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = resultadoDto.InicioSesionExitoso,
                     CuentaNoEncontrada = resultadoDto.CuentaNoEncontrada,
@@ -74,14 +74,14 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
         }
 
-        private static UsuarioSesion MapearUsuario(InicioSesionSrv.UsuarioDTO dto)
+        private static UsuarioDTO MapearUsuario(InicioSesionSrv.UsuarioDTO dto)
         {
             if (dto == null)
             {
                 return null;
             }
 
-            return new UsuarioSesion
+            return new UsuarioDTO
             {
                 IdUsuario = dto.IdUsuario,
                 JugadorId = dto.JugadorId,
@@ -90,7 +90,11 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 Apellido = dto.Apellido,
                 Correo = dto.Correo,
                 AvatarId = dto.AvatarId,
-                AvatarRutaRelativa = dto.AvatarRutaRelativa
+                AvatarRutaRelativa = dto.AvatarRutaRelativa,
+                Instagram = dto.Instagram,
+                Facebook = dto.Facebook,
+                X = dto.X,
+                Discord = dto.Discord
             };
         }
     }

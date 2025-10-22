@@ -9,13 +9,13 @@ using System.Windows.Media;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -144,7 +144,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public async Task CargarPerfilAsync()
         {
-            UsuarioSesion sesion = SesionUsuarioActual.Instancia.Usuario;
+            UsuarioDTO sesion = SesionUsuarioActual.Instancia.Usuario;
 
             if (sesion == null)
             {
@@ -259,7 +259,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            var solicitud = new ActualizarPerfilSolicitud
+            var solicitud = new ActualizarPerfilDTO
             {
                 UsuarioId = _usuarioId,
                 Nombre = nombre,
@@ -464,7 +464,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void ActualizarSesion()
         {
-            UsuarioSesion sesion = SesionUsuarioActual.Instancia.Usuario;
+            UsuarioDTO sesion = SesionUsuarioActual.Instancia.Usuario;
             if (sesion == null)
             {
                 return;
@@ -472,6 +472,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             sesion.Nombre = Nombre;
             sesion.Apellido = Apellido;
+            sesion.Instagram = ObtenerIdentificador("Instagram");
+            sesion.Facebook = ObtenerIdentificador("Facebook");
+            sesion.X = ObtenerIdentificador("X");
+            sesion.Discord = ObtenerIdentificador("Discord");
 
             ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPorRuta(AvatarSeleccionadoRutaRelativa);
             sesion.AvatarId = avatar?.Id ?? 0;
@@ -480,7 +484,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void ActualizarSesion(UsuarioAutenticado perfil)
         {
-            var sesion = new UsuarioSesion
+            var sesion = new UsuarioDTO
             {
                 IdUsuario = perfil.IdUsuario,
                 JugadorId = perfil.JugadorId,
@@ -489,7 +493,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 Apellido = perfil.Apellido,
                 Correo = perfil.Correo,
                 AvatarId = perfil.AvatarId,
-                AvatarRutaRelativa = perfil.AvatarRutaRelativa
+                AvatarRutaRelativa = perfil.AvatarRutaRelativa,
+                Instagram = perfil.Instagram,
+                Facebook = perfil.Facebook,
+                X = perfil.X,
+                Discord = perfil.Discord
             };
 
             SesionUsuarioActual.Instancia.EstablecerUsuario(sesion);

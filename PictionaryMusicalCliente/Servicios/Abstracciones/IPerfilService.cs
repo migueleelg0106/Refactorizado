@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Cuentas;
+using Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
@@ -9,7 +9,7 @@ namespace PictionaryMusicalCliente.Servicios.Abstracciones
     {
         Task<UsuarioAutenticado> ObtenerPerfilAsync(int usuarioId);
 
-        Task<ResultadoOperacion> ActualizarPerfilAsync(ActualizarPerfilSolicitud solicitud);
+        Task<ResultadoOperacion> ActualizarPerfilAsync(ActualizarPerfilDTO solicitud);
 
         Task<IReadOnlyList<ObjetoAvatar>> ObtenerAvataresDisponiblesAsync();
     }

@@ -1,10 +1,10 @@
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using Servicios.Contratos.DTOs;
 using CuentaSrv = PictionaryMusicalCliente.PictionaryServidorServicioCuenta;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf
@@ -13,7 +13,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
     {
         private const string CuentaEndpoint = "BasicHttpBinding_ICuentaManejador";
 
-        public async Task<ResultadoRegistroCuenta> RegistrarCuentaAsync(SolicitudRegistroCuenta solicitud)
+        public async Task<ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(NuevaCuentaDTO solicitud)
         {
             if (solicitud == null)
             {
@@ -43,7 +43,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     return null;
                 }
 
-                return new ResultadoRegistroCuenta
+                return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = resultado.RegistroExitoso,
                     UsuarioYaRegistrado = resultado.UsuarioYaRegistrado,

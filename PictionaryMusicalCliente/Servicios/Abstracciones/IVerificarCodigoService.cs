@@ -1,10 +1,13 @@
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 
 namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface IVerificarCodigoService
     {
+        Task<Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(
+            string tokenCodigo,
+            string codigoIngresado);
 
+        Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo);
     }
 }

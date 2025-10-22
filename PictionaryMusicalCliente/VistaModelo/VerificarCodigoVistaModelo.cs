@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using PictionaryMusicalCliente.Utilidades;
+using Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -101,7 +101,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public ICommand CancelarCommand { get; }
 
-        public Action<ResultadoRegistroCuenta> VerificacionCompletada { get; set; }
+        public Action<ResultadoRegistroCuentaDTO> VerificacionCompletada { get; set; }
 
         public Action Cancelado { get; set; }
 
@@ -122,7 +122,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                ResultadoRegistroCuenta resultado = await _codigoVerificacionService
+                ResultadoRegistroCuentaDTO resultado = await _codigoVerificacionService
                     .ConfirmarCodigoRegistroAsync(_tokenCodigo, CodigoVerificacion).ConfigureAwait(true);
 
                 if (resultado == null)
@@ -173,7 +173,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                ResultadoSolicitudCodigo resultado = await _codigoVerificacionService
+                ResultadoSolicitudCodigoDTO resultado = await _codigoVerificacionService
                     .ReenviarCodigoRegistroAsync(_tokenCodigo).ConfigureAwait(true);
 
                 if (resultado?.CodigoEnviado == true)

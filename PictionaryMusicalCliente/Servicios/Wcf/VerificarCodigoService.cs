@@ -1,18 +1,18 @@
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using CodigoVerificacionSrv = PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion;
 using CuentaSrv = PictionaryMusicalCliente.PictionaryServidorServicioCuenta;
+using Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf
 {
     public class VerificarCodigoService : IVerificarCodigoService
     {
-        public async Task<ConfirmacionCodigoResultado> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
+        public async Task<ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
         {
             if (string.IsNullOrWhiteSpace(tokenCodigo))
             {
@@ -28,10 +28,16 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 return null;
             }
 
-            return new ConfirmacionCodigoResultado(resultado.RegistroExitoso, resultado.Mensaje);
+            return new ResultadoRegistroCuentaDTO
+            {
+                RegistroExitoso = resultado.RegistroExitoso,
+                UsuarioYaRegistrado = resultado.UsuarioYaRegistrado,
+                CorreoYaRegistrado = resultado.CorreoYaRegistrado,
+                Mensaje = resultado.Mensaje
+            };
         }
 
-        public async Task<ReenvioCodigoResultado> ReenviarCodigoRegistroAsync(string tokenCodigo)
+        public async Task<ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
         {
             if (string.IsNullOrWhiteSpace(tokenCodigo))
             {
@@ -47,7 +53,14 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 return null;
             }
 
-            return new ReenvioCodigoResultado(resultado.CodigoEnviado, resultado.Mensaje, resultado.TokenCodigo);
+            return new ResultadoSolicitudCodigoDTO
+            {
+                CodigoEnviado = resultado.CodigoEnviado,
+                UsuarioYaRegistrado = resultado.UsuarioYaRegistrado,
+                CorreoYaRegistrado = resultado.CorreoYaRegistrado,
+                Mensaje = resultado.Mensaje,
+                TokenCodigo = resultado.TokenCodigo
+            };
         }
 
         private static async Task<T> EjecutarOperacionAsync<T>(Func<Task<T>> operacion, string mensajeErrorPredeterminado)

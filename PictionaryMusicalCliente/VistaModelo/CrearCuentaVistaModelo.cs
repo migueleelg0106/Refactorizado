@@ -5,11 +5,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
+using Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -215,7 +215,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            var solicitud = new SolicitudRegistroCuenta
+            var solicitud = new NuevaCuentaDTO
             {
                 Usuario = Usuario,
                 Nombre = Nombre,
@@ -229,7 +229,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 EstaProcesando = true;
 
-                ResultadoSolicitudCodigo resultadoSolicitud = await _codigoVerificacionService
+                ResultadoSolicitudCodigoDTO resultadoSolicitud = await _codigoVerificacionService
                     .SolicitarCodigoRegistroAsync(solicitud).ConfigureAwait(true);
 
                 if (resultadoSolicitud == null)
@@ -279,7 +279,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     return;
                 }
 
-                ResultadoRegistroCuenta resultadoVerificacion = await _verificarCodigoDialogService
+                ResultadoRegistroCuentaDTO resultadoVerificacion = await _verificarCodigoDialogService
                     .MostrarDialogoAsync(
                         Lang.cambiarContrasenaTextoCodigoVerificacion,
                         resultadoSolicitud.TokenCodigo,
@@ -295,7 +295,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     return;
                 }
 
-                ResultadoRegistroCuenta resultadoRegistro = await _cuentaService
+                ResultadoRegistroCuentaDTO resultadoRegistro = await _cuentaService
                     .RegistrarCuentaAsync(solicitud).ConfigureAwait(true);
 
                 if (resultadoRegistro == null)

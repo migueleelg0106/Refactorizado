@@ -68,17 +68,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioAvatares\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioCambioContrasena\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioClasificacion\Reference.cs">
-      <AutoGen>True</AutoGen>
+      <AutoGen>True</Auto>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioCuenta\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -108,16 +118,7 @@
     <Compile Include="Modelo\ObjetoAvatar.cs" />
     <Compile Include="Modelo\ResultadoOperacion.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
-    <Compile Include="Modelo\Cuentas\ResultadoInicioSesion.cs" />
-    <Compile Include="Modelo\Cuentas\ResultadoSolicitudCodigo.cs" />
-    <Compile Include="Modelo\Cuentas\ResultadoRegistroCuenta.cs" />
-    <Compile Include="Modelo\Cuentas\ResultadoSolicitudRecuperacion.cs" />
-    <Compile Include="Modelo\Cuentas\SolicitudInicioSesion.cs" />
-    <Compile Include="Modelo\Cuentas\SolicitudRegistroCuenta.cs" />
-    <Compile Include="Modelo\Cuentas\UsuarioSesion.cs" />
     <Compile Include="Modelo\IdiomaOpcion.cs" />
-    <Compile Include="Modelo\Cuentas\ActualizarPerfilSolicitud.cs" />
-    <Compile Include="Modelo\Cuentas\VerificacionCodigoResultados.cs" />
     <Compile Include="Servicios\Abstracciones\IAvatarService.cs" />
     <Compile Include="Servicios\Abstracciones\ICambioContrasenaService.cs" />
     <Compile Include="Servicios\Abstracciones\IAmigosService.cs" />
@@ -683,6 +684,12 @@
   <ItemGroup>
     <Resource Include="Recursos\Aceptar.png" />
     <Resource Include="Recursos\Rechazar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ContratosCompartidos\ContratosCompartidos.csproj">
+      <Project>{b19e3856-544a-4b41-8d27-7579bff0a0c8}</Project>
+      <Name>Servicios.Contratos</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

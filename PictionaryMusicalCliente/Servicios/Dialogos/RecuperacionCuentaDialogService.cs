@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente;
 
 namespace PictionaryMusicalCliente.Servicios.Dialogos
@@ -28,7 +28,7 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
                 throw new ArgumentNullException(nameof(cambioContrasenaService));
             }
 
-            ResultadoSolicitudRecuperacion resultadoSolicitud = await cambioContrasenaService
+            ResultadoSolicitudRecuperacionDTO resultadoSolicitud = await cambioContrasenaService
                 .SolicitarCodigoRecuperacionAsync(identificador).ConfigureAwait(true);
 
             if (resultadoSolicitud == null)
@@ -56,7 +56,7 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 
             var adaptador = new ServicioCodigoRecuperacionAdapter(cambioContrasenaService);
 
-            ResultadoRegistroCuenta resultadoVerificacion = await _verificarCodigoDialogService
+            ResultadoRegistroCuentaDTO resultadoVerificacion = await _verificarCodigoDialogService
                 .MostrarDialogoAsync(
                     Lang.cambiarContrasenaTextoCodigoVerificacion,
                     resultadoSolicitud.TokenCodigo,
@@ -117,17 +117,17 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
                 _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
             }
 
-            public Task<ResultadoSolicitudCodigo> SolicitarCodigoRegistroAsync(SolicitudRegistroCuenta solicitud)
+            public Task<ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(NuevaCuentaDTO solicitud)
             {
                 throw new NotSupportedException();
             }
 
-            public Task<ResultadoSolicitudCodigo> ReenviarCodigoRegistroAsync(string tokenCodigo)
+            public Task<ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
             {
                 return _cambioContrasenaService.ReenviarCodigoRecuperacionAsync(tokenCodigo);
             }
 
-            public async Task<ResultadoRegistroCuenta> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
+            public async Task<ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
             {
                 ResultadoOperacion resultado = await _cambioContrasenaService
                     .ConfirmarCodigoRecuperacionAsync(tokenCodigo, codigoIngresado).ConfigureAwait(true);
@@ -137,7 +137,7 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
                     return null;
                 }
 
-                return new ResultadoRegistroCuenta
+                return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = resultado.Exito,
                     Mensaje = resultado.Mensaje

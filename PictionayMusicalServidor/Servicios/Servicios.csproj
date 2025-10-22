@@ -75,47 +75,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contratos\IAmigosManejador.cs" />
-    <Compile Include="Contratos\IAmigosManejadorCallback.cs" />
-    <Compile Include="Contratos\ICambiarContrasenaManejador.cs" />
-    <Compile Include="Contratos\ICatalogoAvatares.cs" />
-    <Compile Include="Contratos\ICerrarSesionManejador.cs" />
-    <Compile Include="Contratos\IChatManejador.cs" />
-    <Compile Include="Contratos\IClasificacionManejador.cs" />
-    <Compile Include="Contratos\ICodigoVerificacionManejador.cs" />
-    <Compile Include="Contratos\IConfiguracionManejador.cs" />
-    <Compile Include="Contratos\ICuentaManejador.cs" />
-    <Compile Include="Contratos\ICursoPartidaManejador.cs" />
-    <Compile Include="Contratos\IInicioPartidaManejador.cs" />
-    <Compile Include="Contratos\IInicioSesionInvitadoManejador.cs" />
-    <Compile Include="Contratos\IInicioSesionManejador.cs" />
-    <Compile Include="Contratos\IInvitacionesManejador.cs" />
-    <Compile Include="Contratos\IJugadoresManejador.cs" />
-    <Compile Include="Contratos\ILienzoManejador.cs" />
-    <Compile Include="Contratos\IListaAmigosManejador.cs" />
-    <Compile Include="Contratos\IListaAmigosManejadorCallback.cs" />
-    <Compile Include="Contratos\INotificacionManejador.cs" />
-    <Compile Include="Contratos\IPerfilManejador.cs" />
-    <Compile Include="Contratos\ISalasManejador.cs" />
-    <Compile Include="Contratos\ISalirSalaManager.cs" />
-    <Compile Include="Contratos\DTOs\ActualizarContrasenaDTO.cs" />
-    <Compile Include="Contratos\DTOs\ClasificacionUsuarioDTO.cs" />
-    <Compile Include="Contratos\DTOs\ConfirmarCodigoDTO.cs" />
-    <Compile Include="Contratos\DTOs\CredencialesInicioSesionDTO.cs" />
-    <Compile Include="Contratos\DTOs\NuevaCuentaDTO.cs" />
-    <Compile Include="Contratos\DTOs\ReenviarCodigoDTO.cs" />
-    <Compile Include="Contratos\DTOs\ReenviarCodigoVerificacionDTO.cs" />
-    <Compile Include="Contratos\DTOs\ResultadoInicioSesionDTO.cs" />
-    <Compile Include="Contratos\DTOs\ActualizarPerfilDTO.cs" />
-    <Compile Include="Contratos\DTOs\ResultadoOperacionDTO.cs" />
-    <Compile Include="Contratos\DTOs\ResultadoRegistroCuentaDTO.cs" />
-    <Compile Include="Contratos\DTOs\ResultadoSolicitudCodigoDTO.cs" />
-    <Compile Include="Contratos\DTOs\ResultadoSolicitudRecuperacionDTO.cs" />
-    <Compile Include="Contratos\DTOs\SolicitudRecuperarCuentaDTO.cs" />
-    <Compile Include="Contratos\DTOs\SolicitudAmistadDTO.cs" />
-    <Compile Include="Contratos\DTOs\AmigoDTO.cs" />
-    <Compile Include="Contratos\DTOs\UsuarioDTO.cs" />
-    <Compile Include="Contratos\DTOs\AvatarDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\CatalogoAvatares.cs" />
     <Compile Include="Servicios\AmigosManejador.cs" />
@@ -139,6 +98,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ContratosCompartidos\ContratosCompartidos.csproj">
+      <Project>{b19e3856-544a-4b41-8d27-7579bff0a0c8}</Project>
+      <Name>Servicios.Contratos</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Datos\Datos.csproj">
       <Project>{985ee861-0e91-4f61-9090-abf706083eeb}</Project>
       <Name>Datos</Name>

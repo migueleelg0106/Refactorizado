@@ -1,15 +1,15 @@
 using System;
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente;
 
 namespace PictionaryMusicalCliente.Servicios.Dialogos
 {
     public class VerificarCodigoDialogService : IVerificarCodigoDialogService
     {
-        public Task<ResultadoRegistroCuenta> MostrarDialogoAsync(
+        public Task<ResultadoRegistroCuentaDTO> MostrarDialogoAsync(
             string descripcion,
             string tokenCodigo,
             ICodigoVerificacionService codigoVerificacionService)
@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 
             var ventana = new VerificarCodigo();
             var vistaModelo = new VerificarCodigoVistaModelo(descripcion, tokenCodigo, codigoVerificacionService);
-            var finalizacion = new TaskCompletionSource<ResultadoRegistroCuenta>();
+            var finalizacion = new TaskCompletionSource<ResultadoRegistroCuentaDTO>();
 
             vistaModelo.VerificacionCompletada = resultado =>
             {
