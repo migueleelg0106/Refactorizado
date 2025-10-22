@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Utilidades;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -99,7 +99,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public Action IniciarSesionInvitado { get; set; }
 
-        public Action<ResultadoInicioSesion> InicioSesionCompletado { get; set; }
+        public Action<DTOs.ResultadoInicioSesionDTO> InicioSesionCompletado { get; set; }
 
         public Action CerrarAccion { get; set; }
 
@@ -145,13 +145,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                var solicitud = new SolicitudInicioSesion
+                var solicitud = new DTOs.CredencialesInicioSesionDTO
                 {
                     Identificador = identificador,
                     Contrasena = _contrasena
                 };
 
-                ResultadoInicioSesion resultado = await _inicioSesionService
+                DTOs.ResultadoInicioSesionDTO resultado = await _inicioSesionService
                     .IniciarSesionAsync(solicitud).ConfigureAwait(true);
 
                 if (resultado == null)
@@ -211,10 +211,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                ResultadoOperacion resultado = await _recuperacionCuentaDialogService
+                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogService
                     .RecuperarCuentaAsync(identificador, _cambioContrasenaService).ConfigureAwait(true);
 
-                if (resultado?.Exito == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
+                if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
                     AvisoHelper.Mostrar(resultado.Mensaje);
                 }
