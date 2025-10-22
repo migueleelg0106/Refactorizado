@@ -1,8 +1,8 @@
-using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -31,11 +31,10 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 if (resultadoDto == null)
                     return null;
 
-                // Localización del mensaje (si aplica)
-                if (!string.IsNullOrWhiteSpace(resultadoDto.Mensaje))
+                UsuarioMapper.ActualizarSesion(resultadoDto.Usuario);
                     resultadoDto.Mensaje = MensajeServidorHelper.Localizar(resultadoDto.Mensaje, resultadoDto.Mensaje);
 
-                // Si hay un usuario válido, lo guardamos en el singleton
+                // Si hay un usuario vÃ¡lido, lo guardamos en el singleton
                 if (resultadoDto.Usuario != null)
                     UsuarioAutenticado.Instancia.CargarDesdeDTO(resultadoDto.Usuario);
 
