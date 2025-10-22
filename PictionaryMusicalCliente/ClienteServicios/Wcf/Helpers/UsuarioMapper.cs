@@ -1,68 +1,27 @@
+using PictionaryMusicalCliente.Sesiones;
 using DTOs = global::Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.Modelo
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
 {
-    public sealed class UsuarioAutenticado
+    /// <summary>
+    /// Expone operaciones auxiliares para mantener sincronizada la sesin del usuario.
+    /// </summary>
+    public static class UsuarioMapper
     {
-        private static UsuarioAutenticado _instancia;
-
-        public static UsuarioAutenticado Instancia
-        {
-            get
-            {
-                _instancia ??= new UsuarioAutenticado();
-                return _instancia;
-            }
-        }
-
-        public int IdUsuario { get; private set; }
-        public int JugadorId { get; private set; }
-        public string NombreUsuario { get; private set; }
-        public string Nombre { get; private set; }
-        public string Apellido { get; private set; }
-        public string Correo { get; private set; }
-        public int AvatarId { get; private set; }
-        public string AvatarRutaRelativa { get; private set; }
-        public string Instagram { get; private set; }
-        public string Facebook { get; private set; }
-        public string X { get; private set; }
-        public string Discord { get; private set; }
-
-        private UsuarioAutenticado() { }
-
-        public void CargarDesdeDTO(DTOs.UsuarioDTO dto)
+        /// <summary>
+        /// Actualiza la sesin del usuario actual a partir del DTO recibido del servidor.
+        /// </summary>
+        /// <param name="dto">Datos del usuario autenticado.</param>
+        public static void ActualizarSesion(DTOs.UsuarioDTO dto)
         {
             if (dto == null)
+            {
+                SesionUsuarioActual.Instancia.CerrarSesion();
                 return;
+            }
 
-            IdUsuario = dto.IdUsuario;
-            JugadorId = dto.JugadorId;
-            NombreUsuario = dto.NombreUsuario;
-            Nombre = dto.Nombre;
-            Apellido = dto.Apellido;
-            Correo = dto.Correo;
-            AvatarId = dto.AvatarId;
-            AvatarRutaRelativa = dto.AvatarRutaRelativa;
-            Instagram = dto.Instagram;
-            Facebook = dto.Facebook;
-            X = dto.X;
-            Discord = dto.Discord;
+            SesionUsuarioActual.Instancia.EstablecerUsuario(dto);
         }
 
-        public void Limpiar()
-        {
-            IdUsuario = 0;
-            JugadorId = 0;
-            NombreUsuario = null;
-            Nombre = null;
-            Apellido = null;
-            Correo = null;
-            AvatarId = 0;
-            AvatarRutaRelativa = null;
-            Instagram = null;
-            Facebook = null;
-            X = null;
-            Discord = null;
-        }
     }
 }

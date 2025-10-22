@@ -151,6 +151,7 @@
     <Compile Include="ClienteServicios\Wcf\PerfilService.cs" />
     <Compile Include="ClienteServicios\Wcf\VerificarCodigoService.cs" />
     <Compile Include="Sesiones\SesionUsuarioActual.cs" />
+    <Compile Include="Modelo\UsuarioAutenticado.cs" />
     <Compile Include="Utilidades\AvatarHelper.cs" />
     <Compile Include="Utilidades\AvisoHelper.cs" />
     <Compile Include="Utilidades\ControlVisualHelper.cs" />
