@@ -8,13 +8,13 @@ using System.Windows;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Amigos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Idiomas;
 using PictionaryMusicalCliente.Servicios.Wcf;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -213,7 +213,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 await _amigosService.SuscribirAsync(_nombreUsuarioSesion).ConfigureAwait(false);
                 _suscripcionActiva = true;
 
-                IReadOnlyList<Amigo> listaActual = _listaAmigosService.ListaActual;
+                IReadOnlyList<DTOs.AmigoDTO> listaActual = _listaAmigosService.ListaActual;
                 EjecutarEnDispatcher(() => ActualizarAmigos(listaActual));
 
             }
@@ -288,12 +288,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 ?? IdiomasDisponibles.FirstOrDefault();
         }
 
-        private void ListaAmigosService_ListaActualizada(object sender, IReadOnlyList<Amigo> amigos)
+        private void ListaAmigosService_ListaActualizada(object sender, IReadOnlyList<DTOs.AmigoDTO> amigos)
         {
             EjecutarEnDispatcher(() => ActualizarAmigos(amigos));
         }
 
-        private void ActualizarAmigos(IReadOnlyList<Amigo> amigos)
+        private void ActualizarAmigos(IReadOnlyList<DTOs.AmigoDTO> amigos)
         {
             if (Amigos == null)
                 Amigos = new ObservableCollection<string>();
