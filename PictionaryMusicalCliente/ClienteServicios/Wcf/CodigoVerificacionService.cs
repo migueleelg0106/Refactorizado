@@ -1,21 +1,20 @@
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.Modelo.Cuentas;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using DTOs = global::Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.Servicios.Wcf
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
     public class CodigoVerificacionService : ICodigoVerificacionService
     {
         private const string CodigoVerificacionEndpoint = "BasicHttpBinding_ICodigoVerificacionManejador";
         private const string CuentaEndpoint = "BasicHttpBinding_ICuentaManejador";
 
-        public async Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(DTOs.SolicitudRegistroCuentaDTO solicitud)
+        public async Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(DTOs.NuevaCuentaDTO solicitud)
         {
             if (solicitud == null)
                 throw new ArgumentNullException(nameof(solicitud));
@@ -24,32 +23,9 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                var dto = new DTOs.NuevaCuentaDTO
-                {
-                    Usuario = solicitud.Usuario,
-                    Correo = solicitud.Correo,
-                    Nombre = solicitud.Nombre,
-                    Apellido = solicitud.Apellido,
-                    Contrasena = solicitud.Contrasena,
-                    AvatarRutaRelativa = solicitud.AvatarRutaRelativa
-                };
-
-                DTOs.ResultadoSolicitudCodigoDTO resultado = await WcfClientHelper.UsarAsync(
-                    cliente,
-                    c => c.SolicitarCodigoVerificacionAsync(dto))
+                return await WcfClientHelper
+                    .UsarAsync(cliente, c => c.SolicitarCodigoVerificacionAsync(solicitud))
                     .ConfigureAwait(false);
-
-                if (resultado == null)
-                    return null;
-
-                return new DTOs.ResultadoSolicitudCodigoDTO
-                {
-                    CodigoEnviado = resultado.CodigoEnviado,
-                    UsuarioYaRegistrado = resultado.UsuarioYaRegistrado,
-                    CorreoYaRegistrado = resultado.CorreoYaRegistrado,
-                    Mensaje = resultado.Mensaje,
-                    TokenCodigo = resultado.TokenCodigo
-                };
             }
             catch (FaultException ex)
             {
@@ -85,25 +61,12 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             {
                 var dto = new DTOs.ReenviarCodigoVerificacionDTO
                 {
-                    TokenCodigo = tokenCodigo
+                    TokenCodigo = tokenCodigo.Trim()
                 };
 
-                DTOs.ResultadoSolicitudCodigoDTO resultado = await WcfClientHelper.UsarAsync(
-                    cliente,
-                    c => c.ReenviarCodigoVerificacionAsync(dto))
+                return await WcfClientHelper
+                    .UsarAsync(cliente, c => c.ReenviarCodigoVerificacionAsync(dto))
                     .ConfigureAwait(false);
-
-                if (resultado == null)
-                    return null;
-
-                return new DTOs.ResultadoSolicitudCodigoDTO
-                {
-                    CodigoEnviado = resultado.CodigoEnviado,
-                    UsuarioYaRegistrado = resultado.UsuarioYaRegistrado,
-                    CorreoYaRegistrado = resultado.CorreoYaRegistrado,
-                    Mensaje = resultado.Mensaje,
-                    TokenCodigo = resultado.TokenCodigo
-                };
             }
             catch (FaultException ex)
             {
@@ -146,21 +109,9 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     CodigoIngresado = codigoIngresado
                 };
 
-                DTOs.ResultadoRegistroCuentaDTO resultado = await WcfClientHelper.UsarAsync(
-                    cliente,
-                    c => c.ConfirmarCodigoVerificacionAsync(dto))
+                return await WcfClientHelper
+                    .UsarAsync(cliente, c => c.ConfirmarCodigoVerificacionAsync(dto))
                     .ConfigureAwait(false);
-
-                if (resultado == null)
-                    return null;
-
-                return new DTOs.ResultadoRegistroCuentaDTO
-                {
-                    RegistroExitoso = resultado.RegistroExitoso,
-                    UsuarioYaRegistrado = resultado.UsuarioYaRegistrado,
-                    CorreoYaRegistrado = resultado.CorreoYaRegistrado,
-                    Mensaje = resultado.Mensaje
-                };
             }
             catch (FaultException ex)
             {
