@@ -27,6 +27,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly ISeleccionarAvatarService _seleccionarAvatarService;
         private readonly ICambioContrasenaService _cambioContrasenaService;
         private readonly IRecuperacionCuentaDialogService _recuperacionCuentaDialogService;
+        private readonly IAvatarService _avatarService;
 
         private readonly Dictionary<string, RedSocialItem> _redesPorNombre;
 
@@ -45,12 +46,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             IPerfilService perfilService,
             ISeleccionarAvatarService seleccionarAvatarService,
             ICambioContrasenaService cambioContrasenaService,
-            IRecuperacionCuentaDialogService recuperacionCuentaDialogService)
+            IRecuperacionCuentaDialogService recuperacionCuentaDialogService,
+            IAvatarService avatarService)
         {
             _perfilService = perfilService ?? throw new ArgumentNullException(nameof(perfilService));
             _seleccionarAvatarService = seleccionarAvatarService ?? throw new ArgumentNullException(nameof(seleccionarAvatarService));
             _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
             _recuperacionCuentaDialogService = recuperacionCuentaDialogService ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogService));
+            _avatarService = avatarService ?? throw new ArgumentNullException(nameof(avatarService));
 
             RedesSociales = CrearRedesSociales();
             _redesPorNombre = RedesSociales.ToDictionary(r => r.Nombre, StringComparer.OrdinalIgnoreCase);
@@ -158,6 +161,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
+                await CargarCatalogoAvataresAsync().ConfigureAwait(true);
+
                 DTOs.UsuarioDTO perfil = await _perfilService
                     .ObtenerPerfilAsync(sesion.IdUsuario).ConfigureAwait(true);
 
@@ -381,7 +386,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             AvatarSeleccionadoNombre = avatar.Nombre;
             AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
-            AvatarSeleccionadoImagen = avatar.Imagen;
+            AvatarSeleccionadoImagen = AvatarHelper.ObtenerImagen(avatar);
         }
 
         private void EstablecerIdentificador(string redSocial, string valor)
@@ -512,6 +517,24 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
 
             SesionUsuarioActual.Instancia.EstablecerUsuario(perfil);
+        }
+
+        private async Task CargarCatalogoAvataresAsync()
+        {
+            try
+            {
+                IReadOnlyList<ObjetoAvatar> avatares = await _avatarService.ObtenerCatalogoAsync()
+                    .ConfigureAwait(true);
+
+                if (avatares != null && avatares.Count > 0)
+                {
+                    AvatarHelper.ActualizarCatalogo(avatares);
+                }
+            }
+            catch (ServicioException ex)
+            {
+                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoServidorInformacionAvatar);
+            }
         }
 
         public class RedSocialItem : BaseVistaModelo
