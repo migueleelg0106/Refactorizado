@@ -15,17 +15,59 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="ReenviarCodigoVerificacion">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="solicitud" nillable="true" type="q3:ReenviarCodigoVerificacionDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReenviarCodigoVerificacionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="ReenviarCodigoVerificacionResult" nillable="true" type="q4:ResultadoSolicitudCodigoDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="ConfirmarCodigoVerificacion">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="confirmacion" nillable="true" type="q3:ConfirmarCodigoVerificacionDTO" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="confirmacion" nillable="true" type="q5:ConfirmarCodigoDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="ConfirmarCodigoVerificacionResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="ConfirmarCodigoVerificacionResult" nillable="true" type="q4:ResultadoRegistroCuentaDTO" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="ConfirmarCodigoVerificacionResult" nillable="true" type="q6:ResultadoRegistroCuentaDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SolicitarCodigoRecuperacion">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="solicitud" nillable="true" type="q7:SolicitudRecuperarCuentaDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SolicitarCodigoRecuperacionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="SolicitarCodigoRecuperacionResult" nillable="true" type="q8:ResultadoSolicitudRecuperacionDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ConfirmarCodigoRecuperacion">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="confirmacion" nillable="true" type="q9:ConfirmarCodigoDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ConfirmarCodigoRecuperacionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="ConfirmarCodigoRecuperacionResult" nillable="true" type="q10:ResultadoOperacionDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

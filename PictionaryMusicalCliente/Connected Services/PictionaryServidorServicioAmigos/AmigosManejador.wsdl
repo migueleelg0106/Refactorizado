@@ -619,7 +619,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>http://localhost:8086/Pictionary/Amigos/Amigos</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>DESKTOP-JQHH8D5\Usuario</Upn>
+          <Upn>URIEL\uriel</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>
@@ -628,7 +628,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>net.tcp://localhost:8096/Pictionary/Amigos/Amigos</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>DESKTOP-JQHH8D5\Usuario</Upn>
+          <Upn>URIEL\uriel</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>

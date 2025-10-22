@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="5ba08038-0f93-4a50-adea-fa60a7406025" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="f5bb5687-43be-45bc-a22d-4415f35a36a3" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -13,8 +13,10 @@
     <GenerateSerializableTypes>true</GenerateSerializableTypes>
     <Serializer>Auto</Serializer>
     <UseSerializerForFaults>true</UseSerializerForFaults>
-    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
-    <ReferencedAssemblies />
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies>
+      <ReferencedAssembly AssemblyName="Servicios" />
+    </ReferencedAssemblies>
     <ReferencedDataContractTypes />
     <ServiceContractMappings />
   </ClientOptions>
@@ -22,11 +24,11 @@
     <MetadataSource Address="http://localhost:8086/Pictionary/Amigos" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="AmigosManejador.wsdl" MetadataType="Wsdl" ID="e09053e3-f595-426b-ae0b-c71ed0b7fb83" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?wsdl" />
-    <MetadataFile FileName="Amigos.xsd" MetadataType="Schema" ID="3015263d-99dc-40f3-ac41-ce52cee8003e" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd0" />
-    <MetadataFile FileName="Amigos.disco" MetadataType="Disco" ID="3ae6092a-6408-4dda-bee8-5c4c8c821c99" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?disco" />
-    <MetadataFile FileName="Amigos1.xsd" MetadataType="Schema" ID="6964f04b-2327-41f9-b1f7-b86b02687981" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd2" />
-    <MetadataFile FileName="Amigos2.xsd" MetadataType="Schema" ID="1ccc5b81-7932-4e46-8f54-b14f7eaa8613" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd1" />
+    <MetadataFile FileName="AmigosManejador.wsdl" MetadataType="Wsdl" ID="2453ddf1-9399-4392-b738-87177ac575e2" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?wsdl" />
+    <MetadataFile FileName="Amigos.xsd" MetadataType="Schema" ID="25458336-67ee-4a70-9799-c0ae793c6233" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd0" />
+    <MetadataFile FileName="Amigos.disco" MetadataType="Disco" ID="8028dacc-57f6-41dc-8e41-2df5a80ac2e4" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?disco" />
+    <MetadataFile FileName="Amigos1.xsd" MetadataType="Schema" ID="3bd0effc-8d56-4ae3-9575-1327a1812e29" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd2" />
+    <MetadataFile FileName="Amigos2.xsd" MetadataType="Schema" ID="f809793b-c8ff-40f5-9169-cd8038e1c04d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

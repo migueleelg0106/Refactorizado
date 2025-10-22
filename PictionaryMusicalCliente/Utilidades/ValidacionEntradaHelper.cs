@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
-using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Utilidades
 {
@@ -14,24 +14,24 @@ namespace PictionaryMusicalCliente.Utilidades
             @"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-\[\]{};:'"",.<>/?]).{8,15}$",
             RegexOptions.Compiled);
 
-        public static ResultadoOperacion ValidarUsuario(string usuario)
+        public static DTOs.ResultadoOperacionDTO ValidarUsuario(string usuario)
         {
             return ValidarCampoObligatorio(usuario, Lang.errorTextoCampoObligatorio);
         }
 
-        public static ResultadoOperacion ValidarNombre(string nombre)
+        public static DTOs.ResultadoOperacionDTO ValidarNombre(string nombre)
         {
             return ValidarCampoObligatorio(nombre, Lang.errorTextoNombreObligatorioLongitud);
         }
 
-        public static ResultadoOperacion ValidarApellido(string apellido)
+        public static DTOs.ResultadoOperacionDTO ValidarApellido(string apellido)
         {
             return ValidarCampoObligatorio(apellido, Lang.errorTextoApellidoObligatorioLongitud);
         }
 
-        public static ResultadoOperacion ValidarCorreo(string correo)
+        public static DTOs.ResultadoOperacionDTO ValidarCorreo(string correo)
         {
-            ResultadoOperacion resultado = ValidarCampoObligatorio(correo,
+            DTOs.ResultadoOperacionDTO resultado = ValidarCampoObligatorio(correo,
                 Lang.errorTextoCorreoInvalido);
 
             if (!resultado.Exito)
@@ -43,46 +43,46 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (!CorreoRegex.IsMatch(correoNormalizado))
             {
-                return ResultadoOperacion.Fallo(Lang.errorTextoCorreoInvalido);
+                return DTOs.ResultadoOperacionDTO.Fallo(Lang.errorTextoCorreoInvalido);
             }
 
-            return ResultadoOperacion.Exitoso();
+            return DTOs.ResultadoOperacionDTO.Exitoso();
         }
 
-        public static ResultadoOperacion ValidarContrasena(string contrasena)
+        public static DTOs.ResultadoOperacionDTO ValidarContrasena(string contrasena)
         {
             if (string.IsNullOrWhiteSpace(contrasena))
             {
-                return ResultadoOperacion.Fallo(Lang.errorTextoCampoObligatorio);
+                return DTOs.ResultadoOperacionDTO.Fallo(Lang.errorTextoCampoObligatorio);
             }
 
             string contrasenaNormalizada = contrasena.Trim();
 
             if (!ContrasenaRegex.IsMatch(contrasenaNormalizada))
             {
-                return ResultadoOperacion.Fallo(Lang.errorTextoContrasenaFormato);
+                return DTOs.ResultadoOperacionDTO.Fallo(Lang.errorTextoContrasenaFormato);
             }
 
-            return ResultadoOperacion.Exitoso();
+            return DTOs.ResultadoOperacionDTO.Exitoso();
         }
 
-        private static ResultadoOperacion ValidarCampoObligatorio(
+        private static DTOs.ResultadoOperacionDTO    ValidarCampoObligatorio(
             string valor,
             string mensajeCampoVacio)
         {
             if (string.IsNullOrWhiteSpace(valor))
             {
-                return ResultadoOperacion.Fallo(mensajeCampoVacio);
+                return DTOs.ResultadoOperacionDTO.Fallo(mensajeCampoVacio);
             }
 
             string valorNormalizado = valor.Trim();
 
             if (valorNormalizado.Length == 0)
             {
-                return ResultadoOperacion.Fallo(mensajeCampoVacio);
+                return DTOs.ResultadoOperacionDTO.Fallo(mensajeCampoVacio);
             }
 
-            return ResultadoOperacion.Exitoso();
+            return DTOs.ResultadoOperacionDTO.Exitoso();
         }
     }
 }

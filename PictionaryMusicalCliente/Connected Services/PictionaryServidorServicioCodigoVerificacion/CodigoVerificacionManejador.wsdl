@@ -42,20 +42,50 @@
   <wsdl:message name="ICodigoVerificacionManejador_SolicitarCodigoVerificacion_OutputMessage">
     <wsdl:part name="parameters" element="tns:SolicitarCodigoVerificacionResponse" />
   </wsdl:message>
+  <wsdl:message name="ICodigoVerificacionManejador_ReenviarCodigoVerificacion_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReenviarCodigoVerificacion" />
+  </wsdl:message>
+  <wsdl:message name="ICodigoVerificacionManejador_ReenviarCodigoVerificacion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReenviarCodigoVerificacionResponse" />
+  </wsdl:message>
   <wsdl:message name="ICodigoVerificacionManejador_ConfirmarCodigoVerificacion_InputMessage">
     <wsdl:part name="parameters" element="tns:ConfirmarCodigoVerificacion" />
   </wsdl:message>
   <wsdl:message name="ICodigoVerificacionManejador_ConfirmarCodigoVerificacion_OutputMessage">
     <wsdl:part name="parameters" element="tns:ConfirmarCodigoVerificacionResponse" />
   </wsdl:message>
+  <wsdl:message name="ICodigoVerificacionManejador_SolicitarCodigoRecuperacion_InputMessage">
+    <wsdl:part name="parameters" element="tns:SolicitarCodigoRecuperacion" />
+  </wsdl:message>
+  <wsdl:message name="ICodigoVerificacionManejador_SolicitarCodigoRecuperacion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SolicitarCodigoRecuperacionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICodigoVerificacionManejador_ConfirmarCodigoRecuperacion_InputMessage">
+    <wsdl:part name="parameters" element="tns:ConfirmarCodigoRecuperacion" />
+  </wsdl:message>
+  <wsdl:message name="ICodigoVerificacionManejador_ConfirmarCodigoRecuperacion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConfirmarCodigoRecuperacionResponse" />
+  </wsdl:message>
   <wsdl:portType name="ICodigoVerificacionManejador">
     <wsdl:operation name="SolicitarCodigoVerificacion">
       <wsdl:input wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoVerificacion" message="tns:ICodigoVerificacionManejador_SolicitarCodigoVerificacion_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoVerificacionResponse" message="tns:ICodigoVerificacionManejador_SolicitarCodigoVerificacion_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="ReenviarCodigoVerificacion">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/ReenviarCodigoVerificacion" message="tns:ICodigoVerificacionManejador_ReenviarCodigoVerificacion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/ReenviarCodigoVerificacionResponse" message="tns:ICodigoVerificacionManejador_ReenviarCodigoVerificacion_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="ConfirmarCodigoVerificacion">
       <wsdl:input wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoVerificacion" message="tns:ICodigoVerificacionManejador_ConfirmarCodigoVerificacion_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoVerificacionResponse" message="tns:ICodigoVerificacionManejador_ConfirmarCodigoVerificacion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SolicitarCodigoRecuperacion">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoRecuperacion" message="tns:ICodigoVerificacionManejador_SolicitarCodigoRecuperacion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoRecuperacionResponse" message="tns:ICodigoVerificacionManejador_SolicitarCodigoRecuperacion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmarCodigoRecuperacion">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoRecuperacion" message="tns:ICodigoVerificacionManejador_ConfirmarCodigoRecuperacion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoRecuperacionResponse" message="tns:ICodigoVerificacionManejador_ConfirmarCodigoRecuperacion_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_ICodigoVerificacionManejador" type="tns:ICodigoVerificacionManejador">
@@ -69,8 +99,35 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ReenviarCodigoVerificacion">
+      <soap:operation soapAction="http://tempuri.org/ICodigoVerificacionManejador/ReenviarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="ConfirmarCodigoVerificacion">
       <soap:operation soapAction="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SolicitarCodigoRecuperacion">
+      <soap:operation soapAction="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoRecuperacion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmarCodigoRecuperacion">
+      <soap:operation soapAction="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoRecuperacion" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -91,8 +148,35 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ReenviarCodigoVerificacion">
+      <soap12:operation soapAction="http://tempuri.org/ICodigoVerificacionManejador/ReenviarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="ConfirmarCodigoVerificacion">
       <soap12:operation soapAction="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SolicitarCodigoRecuperacion">
+      <soap12:operation soapAction="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoRecuperacion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmarCodigoRecuperacion">
+      <soap12:operation soapAction="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoRecuperacion" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -110,7 +194,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>net.tcp://localhost:8096/Pictionary/CodigoVerificacion/CodigoVerificacion</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>DESKTOP-JQHH8D5\Usuario</Upn>
+          <Upn>URIEL\uriel</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>

@@ -2,12 +2,12 @@
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:complexType name="NuevaCuentaDTO">
     <xs:sequence>
-      <xs:element minOccurs="0" name="Apellido" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="AvatarRutaRelativa" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Contrasena" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Correo" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Nombre" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Usuario" nillable="true" type="xs:string" />
+      <xs:element name="Apellido" nillable="true" type="xs:string" />
+      <xs:element name="AvatarRutaRelativa" nillable="true" type="xs:string" />
+      <xs:element name="Contrasena" nillable="true" type="xs:string" />
+      <xs:element name="Correo" nillable="true" type="xs:string" />
+      <xs:element name="Nombre" nillable="true" type="xs:string" />
+      <xs:element name="Usuario" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="NuevaCuentaDTO" nillable="true" type="tns:NuevaCuentaDTO" />
@@ -21,10 +21,16 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ResultadoSolicitudCodigoDTO" nillable="true" type="tns:ResultadoSolicitudCodigoDTO" />
+  <xs:complexType name="ReenviarCodigoVerificacionDTO">
+    <xs:sequence>
+      <xs:element name="TokenCodigo" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReenviarCodigoVerificacionDTO" nillable="true" type="tns:ReenviarCodigoVerificacionDTO" />
   <xs:complexType name="ConfirmarCodigoDTO">
     <xs:sequence>
-      <xs:element minOccurs="0" name="CodigoIngresado" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="TokenCodigo" nillable="true" type="xs:string" />
+      <xs:element name="CodigoIngresado" nillable="true" type="xs:string" />
+      <xs:element name="TokenCodigo" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ConfirmarCodigoDTO" nillable="true" type="tns:ConfirmarCodigoDTO" />
@@ -37,4 +43,27 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ResultadoRegistroCuentaDTO" nillable="true" type="tns:ResultadoRegistroCuentaDTO" />
+  <xs:complexType name="SolicitudRecuperarCuentaDTO">
+    <xs:sequence>
+      <xs:element name="Identificador" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SolicitudRecuperarCuentaDTO" nillable="true" type="tns:SolicitudRecuperarCuentaDTO" />
+  <xs:complexType name="ResultadoSolicitudRecuperacionDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CodigoEnviado" type="xs:boolean" />
+      <xs:element minOccurs="0" name="CorreoDestino" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CuentaEncontrada" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TokenCodigo" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ResultadoSolicitudRecuperacionDTO" nillable="true" type="tns:ResultadoSolicitudRecuperacionDTO" />
+  <xs:complexType name="ResultadoOperacionDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OperacionExitosa" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ResultadoOperacionDTO" nillable="true" type="tns:ResultadoOperacionDTO" />
 </xs:schema>

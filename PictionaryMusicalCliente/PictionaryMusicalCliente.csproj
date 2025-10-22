@@ -36,6 +36,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Datos">
+      <HintPath>..\PictionayMusicalServidor\Servicios\bin\Debug\Datos.dll</HintPath>
+    </Reference>
+    <Reference Include="Servicios">
+      <HintPath>..\PictionayMusicalServidor\Servicios\bin\Debug\Servicios.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
@@ -68,6 +74,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioAvatares\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioCambioContrasena\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -79,6 +90,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioCuenta\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -103,75 +119,51 @@
     <Compile Include="Convertidores\ConvertidorCadenaVaciaVisibilidad.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoAvataresLocales.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoImagenesPerfilLocales.cs" />
-    <Compile Include="Modelo\Amigos\Amigo.cs" />
-    <Compile Include="Modelo\Amigos\SolicitudAmistad.cs" />
     <Compile Include="Modelo\ObjetoAvatar.cs" />
-    <Compile Include="Modelo\ResultadoOperacion.cs" />
-    <Compile Include="Modelo\UsuarioAutenticado.cs" />
-    <Compile Include="Modelo\Cuentas\ResultadoInicioSesion.cs" />
-    <Compile Include="Modelo\Cuentas\ResultadoSolicitudCodigo.cs" />
-    <Compile Include="Modelo\Cuentas\ResultadoRegistroCuenta.cs" />
-    <Compile Include="Modelo\Cuentas\ResultadoSolicitudRecuperacion.cs" />
-    <Compile Include="Modelo\Cuentas\SolicitudInicioSesion.cs" />
-    <Compile Include="Modelo\Cuentas\SolicitudRegistroCuenta.cs" />
-    <Compile Include="Modelo\Cuentas\UsuarioSesion.cs" />
     <Compile Include="Modelo\IdiomaOpcion.cs" />
-    <Compile Include="Modelo\Cuentas\ActualizarPerfilSolicitud.cs" />
-    <Compile Include="Modelo\Cuentas\VerificacionCodigoResultados.cs" />
-    <Compile Include="Servicios\Abstracciones\IAvatarService.cs" />
-    <Compile Include="Servicios\Abstracciones\ICambioContrasenaService.cs" />
-    <Compile Include="Servicios\Abstracciones\IAmigosService.cs" />
-    <Compile Include="Servicios\Abstracciones\IListaAmigosService.cs" />
-    <Compile Include="Servicios\Abstracciones\ICodigoVerificacionService.cs" />
-    <Compile Include="Servicios\Abstracciones\IClasificacionService.cs" />
-    <Compile Include="Servicios\Abstracciones\ICuentaService.cs" />
-    <Compile Include="Servicios\Abstracciones\ILocalizacionService.cs" />
-    <Compile Include="Servicios\Abstracciones\IInicioSesionService.cs" />
-    <Compile Include="Servicios\Abstracciones\IRecuperacionCuentaDialogService.cs" />
-    <Compile Include="Servicios\Abstracciones\ISeleccionarAvatarService.cs" />
-    <Compile Include="Servicios\Abstracciones\IVerificarCodigoDialogService.cs" />
-    <Compile Include="Servicios\Abstracciones\IPerfilService.cs" />
-    <Compile Include="Servicios\Abstracciones\IVerificarCodigoService.cs" />
-    <Compile Include="Servicios\Dialogos\RecuperacionCuentaDialogService.cs" />
-    <Compile Include="Servicios\Dialogos\SeleccionarAvatarDialogService.cs" />
-    <Compile Include="Servicios\Dialogos\VerificarCodigoDialogService.cs" />
-    <Compile Include="Servicios\Idiomas\LocalizacionService.cs" />
-    <Compile Include="Servicios\ServicioException.cs" />
-    <Compile Include="Servicios\Wcf\AvatarService.cs" />
-    <Compile Include="Servicios\Wcf\CambioContrasenaService.cs" />
-    <Compile Include="Servicios\Wcf\ClasificacionService.cs" />
-    <Compile Include="Servicios\Wcf\CodigoVerificacionService.cs" />
-    <Compile Include="Servicios\Wcf\CuentaService.cs" />
-    <Compile Include="Servicios\Wcf\AmigosService.cs" />
-    <Compile Include="Servicios\Wcf\ListaAmigosService.cs" />
-    <Compile Include="Servicios\Wcf\InicioSesionService.cs" />
-    <Compile Include="Servicios\Wcf\PerfilService.cs" />
-    <Compile Include="Servicios\Wcf\VerificarCodigoService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IAvatarService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\ICambioContrasenaService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IAmigosService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IListaAmigosService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\ICodigoVerificacionService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IClasificacionService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\ICuentaService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\ILocalizacionService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IInicioSesionService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IRecuperacionCuentaDialogService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\ISeleccionarAvatarService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IVerificarCodigoDialogService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IPerfilService.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IVerificarCodigoService.cs" />
+    <Compile Include="ClienteServicios\Dialogos\RecuperacionCuentaDialogService.cs" />
+    <Compile Include="ClienteServicios\Dialogos\SeleccionarAvatarDialogService.cs" />
+    <Compile Include="ClienteServicios\Dialogos\VerificarCodigoDialogService.cs" />
+    <Compile Include="ClienteServicios\Idiomas\LocalizacionService.cs" />
+    <Compile Include="ClienteServicios\ServicioException.cs" />
+    <Compile Include="ClienteServicios\Wcf\AvatarService.cs" />
+    <Compile Include="ClienteServicios\Wcf\CambioContrasenaService.cs" />
+    <Compile Include="ClienteServicios\Wcf\ClasificacionService.cs" />
+    <Compile Include="ClienteServicios\Wcf\CodigoVerificacionService.cs" />
+    <Compile Include="ClienteServicios\Wcf\CuentaService.cs" />
+    <Compile Include="ClienteServicios\Wcf\AmigosService.cs" />
+    <Compile Include="ClienteServicios\Wcf\ListaAmigosService.cs" />
+    <Compile Include="ClienteServicios\Wcf\InicioSesionService.cs" />
+    <Compile Include="ClienteServicios\Wcf\PerfilService.cs" />
+    <Compile Include="ClienteServicios\Wcf\VerificarCodigoService.cs" />
     <Compile Include="Sesiones\SesionUsuarioActual.cs" />
     <Compile Include="Utilidades\AvatarHelper.cs" />
     <Compile Include="Utilidades\AvisoHelper.cs" />
     <Compile Include="Utilidades\ControlVisualHelper.cs" />
     <Compile Include="Utilidades\Idiomas\LocalizacionContexto.cs" />
     <Compile Include="Utilidades\ValidacionEntradaHelper.cs" />
-    <Compile Include="Servicios\Wcf\Helpers\AvatarRutaHelper.cs" />
-    <Compile Include="Servicios\Wcf\Helpers\AvatarServicioHelper.cs" />
-    <Compile Include="Servicios\Wcf\Helpers\CodigoVerificacionServicioHelper.cs" />
-    <Compile Include="Servicios\Wcf\Helpers\ErrorServicioHelper.cs" />
-    <Compile Include="Servicios\Wcf\Helpers\MensajeServidorHelper.cs" />
-    <Compile Include="Servicios\Wcf\Helpers\UsuarioMapper.cs" />
-    <Compile Include="Servicios\Wcf\Helpers\WcfClientHelper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Helpers\AvatarRutaHelper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Helpers\AvatarServicioHelper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Helpers\CodigoVerificacionServicioHelper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Helpers\ErrorServicioHelper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Helpers\MensajeServidorHelper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Helpers\UsuarioMapper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Helpers\WcfClientHelper.cs" />
     <Compile Include="VistaModelo\BaseVistaModelo.cs" />
-    <Compile Include="Connected Services\PictionaryServidorServicioAvatares\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Connected Services\PictionaryServidorServicioCuenta\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Connected Services\PictionaryServidorServicioCuenta\VerificacionExtensions.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -308,9 +300,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioAvatares\CatalogoAvatares.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\PictionaryMusicalCliente.PictionaryServidorServicioAvatares.AvatarDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambiarContrasena.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -321,15 +310,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambiarContrasenaManejador.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena.ResultadoOperacionDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena.ResultadoSolicitudCodigoDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena.ResultadoSolicitudRecuperacionDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -340,9 +320,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioClasificacion\ClasificacionManejador.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioClasificacion\PictionaryMusicalCliente.PictionaryServidorServicioClasificacion.ClasificacionUsuarioDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -353,12 +330,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacionManejador.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoRegistroCuentaDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudCodigoDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -379,9 +350,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesionManejador.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\PictionaryMusicalCliente.PictionaryServidorServicioInicioSesion.ResultadoInicioSesionDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -392,9 +360,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigosManejador.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos.AmigoDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -405,12 +370,15 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioPerfil\PerfilManejador.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioPerfil\PictionaryMusicalCliente.PictionaryServidorServicioPerfil.ResultadoOperacionDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\PictionaryServidorServicioPerfil\PictionaryMusicalCliente.PictionaryServidorServicioPerfil.UsuarioDTO.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AmigoDTO.datasource" />
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AvatarDTO.datasource" />
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ClasificacionUsuarioDTO.datasource" />
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoInicioSesionDTO.datasource" />
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoOperacionDTO.datasource" />
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO.datasource" />
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO.datasource" />
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO.datasource" />
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.UsuarioDTO.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -444,30 +412,6 @@
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioInicioSesion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioListaAmigos\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioPerfil\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion.disco" />
@@ -651,21 +595,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos.disco" />
   </ItemGroup>
   <ItemGroup>
@@ -683,6 +612,51 @@
   <ItemGroup>
     <Resource Include="Recursos\Aceptar.png" />
     <Resource Include="Recursos\Rechazar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

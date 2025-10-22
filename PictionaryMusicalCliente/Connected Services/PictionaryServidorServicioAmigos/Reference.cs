@@ -9,86 +9,7 @@
 //------------------------------------------------------------------------------
 
 namespace PictionaryMusicalCliente.PictionaryServidorServicioAmigos {
-    using System.Runtime.Serialization;
-    using System;
     
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="SolicitudAmistadDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class SolicitudAmistadDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool SolicitudAceptadaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string UsuarioEmisorField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string UsuarioReceptorField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool SolicitudAceptada {
-            get {
-                return this.SolicitudAceptadaField;
-            }
-            set {
-                if ((this.SolicitudAceptadaField.Equals(value) != true)) {
-                    this.SolicitudAceptadaField = value;
-                    this.RaisePropertyChanged("SolicitudAceptada");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string UsuarioEmisor {
-            get {
-                return this.UsuarioEmisorField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.UsuarioEmisorField, value) != true)) {
-                    this.UsuarioEmisorField = value;
-                    this.RaisePropertyChanged("UsuarioEmisor");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string UsuarioReceptor {
-            get {
-                return this.UsuarioReceptorField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.UsuarioReceptorField, value) != true)) {
-                    this.UsuarioReceptorField = value;
-                    this.RaisePropertyChanged("UsuarioReceptor");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PictionaryServidorServicioAmigos.IAmigosManejador", CallbackContract=typeof(PictionaryMusicalCliente.PictionaryServidorServicioAmigos.IAmigosManejadorCallback))]
@@ -129,10 +50,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAmigos {
     public interface IAmigosManejadorCallback {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IAmigosManejador/SolicitudActualizada")]
-        void SolicitudActualizada(PictionaryMusicalCliente.PictionaryServidorServicioAmigos.SolicitudAmistadDTO solicitud);
+        void SolicitudActualizada(Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IAmigosManejador/AmistadEliminada")]
-        void AmistadEliminada(PictionaryMusicalCliente.PictionaryServidorServicioAmigos.SolicitudAmistadDTO solicitud);
+        void AmistadEliminada(Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]

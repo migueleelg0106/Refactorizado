@@ -9,70 +9,7 @@
 //------------------------------------------------------------------------------
 
 namespace PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos {
-    using System.Runtime.Serialization;
-    using System;
     
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="AmigoDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class AmigoDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int IdUsuarioField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string NombreUsuarioField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int IdUsuario {
-            get {
-                return this.IdUsuarioField;
-            }
-            set {
-                if ((this.IdUsuarioField.Equals(value) != true)) {
-                    this.IdUsuarioField = value;
-                    this.RaisePropertyChanged("IdUsuario");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string NombreUsuario {
-            get {
-                return this.NombreUsuarioField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.NombreUsuarioField, value) != true)) {
-                    this.NombreUsuarioField = value;
-                    this.RaisePropertyChanged("NombreUsuario");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PictionaryServidorServicioListaAmigos.IListaAmigosManejador", CallbackContract=typeof(PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos.IListaAmigosManejadorCallback))]
@@ -91,17 +28,17 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos {
         System.Threading.Tasks.Task CancelarSuscripcionAsync(string nombreUsuario);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IListaAmigosManejador/ObtenerAmigos", ReplyAction="http://tempuri.org/IListaAmigosManejador/ObtenerAmigosResponse")]
-        PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos.AmigoDTO[] ObtenerAmigos(string nombreUsuario);
+        Servicios.Contratos.DTOs.AmigoDTO[] ObtenerAmigos(string nombreUsuario);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IListaAmigosManejador/ObtenerAmigos", ReplyAction="http://tempuri.org/IListaAmigosManejador/ObtenerAmigosResponse")]
-        System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos.AmigoDTO[]> ObtenerAmigosAsync(string nombreUsuario);
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AmigoDTO[]> ObtenerAmigosAsync(string nombreUsuario);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IListaAmigosManejadorCallback {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IListaAmigosManejador/ListaAmigosActualizada")]
-        void ListaAmigosActualizada(PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos.AmigoDTO[] amigos);
+        void ListaAmigosActualizada(Servicios.Contratos.DTOs.AmigoDTO[] amigos);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -148,11 +85,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos {
             return base.Channel.CancelarSuscripcionAsync(nombreUsuario);
         }
         
-        public PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos.AmigoDTO[] ObtenerAmigos(string nombreUsuario) {
+        public Servicios.Contratos.DTOs.AmigoDTO[] ObtenerAmigos(string nombreUsuario) {
             return base.Channel.ObtenerAmigos(nombreUsuario);
         }
         
-        public System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos.AmigoDTO[]> ObtenerAmigosAsync(string nombreUsuario) {
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AmigoDTO[]> ObtenerAmigosAsync(string nombreUsuario) {
             return base.Channel.ObtenerAmigosAsync(nombreUsuario);
         }
     }

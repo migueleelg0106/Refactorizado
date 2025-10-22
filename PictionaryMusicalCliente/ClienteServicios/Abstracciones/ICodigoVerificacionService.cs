@@ -1,0 +1,14 @@
+using System.Threading.Tasks;
+using DTOs = global::Servicios.Contratos.DTOs;
+
+namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
+{
+    public interface ICodigoVerificacionService
+    {
+        Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(DTOs.SolicitudRegistroCuentaDTO solicitud);
+
+        Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo);
+
+        Task<DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado);
+    }
+}

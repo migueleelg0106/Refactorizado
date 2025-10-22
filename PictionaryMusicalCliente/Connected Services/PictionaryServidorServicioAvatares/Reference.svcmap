@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="15da4664-c0ee-449b-99e8-2f2d05d85545" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="a6a8fa12-6202-4d26-83fa-c1c35ae7914a" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -13,19 +13,22 @@
     <GenerateSerializableTypes>true</GenerateSerializableTypes>
     <Serializer>Auto</Serializer>
     <UseSerializerForFaults>true</UseSerializerForFaults>
-    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
-    <ReferencedAssemblies />
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies>
+      <ReferencedAssembly AssemblyName="Servicios" />
+    </ReferencedAssemblies>
     <ReferencedDataContractTypes />
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/Avatares?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8086/Pictionary/Avatares" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="CatalogoAvatares.wsdl" MetadataType="Wsdl" ID="f97cb2b9-d1aa-415a-a1d3-6862192fc000" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?wsdl" />
-    <MetadataFile FileName="Avatares.xsd" MetadataType="Schema" ID="7a58a818-baf4-4e71-96f7-fd1a4fe48574" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?xsd=xsd0" />
-    <MetadataFile FileName="Avatares1.xsd" MetadataType="Schema" ID="9a2a300a-f92e-4636-b4f8-00875d5cf35d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?xsd=xsd1" />
-    <MetadataFile FileName="Avatares2.xsd" MetadataType="Schema" ID="01f88b96-6239-482e-af8d-8af87b3da5fc" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?xsd=xsd2" />
+    <MetadataFile FileName="CatalogoAvatares.wsdl" MetadataType="Wsdl" ID="b79b88c2-ec35-431e-b51f-087a34fa051e" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?wsdl" />
+    <MetadataFile FileName="Avatares.xsd" MetadataType="Schema" ID="90593d1e-c36a-4d18-ad67-df093a1ddb91" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?xsd=xsd0" />
+    <MetadataFile FileName="Avatares.disco" MetadataType="Disco" ID="df2703f5-37e9-4008-a71d-60ba6bd721e9" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?disco" />
+    <MetadataFile FileName="Avatares1.xsd" MetadataType="Schema" ID="08369e26-948a-438e-8ec0-96fdb61f024f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?xsd=xsd1" />
+    <MetadataFile FileName="Avatares2.xsd" MetadataType="Schema" ID="b3bbd1ad-0f53-4b11-8b60-146a9bc7bf99" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?xsd=xsd2" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

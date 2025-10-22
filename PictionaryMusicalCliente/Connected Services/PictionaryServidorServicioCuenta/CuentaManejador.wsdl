@@ -36,6 +36,24 @@
       <xsd:import schemaLocation="http://localhost:8086/Pictionary/Cuenta?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" />
     </xsd:schema>
   </wsdl:types>
+  <wsdl:message name="ICuentaManejador_SolicitarCodigoVerificacion_InputMessage">
+    <wsdl:part name="parameters" element="tns:SolicitarCodigoVerificacion" />
+  </wsdl:message>
+  <wsdl:message name="ICuentaManejador_SolicitarCodigoVerificacion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SolicitarCodigoVerificacionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICuentaManejador_ReenviarCodigoVerificacion_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReenviarCodigoVerificacion" />
+  </wsdl:message>
+  <wsdl:message name="ICuentaManejador_ReenviarCodigoVerificacion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReenviarCodigoVerificacionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICuentaManejador_ConfirmarCodigoVerificacion_InputMessage">
+    <wsdl:part name="parameters" element="tns:ConfirmarCodigoVerificacion" />
+  </wsdl:message>
+  <wsdl:message name="ICuentaManejador_ConfirmarCodigoVerificacion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConfirmarCodigoVerificacionResponse" />
+  </wsdl:message>
   <wsdl:message name="ICuentaManejador_RegistrarCuenta_InputMessage">
     <wsdl:part name="parameters" element="tns:RegistrarCuenta" />
   </wsdl:message>
@@ -43,6 +61,18 @@
     <wsdl:part name="parameters" element="tns:RegistrarCuentaResponse" />
   </wsdl:message>
   <wsdl:portType name="ICuentaManejador">
+    <wsdl:operation name="SolicitarCodigoVerificacion">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICuentaManejador/SolicitarCodigoVerificacion" message="tns:ICuentaManejador_SolicitarCodigoVerificacion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICuentaManejador/SolicitarCodigoVerificacionResponse" message="tns:ICuentaManejador_SolicitarCodigoVerificacion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReenviarCodigoVerificacion">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacion" message="tns:ICuentaManejador_ReenviarCodigoVerificacion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacionResponse" message="tns:ICuentaManejador_ReenviarCodigoVerificacion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmarCodigoVerificacion">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacion" message="tns:ICuentaManejador_ConfirmarCodigoVerificacion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacionResponse" message="tns:ICuentaManejador_ConfirmarCodigoVerificacion_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="RegistrarCuenta">
       <wsdl:input wsaw:Action="http://tempuri.org/ICuentaManejador/RegistrarCuenta" message="tns:ICuentaManejador_RegistrarCuenta_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ICuentaManejador/RegistrarCuentaResponse" message="tns:ICuentaManejador_RegistrarCuenta_OutputMessage" />
@@ -50,6 +80,33 @@
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_ICuentaManejador" type="tns:ICuentaManejador">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SolicitarCodigoVerificacion">
+      <soap:operation soapAction="http://tempuri.org/ICuentaManejador/SolicitarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReenviarCodigoVerificacion">
+      <soap:operation soapAction="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmarCodigoVerificacion">
+      <soap:operation soapAction="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="RegistrarCuenta">
       <soap:operation soapAction="http://tempuri.org/ICuentaManejador/RegistrarCuenta" style="document" />
       <wsdl:input>
@@ -63,6 +120,33 @@
   <wsdl:binding name="NetTcpBinding_ICuentaManejador" type="tns:ICuentaManejador">
     <wsp:PolicyReference URI="#NetTcpBinding_ICuentaManejador_policy" />
     <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="SolicitarCodigoVerificacion">
+      <soap12:operation soapAction="http://tempuri.org/ICuentaManejador/SolicitarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReenviarCodigoVerificacion">
+      <soap12:operation soapAction="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmarCodigoVerificacion">
+      <soap12:operation soapAction="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="RegistrarCuenta">
       <soap12:operation soapAction="http://tempuri.org/ICuentaManejador/RegistrarCuenta" style="document" />
       <wsdl:input>
@@ -82,7 +166,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>net.tcp://localhost:8096/Pictionary/Cuenta/Cuenta</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>DESKTOP-JQHH8D5\Usuario</Upn>
+          <Upn>URIEL\uriel</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>

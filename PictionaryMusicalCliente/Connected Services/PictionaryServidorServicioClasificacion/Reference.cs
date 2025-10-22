@@ -9,96 +9,17 @@
 //------------------------------------------------------------------------------
 
 namespace PictionaryMusicalCliente.PictionaryServidorServicioClasificacion {
-    using System.Runtime.Serialization;
-    using System;
     
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ClasificacionUsuarioDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class ClasificacionUsuarioDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int PuntosField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int RondasGanadasField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string UsuarioField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Puntos {
-            get {
-                return this.PuntosField;
-            }
-            set {
-                if ((this.PuntosField.Equals(value) != true)) {
-                    this.PuntosField = value;
-                    this.RaisePropertyChanged("Puntos");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int RondasGanadas {
-            get {
-                return this.RondasGanadasField;
-            }
-            set {
-                if ((this.RondasGanadasField.Equals(value) != true)) {
-                    this.RondasGanadasField = value;
-                    this.RaisePropertyChanged("RondasGanadas");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Usuario {
-            get {
-                return this.UsuarioField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.UsuarioField, value) != true)) {
-                    this.UsuarioField = value;
-                    this.RaisePropertyChanged("Usuario");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PictionaryServidorServicioClasificacion.IClasificacionManejador")]
     public interface IClasificacionManejador {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IClasificacionManejador/ObtenerTopJugadores", ReplyAction="http://tempuri.org/IClasificacionManejador/ObtenerTopJugadoresResponse")]
-        PictionaryMusicalCliente.PictionaryServidorServicioClasificacion.ClasificacionUsuarioDTO[] ObtenerTopJugadores();
+        Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[] ObtenerTopJugadores();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IClasificacionManejador/ObtenerTopJugadores", ReplyAction="http://tempuri.org/IClasificacionManejador/ObtenerTopJugadoresResponse")]
-        System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioClasificacion.ClasificacionUsuarioDTO[]> ObtenerTopJugadoresAsync();
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[]> ObtenerTopJugadoresAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -128,11 +49,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioClasificacion {
                 base(binding, remoteAddress) {
         }
         
-        public PictionaryMusicalCliente.PictionaryServidorServicioClasificacion.ClasificacionUsuarioDTO[] ObtenerTopJugadores() {
+        public Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[] ObtenerTopJugadores() {
             return base.Channel.ObtenerTopJugadores();
         }
         
-        public System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioClasificacion.ClasificacionUsuarioDTO[]> ObtenerTopJugadoresAsync() {
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[]> ObtenerTopJugadoresAsync() {
             return base.Channel.ObtenerTopJugadoresAsync();
         }
     }

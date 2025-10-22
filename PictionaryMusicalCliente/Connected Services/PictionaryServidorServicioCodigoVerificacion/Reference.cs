@@ -9,657 +9,7 @@
 //------------------------------------------------------------------------------
 
 namespace PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion {
-    using System.Runtime.Serialization;
-    using System;
     
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="NuevaCuentaDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class NuevaCuentaDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ApellidoField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string AvatarRutaRelativaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ContrasenaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CorreoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string NombreField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string UsuarioField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Apellido {
-            get {
-                return this.ApellidoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ApellidoField, value) != true)) {
-                    this.ApellidoField = value;
-                    this.RaisePropertyChanged("Apellido");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string AvatarRutaRelativa {
-            get {
-                return this.AvatarRutaRelativaField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.AvatarRutaRelativaField, value) != true)) {
-                    this.AvatarRutaRelativaField = value;
-                    this.RaisePropertyChanged("AvatarRutaRelativa");
-                }
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Contrasena {
-            get {
-                return this.ContrasenaField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ContrasenaField, value) != true)) {
-                    this.ContrasenaField = value;
-                    this.RaisePropertyChanged("Contrasena");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Correo {
-            get {
-                return this.CorreoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CorreoField, value) != true)) {
-                    this.CorreoField = value;
-                    this.RaisePropertyChanged("Correo");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Nombre {
-            get {
-                return this.NombreField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.NombreField, value) != true)) {
-                    this.NombreField = value;
-                    this.RaisePropertyChanged("Nombre");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Usuario {
-            get {
-                return this.UsuarioField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.UsuarioField, value) != true)) {
-                    this.UsuarioField = value;
-                    this.RaisePropertyChanged("Usuario");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ResultadoSolicitudCodigoDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class ResultadoSolicitudCodigoDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool CodigoEnviadoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool CorreoYaRegistradoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MensajeField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TokenCodigoField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool UsuarioYaRegistradoField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool CodigoEnviado {
-            get {
-                return this.CodigoEnviadoField;
-            }
-            set {
-                if ((this.CodigoEnviadoField.Equals(value) != true)) {
-                    this.CodigoEnviadoField = value;
-                    this.RaisePropertyChanged("CodigoEnviado");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool CorreoYaRegistrado {
-            get {
-                return this.CorreoYaRegistradoField;
-            }
-            set {
-                if ((this.CorreoYaRegistradoField.Equals(value) != true)) {
-                    this.CorreoYaRegistradoField = value;
-                    this.RaisePropertyChanged("CorreoYaRegistrado");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Mensaje {
-            get {
-                return this.MensajeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MensajeField, value) != true)) {
-                    this.MensajeField = value;
-                    this.RaisePropertyChanged("Mensaje");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string TokenCodigo {
-            get {
-                return this.TokenCodigoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.TokenCodigoField, value) != true)) {
-                    this.TokenCodigoField = value;
-                    this.RaisePropertyChanged("TokenCodigo");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool UsuarioYaRegistrado {
-            get {
-                return this.UsuarioYaRegistradoField;
-            }
-            set {
-                if ((this.UsuarioYaRegistradoField.Equals(value) != true)) {
-                    this.UsuarioYaRegistradoField = value;
-                    this.RaisePropertyChanged("UsuarioYaRegistrado");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="SolicitudRecuperarCuentaDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class SolicitudRecuperarCuentaDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string IdentificadorField;
-
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Identificador {
-            get {
-                return this.IdentificadorField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.IdentificadorField, value) != true)) {
-                    this.IdentificadorField = value;
-                    this.RaisePropertyChanged("Identificador");
-                }
-            }
-        }
-
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ResultadoSolicitudRecuperacionDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class ResultadoSolicitudRecuperacionDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool CodigoEnviadoField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CorreoDestinoField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool CuentaEncontradaField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MensajeField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TokenCodigoField;
-
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool CodigoEnviado {
-            get {
-                return this.CodigoEnviadoField;
-            }
-            set {
-                if ((this.CodigoEnviadoField.Equals(value) != true)) {
-                    this.CodigoEnviadoField = value;
-                    this.RaisePropertyChanged("CodigoEnviado");
-                }
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CorreoDestino {
-            get {
-                return this.CorreoDestinoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CorreoDestinoField, value) != true)) {
-                    this.CorreoDestinoField = value;
-                    this.RaisePropertyChanged("CorreoDestino");
-                }
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool CuentaEncontrada {
-            get {
-                return this.CuentaEncontradaField;
-            }
-            set {
-                if ((this.CuentaEncontradaField.Equals(value) != true)) {
-                    this.CuentaEncontradaField = value;
-                    this.RaisePropertyChanged("CuentaEncontrada");
-                }
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Mensaje {
-            get {
-                return this.MensajeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MensajeField, value) != true)) {
-                    this.MensajeField = value;
-                    this.RaisePropertyChanged("Mensaje");
-                }
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string TokenCodigo {
-            get {
-                return this.TokenCodigoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.TokenCodigoField, value) != true)) {
-                    this.TokenCodigoField = value;
-                    this.RaisePropertyChanged("TokenCodigo");
-                }
-            }
-        }
-
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="SolicitudReenviarCodigoRecuperacionDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class SolicitudReenviarCodigoRecuperacionDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TokenCodigoField;
-
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string TokenCodigo {
-            get {
-                return this.TokenCodigoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.TokenCodigoField, value) != true)) {
-                    this.TokenCodigoField = value;
-                    this.RaisePropertyChanged("TokenCodigo");
-                }
-            }
-        }
-
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ResultadoOperacionDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class ResultadoOperacionDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MensajeField;
-
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool OperacionExitosaField;
-
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Mensaje {
-            get {
-                return this.MensajeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MensajeField, value) != true)) {
-                    this.MensajeField = value;
-                    this.RaisePropertyChanged("Mensaje");
-                }
-            }
-        }
-
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool OperacionExitosa {
-            get {
-                return this.OperacionExitosaField;
-            }
-            set {
-                if ((this.OperacionExitosaField.Equals(value) != true)) {
-                    this.OperacionExitosaField = value;
-                    this.RaisePropertyChanged("OperacionExitosa");
-                }
-            }
-        }
-
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ConfirmarCodigoDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class ConfirmarCodigoDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CodigoIngresadoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TokenCodigoField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CodigoIngresado {
-            get {
-                return this.CodigoIngresadoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CodigoIngresadoField, value) != true)) {
-                    this.CodigoIngresadoField = value;
-                    this.RaisePropertyChanged("CodigoIngresado");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string TokenCodigo {
-            get {
-                return this.TokenCodigoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.TokenCodigoField, value) != true)) {
-                    this.TokenCodigoField = value;
-                    this.RaisePropertyChanged("TokenCodigo");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ResultadoRegistroCuentaDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class ResultadoRegistroCuentaDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool CorreoYaRegistradoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MensajeField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool RegistroExitosoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool UsuarioYaRegistradoField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool CorreoYaRegistrado {
-            get {
-                return this.CorreoYaRegistradoField;
-            }
-            set {
-                if ((this.CorreoYaRegistradoField.Equals(value) != true)) {
-                    this.CorreoYaRegistradoField = value;
-                    this.RaisePropertyChanged("CorreoYaRegistrado");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Mensaje {
-            get {
-                return this.MensajeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MensajeField, value) != true)) {
-                    this.MensajeField = value;
-                    this.RaisePropertyChanged("Mensaje");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool RegistroExitoso {
-            get {
-                return this.RegistroExitosoField;
-            }
-            set {
-                if ((this.RegistroExitosoField.Equals(value) != true)) {
-                    this.RegistroExitosoField = value;
-                    this.RaisePropertyChanged("RegistroExitoso");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool UsuarioYaRegistrado {
-            get {
-                return this.UsuarioYaRegistradoField;
-            }
-            set {
-                if ((this.UsuarioYaRegistradoField.Equals(value) != true)) {
-                    this.UsuarioYaRegistradoField = value;
-                    this.RaisePropertyChanged("UsuarioYaRegistrado");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PictionaryServidorServicioCodigoVerificacion.ICodigoVerificacionManejador")]
@@ -667,35 +17,43 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion 
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoVerificacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoVerificacionRespon" +
             "se")]
-        PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.NuevaCuentaDTO nuevaCuenta);
+        Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoVerificacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoVerificacionRespon" +
             "se")]
-        System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudCodigoDTO> SolicitarCodigoVerificacionAsync(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.NuevaCuentaDTO nuevaCuenta);
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoVerificacionAsync(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/ReenviarCodigoVerificacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/ReenviarCodigoVerificacionRespons" +
+            "e")]
+        Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(Servicios.Contratos.DTOs.ReenviarCodigoVerificacionDTO solicitud);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/ReenviarCodigoVerificacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/ReenviarCodigoVerificacionRespons" +
+            "e")]
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(Servicios.Contratos.DTOs.ReenviarCodigoVerificacionDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoVerificacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoVerificacionRespon" +
             "se")]
-        PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ConfirmarCodigoDTO confirmacion);
+        Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoVerificacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoVerificacionRespon" +
             "se")]
-        System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ConfirmarCodigoDTO confirmacion);
-
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoRecuperacionRespon" +
             "se")]
-        PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.SolicitudRecuperarCuentaDTO solicitud);
-
+        Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/SolicitarCodigoRecuperacionRespon" +
             "se")]
-        System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.SolicitudRecuperarCuentaDTO solicitud);
-
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoRecuperacionRespon" +
             "se")]
-        PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ConfirmarCodigoDTO confirmacion);
-
+        Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICodigoVerificacionManejador/ConfirmarCodigoRecuperacionRespon" +
             "se")]
-        System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ConfirmarCodigoDTO confirmacion);
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -725,35 +83,43 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion 
                 base(binding, remoteAddress) {
         }
         
-        public PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.NuevaCuentaDTO nuevaCuenta) {
+        public Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
             return base.Channel.SolicitarCodigoVerificacion(nuevaCuenta);
         }
         
-        public System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudCodigoDTO> SolicitarCodigoVerificacionAsync(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.NuevaCuentaDTO nuevaCuenta) {
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoVerificacionAsync(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
             return base.Channel.SolicitarCodigoVerificacionAsync(nuevaCuenta);
         }
         
-        public PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ConfirmarCodigoDTO confirmacion) {
+        public Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(Servicios.Contratos.DTOs.ReenviarCodigoVerificacionDTO solicitud) {
+            return base.Channel.ReenviarCodigoVerificacion(solicitud);
+        }
+        
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(Servicios.Contratos.DTOs.ReenviarCodigoVerificacionDTO solicitud) {
+            return base.Channel.ReenviarCodigoVerificacionAsync(solicitud);
+        }
+        
+        public Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoVerificacion(confirmacion);
         }
         
-        public System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ConfirmarCodigoDTO confirmacion) {
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoVerificacionAsync(confirmacion);
         }
-
-        public PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.SolicitudRecuperarCuentaDTO solicitud) {
+        
+        public Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
             return base.Channel.SolicitarCodigoRecuperacion(solicitud);
         }
-
-        public System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.SolicitudRecuperarCuentaDTO solicitud) {
+        
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
             return base.Channel.SolicitarCodigoRecuperacionAsync(solicitud);
         }
-
-        public PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ConfirmarCodigoDTO confirmacion) {
+        
+        public Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoRecuperacion(confirmacion);
         }
-
-        public System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(PictionaryMusicalCliente.PictionaryServidorServicioCodigoVerificacion.ConfirmarCodigoDTO confirmacion) {
+        
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoRecuperacionAsync(confirmacion);
         }
     }

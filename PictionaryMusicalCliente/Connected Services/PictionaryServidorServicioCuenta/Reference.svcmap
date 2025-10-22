@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="43ec9f12-15b3-471d-8427-dd4d3dc4986f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="c9fe0a87-7c4d-4a47-aa16-9a342669d7a6" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -13,19 +13,22 @@
     <GenerateSerializableTypes>true</GenerateSerializableTypes>
     <Serializer>Auto</Serializer>
     <UseSerializerForFaults>true</UseSerializerForFaults>
-    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
-    <ReferencedAssemblies />
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies>
+      <ReferencedAssembly AssemblyName="Servicios" />
+    </ReferencedAssemblies>
     <ReferencedDataContractTypes />
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/Cuenta?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8086/Pictionary/Cuenta" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Cuenta.xsd" MetadataType="Schema" ID="51fbbc78-77ad-43b9-bff5-3ac93df5ff95" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Cuenta?xsd=xsd1" />
-    <MetadataFile FileName="Cuenta1.xsd" MetadataType="Schema" ID="85fcc74b-7ade-48e7-a686-a5067dba1c66" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Cuenta?xsd=xsd0" />
-    <MetadataFile FileName="CuentaManejador.wsdl" MetadataType="Wsdl" ID="64012ef8-6fea-4dc5-a4cd-377fcf3937a6" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Cuenta?wsdl" />
-    <MetadataFile FileName="Cuenta2.xsd" MetadataType="Schema" ID="baf83986-d6b9-4100-96d9-f4ce58c6d553" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Cuenta?xsd=xsd2" />
+    <MetadataFile FileName="Cuenta.xsd" MetadataType="Schema" ID="5eff1ad9-c590-4321-b7a7-fee06564fd83" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Cuenta?xsd=xsd1" />
+    <MetadataFile FileName="Cuenta1.xsd" MetadataType="Schema" ID="12eb50c6-1f70-4768-9732-12b942a11293" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Cuenta?xsd=xsd0" />
+    <MetadataFile FileName="CuentaManejador.wsdl" MetadataType="Wsdl" ID="e334904c-a14c-4b6d-87ab-6cfbd08ddd06" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Cuenta?wsdl" />
+    <MetadataFile FileName="Cuenta2.xsd" MetadataType="Schema" ID="abf2d09d-a2f2-4563-ba1d-e74e16e185c1" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Cuenta?xsd=xsd2" />
+    <MetadataFile FileName="Cuenta.disco" MetadataType="Disco" ID="d6bda9e3-6626-4277-a214-b64fd95a5fbc" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Cuenta?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -9,96 +9,17 @@
 //------------------------------------------------------------------------------
 
 namespace PictionaryMusicalCliente.PictionaryServidorServicioAvatares {
-    using System.Runtime.Serialization;
-    using System;
     
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="AvatarDTO", Namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs")]
-    [System.SerializableAttribute()]
-    public partial class AvatarDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int IdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string NombreField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string RutaRelativaField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Id {
-            get {
-                return this.IdField;
-            }
-            set {
-                if ((this.IdField.Equals(value) != true)) {
-                    this.IdField = value;
-                    this.RaisePropertyChanged("Id");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Nombre {
-            get {
-                return this.NombreField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.NombreField, value) != true)) {
-                    this.NombreField = value;
-                    this.RaisePropertyChanged("Nombre");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string RutaRelativa {
-            get {
-                return this.RutaRelativaField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.RutaRelativaField, value) != true)) {
-                    this.RutaRelativaField = value;
-                    this.RaisePropertyChanged("RutaRelativa");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PictionaryServidorServicioAvatares.ICatalogoAvatares")]
     public interface ICatalogoAvatares {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponiblesResponse")]
-        PictionaryMusicalCliente.PictionaryServidorServicioAvatares.AvatarDTO[] ObtenerAvataresDisponibles();
+        Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponiblesResponse")]
-        System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioAvatares.AvatarDTO[]> ObtenerAvataresDisponiblesAsync();
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -128,11 +49,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAvatares {
                 base(binding, remoteAddress) {
         }
         
-        public PictionaryMusicalCliente.PictionaryServidorServicioAvatares.AvatarDTO[] ObtenerAvataresDisponibles() {
+        public Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles() {
             return base.Channel.ObtenerAvataresDisponibles();
         }
         
-        public System.Threading.Tasks.Task<PictionaryMusicalCliente.PictionaryServidorServicioAvatares.AvatarDTO[]> ObtenerAvataresDisponiblesAsync() {
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync() {
             return base.Channel.ObtenerAvataresDisponiblesAsync();
         }
     }
