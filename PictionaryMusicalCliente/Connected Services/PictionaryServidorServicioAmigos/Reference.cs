@@ -50,10 +50,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAmigos {
     public interface IAmigosManejadorCallback {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IAmigosManejador/SolicitudActualizada")]
-        void SolicitudActualizada(Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
+        void SolicitudActualizada(global::Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IAmigosManejador/AmistadEliminada")]
-        void AmistadEliminada(Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
+        void AmistadEliminada(global::Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]

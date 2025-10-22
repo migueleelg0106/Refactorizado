@@ -16,16 +16,16 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioPerfil {
     public interface IPerfilManejador {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPerfilManejador/ObtenerPerfil", ReplyAction="http://tempuri.org/IPerfilManejador/ObtenerPerfilResponse")]
-        Servicios.Contratos.DTOs.UsuarioDTO ObtenerPerfil(int idUsuario);
+        global::Servicios.Contratos.DTOs.UsuarioDTO ObtenerPerfil(int idUsuario);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPerfilManejador/ObtenerPerfil", ReplyAction="http://tempuri.org/IPerfilManejador/ObtenerPerfilResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.UsuarioDTO> ObtenerPerfilAsync(int idUsuario);
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.UsuarioDTO> ObtenerPerfilAsync(int idUsuario);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPerfilManejador/ActualizarPerfil", ReplyAction="http://tempuri.org/IPerfilManejador/ActualizarPerfilResponse")]
-        Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarPerfil(Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud);
+        global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarPerfil(global::Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPerfilManejador/ActualizarPerfil", ReplyAction="http://tempuri.org/IPerfilManejador/ActualizarPerfilResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud);
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(global::Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -55,19 +55,19 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioPerfil {
                 base(binding, remoteAddress) {
         }
         
-        public Servicios.Contratos.DTOs.UsuarioDTO ObtenerPerfil(int idUsuario) {
+        public global::Servicios.Contratos.DTOs.UsuarioDTO ObtenerPerfil(int idUsuario) {
             return base.Channel.ObtenerPerfil(idUsuario);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.UsuarioDTO> ObtenerPerfilAsync(int idUsuario) {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.UsuarioDTO> ObtenerPerfilAsync(int idUsuario) {
             return base.Channel.ObtenerPerfilAsync(idUsuario);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarPerfil(Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud) {
+        public global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarPerfil(global::Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud) {
             return base.Channel.ActualizarPerfil(solicitud);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud) {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(global::Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud) {
             return base.Channel.ActualizarPerfilAsync(solicitud);
         }
     }

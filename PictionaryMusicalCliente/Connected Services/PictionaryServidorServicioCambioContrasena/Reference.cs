@@ -17,33 +17,33 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambiarContrasenaManejador/SolicitarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambiarContrasenaManejador/SolicitarCodigoRecuperacionRespons" +
             "e")]
-        Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
+        global::Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(global::Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambiarContrasenaManejador/SolicitarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambiarContrasenaManejador/SolicitarCodigoRecuperacionRespons" +
             "e")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(global::Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambiarContrasenaManejador/ReenviarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambiarContrasenaManejador/ReenviarCodigoRecuperacionResponse" +
             "")]
-        Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(Servicios.Contratos.DTOs.ReenviarCodigoDTO solicitud);
+        global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(global::Servicios.Contratos.DTOs.ReenviarCodigoDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambiarContrasenaManejador/ReenviarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambiarContrasenaManejador/ReenviarCodigoRecuperacionResponse" +
             "")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ReenviarCodigoDTO solicitud);
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(global::Servicios.Contratos.DTOs.ReenviarCodigoDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambiarContrasenaManejador/ConfirmarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambiarContrasenaManejador/ConfirmarCodigoRecuperacionRespons" +
             "e")]
-        Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
+        global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(global::Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambiarContrasenaManejador/ConfirmarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambiarContrasenaManejador/ConfirmarCodigoRecuperacionRespons" +
             "e")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(global::Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambiarContrasenaManejador/ActualizarContrasena", ReplyAction="http://tempuri.org/ICambiarContrasenaManejador/ActualizarContrasenaResponse")]
-        Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarContrasena(Servicios.Contratos.DTOs.ActualizarContrasenaDTO solicitud);
+        global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarContrasena(global::Servicios.Contratos.DTOs.ActualizarContrasenaDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambiarContrasenaManejador/ActualizarContrasena", ReplyAction="http://tempuri.org/ICambiarContrasenaManejador/ActualizarContrasenaResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(Servicios.Contratos.DTOs.ActualizarContrasenaDTO solicitud);
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(global::Servicios.Contratos.DTOs.ActualizarContrasenaDTO solicitud);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -73,35 +73,35 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena {
                 base(binding, remoteAddress) {
         }
         
-        public Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
+        public global::Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(global::Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
             return base.Channel.SolicitarCodigoRecuperacion(solicitud);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(global::Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
             return base.Channel.SolicitarCodigoRecuperacionAsync(solicitud);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(Servicios.Contratos.DTOs.ReenviarCodigoDTO solicitud) {
+        public global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(global::Servicios.Contratos.DTOs.ReenviarCodigoDTO solicitud) {
             return base.Channel.ReenviarCodigoRecuperacion(solicitud);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ReenviarCodigoDTO solicitud) {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(global::Servicios.Contratos.DTOs.ReenviarCodigoDTO solicitud) {
             return base.Channel.ReenviarCodigoRecuperacionAsync(solicitud);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
+        public global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(global::Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoRecuperacion(confirmacion);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(global::Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoRecuperacionAsync(confirmacion);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarContrasena(Servicios.Contratos.DTOs.ActualizarContrasenaDTO solicitud) {
+        public global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarContrasena(global::Servicios.Contratos.DTOs.ActualizarContrasenaDTO solicitud) {
             return base.Channel.ActualizarContrasena(solicitud);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(Servicios.Contratos.DTOs.ActualizarContrasenaDTO solicitud) {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(global::Servicios.Contratos.DTOs.ActualizarContrasenaDTO solicitud) {
             return base.Channel.ActualizarContrasenaAsync(solicitud);
         }
     }

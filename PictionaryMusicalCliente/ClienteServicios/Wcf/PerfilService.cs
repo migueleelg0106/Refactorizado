@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
@@ -134,7 +135,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
         }
 
-        public async Task<IReadOnlyList<DTOs.ObjetoAvatarDTO>> ObtenerAvataresDisponiblesAsync()
+        public async Task<IReadOnlyList<ObjetoAvatar>> ObtenerAvataresDisponiblesAsync()
         {
             var cliente = new PictionaryServidorServicioAvatares.CatalogoAvataresClient(CatalogoAvataresEndpoint);
 
@@ -145,13 +146,13 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     .ConfigureAwait(false);
 
                 if (avatares == null)
-                    return Array.Empty<DTOs.ObjetoAvatarDTO>();
+                    return Array.Empty<ObjetoAvatar>();
 
-                var lista = new List<DTOs.ObjetoAvatarDTO>();
+                var lista = new List<ObjetoAvatar>();
 
                 foreach (var avatar in avatares)
                 {
-                    lista.Add(new DTOs.ObjetoAvatarDTO
+                    lista.Add(new ObjetoAvatar
                     {
                         Id = avatar.Id,
                         RutaRelativa = avatar.RutaRelativa

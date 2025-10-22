@@ -16,10 +16,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAvatares {
     public interface ICatalogoAvatares {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponiblesResponse")]
-        Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles();
+        global::Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponiblesResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync();
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -28,7 +28,7 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAvatares {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class CatalogoAvataresClient : System.ServiceModel.ClientBase<PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvatares>, PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvatares {
+    public partial class CatalogoAvataresClient : System.ServiceModel.ClientBase<PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvatares>, global::PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvatares {
         
         public CatalogoAvataresClient() {
         }
@@ -49,11 +49,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAvatares {
                 base(binding, remoteAddress) {
         }
         
-        public Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles() {
+        public global::Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles() {
             return base.Channel.ObtenerAvataresDisponibles();
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync() {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync() {
             return base.Channel.ObtenerAvataresDisponiblesAsync();
         }
     }

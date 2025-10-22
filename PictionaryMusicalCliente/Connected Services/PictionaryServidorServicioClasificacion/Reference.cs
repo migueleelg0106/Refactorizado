@@ -16,10 +16,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioClasificacion {
     public interface IClasificacionManejador {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IClasificacionManejador/ObtenerTopJugadores", ReplyAction="http://tempuri.org/IClasificacionManejador/ObtenerTopJugadoresResponse")]
-        Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[] ObtenerTopJugadores();
+        global::Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[] ObtenerTopJugadores();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IClasificacionManejador/ObtenerTopJugadores", ReplyAction="http://tempuri.org/IClasificacionManejador/ObtenerTopJugadoresResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[]> ObtenerTopJugadoresAsync();
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[]> ObtenerTopJugadoresAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,11 +49,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioClasificacion {
                 base(binding, remoteAddress) {
         }
         
-        public Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[] ObtenerTopJugadores() {
+        public global::Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[] ObtenerTopJugadores() {
             return base.Channel.ObtenerTopJugadores();
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[]> ObtenerTopJugadoresAsync() {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ClasificacionUsuarioDTO[]> ObtenerTopJugadoresAsync() {
             return base.Channel.ObtenerTopJugadoresAsync();
         }
     }
