@@ -34,7 +34,7 @@ namespace PictionaryMusicalCliente.Utilidades
             DTOs.ResultadoOperacionDTO resultado = ValidarCampoObligatorio(correo,
                 Lang.errorTextoCorreoInvalido);
 
-            if (!resultado.Exito)
+            if (!EsOperacionExitosa(resultado))
             {
                 return resultado;
             }
@@ -43,46 +43,68 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (!CorreoRegex.IsMatch(correoNormalizado))
             {
-                return DTOs.ResultadoOperacionDTO.Fallo(Lang.errorTextoCorreoInvalido);
+                return CrearResultadoFallido(Lang.errorTextoCorreoInvalido);
             }
 
-            return DTOs.ResultadoOperacionDTO.Exitoso();
+            return CrearResultadoExitoso();
         }
 
         public static DTOs.ResultadoOperacionDTO ValidarContrasena(string contrasena)
         {
             if (string.IsNullOrWhiteSpace(contrasena))
             {
-                return DTOs.ResultadoOperacionDTO.Fallo(Lang.errorTextoCampoObligatorio);
+                return CrearResultadoFallido(Lang.errorTextoCampoObligatorio);
             }
 
             string contrasenaNormalizada = contrasena.Trim();
 
             if (!ContrasenaRegex.IsMatch(contrasenaNormalizada))
             {
-                return DTOs.ResultadoOperacionDTO.Fallo(Lang.errorTextoContrasenaFormato);
+                return CrearResultadoFallido(Lang.errorTextoContrasenaFormato);
             }
 
-            return DTOs.ResultadoOperacionDTO.Exitoso();
+            return CrearResultadoExitoso();
         }
 
-        private static DTOs.ResultadoOperacionDTO    ValidarCampoObligatorio(
+        private static DTOs.ResultadoOperacionDTO ValidarCampoObligatorio(
             string valor,
             string mensajeCampoVacio)
         {
             if (string.IsNullOrWhiteSpace(valor))
             {
-                return DTOs.ResultadoOperacionDTO.Fallo(mensajeCampoVacio);
+                return CrearResultadoFallido(mensajeCampoVacio);
             }
 
             string valorNormalizado = valor.Trim();
 
             if (valorNormalizado.Length == 0)
             {
-                return DTOs.ResultadoOperacionDTO.Fallo(mensajeCampoVacio);
+                return CrearResultadoFallido(mensajeCampoVacio);
             }
 
-            return DTOs.ResultadoOperacionDTO.Exitoso();
+            return CrearResultadoExitoso();
+        }
+
+        private static DTOs.ResultadoOperacionDTO CrearResultadoExitoso()
+        {
+            return new DTOs.ResultadoOperacionDTO
+            {
+                OperacionExitosa = true
+            };
+        }
+
+        private static DTOs.ResultadoOperacionDTO CrearResultadoFallido(string mensaje)
+        {
+            return new DTOs.ResultadoOperacionDTO
+            {
+                OperacionExitosa = false,
+                Mensaje = mensaje
+            };
+        }
+
+        private static bool EsOperacionExitosa(DTOs.ResultadoOperacionDTO resultado)
+        {
+            return resultado != null && resultado.OperacionExitosa;
         }
     }
 }
