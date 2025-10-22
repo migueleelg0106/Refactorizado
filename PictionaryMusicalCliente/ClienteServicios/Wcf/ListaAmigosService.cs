@@ -4,6 +4,7 @@ using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,21 +18,21 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
         private readonly SemaphoreSlim _semaphore = new(1, 1);
         private readonly object _amigosLock = new();
-        private readonly List<Amigo> _amigos = new();
+        private readonly List<DTOs.AmigoDTO> _amigos = new();
 
         private PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient _cliente;
         private string _usuarioSuscrito;
 
-        public event EventHandler<IReadOnlyList<Amigo>> ListaActualizada;
+        public event EventHandler<IReadOnlyList<DTOs.AmigoDTO>> ListaActualizada;
 
-        public IReadOnlyList<Amigo> ListaActual
+        public IReadOnlyList<DTOs.AmigoDTO> ListaActual
         {
             get
             {
                 lock (_amigosLock)
                 {
                     return _amigos.Count == 0
-                        ? Array.Empty<Amigo>()
+                        ? Array.Empty<DTOs.AmigoDTO>()
                         : _amigos.ToArray();
                 }
             }
@@ -128,7 +129,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 _amigos.AddRange(lista);
             }
 
-            ListaActualizada?.Invoke(this, lista.AsReadOnly());
+            ListaActualizada?.Invoke(this, lista);
         }
 
         public void Dispose()
@@ -222,22 +223,21 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
         }
 
-        private static List<Amigo> Convertir(IEnumerable<DTOs.AmigoDTO> amigos)
+        private static IReadOnlyList<DTOs.AmigoDTO> Convertir(IEnumerable<DTOs.AmigoDTO> amigos)
         {
-            var lista = new List<Amigo>();
-
             if (amigos == null)
-                return lista;
+                return Array.Empty<DTOs.AmigoDTO>();
 
-            foreach (var amigo in amigos)
-            {
-                if (amigo == null || string.IsNullOrWhiteSpace(amigo.NombreUsuario))
-                    continue;
+            var lista = amigos
+                .Where(amigo => amigo != null && !string.IsNullOrWhiteSpace(amigo.NombreUsuario))
+                .Select(amigo => new DTOs.AmigoDTO
+                {
+                    IdUsuario = amigo.IdUsuario,
+                    NombreUsuario = amigo.NombreUsuario
+                })
+                .ToList();
 
-                lista.Add(new Amigo(amigo.IdUsuario, amigo.NombreUsuario));
-            }
-
-            return lista;
+            return lista.Count == 0 ? Array.Empty<DTOs.AmigoDTO>() : lista.AsReadOnly();
         }
     }
 }

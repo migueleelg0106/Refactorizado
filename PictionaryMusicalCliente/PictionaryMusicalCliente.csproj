@@ -119,7 +119,6 @@
     <Compile Include="Convertidores\ConvertidorCadenaVaciaVisibilidad.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoAvataresLocales.cs" />
     <Compile Include="Modelo\Catalogos\CatalogoImagenesPerfilLocales.cs" />
-    <Compile Include="Modelo\Mapeo\ActualizarPerfilSolicitud.cs" />
     <Compile Include="Modelo\ObjetoAvatar.cs" />
     <Compile Include="Modelo\IdiomaOpcion.cs" />
     <Compile Include="ClienteServicios\Abstracciones\IAvatarService.cs" />

@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.ServiceModel;
-using System.Threading.Tasks;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using System;
+using System.Collections.Generic;
+using System.ServiceModel;
+using System.Threading.Tasks;
 using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf
@@ -64,7 +65,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
         }
 
-        public async Task<DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(DTOs.ActualizarPerfilSolicitudDTO solicitud)
+        public async Task<DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(DTOs.ActualizarPerfilDTO solicitud)
         {
             if (solicitud == null)
                 throw new ArgumentNullException(nameof(solicitud));
@@ -73,20 +74,8 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                var dto = new DTOs.ActualizarPerfilDTO
-                {
-                    UsuarioId = solicitud.UsuarioId,
-                    Nombre = solicitud.Nombre,
-                    Apellido = solicitud.Apellido,
-                    AvatarRutaRelativa = solicitud.AvatarRutaRelativa,
-                    Instagram = solicitud.Instagram,
-                    Facebook = solicitud.Facebook,
-                    X = solicitud.X,
-                    Discord = solicitud.Discord
-                };
-
                 DTOs.ResultadoOperacionDTO resultado = await WcfClientHelper
-                    .UsarAsync(cliente, c => c.ActualizarPerfilAsync(dto))
+                    .UsarAsync(cliente, c => c.ActualizarPerfilAsync(solicitud))
                     .ConfigureAwait(false);
 
                 if (resultado == null)
@@ -145,21 +134,9 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     .UsarAsync(cliente, c => c.ObtenerAvataresDisponiblesAsync())
                     .ConfigureAwait(false);
 
-                if (avatares == null)
-                    return Array.Empty<ObjetoAvatar>();
+                IReadOnlyList<ObjetoAvatar> lista = AvatarServicioHelper.Convertir(avatares);
 
-                var lista = new List<ObjetoAvatar>();
-
-                foreach (var avatar in avatares)
-                {
-                    lista.Add(new ObjetoAvatar
-                    {
-                        Id = avatar.Id,
-                        RutaRelativa = avatar.RutaRelativa
-                    });
-                }
-
-                return lista.AsReadOnly();
+                return lista?.Count > 0 ? lista : Array.Empty<ObjetoAvatar>();
             }
             catch (FaultException ex)
             {

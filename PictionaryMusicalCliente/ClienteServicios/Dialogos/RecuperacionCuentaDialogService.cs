@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
-using ICambioContrasenaCli = PictionaryMusicalCliente.ClienteServicios.Abstracciones.ICambioContrasenaService;
-using ICodigoVerificacionCli = PictionaryMusicalCliente.ClienteServicios.Abstracciones.ICodigoVerificacionService;
 using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Servicios.Dialogos
@@ -21,7 +20,7 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 
         public async Task<DTOs.ResultadoOperacionDTO> RecuperarCuentaAsync(
             string identificador,
-            ICambioContrasenaCli cambioContrasenaService)
+            ICambioContrasenaService cambioContrasenaService)
         {
             if (cambioContrasenaService == null)
                 throw new ArgumentNullException(nameof(cambioContrasenaService));
@@ -120,11 +119,11 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
             return await finalizacion.Task.ConfigureAwait(true);
         }
 
-        private class ServicioCodigoRecuperacionAdapter : ICodigoVerificacionCli
+        private class ServicioCodigoRecuperacionAdapter : ICodigoVerificacionService
         {
-            private readonly ICambioContrasenaCli _cambioContrasenaService;
+            private readonly ICambioContrasenaService _cambioContrasenaService;
 
-            public ServicioCodigoRecuperacionAdapter(ICambioContrasenaCli cambioContrasenaService)
+            public ServicioCodigoRecuperacionAdapter(ICambioContrasenaService cambioContrasenaService)
             {
                 _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
             }
