@@ -145,9 +145,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public async Task CargarPerfilAsync()
         {
-            UsuarioSesion sesion = SesionUsuarioActual.Instancia.Usuario;
+            UsuarioAutenticado sesion = SesionUsuarioActual.Instancia.Usuario;
 
-            if (sesion == null)
+            if (sesion == null || sesion.IdUsuario <= 0)
             {
                 AvisoHelper.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
                 CerrarAccion?.Invoke();
@@ -158,7 +158,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                UsuarioAutenticado perfil = await _perfilService
+                DTOs.UsuarioDTO perfil = await _perfilService
                     .ObtenerPerfilAsync(sesion.IdUsuario).ConfigureAwait(true);
 
                 if (perfil == null)
@@ -342,7 +342,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        private void AplicarPerfil(UsuarioAutenticado perfil)
+        private void AplicarPerfil(DTOs.UsuarioDTO perfil)
         {
             _usuarioId = perfil.IdUsuario;
             Usuario = perfil.NombreUsuario;
@@ -467,35 +467,51 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void ActualizarSesion()
         {
-            UsuarioSesion sesion = SesionUsuarioActual.Instancia.Usuario;
-            if (sesion == null)
+            UsuarioAutenticado sesion = SesionUsuarioActual.Instancia.Usuario;
+            if (sesion == null || sesion.IdUsuario <= 0)
             {
                 return;
             }
 
-            sesion.Nombre = Nombre;
-            sesion.Apellido = Apellido;
+            string rutaRelativa = string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa)
+                ? sesion.AvatarRutaRelativa
+                : AvatarSeleccionadoRutaRelativa;
 
-            ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPorRuta(AvatarSeleccionadoRutaRelativa);
-            sesion.AvatarId = avatar?.Id ?? 0;
-            sesion.AvatarRutaRelativa = AvatarSeleccionadoRutaRelativa;
-        }
+            ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPorRuta(rutaRelativa);
+            string nombreActual = string.IsNullOrWhiteSpace(Nombre)
+                ? sesion.Nombre
+                : Nombre.Trim();
+            string apellidoActual = string.IsNullOrWhiteSpace(Apellido)
+                ? sesion.Apellido
+                : Apellido.Trim();
 
-        private void ActualizarSesion(UsuarioAutenticado perfil)
-        {
-            var sesion = new UsuarioSesion
+            var dto = new DTOs.UsuarioDTO
             {
-                IdUsuario = perfil.IdUsuario,
-                JugadorId = perfil.JugadorId,
-                NombreUsuario = perfil.NombreUsuario,
-                Nombre = perfil.Nombre,
-                Apellido = perfil.Apellido,
-                Correo = perfil.Correo,
-                AvatarId = perfil.AvatarId,
-                AvatarRutaRelativa = perfil.AvatarRutaRelativa
+                IdUsuario = sesion.IdUsuario,
+                JugadorId = sesion.JugadorId,
+                NombreUsuario = sesion.NombreUsuario,
+                Nombre = nombreActual,
+                Apellido = apellidoActual,
+                Correo = sesion.Correo,
+                AvatarId = avatar?.Id ?? sesion.AvatarId,
+                AvatarRutaRelativa = rutaRelativa,
+                Instagram = ObtenerIdentificador("Instagram"),
+                Facebook = ObtenerIdentificador("Facebook"),
+                X = ObtenerIdentificador("X"),
+                Discord = ObtenerIdentificador("Discord")
             };
 
-            SesionUsuarioActual.Instancia.EstablecerUsuario(sesion);
+            SesionUsuarioActual.Instancia.EstablecerUsuario(dto);
+        }
+
+        private void ActualizarSesion(DTOs.UsuarioDTO perfil)
+        {
+            if (perfil == null)
+            {
+                return;
+            }
+
+            SesionUsuarioActual.Instancia.EstablecerUsuario(perfil);
         }
 
         public class RedSocialItem : BaseVistaModelo

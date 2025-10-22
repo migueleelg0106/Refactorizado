@@ -8,30 +8,30 @@ using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
-using ClasificacionSrv = PictionaryMusicalCliente.PictionaryServidorServicioClasificacion;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
     public class ClasificacionVistaModelo : BaseVistaModelo
     {
         private readonly IClasificacionService _clasificacionService;
-        private IReadOnlyList<ClasificacionSrv.ClasificacionUsuarioDTO> _clasificacionOriginal;
-        private ObservableCollection<ClasificacionSrv.ClasificacionUsuarioDTO> _clasificacion;
+        private IReadOnlyList<DTOs.ClasificacionUsuarioDTO> _clasificacionOriginal;
+        private ObservableCollection<DTOs.ClasificacionUsuarioDTO> _clasificacion;
         private bool _estaCargando;
 
         public ClasificacionVistaModelo(IClasificacionService clasificacionService)
         {
             _clasificacionService = clasificacionService ?? throw new ArgumentNullException(nameof(clasificacionService));
 
-            _clasificacionOriginal = Array.Empty<ClasificacionSrv.ClasificacionUsuarioDTO>();
-            _clasificacion = new ObservableCollection<ClasificacionSrv.ClasificacionUsuarioDTO>();
+            _clasificacionOriginal = Array.Empty<DTOs.ClasificacionUsuarioDTO>();
+            _clasificacion = new ObservableCollection<DTOs.ClasificacionUsuarioDTO>();
 
             OrdenarPorRondasCommand = new ComandoDelegado(_ => OrdenarPorRondas(), _ => PuedeOrdenar());
             OrdenarPorPuntosCommand = new ComandoDelegado(_ => OrdenarPorPuntos(), _ => PuedeOrdenar());
             CerrarCommand = new ComandoDelegado(_ => CerrarAccion?.Invoke());
         }
 
-        public ObservableCollection<ClasificacionSrv.ClasificacionUsuarioDTO> Clasificacion
+        public ObservableCollection<DTOs.ClasificacionUsuarioDTO> Clasificacion
         {
             get => _clasificacion;
             private set
@@ -72,10 +72,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                IReadOnlyList<ClasificacionSrv.ClasificacionUsuarioDTO> clasificacion =
+                IReadOnlyList<DTOs.ClasificacionUsuarioDTO> clasificacion =
                     await _clasificacionService.ObtenerTopJugadoresAsync().ConfigureAwait(true);
 
-                _clasificacionOriginal = clasificacion ?? Array.Empty<ClasificacionSrv.ClasificacionUsuarioDTO>();
+                _clasificacionOriginal = clasificacion ?? Array.Empty<DTOs.ClasificacionUsuarioDTO>();
                 ActualizarClasificacion(_clasificacionOriginal);
             }
             catch (ServicioException ex)
@@ -92,10 +92,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        private void ActualizarClasificacion(IEnumerable<ClasificacionSrv.ClasificacionUsuarioDTO> clasificacion)
+        private void ActualizarClasificacion(IEnumerable<DTOs.ClasificacionUsuarioDTO> clasificacion)
         {
-            Clasificacion = new ObservableCollection<ClasificacionSrv.ClasificacionUsuarioDTO>(
-                clasificacion?.Where(c => c != null) ?? Enumerable.Empty<ClasificacionSrv.ClasificacionUsuarioDTO>());
+            Clasificacion = new ObservableCollection<DTOs.ClasificacionUsuarioDTO>(
+                clasificacion?.Where(c => c != null) ?? Enumerable.Empty<DTOs.ClasificacionUsuarioDTO>());
         }
 
         private void OrdenarPorRondas()
@@ -105,7 +105,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            IEnumerable<ClasificacionSrv.ClasificacionUsuarioDTO> ordenados = _clasificacionOriginal
+            IEnumerable<DTOs.ClasificacionUsuarioDTO> ordenados = _clasificacionOriginal
                 .Where(c => c != null)
                 .OrderByDescending(c => c.RondasGanadas)
                 .ThenByDescending(c => c.Puntos)
@@ -121,7 +121,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            IEnumerable<ClasificacionSrv.ClasificacionUsuarioDTO> ordenados = _clasificacionOriginal
+            IEnumerable<DTOs.ClasificacionUsuarioDTO> ordenados = _clasificacionOriginal
                 .Where(c => c != null)
                 .OrderByDescending(c => c.Puntos)
                 .ThenByDescending(c => c.RondasGanadas)
