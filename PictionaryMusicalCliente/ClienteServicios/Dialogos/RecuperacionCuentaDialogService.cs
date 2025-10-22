@@ -1,11 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using DTOs = global::Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using ICambioContrasenaCli = PictionaryMusicalCliente.ClienteServicios.Abstracciones.ICambioContrasenaService;
+using ICodigoVerificacionCli = PictionaryMusicalCliente.ClienteServicios.Abstracciones.ICodigoVerificacionService;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Servicios.Dialogos
 {
@@ -20,27 +21,27 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 
         public async Task<DTOs.ResultadoOperacionDTO> RecuperarCuentaAsync(
             string identificador,
-            ICambioContrasenaService cambioContrasenaService)
+            ICambioContrasenaCli cambioContrasenaService)
         {
             if (cambioContrasenaService == null)
-            {
                 throw new ArgumentNullException(nameof(cambioContrasenaService));
-            }
 
-            DTOs.ResultadoSolicitudRecuperacionDTO resultadoSolicitud = await cambioContrasenaService
-                .SolicitarCodigoRecuperacionAsync(identificador).ConfigureAwait(true);
+            DTOs.ResultadoSolicitudRecuperacionDTO resultadoSolicitud =
+                await cambioContrasenaService.SolicitarCodigoRecuperacionAsync(identificador).ConfigureAwait(true);
 
-            if (resultadoSolicitud == null)
-            {
-                return null;
-            }
+            if (resultadoSolicitud == null) return null;
 
             if (!resultadoSolicitud.CuentaEncontrada)
             {
                 string mensaje = string.IsNullOrWhiteSpace(resultadoSolicitud.Mensaje)
                     ? Lang.errorTextoCuentaNoRegistrada
                     : resultadoSolicitud.Mensaje;
-                return DTOs.ResultadoOperacionDTO.Fallo(mensaje);
+
+                return new DTOs.ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = mensaje
+                };
             }
 
             if (!resultadoSolicitud.CodigoEnviado)
@@ -48,7 +49,12 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
                 string mensaje = string.IsNullOrWhiteSpace(resultadoSolicitud.Mensaje)
                     ? Lang.errorTextoServidorSolicitudCambioContrasena
                     : resultadoSolicitud.Mensaje;
-                return DTOs.ResultadoOperacionDTO.Fallo(mensaje);
+
+                return new DTOs.ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = mensaje
+                };
             }
 
             AvisoHelper.Mostrar(Lang.avisoTextoCodigoEnviado);
@@ -61,17 +67,19 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
                     resultadoSolicitud.TokenCodigo,
                     adaptador).ConfigureAwait(true);
 
-            if (resultadoVerificacion == null)
-            {
-                return null;
-            }
+            if (resultadoVerificacion == null) return null;
 
             if (!resultadoVerificacion.RegistroExitoso)
             {
                 string mensaje = string.IsNullOrWhiteSpace(resultadoVerificacion.Mensaje)
                     ? Lang.errorTextoCodigoIncorrecto
                     : resultadoVerificacion.Mensaje;
-                return DTOs.ResultadoOperacionDTO.Fallo(mensaje);
+
+                return new DTOs.ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = mensaje
+                };
             }
 
             AvisoHelper.Mostrar(Lang.avisoTextoCodigoVerificadoCambio);
@@ -82,7 +90,12 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 
             vistaModelo.CambioContrasenaCompletado = resultado =>
             {
-                finalizacion.TrySetResult(resultado ?? DTOs.ResultadoOperacionDTO.Exitoso(Lang.avisoTextoContrasenaActualizada));
+                finalizacion.TrySetResult(
+                    resultado ?? new DTOs.ResultadoOperacionDTO
+                    {
+                        OperacionExitosa = true,
+                        Mensaje = Lang.avisoTextoContrasenaActualizada
+                    });
                 ventana.Close();
             };
 
@@ -107,38 +120,31 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
             return await finalizacion.Task.ConfigureAwait(true);
         }
 
-        private class ServicioCodigoRecuperacionAdapter : ICodigoVerificacionService
+        private class ServicioCodigoRecuperacionAdapter : ICodigoVerificacionCli
         {
-            private readonly ICambioContrasenaService _cambioContrasenaService;
+            private readonly ICambioContrasenaCli _cambioContrasenaService;
 
-            public ServicioCodigoRecuperacionAdapter(ICambioContrasenaService cambioContrasenaService)
+            public ServicioCodigoRecuperacionAdapter(ICambioContrasenaCli cambioContrasenaService)
             {
                 _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
             }
 
-            public Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(DTOs.SolicitudRegistroCuentaDTO solicitud)
-            {
-                throw new NotSupportedException();
-            }
+            public Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(DTOs.NuevaCuentaDTO solicitud)
+                => throw new NotSupportedException();
 
             public Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
-            {
-                return _cambioContrasenaService.ReenviarCodigoRecuperacionAsync(tokenCodigo);
-            }
+                => _cambioContrasenaService.ReenviarCodigoRecuperacionAsync(tokenCodigo);
 
             public async Task<DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
             {
-                DTOs.ResultadoOperacionDTO resultado = await _cambioContrasenaService
-                    .ConfirmarCodigoRecuperacionAsync(tokenCodigo, codigoIngresado).ConfigureAwait(true);
+                DTOs.ResultadoOperacionDTO resultado =
+                    await _cambioContrasenaService.ConfirmarCodigoRecuperacionAsync(tokenCodigo, codigoIngresado).ConfigureAwait(true);
 
-                if (resultado == null)
-                {
-                    return null;
-                }
+                if (resultado == null) return null;
 
                 return new DTOs.ResultadoRegistroCuentaDTO
                 {
-                    RegistroExitoso = resultado.Exito,
+                    RegistroExitoso = resultado.OperacionExitosa,
                     Mensaje = resultado.Mensaje
                 };
             }

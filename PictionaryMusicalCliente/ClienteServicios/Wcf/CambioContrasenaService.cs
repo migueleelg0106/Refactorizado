@@ -120,9 +120,11 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 if (resultado == null)
                     return null;
 
-                return resultado.OperacionExitosa
-                    ? DTOs.ResultadoOperacionDTO.Exitoso(resultado.Mensaje)
-                    : DTOs.ResultadoOperacionDTO.Fallo(resultado.Mensaje);
+                return new DTOs.ResultadoOperacionDTO
+                {
+                    OperacionExitosa = resultado.OperacionExitosa,
+                    Mensaje = resultado.Mensaje
+                };
             }
             catch (FaultException ex)
             {
@@ -173,9 +175,11 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 if (resultado == null)
                     return null;
 
-                return resultado.OperacionExitosa
-                    ? DTOs.ResultadoOperacionDTO.Exitoso(resultado.Mensaje)
-                    : DTOs.ResultadoOperacionDTO.Fallo(resultado.Mensaje);
+                return new DTOs.ResultadoOperacionDTO
+                {
+                    OperacionExitosa = resultado.OperacionExitosa,
+                    Mensaje = resultado.Mensaje
+                };
             }
             catch (FaultException ex)
             {

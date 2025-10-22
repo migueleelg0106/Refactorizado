@@ -5,6 +5,6 @@ namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface IInicioSesionService
     {
-        Task<DTOs.ResultadoInicioSesionDTO> IniciarSesionAsync(DTOs.SolicitudInicioSesionDTO solicitud);
+        Task<DTOs.ResultadoInicioSesionDTO> IniciarSesionAsync(DTOs.CredencialesInicioSesionDTO solicitud);
     }
 }

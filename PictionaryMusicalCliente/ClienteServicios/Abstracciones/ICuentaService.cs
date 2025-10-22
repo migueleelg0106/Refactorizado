@@ -5,6 +5,6 @@ namespace PictionaryMusicalCliente.Servicios.Abstracciones
 {
     public interface ICuentaService
     {
-        Task<DTOs.ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(DTOs.SolicitudRegistroCuentaDTO solicitud);
+        Task<DTOs.ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(DTOs.NuevaCuentaDTO solicitud);
     }
 }

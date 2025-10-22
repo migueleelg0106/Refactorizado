@@ -2,12 +2,12 @@ using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
-using DTOs = global::Servicios.Contratos.DTOs;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
@@ -292,17 +292,5 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             IReadOnlyCollection<DTOs.SolicitudAmistadDTO> snapshot = SolicitudesPendientes;
             SolicitudesActualizadas?.Invoke(this, snapshot);
         }
-
-        public void SolicitudActualizada(Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AmistadEliminada(Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud)
-        {
-            throw new NotImplementedException();
-        }
     }
-
-    //EL ERROR ES PORQUE LOS ÚLTIMOS 2 MÉTODOS PIDEN EL CONTRATOS DE SERVICIOS, E INTENTA ENCONTRARLO EN EL CLIENTE, O ESTÁ MAL EN SERVIDOR, O HAY QUE MODIFICAR ALGO AQUÍ
 }

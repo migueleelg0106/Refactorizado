@@ -5,7 +5,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
 {
     public interface ICodigoVerificacionService
     {
-        Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(DTOs.SolicitudRegistroCuentaDTO solicitud);
+        Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(DTOs.NuevaCuentaDTO solicitud);
 
         Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo);
 
