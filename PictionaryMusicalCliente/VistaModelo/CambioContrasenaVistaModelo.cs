@@ -8,6 +8,7 @@ using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers;
 using PictionaryMusicalCliente.Utilidades;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -57,7 +58,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public ICommand CancelarCommand { get; }
 
-        public Action<ResultadoOperacion> CambioContrasenaCompletado { get; set; }
+        public Action<DTOs.ResultadoOperacionDTO> CambioContrasenaCompletado { get; set; }
 
         public Action Cancelado { get; set; }
 
@@ -86,10 +87,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            ResultadoOperacion validacion = ValidacionEntradaHelper.ValidarContrasena(NuevaContrasena);
-            if (!validacion.Exito)
+            DTOs.ResultadoOperacionDTO validacion = ValidacionEntradaHelper.ValidarContrasena(NuevaContrasena);
+            if (validacion?.OperacionExitosa != true)
             {
-                AvisoHelper.Mostrar(validacion.Mensaje ?? Lang.errorTextoContrasenaFormato);
+                AvisoHelper.Mostrar(validacion?.Mensaje ?? Lang.errorTextoContrasenaFormato);
                 MostrarCamposInvalidos?.Invoke(new[] { nameof(NuevaContrasena) });
                 return;
             }
@@ -107,7 +108,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                ResultadoOperacion resultado = await _cambioContrasenaService
+                DTOs.ResultadoOperacionDTO resultado = await _cambioContrasenaService
                     .ActualizarContrasenaAsync(_tokenCodigo, NuevaContrasena).ConfigureAwait(true);
 
                 if (resultado == null)
@@ -116,7 +117,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     return;
                 }
 
-                if (!resultado.Exito)
+                if (!resultado.OperacionExitosa)
                 {
                     AvisoHelper.Mostrar(resultado.Mensaje ?? Lang.errorTextoActualizarContrasena);
                     return;
@@ -124,7 +125,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 string mensaje = resultado.Mensaje ?? Lang.avisoTextoContrasenaActualizada;
                 AvisoHelper.Mostrar(mensaje);
-                CambioContrasenaCompletado?.Invoke(ResultadoOperacion.Exitoso(mensaje));
+                resultado.Mensaje = mensaje;
+                CambioContrasenaCompletado?.Invoke(resultado);
             }
             catch (ServicioException ex)
             {

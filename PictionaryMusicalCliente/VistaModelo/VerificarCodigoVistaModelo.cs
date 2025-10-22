@@ -8,6 +8,7 @@ using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using PictionaryMusicalCliente.Utilidades;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -100,7 +101,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public ICommand CancelarCommand { get; }
 
-        public Action<ResultadoRegistroCuenta> VerificacionCompletada { get; set; }
+        public Action<DTOs.ResultadoRegistroCuentaDTO> VerificacionCompletada { get; set; }
 
         public Action Cancelado { get; set; }
 
@@ -121,7 +122,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                ResultadoRegistroCuenta resultado = await _codigoVerificacionService
+                DTOs.ResultadoRegistroCuentaDTO resultado = await _codigoVerificacionService
                     .ConfirmarCodigoRegistroAsync(_tokenCodigo, CodigoVerificacion).ConfigureAwait(true);
 
                 if (resultado == null)
@@ -172,7 +173,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                ResultadoSolicitudCodigo resultado = await _codigoVerificacionService
+                DTOs.ResultadoSolicitudCodigoDTO resultado = await _codigoVerificacionService
                     .ReenviarCodigoRegistroAsync(_tokenCodigo).ConfigureAwait(true);
 
                 if (resultado?.CodigoEnviado == true)

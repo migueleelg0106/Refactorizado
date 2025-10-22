@@ -10,6 +10,7 @@ using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -144,53 +145,53 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             string mensajeError = null;
 
-            ResultadoOperacion resultadoUsuario = ValidacionEntradaHelper.ValidarUsuario(Usuario);
-            if (!resultadoUsuario.Exito)
+            DTOs.ResultadoOperacionDTO resultadoUsuario = ValidacionEntradaHelper.ValidarUsuario(Usuario);
+            if (resultadoUsuario?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Usuario));
                 if (mensajeError == null)
                 {
-                    mensajeError = resultadoUsuario.Mensaje;
+                    mensajeError = resultadoUsuario?.Mensaje;
                 }
             }
 
-            ResultadoOperacion resultadoNombre = ValidacionEntradaHelper.ValidarNombre(Nombre);
-            if (!resultadoNombre.Exito)
+            DTOs.ResultadoOperacionDTO resultadoNombre = ValidacionEntradaHelper.ValidarNombre(Nombre);
+            if (resultadoNombre?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Nombre));
                 if (mensajeError == null)
                 {
-                    mensajeError = resultadoNombre.Mensaje;
+                    mensajeError = resultadoNombre?.Mensaje;
                 }
             }
 
-            ResultadoOperacion resultadoApellido = ValidacionEntradaHelper.ValidarApellido(Apellido);
-            if (!resultadoApellido.Exito)
+            DTOs.ResultadoOperacionDTO resultadoApellido = ValidacionEntradaHelper.ValidarApellido(Apellido);
+            if (resultadoApellido?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Apellido));
                 if (mensajeError == null)
                 {
-                    mensajeError = resultadoApellido.Mensaje;
+                    mensajeError = resultadoApellido?.Mensaje;
                 }
             }
 
-            ResultadoOperacion resultadoCorreo = ValidacionEntradaHelper.ValidarCorreo(Correo);
-            if (!resultadoCorreo.Exito)
+            DTOs.ResultadoOperacionDTO resultadoCorreo = ValidacionEntradaHelper.ValidarCorreo(Correo);
+            if (resultadoCorreo?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Correo));
                 if (mensajeError == null)
                 {
-                    mensajeError = resultadoCorreo.Mensaje;
+                    mensajeError = resultadoCorreo?.Mensaje;
                 }
             }
 
-            ResultadoOperacion resultadoContrasena = ValidacionEntradaHelper.ValidarContrasena(Contrasena);
-            if (!resultadoContrasena.Exito)
+            DTOs.ResultadoOperacionDTO resultadoContrasena = ValidacionEntradaHelper.ValidarContrasena(Contrasena);
+            if (resultadoContrasena?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Contrasena));
                 if (mensajeError == null)
                 {
-                    mensajeError = resultadoContrasena.Mensaje;
+                    mensajeError = resultadoContrasena?.Mensaje;
                 }
             }
 
@@ -215,7 +216,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            var solicitud = new SolicitudRegistroCuenta
+            var solicitud = new DTOs.NuevaCuentaDTO
             {
                 Usuario = Usuario,
                 Nombre = Nombre,
@@ -229,7 +230,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 EstaProcesando = true;
 
-                ResultadoSolicitudCodigo resultadoSolicitud = await _codigoVerificacionService
+                DTOs.ResultadoSolicitudCodigoDTO resultadoSolicitud = await _codigoVerificacionService
                     .SolicitarCodigoRegistroAsync(solicitud).ConfigureAwait(true);
 
                 if (resultadoSolicitud == null)
@@ -279,7 +280,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     return;
                 }
 
-                ResultadoRegistroCuenta resultadoVerificacion = await _verificarCodigoDialogService
+                DTOs.ResultadoRegistroCuentaDTO resultadoVerificacion = await _verificarCodigoDialogService
                     .MostrarDialogoAsync(
                         Lang.cambiarContrasenaTextoCodigoVerificacion,
                         resultadoSolicitud.TokenCodigo,
@@ -295,7 +296,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     return;
                 }
 
-                ResultadoRegistroCuenta resultadoRegistro = await _cuentaService
+                DTOs.ResultadoRegistroCuentaDTO resultadoRegistro = await _cuentaService
                     .RegistrarCuentaAsync(solicitud).ConfigureAwait(true);
 
                 if (resultadoRegistro == null)

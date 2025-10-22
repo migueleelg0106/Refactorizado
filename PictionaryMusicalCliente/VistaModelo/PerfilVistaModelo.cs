@@ -16,6 +16,7 @@ using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -216,20 +217,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             string mensajeError = null;
 
-            ResultadoOperacion validacionNombre = ValidacionEntradaHelper.ValidarNombre(nombre);
-            if (!validacionNombre.Exito)
+            DTOs.ResultadoOperacionDTO validacionNombre = ValidacionEntradaHelper.ValidarNombre(nombre);
+            if (validacionNombre?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Nombre));
                 if (mensajeError == null)
-                    mensajeError = validacionNombre.Mensaje;
+                    mensajeError = validacionNombre?.Mensaje;
             }
 
-            ResultadoOperacion validacionApellido = ValidacionEntradaHelper.ValidarApellido(apellido);
-            if (!validacionApellido.Exito)
+            DTOs.ResultadoOperacionDTO validacionApellido = ValidacionEntradaHelper.ValidarApellido(apellido);
+            if (validacionApellido?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Apellido));
                 if (mensajeError == null)
-                    mensajeError = validacionApellido.Mensaje;
+                    mensajeError = validacionApellido?.Mensaje;
             }
 
             if (string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa))
@@ -239,12 +240,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     mensajeError = Lang.errorTextoSeleccionAvatarValido;
             }
 
-            ResultadoOperacion validacionRedes = ValidarRedesSociales();
-            if (!validacionRedes.Exito)
+            DTOs.ResultadoOperacionDTO validacionRedes = ValidarRedesSociales();
+            if (validacionRedes?.OperacionExitosa != true)
             {
                 camposInvalidos.Add("RedesSociales");
                 if (mensajeError == null)
-                    mensajeError = validacionRedes.Mensaje;
+                    mensajeError = validacionRedes?.Mensaje;
             }
 
             if (camposInvalidos.Count > 0)
@@ -259,7 +260,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            var solicitud = new ActualizarPerfilSolicitud
+            var solicitud = new DTOs.ActualizarPerfilDTO
             {
                 UsuarioId = _usuarioId,
                 Nombre = nombre,
@@ -275,7 +276,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                ResultadoOperacion resultado = await _perfilService
+                DTOs.ResultadoOperacionDTO resultado = await _perfilService
                     .ActualizarPerfilAsync(solicitud).ConfigureAwait(true);
 
                 if (resultado == null)
@@ -284,7 +285,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     return;
                 }
 
-                if (!resultado.Exito)
+                if (!resultado.OperacionExitosa)
                 {
                     mensajeError = MensajeServidorHelper.Localizar(
                         resultado.Mensaje,
@@ -322,10 +323,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                ResultadoOperacion resultado = await _recuperacionCuentaDialogService
+                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogService
                     .RecuperarCuentaAsync(Correo, _cambioContrasenaService).ConfigureAwait(true);
 
-                if (resultado?.Exito == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
+                if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
                     AvisoHelper.Mostrar(resultado.Mensaje);
                 }
@@ -402,7 +403,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             return null;
         }
 
-        private ResultadoOperacion ValidarRedesSociales()
+        private DTOs.ResultadoOperacionDTO ValidarRedesSociales()
         {
             bool algunaInvalida = false;
             string mensaje = null;
@@ -432,9 +433,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
             }
 
-            return algunaInvalida
-                ? ResultadoOperacion.Fallo(mensaje ?? Lang.errorTextoIdentificadorRedSocialLongitud)
-                : ResultadoOperacion.Exitoso();
+            return new DTOs.ResultadoOperacionDTO
+            {
+                OperacionExitosa = !algunaInvalida,
+                Mensaje = algunaInvalida ? mensaje ?? Lang.errorTextoIdentificadorRedSocialLongitud : null
+            };
         }
 
         private void LimpiarErroresRedesSociales()
