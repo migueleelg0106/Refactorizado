@@ -11,7 +11,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 {
     public class VerificarCodigoService : IVerificarCodigoService
     {
-        public async Task<ConfirmacionCodigoResultado> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
+        public async Task<DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
         {
             if (string.IsNullOrWhiteSpace(tokenCodigo))
             {
@@ -27,10 +27,10 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 return null;
             }
 
-            return new ConfirmacionCodigoResultado(resultado.RegistroExitoso, resultado.Mensaje);
+            return resultado;
         }
 
-        public async Task<DTOs.ReenvioCodigoResultadoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
+        public async Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
         {
             if (string.IsNullOrWhiteSpace(tokenCodigo))
             {
@@ -46,7 +46,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 return null;
             }
 
-            return new DTOs.ReenvioCodigoResultadoDTO(resultado.CodigoEnviado, resultado.Mensaje, resultado.TokenCodigo);
+            return resultado;
         }
 
         private static async Task<T> EjecutarOperacionAsync<T>(Func<Task<T>> operacion, string mensajeErrorPredeterminado)
