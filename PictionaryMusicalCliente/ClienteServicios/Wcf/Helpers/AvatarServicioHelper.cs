@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using PictionaryMusicalCliente.Modelo;
 using DTOs = global::Servicios.Contratos.DTOs;
 
@@ -27,12 +29,37 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
             if (dto == null)
                 return null;
 
+            string rutaAbsoluta = ObtenerRutaAbsoluta(dto.RutaRelativa);
+
+            ImageSource imagen = CrearImagen(rutaAbsoluta);
+
             return new ObjetoAvatar(
                 dto.Id,
                 dto.Nombre,
-                imagen: null,
+                imagen,
                 rutaRelativa: dto.RutaRelativa,
-                imagenUriAbsoluta: ObtenerRutaAbsoluta(dto.RutaRelativa));
+                imagenUriAbsoluta: rutaAbsoluta);
+        }
+
+        private static ImageSource CrearImagen(string rutaAbsoluta)
+        {
+            if (string.IsNullOrWhiteSpace(rutaAbsoluta))
+                return null;
+
+            try
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(rutaAbsoluta, UriKind.Absolute);
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze();
+                return bitmap;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static string ObtenerRutaAbsoluta(string rutaRelativa)

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 
@@ -8,29 +11,101 @@ namespace PictionaryMusicalCliente.Utilidades
 {
     internal static class AvatarHelper
     {
-        private static readonly IReadOnlyList<ObjetoAvatar> Avatares =
-            CatalogoAvataresLocales.ObtenerAvatares();
+        private static readonly object Sincronizacion = new object();
 
-        private static readonly IReadOnlyDictionary<int, ObjetoAvatar> AvataresPorId =
-            Avatares.ToDictionary(avatar => avatar.Id);
+        private static IReadOnlyList<ObjetoAvatar> _avatares;
+        private static Dictionary<int, ObjetoAvatar> _avataresPorId;
+        private static Dictionary<string, ObjetoAvatar> _avataresPorRuta;
 
-        private static readonly IReadOnlyDictionary<string, ObjetoAvatar> AvataresPorRuta =
-            Avatares
+        static AvatarHelper()
+        {
+            RestablecerCatalogoPredeterminado();
+        }
+
+        public static void ActualizarCatalogo(IEnumerable<ObjetoAvatar> avatares)
+        {
+            if (avatares == null)
+            {
+                RestablecerCatalogoPredeterminado();
+                return;
+            }
+
+            var lista = new List<ObjetoAvatar>();
+            var porId = new Dictionary<int, ObjetoAvatar>();
+            var porRuta = new Dictionary<string, ObjetoAvatar>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (ObjetoAvatar avatar in avatares)
+            {
+                if (avatar == null)
+                {
+                    continue;
+                }
+
+                if (!porId.ContainsKey(avatar.Id))
+                {
+                    lista.Add(avatar);
+                }
+
+                porId[avatar.Id] = avatar;
+
+                string rutaNormalizada = NormalizarRuta(avatar.RutaRelativa);
+                if (!string.IsNullOrEmpty(rutaNormalizada))
+                {
+                    porRuta[rutaNormalizada] = avatar;
+                }
+            }
+
+            if (lista.Count == 0)
+            {
+                RestablecerCatalogoPredeterminado();
+                return;
+            }
+
+            AsignarCatalogo(lista, porId, porRuta);
+        }
+
+        public static void RestablecerCatalogoPredeterminado()
+        {
+            IReadOnlyList<ObjetoAvatar> locales = CatalogoAvataresLocales.ObtenerAvatares();
+            var lista = locales?.Where(avatar => avatar != null).ToList() ?? new List<ObjetoAvatar>();
+            var porId = lista.ToDictionary(avatar => avatar.Id);
+            var porRuta = lista
                 .Where(avatar => !string.IsNullOrWhiteSpace(avatar.RutaRelativa))
                 .ToDictionary(
                     avatar => NormalizarRuta(avatar.RutaRelativa),
                     avatar => avatar,
                     StringComparer.OrdinalIgnoreCase);
 
+            AsignarCatalogo(lista, porId, porRuta);
+        }
+
+        public static IReadOnlyList<ObjetoAvatar> ObtenerAvatares()
+        {
+            lock (Sincronizacion)
+            {
+                return _avatares;
+            }
+        }
+
         public static ObjetoAvatar ObtenerAvatarPredeterminado()
         {
-            return Avatares.FirstOrDefault();
+            lock (Sincronizacion)
+            {
+                return _avatares != null && _avatares.Count > 0 ? _avatares[0] : null;
+            }
         }
 
         public static ObjetoAvatar ObtenerAvatarPorId(int id)
         {
-            AvataresPorId.TryGetValue(id, out ObjetoAvatar avatar);
-            return avatar;
+            lock (Sincronizacion)
+            {
+                if (_avataresPorId != null && _avataresPorId.TryGetValue(id, out ObjetoAvatar avatar))
+                {
+                    return avatar;
+                }
+            }
+
+            return null;
         }
 
         public static ObjetoAvatar ObtenerAvatarPorRuta(string rutaRelativa)
@@ -46,8 +121,15 @@ namespace PictionaryMusicalCliente.Utilidades
                 return null;
             }
 
-            AvataresPorRuta.TryGetValue(rutaNormalizada, out ObjetoAvatar avatar);
-            return avatar;
+            lock (Sincronizacion)
+            {
+                if (_avataresPorRuta != null && _avataresPorRuta.TryGetValue(rutaNormalizada, out ObjetoAvatar avatar))
+                {
+                    return avatar;
+                }
+            }
+
+            return null;
         }
 
         public static bool SonRutasEquivalentes(string rutaA, string rutaB)
@@ -61,6 +143,52 @@ namespace PictionaryMusicalCliente.Utilidades
             }
 
             return string.Equals(normalizadaA, normalizadaB, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static ImageSource ObtenerImagen(ObjetoAvatar avatar)
+        {
+            if (avatar == null)
+            {
+                return null;
+            }
+
+            if (avatar.Imagen != null)
+            {
+                return avatar.Imagen;
+            }
+
+            if (string.IsNullOrWhiteSpace(avatar.ImagenUriAbsoluta))
+            {
+                return null;
+            }
+
+            try
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(avatar.ImagenUriAbsoluta, UriKind.Absolute);
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze();
+                return bitmap;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static void AsignarCatalogo(
+            List<ObjetoAvatar> lista,
+            Dictionary<int, ObjetoAvatar> porId,
+            Dictionary<string, ObjetoAvatar> porRuta)
+        {
+            lock (Sincronizacion)
+            {
+                _avatares = new ReadOnlyCollection<ObjetoAvatar>(lista);
+                _avataresPorId = porId;
+                _avataresPorRuta = porRuta;
+            }
         }
 
         private static string NormalizarRuta(string ruta)

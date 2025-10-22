@@ -20,7 +20,8 @@ namespace PictionaryMusicalCliente
             InitializeComponent();
 
             IPerfilService perfilService = new PerfilService();
-            ISeleccionarAvatarService seleccionarAvatarService = new SeleccionarAvatarDialogService();
+            IAvatarService avatarService = new AvatarService();
+            ISeleccionarAvatarService seleccionarAvatarService = new SeleccionarAvatarDialogService(avatarService);
             ICambioContrasenaService cambioContrasenaService = new CambioContrasenaService();
             IVerificarCodigoDialogService verificarCodigoDialogService = new VerificarCodigoDialogService();
             IRecuperacionCuentaDialogService recuperacionCuentaDialogService =
@@ -30,7 +31,8 @@ namespace PictionaryMusicalCliente
                 perfilService,
                 seleccionarAvatarService,
                 cambioContrasenaService,
-                recuperacionCuentaDialogService)
+                recuperacionCuentaDialogService,
+                avatarService)
             {
                 CerrarAccion = Close
             };

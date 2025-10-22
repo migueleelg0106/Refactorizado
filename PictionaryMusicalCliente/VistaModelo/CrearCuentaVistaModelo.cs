@@ -20,6 +20,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly ICuentaService _cuentaService;
         private readonly ISeleccionarAvatarService _seleccionarAvatarService;
         private readonly IVerificarCodigoDialogService _verificarCodigoDialogService;
+        private readonly IAvatarService _avatarService;
 
         private string _usuario;
         private string _nombre;
@@ -36,18 +37,21 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             ICodigoVerificacionService codigoVerificacionService,
             ICuentaService cuentaService,
             ISeleccionarAvatarService seleccionarAvatarService,
-            IVerificarCodigoDialogService verificarCodigoDialogService)
+            IVerificarCodigoDialogService verificarCodigoDialogService,
+            IAvatarService avatarService)
         {
             _codigoVerificacionService = codigoVerificacionService ?? throw new ArgumentNullException(nameof(codigoVerificacionService));
             _cuentaService = cuentaService ?? throw new ArgumentNullException(nameof(cuentaService));
             _seleccionarAvatarService = seleccionarAvatarService ?? throw new ArgumentNullException(nameof(seleccionarAvatarService));
             _verificarCodigoDialogService = verificarCodigoDialogService ?? throw new ArgumentNullException(nameof(verificarCodigoDialogService));
+            _avatarService = avatarService ?? throw new ArgumentNullException(nameof(avatarService));
 
             CrearCuentaCommand = new ComandoAsincrono(_ => CrearCuentaAsync(), _ => !EstaProcesando);
             CancelarCommand = new ComandoDelegado(Cancelar);
             SeleccionarAvatarCommand = new ComandoAsincrono(_ => SeleccionarAvatarAsync());
 
             EstablecerAvatarPredeterminado();
+            _ = CargarCatalogoAvataresAsync();
         }
 
         public string Usuario
@@ -366,7 +370,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
 
             AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
-            AvatarSeleccionadoImagen = avatar.Imagen;
+            AvatarSeleccionadoImagen = AvatarHelper.ObtenerImagen(avatar);
         }
 
         private void EstablecerAvatarPredeterminado()
@@ -375,7 +379,26 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             if (avatar != null)
             {
                 AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
-                AvatarSeleccionadoImagen = avatar.Imagen;
+                AvatarSeleccionadoImagen = AvatarHelper.ObtenerImagen(avatar);
+            }
+        }
+
+        private async Task CargarCatalogoAvataresAsync()
+        {
+            try
+            {
+                IReadOnlyList<ObjetoAvatar> avatares = await _avatarService.ObtenerCatalogoAsync()
+                    .ConfigureAwait(true);
+
+                if (avatares != null && avatares.Count > 0)
+                {
+                    AvatarHelper.ActualizarCatalogo(avatares);
+                    EstablecerAvatarPredeterminado();
+                }
+            }
+            catch (ServicioException)
+            {
+                // Se mantiene el catálogo local como respaldo
             }
         }
     }
