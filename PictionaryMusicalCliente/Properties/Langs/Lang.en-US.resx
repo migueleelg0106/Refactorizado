@@ -265,6 +265,30 @@
   <data name="amigosTextoAmigoEliminado" xml:space="preserve">
     <value>Friend removed from your list.</value>
   </data>
+  <data name="amigosErrorSolicitudPropia" xml:space="preserve">
+    <value>You can't send a friend request to yourself.</value>
+  </data>
+  <data name="amigosErrorUsuarioNoExiste" xml:space="preserve">
+    <value>One of the specified users doesn't exist.</value>
+  </data>
+  <data name="amigosErrorRelacionExistente" xml:space="preserve">
+    <value>A friend request or relationship between the users already exists.</value>
+  </data>
+  <data name="amigosErrorSoloReceptorAcepta" xml:space="preserve">
+    <value>Only the request recipient can accept it.</value>
+  </data>
+  <data name="amigosErrorSolicitudYaAceptada" xml:space="preserve">
+    <value>The friend request has already been accepted.</value>
+  </data>
+  <data name="amigosErrorSolicitudInexistente" xml:space="preserve">
+    <value>No friend request exists between the users.</value>
+  </data>
+  <data name="amigosErrorEliminarRelacionPropia" xml:space="preserve">
+    <value>You can't remove a relationship with yourself.</value>
+  </data>
+  <data name="amigosErrorRelacionInexistente" xml:space="preserve">
+    <value>No friendship exists between the users.</value>
+  </data>
   <data name="globalTextoInvitaciones" xml:space="preserve">
     <value>INVITATIONS</value>
   </data>
