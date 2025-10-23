@@ -265,6 +265,45 @@
   <data name="amigosTextoAmigoEliminado" xml:space="preserve">
     <value>Se eliminó al amigo de tu lista.</value>
   </data>
+  <data name="amigosErrorRecuperarSolicitudes" xml:space="preserve">
+    <value>No fue posible recuperar las solicitudes de amistad.</value>
+  </data>
+  <data name="amigosErrorAutoSolicitud" xml:space="preserve">
+    <value>No es posible enviarse una solicitud de amistad a sí mismo.</value>
+  </data>
+  <data name="amigosErrorUsuarioNoExiste" xml:space="preserve">
+    <value>Alguno de los usuarios especificados no existe.</value>
+  </data>
+  <data name="amigosErrorRelacionExiste" xml:space="preserve">
+    <value>Ya existe una solicitud o relación de amistad entre los usuarios.</value>
+  </data>
+  <data name="amigosErrorCompletarSolicitud" xml:space="preserve">
+    <value>No fue posible completar la solicitud de amistad.</value>
+  </data>
+  <data name="amigosErrorAlmacenarSolicitud" xml:space="preserve">
+    <value>No fue posible almacenar la solicitud de amistad.</value>
+  </data>
+  <data name="amigosErrorSolicitudAceptada" xml:space="preserve">
+    <value>La solicitud de amistad ya fue aceptada con anterioridad.</value>
+  </data>
+  <data name="amigosErrorSolicitudNoExiste" xml:space="preserve">
+    <value>No existe una solicitud de amistad entre los usuarios.</value>
+  </data>
+  <data name="amigosErrorAceptarSolicitud" xml:space="preserve">
+    <value>No fue posible aceptar la solicitud de amistad.</value>
+  </data>
+  <data name="amigosErrorActualizarSolicitud" xml:space="preserve">
+    <value>No fue posible actualizar la solicitud de amistad.</value>
+  </data>
+  <data name="amigosErrorRelacionNoExiste" xml:space="preserve">
+    <value>No existe una relación de amistad entre los usuarios.</value>
+  </data>
+  <data name="amigosErrorEliminarRelacion" xml:space="preserve">
+    <value>No fue posible eliminar la relación de amistad.</value>
+  </data>
+  <data name="amigosErrorEliminarRelacionBaseDatos" xml:space="preserve">
+    <value>No fue posible eliminar la relación de amistad en la base de datos.</value>
+  </data>
   <data name="globalTextoInvitaciones" xml:space="preserve">
     <value>INVITACIONES</value>
   </data>
