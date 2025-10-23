@@ -22,7 +22,7 @@
 
                 <TextBlock Grid.Row="0" Text="{x:Static language:Lang.globalTextoSolicitudes}" FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" Width="202"/>
 
-                <ListBox Margin="0,59,0,0" Grid.RowSpan="2" ItemsSource="{Binding Solicitudes}" BorderThickness="0">
+                <ListBox Margin="0,59,0,0" Grid.RowSpan="2" ItemsSource="{Binding Solicitudes}" BorderThickness="0" HorizontalContentAlignment="Stretch">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="0,5">

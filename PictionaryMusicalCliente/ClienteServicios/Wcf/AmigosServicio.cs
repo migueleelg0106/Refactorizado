@@ -53,43 +53,48 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
 
                 LimpiarSolicitudes();
-
                 var cliente = CrearCliente();
+                _usuarioSuscrito = nombreUsuario;
 
                 try
                 {
                     await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
                     _cliente = cliente;
-                    _usuarioSuscrito = nombreUsuario;
                     NotificarSolicitudesActualizadas();
                 }
                 catch (FaultException ex)
                 {
+                    _usuarioSuscrito = null;
                     cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
                 }
                 catch (EndpointNotFoundException ex)
                 {
+                    _usuarioSuscrito = null;
                     cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
                 }
                 catch (TimeoutException ex)
                 {
+                    _usuarioSuscrito = null;
                     cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
                 }
                 catch (CommunicationException ex)
                 {
+                    _usuarioSuscrito = null;
                     cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
                 }
                 catch (InvalidOperationException ex)
                 {
+                    _usuarioSuscrito = null;
                     cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
                 }
                 catch (OperationCanceledException ex)
                 {
+                    _usuarioSuscrito = null;
                     cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
                 }

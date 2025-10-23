@@ -31,8 +31,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private IdiomaOpcion _idiomaSeleccionado;
         private ObservableCollection<OpcionTexto> _dificultadesDisponibles;
         private OpcionTexto _dificultadSeleccionada;
-        private ObservableCollection<string> _amigos;
-        private string _amigoSeleccionado;
+        private ObservableCollection<DTOs.AmigoDTO> _amigos;
+        private DTOs.AmigoDTO _amigoSeleccionado;
 
         private readonly string _nombreUsuarioSesion;
         private readonly ILocalizacionServicio _localizacionService;
@@ -69,7 +69,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             AbrirClasificacionCommand = new ComandoDelegado(_ => AbrirClasificacion?.Invoke());
             AbrirBuscarAmigoCommand = new ComandoDelegado(_ => AbrirBuscarAmigo?.Invoke());
             AbrirSolicitudesCommand = new ComandoDelegado(_ => AbrirSolicitudes?.Invoke());
-            AbrirEliminarAmigoCommand = new ComandoAsincrono(_ => EliminarAmigoAsync(), _ => !string.IsNullOrWhiteSpace(AmigoSeleccionado));
+            EliminarAmigoCommand = new ComandoAsincrono(
+                param => EjecutarEliminarAmigoAsync(param as DTOs.AmigoDTO),
+                param => param is DTOs.AmigoDTO
+            );
+
             AbrirInvitacionesCommand = new ComandoDelegado(_ => AbrirInvitaciones?.Invoke());
             UnirseSalaCommand = new ComandoDelegado(_ => UnirseSalaInterno());
             IniciarJuegoCommand = new ComandoDelegado(_ => IniciarJuegoInterno(), _ => PuedeIniciarJuego());
@@ -160,21 +164,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        public ObservableCollection<string> Amigos
+        public ObservableCollection<DTOs.AmigoDTO> Amigos
         {
             get => _amigos;
             private set => EstablecerPropiedad(ref _amigos, value);
         }
 
-        public string AmigoSeleccionado
+        public DTOs.AmigoDTO AmigoSeleccionado
         {
             get => _amigoSeleccionado;
             set
             {
-                if (EstablecerPropiedad(ref _amigoSeleccionado, value))
-                {
-                    AbrirEliminarAmigoCommand?.NotificarPuedeEjecutar();
-                }
+                EstablecerPropiedad(ref _amigoSeleccionado, value);
             }
         }
 
@@ -184,7 +185,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public ICommand AbrirClasificacionCommand { get; }
         public ICommand AbrirBuscarAmigoCommand { get; }
         public ICommand AbrirSolicitudesCommand { get; }
-        public IComandoAsincrono AbrirEliminarAmigoCommand { get; }
+        public IComandoAsincrono EliminarAmigoCommand { get; }
         public ICommand AbrirInvitacionesCommand { get; }
         public ICommand UnirseSalaCommand { get; }
         public IComandoNotificable IniciarJuegoCommand { get; }
@@ -247,7 +248,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private void CargarDatosUsuario()
         {
             CodigoSala = string.Empty;
-            Amigos = new ObservableCollection<string>();
+
+            Amigos = new ObservableCollection<DTOs.AmigoDTO>();
+
             NombreUsuario = _nombreUsuarioSesion;
         }
 
@@ -329,7 +332,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private void ActualizarAmigos(IReadOnlyList<DTOs.AmigoDTO> amigos)
         {
             if (Amigos == null)
-                Amigos = new ObservableCollection<string>();
+                Amigos = new ObservableCollection<DTOs.AmigoDTO>();
 
             Amigos.Clear();
 
@@ -338,12 +341,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 foreach (var amigo in amigos)
                 {
                     if (!string.IsNullOrWhiteSpace(amigo?.NombreUsuario))
-                        Amigos.Add(amigo.NombreUsuario);
+                        Amigos.Add(amigo);
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(AmigoSeleccionado)
-                && (amigos == null || !amigos.Any(a => string.Equals(a.NombreUsuario, AmigoSeleccionado, StringComparison.OrdinalIgnoreCase))))
+            if (AmigoSeleccionado != null
+                && (amigos == null || !amigos.Any(a => string.Equals(a.NombreUsuario, AmigoSeleccionado.NombreUsuario, StringComparison.OrdinalIgnoreCase))))
             {
                 AmigoSeleccionado = null;
             }
@@ -360,13 +363,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 dispatcher.BeginInvoke(accion);
         }
 
-        private async Task EliminarAmigoAsync()
+        private async Task EjecutarEliminarAmigoAsync(DTOs.AmigoDTO amigo)
         {
-            string amigo = AmigoSeleccionado;
+            if (amigo == null) return;
 
-            if (string.IsNullOrWhiteSpace(amigo)) return;
-
-            bool? confirmar = ConfirmarEliminarAmigo?.Invoke(amigo);
+            bool? confirmar = ConfirmarEliminarAmigo?.Invoke(amigo.NombreUsuario);
             if (confirmar != true) return;
 
             if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
@@ -377,7 +378,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                await _amigosService.EliminarAmigoAsync(_nombreUsuarioSesion, amigo).ConfigureAwait(true);
+                await _amigosService.EliminarAmigoAsync(_nombreUsuarioSesion, amigo.NombreUsuario).ConfigureAwait(true);
                 MostrarMensaje?.Invoke(Lang.amigosTextoAmigoEliminado);
             }
             catch (ExcepcionServicio ex)

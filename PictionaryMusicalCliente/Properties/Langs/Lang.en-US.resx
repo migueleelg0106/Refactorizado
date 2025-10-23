@@ -245,7 +245,7 @@
     <value>FRIENDS</value>
   </data>
   <data name="globalTextoBuscarAmigo" xml:space="preserve">
-    <value>FIND A FRIEND</value>
+    <value>ADD A FRIEND</value>
   </data>
   <data name="globalTextoSolicitudes" xml:space="preserve">
     <value>REQUESTS</value>

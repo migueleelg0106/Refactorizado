@@ -62,7 +62,7 @@ namespace Servicios.Servicios.Utilidades
             {
                 using (var mensaje = new MailMessage(remitente, correoDestino, asunto, cuerpo))
                 {
-                    mensaje.IsBodyHtml = false;
+                    mensaje.IsBodyHtml = true;
 
                     using (var cliente = new SmtpClient(host, puerto))
                     {
@@ -112,21 +112,22 @@ namespace Servicios.Servicios.Utilidades
         private static string ConstruirCuerpoMensaje(string usuarioDestino, string codigo)
         {
             var builder = new StringBuilder();
+            builder.Append("<html><body>");
 
             if (!string.IsNullOrWhiteSpace(usuarioDestino))
             {
-                builder.AppendLine($"Hola {usuarioDestino},");
+                builder.Append($"<h2>Hola {usuarioDestino},</h2>");
             }
             else
             {
-                builder.AppendLine("Hola,");
+                builder.Append("<h2>Hola,</h2>");
             }
 
-            builder.AppendLine();
-            builder.AppendLine($"Tu código de verificación es: {codigo}");
-            builder.AppendLine();
-            builder.AppendLine("Si no solicitaste este código puedes ignorar este mensaje.");
+            builder.Append("<p>Tu código de verificación es:</p>");
+            builder.Append($"<h1>{codigo}</h1>");
+            builder.Append("<p>Si no solicitaste este código puedes ignorar este mensaje.</p>");
 
+            builder.Append("</body></html>");
             return builder.ToString();
         }
     }

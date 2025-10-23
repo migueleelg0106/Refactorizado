@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="{x:Static language:Lang.principalTextoTitulo}"
         Height="620" Width="1000"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Cursor="">
 
     <Grid>
         <Grid.Background>
@@ -24,7 +24,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Cabecera: Usuario, Título, Ajustes -->
         <Grid Grid.Row="0" Margin="20,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -32,7 +31,6 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Perfil de Usuario -->
             <Button x:Name="botonPerfilUsuario"
                     Grid.Column="0"
                     Content="{Binding NombreUsuario}"
@@ -44,7 +42,6 @@
                     FontFamily="Comic Sans MS"
                     Command="{Binding AbrirPerfilCommand}" VerticalAlignment="Center"/>
 
-            <!-- Título Principal -->
             <Grid Grid.ColumnSpan="3" IsHitTestVisible="False">
                 <Image Source="/Recursos/PictionaryMusicalLogo.png"
                        HorizontalAlignment="Center"
@@ -53,7 +50,6 @@
                        Stretch="Uniform" Width="152"/>
             </Grid>
 
-            <!-- Botón de Ajustes -->
             <Button Grid.Column="2"
                     Content="{x:Static language:Lang.globalTextoAjustes}"
                     FontFamily="Comic Sans MS"
@@ -64,7 +60,6 @@
                     Command="{Binding AbrirAjustesCommand}"/>
         </Grid>
 
-        <!-- Paneles centrales -->
         <Grid Grid.Row="1" Margin="10,0,10,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -72,7 +67,6 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Columna Izquierda: Unirse a sala y otros -->
             <StackPanel Grid.Column="0" Margin="10,0">
                 <Border Background="White" BorderBrush="Black" BorderThickness="2" Padding="15" CornerRadius="3">
                     <Grid>
@@ -120,7 +114,6 @@
                         Command="{Binding AbrirClasificacionCommand}"/>
             </StackPanel>
 
-            <!-- Columna Central: Crear una sala -->
             <Border Background="White" BorderBrush="Black" BorderThickness="2" Padding="20" CornerRadius="3"
                     Margin="10,0"
                     Grid.Column="1">
@@ -183,7 +176,6 @@
                 </Grid>
             </Border>
 
-            <!-- Columna Derecha: Amigos -->
             <Grid Grid.Column="2" Margin="10,0,10,0">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -209,35 +201,61 @@
                                 BorderBrush="Black"
                                 FontFamily="Comic Sans MS"
                                 Command="{Binding AbrirBuscarAmigoCommand}"/>
+
                         <ListBox Grid.Row="2"
+                                 x:Name="ListaAmigosControl"
                                  BorderBrush="Gray"
                                  BorderThickness="1"
+                                 Margin="0,5,0,0"
                                  MinHeight="100"
                                  FontFamily="Comic Sans MS"
                                  ItemsSource="{Binding Amigos}"
-                                 SelectedItem="{Binding AmigoSeleccionado, Mode=TwoWay}"
-                                 SelectionMode="Single"/>
+                                 Background="Transparent"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 
+                                 HorizontalContentAlignment="Stretch">
+
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding NombreUsuario}" 
+                                                   VerticalAlignment="Center"/>
+
+                                        <Button Grid.Column="1"
+                                                
+                                                Command="{Binding DataContext.EliminarAmigoCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                CommandParameter="{Binding}"
+                                                
+                                                Background="Transparent" 
+                                                BorderThickness="0"
+                                                Cursor="Hand"
+                                                ToolTip="{x:Static language:Lang.eliminarAmigoTextoEliminar}">
+
+                                            <Image Source="/Recursos/Rechazar.png" Width="18" 
+                                                   Height="18"/>
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                         <Grid Grid.Row="3" Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
+
                             <Button Grid.Column="0"
                                     Content="{x:Static language:Lang.globalTextoSolicitudes}"
-                                    Margin="0,0,5,0"
                                     Padding="5"
                                     Background="White"
                                     BorderBrush="Black"
                                     FontFamily="Comic Sans MS"
                                     Command="{Binding AbrirSolicitudesCommand}"/>
-                            <Button Grid.Column="1"
-                                    Content="{x:Static language:Lang.eliminarAmigoTextoEliminar}"
-                                    Margin="5,0,0,0"
-                                    Padding="5"
-                                    Background="White"
-                                    BorderBrush="Black"
-                                    FontFamily="Comic Sans MS"
-                                    Command="{Binding AbrirEliminarAmigoCommand}"/>
                         </Grid>
                     </Grid>
                 </Border>
