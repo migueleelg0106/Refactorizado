@@ -114,7 +114,20 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
                 ["Los datos proporcionados no son válidos para iniciar sesión."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
                 ["No fue posible completar el inicio de sesión."] = () => LangResources.Lang.errorTextoServidorInicioSesion,
                 ["Ocurrió un problema al iniciar sesión."] = () => LangResources.Lang.errorTextoServidorInicioSesion,
-                ["Ocurrió un error inesperado al iniciar sesión."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud
+                ["Ocurrió un error inesperado al iniciar sesión."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
+                ["No fue posible recuperar las solicitudes de amistad."] = () => LangResources.Lang.amigosErrorRecuperarSolicitudes,
+                ["No es posible enviarse una solicitud de amistad a sí mismo."] = () => LangResources.Lang.amigosErrorAutoSolicitud,
+                ["Alguno de los usuarios especificados no existe."] = () => LangResources.Lang.amigosErrorUsuarioNoExiste,
+                ["Ya existe una solicitud o relación de amistad entre los usuarios."] = () => LangResources.Lang.amigosErrorRelacionExiste,
+                ["No fue posible completar la solicitud de amistad."] = () => LangResources.Lang.amigosErrorCompletarSolicitud,
+                ["No fue posible almacenar la solicitud de amistad."] = () => LangResources.Lang.amigosErrorAlmacenarSolicitud,
+                ["La solicitud de amistad ya fue aceptada con anterioridad."] = () => LangResources.Lang.amigosErrorSolicitudAceptada,
+                ["No existe una solicitud de amistad entre los usuarios."] = () => LangResources.Lang.amigosErrorSolicitudNoExiste,
+                ["No fue posible aceptar la solicitud de amistad."] = () => LangResources.Lang.amigosErrorAceptarSolicitud,
+                ["No fue posible actualizar la solicitud de amistad."] = () => LangResources.Lang.amigosErrorActualizarSolicitud,
+                ["No existe una relación de amistad entre los usuarios."] = () => LangResources.Lang.amigosErrorRelacionNoExiste,
+                ["No fue posible eliminar la relación de amistad."] = () => LangResources.Lang.amigosErrorEliminarRelacion,
+                ["No fue posible eliminar la relación de amistad en la base de datos."] = () => LangResources.Lang.amigosErrorEliminarRelacionBaseDatos
             };
 
         public static string Localizar(string mensaje, string mensajePredeterminado)
