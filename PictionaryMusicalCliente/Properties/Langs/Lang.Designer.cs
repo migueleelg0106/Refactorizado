@@ -412,6 +412,123 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
 
         /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible recuperar las solicitudes de amistad..
+        /// </summary>
+        public static string amigosErrorRecuperarSolicitudes {
+            get {
+                return ResourceManager.GetString("amigosErrorRecuperarSolicitudes", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No es posible enviarse una solicitud de amistad a sí mismo..
+        /// </summary>
+        public static string amigosErrorAutoSolicitud {
+            get {
+                return ResourceManager.GetString("amigosErrorAutoSolicitud", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Alguno de los usuarios especificados no existe..
+        /// </summary>
+        public static string amigosErrorUsuarioNoExiste {
+            get {
+                return ResourceManager.GetString("amigosErrorUsuarioNoExiste", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ya existe una solicitud o relación de amistad entre los usuarios..
+        /// </summary>
+        public static string amigosErrorRelacionExiste {
+            get {
+                return ResourceManager.GetString("amigosErrorRelacionExiste", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible completar la solicitud de amistad..
+        /// </summary>
+        public static string amigosErrorCompletarSolicitud {
+            get {
+                return ResourceManager.GetString("amigosErrorCompletarSolicitud", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible almacenar la solicitud de amistad..
+        /// </summary>
+        public static string amigosErrorAlmacenarSolicitud {
+            get {
+                return ResourceManager.GetString("amigosErrorAlmacenarSolicitud", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a La solicitud de amistad ya fue aceptada con anterioridad..
+        /// </summary>
+        public static string amigosErrorSolicitudAceptada {
+            get {
+                return ResourceManager.GetString("amigosErrorSolicitudAceptada", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No existe una solicitud de amistad entre los usuarios..
+        /// </summary>
+        public static string amigosErrorSolicitudNoExiste {
+            get {
+                return ResourceManager.GetString("amigosErrorSolicitudNoExiste", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible aceptar la solicitud de amistad..
+        /// </summary>
+        public static string amigosErrorAceptarSolicitud {
+            get {
+                return ResourceManager.GetString("amigosErrorAceptarSolicitud", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible actualizar la solicitud de amistad..
+        /// </summary>
+        public static string amigosErrorActualizarSolicitud {
+            get {
+                return ResourceManager.GetString("amigosErrorActualizarSolicitud", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No existe una relación de amistad entre los usuarios..
+        /// </summary>
+        public static string amigosErrorRelacionNoExiste {
+            get {
+                return ResourceManager.GetString("amigosErrorRelacionNoExiste", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible eliminar la relación de amistad..
+        /// </summary>
+        public static string amigosErrorEliminarRelacion {
+            get {
+                return ResourceManager.GetString("amigosErrorEliminarRelacion", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible eliminar la relación de amistad en la base de datos..
+        /// </summary>
+        public static string amigosErrorEliminarRelacionBaseDatos {
+            get {
+                return ResourceManager.GetString("amigosErrorEliminarRelacionBaseDatos", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Busca una cadena traducida similar a No se pudo actualizar la contraseña. Intente nuevamente..
         /// </summary>
         public static string errorTextoActualizarContrasena {
