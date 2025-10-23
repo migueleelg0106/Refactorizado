@@ -16,11 +16,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
     public class CrearCuentaVistaModelo : BaseVistaModelo
     {
-        private readonly ICodigoVerificacionService _codigoVerificacionService;
-        private readonly ICuentaService _cuentaService;
-        private readonly ISeleccionarAvatarService _seleccionarAvatarService;
-        private readonly IVerificarCodigoDialogService _verificarCodigoDialogService;
-        private readonly IAvatarService _avatarService;
+        private readonly ICodigoVerificacionServicio _codigoVerificacionService;
+        private readonly ICuentaServicio _cuentaService;
+        private readonly ISeleccionarAvatarServicio _seleccionarAvatarService;
+        private readonly IVerificarCodigoDialogoServicio _verificarCodigoDialogService;
+        private readonly IAvatarServicio _avatarService;
 
         private string _usuario;
         private string _nombre;
@@ -34,11 +34,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private bool _estaProcesando;
 
         public CrearCuentaVistaModelo(
-            ICodigoVerificacionService codigoVerificacionService,
-            ICuentaService cuentaService,
-            ISeleccionarAvatarService seleccionarAvatarService,
-            IVerificarCodigoDialogService verificarCodigoDialogService,
-            IAvatarService avatarService)
+            ICodigoVerificacionServicio codigoVerificacionService,
+            ICuentaServicio cuentaService,
+            ISeleccionarAvatarServicio seleccionarAvatarService,
+            IVerificarCodigoDialogoServicio verificarCodigoDialogService,
+            IAvatarServicio avatarService)
         {
             _codigoVerificacionService = codigoVerificacionService ?? throw new ArgumentNullException(nameof(codigoVerificacionService));
             _cuentaService = cuentaService ?? throw new ArgumentNullException(nameof(cuentaService));
@@ -149,7 +149,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             string mensajeError = null;
 
-            DTOs.ResultadoOperacionDTO resultadoUsuario = ValidacionEntradaHelper.ValidarUsuario(Usuario);
+            DTOs.ResultadoOperacionDTO resultadoUsuario = ValidacionEntrada.ValidarUsuario(Usuario);
             if (resultadoUsuario?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Usuario));
@@ -159,7 +159,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
             }
 
-            DTOs.ResultadoOperacionDTO resultadoNombre = ValidacionEntradaHelper.ValidarNombre(Nombre);
+            DTOs.ResultadoOperacionDTO resultadoNombre = ValidacionEntrada.ValidarNombre(Nombre);
             if (resultadoNombre?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Nombre));
@@ -169,7 +169,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
             }
 
-            DTOs.ResultadoOperacionDTO resultadoApellido = ValidacionEntradaHelper.ValidarApellido(Apellido);
+            DTOs.ResultadoOperacionDTO resultadoApellido = ValidacionEntrada.ValidarApellido(Apellido);
             if (resultadoApellido?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Apellido));
@@ -179,7 +179,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
             }
 
-            DTOs.ResultadoOperacionDTO resultadoCorreo = ValidacionEntradaHelper.ValidarCorreo(Correo);
+            DTOs.ResultadoOperacionDTO resultadoCorreo = ValidacionEntrada.ValidarCorreo(Correo);
             if (resultadoCorreo?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Correo));
@@ -189,7 +189,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
             }
 
-            DTOs.ResultadoOperacionDTO resultadoContrasena = ValidacionEntradaHelper.ValidarContrasena(Contrasena);
+            DTOs.ResultadoOperacionDTO resultadoContrasena = ValidacionEntrada.ValidarContrasena(Contrasena);
             if (resultadoContrasena?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Contrasena));
@@ -344,7 +344,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 MostrarMensaje?.Invoke(Lang.crearCuentaTextoExitosoMensaje);
                 CerrarAccion?.Invoke();
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoRegistrarCuentaMasTarde);
             }
@@ -370,16 +370,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
 
             AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
-            AvatarSeleccionadoImagen = AvatarHelper.ObtenerImagen(avatar);
+            AvatarSeleccionadoImagen = AvatarAyudante.ObtenerImagen(avatar);
         }
 
         private void EstablecerAvatarPredeterminado()
         {
-            ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPredeterminado();
+            ObjetoAvatar avatar = AvatarAyudante.ObtenerAvatarPredeterminado();
             if (avatar != null)
             {
                 AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
-                AvatarSeleccionadoImagen = AvatarHelper.ObtenerImagen(avatar);
+                AvatarSeleccionadoImagen = AvatarAyudante.ObtenerImagen(avatar);
             }
         }
 
@@ -392,11 +392,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (avatares != null && avatares.Count > 0)
                 {
-                    AvatarHelper.ActualizarCatalogo(avatares);
+                    AvatarAyudante.ActualizarCatalogo(avatares);
                     EstablecerAvatarPredeterminado();
                 }
             }
-            catch (ServicioException)
+            catch (ExcepcionServicio)
             {
                 // Se mantiene el catálogo local como respaldo
             }

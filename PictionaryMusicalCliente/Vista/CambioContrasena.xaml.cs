@@ -42,8 +42,8 @@ namespace PictionaryMusicalCliente
 
         private void MarcarCamposInvalidos(IList<string> camposInvalidos)
         {
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueContrasenaNueva);
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueContrasenaConfirmacion);
+            ControlVisual.RestablecerEstadoCampo(bloqueContrasenaNueva);
+            ControlVisual.RestablecerEstadoCampo(bloqueContrasenaConfirmacion);
 
             if (camposInvalidos == null)
             {
@@ -52,12 +52,12 @@ namespace PictionaryMusicalCliente
 
             if (camposInvalidos.Contains(nameof(CambioContrasenaVistaModelo.NuevaContrasena)))
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueContrasenaNueva);
+                ControlVisual.MarcarCampoInvalido(bloqueContrasenaNueva);
             }
 
             if (camposInvalidos.Contains(nameof(CambioContrasenaVistaModelo.ConfirmacionContrasena)))
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueContrasenaConfirmacion);
+                ControlVisual.MarcarCampoInvalido(bloqueContrasenaConfirmacion);
             }
         }
     }

@@ -19,11 +19,11 @@ namespace PictionaryMusicalCliente
         {
             InitializeComponent();
 
-            var codigoVerificacionService = new CodigoVerificacionService();
-            var cuentaService = new CuentaService();
-            IAvatarService avatarService = new AvatarService();
-            var seleccionarAvatarService = new SeleccionarAvatarDialogService(avatarService);
-            var verificarCodigoDialogService = new VerificarCodigoDialogService();
+            var codigoVerificacionService = new CodigoVerificacionServicio();
+            var cuentaService = new CuentaServicio();
+            IAvatarServicio avatarService = new AvatarService();
+            var seleccionarAvatarService = new SeleccionarAvatarDialogoService(avatarService);
+            var verificarCodigoDialogService = new VerificarCodigoDialogoService();
 
             _vistaModelo = new CrearCuentaVistaModelo(
                 codigoVerificacionService,
@@ -34,7 +34,7 @@ namespace PictionaryMusicalCliente
 
             _vistaModelo.CerrarAccion = Close;
             _vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
-            _vistaModelo.MostrarMensaje = AvisoHelper.Mostrar;
+            _vistaModelo.MostrarMensaje = AvisoAyudante.Mostrar;
 
             DataContext = _vistaModelo;
         }
@@ -49,11 +49,11 @@ namespace PictionaryMusicalCliente
 
         private void MarcarCamposInvalidos(IList<string> camposInvalidos)
         {
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoUsuario);
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoNombre);
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoApellido);
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoCorreo);
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueContrasena);
+            ControlVisual.RestablecerEstadoCampo(bloqueTextoUsuario);
+            ControlVisual.RestablecerEstadoCampo(bloqueTextoNombre);
+            ControlVisual.RestablecerEstadoCampo(bloqueTextoApellido);
+            ControlVisual.RestablecerEstadoCampo(bloqueTextoCorreo);
+            ControlVisual.RestablecerEstadoCampo(bloqueContrasena);
 
             if (camposInvalidos == null)
             {
@@ -62,27 +62,27 @@ namespace PictionaryMusicalCliente
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Usuario)))
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoUsuario);
+                ControlVisual.MarcarCampoInvalido(bloqueTextoUsuario);
             }
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Nombre)))
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoNombre);
+                ControlVisual.MarcarCampoInvalido(bloqueTextoNombre);
             }
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Apellido)))
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoApellido);
+                ControlVisual.MarcarCampoInvalido(bloqueTextoApellido);
             }
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Correo)))
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoCorreo);
+                ControlVisual.MarcarCampoInvalido(bloqueTextoCorreo);
             }
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Contrasena)))
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueContrasena);
+                ControlVisual.MarcarCampoInvalido(bloqueContrasena);
             }
         }
     }

@@ -12,12 +12,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
     public class BuscarAmigoVistaModelo : BaseVistaModelo
     {
-        private readonly IAmigosService _amigosService;
+        private readonly IAmigosServicio _amigosService;
         private readonly string _usuarioActual;
         private string _nombreUsuarioBusqueda;
         private bool _estaProcesando;
 
-        public BuscarAmigoVistaModelo(IAmigosService amigosService)
+        public BuscarAmigoVistaModelo(IAmigosServicio amigosService)
         {
             _amigosService = amigosService ?? throw new ArgumentNullException(nameof(amigosService));
             _usuarioActual = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
@@ -70,13 +70,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             if (string.IsNullOrWhiteSpace(nombreAmigo))
             {
-                AvisoHelper.Mostrar(Lang.buscarAmigoTextoIngreseUsuario);
+                AvisoAyudante.Mostrar(Lang.buscarAmigoTextoIngreseUsuario);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_usuarioActual))
             {
-                AvisoHelper.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
+                AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
 
@@ -85,12 +85,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             try
             {
                 await _amigosService.EnviarSolicitudAsync(_usuarioActual, nombreAmigo).ConfigureAwait(true);
-                AvisoHelper.Mostrar(Lang.amigosTextoSolicitudEnviada);
+                AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudEnviada);
                 SolicitudEnviada?.Invoke();
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {

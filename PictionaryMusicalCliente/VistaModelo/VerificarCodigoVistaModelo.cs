@@ -17,7 +17,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private const int SegundosEsperaReenvio = 30;
         private static readonly TimeSpan TiempoExpiracionCodigo = TimeSpan.FromMinutes(5);
 
-        private readonly ICodigoVerificacionService _codigoVerificacionService;
+        private readonly ICodigoVerificacionServicio _codigoVerificacionService;
         private string _tokenCodigo;
         private readonly DispatcherTimer _temporizadorReenvio;
         private readonly DispatcherTimer _temporizadorExpiracion;
@@ -31,7 +31,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public VerificarCodigoVistaModelo(
             string descripcion,
             string tokenCodigo,
-            ICodigoVerificacionService codigoVerificacionService)
+            ICodigoVerificacionServicio codigoVerificacionService)
         {
             Descripcion = descripcion ?? throw new ArgumentNullException(nameof(descripcion));
             _tokenCodigo = tokenCodigo ?? throw new ArgumentNullException(nameof(tokenCodigo));
@@ -114,7 +114,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             if (string.IsNullOrWhiteSpace(CodigoVerificacion))
             {
                 MarcarCodigoInvalido?.Invoke(true);
-                AvisoHelper.Mostrar(Lang.errorTextoCodigoVerificacionRequerido);
+                AvisoAyudante.Mostrar(Lang.errorTextoCodigoVerificacionRequerido);
                 return;
             }
 
@@ -128,7 +128,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 if (resultado == null)
                 {
                     MarcarCodigoInvalido?.Invoke(true);
-                    AvisoHelper.Mostrar(Lang.errorTextoVerificarCodigo);
+                    AvisoAyudante.Mostrar(Lang.errorTextoVerificarCodigo);
                     return;
                 }
 
@@ -145,7 +145,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                         return;
                     }
 
-                    AvisoHelper.Mostrar(mensaje);
+                    AvisoAyudante.Mostrar(mensaje);
                     return;
                 }
 
@@ -153,10 +153,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 DetenerTemporizadores();
                 VerificacionCompletada?.Invoke(resultado);
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
                 MarcarCodigoInvalido?.Invoke(true);
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoVerificarCodigo);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoVerificarCodigo);
             }
             finally
             {
@@ -187,12 +187,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
                 else
                 {
-                    AvisoHelper.Mostrar(resultado?.Mensaje ?? Lang.errorTextoSolicitarNuevoCodigo);
+                    AvisoAyudante.Mostrar(resultado?.Mensaje ?? Lang.errorTextoSolicitarNuevoCodigo);
                 }
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoSolicitarNuevoCodigo);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoSolicitarNuevoCodigo);
             }
         }
 
@@ -233,7 +233,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private void TemporizadorExpiracionTick(object sender, EventArgs e)
         {
             _temporizadorExpiracion.Stop();
-            AvisoHelper.Mostrar(Lang.avisoTextoCodigoExpirado);
+            AvisoAyudante.Mostrar(Lang.avisoTextoCodigoExpirado);
             DetenerTemporizadores();
             Cancelado?.Invoke();
         }

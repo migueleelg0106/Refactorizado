@@ -19,10 +19,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
     public class InicioSesionVistaModelo : BaseVistaModelo
     {
-        private readonly IInicioSesionService _inicioSesionService;
-        private readonly ICambioContrasenaService _cambioContrasenaService;
-        private readonly IRecuperacionCuentaDialogService _recuperacionCuentaDialogService;
-        private readonly ILocalizacionService _localizacionService;
+        private readonly IInicioSesionServicio _inicioSesionService;
+        private readonly ICambioContrasenaServicio _cambioContrasenaService;
+        private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogService;
+        private readonly ILocalizacionServicio _localizacionService;
 
         public const string CampoContrasena = "Contrasena";
 
@@ -33,10 +33,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private IdiomaOpcion _idiomaSeleccionado;
 
         public InicioSesionVistaModelo(
-            IInicioSesionService inicioSesionService,
-            ICambioContrasenaService cambioContrasenaService,
-            IRecuperacionCuentaDialogService recuperacionCuentaDialogService,
-            ILocalizacionService localizacionService)
+            IInicioSesionServicio inicioSesionService,
+            ICambioContrasenaServicio cambioContrasenaService,
+            IRecuperacionCuentaServicio recuperacionCuentaDialogService,
+            ILocalizacionServicio localizacionService)
         {
             _inicioSesionService = inicioSesionService ?? throw new ArgumentNullException(nameof(inicioSesionService));
             _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
@@ -136,7 +136,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             if (camposInvalidos != null)
             {
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
-                AvisoHelper.Mostrar(Lang.errorTextoCamposInvalidosGenerico);
+                AvisoAyudante.Mostrar(Lang.errorTextoCamposInvalidosGenerico);
                 return;
             }
 
@@ -157,7 +157,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado == null)
                 {
-                    AvisoHelper.Mostrar(Lang.errorTextoServidorInicioSesion);
+                    AvisoAyudante.Mostrar(Lang.errorTextoServidorInicioSesion);
                     return;
                 }
 
@@ -174,7 +174,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                     if (!string.IsNullOrWhiteSpace(mensaje))
                     {
-                        AvisoHelper.Mostrar(mensaje);
+                        AvisoAyudante.Mostrar(mensaje);
                     }
 
                     return;
@@ -188,9 +188,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 InicioSesionCompletado?.Invoke(resultado);
                 CerrarAccion?.Invoke();
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoServidorInicioSesion);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorInicioSesion);
             }
             finally
             {
@@ -204,7 +204,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (string.IsNullOrWhiteSpace(identificador))
             {
-                AvisoHelper.Mostrar(Lang.errorTextoIdentificadorRecuperacionRequerido);
+                AvisoAyudante.Mostrar(Lang.errorTextoIdentificadorRecuperacionRequerido);
                 return;
             }
 
@@ -217,12 +217,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
-                    AvisoHelper.Mostrar(resultado.Mensaje);
+                    AvisoAyudante.Mostrar(resultado.Mensaje);
                 }
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoServidorSolicitudCambioContrasena);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorSolicitudCambioContrasena);
             }
             finally
             {

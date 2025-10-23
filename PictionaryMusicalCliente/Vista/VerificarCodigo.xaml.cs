@@ -26,11 +26,11 @@ namespace PictionaryMusicalCliente
         {
             if (invalido)
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoCodigoVerificacion);
+                ControlVisual.MarcarCampoInvalido(bloqueTextoCodigoVerificacion);
             }
             else
             {
-                ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoCodigoVerificacion);
+                ControlVisual.RestablecerEstadoCampo(bloqueTextoCodigoVerificacion);
             }
         }
     }

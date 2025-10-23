@@ -36,21 +36,21 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         // Campos readonly (no se modifican fuera del constructor)
         private readonly string _nombreUsuarioSesion;
-        private readonly ILocalizacionService _localizacionService;
-        private readonly IListaAmigosService _listaAmigosService;
-        private readonly IAmigosService _amigosService;
+        private readonly ILocalizacionServicio _localizacionService;
+        private readonly IListaAmigosServicio _listaAmigosService;
+        private readonly IAmigosServicio _amigosService;
 
         private bool _suscripcionActiva;
 
         public VentanaPrincipalVistaModelo()
-            : this(LocalizacionService.Instancia, new ListaAmigosService(), new AmigosService())
+            : this(LocalizacionServicio.Instancia, new ListaAmigosServicio(), new AmigosService())
         {
         }
 
         public VentanaPrincipalVistaModelo(
-            ILocalizacionService localizacionService,
-            IListaAmigosService listaAmigosService,
-            IAmigosService amigosService)
+            ILocalizacionServicio localizacionService,
+            IListaAmigosServicio listaAmigosService,
+            IAmigosServicio amigosService)
         {
             _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
             _listaAmigosService = listaAmigosService ?? throw new ArgumentNullException(nameof(listaAmigosService));
@@ -218,7 +218,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 EjecutarEnDispatcher(() => ActualizarAmigos(listaActual));
 
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
@@ -236,7 +236,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 await _listaAmigosService.CancelarSuscripcionAsync(_nombreUsuarioSesion).ConfigureAwait(false);
                 await _amigosService.CancelarSuscripcionAsync(_nombreUsuarioSesion).ConfigureAwait(false);
             }
-            catch (ServicioException)
+            catch (ExcepcionServicio)
             {
                 // Ignorado
             }
@@ -348,7 +348,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 await _amigosService.EliminarAmigoAsync(_nombreUsuarioSesion, amigo).ConfigureAwait(true);
                 MostrarMensaje?.Invoke(Lang.amigosTextoAmigoEliminado);
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }

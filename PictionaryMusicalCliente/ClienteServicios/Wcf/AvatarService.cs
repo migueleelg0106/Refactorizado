@@ -12,7 +12,7 @@ using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
-    public class AvatarService : IAvatarService
+    public class AvatarService : IAvatarServicio
     {
         private const string CatalogoAvataresEndpoint = "BasicHttpBinding_ICatalogoAvatares";
 
@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             DTOs.AvatarDTO[] avatares = await EjecutarCatalogoAsync(
                 cliente => cliente.ObtenerAvataresDisponiblesAsync()).ConfigureAwait(false);
 
-            IReadOnlyList<ObjetoAvatar> lista = AvatarServicioHelper.Convertir(avatares);
+            IReadOnlyList<ObjetoAvatar> lista = AvatarServicioAyudante.Convertir(avatares);
 
             return lista?.Count > 0 ? lista : Array.Empty<ObjetoAvatar>();
         }
@@ -36,11 +36,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             if (avatares == null || avatares.Count == 0)
                 return null;
 
-            string rutaNormalizada = AvatarRutaHelper.NormalizarRutaParaComparacion(rutaRelativa);
+            string rutaNormalizada = AvatarRutaAyudante.NormalizarRutaParaComparacion(rutaRelativa);
 
             foreach (ObjetoAvatar avatar in avatares)
             {
-                string rutaAvatar = AvatarRutaHelper.NormalizarRutaParaComparacion(avatar?.RutaRelativa);
+                string rutaAvatar = AvatarRutaAyudante.NormalizarRutaParaComparacion(avatar?.RutaRelativa);
 
                 if (!string.IsNullOrEmpty(rutaAvatar) &&
                     string.Equals(rutaAvatar, rutaNormalizada, StringComparison.OrdinalIgnoreCase))
@@ -63,23 +63,23 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             catch (FaultException ex)
             {
                 string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorInformacionAvatar);
-                throw new ServicioException(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
-                throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
             }
             catch (TimeoutException ex)
             {
-                throw new ServicioException(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
             }
             catch (CommunicationException ex)
             {
-                throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
             }
             catch (InvalidOperationException ex)
             {
-                throw new ServicioException(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                throw new ExcepcionServicio(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
             }
         }
     }

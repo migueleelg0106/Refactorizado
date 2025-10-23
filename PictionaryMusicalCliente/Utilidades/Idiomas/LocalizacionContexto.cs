@@ -9,19 +9,19 @@ namespace PictionaryMusicalCliente.Utilidades.Idiomas
 {
     public class LocalizacionContexto : INotifyPropertyChanged
     {
-        private readonly ILocalizacionService _localizacionService;
+        private readonly ILocalizacionServicio _localizacionService;
 
         public LocalizacionContexto()
-            : this(LocalizacionService.Instancia)
+            : this(LocalizacionServicio.Instancia)
         {
         }
 
-        public LocalizacionContexto(ILocalizacionService localizacionService)
+        public LocalizacionContexto(ILocalizacionServicio localizacionService)
         {
             _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
-            WeakEventManager<ILocalizacionService, EventArgs>.AddHandler(
+            WeakEventManager<ILocalizacionServicio, EventArgs>.AddHandler(
                 _localizacionService,
-                nameof(ILocalizacionService.IdiomaActualizado),
+                nameof(ILocalizacionServicio.IdiomaActualizado),
                 LocalizacionServiceOnIdiomaActualizado);
         }
 

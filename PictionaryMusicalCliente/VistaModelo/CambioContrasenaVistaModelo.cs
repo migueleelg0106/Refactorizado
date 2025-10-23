@@ -15,13 +15,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
     public class CambioContrasenaVistaModelo : BaseVistaModelo
     {
         private readonly string _tokenCodigo;
-        private readonly ICambioContrasenaService _cambioContrasenaService;
+        private readonly ICambioContrasenaServicio _cambioContrasenaService;
 
         private string _nuevaContrasena;
         private string _confirmacionContrasena;
         private bool _estaProcesando;
 
-        public CambioContrasenaVistaModelo(string tokenCodigo, ICambioContrasenaService cambioContrasenaService)
+        public CambioContrasenaVistaModelo(string tokenCodigo, ICambioContrasenaServicio cambioContrasenaService)
         {
             _tokenCodigo = tokenCodigo ?? throw new ArgumentNullException(nameof(tokenCodigo));
             _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
@@ -82,22 +82,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (camposInvalidos.Count > 0)
             {
-                AvisoHelper.Mostrar(Lang.errorTextoConfirmacionContrasenaRequerida);
+                AvisoAyudante.Mostrar(Lang.errorTextoConfirmacionContrasenaRequerida);
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
                 return;
             }
 
-            DTOs.ResultadoOperacionDTO validacion = ValidacionEntradaHelper.ValidarContrasena(NuevaContrasena);
+            DTOs.ResultadoOperacionDTO validacion = ValidacionEntrada.ValidarContrasena(NuevaContrasena);
             if (validacion?.OperacionExitosa != true)
             {
-                AvisoHelper.Mostrar(validacion?.Mensaje ?? Lang.errorTextoContrasenaFormato);
+                AvisoAyudante.Mostrar(validacion?.Mensaje ?? Lang.errorTextoContrasenaFormato);
                 MostrarCamposInvalidos?.Invoke(new[] { nameof(NuevaContrasena) });
                 return;
             }
 
             if (!string.Equals(NuevaContrasena, ConfirmacionContrasena, StringComparison.Ordinal))
             {
-                AvisoHelper.Mostrar(Lang.errorTextoContrasenasNoCoinciden);
+                AvisoAyudante.Mostrar(Lang.errorTextoContrasenasNoCoinciden);
                 MostrarCamposInvalidos?.Invoke(new[] { nameof(NuevaContrasena), nameof(ConfirmacionContrasena) });
                 return;
             }
@@ -113,24 +113,24 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado == null)
                 {
-                    AvisoHelper.Mostrar(Lang.errorTextoActualizarContrasena);
+                    AvisoAyudante.Mostrar(Lang.errorTextoActualizarContrasena);
                     return;
                 }
 
                 if (!resultado.OperacionExitosa)
                 {
-                    AvisoHelper.Mostrar(resultado.Mensaje ?? Lang.errorTextoActualizarContrasena);
+                    AvisoAyudante.Mostrar(resultado.Mensaje ?? Lang.errorTextoActualizarContrasena);
                     return;
                 }
 
                 string mensaje = resultado.Mensaje ?? Lang.avisoTextoContrasenaActualizada;
-                AvisoHelper.Mostrar(mensaje);
+                AvisoAyudante.Mostrar(mensaje);
                 resultado.Mensaje = mensaje;
                 CambioContrasenaCompletado?.Invoke(resultado);
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoActualizarContrasena);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoActualizarContrasena);
             }
             finally
             {

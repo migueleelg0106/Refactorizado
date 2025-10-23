@@ -16,11 +16,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
     public class SolicitudesVistaModelo : BaseVistaModelo, IDisposable
     {
-        private readonly IAmigosService _amigosService;
+        private readonly IAmigosServicio _amigosService;
         private readonly string _usuarioActual;
         private bool _estaProcesando;
 
-        public SolicitudesVistaModelo(IAmigosService amigosService)
+        public SolicitudesVistaModelo(IAmigosServicio amigosService)
         {
             _amigosService = amigosService ?? throw new ArgumentNullException(nameof(amigosService));
             _usuarioActual = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
@@ -141,11 +141,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     .ResponderSolicitudAsync(entrada.Solicitud.UsuarioEmisor, entrada.Solicitud.UsuarioReceptor)
                     .ConfigureAwait(true);
 
-                AvisoHelper.Mostrar(Lang.amigosTextoSolicitudAceptada);
+                AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudAceptada);
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {
@@ -168,11 +168,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     .EliminarAmigoAsync(entrada.Solicitud.UsuarioEmisor, entrada.Solicitud.UsuarioReceptor)
                     .ConfigureAwait(true);
 
-                AvisoHelper.Mostrar(Lang.amigosTextoSolicitudCancelada);
+                AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudCancelada);
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {

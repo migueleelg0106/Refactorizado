@@ -14,12 +14,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
     public class ClasificacionVistaModelo : BaseVistaModelo
     {
-        private readonly IClasificacionService _clasificacionService;
+        private readonly IClasificacionServicio _clasificacionService;
         private IReadOnlyList<DTOs.ClasificacionUsuarioDTO> _clasificacionOriginal;
         private ObservableCollection<DTOs.ClasificacionUsuarioDTO> _clasificacion;
         private bool _estaCargando;
 
-        public ClasificacionVistaModelo(IClasificacionService clasificacionService)
+        public ClasificacionVistaModelo(IClasificacionServicio clasificacionService)
         {
             _clasificacionService = clasificacionService ?? throw new ArgumentNullException(nameof(clasificacionService));
 
@@ -78,13 +78,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 _clasificacionOriginal = clasificacion ?? Array.Empty<DTOs.ClasificacionUsuarioDTO>();
                 ActualizarClasificacion(_clasificacionOriginal);
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             catch (Exception)
             {
-                AvisoHelper.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
+                AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {

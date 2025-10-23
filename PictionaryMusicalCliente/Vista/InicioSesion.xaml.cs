@@ -20,12 +20,12 @@ namespace PictionaryMusicalCliente
             InitializeComponent();
 
 
-            IInicioSesionService inicioSesionService = new InicioSesionService();
-            ICambioContrasenaService cambioContrasenaService = new CambioContrasenaService();
-            IVerificarCodigoDialogService verificarCodigoDialogService = new VerificarCodigoDialogService();
-            IRecuperacionCuentaDialogService recuperacionCuentaDialogService =
-                new RecuperacionCuentaDialogService(verificarCodigoDialogService);
-            ILocalizacionService localizacionService = LocalizacionService.Instancia;
+            IInicioSesionServicio inicioSesionService = new InicioSesionServicio();
+            ICambioContrasenaServicio cambioContrasenaService = new CambioContrasenaServicio();
+            IVerificarCodigoDialogoServicio verificarCodigoDialogService = new VerificarCodigoDialogoService();
+            IRecuperacionCuentaServicio recuperacionCuentaDialogService =
+                new RecuperacionCuentaDialogoServicio(verificarCodigoDialogService);
+            ILocalizacionServicio localizacionService = LocalizacionServicio.Instancia;
 
             var vistaModelo = new InicioSesionVistaModelo(
                 inicioSesionService,
@@ -66,8 +66,8 @@ namespace PictionaryMusicalCliente
 
         private void MarcarCamposInvalidos(IList<string> camposInvalidos)
         {
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoUsuario);
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueContrasenaContrasena);
+            ControlVisual.RestablecerEstadoCampo(bloqueTextoUsuario);
+            ControlVisual.RestablecerEstadoCampo(bloqueContrasenaContrasena);
 
             if (camposInvalidos == null)
             {
@@ -79,10 +79,10 @@ namespace PictionaryMusicalCliente
                 switch (campo)
                 {
                     case nameof(InicioSesionVistaModelo.Identificador):
-                        ControlVisualHelper.MarcarCampoInvalido(bloqueTextoUsuario);
+                        ControlVisual.MarcarCampoInvalido(bloqueTextoUsuario);
                         break;
                     case InicioSesionVistaModelo.CampoContrasena:
-                        ControlVisualHelper.MarcarCampoInvalido(bloqueContrasenaContrasena);
+                        ControlVisual.MarcarCampoInvalido(bloqueContrasenaContrasena);
                         break;
                 }
             }

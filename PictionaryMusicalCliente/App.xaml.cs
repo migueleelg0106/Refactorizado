@@ -14,7 +14,7 @@ namespace PictionaryMusicalCliente
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            var localizacionService = LocalizacionService.Instancia;
+            var localizacionService = LocalizacionServicio.Instancia;
             string codigoIdioma = Settings.Default.idiomaCodigo;
 
             try

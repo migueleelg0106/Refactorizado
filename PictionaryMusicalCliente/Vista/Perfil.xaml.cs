@@ -20,13 +20,13 @@ namespace PictionaryMusicalCliente
         {
             InitializeComponent();
 
-            IPerfilService perfilService = new PerfilService();
-            IAvatarService avatarService = new AvatarService();
-            ISeleccionarAvatarService seleccionarAvatarService = new SeleccionarAvatarDialogService(avatarService);
-            ICambioContrasenaService cambioContrasenaService = new CambioContrasenaService();
-            IVerificarCodigoDialogService verificarCodigoDialogService = new VerificarCodigoDialogService();
-            IRecuperacionCuentaDialogService recuperacionCuentaDialogService =
-                new RecuperacionCuentaDialogService(verificarCodigoDialogService);
+            IPerfilServicio perfilService = new PerfilServicio();
+            IAvatarServicio avatarService = new AvatarService();
+            ISeleccionarAvatarServicio seleccionarAvatarService = new SeleccionarAvatarDialogoService(avatarService);
+            ICambioContrasenaServicio cambioContrasenaService = new CambioContrasenaServicio();
+            IVerificarCodigoDialogoServicio verificarCodigoDialogService = new VerificarCodigoDialogoService();
+            IRecuperacionCuentaServicio recuperacionCuentaDialogService =
+                new RecuperacionCuentaDialogoServicio(verificarCodigoDialogService);
 
             var vistaModelo = new PerfilVistaModelo(
                 perfilService,
@@ -74,8 +74,8 @@ namespace PictionaryMusicalCliente
 
         private void MarcarCamposInvalidos(IList<string> camposInvalidos)
         {
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoNombre);
-            ControlVisualHelper.RestablecerEstadoCampo(bloqueTextoApellido);
+            ControlVisual.RestablecerEstadoCampo(bloqueTextoNombre);
+            ControlVisual.RestablecerEstadoCampo(bloqueTextoApellido);
 
             if (camposInvalidos == null)
             {
@@ -84,12 +84,12 @@ namespace PictionaryMusicalCliente
 
             if (camposInvalidos.Contains(nameof(PerfilVistaModelo.Nombre)))
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoNombre);
+                ControlVisual.MarcarCampoInvalido(bloqueTextoNombre);
             }
 
             if (camposInvalidos.Contains(nameof(PerfilVistaModelo.Apellido)))
             {
-                ControlVisualHelper.MarcarCampoInvalido(bloqueTextoApellido);
+                ControlVisual.MarcarCampoInvalido(bloqueTextoApellido);
             }
         }
     }

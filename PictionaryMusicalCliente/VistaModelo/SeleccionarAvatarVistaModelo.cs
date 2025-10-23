@@ -42,7 +42,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             if (AvatarSeleccionado == null)
             {
-                AvisoHelper.Mostrar(Lang.errorTextoSeleccionAvatarValido);
+                AvisoAyudante.Mostrar(Lang.errorTextoSeleccionAvatarValido);
                 return;
             }
 

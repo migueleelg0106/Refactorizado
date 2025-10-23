@@ -11,7 +11,7 @@ using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
-    public class AmigosService : IAmigosService, PictionaryServidorServicioAmigos.IAmigosManejadorCallback
+    public class AmigosService : IAmigosServicio, PictionaryServidorServicioAmigos.IAmigosManejadorCallback
     {
         private const string Endpoint = "NetTcpBinding_IAmigosManejador";
 
@@ -267,15 +267,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             switch (ex)
             {
                 case FaultException faultEx:
-                    throw new ServicioException(TipoErrorServicio.FallaServicio, ErrorServicioHelper.ObtenerMensaje(faultEx, mensajePredeterminado), ex);
+                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, ErrorServicioHelper.ObtenerMensaje(faultEx, mensajePredeterminado), ex);
                 case EndpointNotFoundException:
-                    throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 case TimeoutException:
-                    throw new ServicioException(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 case CommunicationException:
-                    throw new ServicioException(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 case InvalidOperationException:
-                    throw new ServicioException(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                    throw new ExcepcionServicio(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
                 default:
                     throw ex;
             }

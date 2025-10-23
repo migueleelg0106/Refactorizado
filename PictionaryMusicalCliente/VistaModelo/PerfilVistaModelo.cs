@@ -23,11 +23,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
     public class PerfilVistaModelo : BaseVistaModelo
     {
         private const int LongitudMaximaRedSocial = 50;
-        private readonly IPerfilService _perfilService;
-        private readonly ISeleccionarAvatarService _seleccionarAvatarService;
-        private readonly ICambioContrasenaService _cambioContrasenaService;
-        private readonly IRecuperacionCuentaDialogService _recuperacionCuentaDialogService;
-        private readonly IAvatarService _avatarService;
+        private readonly IPerfilServicio _perfilService;
+        private readonly ISeleccionarAvatarServicio _seleccionarAvatarService;
+        private readonly ICambioContrasenaServicio _cambioContrasenaService;
+        private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogService;
+        private readonly IAvatarServicio _avatarService;
 
         private readonly Dictionary<string, RedSocialItem> _redesPorNombre;
 
@@ -43,11 +43,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private bool _estaCambiandoContrasena;
 
         public PerfilVistaModelo(
-            IPerfilService perfilService,
-            ISeleccionarAvatarService seleccionarAvatarService,
-            ICambioContrasenaService cambioContrasenaService,
-            IRecuperacionCuentaDialogService recuperacionCuentaDialogService,
-            IAvatarService avatarService)
+            IPerfilServicio perfilService,
+            ISeleccionarAvatarServicio seleccionarAvatarService,
+            ICambioContrasenaServicio cambioContrasenaService,
+            IRecuperacionCuentaServicio recuperacionCuentaDialogService,
+            IAvatarServicio avatarService)
         {
             _perfilService = perfilService ?? throw new ArgumentNullException(nameof(perfilService));
             _seleccionarAvatarService = seleccionarAvatarService ?? throw new ArgumentNullException(nameof(seleccionarAvatarService));
@@ -152,7 +152,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (sesion == null || sesion.IdUsuario <= 0)
             {
-                AvisoHelper.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
+                AvisoAyudante.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
                 CerrarAccion?.Invoke();
                 return;
             }
@@ -168,15 +168,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (perfil == null)
                 {
-                    AvisoHelper.Mostrar(Lang.errorTextoServidorObtenerPerfil);
+                    AvisoAyudante.Mostrar(Lang.errorTextoServidorObtenerPerfil);
                     return;
                 }
 
                 AplicarPerfil(perfil);
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoServidorObtenerPerfil);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorObtenerPerfil);
             }
             finally
             {
@@ -216,13 +216,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 if (apellidoVacio) camposInvalidos.Add(nameof(Apellido));
 
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
-                AvisoHelper.Mostrar(Lang.errorTextoCamposInvalidosGenerico);
+                AvisoAyudante.Mostrar(Lang.errorTextoCamposInvalidosGenerico);
                 return;
             }
 
             string mensajeError = null;
 
-            DTOs.ResultadoOperacionDTO validacionNombre = ValidacionEntradaHelper.ValidarNombre(nombre);
+            DTOs.ResultadoOperacionDTO validacionNombre = ValidacionEntrada.ValidarNombre(nombre);
             if (validacionNombre?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Nombre));
@@ -230,7 +230,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     mensajeError = validacionNombre?.Mensaje;
             }
 
-            DTOs.ResultadoOperacionDTO validacionApellido = ValidacionEntradaHelper.ValidarApellido(apellido);
+            DTOs.ResultadoOperacionDTO validacionApellido = ValidacionEntrada.ValidarApellido(apellido);
             if (validacionApellido?.OperacionExitosa != true)
             {
                 camposInvalidos.Add(nameof(Apellido));
@@ -261,7 +261,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
 
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
-                AvisoHelper.Mostrar(mensajeError ?? Lang.errorTextoCamposInvalidosGenerico);
+                AvisoAyudante.Mostrar(mensajeError ?? Lang.errorTextoCamposInvalidosGenerico);
                 return;
             }
 
@@ -286,7 +286,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado == null)
                 {
-                    AvisoHelper.Mostrar(Lang.errorTextoServidorActualizarPerfil);
+                    AvisoAyudante.Mostrar(Lang.errorTextoServidorActualizarPerfil);
                     return;
                 }
 
@@ -295,7 +295,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     mensajeError = MensajeServidorHelper.Localizar(
                         resultado.Mensaje,
                         Lang.errorTextoActualizarPerfil);
-                    AvisoHelper.Mostrar(mensajeError);
+                    AvisoAyudante.Mostrar(mensajeError);
                     return;
                 }
 
@@ -303,11 +303,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 string mensajeExito = MensajeServidorHelper.Localizar(
                     resultado.Mensaje,
                     Lang.avisoTextoPerfilActualizado);
-                AvisoHelper.Mostrar(mensajeExito);
+                AvisoAyudante.Mostrar(mensajeExito);
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoServidorActualizarPerfil);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorActualizarPerfil);
             }
             finally
             {
@@ -319,7 +319,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             if (string.IsNullOrWhiteSpace(Correo))
             {
-                AvisoHelper.Mostrar(Lang.errorTextoIniciarCambioContrasena);
+                AvisoAyudante.Mostrar(Lang.errorTextoIniciarCambioContrasena);
                 return;
             }
 
@@ -333,12 +333,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
-                    AvisoHelper.Mostrar(resultado.Mensaje);
+                    AvisoAyudante.Mostrar(resultado.Mensaje);
                 }
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoIniciarCambioContrasena);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoIniciarCambioContrasena);
             }
             finally
             {
@@ -367,9 +367,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void EstablecerAvatarDesdeRuta(string rutaRelativa, int avatarId)
         {
-            ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPorRuta(rutaRelativa)
-                ?? AvatarHelper.ObtenerAvatarPorId(avatarId)
-                ?? AvatarHelper.ObtenerAvatarPredeterminado();
+            ObjetoAvatar avatar = AvatarAyudante.ObtenerAvatarPorRuta(rutaRelativa)
+                ?? AvatarAyudante.ObtenerAvatarPorId(avatarId)
+                ?? AvatarAyudante.ObtenerAvatarPredeterminado();
 
             if (avatar != null)
             {
@@ -386,7 +386,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             AvatarSeleccionadoNombre = avatar.Nombre;
             AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
-            AvatarSeleccionadoImagen = AvatarHelper.ObtenerImagen(avatar);
+            AvatarSeleccionadoImagen = AvatarAyudante.ObtenerImagen(avatar);
         }
 
         private void EstablecerIdentificador(string redSocial, string valor)
@@ -482,7 +482,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 ? sesion.AvatarRutaRelativa
                 : AvatarSeleccionadoRutaRelativa;
 
-            ObjetoAvatar avatar = AvatarHelper.ObtenerAvatarPorRuta(rutaRelativa);
+            ObjetoAvatar avatar = AvatarAyudante.ObtenerAvatarPorRuta(rutaRelativa);
             string nombreActual = string.IsNullOrWhiteSpace(Nombre)
                 ? sesion.Nombre
                 : Nombre.Trim();
@@ -528,12 +528,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (avatares != null && avatares.Count > 0)
                 {
-                    AvatarHelper.ActualizarCatalogo(avatares);
+                    AvatarAyudante.ActualizarCatalogo(avatares);
                 }
             }
-            catch (ServicioException ex)
+            catch (ExcepcionServicio ex)
             {
-                AvisoHelper.Mostrar(ex.Message ?? Lang.errorTextoServidorInformacionAvatar);
+                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorInformacionAvatar);
             }
         }
 
