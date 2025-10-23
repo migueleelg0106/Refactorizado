@@ -82,7 +82,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
-            catch (Exception)
+            catch (InvalidOperationException)
+            {
+                AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
+            }
+            catch (OperationCanceledException)
             {
                 AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
             }

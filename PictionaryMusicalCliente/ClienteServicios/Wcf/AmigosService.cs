@@ -62,7 +62,32 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     LimpiarSolicitudes();
                     NotificarSolicitudesActualizadas();
                 }
-                catch (Exception ex)
+                catch (FaultException ex)
+                {
+                    cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (EndpointNotFoundException ex)
+                {
+                    cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (TimeoutException ex)
+                {
+                    cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (CommunicationException ex)
+                {
+                    cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (OperationCanceledException ex)
                 {
                     cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
@@ -199,7 +224,32 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     await operacion(cliente).ConfigureAwait(false);
                     if (esTemporal) CerrarCliente(cliente);
                 }
-                catch (Exception ex)
+                catch (FaultException ex)
+                {
+                    if (esTemporal) cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (EndpointNotFoundException ex)
+                {
+                    if (esTemporal) cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (TimeoutException ex)
+                {
+                    if (esTemporal) cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (CommunicationException ex)
+                {
+                    if (esTemporal) cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    if (esTemporal) cliente.Abort();
+                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                }
+                catch (OperationCanceledException ex)
                 {
                     if (esTemporal) cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
@@ -234,7 +284,32 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 CerrarCliente(cliente);
             }
-            catch (Exception ex)
+            catch (FaultException ex)
+            {
+                cliente.Abort();
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+            }
+            catch (EndpointNotFoundException ex)
+            {
+                cliente.Abort();
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+            }
+            catch (TimeoutException ex)
+            {
+                cliente.Abort();
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+            }
+            catch (CommunicationException ex)
+            {
+                cliente.Abort();
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+            }
+            catch (InvalidOperationException ex)
+            {
+                cliente.Abort();
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+            }
+            catch (OperationCanceledException ex)
             {
                 cliente.Abort();
                 ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
@@ -256,7 +331,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 else
                     cliente.Close();
             }
-            catch
+            catch (CommunicationException)
+            {
+                cliente.Abort();
+            }
+            catch (TimeoutException)
+            {
+                cliente.Abort();
+            }
+            catch (InvalidOperationException)
             {
                 cliente.Abort();
             }
@@ -274,6 +357,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 case CommunicationException:
                     throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                case OperationCanceledException:
+                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 case InvalidOperationException:
                     throw new ExcepcionServicio(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
                 default:

@@ -1,5 +1,8 @@
 using System;
+using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.ServiceModel;
 using Datos.DAL.Implementaciones;
@@ -67,9 +70,24 @@ namespace Servicios.Servicios
             {
                 throw;
             }
-            catch (Exception ex)
+            catch (DataException ex)
             {
-                Logger.Error("Error al obtener el perfil del usuario", ex);
+                Logger.Error("Error de datos al obtener el perfil del usuario", ex);
+                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
+            }
+            catch (EntityException ex)
+            {
+                Logger.Error("Error de entidad al obtener el perfil del usuario", ex);
+                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al obtener el perfil del usuario", ex);
+                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Error inesperado al obtener el perfil del usuario", ex);
                 throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
             }
         }
@@ -166,9 +184,24 @@ namespace Servicios.Servicios
                     };
                 }
             }
-            catch (Exception ex)
+            catch (DataException ex)
             {
-                Logger.Error("Error al actualizar el perfil", ex);
+                Logger.Error("Error de datos al actualizar el perfil", ex);
+                return CrearResultadoFallo("No fue posible actualizar el perfil.");
+            }
+            catch (EntityException ex)
+            {
+                Logger.Error("Error de entidad al actualizar el perfil", ex);
+                return CrearResultadoFallo("No fue posible actualizar el perfil.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al actualizar el perfil", ex);
+                return CrearResultadoFallo("No fue posible actualizar el perfil.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Error inesperado al actualizar el perfil", ex);
                 return CrearResultadoFallo("No fue posible actualizar el perfil.");
             }
         }

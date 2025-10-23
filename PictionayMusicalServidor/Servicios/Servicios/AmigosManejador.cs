@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using System.ServiceModel;
 using Datos.DAL.Implementaciones;
 using Datos.Utilidades;
@@ -95,10 +97,15 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al recuperar las solicitudes pendientes de amistad", ex);
                 throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
             }
-            catch (Exception ex)
+            catch (EntityException ex)
             {
-                Logger.Error("Error inesperado al recuperar las solicitudes pendientes de amistad", ex);
-                throw new FaultException("Ocurrió un error al recuperar las solicitudes de amistad.");
+                Logger.Error("Error de entidad al recuperar las solicitudes pendientes de amistad", ex);
+                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al recuperar las solicitudes pendientes de amistad", ex);
+                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
             }
         }
 
@@ -170,10 +177,15 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al enviar la solicitud de amistad", ex);
                 throw new FaultException("No fue posible almacenar la solicitud de amistad.");
             }
-            catch (Exception ex)
+            catch (EntityException ex)
             {
-                Logger.Error("Error inesperado al enviar la solicitud de amistad", ex);
-                throw new FaultException("Ocurrió un error al enviar la solicitud de amistad.");
+                Logger.Error("Error de entidad al enviar la solicitud de amistad", ex);
+                throw new FaultException("No fue posible almacenar la solicitud de amistad.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al enviar la solicitud de amistad", ex);
+                throw new FaultException("No fue posible almacenar la solicitud de amistad.");
             }
         }
 
@@ -249,10 +261,15 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al aceptar la solicitud de amistad", ex);
                 throw new FaultException("No fue posible actualizar la solicitud de amistad.");
             }
-            catch (Exception ex)
+            catch (EntityException ex)
             {
-                Logger.Error("Error inesperado al aceptar la solicitud de amistad", ex);
-                throw new FaultException("Ocurrió un error al aceptar la solicitud de amistad.");
+                Logger.Error("Error de entidad al aceptar la solicitud de amistad", ex);
+                throw new FaultException("No fue posible actualizar la solicitud de amistad.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al aceptar la solicitud de amistad", ex);
+                throw new FaultException("No fue posible actualizar la solicitud de amistad.");
             }
         }
 
@@ -323,10 +340,15 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al eliminar la relación de amistad", ex);
                 throw new FaultException("No fue posible eliminar la relación de amistad en la base de datos.");
             }
-            catch (Exception ex)
+            catch (EntityException ex)
             {
-                Logger.Error("Error inesperado al eliminar la relación de amistad", ex);
-                throw new FaultException("Ocurrió un error al eliminar la relación de amistad.");
+                Logger.Error("Error de entidad al eliminar la relación de amistad", ex);
+                throw new FaultException("No fue posible eliminar la relación de amistad en la base de datos.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al eliminar la relación de amistad", ex);
+                throw new FaultException("No fue posible eliminar la relación de amistad en la base de datos.");
             }
         }
 
@@ -397,7 +419,7 @@ namespace Servicios.Servicios
             {
                 RemoverSuscripcion(nombreUsuario);
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 Logger.Warn($"Error al notificar la solicitud de amistad al usuario {nombreUsuario}", ex);
             }
@@ -427,7 +449,7 @@ namespace Servicios.Servicios
             {
                 RemoverSuscripcion(nombreUsuario);
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 Logger.Warn($"Error al notificar la eliminación de amistad al usuario {nombreUsuario}", ex);
             }
