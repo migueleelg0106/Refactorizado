@@ -1,10 +1,13 @@
 using System;
+using System.Diagnostics;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Utilidades;
 
@@ -80,6 +83,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 return;
             }
 
+            if (string.Equals(nombreAmigo, _usuarioActual, StringComparison.OrdinalIgnoreCase))
+            {
+                AvisoAyudante.Mostrar(Lang.amigosErrorSolicitudPropia);
+                return;
+            }
+
             EstaProcesando = true;
 
             try
@@ -88,9 +97,21 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudEnviada);
                 SolicitudEnviada?.Invoke();
             }
+            catch (FaultException fault)
+            {
+                string mensaje = MensajeServidorHelper.Localizar(
+                    fault?.Message,
+                    Lang.errorTextoErrorProcesarSolicitud);
+                AvisoAyudante.Mostrar(mensaje);
+            }
             catch (ExcepcionServicio ex)
             {
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.ToString());
+                AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {
