@@ -2,12 +2,9 @@ using Servicios.Contratos;
 using System;
 using System.Configuration;
 using System.Data;
-using System.Data.Entity.Core;
-using System.Data.Entity.Infrastructure;
 using System.Net.Mail;
 using log4net;
 using Servicios.Contratos.DTOs;
-using Servicios.Servicios.Utilidades;
 
 namespace Servicios.Servicios
 {
@@ -39,16 +36,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al solicitar código de verificación", ex);
-                return CrearResultadoSolicitudCodigoFallido(ex.Message);
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al solicitar código de verificación", ex);
-                return CrearResultadoSolicitudCodigoFallido(ex.Message);
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al solicitar código de verificación", ex);
                 return CrearResultadoSolicitudCodigoFallido(ex.Message);
             }
             catch (SmtpException ex)
@@ -89,16 +76,6 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al reenviar código de verificación", ex);
                 return CrearResultadoSolicitudCodigoFallido(ex.Message);
             }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al reenviar código de verificación", ex);
-                return CrearResultadoSolicitudCodigoFallido(ex.Message);
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al reenviar código de verificación", ex);
-                return CrearResultadoSolicitudCodigoFallido(ex.Message);
-            }
             catch (SmtpException ex)
             {
                 Logger.Error("Error de correo al reenviar código de verificación", ex);
@@ -135,16 +112,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al confirmar el código de verificación", ex);
-                return CrearResultadoRegistroFallido(ex.Message);
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al confirmar el código de verificación", ex);
-                return CrearResultadoRegistroFallido(ex.Message);
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al confirmar el código de verificación", ex);
                 return CrearResultadoRegistroFallido(ex.Message);
             }
             catch (SmtpException ex)
@@ -185,16 +152,6 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al solicitar código de recuperación", ex);
                 return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
             }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al solicitar código de recuperación", ex);
-                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al solicitar código de recuperación", ex);
-                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
-            }
             catch (SmtpException ex)
             {
                 Logger.Error("Error de correo al solicitar código de recuperación", ex);
@@ -231,16 +188,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al confirmar el código de recuperación", ex);
-                return CrearResultadoOperacionFallida(ex.Message);
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al confirmar el código de recuperación", ex);
-                return CrearResultadoOperacionFallida(ex.Message);
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al confirmar el código de recuperación", ex);
                 return CrearResultadoOperacionFallida(ex.Message);
             }
             catch (SmtpException ex)

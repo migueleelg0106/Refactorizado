@@ -5,8 +5,6 @@ using Datos.Utilidades;
 using System;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Core;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using log4net;
 using BCryptNet = BCrypt.Net.BCrypt;
@@ -38,56 +36,36 @@ namespace Servicios.Servicios
 
             try
             {
-                using (var contexto = CrearContexto())
+                using var contexto = CrearContexto();
+                Usuario usuario = BuscarUsuarioPorIdentificador(contexto, identificador);
+
+                if (usuario == null)
                 {
-                    Usuario usuario = BuscarUsuarioPorIdentificador(contexto, identificador);
-
-                    if (usuario == null)
-                    {
-                        return new ResultadoInicioSesionDTO
-                        {
-                            CuentaNoEncontrada = true,
-                            Mensaje = null
-                        };
-                    }
-
-                    if (!BCryptNet.Verify(contrasena, usuario.Contrasena))
-                    {
-                        return new ResultadoInicioSesionDTO
-                        {
-                            ContrasenaIncorrecta = true,
-                            Mensaje = "Credenciales incorrectas."
-                        };
-                    }
-
                     return new ResultadoInicioSesionDTO
                     {
-                        InicioSesionExitoso = true,
-                        Usuario = MapearUsuario(usuario)
+                        CuentaNoEncontrada = true,
+                        Mensaje = null
                     };
                 }
+
+                if (!BCryptNet.Verify(contrasena, usuario.Contrasena))
+                {
+                    return new ResultadoInicioSesionDTO
+                    {
+                        ContrasenaIncorrecta = true,
+                        Mensaje = "Credenciales incorrectas."
+                    };
+                }
+
+                return new ResultadoInicioSesionDTO
+                {
+                    InicioSesionExitoso = true,
+                    Usuario = MapearUsuario(usuario)
+                };
             }
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al iniciar sesión", ex);
-                return new ResultadoInicioSesionDTO
-                {
-                    InicioSesionExitoso = false,
-                    Mensaje = ex.Message
-                };
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al iniciar sesión", ex);
-                return new ResultadoInicioSesionDTO
-                {
-                    InicioSesionExitoso = false,
-                    Mensaje = ex.Message
-                };
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al iniciar sesión", ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,

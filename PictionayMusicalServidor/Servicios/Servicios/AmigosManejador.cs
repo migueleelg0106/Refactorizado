@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Data;
-using System.Data.Entity.Core;
-using System.Data.Entity.Infrastructure;
 using System.ServiceModel;
 using Datos.DAL.Implementaciones;
 using Datos.Utilidades;
@@ -17,7 +15,7 @@ namespace Servicios.Servicios
     public class AmigosManejador : IAmigosManejador
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(AmigosManejador));
-        private static readonly ConcurrentDictionary<string, IAmigosManejadorCallback> Suscripciones = new ConcurrentDictionary<string, IAmigosManejadorCallback>(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, IAmigosManejadorCallback> Suscripciones = new(StringComparer.OrdinalIgnoreCase);
 
         public void Suscribir(string nombreUsuario)
         {
@@ -38,44 +36,42 @@ namespace Servicios.Servicios
 
             try
             {
-                using (var contexto = CrearContexto())
+                using var contexto = CrearContexto();
+                var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
+
+                if (usuario == null)
                 {
-                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                    Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
+                    RemoverSuscripcion(nombreUsuario);
+                    throw new FaultException("El usuario especificado no existe.");
+                }
 
-                    if (usuario == null)
+                var amigoRepositorio = new AmigoRepositorio(contexto);
+                var solicitudesPendientes = amigoRepositorio.ObtenerSolicitudesPendientes(usuario.idUsuario);
+
+                if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
+                {
+                    return;
+                }
+
+                foreach (var solicitud in solicitudesPendientes)
+                {
+                    string emisor = solicitud.Usuario?.Nombre_Usuario;
+                    string receptor = solicitud.Usuario1?.Nombre_Usuario;
+
+                    if (string.IsNullOrWhiteSpace(emisor) || string.IsNullOrWhiteSpace(receptor))
                     {
-                        RemoverSuscripcion(nombreUsuario);
-                        throw new FaultException("El usuario especificado no existe.");
+                        continue;
                     }
 
-                    var amigoRepositorio = new AmigoRepositorio(contexto);
-                    var solicitudesPendientes = amigoRepositorio.ObtenerSolicitudesPendientes(usuario.idUsuario);
-
-                    if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
+                    var dto = new SolicitudAmistadDTO
                     {
-                        return;
-                    }
+                        UsuarioEmisor = emisor,
+                        UsuarioReceptor = receptor,
+                        SolicitudAceptada = solicitud.Estado
+                    };
 
-                    foreach (var solicitud in solicitudesPendientes)
-                    {
-                        string emisor = solicitud.Usuario?.Nombre_Usuario;
-                        string receptor = solicitud.Usuario1?.Nombre_Usuario;
-
-                        if (string.IsNullOrWhiteSpace(emisor) || string.IsNullOrWhiteSpace(receptor))
-                        {
-                            continue;
-                        }
-
-                        var dto = new SolicitudAmistadDTO
-                        {
-                            UsuarioEmisor = emisor,
-                            UsuarioReceptor = receptor,
-                            SolicitudAceptada = solicitud.Estado
-                        };
-
-                        NotificarSolicitud(nombreUsuario, dto);
-                    }
+                    NotificarSolicitud(nombreUsuario, dto);
                 }
             }
             catch (FaultException)
@@ -95,16 +91,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al recuperar las solicitudes pendientes de amistad", ex);
-                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al recuperar las solicitudes pendientes de amistad", ex);
-                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al recuperar las solicitudes pendientes de amistad", ex);
                 throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
             }
         }
@@ -131,36 +117,34 @@ namespace Servicios.Servicios
 
             try
             {
-                using (var contexto = CrearContexto())
+                using var contexto = CrearContexto();
+                var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                var amigoRepositorio = new AmigoRepositorio(contexto);
+
+                Usuario usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
+                Usuario usuarioReceptor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioReceptor);
+
+                if (usuarioEmisor == null || usuarioReceptor == null)
                 {
-                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                    var amigoRepositorio = new AmigoRepositorio(contexto);
-
-                    Usuario usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
-                    Usuario usuarioReceptor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioReceptor);
-
-                    if (usuarioEmisor == null || usuarioReceptor == null)
-                    {
-                        throw new FaultException("Alguno de los usuarios especificados no existe.");
-                    }
-
-                    if (amigoRepositorio.ExisteRelacion(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario))
-                    {
-                        throw new FaultException("Ya existe una solicitud o relación de amistad entre los usuarios.");
-                    }
-
-                    amigoRepositorio.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
-
-                    var solicitud = new SolicitudAmistadDTO
-                    {
-                        UsuarioEmisor = nombreUsuarioEmisor,
-                        UsuarioReceptor = nombreUsuarioReceptor,
-                        SolicitudAceptada = false
-                    };
-
-                    NotificarSolicitud(nombreUsuarioEmisor, solicitud);
-                    NotificarSolicitud(nombreUsuarioReceptor, solicitud);
+                    throw new FaultException("Alguno de los usuarios especificados no existe.");
                 }
+
+                if (amigoRepositorio.ExisteRelacion(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario))
+                {
+                    throw new FaultException("Ya existe una solicitud o relación de amistad entre los usuarios.");
+                }
+
+                amigoRepositorio.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
+
+                var solicitud = new SolicitudAmistadDTO
+                {
+                    UsuarioEmisor = nombreUsuarioEmisor,
+                    UsuarioReceptor = nombreUsuarioReceptor,
+                    SolicitudAceptada = false
+                };
+
+                NotificarSolicitud(nombreUsuarioEmisor, solicitud);
+                NotificarSolicitud(nombreUsuarioReceptor, solicitud);
             }
             catch (ArgumentException ex)
             {
@@ -175,16 +159,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al enviar la solicitud de amistad", ex);
-                throw new FaultException("No fue posible almacenar la solicitud de amistad.");
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al enviar la solicitud de amistad", ex);
-                throw new FaultException("No fue posible almacenar la solicitud de amistad.");
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al enviar la solicitud de amistad", ex);
                 throw new FaultException("No fue posible almacenar la solicitud de amistad.");
             }
         }
@@ -211,32 +185,34 @@ namespace Servicios.Servicios
 
                     var relacion = amigoRepositorio.ObtenerRelacion(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
 
-                    if (relacion == null)
+                    if (relacion != null)
+                    {
+                        if (relacion.UsuarioReceptor != usuarioReceptor.idUsuario)
+                        {
+                            throw new FaultException("Solo el receptor de la solicitud puede aceptarla.");
+                        }
+
+                        if (relacion.Estado)
+                        {
+                            throw new FaultException("La solicitud de amistad ya fue aceptada con anterioridad.");
+                        }
+
+                        amigoRepositorio.ActualizarEstado(relacion, true);
+
+                        var solicitud = new SolicitudAmistadDTO
+                        {
+                            UsuarioEmisor = nombreUsuarioEmisor,
+                            UsuarioReceptor = nombreUsuarioReceptor,
+                            SolicitudAceptada = true
+                        };
+
+                        NotificarSolicitud(nombreUsuarioEmisor, solicitud);
+                        NotificarSolicitud(nombreUsuarioReceptor, solicitud);
+                    }
+                    else
                     {
                         throw new FaultException("No existe una solicitud de amistad entre los usuarios.");
                     }
-
-                    if (relacion.UsuarioReceptor != usuarioReceptor.idUsuario)
-                    {
-                        throw new FaultException("Solo el receptor de la solicitud puede aceptarla.");
-                    }
-
-                    if (relacion.Estado)
-                    {
-                        throw new FaultException("La solicitud de amistad ya fue aceptada con anterioridad.");
-                    }
-
-                    amigoRepositorio.ActualizarEstado(relacion, true);
-
-                    var solicitud = new SolicitudAmistadDTO
-                    {
-                        UsuarioEmisor = nombreUsuarioEmisor,
-                        UsuarioReceptor = nombreUsuarioReceptor,
-                        SolicitudAceptada = true
-                    };
-
-                    NotificarSolicitud(nombreUsuarioEmisor, solicitud);
-                    NotificarSolicitud(nombreUsuarioReceptor, solicitud);
                 }
 
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioEmisor);
@@ -259,16 +235,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al aceptar la solicitud de amistad", ex);
-                throw new FaultException("No fue posible actualizar la solicitud de amistad.");
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al aceptar la solicitud de amistad", ex);
-                throw new FaultException("No fue posible actualizar la solicitud de amistad.");
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al aceptar la solicitud de amistad", ex);
                 throw new FaultException("No fue posible actualizar la solicitud de amistad.");
             }
         }
@@ -300,22 +266,24 @@ namespace Servicios.Servicios
 
                     var relacion = amigoRepositorio.ObtenerRelacion(usuarioA.idUsuario, usuarioB.idUsuario);
 
-                    if (relacion == null)
+                    if (relacion != null)
+                    {
+                        amigoRepositorio.EliminarRelacion(relacion);
+
+                        var solicitud = new SolicitudAmistadDTO
+                        {
+                            UsuarioEmisor = relacion.UsuarioEmisor == usuarioA.idUsuario ? nombreUsuarioA : nombreUsuarioB,
+                            UsuarioReceptor = relacion.UsuarioEmisor == usuarioA.idUsuario ? nombreUsuarioB : nombreUsuarioA,
+                            SolicitudAceptada = false
+                        };
+
+                        NotificarEliminacion(nombreUsuarioA, solicitud);
+                        NotificarEliminacion(nombreUsuarioB, solicitud);
+                    }
+                    else
                     {
                         throw new FaultException("No existe una relación de amistad entre los usuarios.");
                     }
-
-                    amigoRepositorio.EliminarRelacion(relacion);
-
-                    var solicitud = new SolicitudAmistadDTO
-                    {
-                        UsuarioEmisor = relacion.UsuarioEmisor == usuarioA.idUsuario ? nombreUsuarioA : nombreUsuarioB,
-                        UsuarioReceptor = relacion.UsuarioEmisor == usuarioA.idUsuario ? nombreUsuarioB : nombreUsuarioA,
-                        SolicitudAceptada = false
-                    };
-
-                    NotificarEliminacion(nombreUsuarioA, solicitud);
-                    NotificarEliminacion(nombreUsuarioB, solicitud);
                 }
 
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioA);
@@ -340,16 +308,6 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al eliminar la relación de amistad", ex);
                 throw new FaultException("No fue posible eliminar la relación de amistad en la base de datos.");
             }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al eliminar la relación de amistad", ex);
-                throw new FaultException("No fue posible eliminar la relación de amistad en la base de datos.");
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al eliminar la relación de amistad", ex);
-                throw new FaultException("No fue posible eliminar la relación de amistad en la base de datos.");
-            }
         }
 
         private static BaseDatosPruebaEntities1 CrearContexto()
@@ -371,18 +329,18 @@ namespace Servicios.Servicios
         private static IAmigosManejadorCallback ObtenerCallbackActual()
         {
             var contexto = OperationContext.Current;
-            if (contexto == null)
+            if (contexto != null)
             {
-                throw new FaultException("No se pudo obtener el contexto de la operación para suscribir el callback.");
-            }
+                var callback = contexto.GetCallbackChannel<IAmigosManejadorCallback>();
+                if (callback != null)
+                {
+                    return callback;
+                }
 
-            var callback = contexto.GetCallbackChannel<IAmigosManejadorCallback>();
-            if (callback == null)
-            {
                 throw new FaultException("No se pudo obtener el canal de retorno para el usuario.");
             }
 
-            return callback;
+            throw new FaultException("No se pudo obtener el contexto de la operación para suscribir el callback.");
         }
 
         private static void RemoverSuscripcion(string nombreUsuario)

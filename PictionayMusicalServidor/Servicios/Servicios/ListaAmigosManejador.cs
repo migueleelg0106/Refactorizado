@@ -2,8 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity.Core;
-using System.Data.Entity.Infrastructure;
 using System.ServiceModel;
 using Datos.DAL.Implementaciones;
 using Datos.Modelo;
@@ -19,7 +17,7 @@ namespace Servicios.Servicios
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(ListaAmigosManejador));
         private static readonly ConcurrentDictionary<string, IListaAmigosManejadorCallback> Suscripciones =
-            new ConcurrentDictionary<string, IListaAmigosManejadorCallback>(StringComparer.OrdinalIgnoreCase);
+            new(StringComparer.OrdinalIgnoreCase);
 
         public void Suscribir(string nombreUsuario)
         {
@@ -47,16 +45,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al suscribirse a la lista de amigos", ex);
-                throw new FaultException("No fue posible suscribirse a la lista de amigos.");
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al suscribirse a la lista de amigos", ex);
-                throw new FaultException("No fue posible suscribirse a la lista de amigos.");
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al suscribirse a la lista de amigos", ex);
                 throw new FaultException("No fue posible suscribirse a la lista de amigos.");
             }
 
@@ -106,16 +94,6 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al obtener la lista de amigos", ex);
                 throw new FaultException("No fue posible recuperar la lista de amigos.");
             }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al obtener la lista de amigos", ex);
-                throw new FaultException("No fue posible recuperar la lista de amigos.");
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al obtener la lista de amigos", ex);
-                throw new FaultException("No fue posible recuperar la lista de amigos.");
-            }
         }
 
         internal static void NotificarCambioAmistad(string nombreUsuario)
@@ -130,18 +108,14 @@ namespace Servicios.Servicios
 
         private static List<AmigoDTO> ObtenerAmigosInterno(string nombreUsuario)
         {
-            using (var contexto = CrearContexto())
+            using var contexto = CrearContexto();
+            var usuarioRepositorio = new UsuarioRepositorio(contexto);
+            var amigoRepositorio = new AmigoRepositorio(contexto);
+
+            Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
+
+            if (usuario != null)
             {
-                var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                var amigoRepositorio = new AmigoRepositorio(contexto);
-
-                Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
-
-                if (usuario == null)
-                {
-                    throw new FaultException("El usuario especificado no existe.");
-                }
-
                 IList<Usuario> amigos = amigoRepositorio.ObtenerAmigos(usuario.idUsuario);
 
                 var resultado = new List<AmigoDTO>(amigos.Count);
@@ -161,6 +135,8 @@ namespace Servicios.Servicios
 
                 return resultado;
             }
+
+            throw new FaultException("El usuario especificado no existe.");
         }
 
         private static void NotificarLista(string nombreUsuario)
@@ -188,14 +164,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 Logger.Error($"Error de datos al obtener la lista de amigos del usuario {nombreUsuario}", ex);
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error($"Error de entidad al obtener la lista de amigos del usuario {nombreUsuario}", ex);
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error($"Error al actualizar la base de datos al obtener la lista de amigos del usuario {nombreUsuario}", ex);
             }
             catch (InvalidOperationException ex)
             {
@@ -231,18 +199,18 @@ namespace Servicios.Servicios
         private static IListaAmigosManejadorCallback ObtenerCallbackActual()
         {
             var contexto = OperationContext.Current;
-            if (contexto == null)
+            if (contexto != null)
             {
-                throw new FaultException("No se pudo obtener el contexto de la operación para suscribirse a la lista de amigos.");
-            }
+                var callback = contexto.GetCallbackChannel<IListaAmigosManejadorCallback>();
+                if (callback != null)
+                {
+                    return callback;
+                }
 
-            var callback = contexto.GetCallbackChannel<IListaAmigosManejadorCallback>();
-            if (callback == null)
-            {
                 throw new FaultException("No se pudo obtener el canal de retorno para la lista de amigos.");
             }
 
-            return callback;
+            throw new FaultException("No se pudo obtener el contexto de la operación para suscribirse a la lista de amigos.");
         }
 
         private static void RemoverSuscripcion(string nombreUsuario)

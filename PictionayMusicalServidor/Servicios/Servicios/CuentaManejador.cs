@@ -1,8 +1,6 @@
 using Servicios.Contratos;
 using System;
 using System.Data;
-using System.Data.Entity.Core;
-using System.Data.Entity.Infrastructure;
 using log4net;
 using Servicios.Contratos.DTOs;
 using Datos.DAL.Implementaciones;
@@ -34,97 +32,77 @@ namespace Servicios.Servicios
 
             try
             {
-                using (var contexto = CrearContexto())
-                using (var transaccion = contexto.Database.BeginTransaction())
+                using var contexto = CrearContexto();
+                using var transaccion = contexto.Database.BeginTransaction();
+                var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                var jugadorRepositorio = new JugadorRepositorio(contexto);
+                var clasificacionRepositorio = new ClasificacionRepositorio(contexto);
+                var avatarRepositorio = new AvatarRepositorio(contexto);
+
+                bool usuarioRegistrado = usuarioRepositorio.ExisteNombreUsuario(nuevaCuenta.Usuario);
+                bool correoRegistrado = jugadorRepositorio.ExisteCorreo(nuevaCuenta.Correo);
+
+                if (usuarioRegistrado || correoRegistrado)
                 {
-                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                    var jugadorRepositorio = new JugadorRepositorio(contexto);
-                    var clasificacionRepositorio = new ClasificacionRepositorio(contexto);
-                    var avatarRepositorio = new AvatarRepositorio(contexto);
-
-                    bool usuarioRegistrado = usuarioRepositorio.ExisteNombreUsuario(nuevaCuenta.Usuario);
-                    bool correoRegistrado = jugadorRepositorio.ExisteCorreo(nuevaCuenta.Correo);
-
-                    if (usuarioRegistrado || correoRegistrado)
-                    {
-                        return new ResultadoRegistroCuentaDTO
-                        {
-                            RegistroExitoso = false,
-                            UsuarioYaRegistrado = usuarioRegistrado,
-                            CorreoYaRegistrado = correoRegistrado,
-                            Mensaje = null
-                        };
-                    }
-
-                    if (string.IsNullOrWhiteSpace(nuevaCuenta.AvatarRutaRelativa))
-                    {
-                        return new ResultadoRegistroCuentaDTO
-                        {
-                            RegistroExitoso = false,
-                            Mensaje = "Avatar no válido."
-                        };
-                    }
-
-                    Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(nuevaCuenta.AvatarRutaRelativa);
-
-                    if (avatar == null)
-                    {
-                        return new ResultadoRegistroCuentaDTO
-                        {
-                            RegistroExitoso = false,
-                            Mensaje = "Avatar no válido."
-                        };
-                    }
-
-                    var clasificacion = clasificacionRepositorio.CrearClasificacionInicial();
-
-                    var jugador = jugadorRepositorio.CrearJugador(new Jugador
-                    {
-                        Nombre = nuevaCuenta.Nombre,
-                        Apellido = nuevaCuenta.Apellido,
-                        Correo = nuevaCuenta.Correo,
-                        Avatar_idAvatar = avatar.idAvatar,
-                        Clasificacion_idClasificacion = clasificacion.idClasificacion
-                    });
-
-                    usuarioRepositorio.CrearUsuario(new Usuario
-                    {
-                        Nombre_Usuario = nuevaCuenta.Usuario,
-                        Contrasena = BCryptNet.HashPassword(nuevaCuenta.Contrasena),
-                        Jugador_idJugador = jugador.idJugador
-                    });
-
-                    transaccion.Commit();
-
-                    CodigoVerificacionServicio.LimpiarVerificacion(nuevaCuenta);
-
                     return new ResultadoRegistroCuentaDTO
                     {
-                        RegistroExitoso = true
+                        RegistroExitoso = false,
+                        UsuarioYaRegistrado = usuarioRegistrado,
+                        CorreoYaRegistrado = correoRegistrado,
+                        Mensaje = null
                     };
                 }
+
+                if (string.IsNullOrWhiteSpace(nuevaCuenta.AvatarRutaRelativa))
+                {
+                    return new ResultadoRegistroCuentaDTO
+                    {
+                        RegistroExitoso = false,
+                        Mensaje = "Avatar no válido."
+                    };
+                }
+
+                Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(nuevaCuenta.AvatarRutaRelativa);
+
+                if (avatar == null)
+                {
+                    return new ResultadoRegistroCuentaDTO
+                    {
+                        RegistroExitoso = false,
+                        Mensaje = "Avatar no válido."
+                    };
+                }
+
+                var clasificacion = clasificacionRepositorio.CrearClasificacionInicial();
+
+                var jugador = jugadorRepositorio.CrearJugador(new Jugador
+                {
+                    Nombre = nuevaCuenta.Nombre,
+                    Apellido = nuevaCuenta.Apellido,
+                    Correo = nuevaCuenta.Correo,
+                    Avatar_idAvatar = avatar.idAvatar,
+                    Clasificacion_idClasificacion = clasificacion.idClasificacion
+                });
+
+                usuarioRepositorio.CrearUsuario(new Usuario
+                {
+                    Nombre_Usuario = nuevaCuenta.Usuario,
+                    Contrasena = BCryptNet.HashPassword(nuevaCuenta.Contrasena),
+                    Jugador_idJugador = jugador.idJugador
+                });
+
+                transaccion.Commit();
+
+                CodigoVerificacionServicio.LimpiarVerificacion(nuevaCuenta);
+
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = true
+                };
             }
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al registrar la cuenta", ex);
-                return new ResultadoRegistroCuentaDTO
-                {
-                    RegistroExitoso = false,
-                    Mensaje = ex.Message
-                };
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al registrar la cuenta", ex);
-                return new ResultadoRegistroCuentaDTO
-                {
-                    RegistroExitoso = false,
-                    Mensaje = ex.Message
-                };
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al registrar la cuenta", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,

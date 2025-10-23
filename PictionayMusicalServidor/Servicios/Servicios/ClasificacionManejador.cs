@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Core;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Datos.Modelo;
 using Datos.Utilidades;
@@ -22,9 +20,8 @@ namespace Servicios.Servicios
         {
             try
             {
-                using (var contexto = CrearContexto())
-                {
-                    List<ClasificacionUsuarioDTO> jugadores = contexto.Usuario
+                using var contexto = CrearContexto();
+                List<ClasificacionUsuarioDTO> jugadores = [.. contexto.Usuario
                         .Include(u => u.Jugador.Clasificacion)
                         .Where(u => u.Jugador != null && u.Jugador.Clasificacion != null)
                         .Select(u => new ClasificacionUsuarioDTO
@@ -36,31 +33,19 @@ namespace Servicios.Servicios
                         .OrderByDescending(c => c.Puntos)
                         .ThenByDescending(c => c.RondasGanadas)
                         .ThenBy(c => c.Usuario)
-                        .Take(LimiteTopJugadores)
-                        .ToList();
+                        .Take(LimiteTopJugadores)];
 
-                    return jugadores;
-                }
+                return jugadores;
             }
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al obtener la clasificación de jugadores", ex);
-                return new List<ClasificacionUsuarioDTO>();
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al obtener la clasificación de jugadores", ex);
-                return new List<ClasificacionUsuarioDTO>();
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al obtener la clasificación de jugadores", ex);
-                return new List<ClasificacionUsuarioDTO>();
+                return [];
             }
             catch (InvalidOperationException ex)
             {
                 Logger.Error("Error inesperado al obtener la clasificación de jugadores", ex);
-                return new List<ClasificacionUsuarioDTO>();
+                return [];
             }
         }
 

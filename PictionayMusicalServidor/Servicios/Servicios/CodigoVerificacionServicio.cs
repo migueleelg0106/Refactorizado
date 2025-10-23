@@ -3,8 +3,6 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Configuration;
 using System.Data;
-using System.Data.Entity.Core;
-using System.Data.Entity.Infrastructure;
 using System.Net.Mail;
 using Datos.Modelo;
 using Datos.Utilidades;
@@ -20,13 +18,13 @@ namespace Servicios.Servicios
         private const string MensajeErrorEnvioCodigo = "No fue posible enviar el código de verificación.";
 
         private static readonly ConcurrentDictionary<string, SolicitudCodigoPendiente> Solicitudes =
-            new ConcurrentDictionary<string, SolicitudCodigoPendiente>();
+            new();
 
         private static readonly ConcurrentDictionary<string, byte> VerificacionesConfirmadas =
-            new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase);
+            new(StringComparer.OrdinalIgnoreCase);
 
         private static readonly ConcurrentDictionary<string, SolicitudRecuperacionPendiente> SolicitudesRecuperacion =
-            new ConcurrentDictionary<string, SolicitudRecuperacionPendiente>();
+            new();
 
         private static ICodigoVerificacionNotificador _notificador = new CorreoCodigoVerificacionNotificador();
 
@@ -196,59 +194,57 @@ namespace Servicios.Servicios
                 };
             }
 
-            using (var contexto = CrearContexto())
+            using var contexto = CrearContexto();
+            Usuario usuario = BuscarUsuarioPorIdentificador(contexto, identificador);
+
+            if (usuario == null)
             {
-                Usuario usuario = BuscarUsuarioPorIdentificador(contexto, identificador);
-
-                if (usuario == null)
+                return new ResultadoSolicitudRecuperacionDTO
                 {
-                    return new ResultadoSolicitudRecuperacionDTO
-                    {
-                        CuentaEncontrada = false,
-                        CodigoEnviado = false,
-                        Mensaje = null
-                    };
-                }
-
-                LimpiarSolicitudesRecuperacion(usuario.idUsuario);
-
-                string token = TokenGenerator.GenerarToken();
-                string codigo = CodigoVerificacionGenerator.GenerarCodigo();
-
-                var pendiente = new SolicitudRecuperacionPendiente
-                {
-                    UsuarioId = usuario.idUsuario,
-                    Correo = usuario.Jugador?.Correo,
-                    NombreUsuario = usuario.Nombre_Usuario,
-                    Nombre = usuario.Jugador?.Nombre,
-                    Apellido = usuario.Jugador?.Apellido,
-                    AvatarRutaRelativa = usuario.Jugador?.Avatar?.Avatar_Ruta,
-                    Codigo = codigo,
-                    Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo),
-                    Confirmado = false
+                    CuentaEncontrada = false,
+                    CodigoEnviado = false,
+                    Mensaje = null
                 };
+            }
 
-                bool enviado = EnviarCorreoRecuperacion(pendiente, codigo);
-                if (!enviado)
-                {
-                    return new ResultadoSolicitudRecuperacionDTO
-                    {
-                        CuentaEncontrada = true,
-                        CodigoEnviado = false,
-                        Mensaje = MensajeErrorEnvioCodigo
-                    };
-                }
+            LimpiarSolicitudesRecuperacion(usuario.idUsuario);
 
-                SolicitudesRecuperacion[token] = pendiente;
+            string token = TokenGenerator.GenerarToken();
+            string codigo = CodigoVerificacionGenerator.GenerarCodigo();
 
+            var pendiente = new SolicitudRecuperacionPendiente
+            {
+                UsuarioId = usuario.idUsuario,
+                Correo = usuario.Jugador?.Correo,
+                NombreUsuario = usuario.Nombre_Usuario,
+                Nombre = usuario.Jugador?.Nombre,
+                Apellido = usuario.Jugador?.Apellido,
+                AvatarRutaRelativa = usuario.Jugador?.Avatar?.Avatar_Ruta,
+                Codigo = codigo,
+                Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo),
+                Confirmado = false
+            };
+
+            bool enviado = EnviarCorreoRecuperacion(pendiente, codigo);
+            if (!enviado)
+            {
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CuentaEncontrada = true,
-                    CodigoEnviado = true,
-                    CorreoDestino = pendiente.Correo,
-                    TokenCodigo = token
+                    CodigoEnviado = false,
+                    Mensaje = MensajeErrorEnvioCodigo
                 };
             }
+
+            SolicitudesRecuperacion[token] = pendiente;
+
+            return new ResultadoSolicitudRecuperacionDTO
+            {
+                CuentaEncontrada = true,
+                CodigoEnviado = true,
+                CorreoDestino = pendiente.Correo,
+                TokenCodigo = token
+            };
         }
 
         public static ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(ReenviarCodigoDTO solicitud)
@@ -430,22 +426,6 @@ namespace Servicios.Servicios
                 };
             }
             catch (DataException ex)
-            {
-                return new ResultadoOperacionDTO
-                {
-                    OperacionExitosa = false,
-                    Mensaje = ex.Message
-                };
-            }
-            catch (EntityException ex)
-            {
-                return new ResultadoOperacionDTO
-                {
-                    OperacionExitosa = false,
-                    Mensaje = ex.Message
-                };
-            }
-            catch (DbUpdateException ex)
             {
                 return new ResultadoOperacionDTO
                 {

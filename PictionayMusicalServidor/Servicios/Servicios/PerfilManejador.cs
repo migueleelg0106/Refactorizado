@@ -1,8 +1,6 @@
 using System;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Core;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.ServiceModel;
 using Datos.DAL.Implementaciones;
@@ -28,43 +26,41 @@ namespace Servicios.Servicios
 
             try
             {
-                using (BaseDatosPruebaEntities1 contexto = CrearContexto())
+                using BaseDatosPruebaEntities1 contexto = CrearContexto();
+                Usuario usuario = contexto.Usuario
+                    .Include(u => u.Jugador.Avatar)
+                    .Include(u => u.Jugador.RedSocial)
+                    .FirstOrDefault(u => u.idUsuario == idUsuario);
+
+                if (usuario != null)
                 {
-                    Usuario usuario = contexto.Usuario
-                        .Include(u => u.Jugador.Avatar)
-                        .Include(u => u.Jugador.RedSocial)
-                        .FirstOrDefault(u => u.idUsuario == idUsuario);
-
-                    if (usuario == null)
-                    {
-                        throw new FaultException("No se encontró el usuario especificado.");
-                    }
-
                     Jugador jugador = usuario.Jugador;
 
-                    if (jugador == null)
+                    if (jugador != null)
                     {
-                        throw new FaultException("No existe un jugador asociado al usuario especificado.");
+                        RedSocial redSocial = jugador.RedSocial.FirstOrDefault();
+
+                        return new UsuarioDTO
+                        {
+                            IdUsuario = usuario.idUsuario,
+                            JugadorId = jugador.idJugador,
+                            NombreUsuario = usuario.Nombre_Usuario,
+                            Nombre = jugador.Nombre,
+                            Apellido = jugador.Apellido,
+                            Correo = jugador.Correo,
+                            AvatarId = jugador.Avatar_idAvatar,
+                            AvatarRutaRelativa = jugador.Avatar?.Avatar_Ruta,
+                            Instagram = redSocial?.Instagram,
+                            Facebook = redSocial?.facebook,
+                            X = redSocial?.x,
+                            Discord = redSocial?.discord
+                        };
                     }
 
-                    RedSocial redSocial = jugador.RedSocial.FirstOrDefault();
-
-                    return new UsuarioDTO
-                    {
-                        IdUsuario = usuario.idUsuario,
-                        JugadorId = jugador.idJugador,
-                        NombreUsuario = usuario.Nombre_Usuario,
-                        Nombre = jugador.Nombre,
-                        Apellido = jugador.Apellido,
-                        Correo = jugador.Correo,
-                        AvatarId = jugador.Avatar_idAvatar,
-                        AvatarRutaRelativa = jugador.Avatar?.Avatar_Ruta,
-                        Instagram = redSocial?.Instagram,
-                        Facebook = redSocial?.facebook,
-                        X = redSocial?.x,
-                        Discord = redSocial?.discord
-                    };
+                    throw new FaultException("No existe un jugador asociado al usuario especificado.");
                 }
+
+                throw new FaultException("No se encontró el usuario especificado.");
             }
             catch (FaultException)
             {
@@ -73,16 +69,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al obtener el perfil del usuario", ex);
-                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al obtener el perfil del usuario", ex);
-                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al obtener el perfil del usuario", ex);
                 throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
             }
             catch (InvalidOperationException ex)
@@ -130,73 +116,61 @@ namespace Servicios.Servicios
 
             try
             {
-                using (BaseDatosPruebaEntities1 contexto = CrearContexto())
+                using BaseDatosPruebaEntities1 contexto = CrearContexto();
+                Usuario usuario = contexto.Usuario
+                    .Include(u => u.Jugador.RedSocial)
+                    .FirstOrDefault(u => u.idUsuario == solicitud.UsuarioId);
+
+                if (usuario == null)
                 {
-                    Usuario usuario = contexto.Usuario
-                        .Include(u => u.Jugador.RedSocial)
-                        .FirstOrDefault(u => u.idUsuario == solicitud.UsuarioId);
-
-                    if (usuario == null)
-                    {
-                        return CrearResultadoFallo("No se encontró el usuario especificado.");
-                    }
-
-                    Jugador jugador = usuario.Jugador;
-
-                    if (jugador == null)
-                    {
-                        return CrearResultadoFallo("No existe un jugador asociado al usuario especificado.");
-                    }
-
-                    var avatarRepositorio = new AvatarRepositorio(contexto);
-                    Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(rutaAvatar);
-                    if (avatar == null)
-                    {
-                        return CrearResultadoFallo("El avatar seleccionado no existe.");
-                    }
-
-                    jugador.Nombre = nombre;
-                    jugador.Apellido = apellido;
-                    jugador.Avatar_idAvatar = avatar.idAvatar;
-
-                    RedSocial redSocial = jugador.RedSocial.FirstOrDefault();
-                    if (redSocial == null)
-                    {
-                        redSocial = new RedSocial
-                        {
-                            Jugador_idJugador = jugador.idJugador
-                        };
-                        contexto.RedSocial.Add(redSocial);
-                        jugador.RedSocial.Add(redSocial);
-                    }
-
-                    redSocial.Instagram = NormalizarRedSocial(solicitud.Instagram);
-                    redSocial.facebook = NormalizarRedSocial(solicitud.Facebook);
-                    redSocial.x = NormalizarRedSocial(solicitud.X);
-                    redSocial.discord = NormalizarRedSocial(solicitud.Discord);
-
-                    contexto.SaveChanges();
-
-                    return new ResultadoOperacionDTO
-                    {
-                        OperacionExitosa = true,
-                        Mensaje = "Perfil actualizado correctamente."
-                    };
+                    return CrearResultadoFallo("No se encontró el usuario especificado.");
                 }
+
+                Jugador jugador = usuario.Jugador;
+
+                if (jugador == null)
+                {
+                    return CrearResultadoFallo("No existe un jugador asociado al usuario especificado.");
+                }
+
+                var avatarRepositorio = new AvatarRepositorio(contexto);
+                Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(rutaAvatar);
+                if (avatar == null)
+                {
+                    return CrearResultadoFallo("El avatar seleccionado no existe.");
+                }
+
+                jugador.Nombre = nombre;
+                jugador.Apellido = apellido;
+                jugador.Avatar_idAvatar = avatar.idAvatar;
+
+                RedSocial redSocial = jugador.RedSocial.FirstOrDefault();
+                if (redSocial == null)
+                {
+                    redSocial = new RedSocial
+                    {
+                        Jugador_idJugador = jugador.idJugador
+                    };
+                    contexto.RedSocial.Add(redSocial);
+                    jugador.RedSocial.Add(redSocial);
+                }
+
+                redSocial.Instagram = NormalizarRedSocial(solicitud.Instagram);
+                redSocial.facebook = NormalizarRedSocial(solicitud.Facebook);
+                redSocial.x = NormalizarRedSocial(solicitud.X);
+                redSocial.discord = NormalizarRedSocial(solicitud.Discord);
+
+                contexto.SaveChanges();
+
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = true,
+                    Mensaje = "Perfil actualizado correctamente."
+                };
             }
             catch (DataException ex)
             {
                 Logger.Error("Error de datos al actualizar el perfil", ex);
-                return CrearResultadoFallo("No fue posible actualizar el perfil.");
-            }
-            catch (EntityException ex)
-            {
-                Logger.Error("Error de entidad al actualizar el perfil", ex);
-                return CrearResultadoFallo("No fue posible actualizar el perfil.");
-            }
-            catch (DbUpdateException ex)
-            {
-                Logger.Error("Error al actualizar la base de datos al actualizar el perfil", ex);
                 return CrearResultadoFallo("No fue posible actualizar el perfil.");
             }
             catch (InvalidOperationException ex)
