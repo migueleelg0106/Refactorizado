@@ -16,7 +16,17 @@ namespace Datos.DAL.Implementaciones
 
         public bool ExisteNombreUsuario(string nombreUsuario)
         {
-            return contexto.Usuario.Any(u => u.Nombre_Usuario == nombreUsuario);
+            if (string.IsNullOrWhiteSpace(nombreUsuario))
+            {
+                return false;
+            }
+
+            string nombreNormalizado = nombreUsuario.Trim();
+
+            var usuario = contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
+
+            return usuario != null
+                && string.Equals(usuario.Nombre_Usuario, nombreNormalizado, StringComparison.Ordinal);
         }
 
         public Usuario CrearUsuario(Usuario usuario)
@@ -38,7 +48,16 @@ namespace Datos.DAL.Implementaciones
                 throw new ArgumentException("El nombre de usuario es obligatorio.", nameof(nombreUsuario));
             }
 
-            return contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreUsuario);
+            string nombreNormalizado = nombreUsuario.Trim();
+
+            var usuario = contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
+
+            if (usuario != null && string.Equals(usuario.Nombre_Usuario, nombreNormalizado, StringComparison.Ordinal))
+            {
+                return usuario;
+            }
+
+            return null;
         }
     }
 }
