@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
@@ -232,14 +233,47 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void CargarIdiomas()
         {
-            IdiomasDisponibles = new ObservableCollection<IdiomaOpcion>
+            WeakEventManager<ILocalizacionServicio, EventArgs>.AddHandler(
+                _localizacionService,
+                nameof(ILocalizacionServicio.IdiomaActualizado),
+                LocalizacionServiceOnIdiomaActualizado);
+
+            ActualizarIdiomasDisponibles(_localizacionService.CulturaActual?.Name
+                ?? CultureInfo.CurrentUICulture?.Name);
+        }
+
+        private void LocalizacionServiceOnIdiomaActualizado(object sender, EventArgs e)
+        {
+            ActualizarIdiomasDisponibles(_localizacionService.CulturaActual?.Name);
+        }
+
+        private void ActualizarIdiomasDisponibles(string culturaActual)
+        {
+            var opciones = new[]
             {
-                new IdiomaOpcion("es-MX", "Español"),
-                new IdiomaOpcion("en-US", "English")
+                new IdiomaOpcion("es-MX", Lang.idiomaTextoEspañol),
+                new IdiomaOpcion("en-US", Lang.idiomaTextoIngles)
             };
 
-            string culturaActual = _localizacionService.CulturaActual?.Name
-                ?? CultureInfo.CurrentUICulture?.Name;
+            if (IdiomasDisponibles == null)
+            {
+                IdiomasDisponibles = new ObservableCollection<IdiomaOpcion>(opciones);
+            }
+            else
+            {
+                IdiomasDisponibles.Clear();
+
+                foreach (var opcion in opciones)
+                {
+                    IdiomasDisponibles.Add(opcion);
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(culturaActual))
+            {
+                IdiomaSeleccionado = IdiomasDisponibles.FirstOrDefault();
+                return;
+            }
 
             IdiomaSeleccionado = IdiomasDisponibles
                 .FirstOrDefault(i => string.Equals(i.Codigo, culturaActual, StringComparison.OrdinalIgnoreCase))
