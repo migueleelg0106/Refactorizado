@@ -22,9 +22,9 @@ namespace PictionaryMusicalCliente
 
             IPerfilServicio perfilService = new PerfilServicio();
             IAvatarServicio avatarService = new AvatarService();
-            ISeleccionarAvatarServicio seleccionarAvatarService = new SeleccionarAvatarDialogoService(avatarService);
+            ISeleccionarAvatarServicio seleccionarAvatarService = new SeleccionarAvatarDialogoServicio(avatarService);
             ICambioContrasenaServicio cambioContrasenaService = new CambioContrasenaServicio();
-            IVerificarCodigoDialogoServicio verificarCodigoDialogService = new VerificarCodigoDialogoService();
+            IVerificarCodigoDialogoServicio verificarCodigoDialogService = new VerificarCodigoDialogoServicio();
             IRecuperacionCuentaServicio recuperacionCuentaDialogService =
                 new RecuperacionCuentaDialogoServicio(verificarCodigoDialogService);
 

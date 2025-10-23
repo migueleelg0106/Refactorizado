@@ -22,7 +22,7 @@ namespace PictionaryMusicalCliente
 
             IInicioSesionServicio inicioSesionService = new InicioSesionServicio();
             ICambioContrasenaServicio cambioContrasenaService = new CambioContrasenaServicio();
-            IVerificarCodigoDialogoServicio verificarCodigoDialogService = new VerificarCodigoDialogoService();
+            IVerificarCodigoDialogoServicio verificarCodigoDialogService = new VerificarCodigoDialogoServicio();
             IRecuperacionCuentaServicio recuperacionCuentaDialogService =
                 new RecuperacionCuentaDialogoServicio(verificarCodigoDialogService);
             ILocalizacionServicio localizacionService = LocalizacionServicio.Instancia;

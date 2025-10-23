@@ -20,7 +20,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.ResultadoSolicitudRecuperacionDTO resultado = await CodigoVerificacionServicioHelper
+                DTOs.ResultadoSolicitudRecuperacionDTO resultado = await CodigoVerificacionServicioAyudante
                     .SolicitarCodigoRecuperacionAsync(identificador)
                     .ConfigureAwait(false);
 
@@ -66,7 +66,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.ResultadoSolicitudCodigoDTO resultado = await CodigoVerificacionServicioHelper
+                DTOs.ResultadoSolicitudCodigoDTO resultado = await CodigoVerificacionServicioAyudante
                     .ReenviarCodigoRecuperacionAsync(tokenCodigo)
                     .ConfigureAwait(false);
 
@@ -113,7 +113,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await CodigoVerificacionServicioHelper
+                DTOs.ResultadoOperacionDTO resultado = await CodigoVerificacionServicioAyudante
                     .ConfirmarCodigoRecuperacionAsync(tokenCodigo, codigoIngresado)
                     .ConfigureAwait(false);
 

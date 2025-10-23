@@ -34,7 +34,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private ObservableCollection<string> _amigos;
         private string _amigoSeleccionado;
 
-        // Campos readonly (no se modifican fuera del constructor)
         private readonly string _nombreUsuarioSesion;
         private readonly ILocalizacionServicio _localizacionService;
         private readonly IListaAmigosServicio _listaAmigosService;
@@ -58,7 +57,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             _listaAmigosService.ListaActualizada += ListaAmigosService_ListaActualizada;
 
-            // ✅ Asignar el usuario de sesión aquí (donde sí se permite)
             _nombreUsuarioSesion = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
 
             CargarDatosUsuario();
@@ -250,7 +248,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             CodigoSala = string.Empty;
             Amigos = new ObservableCollection<string>();
-            NombreUsuario = _nombreUsuarioSesion; // ✅ ahora solo se usa, no se reasigna
+            NombreUsuario = _nombreUsuarioSesion;
         }
 
         private void CargarOpcionesPartida()

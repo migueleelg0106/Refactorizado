@@ -7,7 +7,7 @@ using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Servicios.Dialogos
 {
-    public class VerificarCodigoDialogoService : IVerificarCodigoDialogoServicio
+    public class VerificarCodigoDialogoServicio : IVerificarCodigoDialogoServicio
     {
         public Task<DTOs.ResultadoRegistroCuentaDTO> MostrarDialogoAsync(
             string descripcion,

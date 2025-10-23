@@ -32,7 +32,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 if (resultadoDto == null)
                     return null;
 
-                UsuarioMapper.ActualizarSesion(resultadoDto.Usuario);
+                UsuarioMapeador.ActualizarSesion(resultadoDto.Usuario);
                     resultadoDto.Mensaje = MensajeServidorHelper.Localizar(resultadoDto.Mensaje, resultadoDto.Mensaje);
 
                 // Si hay un usuario válido, lo guardamos en el singleton

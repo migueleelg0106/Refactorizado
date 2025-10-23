@@ -5,7 +5,7 @@ using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
 {
-    public static class CodigoVerificacionServicioHelper
+    public static class CodigoVerificacionServicioAyudante
     {
         private const string CodigoVerificacionEndpoint = "BasicHttpBinding_ICodigoVerificacionManejador";
         private const string CuentaEndpoint = "BasicHttpBinding_ICuentaManejador";
