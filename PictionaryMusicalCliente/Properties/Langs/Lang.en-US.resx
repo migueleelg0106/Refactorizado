@@ -272,7 +272,7 @@
     <value>You cannot send a friend request to yourself.</value>
   </data>
   <data name="amigosErrorUsuarioNoExiste" xml:space="preserve">
-    <value>One or more specified users do not exist.</value>
+    <value>The entered user was not found, please enter another one.</value>
   </data>
   <data name="amigosErrorRelacionExiste" xml:space="preserve">
     <value>A friend request or friendship already exists between the users.</value>

@@ -272,7 +272,7 @@
     <value>No es posible enviarse una solicitud de amistad a sí mismo.</value>
   </data>
   <data name="amigosErrorUsuarioNoExiste" xml:space="preserve">
-    <value>Alguno de los usuarios especificados no existe.</value>
+    <value>El usuario ingresado no se encontró, por favor ingrese otro.</value>
   </data>
   <data name="amigosErrorRelacionExiste" xml:space="preserve">
     <value>Ya existe una solicitud o relación de amistad entre los usuarios.</value>
