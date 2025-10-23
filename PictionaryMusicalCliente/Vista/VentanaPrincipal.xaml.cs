@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente
             InitializeComponent();
 
             _listaAmigosService = new ListaAmigosServicio();
-            _amigosService = new AmigosService();
+            _amigosService = new AmigosServicio();
 
             _vistaModelo = new VentanaPrincipalVistaModelo(
                 LocalizacionServicio.Instancia,

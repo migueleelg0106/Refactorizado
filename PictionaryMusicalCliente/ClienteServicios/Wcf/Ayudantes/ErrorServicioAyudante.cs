@@ -4,7 +4,7 @@ using System.ServiceModel;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
 {
-    public static class ErrorServicioHelper
+    public static class ErrorServicioAyudante
     {
         public static string ObtenerMensaje(
             FaultException excepcion,
@@ -14,19 +14,19 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
 
             if (!string.IsNullOrWhiteSpace(mensajeDetalle))
             {
-                return MensajeServidorHelper.Localizar(
+                return MensajeServidorAyudante.Localizar(
                     mensajeDetalle,
                     mensajePredeterminado);
             }
 
             if (!string.IsNullOrWhiteSpace(excepcion?.Message))
             {
-                return MensajeServidorHelper.Localizar(
+                return MensajeServidorAyudante.Localizar(
                     excepcion.Message,
                     mensajePredeterminado);
             }
 
-            return MensajeServidorHelper.Localizar(null, mensajePredeterminado);
+            return MensajeServidorAyudante.Localizar(null, mensajePredeterminado);
         }
 
         private static string ObtenerMensajeDetalle(FaultException excepcion)

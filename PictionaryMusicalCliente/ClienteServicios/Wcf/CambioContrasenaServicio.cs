@@ -20,7 +20,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.ResultadoSolicitudRecuperacionDTO resultado = await CodigoVerificacionServicioHelper
+                DTOs.ResultadoSolicitudRecuperacionDTO resultado = await CodigoVerificacionServicioAyudante
                     .SolicitarCodigoRecuperacionAsync(identificador)
                     .ConfigureAwait(false);
 
@@ -38,7 +38,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorSolicitudCambioContrasena);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorSolicitudCambioContrasena);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
@@ -66,7 +66,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.ResultadoSolicitudCodigoDTO resultado = await CodigoVerificacionServicioHelper
+                DTOs.ResultadoSolicitudCodigoDTO resultado = await CodigoVerificacionServicioAyudante
                     .ReenviarCodigoRecuperacionAsync(tokenCodigo)
                     .ConfigureAwait(false);
 
@@ -82,7 +82,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorReenviarCodigo);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorReenviarCodigo);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
@@ -113,7 +113,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await CodigoVerificacionServicioHelper
+                DTOs.ResultadoOperacionDTO resultado = await CodigoVerificacionServicioAyudante
                     .ConfirmarCodigoRecuperacionAsync(tokenCodigo, codigoIngresado)
                     .ConfigureAwait(false);
 
@@ -128,7 +128,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorValidarCodigo);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorValidarCodigo);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
@@ -167,7 +167,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     NuevaContrasena = nuevaContrasena
                 };
 
-                DTOs.ResultadoOperacionDTO resultado = await WcfClientHelper.UsarAsync(
+                DTOs.ResultadoOperacionDTO resultado = await WcfClienteAyudante.UsarAsync(
                     cliente,
                     c => c.ActualizarContrasenaAsync(solicitud))
                     .ConfigureAwait(false);
@@ -183,7 +183,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorActualizarContrasena);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorActualizarContrasena);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

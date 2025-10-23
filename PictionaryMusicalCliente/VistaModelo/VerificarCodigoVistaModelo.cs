@@ -134,7 +134,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.RegistroExitoso)
                 {
-                    string mensaje = MensajeServidorHelper.Localizar(resultado.Mensaje, Lang.errorTextoCodigoIncorrecto);
+                    string mensaje = MensajeServidorAyudante.Localizar(resultado.Mensaje, Lang.errorTextoCodigoIncorrecto);
                     resultado.Mensaje = mensaje;
                     MarcarCodigoInvalido?.Invoke(true);
 

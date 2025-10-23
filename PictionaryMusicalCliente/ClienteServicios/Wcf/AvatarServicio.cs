@@ -12,7 +12,7 @@ using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
-    public class AvatarService : IAvatarServicio
+    public class AvatarServicio : IAvatarServicio
     {
         private const string CatalogoAvataresEndpoint = "BasicHttpBinding_ICatalogoAvatares";
 
@@ -58,11 +58,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             try
             {
-                return await WcfClientHelper.UsarAsync(cliente, operacion).ConfigureAwait(false);
+                return await WcfClienteAyudante.UsarAsync(cliente, operacion).ConfigureAwait(false);
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorInformacionAvatar);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorInformacionAvatar);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

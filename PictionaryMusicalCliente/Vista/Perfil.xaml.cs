@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente
             InitializeComponent();
 
             IPerfilServicio perfilService = new PerfilServicio();
-            IAvatarServicio avatarService = new AvatarService();
+            IAvatarServicio avatarService = new AvatarServicio();
             ISeleccionarAvatarServicio seleccionarAvatarService = new SeleccionarAvatarDialogoService(avatarService);
             ICambioContrasenaServicio cambioContrasenaService = new CambioContrasenaServicio();
             IVerificarCodigoDialogoServicio verificarCodigoDialogService = new VerificarCodigoDialogoService();

@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente
 
             var codigoVerificacionService = new CodigoVerificacionServicio();
             var cuentaService = new CuentaServicio();
-            IAvatarServicio avatarService = new AvatarService();
+            IAvatarServicio avatarService = new AvatarServicio();
             var seleccionarAvatarService = new SeleccionarAvatarDialogoService(avatarService);
             var verificarCodigoDialogService = new VerificarCodigoDialogoService();
 

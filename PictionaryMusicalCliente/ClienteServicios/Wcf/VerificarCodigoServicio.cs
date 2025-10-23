@@ -19,7 +19,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
 
             DTOs.ResultadoRegistroCuentaDTO resultado = await EjecutarOperacionAsync(
-                () => CodigoVerificacionServicioHelper.ConfirmarCodigoRegistroAsync(tokenCodigo, codigoIngresado),
+                () => CodigoVerificacionServicioAyudante.ConfirmarCodigoRegistroAsync(tokenCodigo, codigoIngresado),
                 Lang.errorTextoServidorValidarCodigo).ConfigureAwait(false);
 
             if (resultado == null)
@@ -38,7 +38,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
 
             DTOs.ResultadoSolicitudCodigoDTO resultado = await EjecutarOperacionAsync(
-                () => CodigoVerificacionServicioHelper.ReenviarCodigoRegistroAsync(tokenCodigo),
+                () => CodigoVerificacionServicioAyudante.ReenviarCodigoRegistroAsync(tokenCodigo),
                 Lang.errorTextoServidorReenviarCodigo).ConfigureAwait(false);
 
             if (resultado == null)
@@ -57,7 +57,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, mensajeErrorPredeterminado);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, mensajeErrorPredeterminado);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

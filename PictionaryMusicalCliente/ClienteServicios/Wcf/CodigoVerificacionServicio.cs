@@ -23,13 +23,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             try
             {
-                return await WcfClientHelper
+                return await WcfClienteAyudante
                     .UsarAsync(cliente, c => c.SolicitarCodigoVerificacionAsync(solicitud))
                     .ConfigureAwait(false);
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorCodigoVerificacion);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorCodigoVerificacion);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
@@ -64,13 +64,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     TokenCodigo = tokenCodigo.Trim()
                 };
 
-                return await WcfClientHelper
+                return await WcfClienteAyudante
                     .UsarAsync(cliente, c => c.ReenviarCodigoVerificacionAsync(dto))
                     .ConfigureAwait(false);
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorCodigoVerificacion);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorCodigoVerificacion);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
@@ -109,13 +109,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     CodigoIngresado = codigoIngresado
                 };
 
-                return await WcfClientHelper
+                return await WcfClienteAyudante
                     .UsarAsync(cliente, c => c.ConfirmarCodigoVerificacionAsync(dto))
                     .ConfigureAwait(false);
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorCodigoVerificacion);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorCodigoVerificacion);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

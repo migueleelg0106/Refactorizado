@@ -11,7 +11,7 @@ using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
-    public class AmigosService : IAmigosServicio, PictionaryServidorServicioAmigos.IAmigosManejadorCallback
+    public class AmigosServicio : IAmigosServicio, PictionaryServidorServicioAmigos.IAmigosManejadorCallback
     {
         private const string Endpoint = "NetTcpBinding_IAmigosManejador";
 
@@ -350,7 +350,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             switch (ex)
             {
                 case FaultException faultEx:
-                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, ErrorServicioHelper.ObtenerMensaje(faultEx, mensajePredeterminado), ex);
+                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, ErrorServicioAyudante.ObtenerMensaje(faultEx, mensajePredeterminado), ex);
                 case EndpointNotFoundException:
                     throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 case TimeoutException:
