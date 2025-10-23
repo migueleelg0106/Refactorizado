@@ -265,6 +265,45 @@
   <data name="amigosTextoAmigoEliminado" xml:space="preserve">
     <value>Friend removed from your list.</value>
   </data>
+  <data name="amigosErrorRecuperarSolicitudes" xml:space="preserve">
+    <value>Unable to retrieve friend requests.</value>
+  </data>
+  <data name="amigosErrorAutoSolicitud" xml:space="preserve">
+    <value>You cannot send a friend request to yourself.</value>
+  </data>
+  <data name="amigosErrorUsuarioNoExiste" xml:space="preserve">
+    <value>One or more specified users do not exist.</value>
+  </data>
+  <data name="amigosErrorRelacionExiste" xml:space="preserve">
+    <value>A friend request or friendship already exists between the users.</value>
+  </data>
+  <data name="amigosErrorCompletarSolicitud" xml:space="preserve">
+    <value>The friend request could not be completed.</value>
+  </data>
+  <data name="amigosErrorAlmacenarSolicitud" xml:space="preserve">
+    <value>The friend request could not be saved.</value>
+  </data>
+  <data name="amigosErrorSolicitudAceptada" xml:space="preserve">
+    <value>The friend request was already accepted.</value>
+  </data>
+  <data name="amigosErrorSolicitudNoExiste" xml:space="preserve">
+    <value>No friend request exists between the users.</value>
+  </data>
+  <data name="amigosErrorAceptarSolicitud" xml:space="preserve">
+    <value>The friend request could not be accepted.</value>
+  </data>
+  <data name="amigosErrorActualizarSolicitud" xml:space="preserve">
+    <value>The friend request could not be updated.</value>
+  </data>
+  <data name="amigosErrorRelacionNoExiste" xml:space="preserve">
+    <value>No friendship exists between the users.</value>
+  </data>
+  <data name="amigosErrorEliminarRelacion" xml:space="preserve">
+    <value>The friendship could not be removed.</value>
+  </data>
+  <data name="amigosErrorEliminarRelacionBaseDatos" xml:space="preserve">
+    <value>The friendship could not be removed from the database.</value>
+  </data>
   <data name="globalTextoInvitaciones" xml:space="preserve">
     <value>INVITATIONS</value>
   </data>
