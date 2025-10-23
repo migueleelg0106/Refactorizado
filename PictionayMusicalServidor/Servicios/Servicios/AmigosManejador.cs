@@ -67,6 +67,11 @@ namespace Servicios.Servicios
 
                 foreach (var solicitud in solicitudesPendientes)
                 {
+                    if(solicitud.UsuarioReceptor != usuario.idUsuario)
+                    {
+                        continue;
+                    }
+
                     string emisor = solicitud.Usuario?.Nombre_Usuario;
                     string receptor = solicitud.Usuario1?.Nombre_Usuario;
 
@@ -157,7 +162,6 @@ namespace Servicios.Servicios
                     SolicitudAceptada = false
                 };
 
-                NotificarSolicitud(nombreEmisor, solicitud);
                 NotificarSolicitud(nombreReceptor, solicitud);
             }
             catch (ArgumentException ex)

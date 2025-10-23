@@ -52,6 +52,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
 
+                LimpiarSolicitudes();
+
                 var cliente = CrearCliente();
 
                 try
@@ -59,7 +61,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
                     _cliente = cliente;
                     _usuarioSuscrito = nombreUsuario;
-                    LimpiarSolicitudes();
                     NotificarSolicitudesActualizadas();
                 }
                 catch (FaultException ex)
@@ -133,13 +134,17 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             if (solicitud == null || string.IsNullOrWhiteSpace(solicitud.UsuarioEmisor) || string.IsNullOrWhiteSpace(solicitud.UsuarioReceptor))
                 return;
 
+            string usuarioActual = _usuarioSuscrito;
+
+            if (string.IsNullOrWhiteSpace(usuarioActual))
+                return;
+
             bool modificada = false;
 
             lock (_solicitudesLock)
             {
                 int indice = _solicitudes.FindIndex(s =>
-                    (s.UsuarioEmisor == solicitud.UsuarioEmisor && s.UsuarioReceptor == solicitud.UsuarioReceptor) ||
-                    (s.UsuarioEmisor == solicitud.UsuarioReceptor && s.UsuarioReceptor == solicitud.UsuarioEmisor));
+                    s.UsuarioEmisor == solicitud.UsuarioEmisor && s.UsuarioReceptor == usuarioActual);
 
                 if (solicitud.SolicitudAceptada)
                 {
@@ -149,7 +154,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                         modificada = true;
                     }
                 }
-                else
+                else if (string.Equals(solicitud.UsuarioReceptor, usuarioActual, StringComparison.OrdinalIgnoreCase))
                 {
                     if (indice >= 0)
                         _solicitudes[indice] = solicitud;
@@ -169,13 +174,16 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             if (solicitud == null)
                 return;
 
+            string usuarioActual = _usuarioSuscrito;
+            if(string.IsNullOrWhiteSpace(usuarioActual))
+                return;
+
             bool modificada = false;
 
             lock (_solicitudesLock)
             {
                 int indice = _solicitudes.FindIndex(s =>
-                    (s.UsuarioEmisor == solicitud.UsuarioEmisor && s.UsuarioReceptor == solicitud.UsuarioReceptor) ||
-                    (s.UsuarioEmisor == solicitud.UsuarioReceptor && s.UsuarioReceptor == solicitud.UsuarioEmisor));
+                    s.UsuarioEmisor == solicitud.UsuarioEmisor && s.UsuarioReceptor == usuarioActual);
 
                 if (indice >= 0)
                 {
