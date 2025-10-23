@@ -11,11 +11,11 @@ using PictionaryMusicalCliente.VistaModelo.Cuentas;
 
 namespace PictionaryMusicalCliente.Servicios.Dialogos
 {
-    public class SeleccionarAvatarDialogoService : ISeleccionarAvatarServicio
+    public class SeleccionarAvatarDialogoServicio : ISeleccionarAvatarServicio
     {
         private readonly IAvatarServicio _avatarService;
 
-        public SeleccionarAvatarDialogoService(IAvatarServicio avatarService)
+        public SeleccionarAvatarDialogoServicio(IAvatarServicio avatarService)
         {
             _avatarService = avatarService ?? throw new ArgumentNullException(nameof(avatarService));
         }

@@ -6,7 +6,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
     /// <summary>
     /// Expone operaciones auxiliares para mantener sincronizada la sesin del usuario.
     /// </summary>
-    public static class UsuarioMapper
+    public static class UsuarioMapeador
     {
         /// <summary>
         /// Actualiza la sesin del usuario actual a partir del DTO recibido del servidor.

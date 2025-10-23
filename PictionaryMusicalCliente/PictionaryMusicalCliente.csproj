@@ -136,8 +136,8 @@
     <Compile Include="ClienteServicios\Abstracciones\IPerfilServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\IVerificarCodigoServicio.cs" />
     <Compile Include="ClienteServicios\Dialogos\RecuperacionCuentaDialogoServicio.cs" />
-    <Compile Include="ClienteServicios\Dialogos\SeleccionarAvatarDialogoService.cs" />
-    <Compile Include="ClienteServicios\Dialogos\VerificarCodigoDialogoService.cs" />
+    <Compile Include="ClienteServicios\Dialogos\SeleccionarAvatarDialogoServicio.cs" />
+    <Compile Include="ClienteServicios\Dialogos\VerificarCodigoDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Idiomas\LocalizacionServicio.cs" />
     <Compile Include="ClienteServicios\ExcepcionServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\AvatarService.cs" />
@@ -159,10 +159,10 @@
     <Compile Include="Utilidades\ValidacionEntrada.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvatarRutaAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvatarServicioAyudante.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\CodigoVerificacionServicioHelper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\CodigoVerificacionServicioAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\ErrorServicioHelper.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\MensajeServidorHelper.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\UsuarioMapper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\UsuarioMapeador.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\WcfClientHelper.cs" />
     <Compile Include="VistaModelo\BaseVistaModelo.cs" />
     <Compile Include="App.xaml.cs">
