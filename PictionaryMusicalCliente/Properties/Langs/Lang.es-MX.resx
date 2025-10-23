@@ -265,6 +265,30 @@
   <data name="amigosTextoAmigoEliminado" xml:space="preserve">
     <value>Se eliminó al amigo de tu lista.</value>
   </data>
+  <data name="amigosErrorSolicitudPropia" xml:space="preserve">
+    <value>No puedes enviarte una solicitud de amistad.</value>
+  </data>
+  <data name="amigosErrorUsuarioNoExiste" xml:space="preserve">
+    <value>Alguno de los usuarios especificados no existe.</value>
+  </data>
+  <data name="amigosErrorRelacionExistente" xml:space="preserve">
+    <value>Ya existe una solicitud o relación de amistad entre los usuarios.</value>
+  </data>
+  <data name="amigosErrorSoloReceptorAcepta" xml:space="preserve">
+    <value>Solo el receptor de la solicitud puede aceptarla.</value>
+  </data>
+  <data name="amigosErrorSolicitudYaAceptada" xml:space="preserve">
+    <value>La solicitud de amistad ya fue aceptada con anterioridad.</value>
+  </data>
+  <data name="amigosErrorSolicitudInexistente" xml:space="preserve">
+    <value>No existe una solicitud de amistad entre los usuarios.</value>
+  </data>
+  <data name="amigosErrorEliminarRelacionPropia" xml:space="preserve">
+    <value>No puedes eliminar una relación contigo mismo.</value>
+  </data>
+  <data name="amigosErrorRelacionInexistente" xml:space="preserve">
+    <value>No existe una relación de amistad entre los usuarios.</value>
+  </data>
   <data name="globalTextoInvitaciones" xml:space="preserve">
     <value>INVITACIONES</value>
   </data>
