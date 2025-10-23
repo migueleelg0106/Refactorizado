@@ -17,7 +17,7 @@ namespace Servicios.Servicios
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(ListaAmigosManejador));
         private static readonly ConcurrentDictionary<string, IListaAmigosManejadorCallback> Suscripciones =
-            new ConcurrentDictionary<string, IListaAmigosManejadorCallback>(StringComparer.OrdinalIgnoreCase);
+            new(StringComparer.OrdinalIgnoreCase);
 
         public void Suscribir(string nombreUsuario)
         {
@@ -46,11 +46,6 @@ namespace Servicios.Servicios
             {
                 Logger.Error("Error de datos al suscribirse a la lista de amigos", ex);
                 throw new FaultException("No fue posible suscribirse a la lista de amigos.");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Error inesperado al suscribirse a la lista de amigos", ex);
-                throw new FaultException("Ocurrió un error al suscribirse a la lista de amigos.");
             }
 
             IListaAmigosManejadorCallback callback = ObtenerCallbackActual();
@@ -99,11 +94,6 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al obtener la lista de amigos", ex);
                 throw new FaultException("No fue posible recuperar la lista de amigos.");
             }
-            catch (Exception ex)
-            {
-                Logger.Error("Error inesperado al obtener la lista de amigos", ex);
-                throw new FaultException("Ocurrió un error al obtener la lista de amigos.");
-            }
         }
 
         internal static void NotificarCambioAmistad(string nombreUsuario)
@@ -118,18 +108,14 @@ namespace Servicios.Servicios
 
         private static List<AmigoDTO> ObtenerAmigosInterno(string nombreUsuario)
         {
-            using (var contexto = CrearContexto())
+            using var contexto = CrearContexto();
+            var usuarioRepositorio = new UsuarioRepositorio(contexto);
+            var amigoRepositorio = new AmigoRepositorio(contexto);
+
+            Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
+
+            if (usuario != null)
             {
-                var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                var amigoRepositorio = new AmigoRepositorio(contexto);
-
-                Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
-
-                if (usuario == null)
-                {
-                    throw new FaultException("El usuario especificado no existe.");
-                }
-
                 IList<Usuario> amigos = amigoRepositorio.ObtenerAmigos(usuario.idUsuario);
 
                 var resultado = new List<AmigoDTO>(amigos.Count);
@@ -149,6 +135,8 @@ namespace Servicios.Servicios
 
                 return resultado;
             }
+
+            throw new FaultException("El usuario especificado no existe.");
         }
 
         private static void NotificarLista(string nombreUsuario)
@@ -177,7 +165,7 @@ namespace Servicios.Servicios
             {
                 Logger.Error($"Error de datos al obtener la lista de amigos del usuario {nombreUsuario}", ex);
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 Logger.Warn($"Error inesperado al obtener la lista de amigos del usuario {nombreUsuario}", ex);
             }
@@ -202,7 +190,7 @@ namespace Servicios.Servicios
             {
                 RemoverSuscripcion(nombreUsuario);
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 Logger.Warn($"Error inesperado al notificar la lista de amigos del usuario {nombreUsuario}", ex);
             }
@@ -211,18 +199,18 @@ namespace Servicios.Servicios
         private static IListaAmigosManejadorCallback ObtenerCallbackActual()
         {
             var contexto = OperationContext.Current;
-            if (contexto == null)
+            if (contexto != null)
             {
-                throw new FaultException("No se pudo obtener el contexto de la operación para suscribirse a la lista de amigos.");
-            }
+                var callback = contexto.GetCallbackChannel<IListaAmigosManejadorCallback>();
+                if (callback != null)
+                {
+                    return callback;
+                }
 
-            var callback = contexto.GetCallbackChannel<IListaAmigosManejadorCallback>();
-            if (callback == null)
-            {
                 throw new FaultException("No se pudo obtener el canal de retorno para la lista de amigos.");
             }
 
-            return callback;
+            throw new FaultException("No se pudo obtener el contexto de la operación para suscribirse a la lista de amigos.");
         }
 
         private static void RemoverSuscripcion(string nombreUsuario)
