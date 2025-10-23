@@ -24,16 +24,6 @@ namespace Servicios.Servicios
                 throw new FaultException("El nombre de usuario es obligatorio para suscribirse a las notificaciones.");
             }
 
-            IAmigosManejadorCallback callback = ObtenerCallbackActual();
-            Suscripciones.AddOrUpdate(nombreUsuario, callback, (_, __) => callback);
-
-            var canal = OperationContext.Current?.Channel;
-            if (canal != null)
-            {
-                canal.Closed += (_, __) => RemoverSuscripcion(nombreUsuario);
-                canal.Faulted += (_, __) => RemoverSuscripcion(nombreUsuario);
-            }
-
             try
             {
                 using var contexto = CrearContexto();
@@ -42,8 +32,29 @@ namespace Servicios.Servicios
 
                 if (usuario == null)
                 {
-                    RemoverSuscripcion(nombreUsuario);
                     throw new FaultException("El usuario especificado no existe.");
+                }
+
+                string nombreNormalizado = ObtenerNombreNormalizado(usuario.Nombre_Usuario, nombreUsuario);
+
+                if (string.IsNullOrWhiteSpace(nombreNormalizado))
+                {
+                    throw new FaultException("El usuario especificado no existe.");
+                }
+
+                IAmigosManejadorCallback callback = ObtenerCallbackActual();
+                Suscripciones.AddOrUpdate(nombreNormalizado, callback, (_, __) => callback);
+
+                if (!string.Equals(nombreUsuario, nombreNormalizado, StringComparison.Ordinal))
+                {
+                    RemoverSuscripcion(nombreUsuario);
+                }
+
+                var canal = OperationContext.Current?.Channel;
+                if (canal != null)
+                {
+                    canal.Closed += (_, __) => RemoverSuscripcion(nombreNormalizado);
+                    canal.Faulted += (_, __) => RemoverSuscripcion(nombreNormalizado);
                 }
 
                 var amigoRepositorio = new AmigoRepositorio(contexto);
@@ -71,7 +82,7 @@ namespace Servicios.Servicios
                         SolicitudAceptada = solicitud.Estado
                     };
 
-                    NotificarSolicitud(nombreUsuario, dto);
+                    NotificarSolicitud(nombreNormalizado, dto);
                 }
             }
             catch (FaultException)
@@ -136,15 +147,18 @@ namespace Servicios.Servicios
 
                 amigoRepositorio.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
 
+                string nombreEmisor = ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
+                string nombreReceptor = ObtenerNombreNormalizado(usuarioReceptor.Nombre_Usuario, nombreUsuarioReceptor);
+
                 var solicitud = new SolicitudAmistadDTO
                 {
-                    UsuarioEmisor = nombreUsuarioEmisor,
-                    UsuarioReceptor = nombreUsuarioReceptor,
+                    UsuarioEmisor = nombreEmisor,
+                    UsuarioReceptor = nombreReceptor,
                     SolicitudAceptada = false
                 };
 
-                NotificarSolicitud(nombreUsuarioEmisor, solicitud);
-                NotificarSolicitud(nombreUsuarioReceptor, solicitud);
+                NotificarSolicitud(nombreEmisor, solicitud);
+                NotificarSolicitud(nombreReceptor, solicitud);
             }
             catch (ArgumentException ex)
             {
@@ -167,6 +181,9 @@ namespace Servicios.Servicios
         {
             ValidarNombreUsuario(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
             ValidarNombreUsuario(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
+
+            string nombreEmisorNormalizado = null;
+            string nombreReceptorNormalizado = null;
 
             try
             {
@@ -199,15 +216,18 @@ namespace Servicios.Servicios
 
                         amigoRepositorio.ActualizarEstado(relacion, true);
 
+                        nombreEmisorNormalizado = ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
+                        nombreReceptorNormalizado = ObtenerNombreNormalizado(usuarioReceptor.Nombre_Usuario, nombreUsuarioReceptor);
+
                         var solicitud = new SolicitudAmistadDTO
                         {
-                            UsuarioEmisor = nombreUsuarioEmisor,
-                            UsuarioReceptor = nombreUsuarioReceptor,
+                            UsuarioEmisor = nombreEmisorNormalizado,
+                            UsuarioReceptor = nombreReceptorNormalizado,
                             SolicitudAceptada = true
                         };
 
-                        NotificarSolicitud(nombreUsuarioEmisor, solicitud);
-                        NotificarSolicitud(nombreUsuarioReceptor, solicitud);
+                        NotificarSolicitud(nombreEmisorNormalizado, solicitud);
+                        NotificarSolicitud(nombreReceptorNormalizado, solicitud);
                     }
                     else
                     {
@@ -215,8 +235,8 @@ namespace Servicios.Servicios
                     }
                 }
 
-                ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioEmisor);
-                ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioReceptor);
+                ListaAmigosManejador.NotificarCambioAmistad(nombreEmisorNormalizado);
+                ListaAmigosManejador.NotificarCambioAmistad(nombreReceptorNormalizado);
             }
             catch (FaultException)
             {
@@ -249,6 +269,9 @@ namespace Servicios.Servicios
                 throw new FaultException("No es posible eliminar una relación consigo mismo.");
             }
 
+            string nombreUsuarioANormalizado = null;
+            string nombreUsuarioBNormalizado = null;
+
             try
             {
                 using (var contexto = CrearContexto())
@@ -270,15 +293,22 @@ namespace Servicios.Servicios
                     {
                         amigoRepositorio.EliminarRelacion(relacion);
 
+                        nombreUsuarioANormalizado = ObtenerNombreNormalizado(usuarioA.Nombre_Usuario, nombreUsuarioA);
+                        nombreUsuarioBNormalizado = ObtenerNombreNormalizado(usuarioB.Nombre_Usuario, nombreUsuarioB);
+
+                        bool usuarioAEsEmisor = relacion.UsuarioEmisor == usuarioA.idUsuario;
+                        string emisor = usuarioAEsEmisor ? nombreUsuarioANormalizado : nombreUsuarioBNormalizado;
+                        string receptor = usuarioAEsEmisor ? nombreUsuarioBNormalizado : nombreUsuarioANormalizado;
+
                         var solicitud = new SolicitudAmistadDTO
                         {
-                            UsuarioEmisor = relacion.UsuarioEmisor == usuarioA.idUsuario ? nombreUsuarioA : nombreUsuarioB,
-                            UsuarioReceptor = relacion.UsuarioEmisor == usuarioA.idUsuario ? nombreUsuarioB : nombreUsuarioA,
+                            UsuarioEmisor = emisor,
+                            UsuarioReceptor = receptor,
                             SolicitudAceptada = false
                         };
 
-                        NotificarEliminacion(nombreUsuarioA, solicitud);
-                        NotificarEliminacion(nombreUsuarioB, solicitud);
+                        NotificarEliminacion(nombreUsuarioANormalizado, solicitud);
+                        NotificarEliminacion(nombreUsuarioBNormalizado, solicitud);
                     }
                     else
                     {
@@ -286,8 +316,8 @@ namespace Servicios.Servicios
                     }
                 }
 
-                ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioA);
-                ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioB);
+                ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioANormalizado);
+                ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioBNormalizado);
             }
             catch (FaultException)
             {
@@ -324,6 +354,18 @@ namespace Servicios.Servicios
             {
                 throw new FaultException($"El parámetro {parametro} es obligatorio.");
             }
+        }
+
+        private static string ObtenerNombreNormalizado(string nombreBaseDatos, string nombreAlterno)
+        {
+            string nombre = nombreBaseDatos?.Trim();
+
+            if (!string.IsNullOrWhiteSpace(nombre))
+            {
+                return nombre;
+            }
+
+            return nombreAlterno?.Trim();
         }
 
         private static IAmigosManejadorCallback ObtenerCallbackActual()
