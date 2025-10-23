@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:convertidores="clr-namespace:PictionaryMusicalCliente.Convertidores"
         xmlns:localizacion="clr-namespace:PictionaryMusicalCliente.Utilidades.Idiomas"
-        Title="{Binding [tituloTextoInicioSesion], Source={StaticResource Localizacion}}" Height="559" Width="800"
+        Title="{Binding [tituloTextoInicioSesion], Source={StaticResource Localizacion}}" Height="650" Width="800"
         WindowStartupLocation="CenterScreen"
         Background="White">
 
@@ -11,7 +11,7 @@
         <convertidores:ConvertidorBooleanoInverso x:Key="BooleanoInverso"/>
     </Window.Resources>
 
-    <Grid>
+    <Grid Margin="0,0,0,-6">
         <!-- Fondo cuadriculado -->
         <Grid.Background>
             <VisualBrush TileMode="Tile" Viewport="0,0,40,40" ViewportUnits="Absolute"
@@ -23,14 +23,12 @@
         </Grid.Background>
 
         <!-- Título -->
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
-            <TextBlock Text="{Binding [tituloTextoPictionary], Source={StaticResource Localizacion}}"
-                       FontSize="28" FontWeight="Bold" Foreground="Blue"
-                       FontFamily="Comic Sans MS" TextAlignment="Center"/>
-            <TextBlock Text="{Binding [tituloTextoMusical], Source={StaticResource Localizacion}}"
-                       FontSize="42" FontWeight="Bold" Foreground="Blue"
-                       FontFamily="Times New Roman" TextAlignment="Center"/>
-        </StackPanel>
+        <Image Source="/Recursos/PictionaryMusicalLogo.png"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
+               Margin="0,-26,0,0"
+               Height="292"
+               Stretch="Uniform" Width="382"/>
 
         <!-- Selector de Idioma -->
         <StackPanel Orientation="Horizontal"
@@ -50,7 +48,7 @@
         <Border Background="White" BorderBrush="Gray" BorderThickness="2"
                 Padding="20" CornerRadius="3"
                 HorizontalAlignment="Center" VerticalAlignment="Top"
-                Height="346" Width="460" Margin="0,140,0,0">
+                Height="346" Width="460" Margin="0,241,0,0">
 
             <!-- Usamos Grid con filas bien definidas -->
             <Grid Cursor="">
