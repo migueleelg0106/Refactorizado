@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
 {
-    public static class WcfClientHelper
+    public static class WcfClienteAyudante
     {
         public static async Task<TResult> UsarAsync<TClient, TResult>(
             TClient cliente,

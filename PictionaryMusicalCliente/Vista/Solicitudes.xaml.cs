@@ -15,7 +15,7 @@ namespace PictionaryMusicalCliente
         private readonly SolicitudesVistaModelo _vistaModelo;
 
         public Solicitudes()
-            : this(new SolicitudesVistaModelo(new AmigosService()))
+            : this(new SolicitudesVistaModelo(new AmigosServicio()))
         {
         }
 

@@ -23,13 +23,13 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             try
             {
                 // Llamada directa con el mismo DTO del server
-                return await WcfClientHelper
+                return await WcfClienteAyudante
                     .UsarAsync(cliente, c => c.RegistrarCuentaAsync(solicitud))
                     .ConfigureAwait(false);
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoRegistrarCuentaMasTarde);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoRegistrarCuentaMasTarde);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

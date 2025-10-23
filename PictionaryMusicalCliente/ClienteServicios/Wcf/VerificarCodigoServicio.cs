@@ -57,7 +57,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, mensajeErrorPredeterminado);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, mensajeErrorPredeterminado);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

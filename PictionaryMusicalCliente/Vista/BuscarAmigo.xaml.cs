@@ -15,7 +15,7 @@ namespace PictionaryMusicalCliente
         private readonly BuscarAmigoVistaModelo _vistaModelo;
 
         public BuscarAmigo()
-            : this(new BuscarAmigoVistaModelo(new AmigosService()))
+            : this(new BuscarAmigoVistaModelo(new AmigosServicio()))
         {
         }
 

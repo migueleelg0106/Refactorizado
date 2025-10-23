@@ -140,12 +140,12 @@
     <Compile Include="ClienteServicios\Dialogos\VerificarCodigoDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Idiomas\LocalizacionServicio.cs" />
     <Compile Include="ClienteServicios\ExcepcionServicio.cs" />
-    <Compile Include="ClienteServicios\Wcf\AvatarService.cs" />
+    <Compile Include="ClienteServicios\Wcf\AvatarServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\CambioContrasenaServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\ClasificacionServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\CodigoVerificacionServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\CuentaServicio.cs" />
-    <Compile Include="ClienteServicios\Wcf\AmigosService.cs" />
+    <Compile Include="ClienteServicios\Wcf\AmigosServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\ListaAmigosServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\InicioSesionServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\PerfilServicio.cs" />
@@ -160,10 +160,10 @@
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvatarRutaAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvatarServicioAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\CodigoVerificacionServicioAyudante.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\ErrorServicioHelper.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\MensajeServidorHelper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\ErrorServicioAyudante.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\MensajeServidorAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\UsuarioMapeador.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\WcfClientHelper.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\WcfClienteAyudante.cs" />
     <Compile Include="VistaModelo\BaseVistaModelo.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

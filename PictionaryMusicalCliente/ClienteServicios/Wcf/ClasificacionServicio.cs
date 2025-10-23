@@ -19,7 +19,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.ClasificacionUsuarioDTO[] clasificacion = await WcfClientHelper.UsarAsync(
+                DTOs.ClasificacionUsuarioDTO[] clasificacion = await WcfClienteAyudante.UsarAsync(
                     cliente,
                     c => c.ObtenerTopJugadoresAsync())
                     .ConfigureAwait(false);
@@ -28,7 +28,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

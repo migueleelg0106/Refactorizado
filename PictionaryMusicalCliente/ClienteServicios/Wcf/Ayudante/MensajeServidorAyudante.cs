@@ -6,7 +6,7 @@ using LangResources = PictionaryMusicalCliente.Properties.Langs;
 
 namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
 {
-    public static class MensajeServidorHelper
+    public static class MensajeServidorAyudante
     {
         private static readonly Regex EsperaCodigoRegex = new Regex(
             @"^Debe esperar (\d+) segundos para solicitar un nuevo código\.$",

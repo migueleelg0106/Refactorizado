@@ -25,7 +25,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             try
             {
                 // Llamamos al servicio remoto
-                var resultadoDto = await WcfClientHelper
+                var resultadoDto = await WcfClienteAyudante
                     .UsarAsync(cliente, c => c.IniciarSesionAsync(solicitud))
                     .ConfigureAwait(false);
 
@@ -33,7 +33,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     return null;
 
                 UsuarioMapeador.ActualizarSesion(resultadoDto.Usuario);
-                    resultadoDto.Mensaje = MensajeServidorHelper.Localizar(resultadoDto.Mensaje, resultadoDto.Mensaje);
+                    resultadoDto.Mensaje = MensajeServidorAyudante.Localizar(resultadoDto.Mensaje, resultadoDto.Mensaje);
 
                 // Si hay un usuario válido, lo guardamos en el singleton
                 if (resultadoDto.Usuario != null)
@@ -43,7 +43,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorInicioSesion);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorInicioSesion);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

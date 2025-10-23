@@ -42,7 +42,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private bool _suscripcionActiva;
 
         public VentanaPrincipalVistaModelo()
-            : this(LocalizacionServicio.Instancia, new ListaAmigosServicio(), new AmigosService())
+            : this(LocalizacionServicio.Instancia, new ListaAmigosServicio(), new AmigosServicio())
         {
         }
 

@@ -292,7 +292,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.OperacionExitosa)
                 {
-                    mensajeError = MensajeServidorHelper.Localizar(
+                    mensajeError = MensajeServidorAyudante.Localizar(
                         resultado.Mensaje,
                         Lang.errorTextoActualizarPerfil);
                     AvisoAyudante.Mostrar(mensajeError);
@@ -300,7 +300,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
 
                 ActualizarSesion();
-                string mensajeExito = MensajeServidorHelper.Localizar(
+                string mensajeExito = MensajeServidorAyudante.Localizar(
                     resultado.Mensaje,
                     Lang.avisoTextoPerfilActualizado);
                 AvisoAyudante.Mostrar(mensajeExito);

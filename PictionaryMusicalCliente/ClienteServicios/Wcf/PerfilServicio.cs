@@ -22,7 +22,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.UsuarioDTO perfilDto = await WcfClientHelper
+                DTOs.UsuarioDTO perfilDto = await WcfClienteAyudante
                     .UsarAsync(cliente, c => c.ObtenerPerfilAsync(usuarioId))
                     .ConfigureAwait(false);
 
@@ -30,7 +30,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorObtenerPerfil);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
@@ -74,7 +74,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await WcfClientHelper
+                DTOs.ResultadoOperacionDTO resultado = await WcfClienteAyudante
                     .UsarAsync(cliente, c => c.ActualizarPerfilAsync(solicitud))
                     .ConfigureAwait(false);
 
@@ -89,7 +89,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorActualizarPerfil);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
@@ -130,7 +130,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                DTOs.AvatarDTO[] avatares = await WcfClientHelper
+                DTOs.AvatarDTO[] avatares = await WcfClienteAyudante
                     .UsarAsync(cliente, c => c.ObtenerAvataresDisponiblesAsync())
                     .ConfigureAwait(false);
 
@@ -140,7 +140,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorNoDisponible);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);

@@ -66,7 +66,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                 catch (FaultException ex)
                 {
                     cliente.Abort();
-                    string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
+                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
                     throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
                 }
                 catch (EndpointNotFoundException ex)
@@ -176,7 +176,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             catch (FaultException ex)
             {
                 cliente.Abort();
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

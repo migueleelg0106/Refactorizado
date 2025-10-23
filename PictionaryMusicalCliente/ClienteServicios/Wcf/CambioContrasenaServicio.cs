@@ -38,7 +38,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorSolicitudCambioContrasena);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorSolicitudCambioContrasena);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
@@ -82,7 +82,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorReenviarCodigo);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorReenviarCodigo);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
@@ -128,7 +128,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorValidarCodigo);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorValidarCodigo);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
@@ -167,7 +167,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
                     NuevaContrasena = nuevaContrasena
                 };
 
-                DTOs.ResultadoOperacionDTO resultado = await WcfClientHelper.UsarAsync(
+                DTOs.ResultadoOperacionDTO resultado = await WcfClienteAyudante.UsarAsync(
                     cliente,
                     c => c.ActualizarContrasenaAsync(solicitud))
                     .ConfigureAwait(false);
@@ -183,7 +183,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioHelper.ObtenerMensaje(ex, Lang.errorTextoServidorActualizarContrasena);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorActualizarContrasena);
                 throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
