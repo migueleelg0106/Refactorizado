@@ -1,6 +1,11 @@
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
 using System;
+using System.Configuration;
+using System.Data;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
+using System.Net.Mail;
 using log4net;
 
 namespace Servicios.Servicios
@@ -15,14 +20,45 @@ namespace Servicios.Servicios
             {
                 return CodigoVerificacionServicio.SolicitarCodigoRecuperacion(solicitud);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                Logger.Error("Error al solicitar código de recuperación", ex);
-                return new ResultadoSolicitudRecuperacionDTO
-                {
-                    CodigoEnviado = false,
-                    Mensaje = ex.Message
-                };
+                Logger.Warn("Datos inválidos al solicitar código de recuperación", ex);
+                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
+            }
+            catch (FormatException ex)
+            {
+                Logger.Warn("Formato inválido al solicitar código de recuperación", ex);
+                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Estado inválido al solicitar código de recuperación", ex);
+                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
+            }
+            catch (DataException ex)
+            {
+                Logger.Error("Error de datos al solicitar código de recuperación", ex);
+                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
+            }
+            catch (EntityException ex)
+            {
+                Logger.Error("Error de entidad al solicitar código de recuperación", ex);
+                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al solicitar código de recuperación", ex);
+                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
+            }
+            catch (SmtpException ex)
+            {
+                Logger.Error("Error de correo al solicitar código de recuperación", ex);
+                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                Logger.Error("Configuración inválida al solicitar código de recuperación", ex);
+                return CrearResultadoSolicitudRecuperacionFallido(ex.Message);
             }
         }
 
@@ -32,14 +68,45 @@ namespace Servicios.Servicios
             {
                 return CodigoVerificacionServicio.ReenviarCodigoRecuperacion(solicitud);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                Logger.Error("Error al reenviar código de recuperación", ex);
-                return new ResultadoSolicitudCodigoDTO
-                {
-                    CodigoEnviado = false,
-                    Mensaje = ex.Message
-                };
+                Logger.Warn("Datos inválidos al reenviar código de recuperación", ex);
+                return CrearResultadoSolicitudCodigoFallido(ex.Message);
+            }
+            catch (FormatException ex)
+            {
+                Logger.Warn("Formato inválido al reenviar código de recuperación", ex);
+                return CrearResultadoSolicitudCodigoFallido(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Estado inválido al reenviar código de recuperación", ex);
+                return CrearResultadoSolicitudCodigoFallido(ex.Message);
+            }
+            catch (DataException ex)
+            {
+                Logger.Error("Error de datos al reenviar código de recuperación", ex);
+                return CrearResultadoSolicitudCodigoFallido(ex.Message);
+            }
+            catch (EntityException ex)
+            {
+                Logger.Error("Error de entidad al reenviar código de recuperación", ex);
+                return CrearResultadoSolicitudCodigoFallido(ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al reenviar código de recuperación", ex);
+                return CrearResultadoSolicitudCodigoFallido(ex.Message);
+            }
+            catch (SmtpException ex)
+            {
+                Logger.Error("Error de correo al reenviar código de recuperación", ex);
+                return CrearResultadoSolicitudCodigoFallido(ex.Message);
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                Logger.Error("Configuración inválida al reenviar código de recuperación", ex);
+                return CrearResultadoSolicitudCodigoFallido(ex.Message);
             }
         }
 
@@ -49,14 +116,45 @@ namespace Servicios.Servicios
             {
                 return CodigoVerificacionServicio.ConfirmarCodigoRecuperacion(confirmacion);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                Logger.Error("Error al confirmar código de recuperación", ex);
-                return new ResultadoOperacionDTO
-                {
-                    OperacionExitosa = false,
-                    Mensaje = ex.Message
-                };
+                Logger.Warn("Datos inválidos al confirmar código de recuperación", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (FormatException ex)
+            {
+                Logger.Warn("Formato inválido al confirmar código de recuperación", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Estado inválido al confirmar código de recuperación", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (DataException ex)
+            {
+                Logger.Error("Error de datos al confirmar código de recuperación", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (EntityException ex)
+            {
+                Logger.Error("Error de entidad al confirmar código de recuperación", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al confirmar código de recuperación", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (SmtpException ex)
+            {
+                Logger.Error("Error de correo al confirmar código de recuperación", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                Logger.Error("Configuración inválida al confirmar código de recuperación", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
             }
         }
 
@@ -66,15 +164,73 @@ namespace Servicios.Servicios
             {
                 return CodigoVerificacionServicio.ActualizarContrasena(solicitud);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                Logger.Error("Error al actualizar la contraseña", ex);
-                return new ResultadoOperacionDTO
-                {
-                    OperacionExitosa = false,
-                    Mensaje = ex.Message
-                };
+                Logger.Warn("Datos inválidos al actualizar la contraseña", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
             }
+            catch (FormatException ex)
+            {
+                Logger.Warn("Formato inválido al actualizar la contraseña", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Estado inválido al actualizar la contraseña", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (DataException ex)
+            {
+                Logger.Error("Error de datos al actualizar la contraseña", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (EntityException ex)
+            {
+                Logger.Error("Error de entidad al actualizar la contraseña", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al actualizar la contraseña", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (SmtpException ex)
+            {
+                Logger.Error("Error de correo al actualizar la contraseña", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                Logger.Error("Configuración inválida al actualizar la contraseña", ex);
+                return CrearResultadoOperacionFallida(ex.Message);
+            }
+        }
+
+        private static ResultadoSolicitudRecuperacionDTO CrearResultadoSolicitudRecuperacionFallido(string mensaje)
+        {
+            return new ResultadoSolicitudRecuperacionDTO
+            {
+                CodigoEnviado = false,
+                Mensaje = mensaje
+            };
+        }
+
+        private static ResultadoSolicitudCodigoDTO CrearResultadoSolicitudCodigoFallido(string mensaje)
+        {
+            return new ResultadoSolicitudCodigoDTO
+            {
+                CodigoEnviado = false,
+                Mensaje = mensaje
+            };
+        }
+
+        private static ResultadoOperacionDTO CrearResultadoOperacionFallida(string mensaje)
+        {
+            return new ResultadoOperacionDTO
+            {
+                OperacionExitosa = false,
+                Mensaje = mensaje
+            };
         }
     }
 }

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Datos.Modelo;
 using Datos.Utilidades;
@@ -39,9 +42,24 @@ namespace Servicios.Servicios
                     return jugadores;
                 }
             }
-            catch (Exception ex)
+            catch (DataException ex)
             {
-                Logger.Error("Error al obtener la clasificación de jugadores", ex);
+                Logger.Error("Error de datos al obtener la clasificación de jugadores", ex);
+                return new List<ClasificacionUsuarioDTO>();
+            }
+            catch (EntityException ex)
+            {
+                Logger.Error("Error de entidad al obtener la clasificación de jugadores", ex);
+                return new List<ClasificacionUsuarioDTO>();
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al obtener la clasificación de jugadores", ex);
+                return new List<ClasificacionUsuarioDTO>();
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Error inesperado al obtener la clasificación de jugadores", ex);
                 return new List<ClasificacionUsuarioDTO>();
             }
         }

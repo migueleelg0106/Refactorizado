@@ -3,7 +3,10 @@ using Servicios.Contratos.DTOs;
 using Datos.Modelo;
 using Datos.Utilidades;
 using System;
+using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using log4net;
 using BCryptNet = BCrypt.Net.BCrypt;
@@ -64,9 +67,36 @@ namespace Servicios.Servicios
                     };
                 }
             }
-            catch (Exception ex)
+            catch (DataException ex)
             {
-                Logger.Error("Error al iniciar sesión", ex);
+                Logger.Error("Error de datos al iniciar sesión", ex);
+                return new ResultadoInicioSesionDTO
+                {
+                    InicioSesionExitoso = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (EntityException ex)
+            {
+                Logger.Error("Error de entidad al iniciar sesión", ex);
+                return new ResultadoInicioSesionDTO
+                {
+                    InicioSesionExitoso = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al iniciar sesión", ex);
+                return new ResultadoInicioSesionDTO
+                {
+                    InicioSesionExitoso = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Error inesperado al iniciar sesión", ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,

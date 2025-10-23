@@ -79,7 +79,23 @@ namespace Servicios.Servicios.Utilidades
 
                 return true;
             }
-            catch (Exception)
+            catch (SmtpException)
+            {
+                return false;
+            }
+            catch (ConfigurationErrorsException)
+            {
+                return false;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+            catch (ArgumentException)
             {
                 return false;
             }

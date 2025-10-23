@@ -1,6 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Configuration;
+using System.Data;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
+using System.Net.Mail;
 using Datos.Modelo;
 using Datos.Utilidades;
 using Servicios.Contratos.DTOs;
@@ -408,7 +413,55 @@ namespace Servicios.Servicios
                     OperacionExitosa = true
                 };
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (InvalidOperationException ex)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (DataException ex)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (EntityException ex)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (DbUpdateException ex)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (SmtpException ex)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (ConfigurationErrorsException ex)
             {
                 return new ResultadoOperacionDTO
                 {
@@ -457,7 +510,19 @@ namespace Servicios.Servicios
 
                 return tarea.GetAwaiter().GetResult();
             }
-            catch
+            catch (SmtpException)
+            {
+                return false;
+            }
+            catch (ConfigurationErrorsException)
+            {
+                return false;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+            catch (ArgumentException)
             {
                 return false;
             }

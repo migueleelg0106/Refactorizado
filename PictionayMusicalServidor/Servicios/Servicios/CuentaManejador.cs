@@ -1,5 +1,8 @@
 using Servicios.Contratos;
 using System;
+using System.Data;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using log4net;
 using Servicios.Contratos.DTOs;
 using Datos.DAL.Implementaciones;
@@ -101,9 +104,36 @@ namespace Servicios.Servicios
                     };
                 }
             }
-            catch (Exception ex)
+            catch (DataException ex)
             {
-                Logger.Error("Error al registrar la cuenta", ex);
+                Logger.Error("Error de datos al registrar la cuenta", ex);
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (EntityException ex)
+            {
+                Logger.Error("Error de entidad al registrar la cuenta", ex);
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al registrar la cuenta", ex);
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    Mensaje = ex.Message
+                };
+            }
+            catch (InvalidOperationException ex)
+            {
+                Logger.Error("Error inesperado al registrar la cuenta", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,

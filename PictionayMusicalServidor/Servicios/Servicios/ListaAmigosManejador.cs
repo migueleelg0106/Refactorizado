@@ -2,6 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using System.ServiceModel;
 using Datos.DAL.Implementaciones;
 using Datos.Modelo;
@@ -47,10 +49,15 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al suscribirse a la lista de amigos", ex);
                 throw new FaultException("No fue posible suscribirse a la lista de amigos.");
             }
-            catch (Exception ex)
+            catch (EntityException ex)
             {
-                Logger.Error("Error inesperado al suscribirse a la lista de amigos", ex);
-                throw new FaultException("Ocurrió un error al suscribirse a la lista de amigos.");
+                Logger.Error("Error de entidad al suscribirse a la lista de amigos", ex);
+                throw new FaultException("No fue posible suscribirse a la lista de amigos.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al suscribirse a la lista de amigos", ex);
+                throw new FaultException("No fue posible suscribirse a la lista de amigos.");
             }
 
             IListaAmigosManejadorCallback callback = ObtenerCallbackActual();
@@ -99,10 +106,15 @@ namespace Servicios.Servicios
                 Logger.Error("Error de datos al obtener la lista de amigos", ex);
                 throw new FaultException("No fue posible recuperar la lista de amigos.");
             }
-            catch (Exception ex)
+            catch (EntityException ex)
             {
-                Logger.Error("Error inesperado al obtener la lista de amigos", ex);
-                throw new FaultException("Ocurrió un error al obtener la lista de amigos.");
+                Logger.Error("Error de entidad al obtener la lista de amigos", ex);
+                throw new FaultException("No fue posible recuperar la lista de amigos.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error("Error al actualizar la base de datos al obtener la lista de amigos", ex);
+                throw new FaultException("No fue posible recuperar la lista de amigos.");
             }
         }
 
@@ -177,7 +189,15 @@ namespace Servicios.Servicios
             {
                 Logger.Error($"Error de datos al obtener la lista de amigos del usuario {nombreUsuario}", ex);
             }
-            catch (Exception ex)
+            catch (EntityException ex)
+            {
+                Logger.Error($"Error de entidad al obtener la lista de amigos del usuario {nombreUsuario}", ex);
+            }
+            catch (DbUpdateException ex)
+            {
+                Logger.Error($"Error al actualizar la base de datos al obtener la lista de amigos del usuario {nombreUsuario}", ex);
+            }
+            catch (InvalidOperationException ex)
             {
                 Logger.Warn($"Error inesperado al obtener la lista de amigos del usuario {nombreUsuario}", ex);
             }
@@ -202,7 +222,7 @@ namespace Servicios.Servicios
             {
                 RemoverSuscripcion(nombreUsuario);
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 Logger.Warn($"Error inesperado al notificar la lista de amigos del usuario {nombreUsuario}", ex);
             }
