@@ -24,11 +24,34 @@
 
         <!-- Título -->
         <Image Source="/Recursos/PictionaryMusicalLogo.png"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Top"
-               Margin="0,-26,0,0"
-               Height="292"
-               Stretch="Uniform" Width="382"/>
+           HorizontalAlignment="Center"
+           VerticalAlignment="Top"
+           Margin="0,-26,0,0"
+           Height="292"
+           Stretch="Uniform" Width="382"
+           RenderTransformOrigin="0.5,0.5">
+
+            <Image.RenderTransform>
+                <RotateTransform Angle="0"/>
+            </Image.RenderTransform>
+
+            <Image.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+
+                            <DoubleAnimation 
+                                Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)" 
+                                From="-5" 
+                                To="5" 
+                                Duration="0:0:2" 
+                                AutoReverse="True"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Image.Triggers>
+        </Image>
+
 
         <!-- Selector de Idioma -->
         <StackPanel Orientation="Horizontal"

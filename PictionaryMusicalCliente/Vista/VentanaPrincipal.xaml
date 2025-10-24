@@ -44,10 +44,33 @@
 
             <Grid Grid.ColumnSpan="3" IsHitTestVisible="False">
                 <Image Source="/Recursos/PictionaryMusicalLogo.png"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Height="148"
-                       Stretch="Uniform" Width="152"/>
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"
+           Height="148"
+           Stretch="Uniform" Width="152"
+           
+           RenderTransformOrigin="0.5,0.5">
+
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="0"/>
+                    </Image.RenderTransform>
+
+                    <Image.Triggers>
+                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+
+                                    <DoubleAnimation 
+                            Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)" 
+                            From="-5" 
+                            To="5" 
+                            Duration="0:0:2" 
+                            AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Image.Triggers>
+                </Image>
             </Grid>
 
             <Button Grid.Column="2"
