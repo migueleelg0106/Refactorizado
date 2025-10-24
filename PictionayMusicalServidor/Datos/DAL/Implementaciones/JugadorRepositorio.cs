@@ -7,16 +7,16 @@ namespace Datos.DAL.Implementaciones
 {
     public class JugadorRepositorio : IJugadorRepositorio
     {
-        private readonly BaseDatosPruebaEntities1 contexto;
+        private readonly BaseDatosPruebaEntities1 _contexto;
 
         public JugadorRepositorio(BaseDatosPruebaEntities1 contexto)
         {
-            this.contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
+            _contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
         }
 
         public bool ExisteCorreo(string correo)
         {
-            return contexto.Jugador.Any(j => j.Correo == correo);
+            return _contexto.Jugador.Any(j => j.Correo == correo);
         }
 
         public Jugador CrearJugador(Jugador jugador)
@@ -26,9 +26,10 @@ namespace Datos.DAL.Implementaciones
                 throw new ArgumentNullException(nameof(jugador));
             }
 
-            var entidad = contexto.Jugador.Add(jugador);
-            contexto.SaveChanges();
+            var entidad = _contexto.Jugador.Add(jugador);
+            _contexto.SaveChanges();
             return entidad;
         }
     }
 }
+

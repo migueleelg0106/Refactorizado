@@ -10,6 +10,6 @@ namespace Servicios.Contratos
         UsuarioDTO ObtenerPerfil(int idUsuario);
 
         [OperationContract]
-        ResultadoOperacionDTO ActualizarPerfil(ActualizarPerfilDTO solicitud);
+        ResultadoOperacionDTO ActualizarPerfil(ActualizacionPerfilDTO solicitud);
     }
 }

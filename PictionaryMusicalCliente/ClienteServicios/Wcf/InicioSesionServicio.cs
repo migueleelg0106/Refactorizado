@@ -24,9 +24,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             try
             {
-                // Llamamos al servicio remoto
                 var resultadoDto = await WcfClienteAyudante
-                    .UsarAsync(cliente, c => c.IniciarSesionAsync(solicitud))
+                    .UsarAsincrono(cliente, c => c.IniciarSesionAsync(solicitud))
                     .ConfigureAwait(false);
 
                 if (resultadoDto == null)
@@ -35,7 +34,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 UsuarioMapeador.ActualizarSesion(resultadoDto.Usuario);
                     resultadoDto.Mensaje = MensajeServidorAyudante.Localizar(resultadoDto.Mensaje, resultadoDto.Mensaje);
 
-                // Si hay un usuario válido, lo guardamos en el singleton
                 if (resultadoDto.Usuario != null)
                     UsuarioAutenticado.Instancia.CargarDesdeDTO(resultadoDto.Usuario);
 

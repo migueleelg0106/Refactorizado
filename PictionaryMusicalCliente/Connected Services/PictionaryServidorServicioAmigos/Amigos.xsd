@@ -64,14 +64,14 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="SolicitudActualizada">
+  <xs:element name="NotificarSolicitudActualizada">
     <xs:complexType>
       <xs:sequence>
         <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="solicitud" nillable="true" type="q1:SolicitudAmistadDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="AmistadEliminada">
+  <xs:element name="NotificarAmistadEliminada">
     <xs:complexType>
       <xs:sequence>
         <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="solicitud" nillable="true" type="q2:SolicitudAmistadDTO" />

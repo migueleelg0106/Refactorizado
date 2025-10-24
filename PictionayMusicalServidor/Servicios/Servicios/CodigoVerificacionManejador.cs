@@ -8,7 +8,7 @@ namespace Servicios.Servicios
 {
     public class CodigoVerificacionManejador : ICodigoVerificacionManejador
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(CodigoVerificacionManejador));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(CodigoVerificacionManejador));
 
         public ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(NuevaCuentaDTO nuevaCuenta)
         {
@@ -18,7 +18,7 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al solicitar código de verificación", ex);
+                _logger.Error("Error al solicitar código de verificación", ex);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -27,7 +27,7 @@ namespace Servicios.Servicios
             }
         }
 
-        public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenviarCodigoVerificacionDTO solicitud)
+        public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenvioCodigoVerificacionDTO solicitud)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al reenviar código de verificación", ex);
+                _logger.Error("Error al reenviar código de verificación", ex);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -44,7 +44,7 @@ namespace Servicios.Servicios
             }
         }
 
-        public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmarCodigoDTO confirmacion)
+        public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmacionCodigoDTO confirmacion)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al confirmar el código de verificación", ex);
+                _logger.Error("Error al confirmar el código de verificación", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -69,7 +69,7 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al solicitar código de recuperación", ex);
+                _logger.Error("Error al solicitar código de recuperación", ex);
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CodigoEnviado = false,
@@ -78,7 +78,7 @@ namespace Servicios.Servicios
             }
         }
 
-        public ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmarCodigoDTO confirmacion)
+        public ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmacionCodigoDTO confirmacion)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al confirmar el código de recuperación", ex);
+                _logger.Error("Error al confirmar el código de recuperación", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,

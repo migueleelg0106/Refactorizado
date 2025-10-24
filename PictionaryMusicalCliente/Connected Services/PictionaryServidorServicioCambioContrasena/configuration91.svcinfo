@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="R26N5Gkz1x+a+P9ANIRPtsNGUBSiTRG9GkSI8Cs8noQ=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="8nfU59dqzCyjpaH9wDH3nmsZeWDZaA/X3QIpo/0De6A=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_ICambiarContrasenaManejador">
+    <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_ICambioContrasenaManejador">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>BasicHttpBinding_ICambiarContrasenaManejador</serializedValue>
+          <serializedValue>BasicHttpBinding_ICambioContrasenaManejador</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -110,10 +110,10 @@
         </property>
       </properties>
     </bindingConfiguration>
-    <bindingConfiguration bindingType="netTcpBinding" name="NetTcpBinding_ICambiarContrasenaManejador">
+    <bindingConfiguration bindingType="netTcpBinding" name="NetTcpBinding_ICambioContrasenaManejador">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetTcpBinding_ICambiarContrasenaManejador</serializedValue>
+          <serializedValue>NetTcpBinding_ICambioContrasenaManejador</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -230,7 +230,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_ICambiarContrasenaManejador" contract="PictionaryServidorServicioCambioContrasena.ICambiarContrasenaManejador" bindingType="basicHttpBinding" address="http://localhost:8086/Pictionary/CambiarContrasena/CambiarContrasena" bindingConfiguration="BasicHttpBinding_ICambiarContrasenaManejador">
+    <endpoint name="BasicHttpBinding_ICambioContrasenaManejador" contract="PictionaryServidorServicioCambioContrasena.ICambioContrasenaManejador" bindingType="basicHttpBinding" address="http://localhost:8086/Pictionary/CambiarContrasena/CambiarContrasena" bindingConfiguration="BasicHttpBinding_ICambioContrasenaManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://localhost:8086/Pictionary/CambiarContrasena/CambiarContrasena</serializedValue>
@@ -242,10 +242,10 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>BasicHttpBinding_ICambiarContrasenaManejador</serializedValue>
+          <serializedValue>BasicHttpBinding_ICambioContrasenaManejador</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>PictionaryServidorServicioCambioContrasena.ICambiarContrasenaManejador</serializedValue>
+          <serializedValue>PictionaryServidorServicioCambioContrasena.ICambioContrasenaManejador</serializedValue>
         </property>
         <property path="/headers" isComplexType="true" isExplicitlyDefined="false" clrType="System.ServiceModel.Configuration.AddressHeaderCollectionElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>System.ServiceModel.Configuration.AddressHeaderCollectionElement</serializedValue>
@@ -305,7 +305,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>BasicHttpBinding_ICambiarContrasenaManejador</serializedValue>
+          <serializedValue>BasicHttpBinding_ICambioContrasenaManejador</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -315,7 +315,7 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="NetTcpBinding_ICambiarContrasenaManejador" contract="PictionaryServidorServicioCambioContrasena.ICambiarContrasenaManejador" bindingType="netTcpBinding" address="net.tcp://localhost:8096/Pictionary/CambiarContrasena/CambiarContrasena" bindingConfiguration="NetTcpBinding_ICambiarContrasenaManejador">
+    <endpoint name="NetTcpBinding_ICambioContrasenaManejador" contract="PictionaryServidorServicioCambioContrasena.ICambioContrasenaManejador" bindingType="netTcpBinding" address="net.tcp://localhost:8096/Pictionary/CambiarContrasena/CambiarContrasena" bindingConfiguration="NetTcpBinding_ICambioContrasenaManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>net.tcp://localhost:8096/Pictionary/CambiarContrasena/CambiarContrasena</serializedValue>
@@ -327,10 +327,10 @@
           <serializedValue>netTcpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetTcpBinding_ICambiarContrasenaManejador</serializedValue>
+          <serializedValue>NetTcpBinding_ICambioContrasenaManejador</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>PictionaryServidorServicioCambioContrasena.ICambiarContrasenaManejador</serializedValue>
+          <serializedValue>PictionaryServidorServicioCambioContrasena.ICambioContrasenaManejador</serializedValue>
         </property>
         <property path="/headers" isComplexType="true" isExplicitlyDefined="false" clrType="System.ServiceModel.Configuration.AddressHeaderCollectionElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>System.ServiceModel.Configuration.AddressHeaderCollectionElement</serializedValue>
@@ -390,7 +390,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetTcpBinding_ICambiarContrasenaManejador</serializedValue>
+          <serializedValue>NetTcpBinding_ICambioContrasenaManejador</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

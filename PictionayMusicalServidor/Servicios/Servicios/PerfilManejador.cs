@@ -14,7 +14,7 @@ namespace Servicios.Servicios
     public class PerfilManejador : IPerfilManejador
     {
         private const int LongitudMaximaRedSocial = 50;
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(PerfilManejador));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(PerfilManejador));
 
         public UsuarioDTO ObtenerPerfil(int idUsuario)
         {
@@ -48,7 +48,7 @@ namespace Servicios.Servicios
 
                     return new UsuarioDTO
                     {
-                        IdUsuario = usuario.idUsuario,
+                        UsuarioId = usuario.idUsuario,
                         JugadorId = jugador.idJugador,
                         NombreUsuario = usuario.Nombre_Usuario,
                         Nombre = jugador.Nombre,
@@ -69,12 +69,12 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al obtener el perfil del usuario", ex);
+                _logger.Error("Error al obtener el perfil del usuario", ex);
                 throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
             }
         }
 
-        public ResultadoOperacionDTO ActualizarPerfil(ActualizarPerfilDTO solicitud)
+        public ResultadoOperacionDTO ActualizarPerfil(ActualizacionPerfilDTO solicitud)
         {
             if (solicitud == null)
             {
@@ -168,7 +168,7 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al actualizar el perfil", ex);
+                _logger.Error("Error al actualizar el perfil", ex);
                 return CrearResultadoFallo("No fue posible actualizar el perfil.");
             }
         }
@@ -181,7 +181,7 @@ namespace Servicios.Servicios
                 : new BaseDatosPruebaEntities1(conexion);
         }
 
-        private static ResultadoOperacionDTO ValidarRedesSociales(ActualizarPerfilDTO solicitud)
+        private static ResultadoOperacionDTO ValidarRedesSociales(ActualizacionPerfilDTO solicitud)
         {
             ResultadoOperacionDTO resultado = ValidarRedSocial("Instagram", solicitud.Instagram);
             if (!resultado.OperacionExitosa)

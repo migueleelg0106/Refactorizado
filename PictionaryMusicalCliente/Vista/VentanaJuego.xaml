@@ -74,7 +74,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- ===== Área de dibujo (OCULTA) ===== -->
-                    <Grid x:Name="grdDibujo" Grid.Row="0" Visibility="Collapsed">
+                    <Grid x:Name="cuadriculaDibujo" Grid.Row="0" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <!-- Barra de herramientas -->
@@ -86,12 +86,12 @@
                         <DockPanel Grid.Row="0" Margin="4">
                             <!-- Herramientas -->
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="0,0,8,0">
-                                <ToggleButton x:Name="tbtnLapiz" Content="✏️" Width="40" Height="32" Margin="0,0,4,0"
-                                        Cursor="Hand" Click="tbtnLapiz_Click"/>
-                                <ToggleButton x:Name="tbtnBorrador" Content="🧼" Width="40" Height="32" Margin="0,0,4,0"
-                                        Cursor="Hand" Click="tbtnBorrador_Click"/>
-                                <Button x:Name="btnLimpiar" Content="🧹" Width="40" Height="32" Margin="0,0,4,0"
-                                        Click="btnBorrar_Click"/>
+                                <ToggleButton x:Name="toggleBotonLapiz" Content="✏️" Width="40" Height="32" Margin="0,0,4,0"
+                                        Cursor="Hand" Click="ToggleBotonLapiz_Click"/>
+                                <ToggleButton x:Name="toggleBotonBorrador" Content="🧼" Width="40" Height="32" Margin="0,0,4,0"
+                                        Cursor="Hand" Click="ToggleBotonBorrador_Click"/>
+                                <Button x:Name="botonLimpiar" Content="🧹" Width="40" Height="32" Margin="0,0,4,0"
+                                        Click="BotonBorrar_Click"/>
 
                             </StackPanel>
 
@@ -169,14 +169,10 @@
             </Border>
 
             <ScrollViewer Grid.Row="1" Background="White" BorderBrush="Black" BorderThickness="1">
-                <StackPanel x:Name="ChatPanel" Margin="6"/>
+                <StackPanel x:Name="PanelApilableChat" Margin="6"/>
             </ScrollViewer>
 
             <TextBox Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1" MaxLength="200"/>
         </Grid>
     </Grid>
 </Window>
-
-
-
-

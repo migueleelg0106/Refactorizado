@@ -333,7 +333,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IAmigosManejador_SolicitudActualizada_output_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IAmigosManejador_NotificarSolicitudActualizada_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -356,7 +356,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IAmigosManejador_AmistadEliminada_output_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IAmigosManejador_NotificarAmistadEliminada_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -445,11 +445,11 @@
   <wsdl:message name="IAmigosManejador_EliminarAmigo_OutputMessage">
     <wsdl:part name="parameters" element="tns:EliminarAmigoResponse" />
   </wsdl:message>
-  <wsdl:message name="IAmigosManejador_SolicitudActualizada_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:SolicitudActualizada" />
+  <wsdl:message name="IAmigosManejador_NotificarSolicitudActualizada_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarSolicitudActualizada" />
   </wsdl:message>
-  <wsdl:message name="IAmigosManejador_AmistadEliminada_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:AmistadEliminada" />
+  <wsdl:message name="IAmigosManejador_NotificarAmistadEliminada_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarAmistadEliminada" />
   </wsdl:message>
   <wsdl:portType name="IAmigosManejador">
     <wsdl:operation name="Suscribir">
@@ -472,11 +472,11 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IAmigosManejador/EliminarAmigo" message="tns:IAmigosManejador_EliminarAmigo_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAmigosManejador/EliminarAmigoResponse" message="tns:IAmigosManejador_EliminarAmigo_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="SolicitudActualizada">
-      <wsdl:output wsaw:Action="http://tempuri.org/IAmigosManejador/SolicitudActualizada" message="tns:IAmigosManejador_SolicitudActualizada_OutputCallbackMessage" />
+    <wsdl:operation name="NotificarSolicitudActualizada">
+      <wsdl:output wsaw:Action="http://tempuri.org/IAmigosManejador/NotificarSolicitudActualizada" message="tns:IAmigosManejador_NotificarSolicitudActualizada_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation name="AmistadEliminada">
-      <wsdl:output wsaw:Action="http://tempuri.org/IAmigosManejador/AmistadEliminada" message="tns:IAmigosManejador_AmistadEliminada_OutputCallbackMessage" />
+    <wsdl:operation name="NotificarAmistadEliminada">
+      <wsdl:output wsaw:Action="http://tempuri.org/IAmigosManejador/NotificarAmistadEliminada" message="tns:IAmigosManejador_NotificarAmistadEliminada_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSDualHttpBinding_IAmigosManejador" type="tns:IAmigosManejador">
@@ -537,17 +537,17 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SolicitudActualizada">
-      <soap12:operation soapAction="http://tempuri.org/IAmigosManejador/SolicitudActualizada" style="document" />
+    <wsdl:operation name="NotificarSolicitudActualizada">
+      <soap12:operation soapAction="http://tempuri.org/IAmigosManejador/NotificarSolicitudActualizada" style="document" />
       <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IAmigosManejador_SolicitudActualizada_output_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IAmigosManejador_NotificarSolicitudActualizada_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="AmistadEliminada">
-      <soap12:operation soapAction="http://tempuri.org/IAmigosManejador/AmistadEliminada" style="document" />
+    <wsdl:operation name="NotificarAmistadEliminada">
+      <soap12:operation soapAction="http://tempuri.org/IAmigosManejador/NotificarAmistadEliminada" style="document" />
       <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IAmigosManejador_AmistadEliminada_output_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IAmigosManejador_NotificarAmistadEliminada_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
@@ -600,14 +600,14 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SolicitudActualizada">
-      <soap12:operation soapAction="http://tempuri.org/IAmigosManejador/SolicitudActualizada" style="document" />
+    <wsdl:operation name="NotificarSolicitudActualizada">
+      <soap12:operation soapAction="http://tempuri.org/IAmigosManejador/NotificarSolicitudActualizada" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="AmistadEliminada">
-      <soap12:operation soapAction="http://tempuri.org/IAmigosManejador/AmistadEliminada" style="document" />
+    <wsdl:operation name="NotificarAmistadEliminada">
+      <soap12:operation soapAction="http://tempuri.org/IAmigosManejador/NotificarAmistadEliminada" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>

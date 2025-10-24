@@ -7,9 +7,9 @@ namespace Servicios.Contratos
     public interface IAmigosManejadorCallback
     {
         [OperationContract(IsOneWay = true)]
-        void SolicitudActualizada(SolicitudAmistadDTO solicitud);
+        void NotificarSolicitudActualizada(SolicitudAmistadDTO solicitud);
 
         [OperationContract(IsOneWay = true)]
-        void AmistadEliminada(SolicitudAmistadDTO solicitud);
+        void NotificarAmistadEliminada(SolicitudAmistadDTO solicitud);
     }
 }

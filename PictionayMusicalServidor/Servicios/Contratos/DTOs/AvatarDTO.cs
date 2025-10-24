@@ -6,7 +6,7 @@ namespace Servicios.Contratos.DTOs
     public class AvatarDTO
     {
         [DataMember]
-        public int Id { get; set; }
+        public int AvatarId { get; set; }
 
         [DataMember]
         public string Nombre { get; set; }

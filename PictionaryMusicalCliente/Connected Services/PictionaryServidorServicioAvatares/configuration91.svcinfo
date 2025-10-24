@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="bkqYoeJRMju1eCw1/WYLaE40053tStGKFz7ZJSx2V4A=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="t46hVKzRbNByA7OHJnaAEY/bj3gGmIoSG7zKeUpFyBQ=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_ICatalogoAvatares">
+    <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_ICatalogoAvataresManejador">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>BasicHttpBinding_ICatalogoAvatares</serializedValue>
+          <serializedValue>BasicHttpBinding_ICatalogoAvataresManejador</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -110,10 +110,10 @@
         </property>
       </properties>
     </bindingConfiguration>
-    <bindingConfiguration bindingType="netTcpBinding" name="NetTcpBinding_ICatalogoAvatares">
+    <bindingConfiguration bindingType="netTcpBinding" name="NetTcpBinding_ICatalogoAvataresManejador">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetTcpBinding_ICatalogoAvatares</serializedValue>
+          <serializedValue>NetTcpBinding_ICatalogoAvataresManejador</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -230,7 +230,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_ICatalogoAvatares" contract="PictionaryServidorServicioAvatares.ICatalogoAvatares" bindingType="basicHttpBinding" address="http://localhost:8086/Pictionary/Avatares/Avatares" bindingConfiguration="BasicHttpBinding_ICatalogoAvatares">
+    <endpoint name="BasicHttpBinding_ICatalogoAvataresManejador" contract="PictionaryServidorServicioAvatares.ICatalogoAvataresManejador" bindingType="basicHttpBinding" address="http://localhost:8086/Pictionary/Avatares/Avatares" bindingConfiguration="BasicHttpBinding_ICatalogoAvataresManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://localhost:8086/Pictionary/Avatares/Avatares</serializedValue>
@@ -242,10 +242,10 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>BasicHttpBinding_ICatalogoAvatares</serializedValue>
+          <serializedValue>BasicHttpBinding_ICatalogoAvataresManejador</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>PictionaryServidorServicioAvatares.ICatalogoAvatares</serializedValue>
+          <serializedValue>PictionaryServidorServicioAvatares.ICatalogoAvataresManejador</serializedValue>
         </property>
         <property path="/headers" isComplexType="true" isExplicitlyDefined="false" clrType="System.ServiceModel.Configuration.AddressHeaderCollectionElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>System.ServiceModel.Configuration.AddressHeaderCollectionElement</serializedValue>
@@ -305,7 +305,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>BasicHttpBinding_ICatalogoAvatares</serializedValue>
+          <serializedValue>BasicHttpBinding_ICatalogoAvataresManejador</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -315,7 +315,7 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="NetTcpBinding_ICatalogoAvatares" contract="PictionaryServidorServicioAvatares.ICatalogoAvatares" bindingType="netTcpBinding" address="net.tcp://localhost:8096/Pictionary/Avatares/Avatares" bindingConfiguration="NetTcpBinding_ICatalogoAvatares">
+    <endpoint name="NetTcpBinding_ICatalogoAvataresManejador" contract="PictionaryServidorServicioAvatares.ICatalogoAvataresManejador" bindingType="netTcpBinding" address="net.tcp://localhost:8096/Pictionary/Avatares/Avatares" bindingConfiguration="NetTcpBinding_ICatalogoAvataresManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>net.tcp://localhost:8096/Pictionary/Avatares/Avatares</serializedValue>
@@ -327,10 +327,10 @@
           <serializedValue>netTcpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetTcpBinding_ICatalogoAvatares</serializedValue>
+          <serializedValue>NetTcpBinding_ICatalogoAvataresManejador</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>PictionaryServidorServicioAvatares.ICatalogoAvatares</serializedValue>
+          <serializedValue>PictionaryServidorServicioAvatares.ICatalogoAvataresManejador</serializedValue>
         </property>
         <property path="/headers" isComplexType="true" isExplicitlyDefined="false" clrType="System.ServiceModel.Configuration.AddressHeaderCollectionElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>System.ServiceModel.Configuration.AddressHeaderCollectionElement</serializedValue>
@@ -390,7 +390,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetTcpBinding_ICatalogoAvatares</serializedValue>
+          <serializedValue>NetTcpBinding_ICatalogoAvataresManejador</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

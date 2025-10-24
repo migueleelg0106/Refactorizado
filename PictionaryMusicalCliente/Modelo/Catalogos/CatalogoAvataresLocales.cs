@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
-using PictionaryMusicalCliente.Modelo;
 
 namespace PictionaryMusicalCliente.Modelo.Catalogos
 {

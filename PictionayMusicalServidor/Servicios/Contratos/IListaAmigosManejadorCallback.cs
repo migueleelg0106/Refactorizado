@@ -8,6 +8,6 @@ namespace Servicios.Contratos
     public interface IListaAmigosManejadorCallback
     {
         [OperationContract(IsOneWay = true)]
-        void ListaAmigosActualizada(List<AmigoDTO> amigos);
+        void NotificarListaAmigosActualizada(List<AmigoDTO> amigos);
     }
 }

@@ -11,35 +11,21 @@ namespace Servicios.Servicios.Utilidades
     {
         private const string AsuntoPredeterminado = "Código de verificación";
 
-        public async Task<bool> NotificarAsync(string correoDestino, string codigo, string usuarioDestino)
+        public async Task<bool> NotificarAsincrono(string correoDestino, string codigo, string usuarioDestino)
         {
             if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigo))
             {
                 return false;
             }
 
-            string remitente = ObtenerConfiguracion(
-                "CorreoRemitente",
-                "Correo.Remitente.Direccion");
-            string contrasena = ObtenerConfiguracion(
-                "CorreoPassword",
-                "Correo.Smtp.Contrasena");
-            string host = ObtenerConfiguracion(
-                "CorreoHost",
-                "Correo.Smtp.Host");
-            string usuarioSmtp = ObtenerConfiguracion(
-                "CorreoUsuario",
-                "Correo.Smtp.Usuario");
-            string puertoConfigurado = ObtenerConfiguracion(
-                "CorreoPuerto",
-                "Correo.Smtp.Puerto");
-            string asunto = ObtenerConfiguracion(
-                "CorreoAsunto",
-                "Correo.Codigo.Asunto") ?? AsuntoPredeterminado;
+            string remitente = ObtenerConfiguracion("CorreoRemitente", "Correo.Remitente.Direccion");
+            string contrasena = ObtenerConfiguracion("CorreoPassword", "Correo.Smtp.Contrasena");
+            string host = ObtenerConfiguracion("CorreoHost", "Correo.Smtp.Host");
+            string usuarioSmtp = ObtenerConfiguracion("CorreoUsuario", "Correo.Smtp.Usuario");
+            string puertoConfigurado = ObtenerConfiguracion("CorreoPuerto", "Correo.Smtp.Puerto");
+            string asunto = ObtenerConfiguracion("CorreoAsunto", "Correo.Codigo.Asunto") ?? AsuntoPredeterminado;
 
-            bool.TryParse(
-                ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"),
-                out bool habilitarSsl);
+            bool.TryParse(ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"), out bool habilitarSsl);
 
             if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
             {
@@ -56,24 +42,24 @@ namespace Servicios.Servicios.Utilidades
                 puerto = 587;
             }
 
-            string cuerpo = ConstruirCuerpoMensaje(usuarioDestino, codigo);
+            string cuerpoHtml = ConstruirCuerpoMensaje(usuarioDestino, codigo);
 
             try
             {
-                using (var mensaje = new MailMessage(remitente, correoDestino, asunto, cuerpo))
+                using (var mensajeCorreo = new MailMessage(remitente, correoDestino, asunto, cuerpoHtml))
                 {
-                    mensaje.IsBodyHtml = true;
+                    mensajeCorreo.IsBodyHtml = true;
 
-                    using (var cliente = new SmtpClient(host, puerto))
+                    using (var clienteSmtp = new SmtpClient(host, puerto))
                     {
-                        cliente.EnableSsl = habilitarSsl;
+                        clienteSmtp.EnableSsl = habilitarSsl;
 
                         if (!string.IsNullOrWhiteSpace(contrasena))
                         {
-                            cliente.Credentials = new NetworkCredential(usuarioSmtp, contrasena);
+                            clienteSmtp.Credentials = new NetworkCredential(usuarioSmtp, contrasena);
                         }
 
-                        await cliente.SendMailAsync(mensaje).ConfigureAwait(false);
+                        await clienteSmtp.SendMailAsync(mensajeCorreo).ConfigureAwait(false);
                     }
                 }
 
@@ -111,24 +97,24 @@ namespace Servicios.Servicios.Utilidades
 
         private static string ConstruirCuerpoMensaje(string usuarioDestino, string codigo)
         {
-            var builder = new StringBuilder();
-            builder.Append("<html><body>");
+            var cuerpoHtml = new StringBuilder();
+            cuerpoHtml.Append("<html><body>");
 
             if (!string.IsNullOrWhiteSpace(usuarioDestino))
             {
-                builder.Append($"<h2>Hola {usuarioDestino},</h2>");
+                cuerpoHtml.Append($"<h2>Hola {usuarioDestino},</h2>");
             }
             else
             {
-                builder.Append("<h2>Hola,</h2>");
+                cuerpoHtml.Append("<h2>Hola,</h2>");
             }
 
-            builder.Append("<p>Tu código de verificación es:</p>");
-            builder.Append($"<h1>{codigo}</h1>");
-            builder.Append("<p>Si no solicitaste este código puedes ignorar este mensaje.</p>");
+            cuerpoHtml.Append("<p>Tu código de verificación es:</p>");
+            cuerpoHtml.Append($"<h1>{codigo}</h1>");
+            cuerpoHtml.Append("<p>Si no solicitaste este código puedes ignorar este mensaje.</p>");
+            cuerpoHtml.Append("</body></html>");
 
-            builder.Append("</body></html>");
-            return builder.ToString();
+            return cuerpoHtml.ToString();
         }
     }
 }

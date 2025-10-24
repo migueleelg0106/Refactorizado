@@ -241,7 +241,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IListaAmigosManejador_ListaAmigosActualizada_output_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IListaAmigosManejador_NotificarListaAmigosActualizada_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -318,8 +318,8 @@
   <wsdl:message name="IListaAmigosManejador_ObtenerAmigos_OutputMessage">
     <wsdl:part name="parameters" element="tns:ObtenerAmigosResponse" />
   </wsdl:message>
-  <wsdl:message name="IListaAmigosManejador_ListaAmigosActualizada_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:ListaAmigosActualizada" />
+  <wsdl:message name="IListaAmigosManejador_NotificarListaAmigosActualizada_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarListaAmigosActualizada" />
   </wsdl:message>
   <wsdl:portType name="IListaAmigosManejador">
     <wsdl:operation name="Suscribir">
@@ -334,8 +334,8 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IListaAmigosManejador/ObtenerAmigos" message="tns:IListaAmigosManejador_ObtenerAmigos_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IListaAmigosManejador/ObtenerAmigosResponse" message="tns:IListaAmigosManejador_ObtenerAmigos_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="ListaAmigosActualizada">
-      <wsdl:output wsaw:Action="http://tempuri.org/IListaAmigosManejador/ListaAmigosActualizada" message="tns:IListaAmigosManejador_ListaAmigosActualizada_OutputCallbackMessage" />
+    <wsdl:operation name="NotificarListaAmigosActualizada">
+      <wsdl:output wsaw:Action="http://tempuri.org/IListaAmigosManejador/NotificarListaAmigosActualizada" message="tns:IListaAmigosManejador_NotificarListaAmigosActualizada_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSDualHttpBinding_IListaAmigosManejador" type="tns:IListaAmigosManejador">
@@ -374,10 +374,10 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="ListaAmigosActualizada">
-      <soap12:operation soapAction="http://tempuri.org/IListaAmigosManejador/ListaAmigosActualizada" style="document" />
+    <wsdl:operation name="NotificarListaAmigosActualizada">
+      <soap12:operation soapAction="http://tempuri.org/IListaAmigosManejador/NotificarListaAmigosActualizada" style="document" />
       <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IListaAmigosManejador_ListaAmigosActualizada_output_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IListaAmigosManejador_NotificarListaAmigosActualizada_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
@@ -412,8 +412,8 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="ListaAmigosActualizada">
-      <soap12:operation soapAction="http://tempuri.org/IListaAmigosManejador/ListaAmigosActualizada" style="document" />
+    <wsdl:operation name="NotificarListaAmigosActualizada">
+      <soap12:operation soapAction="http://tempuri.org/IListaAmigosManejador/NotificarListaAmigosActualizada" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>

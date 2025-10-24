@@ -8,16 +8,16 @@
       <xs:element minOccurs="0" name="Correo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Discord" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Facebook" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="IdUsuario" type="xs:int" />
       <xs:element minOccurs="0" name="Instagram" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="JugadorId" type="xs:int" />
       <xs:element minOccurs="0" name="Nombre" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="NombreUsuario" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UsuarioId" type="xs:int" />
       <xs:element minOccurs="0" name="X" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="UsuarioDTO" nillable="true" type="tns:UsuarioDTO" />
-  <xs:complexType name="ActualizarPerfilDTO">
+  <xs:complexType name="ActualizacionPerfilDTO">
     <xs:sequence>
       <xs:element minOccurs="0" name="Apellido" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="AvatarRutaRelativa" nillable="true" type="xs:string" />
@@ -29,7 +29,7 @@
       <xs:element minOccurs="0" name="X" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ActualizarPerfilDTO" nillable="true" type="tns:ActualizarPerfilDTO" />
+  <xs:element name="ActualizacionPerfilDTO" nillable="true" type="tns:ActualizacionPerfilDTO" />
   <xs:complexType name="ResultadoOperacionDTO">
     <xs:sequence>
       <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />

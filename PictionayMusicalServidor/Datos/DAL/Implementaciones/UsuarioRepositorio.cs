@@ -7,11 +7,11 @@ namespace Datos.DAL.Implementaciones
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
-        private readonly BaseDatosPruebaEntities1 contexto;
+        private readonly BaseDatosPruebaEntities1 _contexto;
 
         public UsuarioRepositorio(BaseDatosPruebaEntities1 contexto)
         {
-            this.contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
+            _contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
         }
 
         public bool ExisteNombreUsuario(string nombreUsuario)
@@ -23,7 +23,7 @@ namespace Datos.DAL.Implementaciones
 
             string nombreNormalizado = nombreUsuario.Trim();
 
-            var usuario = contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
+            var usuario = _contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
 
             return usuario != null
                 && string.Equals(usuario.Nombre_Usuario, nombreNormalizado, StringComparison.Ordinal);
@@ -36,8 +36,8 @@ namespace Datos.DAL.Implementaciones
                 throw new ArgumentNullException(nameof(usuario));
             }
 
-            var entidad = contexto.Usuario.Add(usuario);
-            contexto.SaveChanges();
+            var entidad = _contexto.Usuario.Add(usuario);
+            _contexto.SaveChanges();
             return entidad;
         }
 
@@ -50,7 +50,7 @@ namespace Datos.DAL.Implementaciones
 
             string nombreNormalizado = nombreUsuario.Trim();
 
-            var usuario = contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
+            var usuario = _contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
 
             if (usuario != null && string.Equals(usuario.Nombre_Usuario, nombreNormalizado, StringComparison.Ordinal))
             {

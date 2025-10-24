@@ -9,7 +9,7 @@ namespace Servicios.Contratos.DTOs
         public bool InicioSesionExitoso { get; set; }
 
         [DataMember]
-        public bool CuentaNoEncontrada { get; set; }
+        public bool CuentaEncontrada { get; set; }
 
         [DataMember]
         public bool ContrasenaIncorrecta { get; set; }

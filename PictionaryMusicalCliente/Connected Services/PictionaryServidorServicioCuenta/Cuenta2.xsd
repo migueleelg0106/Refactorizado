@@ -14,32 +14,32 @@
   <xs:complexType name="ResultadoSolicitudCodigoDTO">
     <xs:sequence>
       <xs:element minOccurs="0" name="CodigoEnviado" type="xs:boolean" />
-      <xs:element minOccurs="0" name="CorreoYaRegistrado" type="xs:boolean" />
+      <xs:element minOccurs="0" name="CorreoRegistrado" type="xs:boolean" />
       <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="TokenCodigo" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="UsuarioYaRegistrado" type="xs:boolean" />
+      <xs:element minOccurs="0" name="UsuarioRegistrado" type="xs:boolean" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ResultadoSolicitudCodigoDTO" nillable="true" type="tns:ResultadoSolicitudCodigoDTO" />
-  <xs:complexType name="ReenviarCodigoVerificacionDTO">
+  <xs:complexType name="ReenvioCodigoVerificacionDTO">
     <xs:sequence>
       <xs:element name="TokenCodigo" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ReenviarCodigoVerificacionDTO" nillable="true" type="tns:ReenviarCodigoVerificacionDTO" />
-  <xs:complexType name="ConfirmarCodigoDTO">
+  <xs:element name="ReenvioCodigoVerificacionDTO" nillable="true" type="tns:ReenvioCodigoVerificacionDTO" />
+  <xs:complexType name="ConfirmacionCodigoDTO">
     <xs:sequence>
       <xs:element name="CodigoIngresado" nillable="true" type="xs:string" />
       <xs:element name="TokenCodigo" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ConfirmarCodigoDTO" nillable="true" type="tns:ConfirmarCodigoDTO" />
+  <xs:element name="ConfirmacionCodigoDTO" nillable="true" type="tns:ConfirmacionCodigoDTO" />
   <xs:complexType name="ResultadoRegistroCuentaDTO">
     <xs:sequence>
-      <xs:element minOccurs="0" name="CorreoYaRegistrado" type="xs:boolean" />
+      <xs:element minOccurs="0" name="CorreoRegistrado" type="xs:boolean" />
       <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="RegistroExitoso" type="xs:boolean" />
-      <xs:element minOccurs="0" name="UsuarioYaRegistrado" type="xs:boolean" />
+      <xs:element minOccurs="0" name="UsuarioRegistrado" type="xs:boolean" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ResultadoRegistroCuentaDTO" nillable="true" type="tns:ResultadoRegistroCuentaDTO" />

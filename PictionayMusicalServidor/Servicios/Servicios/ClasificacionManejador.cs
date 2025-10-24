@@ -13,7 +13,7 @@ namespace Servicios.Servicios
     public class ClasificacionManejador : IClasificacionManejador
     {
         private const int LimiteTopJugadores = 10;
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(ClasificacionManejador));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(ClasificacionManejador));
 
         public IList<ClasificacionUsuarioDTO> ObtenerTopJugadores()
         {
@@ -41,7 +41,7 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al obtener la clasificación de jugadores", ex);
+                _logger.Error("Error al obtener la clasificación de jugadores", ex);
                 return new List<ClasificacionUsuarioDTO>();
             }
         }

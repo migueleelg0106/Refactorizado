@@ -9,16 +9,16 @@ namespace Datos.DAL.Implementaciones
 {
     public class AmigoRepositorio : IAmigoRepositorio
     {
-        private readonly BaseDatosPruebaEntities1 contexto;
+        private readonly BaseDatosPruebaEntities1 _contexto;
 
         public AmigoRepositorio(BaseDatosPruebaEntities1 contexto)
         {
-            this.contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
+            _contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
         }
 
         public bool ExisteRelacion(int usuarioAId, int usuarioBId)
         {
-            return contexto.Amigo.Any(a =>
+            return _contexto.Amigo.Any(a =>
                 (a.UsuarioEmisor == usuarioAId && a.UsuarioReceptor == usuarioBId) ||
                 (a.UsuarioEmisor == usuarioBId && a.UsuarioReceptor == usuarioAId));
         }
@@ -32,14 +32,14 @@ namespace Datos.DAL.Implementaciones
                 Estado = false
             };
 
-            contexto.Amigo.Add(solicitud);
-            contexto.SaveChanges();
+            _contexto.Amigo.Add(solicitud);
+            _contexto.SaveChanges();
             return solicitud;
         }
 
         public Amigo ObtenerRelacion(int usuarioAId, int usuarioBId)
         {
-            return contexto.Amigo.FirstOrDefault(a =>
+            return _contexto.Amigo.FirstOrDefault(a =>
                 (a.UsuarioEmisor == usuarioAId && a.UsuarioReceptor == usuarioBId) ||
                 (a.UsuarioEmisor == usuarioBId && a.UsuarioReceptor == usuarioAId));
         }
@@ -51,7 +51,7 @@ namespace Datos.DAL.Implementaciones
                 throw new ArgumentOutOfRangeException(nameof(usuarioId), "El identificador del usuario debe ser positivo.");
             }
 
-            return contexto.Amigo
+            return _contexto.Amigo
                 .Where(a => !a.Estado && (a.UsuarioEmisor == usuarioId || a.UsuarioReceptor == usuarioId))
                 .Include(a => a.Usuario)
                 .Include(a => a.Usuario1)
@@ -66,7 +66,7 @@ namespace Datos.DAL.Implementaciones
             }
 
             relacion.Estado = estado;
-            contexto.SaveChanges();
+            _contexto.SaveChanges();
         }
 
         public void EliminarRelacion(Amigo relacion)
@@ -76,8 +76,8 @@ namespace Datos.DAL.Implementaciones
                 throw new ArgumentNullException(nameof(relacion));
             }
 
-            contexto.Amigo.Remove(relacion);
-            contexto.SaveChanges();
+            _contexto.Amigo.Remove(relacion);
+            _contexto.SaveChanges();
         }
 
         public IList<Usuario> ObtenerAmigos(int usuarioId)
@@ -87,7 +87,7 @@ namespace Datos.DAL.Implementaciones
                 throw new ArgumentOutOfRangeException(nameof(usuarioId), "El identificador del usuario debe ser positivo.");
             }
 
-            var amigosIds = contexto.Amigo
+            var amigosIds = _contexto.Amigo
                 .Where(a => a.Estado && (a.UsuarioEmisor == usuarioId || a.UsuarioReceptor == usuarioId))
                 .Select(a => a.UsuarioEmisor == usuarioId ? a.UsuarioReceptor : a.UsuarioEmisor)
                 .Distinct()
@@ -98,7 +98,7 @@ namespace Datos.DAL.Implementaciones
                 return new List<Usuario>();
             }
 
-            return contexto.Usuario
+            return _contexto.Usuario
                 .Where(u => amigosIds.Contains(u.idUsuario))
                 .ToList();
         }

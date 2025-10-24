@@ -20,10 +20,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
     public class InicioSesionVistaModelo : BaseVistaModelo
     {
-        private readonly IInicioSesionServicio _inicioSesionService;
-        private readonly ICambioContrasenaServicio _cambioContrasenaService;
-        private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogService;
-        private readonly ILocalizacionServicio _localizacionService;
+        private readonly IInicioSesionServicio _inicioSesionServicio;
+        private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
+        private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogoServicio;
+        private readonly ILocalizacionServicio _localizacionServicio;
 
         public const string CampoContrasena = "Contrasena";
 
@@ -34,20 +34,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private IdiomaOpcion _idiomaSeleccionado;
 
         public InicioSesionVistaModelo(
-            IInicioSesionServicio inicioSesionService,
-            ICambioContrasenaServicio cambioContrasenaService,
-            IRecuperacionCuentaServicio recuperacionCuentaDialogService,
-            ILocalizacionServicio localizacionService)
+            IInicioSesionServicio inicioSesionServicio,
+            ICambioContrasenaServicio cambioContrasenaServicio,
+            IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
+            ILocalizacionServicio localizacionServicio)
         {
-            _inicioSesionService = inicioSesionService ?? throw new ArgumentNullException(nameof(inicioSesionService));
-            _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
-            _recuperacionCuentaDialogService = recuperacionCuentaDialogService ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogService));
-            _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
+            _inicioSesionServicio = inicioSesionServicio ?? throw new ArgumentNullException(nameof(inicioSesionServicio));
+            _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
+            _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
+            _localizacionServicio = localizacionServicio ?? throw new ArgumentNullException(nameof(localizacionServicio));
 
-            IniciarSesionCommand = new ComandoAsincrono(_ => IniciarSesionAsync(), _ => !EstaProcesando);
-            RecuperarCuentaCommand = new ComandoAsincrono(_ => RecuperarCuentaAsync(), _ => !EstaProcesando);
-            AbrirCrearCuentaCommand = new ComandoDelegado(_ => AbrirCrearCuenta?.Invoke());
-            IniciarSesionInvitadoCommand = new ComandoDelegado(_ => IniciarSesionInvitado?.Invoke());
+            IniciarSesionComando = new ComandoAsincrono(_ => IniciarSesionAsync(), _ => !EstaProcesando);
+            RecuperarCuentaComando = new ComandoAsincrono(_ => RecuperarCuentaAsync(), _ => !EstaProcesando);
+            AbrirCrearCuentaComando = new ComandoDelegado(_ => AbrirCrearCuenta?.Invoke());
+            IniciarSesionInvitadoComando = new ComandoDelegado(_ => IniciarSesionInvitado?.Invoke());
 
             CargarIdiomas();
         }
@@ -71,7 +71,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _idiomaSeleccionado, value) && value != null)
                 {
-                    _localizacionService.EstablecerIdioma(value.Codigo);
+                    _localizacionServicio.EstablecerIdioma(value.Codigo);
                 }
             }
         }
@@ -83,19 +83,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _estaProcesando, value))
                 {
-                    ((IComandoNotificable)IniciarSesionCommand).NotificarPuedeEjecutar();
-                    ((IComandoNotificable)RecuperarCuentaCommand).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)IniciarSesionComando).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)RecuperarCuentaComando).NotificarPuedeEjecutar();
                 }
             }
         }
 
-        public IComandoAsincrono IniciarSesionCommand { get; }
+        public IComandoAsincrono IniciarSesionComando { get; }
 
-        public IComandoAsincrono RecuperarCuentaCommand { get; }
+        public IComandoAsincrono RecuperarCuentaComando { get; }
 
-        public ICommand AbrirCrearCuentaCommand { get; }
+        public ICommand AbrirCrearCuentaComando { get; }
 
-        public ICommand IniciarSesionInvitadoCommand { get; }
+        public ICommand IniciarSesionInvitadoComando { get; }
 
         public Action AbrirCrearCuenta { get; set; }
 
@@ -153,7 +153,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     Contrasena = _contrasena
                 };
 
-                DTOs.ResultadoInicioSesionDTO resultado = await _inicioSesionService
+                DTOs.ResultadoInicioSesionDTO resultado = await _inicioSesionServicio
                     .IniciarSesionAsync(solicitud).ConfigureAwait(true);
 
                 if (resultado == null)
@@ -164,7 +164,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.InicioSesionExitoso)
                 {
-                    string mensaje = resultado.CuentaNoEncontrada
+                    string mensaje = resultado.CuentaEncontrada
                         ? Lang.errorTextoCuentaNoEncontradaInicioSesion
                         : resultado.Mensaje;
 
@@ -213,8 +213,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogService
-                    .RecuperarCuentaAsync(identificador, _cambioContrasenaService).ConfigureAwait(true);
+                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
+                    .RecuperarCuentaAsync(identificador, _cambioContrasenaServicio).ConfigureAwait(true);
 
                 if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
@@ -234,17 +234,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private void CargarIdiomas()
         {
             WeakEventManager<ILocalizacionServicio, EventArgs>.AddHandler(
-                _localizacionService,
+                _localizacionServicio,
                 nameof(ILocalizacionServicio.IdiomaActualizado),
-                LocalizacionServiceOnIdiomaActualizado);
+                LocalizacionServicioEnIdiomaActualizado);
 
-            ActualizarIdiomasDisponibles(_localizacionService.CulturaActual?.Name
+            ActualizarIdiomasDisponibles(_localizacionServicio.CulturaActual?.Name
                 ?? CultureInfo.CurrentUICulture?.Name);
         }
 
-        private void LocalizacionServiceOnIdiomaActualizado(object sender, EventArgs e)
+        private void LocalizacionServicioEnIdiomaActualizado(object sender, EventArgs e)
         {
-            ActualizarIdiomasDisponibles(_localizacionService.CulturaActual?.Name);
+            ActualizarIdiomasDisponibles(_localizacionServicio.CulturaActual?.Name);
         }
 
         private void ActualizarIdiomasDisponibles(string culturaActual)

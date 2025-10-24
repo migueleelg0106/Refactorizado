@@ -33,7 +33,7 @@ namespace PictionaryMusicalCliente.Modelo
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            IdUsuario = dto.IdUsuario;
+            IdUsuario = dto.UsuarioId;
             JugadorId = dto.JugadorId;
             NombreUsuario = dto.NombreUsuario;
             Nombre = dto.Nombre;

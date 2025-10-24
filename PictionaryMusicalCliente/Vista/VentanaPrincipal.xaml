@@ -40,7 +40,7 @@
                     Background="White"
                     BorderBrush="Black"
                     FontFamily="Comic Sans MS"
-                    Command="{Binding AbrirPerfilCommand}" VerticalAlignment="Center"/>
+                    Command="{Binding AbrirPerfilComando}" VerticalAlignment="Center"/>
 
             <Grid Grid.ColumnSpan="3" IsHitTestVisible="False">
                 <Image Source="/Recursos/PictionaryMusicalLogo.png"
@@ -80,7 +80,7 @@
                     Background="White"
                     BorderBrush="Black"
                     VerticalAlignment="Center"
-                    Command="{Binding AbrirAjustesCommand}"/>
+                    Command="{Binding AbrirAjustesComando}"/>
         </Grid>
 
         <Grid Grid.Row="1" Margin="10,0,10,10">
@@ -118,7 +118,7 @@
                                 Background="White"
                                 BorderBrush="Black"
                                 FontFamily="Comic Sans MS"
-                                Command="{Binding UnirseSalaCommand}"/>
+                                Command="{Binding UnirseSalaComando}"/>
                     </Grid>
                 </Border>
                 <Button Content="{x:Static language:Lang.globalTextoComoJugar}"
@@ -127,14 +127,14 @@
                         Background="White"
                         BorderBrush="Black"
                         FontFamily="Comic Sans MS"
-                        Command="{Binding AbrirComoJugarCommand}"/>
+                        Command="{Binding AbrirComoJugarComando}"/>
                 <Button Content="{x:Static language:Lang.globalTextoClasificacion}"
                         Margin="0,10,0,0"
                         Padding="10"
                         Background="White"
                         BorderBrush="Black"
                         FontFamily="Comic Sans MS"
-                        Command="{Binding AbrirClasificacionCommand}"/>
+                        Command="{Binding AbrirClasificacionComando}"/>
             </StackPanel>
 
             <Border Background="White" BorderBrush="Black" BorderThickness="2" Padding="20" CornerRadius="3"
@@ -195,7 +195,7 @@
                             FontFamily="Comic Sans MS" FontWeight="Bold"
                             Background="White" BorderBrush="Black"
                             Margin="0,297,0,0"
-                            Command="{Binding IniciarJuegoCommand}" Grid.RowSpan="2"/>
+                            Command="{Binding IniciarJuegoComando}" Grid.RowSpan="2"/>
                 </Grid>
             </Border>
 
@@ -223,10 +223,10 @@
                                 Background="White"
                                 BorderBrush="Black"
                                 FontFamily="Comic Sans MS"
-                                Command="{Binding AbrirBuscarAmigoCommand}"/>
+                                Command="{Binding AbrirBuscarAmigoComando}"/>
 
                         <ListBox Grid.Row="2"
-                                 x:Name="ListaAmigosControl"
+                                 x:Name="cuadroListaAmigos"
                                  BorderBrush="Gray"
                                  BorderThickness="1"
                                  Margin="0,5,0,0"
@@ -252,7 +252,7 @@
 
                                         <Button Grid.Column="1"
                                                 
-                                                Command="{Binding DataContext.EliminarAmigoCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                Command="{Binding DataContext.EliminarAmigoComando, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                                 CommandParameter="{Binding}"
                                                 
                                                 Background="Transparent" 
@@ -278,7 +278,7 @@
                                     Background="White"
                                     BorderBrush="Black"
                                     FontFamily="Comic Sans MS"
-                                    Command="{Binding AbrirSolicitudesCommand}"/>
+                                    Command="{Binding AbrirSolicitudesComando}"/>
                         </Grid>
                     </Grid>
                 </Border>
@@ -290,7 +290,7 @@
                         Background="White"
                         BorderBrush="Black"
                         FontFamily="Comic Sans MS"
-                        Command="{Binding AbrirInvitacionesCommand}"/>
+                        Command="{Binding AbrirInvitacionesComando}"/>
             </Grid>
         </Grid>
     </Grid>

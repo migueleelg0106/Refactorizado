@@ -9,10 +9,10 @@ namespace Servicios.Contratos.DTOs
         public bool RegistroExitoso { get; set; }
 
         [DataMember]
-        public bool UsuarioYaRegistrado { get; set; }
+        public bool UsuarioRegistrado { get; set; }
 
         [DataMember]
-        public bool CorreoYaRegistrado { get; set; }
+        public bool CorreoRegistrado { get; set; }
 
         [DataMember]
         public string Mensaje { get; set; }

@@ -6,7 +6,6 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers;
 using PictionaryMusicalCliente.Utilidades;
 using DTOs = global::Servicios.Contratos.DTOs;
 
@@ -15,19 +14,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
     public class CambioContrasenaVistaModelo : BaseVistaModelo
     {
         private readonly string _tokenCodigo;
-        private readonly ICambioContrasenaServicio _cambioContrasenaService;
+        private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
 
         private string _nuevaContrasena;
         private string _confirmacionContrasena;
         private bool _estaProcesando;
 
-        public CambioContrasenaVistaModelo(string tokenCodigo, ICambioContrasenaServicio cambioContrasenaService)
+        public CambioContrasenaVistaModelo(string tokenCodigo, ICambioContrasenaServicio cambioContrasenaServicio)
         {
             _tokenCodigo = tokenCodigo ?? throw new ArgumentNullException(nameof(tokenCodigo));
-            _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
+            _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
 
-            ConfirmarCommand = new ComandoAsincrono(_ => ConfirmarAsync(), _ => !EstaProcesando);
-            CancelarCommand = new ComandoDelegado(Cancelar);
+            ConfirmarComando = new ComandoAsincrono(_ => ConfirmarAsync(), _ => !EstaProcesando);
+            CancelarComando = new ComandoDelegado(Cancelar);
         }
 
         public string NuevaContrasena
@@ -49,14 +48,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _estaProcesando, value))
                 {
-                    ((IComandoNotificable)ConfirmarCommand).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)ConfirmarComando).NotificarPuedeEjecutar();
                 }
             }
         }
 
-        public IComandoAsincrono ConfirmarCommand { get; }
+        public IComandoAsincrono ConfirmarComando { get; }
 
-        public ICommand CancelarCommand { get; }
+        public ICommand CancelarComando { get; }
 
         public Action<DTOs.ResultadoOperacionDTO> CambioContrasenaCompletado { get; set; }
 
@@ -108,7 +107,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await _cambioContrasenaService
+                DTOs.ResultadoOperacionDTO resultado = await _cambioContrasenaServicio
                     .ActualizarContrasenaAsync(_tokenCodigo, NuevaContrasena).ConfigureAwait(true);
 
                 if (resultado == null)

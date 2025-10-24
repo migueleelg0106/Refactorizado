@@ -20,10 +20,10 @@
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
                     <Button Content="{x:Static language:Lang.clasificacionTextoOrdenarRondas}" Margin="0,0,10,0" Padding="10,5"
                             Background="White" BorderBrush="Black" FontFamily="Comic Sans MS" FontWeight="Bold"
-                            Command="{Binding OrdenarPorRondasCommand}"/>
+                            Command="{Binding OrdenarPorRondasComando}"/>
                     <Button Content="{x:Static language:Lang.clasificacionTextoOrdenarPuntos}" Padding="10,5" Background="White"
                             BorderBrush="Black" FontFamily="Comic Sans MS" FontWeight="Bold"
-                            Command="{Binding OrdenarPorPuntosCommand}"/>
+                            Command="{Binding OrdenarPorPuntosComando}"/>
                 </StackPanel>
 
                 <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" FontFamily="Comic Sans MS" FontSize="14"
@@ -44,7 +44,7 @@
                 </DataGrid>
 
                 <Button Grid.Row="3" Content="{x:Static language:Lang.globalTextoRegresar}" Margin="0,20,0,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold"
-                        Background="White" BorderBrush="Black" Command="{Binding CerrarCommand}"/>
+                        Background="White" BorderBrush="Black" Command="{Binding CerrarComando}"/>
             </Grid>
         </Border>
     </Grid>

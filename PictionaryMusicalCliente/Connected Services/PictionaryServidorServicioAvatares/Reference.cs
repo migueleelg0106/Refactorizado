@@ -12,40 +12,40 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAvatares {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PictionaryServidorServicioAvatares.ICatalogoAvatares")]
-    public interface ICatalogoAvatares {
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PictionaryServidorServicioAvatares.ICatalogoAvataresManejador")]
+    public interface ICatalogoAvataresManejador {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponiblesResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponiblesResponse")]
         global::Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponiblesResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponiblesResponse")]
         System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface ICatalogoAvataresChannel : PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvatares, System.ServiceModel.IClientChannel {
+    public interface ICatalogoAvataresManejadorChannel : PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvataresManejador, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class CatalogoAvataresClient : System.ServiceModel.ClientBase<PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvatares>, global::PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvatares {
+    public partial class CatalogoAvataresManejadorClient : System.ServiceModel.ClientBase<PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvataresManejador>, PictionaryMusicalCliente.PictionaryServidorServicioAvatares.ICatalogoAvataresManejador {
         
-        public CatalogoAvataresClient() {
+        public CatalogoAvataresManejadorClient() {
         }
         
-        public CatalogoAvataresClient(string endpointConfigurationName) : 
+        public CatalogoAvataresManejadorClient(string endpointConfigurationName) : 
                 base(endpointConfigurationName) {
         }
         
-        public CatalogoAvataresClient(string endpointConfigurationName, string remoteAddress) : 
+        public CatalogoAvataresManejadorClient(string endpointConfigurationName, string remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public CatalogoAvataresClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public CatalogoAvataresManejadorClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public CatalogoAvataresClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public CatalogoAvataresManejadorClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
         }
         

@@ -6,11 +6,11 @@ namespace Datos.DAL.Implementaciones
 {
     public class ClasificacionRepositorio : IClasificacionRepositorio
     {
-        private readonly BaseDatosPruebaEntities1 contexto;
+        private readonly BaseDatosPruebaEntities1 _contexto;
 
         public ClasificacionRepositorio(BaseDatosPruebaEntities1 contexto)
         {
-            this.contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
+            _contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
         }
 
         public Clasificacion CrearClasificacionInicial()
@@ -21,8 +21,8 @@ namespace Datos.DAL.Implementaciones
                 Rondas_Ganadas = 0
             };
 
-            contexto.Clasificacion.Add(clasificacion);
-            contexto.SaveChanges();
+            _contexto.Clasificacion.Add(clasificacion);
+            _contexto.SaveChanges();
 
             return clasificacion;
         }

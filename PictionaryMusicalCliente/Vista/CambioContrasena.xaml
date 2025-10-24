@@ -39,7 +39,7 @@
                         Content="{x:Static language:Lang.globalTextoConfirmar}"
                         Height="44" FontFamily="Comic Sans MS" FontWeight="Bold"
                         Background="White" BorderBrush="Black"
-                        Command="{Binding ConfirmarCommand}"
+                        Command="{Binding ConfirmarComando}"
                         IsEnabled="{Binding EstaProcesando, Converter={StaticResource BooleanoInverso}}"/>
 
                 <Button x:Name="botonCancelarContrasena"
@@ -48,7 +48,7 @@
                         HorizontalAlignment="Center"
                         FontFamily="Comic Sans MS"
                         Background="White" BorderBrush="Black"
-                        Command="{Binding CancelarCommand}"/>
+                        Command="{Binding CancelarComando}"/>
             </StackPanel>
         </Border>
     </Grid>

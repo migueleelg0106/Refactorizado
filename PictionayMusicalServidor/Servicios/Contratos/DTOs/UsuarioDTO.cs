@@ -6,7 +6,7 @@ namespace Servicios.Contratos.DTOs
     public class UsuarioDTO
     {
         [DataMember]
-        public int IdUsuario { get; set; }
+        public int UsuarioId { get; set; }
 
         [DataMember]
         public int JugadorId { get; set; }

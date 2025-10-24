@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using PictionaryMusicalCliente.Modelo;
@@ -34,7 +35,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
             ImageSource imagen = CrearImagen(rutaAbsoluta);
 
             return new ObjetoAvatar(
-                dto.Id,
+                dto.AvatarId,
                 dto.Nombre,
                 imagen,
                 rutaRelativa: dto.RutaRelativa,
@@ -56,7 +57,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
                 bitmap.Freeze();
                 return bitmap;
             }
-            catch
+            catch (UriFormatException ex)
+            {
+                return null;
+            }
+            catch (NotSupportedException ex)
+            {
+                return null;
+            }
+            catch (WebException ex)
             {
                 return null;
             }

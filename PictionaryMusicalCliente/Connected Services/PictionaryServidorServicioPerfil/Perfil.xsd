@@ -18,7 +18,7 @@
   <xs:element name="ActualizarPerfil">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="solicitud" nillable="true" type="q2:ActualizarPerfilDTO" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="solicitud" nillable="true" type="q2:ActualizacionPerfilDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

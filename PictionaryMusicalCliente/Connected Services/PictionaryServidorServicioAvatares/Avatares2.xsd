@@ -8,7 +8,7 @@
   <xs:element name="ArrayOfAvatarDTO" nillable="true" type="tns:ArrayOfAvatarDTO" />
   <xs:complexType name="AvatarDTO">
     <xs:sequence>
-      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="AvatarId" type="xs:int" />
       <xs:element minOccurs="0" name="Nombre" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="RutaRelativa" nillable="true" type="xs:string" />
     </xs:sequence>

@@ -39,7 +39,7 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="ListaAmigosActualizada">
+  <xs:element name="NotificarListaAmigosActualizada">
     <xs:complexType>
       <xs:sequence>
         <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="amigos" nillable="true" type="q2:ArrayOfAmigoDTO" />

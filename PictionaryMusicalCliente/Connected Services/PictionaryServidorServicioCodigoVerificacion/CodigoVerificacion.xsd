@@ -18,7 +18,7 @@
   <xs:element name="ReenviarCodigoVerificacion">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="solicitud" nillable="true" type="q3:ReenviarCodigoVerificacionDTO" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="solicitud" nillable="true" type="q3:ReenvioCodigoVerificacionDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -32,7 +32,7 @@
   <xs:element name="ConfirmarCodigoVerificacion">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="confirmacion" nillable="true" type="q5:ConfirmarCodigoDTO" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="confirmacion" nillable="true" type="q5:ConfirmacionCodigoDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -60,7 +60,7 @@
   <xs:element name="ConfirmarCodigoRecuperacion">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="confirmacion" nillable="true" type="q9:ConfirmarCodigoDTO" />
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="confirmacion" nillable="true" type="q9:ConfirmacionCodigoDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

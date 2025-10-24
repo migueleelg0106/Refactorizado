@@ -8,21 +8,21 @@ namespace Datos.DAL.Implementaciones
 {
     public class AvatarRepositorio : IAvatarRepositorio
     {
-        private readonly BaseDatosPruebaEntities1 contexto;
+        private readonly BaseDatosPruebaEntities1 _contexto;
 
         public AvatarRepositorio(BaseDatosPruebaEntities1 contexto)
         {
-            this.contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
+            _contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
         }
 
         public bool ExisteAvatar(int avatarId)
         {
-            return contexto.Avatar.Any(a => a.idAvatar == avatarId);
+            return _contexto.Avatar.Any(a => a.idAvatar == avatarId);
         }
 
         public IEnumerable<Avatar> ObtenerAvatares()
         {
-            return contexto.Avatar
+            return _contexto.Avatar
                 .Select(a => new Avatar
                 {
                     idAvatar = a.idAvatar,
@@ -41,7 +41,7 @@ namespace Datos.DAL.Implementaciones
                 return null;
             }
 
-            return contexto.Avatar
+            return _contexto.Avatar
                 .AsEnumerable()
                 .Select(a => new Avatar
                 {

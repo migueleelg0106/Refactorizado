@@ -15,8 +15,8 @@ namespace Servicios.Servicios
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class ListaAmigosManejador : IListaAmigosManejador
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(ListaAmigosManejador));
-        private static readonly ConcurrentDictionary<string, IListaAmigosManejadorCallback> Suscripciones =
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(ListaAmigosManejador));
+        private static readonly ConcurrentDictionary<string, IListaAmigosManejadorCallback> _suscripciones =
             new(StringComparer.OrdinalIgnoreCase);
 
         public void Suscribir(string nombreUsuario)
@@ -34,22 +34,22 @@ namespace Servicios.Servicios
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                Logger.Warn("Identificador inválido al suscribirse a la lista de amigos", ex);
+                _logger.Warn("Identificador inválido al suscribirse a la lista de amigos", ex);
                 throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
-                Logger.Warn("Datos inválidos al suscribirse a la lista de amigos", ex);
+                _logger.Warn("Datos inválidos al suscribirse a la lista de amigos", ex);
                 throw new FaultException(ex.Message);
             }
             catch (DataException ex)
             {
-                Logger.Error("Error de datos al suscribirse a la lista de amigos", ex);
+                _logger.Error("Error de datos al suscribirse a la lista de amigos", ex);
                 throw new FaultException("No fue posible suscribirse a la lista de amigos.");
             }
 
             IListaAmigosManejadorCallback callback = ObtenerCallbackActual();
-            Suscripciones.AddOrUpdate(nombreUsuario, callback, (_, __) => callback);
+            _suscripciones.AddOrUpdate(nombreUsuario, callback, (_, __) => callback);
 
             var canal = OperationContext.Current?.Channel;
             if (canal != null)
@@ -81,17 +81,17 @@ namespace Servicios.Servicios
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                Logger.Warn("Identificador inválido al obtener la lista de amigos", ex);
+                _logger.Warn("Identificador inválido al obtener la lista de amigos", ex);
                 throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
-                Logger.Warn("Datos inválidos al obtener la lista de amigos", ex);
+                _logger.Warn("Datos inválidos al obtener la lista de amigos", ex);
                 throw new FaultException(ex.Message);
             }
             catch (DataException ex)
             {
-                Logger.Error("Error de datos al obtener la lista de amigos", ex);
+                _logger.Error("Error de datos al obtener la lista de amigos", ex);
                 throw new FaultException("No fue posible recuperar la lista de amigos.");
             }
         }
@@ -128,7 +128,7 @@ namespace Servicios.Servicios
 
                     resultado.Add(new AmigoDTO
                     {
-                        IdUsuario = amigo.idUsuario,
+                        UsuarioId = amigo.idUsuario,
                         NombreUsuario = amigo.Nombre_Usuario
                     });
                 }
@@ -148,39 +148,39 @@ namespace Servicios.Servicios
             }
             catch (FaultException ex)
             {
-                Logger.Warn($"No se pudo obtener la lista de amigos del usuario {nombreUsuario} para notificar", ex);
+                _logger.Warn($"No se pudo obtener la lista de amigos del usuario {nombreUsuario} para notificar", ex);
                 RemoverSuscripcion(nombreUsuario);
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                Logger.Warn($"Identificador inválido al actualizar la lista de amigos del usuario {nombreUsuario}", ex);
+                _logger.Warn($"Identificador inválido al actualizar la lista de amigos del usuario {nombreUsuario}", ex);
                 RemoverSuscripcion(nombreUsuario);
             }
             catch (ArgumentException ex)
             {
-                Logger.Warn($"Datos inválidos al actualizar la lista de amigos del usuario {nombreUsuario}", ex);
+                _logger.Warn($"Datos inválidos al actualizar la lista de amigos del usuario {nombreUsuario}", ex);
                 RemoverSuscripcion(nombreUsuario);
             }
             catch (DataException ex)
             {
-                Logger.Error($"Error de datos al obtener la lista de amigos del usuario {nombreUsuario}", ex);
+                _logger.Error($"Error de datos al obtener la lista de amigos del usuario {nombreUsuario}", ex);
             }
             catch (InvalidOperationException ex)
             {
-                Logger.Warn($"Error inesperado al obtener la lista de amigos del usuario {nombreUsuario}", ex);
+                _logger.Warn($"Error inesperado al obtener la lista de amigos del usuario {nombreUsuario}", ex);
             }
         }
 
         private static void NotificarLista(string nombreUsuario, List<AmigoDTO> amigos)
         {
-            if (!Suscripciones.TryGetValue(nombreUsuario, out var callback))
+            if (!_suscripciones.TryGetValue(nombreUsuario, out var callback))
             {
                 return;
             }
 
             try
             {
-                callback.ListaAmigosActualizada(amigos);
+                callback.NotificarListaAmigosActualizada(amigos);
             }
             catch (CommunicationException)
             {
@@ -192,7 +192,7 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                Logger.Warn($"Error inesperado al notificar la lista de amigos del usuario {nombreUsuario}", ex);
+                _logger.Warn($"Error inesperado al notificar la lista de amigos del usuario {nombreUsuario}", ex);
             }
         }
 
@@ -220,7 +220,7 @@ namespace Servicios.Servicios
                 return;
             }
 
-            Suscripciones.TryRemove(nombreUsuario, out _);
+            _suscripciones.TryRemove(nombreUsuario, out _);
         }
 
         private static void ValidarNombreUsuario(string nombreUsuario, string parametro)

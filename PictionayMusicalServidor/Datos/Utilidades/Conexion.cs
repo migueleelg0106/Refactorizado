@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Datos.Utilidades
 {
     public static class Conexion
     {
-        public static String ObtenerConexion()
+        public static string ObtenerConexion()
         {
             var constructorSql = new SqlConnectionStringBuilder
             {
@@ -26,8 +22,8 @@ namespace Datos.Utilidades
                 Provider = "System.Data.SqlClient",
                 ProviderConnectionString = constructorSql.ToString(),
                 Metadata = "res://*/Modelo.BasePictionaryMusical.csdl|res://*/Modelo.BasePictionaryMusical.ssdl|res://*/Modelo.BasePictionaryMusical.msl"
-
             };
+
             return constructorEntidad.ToString();
         }
     }

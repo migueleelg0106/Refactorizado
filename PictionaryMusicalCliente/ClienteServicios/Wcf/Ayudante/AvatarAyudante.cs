@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using PictionaryMusicalCliente.Modelo;
@@ -11,7 +13,7 @@ namespace PictionaryMusicalCliente.Utilidades
 {
     internal static class AvatarAyudante
     {
-        private static readonly object Sincronizacion = new object();
+        private static readonly object _sincronizacion = new object();
 
         private static IReadOnlyList<ObjetoAvatar> _avatares;
         private static Dictionary<int, ObjetoAvatar> _avataresPorId;
@@ -81,7 +83,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
         public static IReadOnlyList<ObjetoAvatar> ObtenerAvatares()
         {
-            lock (Sincronizacion)
+            lock (_sincronizacion)
             {
                 return _avatares;
             }
@@ -89,7 +91,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
         public static ObjetoAvatar ObtenerAvatarPredeterminado()
         {
-            lock (Sincronizacion)
+            lock (_sincronizacion)
             {
                 return _avatares != null && _avatares.Count > 0 ? _avatares[0] : null;
             }
@@ -97,7 +99,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
         public static ObjetoAvatar ObtenerAvatarPorId(int id)
         {
-            lock (Sincronizacion)
+            lock (_sincronizacion)
             {
                 if (_avataresPorId != null && _avataresPorId.TryGetValue(id, out ObjetoAvatar avatar))
                 {
@@ -121,7 +123,7 @@ namespace PictionaryMusicalCliente.Utilidades
                 return null;
             }
 
-            lock (Sincronizacion)
+            lock (_sincronizacion)
             {
                 if (_avataresPorRuta != null && _avataresPorRuta.TryGetValue(rutaNormalizada, out ObjetoAvatar avatar))
                 {
@@ -162,18 +164,43 @@ namespace PictionaryMusicalCliente.Utilidades
                 return null;
             }
 
+            BitmapImage bitmap = null;
             try
             {
-                var bitmap = new BitmapImage();
+                bitmap = new BitmapImage();
                 bitmap.BeginInit();
-                bitmap.UriSource = new Uri(avatar.ImagenUriAbsoluta, UriKind.Absolute);
+                if (Uri.TryCreate(avatar.ImagenUriAbsoluta, UriKind.Absolute, out Uri uriSource))
+                {
+                    bitmap.UriSource = uriSource;
+                }
+                else
+                {
+                    bitmap.EndInit();
+                    return null;
+                }
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
                 bitmap.Freeze();
                 return bitmap;
             }
-            catch
+            catch (UriFormatException uriEx)
             {
+                if (bitmap != null && bitmap.IsDownloading) bitmap.EndInit();
+                return null;
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                if (bitmap != null && bitmap.IsDownloading) bitmap.EndInit();
+                return null;
+            }
+            catch (WebException webEx)
+            {
+                if (bitmap != null && bitmap.IsDownloading) bitmap.EndInit();
+                return null;
+            }
+            catch (NotSupportedException nsEx)
+            {
+                if (bitmap != null && bitmap.IsDownloading) bitmap.EndInit();
                 return null;
             }
         }
@@ -183,7 +210,7 @@ namespace PictionaryMusicalCliente.Utilidades
             Dictionary<int, ObjetoAvatar> porId,
             Dictionary<string, ObjetoAvatar> porRuta)
         {
-            lock (Sincronizacion)
+            lock (_sincronizacion)
             {
                 _avatares = new ReadOnlyCollection<ObjetoAvatar>(lista);
                 _avataresPorId = porId;

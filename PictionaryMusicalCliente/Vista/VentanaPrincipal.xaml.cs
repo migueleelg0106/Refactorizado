@@ -12,28 +12,28 @@ namespace PictionaryMusicalCliente
 {
     public partial class VentanaPrincipal : Window
     {
-        private readonly IListaAmigosServicio _listaAmigosService;
-        private readonly IAmigosServicio _amigosService;
+        private readonly IListaAmigosServicio _listaAmigosServicio;
+        private readonly IAmigosServicio _amigosServicio;
         private readonly VentanaPrincipalVistaModelo _vistaModelo;
 
         public VentanaPrincipal()
         {
             InitializeComponent();
 
-            _listaAmigosService = new ListaAmigosServicio();
-            _amigosService = new AmigosServicio();
+            _listaAmigosServicio = new ListaAmigosServicio();
+            _amigosServicio = new AmigosServicio();
 
             _vistaModelo = new VentanaPrincipalVistaModelo(
                 LocalizacionServicio.Instancia,
-                _listaAmigosService,
-                _amigosService)
+                _listaAmigosServicio,
+                _amigosServicio)
             {
                 AbrirPerfil = () => MostrarDialogo(new Perfil()),
                 AbrirAjustes = () => MostrarDialogo(new Ajustes()),
                 AbrirComoJugar = () => MostrarDialogo(new ComoJugar()),
                 AbrirClasificacion = () => MostrarDialogo(new Clasificacion()),
-                AbrirBuscarAmigo = () => MostrarDialogo(new BuscarAmigo(_amigosService)),
-                AbrirSolicitudes = () => MostrarDialogo(new Solicitudes(_amigosService)),
+                AbrirBuscarAmigo = () => MostrarDialogo(new BusquedaAmigo(_amigosServicio)),
+                AbrirSolicitudes = () => MostrarDialogo(new Solicitudes(_amigosServicio)),
                 ConfirmarEliminarAmigo = MostrarConfirmacionEliminar,
                 AbrirInvitaciones = () => MostrarDialogo(new Invitaciones()),
                 IniciarJuego = _ => MostrarVentanaJuego(),
@@ -60,13 +60,13 @@ namespace PictionaryMusicalCliente
 
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
 
-            _listaAmigosService?.Dispose();
-            _amigosService?.Dispose();
+            _listaAmigosServicio?.Dispose();
+            _amigosServicio?.Dispose();
         }
 
         private bool? MostrarConfirmacionEliminar(string amigo)
         {
-            var ventana = new EliminarAmigo(amigo)
+            var ventana = new EliminacionAmigo(amigo)
             {
                 Owner = this
             };

@@ -14,21 +14,21 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
     public class ClasificacionVistaModelo : BaseVistaModelo
     {
-        private readonly IClasificacionServicio _clasificacionService;
+        private readonly IClasificacionServicio _clasificacionServicio;
         private IReadOnlyList<DTOs.ClasificacionUsuarioDTO> _clasificacionOriginal;
         private ObservableCollection<DTOs.ClasificacionUsuarioDTO> _clasificacion;
         private bool _estaCargando;
 
-        public ClasificacionVistaModelo(IClasificacionServicio clasificacionService)
+        public ClasificacionVistaModelo(IClasificacionServicio clasificacionServicio)
         {
-            _clasificacionService = clasificacionService ?? throw new ArgumentNullException(nameof(clasificacionService));
+            _clasificacionServicio = clasificacionServicio ?? throw new ArgumentNullException(nameof(clasificacionServicio));
 
             _clasificacionOriginal = Array.Empty<DTOs.ClasificacionUsuarioDTO>();
             _clasificacion = new ObservableCollection<DTOs.ClasificacionUsuarioDTO>();
 
-            OrdenarPorRondasCommand = new ComandoDelegado(_ => OrdenarPorRondas(), _ => PuedeOrdenar());
-            OrdenarPorPuntosCommand = new ComandoDelegado(_ => OrdenarPorPuntos(), _ => PuedeOrdenar());
-            CerrarCommand = new ComandoDelegado(_ => CerrarAccion?.Invoke());
+            OrdenarPorRondasComando = new ComandoDelegado(_ => OrdenarPorRondas(), _ => PuedeOrdenar());
+            OrdenarPorPuntosComando = new ComandoDelegado(_ => OrdenarPorPuntos(), _ => PuedeOrdenar());
+            CerrarComando = new ComandoDelegado(_ => CerrarAccion?.Invoke());
         }
 
         public ObservableCollection<DTOs.ClasificacionUsuarioDTO> Clasificacion
@@ -58,11 +58,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public bool HayResultados => Clasificacion?.Count > 0;
 
-        public IComandoNotificable OrdenarPorRondasCommand { get; }
+        public IComandoNotificable OrdenarPorRondasComando { get; }
 
-        public IComandoNotificable OrdenarPorPuntosCommand { get; }
+        public IComandoNotificable OrdenarPorPuntosComando { get; }
 
-        public IComandoNotificable CerrarCommand { get; }
+        public IComandoNotificable CerrarComando { get; }
 
         public Action CerrarAccion { get; set; }
 
@@ -73,7 +73,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             try
             {
                 IReadOnlyList<DTOs.ClasificacionUsuarioDTO> clasificacion =
-                    await _clasificacionService.ObtenerTopJugadoresAsync().ConfigureAwait(true);
+                    await _clasificacionServicio.ObtenerTopJugadoresAsync().ConfigureAwait(true);
 
                 _clasificacionOriginal = clasificacion ?? Array.Empty<DTOs.ClasificacionUsuarioDTO>();
                 ActualizarClasificacion(_clasificacionOriginal);
@@ -81,10 +81,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             catch (ExcepcionServicio ex)
             {
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
-            }
-            catch (Exception)
-            {
-                AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {
@@ -137,8 +133,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void NotificarEstadoComandosOrdenamiento()
         {
-            OrdenarPorRondasCommand?.NotificarPuedeEjecutar();
-            OrdenarPorPuntosCommand?.NotificarPuedeEjecutar();
+            OrdenarPorRondasComando?.NotificarPuedeEjecutar();
+            OrdenarPorPuntosComando?.NotificarPuedeEjecutar();
         }
     }
 }

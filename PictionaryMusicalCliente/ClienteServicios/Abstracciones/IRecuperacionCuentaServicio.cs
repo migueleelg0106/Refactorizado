@@ -8,6 +8,6 @@ namespace PictionaryMusicalCliente.Servicios.Abstracciones
     {
         Task<DTOs.ResultadoOperacionDTO> RecuperarCuentaAsync(
             string identificador,
-            ICambioContrasenaServicio cambioContrasenaService);
+            ICambioContrasenaServicio cambioContrasenaServicio);
     }
 }

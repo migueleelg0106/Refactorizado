@@ -14,13 +14,13 @@ namespace Servicios.Servicios
         private const int MinutosExpiracionCodigo = 5;
         private const string MensajeErrorEnvioCodigo = "No fue posible enviar el código de verificación.";
 
-        private static readonly ConcurrentDictionary<string, SolicitudCodigoPendiente> Solicitudes =
+        private static readonly ConcurrentDictionary<string, SolicitudCodigoPendiente> _solicitudes =
             new ConcurrentDictionary<string, SolicitudCodigoPendiente>();
 
-        private static readonly ConcurrentDictionary<string, byte> VerificacionesConfirmadas =
+        private static readonly ConcurrentDictionary<string, byte> _verificacionesConfirmadas =
             new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase);
 
-        private static readonly ConcurrentDictionary<string, SolicitudRecuperacionPendiente> SolicitudesRecuperacion =
+        private static readonly ConcurrentDictionary<string, SolicitudRecuperacionPendiente> _solicitudesRecuperacion =
             new ConcurrentDictionary<string, SolicitudRecuperacionPendiente>();
 
         private static ICodigoVerificacionNotificador _notificador = new CorreoCodigoVerificacionNotificador();
@@ -47,15 +47,15 @@ namespace Servicios.Servicios
                     return new ResultadoSolicitudCodigoDTO
                     {
                         CodigoEnviado = false,
-                        UsuarioYaRegistrado = usuarioRegistrado,
-                        CorreoYaRegistrado = correoRegistrado,
+                        UsuarioRegistrado = usuarioRegistrado,
+                        CorreoRegistrado = correoRegistrado,
                         Mensaje = null
                     };
                 }
             }
 
-            string token = TokenGenerator.GenerarToken();
-            string codigo = CodigoVerificacionGenerator.GenerarCodigo();
+            string token = TokenGenerador.GenerarToken();
+            string codigo = CodigoVerificacionGenerador.GenerarCodigo();
             NuevaCuentaDTO datosCuenta = CopiarCuenta(nuevaCuenta);
 
             bool enviado = EnviarCorreoVerificacion(datosCuenta, codigo);
@@ -75,7 +75,7 @@ namespace Servicios.Servicios
                 Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo)
             };
 
-            Solicitudes[token] = solicitud;
+            _solicitudes[token] = solicitud;
 
             return new ResultadoSolicitudCodigoDTO
             {
@@ -84,14 +84,14 @@ namespace Servicios.Servicios
             };
         }
 
-        public static ResultadoSolicitudCodigoDTO ReenviarCodigo(ReenviarCodigoVerificacionDTO solicitud)
+        public static ResultadoSolicitudCodigoDTO ReenviarCodigo(ReenvioCodigoVerificacionDTO solicitud)
         {
             if (solicitud == null)
             {
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            if (!Solicitudes.TryGetValue(solicitud.TokenCodigo, out SolicitudCodigoPendiente existente))
+            if (!_solicitudes.TryGetValue(solicitud.TokenCodigo, out SolicitudCodigoPendiente existente))
             {
                 return new ResultadoSolicitudCodigoDTO
                 {
@@ -103,7 +103,7 @@ namespace Servicios.Servicios
             string codigoAnterior = existente.Codigo;
             DateTime expiracionAnterior = existente.Expira;
 
-            string nuevoCodigo = CodigoVerificacionGenerator.GenerarCodigo();
+            string nuevoCodigo = CodigoVerificacionGenerador.GenerarCodigo();
             existente.Codigo = nuevoCodigo;
             existente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
 
@@ -127,14 +127,14 @@ namespace Servicios.Servicios
             };
         }
 
-        public static ResultadoRegistroCuentaDTO ConfirmarCodigo(ConfirmarCodigoDTO confirmacion)
+        public static ResultadoRegistroCuentaDTO ConfirmarCodigo(ConfirmacionCodigoDTO confirmacion)
         {
             if (confirmacion == null)
             {
                 throw new ArgumentNullException(nameof(confirmacion));
             }
 
-            if (!Solicitudes.TryGetValue(confirmacion.TokenCodigo, out SolicitudCodigoPendiente pendiente))
+            if (!_solicitudes.TryGetValue(confirmacion.TokenCodigo, out SolicitudCodigoPendiente pendiente))
             {
                 return new ResultadoRegistroCuentaDTO
                 {
@@ -145,7 +145,7 @@ namespace Servicios.Servicios
 
             if (pendiente.Expira < DateTime.UtcNow)
             {
-                Solicitudes.TryRemove(confirmacion.TokenCodigo, out _);
+                _solicitudes.TryRemove(confirmacion.TokenCodigo, out _);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -162,10 +162,10 @@ namespace Servicios.Servicios
                 };
             }
 
-            Solicitudes.TryRemove(confirmacion.TokenCodigo, out _);
+            _solicitudes.TryRemove(confirmacion.TokenCodigo, out _);
 
             string clave = ObtenerClave(pendiente.DatosCuenta.Usuario, pendiente.DatosCuenta.Correo);
-            VerificacionesConfirmadas[clave] = 0;
+            _verificacionesConfirmadas[clave] = 0;
 
             return new ResultadoRegistroCuentaDTO
             {
@@ -207,8 +207,8 @@ namespace Servicios.Servicios
 
                 LimpiarSolicitudesRecuperacion(usuario.idUsuario);
 
-                string token = TokenGenerator.GenerarToken();
-                string codigo = CodigoVerificacionGenerator.GenerarCodigo();
+                string token = TokenGenerador.GenerarToken();
+                string codigo = CodigoVerificacionGenerador.GenerarCodigo();
 
                 var pendiente = new SolicitudRecuperacionPendiente
                 {
@@ -234,7 +234,7 @@ namespace Servicios.Servicios
                     };
                 }
 
-                SolicitudesRecuperacion[token] = pendiente;
+                _solicitudesRecuperacion[token] = pendiente;
 
                 return new ResultadoSolicitudRecuperacionDTO
                 {
@@ -246,14 +246,14 @@ namespace Servicios.Servicios
             }
         }
 
-        public static ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(ReenviarCodigoDTO solicitud)
+        public static ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(ReenvioCodigoDTO solicitud)
         {
             if (solicitud == null)
             {
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            if (!SolicitudesRecuperacion.TryGetValue(solicitud.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
+            if (!_solicitudesRecuperacion.TryGetValue(solicitud.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
             {
                 return new ResultadoSolicitudCodigoDTO
                 {
@@ -264,7 +264,7 @@ namespace Servicios.Servicios
 
             if (pendiente.Expira < DateTime.UtcNow)
             {
-                SolicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
+                _solicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -276,7 +276,7 @@ namespace Servicios.Servicios
             DateTime expiracionAnterior = pendiente.Expira;
             bool confirmadoAnterior = pendiente.Confirmado;
 
-            string nuevoCodigo = CodigoVerificacionGenerator.GenerarCodigo();
+            string nuevoCodigo = CodigoVerificacionGenerador.GenerarCodigo();
             pendiente.Codigo = nuevoCodigo;
             pendiente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
             pendiente.Confirmado = false;
@@ -302,14 +302,14 @@ namespace Servicios.Servicios
             };
         }
 
-        public static ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmarCodigoDTO confirmacion)
+        public static ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmacionCodigoDTO confirmacion)
         {
             if (confirmacion == null)
             {
                 throw new ArgumentNullException(nameof(confirmacion));
             }
 
-            if (!SolicitudesRecuperacion.TryGetValue(confirmacion.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
+            if (!_solicitudesRecuperacion.TryGetValue(confirmacion.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
             {
                 return new ResultadoOperacionDTO
                 {
@@ -320,7 +320,7 @@ namespace Servicios.Servicios
 
             if (pendiente.Expira < DateTime.UtcNow)
             {
-                SolicitudesRecuperacion.TryRemove(confirmacion.TokenCodigo, out _);
+                _solicitudesRecuperacion.TryRemove(confirmacion.TokenCodigo, out _);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -347,14 +347,14 @@ namespace Servicios.Servicios
             };
         }
 
-        public static ResultadoOperacionDTO ActualizarContrasena(ActualizarContrasenaDTO solicitud)
+        public static ResultadoOperacionDTO ActualizarContrasena(ActualizacionContrasenaDTO solicitud)
         {
             if (solicitud == null)
             {
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            if (!SolicitudesRecuperacion.TryGetValue(solicitud.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
+            if (!_solicitudesRecuperacion.TryGetValue(solicitud.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
             {
                 return new ResultadoOperacionDTO
                 {
@@ -374,7 +374,7 @@ namespace Servicios.Servicios
 
             if (pendiente.Expira < DateTime.UtcNow)
             {
-                SolicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
+                _solicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -401,7 +401,7 @@ namespace Servicios.Servicios
                     contexto.SaveChanges();
                 }
 
-                SolicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
+                _solicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
 
                 return new ResultadoOperacionDTO
                 {
@@ -426,7 +426,7 @@ namespace Servicios.Servicios
             }
 
             string clave = ObtenerClave(nuevaCuenta.Usuario, nuevaCuenta.Correo);
-            return VerificacionesConfirmadas.ContainsKey(clave);
+            return _verificacionesConfirmadas.ContainsKey(clave);
         }
 
         public static void LimpiarVerificacion(NuevaCuentaDTO nuevaCuenta)
@@ -437,7 +437,7 @@ namespace Servicios.Servicios
             }
 
             string clave = ObtenerClave(nuevaCuenta.Usuario, nuevaCuenta.Correo);
-            VerificacionesConfirmadas.TryRemove(clave, out _);
+            _verificacionesConfirmadas.TryRemove(clave, out _);
         }
 
         private static bool EnviarCorreoVerificacion(NuevaCuentaDTO nuevaCuenta, string codigo)
@@ -449,7 +449,7 @@ namespace Servicios.Servicios
 
             try
             {
-                var tarea = _notificador?.NotificarAsync(nuevaCuenta.Correo, codigo, nuevaCuenta.Usuario);
+                var tarea = _notificador?.NotificarAsincrono(nuevaCuenta.Correo, codigo, nuevaCuenta.Usuario);
                 if (tarea == null)
                 {
                     return false;
@@ -473,13 +473,13 @@ namespace Servicios.Servicios
 
         private static void LimpiarSolicitudesRecuperacion(int usuarioId)
         {
-            var registros = SolicitudesRecuperacion
+            var registros = _solicitudesRecuperacion
                 .Where(pair => pair.Value.UsuarioId == usuarioId)
                 .ToList();
 
             foreach (var registro in registros)
             {
-                SolicitudesRecuperacion.TryRemove(registro.Key, out _);
+                _solicitudesRecuperacion.TryRemove(registro.Key, out _);
             }
         }
 

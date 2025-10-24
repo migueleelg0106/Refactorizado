@@ -14,8 +14,8 @@ namespace Servicios.Servicios
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class AmigosManejador : IAmigosManejador
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(AmigosManejador));
-        private static readonly ConcurrentDictionary<string, IAmigosManejadorCallback> Suscripciones = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(AmigosManejador));
+        private static readonly ConcurrentDictionary<string, IAmigosManejadorCallback> _suscripciones = new(StringComparer.OrdinalIgnoreCase);
 
         public void Suscribir(string nombreUsuario)
         {
@@ -43,7 +43,7 @@ namespace Servicios.Servicios
                 }
 
                 IAmigosManejadorCallback callback = ObtenerCallbackActual();
-                Suscripciones.AddOrUpdate(nombreNormalizado, callback, (_, __) => callback);
+                _suscripciones.AddOrUpdate(nombreNormalizado, callback, (_, __) => callback);
 
                 if (!string.Equals(nombreUsuario, nombreNormalizado, StringComparison.Ordinal))
                 {
@@ -67,7 +67,7 @@ namespace Servicios.Servicios
 
                 foreach (var solicitud in solicitudesPendientes)
                 {
-                    if(solicitud.UsuarioReceptor != usuario.idUsuario)
+                    if (solicitud.UsuarioReceptor != usuario.idUsuario)
                     {
                         continue;
                     }
@@ -96,17 +96,17 @@ namespace Servicios.Servicios
             }
             catch (ArgumentException ex)
             {
-                Logger.Warn("Datos inválidos al recuperar las solicitudes pendientes de amistad", ex);
+                _logger.Warn("Datos inválidos al recuperar las solicitudes pendientes de amistad", ex);
                 throw new FaultException(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                Logger.Error("Estado inválido al recuperar las solicitudes pendientes de amistad", ex);
+                _logger.Error("Estado inválido al recuperar las solicitudes pendientes de amistad", ex);
                 throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
             }
             catch (DataException ex)
             {
-                Logger.Error("Error de datos al recuperar las solicitudes pendientes de amistad", ex);
+                _logger.Error("Error de datos al recuperar las solicitudes pendientes de amistad", ex);
                 throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
             }
         }
@@ -166,17 +166,17 @@ namespace Servicios.Servicios
             }
             catch (ArgumentException ex)
             {
-                Logger.Warn("Datos inválidos al enviar la solicitud de amistad", ex);
+                _logger.Warn("Datos inválidos al enviar la solicitud de amistad", ex);
                 throw new FaultException(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                Logger.Error("Estado inválido al enviar la solicitud de amistad", ex);
+                _logger.Error("Estado inválido al enviar la solicitud de amistad", ex);
                 throw new FaultException("No fue posible completar la solicitud de amistad.");
             }
             catch (DataException ex)
             {
-                Logger.Error("Error de datos al enviar la solicitud de amistad", ex);
+                _logger.Error("Error de datos al enviar la solicitud de amistad", ex);
                 throw new FaultException("No fue posible almacenar la solicitud de amistad.");
             }
         }
@@ -248,17 +248,17 @@ namespace Servicios.Servicios
             }
             catch (ArgumentException ex)
             {
-                Logger.Warn("Datos inválidos al aceptar la solicitud de amistad", ex);
+                _logger.Warn("Datos inválidos al aceptar la solicitud de amistad", ex);
                 throw new FaultException(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                Logger.Error("Estado inválido al aceptar la solicitud de amistad", ex);
+                _logger.Error("Estado inválido al aceptar la solicitud de amistad", ex);
                 throw new FaultException("No fue posible aceptar la solicitud de amistad.");
             }
             catch (DataException ex)
             {
-                Logger.Error("Error de datos al aceptar la solicitud de amistad", ex);
+                _logger.Error("Error de datos al aceptar la solicitud de amistad", ex);
                 throw new FaultException("No fue posible actualizar la solicitud de amistad.");
             }
         }
@@ -329,17 +329,17 @@ namespace Servicios.Servicios
             }
             catch (ArgumentException ex)
             {
-                Logger.Warn("Datos inválidos al eliminar la relación de amistad", ex);
+                _logger.Warn("Datos inválidos al eliminar la relación de amistad", ex);
                 throw new FaultException(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                Logger.Error("Estado inválido al eliminar la relación de amistad", ex);
+                _logger.Error("Estado inválido al eliminar la relación de amistad", ex);
                 throw new FaultException("No fue posible eliminar la relación de amistad.");
             }
             catch (DataException ex)
             {
-                Logger.Error("Error de datos al eliminar la relación de amistad", ex);
+                _logger.Error("Error de datos al eliminar la relación de amistad", ex);
                 throw new FaultException("No fue posible eliminar la relación de amistad en la base de datos.");
             }
         }
@@ -396,7 +396,7 @@ namespace Servicios.Servicios
                 return;
             }
 
-            Suscripciones.TryRemove(nombreUsuario, out _);
+            _suscripciones.TryRemove(nombreUsuario, out _);
         }
 
         private void NotificarSolicitud(string nombreUsuario, SolicitudAmistadDTO solicitud)
@@ -406,14 +406,14 @@ namespace Servicios.Servicios
                 return;
             }
 
-            if (!Suscripciones.TryGetValue(nombreUsuario, out var callback))
+            if (!_suscripciones.TryGetValue(nombreUsuario, out var callback))
             {
                 return;
             }
 
             try
             {
-                callback.SolicitudActualizada(solicitud);
+                callback.NotificarSolicitudActualizada(solicitud);
             }
             catch (CommunicationException)
             {
@@ -425,7 +425,7 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                Logger.Warn($"Error al notificar la solicitud de amistad al usuario {nombreUsuario}", ex);
+                _logger.Warn($"Error al notificar la solicitud de amistad al usuario {nombreUsuario}", ex);
             }
         }
 
@@ -436,14 +436,14 @@ namespace Servicios.Servicios
                 return;
             }
 
-            if (!Suscripciones.TryGetValue(nombreUsuario, out var callback))
+            if (!_suscripciones.TryGetValue(nombreUsuario, out var callback))
             {
                 return;
             }
 
             try
             {
-                callback.AmistadEliminada(solicitud);
+                callback.NotificarAmistadEliminada(solicitud);
             }
             catch (CommunicationException)
             {
@@ -455,7 +455,7 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                Logger.Warn($"Error al notificar la eliminación de amistad al usuario {nombreUsuario}", ex);
+                _logger.Warn($"Error al notificar la eliminación de amistad al usuario {nombreUsuario}", ex);
             }
         }
     }

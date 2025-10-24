@@ -12,7 +12,7 @@ namespace Servicios.Servicios
 {
     public class InicioSesionManejador : IInicioSesionManejador
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(InicioSesionManejador));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(InicioSesionManejador));
 
         public ResultadoInicioSesionDTO IniciarSesion(CredencialesInicioSesionDTO credenciales)
         {
@@ -28,7 +28,7 @@ namespace Servicios.Servicios
             {
                 return new ResultadoInicioSesionDTO
                 {
-                    CuentaNoEncontrada = true,
+                    CuentaEncontrada = true,
                     Mensaje = "Credenciales inválidas"
                 };
             }
@@ -43,7 +43,7 @@ namespace Servicios.Servicios
                     {
                         return new ResultadoInicioSesionDTO
                         {
-                            CuentaNoEncontrada = true,
+                            CuentaEncontrada = true,
                             Mensaje = null
                         };
                     }
@@ -66,7 +66,7 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al iniciar sesión", ex);
+                _logger.Error("Error al iniciar sesión", ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,
@@ -113,7 +113,7 @@ namespace Servicios.Servicios
 
             return new UsuarioDTO
             {
-                IdUsuario = usuario.idUsuario,
+                UsuarioId = usuario.idUsuario,
                 JugadorId = jugador?.idJugador ?? 0,
                 NombreUsuario = usuario.Nombre_Usuario,
                 Nombre = jugador?.Nombre,

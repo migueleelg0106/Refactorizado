@@ -49,11 +49,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAmigos {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IAmigosManejadorCallback {
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IAmigosManejador/SolicitudActualizada")]
-        void SolicitudActualizada(global::Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IAmigosManejador/NotificarSolicitudActualizada")]
+        void NotificarSolicitudActualizada(global::Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IAmigosManejador/AmistadEliminada")]
-        void AmistadEliminada(global::Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IAmigosManejador/NotificarAmistadEliminada")]
+        void NotificarAmistadEliminada(global::Servicios.Contratos.DTOs.SolicitudAmistadDTO solicitud);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]

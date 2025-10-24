@@ -11,22 +11,22 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 {
     public class RecuperacionCuentaDialogoServicio : IRecuperacionCuentaServicio
     {
-        private readonly IVerificarCodigoDialogoServicio _verificarCodigoDialogService;
+        private readonly IVerificacionCodigoDialogoServicio _verificarCodigoDialogoServicio;
 
-        public RecuperacionCuentaDialogoServicio(IVerificarCodigoDialogoServicio verificarCodigoDialogService)
+        public RecuperacionCuentaDialogoServicio(IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio)
         {
-            _verificarCodigoDialogService = verificarCodigoDialogService ?? throw new ArgumentNullException(nameof(verificarCodigoDialogService));
+            _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ?? throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));
         }
 
         public async Task<DTOs.ResultadoOperacionDTO> RecuperarCuentaAsync(
             string identificador,
-            ICambioContrasenaServicio cambioContrasenaService)
+            ICambioContrasenaServicio cambioContrasenaServicio)
         {
-            if (cambioContrasenaService == null)
-                throw new ArgumentNullException(nameof(cambioContrasenaService));
+            if (cambioContrasenaServicio == null)
+                throw new ArgumentNullException(nameof(cambioContrasenaServicio));
 
             DTOs.ResultadoSolicitudRecuperacionDTO resultadoSolicitud =
-                await cambioContrasenaService.SolicitarCodigoRecuperacionAsync(identificador).ConfigureAwait(true);
+                await cambioContrasenaServicio.SolicitarCodigoRecuperacionAsync(identificador).ConfigureAwait(true);
 
             if (resultadoSolicitud == null) return null;
 
@@ -58,9 +58,9 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 
             AvisoAyudante.Mostrar(Lang.avisoTextoCodigoEnviado);
 
-            var adaptador = new ServicioCodigoRecuperacionAdapter(cambioContrasenaService);
+            var adaptador = new ServicioCodigoRecuperacionAdapter(cambioContrasenaServicio);
 
-            DTOs.ResultadoRegistroCuentaDTO resultadoVerificacion = await _verificarCodigoDialogService
+            DTOs.ResultadoRegistroCuentaDTO resultadoVerificacion = await _verificarCodigoDialogoServicio
                 .MostrarDialogoAsync(
                     Lang.cambiarContrasenaTextoCodigoVerificacion,
                     resultadoSolicitud.TokenCodigo,
@@ -84,7 +84,7 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
             AvisoAyudante.Mostrar(Lang.avisoTextoCodigoVerificadoCambio);
 
             var ventana = new CambioContrasena();
-            var vistaModelo = new CambioContrasenaVistaModelo(resultadoSolicitud.TokenCodigo, cambioContrasenaService);
+            var vistaModelo = new CambioContrasenaVistaModelo(resultadoSolicitud.TokenCodigo, cambioContrasenaServicio);
             var finalizacion = new TaskCompletionSource<DTOs.ResultadoOperacionDTO>();
 
             vistaModelo.CambioContrasenaCompletado = resultado =>
@@ -121,23 +121,23 @@ namespace PictionaryMusicalCliente.Servicios.Dialogos
 
         private class ServicioCodigoRecuperacionAdapter : ICodigoVerificacionServicio
         {
-            private readonly ICambioContrasenaServicio _cambioContrasenaService;
+            private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
 
-            public ServicioCodigoRecuperacionAdapter(ICambioContrasenaServicio cambioContrasenaService)
+            public ServicioCodigoRecuperacionAdapter(ICambioContrasenaServicio cambioContrasenaServicio)
             {
-                _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
+                _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
             }
 
             public Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(DTOs.NuevaCuentaDTO solicitud)
                 => throw new NotSupportedException();
 
             public Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
-                => _cambioContrasenaService.ReenviarCodigoRecuperacionAsync(tokenCodigo);
+                => _cambioContrasenaServicio.ReenviarCodigoRecuperacionAsync(tokenCodigo);
 
             public async Task<DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
             {
                 DTOs.ResultadoOperacionDTO resultado =
-                    await _cambioContrasenaService.ConfirmarCodigoRecuperacionAsync(tokenCodigo, codigoIngresado).ConfigureAwait(true);
+                    await _cambioContrasenaServicio.ConfirmarCodigoRecuperacionAsync(tokenCodigo, codigoIngresado).ConfigureAwait(true);
 
                 if (resultado == null) return null;
 

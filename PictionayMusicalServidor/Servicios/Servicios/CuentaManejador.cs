@@ -11,7 +11,7 @@ namespace Servicios.Servicios
 {
     public class CuentaManejador : ICuentaManejador
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(CuentaManejador));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(CuentaManejador));
 
         public ResultadoRegistroCuentaDTO RegistrarCuenta(NuevaCuentaDTO nuevaCuenta)
         {
@@ -47,8 +47,8 @@ namespace Servicios.Servicios
                         return new ResultadoRegistroCuentaDTO
                         {
                             RegistroExitoso = false,
-                            UsuarioYaRegistrado = usuarioRegistrado,
-                            CorreoYaRegistrado = correoRegistrado,
+                            UsuarioRegistrado = usuarioRegistrado,
+                            CorreoRegistrado = correoRegistrado,
                             Mensaje = null
                         };
                     }
@@ -103,7 +103,7 @@ namespace Servicios.Servicios
             }
             catch (Exception ex)
             {
-                Logger.Error("Error al registrar la cuenta", ex);
+                _logger.Error("Error al registrar la cuenta", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -125,12 +125,12 @@ namespace Servicios.Servicios
             return CodigoVerificacionServicio.SolicitarCodigo(nuevaCuenta);
         }
 
-        public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenviarCodigoVerificacionDTO solicitud)
+        public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenvioCodigoVerificacionDTO solicitud)
         {
             return CodigoVerificacionServicio.ReenviarCodigo(solicitud);
         }
 
-        public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmarCodigoDTO confirmacion)
+        public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmacionCodigoDTO confirmacion)
         {
             return CodigoVerificacionServicio.ConfirmarCodigo(confirmacion);
         }

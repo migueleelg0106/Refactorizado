@@ -23,10 +23,10 @@ namespace PictionaryMusicalCliente
         private void BotonInvitarCorreo(object sender, RoutedEventArgs e)
         {
             // de momento esta aqui para la prueba de la ventana pero esto ira cuando se implemente la duncion de expulsar jugador que es la que tenemos duda
-            ExpulsarJugador expulsarJugador = new ExpulsarJugador();
+            ExpulsionJugador expulsarJugador = new ExpulsionJugador();
             expulsarJugador.ShowDialog();
             // esto igual es momentaneo en lo que se hace lo de los botones dinamicos de esa lista
-            InvitarAmigos invitarAmigos = new InvitarAmigos();
+            InvitacionAmigos invitarAmigos = new InvitacionAmigos();
             invitarAmigos.ShowDialog();
         }
 
@@ -42,7 +42,7 @@ namespace PictionaryMusicalCliente
             if (_juegoIniciado) return;
             _juegoIniciado = true;
 
-            grdDibujo.Visibility = Visibility.Visible;
+            cuadriculaDibujo.Visibility = Visibility.Visible;
             SetTool(true);
             AplicarEstiloLapiz();
             ActualizarEraserShape();
@@ -57,8 +57,8 @@ namespace PictionaryMusicalCliente
 
             // Evita que cambiar IsChecked dispare Click/Checked en cascada
             _syncingToolUI = true;
-            if (tbtnLapiz != null) tbtnLapiz.IsChecked = isPencil;
-            if (tbtnBorrador != null) tbtnBorrador.IsChecked = !isPencil;
+            if (toggleBotonLapiz != null) toggleBotonLapiz.IsChecked = isPencil;
+            if (toggleBotonBorrador != null) toggleBotonBorrador.IsChecked = !isPencil;
             _syncingToolUI = false;
 
             ink.EditingMode = isPencil
@@ -70,13 +70,13 @@ namespace PictionaryMusicalCliente
         }
 
         // Handlers de los ToggleButton basados en Click
-        private void tbtnLapiz_Click(object sender, RoutedEventArgs e)
+        private void ToggleBotonLapiz_Click(object sender, RoutedEventArgs e)
         {
             if (_syncingToolUI) return;   // click provocado por SetTool
             SetTool(true);
         }
 
-        private void tbtnBorrador_Click(object sender, RoutedEventArgs e)
+        private void ToggleBotonBorrador_Click(object sender, RoutedEventArgs e)
         {
             if (_syncingToolUI) return;   // click provocado por SetTool
             SetTool(false);
@@ -124,7 +124,7 @@ namespace PictionaryMusicalCliente
             }
         }
 
-        private void btnBorrar_Click(object sender, RoutedEventArgs e)
+        private void BotonBorrar_Click(object sender, RoutedEventArgs e)
         {
             ink?.Strokes.Clear();
         }

@@ -2,7 +2,6 @@ using System;
 using System.Windows;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Servicios.Wcf;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 
 namespace PictionaryMusicalCliente
@@ -19,8 +18,8 @@ namespace PictionaryMusicalCliente
         {
         }
 
-        public Solicitudes(IAmigosServicio amigosService)
-            : this(new SolicitudesVistaModelo(amigosService))
+        public Solicitudes(IAmigosServicio amigosServicio)
+            : this(new SolicitudesVistaModelo(amigosServicio))
         {
         }
 

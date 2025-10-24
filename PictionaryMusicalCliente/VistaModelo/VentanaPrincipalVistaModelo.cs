@@ -14,8 +14,8 @@ using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Idiomas;
 using PictionaryMusicalCliente.Servicios.Wcf;
-using DTOs = global::Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
+using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -35,9 +35,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private DTOs.AmigoDTO _amigoSeleccionado;
 
         private readonly string _nombreUsuarioSesion;
-        private readonly ILocalizacionServicio _localizacionService;
-        private readonly IListaAmigosServicio _listaAmigosService;
-        private readonly IAmigosServicio _amigosService;
+        private readonly ILocalizacionServicio _localizacionServicio;
+        private readonly IListaAmigosServicio _listaAmigosServicio;
+        private readonly IAmigosServicio _amigosServicio;
 
         private bool _suscripcionActiva;
 
@@ -47,15 +47,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         }
 
         public VentanaPrincipalVistaModelo(
-            ILocalizacionServicio localizacionService,
-            IListaAmigosServicio listaAmigosService,
-            IAmigosServicio amigosService)
+            ILocalizacionServicio localizacionServicio,
+            IListaAmigosServicio listaAmigosServicio,
+            IAmigosServicio amigosServicio)
         {
-            _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
-            _listaAmigosService = listaAmigosService ?? throw new ArgumentNullException(nameof(listaAmigosService));
-            _amigosService = amigosService ?? throw new ArgumentNullException(nameof(amigosService));
+            _localizacionServicio = localizacionServicio ?? throw new ArgumentNullException(nameof(localizacionServicio));
+            _listaAmigosServicio = listaAmigosServicio ?? throw new ArgumentNullException(nameof(listaAmigosServicio));
+            _amigosServicio = amigosServicio ?? throw new ArgumentNullException(nameof(amigosServicio));
 
-            _listaAmigosService.ListaActualizada += ListaAmigosService_ListaActualizada;
+            _listaAmigosServicio.ListaActualizada += ListaActualizada;
 
             _nombreUsuarioSesion = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
 
@@ -63,20 +63,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             CargarOpcionesPartida();
             CargarIdiomas();
 
-            AbrirPerfilCommand = new ComandoDelegado(_ => AbrirPerfil?.Invoke());
-            AbrirAjustesCommand = new ComandoDelegado(_ => AbrirAjustes?.Invoke());
-            AbrirComoJugarCommand = new ComandoDelegado(_ => AbrirComoJugar?.Invoke());
-            AbrirClasificacionCommand = new ComandoDelegado(_ => AbrirClasificacion?.Invoke());
-            AbrirBuscarAmigoCommand = new ComandoDelegado(_ => AbrirBuscarAmigo?.Invoke());
-            AbrirSolicitudesCommand = new ComandoDelegado(_ => AbrirSolicitudes?.Invoke());
-            EliminarAmigoCommand = new ComandoAsincrono(
+            AbrirPerfilComando = new ComandoDelegado(_ => AbrirPerfil?.Invoke());
+            AbrirAjustesComando = new ComandoDelegado(_ => AbrirAjustes?.Invoke());
+            AbrirComoJugarComando = new ComandoDelegado(_ => AbrirComoJugar?.Invoke());
+            AbrirClasificacionComando = new ComandoDelegado(_ => AbrirClasificacion?.Invoke());
+            AbrirBuscarAmigoComando = new ComandoDelegado(_ => AbrirBuscarAmigo?.Invoke());
+            AbrirSolicitudesComando = new ComandoDelegado(_ => AbrirSolicitudes?.Invoke());
+            EliminarAmigoComando = new ComandoAsincrono(
                 param => EjecutarEliminarAmigoAsync(param as DTOs.AmigoDTO),
                 param => param is DTOs.AmigoDTO
             );
 
-            AbrirInvitacionesCommand = new ComandoDelegado(_ => AbrirInvitaciones?.Invoke());
-            UnirseSalaCommand = new ComandoDelegado(_ => UnirseSalaInterno());
-            IniciarJuegoCommand = new ComandoDelegado(_ => IniciarJuegoInterno(), _ => PuedeIniciarJuego());
+            AbrirInvitacionesComando = new ComandoDelegado(_ => AbrirInvitaciones?.Invoke());
+            UnirseSalaComando = new ComandoDelegado(_ => UnirseSalaInterno());
+            IniciarJuegoComando = new ComandoDelegado(_ => IniciarJuegoInterno(), _ => PuedeIniciarJuego());
         }
 
         public string NombreUsuario
@@ -140,7 +140,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _idiomaSeleccionado, value) && value != null)
                 {
-                    _localizacionService.EstablecerIdioma(value.Codigo);
+                    _localizacionServicio.EstablecerIdioma(value.Codigo);
                     ActualizarEstadoIniciarJuego();
                 }
             }
@@ -179,16 +179,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        public ICommand AbrirPerfilCommand { get; }
-        public ICommand AbrirAjustesCommand { get; }
-        public ICommand AbrirComoJugarCommand { get; }
-        public ICommand AbrirClasificacionCommand { get; }
-        public ICommand AbrirBuscarAmigoCommand { get; }
-        public ICommand AbrirSolicitudesCommand { get; }
-        public IComandoAsincrono EliminarAmigoCommand { get; }
-        public ICommand AbrirInvitacionesCommand { get; }
-        public ICommand UnirseSalaCommand { get; }
-        public IComandoNotificable IniciarJuegoCommand { get; }
+        public ICommand AbrirPerfilComando { get; }
+        public ICommand AbrirAjustesComando { get; }
+        public ICommand AbrirComoJugarComando { get; }
+        public ICommand AbrirClasificacionComando { get; }
+        public ICommand AbrirBuscarAmigoComando { get; }
+        public ICommand AbrirSolicitudesComando { get; }
+        public IComandoAsincrono EliminarAmigoComando { get; }
+        public ICommand AbrirInvitacionesComando { get; }
+        public ICommand UnirseSalaComando { get; }
+        public IComandoNotificable IniciarJuegoComando { get; }
 
         public Action AbrirPerfil { get; set; }
         public Action AbrirAjustes { get; set; }
@@ -209,11 +209,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                await _listaAmigosService.SuscribirAsync(_nombreUsuarioSesion).ConfigureAwait(false);
-                await _amigosService.SuscribirAsync(_nombreUsuarioSesion).ConfigureAwait(false);
+                await _listaAmigosServicio.SuscribirAsync(_nombreUsuarioSesion).ConfigureAwait(false);
+                await _amigosServicio.SuscribirAsync(_nombreUsuarioSesion).ConfigureAwait(false);
                 _suscripcionActiva = true;
 
-                IReadOnlyList<DTOs.AmigoDTO> listaActual = _listaAmigosService.ListaActual;
+                IReadOnlyList<DTOs.AmigoDTO> listaActual = _listaAmigosServicio.ListaActual;
                 EjecutarEnDispatcher(() => ActualizarAmigos(listaActual));
 
             }
@@ -225,15 +225,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public async Task FinalizarAsync()
         {
-            _listaAmigosService.ListaActualizada -= ListaAmigosService_ListaActualizada;
+            _listaAmigosServicio.ListaActualizada -= ListaActualizada;
 
             if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
                 return;
 
             try
             {
-                await _listaAmigosService.CancelarSuscripcionAsync(_nombreUsuarioSesion).ConfigureAwait(false);
-                await _amigosService.CancelarSuscripcionAsync(_nombreUsuarioSesion).ConfigureAwait(false);
+                await _listaAmigosServicio.CancelarSuscripcionAsync(_nombreUsuarioSesion).ConfigureAwait(false);
+                await _amigosServicio.CancelarSuscripcionAsync(_nombreUsuarioSesion).ConfigureAwait(false);
             }
             catch (ExcepcionServicio)
             {
@@ -278,17 +278,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private void CargarIdiomas()
         {
             WeakEventManager<ILocalizacionServicio, EventArgs>.AddHandler(
-                _localizacionService,
+                _localizacionServicio,
                 nameof(ILocalizacionServicio.IdiomaActualizado),
-                LocalizacionServiceOnIdiomaActualizado);
+                LocalizacionServicioEnIdiomaActualizado);
 
-            ActualizarIdiomasDisponibles(_localizacionService.CulturaActual?.Name
+            ActualizarIdiomasDisponibles(_localizacionServicio.CulturaActual?.Name
                 ?? CultureInfo.CurrentUICulture?.Name);
         }
 
-        private void LocalizacionServiceOnIdiomaActualizado(object sender, EventArgs e)
+        private void LocalizacionServicioEnIdiomaActualizado(object sender, EventArgs e)
         {
-            ActualizarIdiomasDisponibles(_localizacionService.CulturaActual?.Name);
+            ActualizarIdiomasDisponibles(_localizacionServicio.CulturaActual?.Name);
         }
 
         private void ActualizarIdiomasDisponibles(string culturaActual)
@@ -324,7 +324,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 ?? IdiomasDisponibles.FirstOrDefault();
         }
 
-        private void ListaAmigosService_ListaActualizada(object sender, IReadOnlyList<DTOs.AmigoDTO> amigos)
+        private void ListaActualizada(object sender, IReadOnlyList<DTOs.AmigoDTO> amigos)
         {
             EjecutarEnDispatcher(() => ActualizarAmigos(amigos));
         }
@@ -378,7 +378,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                await _amigosService.EliminarAmigoAsync(_nombreUsuarioSesion, amigo.NombreUsuario).ConfigureAwait(true);
+                await _amigosServicio.EliminarAmigoAsync(_nombreUsuarioSesion, amigo.NombreUsuario).ConfigureAwait(true);
                 MostrarMensaje?.Invoke(Lang.amigosTextoAmigoEliminado);
             }
             catch (ExcepcionServicio ex)
@@ -434,7 +434,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void ActualizarEstadoIniciarJuego()
         {
-            IniciarJuegoCommand?.NotificarPuedeEjecutar();
+            IniciarJuegoComando?.NotificarPuedeEjecutar();
         }
 
         public class OpcionEntero

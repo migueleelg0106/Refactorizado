@@ -77,9 +77,9 @@
   <ItemGroup>
     <Compile Include="Contratos\IAmigosManejador.cs" />
     <Compile Include="Contratos\IAmigosManejadorCallback.cs" />
-    <Compile Include="Contratos\ICambiarContrasenaManejador.cs" />
-    <Compile Include="Contratos\ICatalogoAvatares.cs" />
-    <Compile Include="Contratos\ICerrarSesionManejador.cs" />
+    <Compile Include="Contratos\ICambioContrasenaManejador.cs" />
+    <Compile Include="Contratos\ICatalogoAvataresManejador.cs" />
+    <Compile Include="Contratos\ICerradoSesionManejador.cs" />
     <Compile Include="Contratos\IChatManejador.cs" />
     <Compile Include="Contratos\IClasificacionManejador.cs" />
     <Compile Include="Contratos\ICodigoVerificacionManejador.cs" />
@@ -97,16 +97,16 @@
     <Compile Include="Contratos\INotificacionManejador.cs" />
     <Compile Include="Contratos\IPerfilManejador.cs" />
     <Compile Include="Contratos\ISalasManejador.cs" />
-    <Compile Include="Contratos\ISalirSalaManager.cs" />
-    <Compile Include="Contratos\DTOs\ActualizarContrasenaDTO.cs" />
+    <Compile Include="Contratos\ISalidaSalaManager.cs" />
+    <Compile Include="Contratos\DTOs\ActualizacionContrasenaDTO.cs" />
     <Compile Include="Contratos\DTOs\ClasificacionUsuarioDTO.cs" />
-    <Compile Include="Contratos\DTOs\ConfirmarCodigoDTO.cs" />
+    <Compile Include="Contratos\DTOs\ConfirmacionCodigoDTO.cs" />
     <Compile Include="Contratos\DTOs\CredencialesInicioSesionDTO.cs" />
     <Compile Include="Contratos\DTOs\NuevaCuentaDTO.cs" />
-    <Compile Include="Contratos\DTOs\ReenviarCodigoDTO.cs" />
-    <Compile Include="Contratos\DTOs\ReenviarCodigoVerificacionDTO.cs" />
+    <Compile Include="Contratos\DTOs\ReenvioCodigoDTO.cs" />
+    <Compile Include="Contratos\DTOs\ReenvioCodigoVerificacionDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoInicioSesionDTO.cs" />
-    <Compile Include="Contratos\DTOs\ActualizarPerfilDTO.cs" />
+    <Compile Include="Contratos\DTOs\ActualizacionPerfilDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoOperacionDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoRegistroCuentaDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoSolicitudCodigoDTO.cs" />
@@ -117,7 +117,7 @@
     <Compile Include="Contratos\DTOs\UsuarioDTO.cs" />
     <Compile Include="Contratos\DTOs\AvatarDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Servicios\CatalogoAvatares.cs" />
+    <Compile Include="Servicios\CatalogoAvataresManejador.cs" />
     <Compile Include="Servicios\AmigosManejador.cs" />
     <Compile Include="Servicios\ListaAmigosManejador.cs" />
     <Compile Include="Servicios\ClasificacionManejador.cs" />
@@ -125,12 +125,12 @@
     <Compile Include="Servicios\CodigoVerificacionServicio.cs" />
     <Compile Include="Servicios\CuentaManejador.cs" />
     <Compile Include="Servicios\InicioSesionManejador.cs" />
-    <Compile Include="Servicios\CambiarContrasenaManejador.cs" />
+    <Compile Include="Servicios\CambioContrasenaManejador.cs" />
     <Compile Include="Servicios\PerfilManejador.cs" />
     <Compile Include="Servicios\Utilidades\CorreoCodigoVerificacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\ICodigoVerificacionNotificador.cs" />
-    <Compile Include="Servicios\Utilidades\CodigoVerificacionGenerator.cs" />
-    <Compile Include="Servicios\Utilidades\TokenGenerator.cs" />
+    <Compile Include="Servicios\Utilidades\CodigoVerificacionGenerador.cs" />
+    <Compile Include="Servicios\Utilidades\TokenGenerador.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />

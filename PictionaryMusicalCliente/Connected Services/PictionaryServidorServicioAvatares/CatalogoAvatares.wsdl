@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="CatalogoAvatares" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsp:Policy wsu:Id="NetTcpBinding_ICatalogoAvatares_policy">
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="CatalogoAvataresManejador" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="NetTcpBinding_ICatalogoAvataresManejador_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
@@ -36,22 +36,22 @@
       <xsd:import schemaLocation="http://localhost:8086/Pictionary/Avatares?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="ICatalogoAvatares_ObtenerAvataresDisponibles_InputMessage">
+  <wsdl:message name="ICatalogoAvataresManejador_ObtenerAvataresDisponibles_InputMessage">
     <wsdl:part name="parameters" element="tns:ObtenerAvataresDisponibles" />
   </wsdl:message>
-  <wsdl:message name="ICatalogoAvatares_ObtenerAvataresDisponibles_OutputMessage">
+  <wsdl:message name="ICatalogoAvataresManejador_ObtenerAvataresDisponibles_OutputMessage">
     <wsdl:part name="parameters" element="tns:ObtenerAvataresDisponiblesResponse" />
   </wsdl:message>
-  <wsdl:portType name="ICatalogoAvatares">
+  <wsdl:portType name="ICatalogoAvataresManejador">
     <wsdl:operation name="ObtenerAvataresDisponibles">
-      <wsdl:input wsaw:Action="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponibles" message="tns:ICatalogoAvatares_ObtenerAvataresDisponibles_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponiblesResponse" message="tns:ICatalogoAvatares_ObtenerAvataresDisponibles_OutputMessage" />
+      <wsdl:input wsaw:Action="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponibles" message="tns:ICatalogoAvataresManejador_ObtenerAvataresDisponibles_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponiblesResponse" message="tns:ICatalogoAvataresManejador_ObtenerAvataresDisponibles_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="BasicHttpBinding_ICatalogoAvatares" type="tns:ICatalogoAvatares">
+  <wsdl:binding name="BasicHttpBinding_ICatalogoAvataresManejador" type="tns:ICatalogoAvataresManejador">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="ObtenerAvataresDisponibles">
-      <soap:operation soapAction="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponibles" style="document" />
+      <soap:operation soapAction="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponibles" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -60,11 +60,11 @@
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-  <wsdl:binding name="NetTcpBinding_ICatalogoAvatares" type="tns:ICatalogoAvatares">
-    <wsp:PolicyReference URI="#NetTcpBinding_ICatalogoAvatares_policy" />
+  <wsdl:binding name="NetTcpBinding_ICatalogoAvataresManejador" type="tns:ICatalogoAvataresManejador">
+    <wsp:PolicyReference URI="#NetTcpBinding_ICatalogoAvataresManejador_policy" />
     <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
     <wsdl:operation name="ObtenerAvataresDisponibles">
-      <soap12:operation soapAction="http://tempuri.org/ICatalogoAvatares/ObtenerAvataresDisponibles" style="document" />
+      <soap12:operation soapAction="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponibles" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -73,11 +73,11 @@
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-  <wsdl:service name="CatalogoAvatares">
-    <wsdl:port name="BasicHttpBinding_ICatalogoAvatares" binding="tns:BasicHttpBinding_ICatalogoAvatares">
+  <wsdl:service name="CatalogoAvataresManejador">
+    <wsdl:port name="BasicHttpBinding_ICatalogoAvataresManejador" binding="tns:BasicHttpBinding_ICatalogoAvataresManejador">
       <soap:address location="http://localhost:8086/Pictionary/Avatares/Avatares" />
     </wsdl:port>
-    <wsdl:port name="NetTcpBinding_ICatalogoAvatares" binding="tns:NetTcpBinding_ICatalogoAvatares">
+    <wsdl:port name="NetTcpBinding_ICatalogoAvataresManejador" binding="tns:NetTcpBinding_ICatalogoAvataresManejador">
       <soap12:address location="net.tcp://localhost:8096/Pictionary/Avatares/Avatares" />
       <wsa10:EndpointReference>
         <wsa10:Address>net.tcp://localhost:8096/Pictionary/Avatares/Avatares</wsa10:Address>

@@ -23,11 +23,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
     public class PerfilVistaModelo : BaseVistaModelo
     {
         private const int LongitudMaximaRedSocial = 50;
-        private readonly IPerfilServicio _perfilService;
-        private readonly ISeleccionarAvatarServicio _seleccionarAvatarService;
-        private readonly ICambioContrasenaServicio _cambioContrasenaService;
-        private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogService;
-        private readonly IAvatarServicio _avatarService;
+        private readonly IPerfilServicio _perfilServicio;
+        private readonly ISeleccionarAvatarServicio _seleccionarAvatarServicio;
+        private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
+        private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogoServicio;
+        private readonly IAvatarServicio _avatarServicio;
 
         private readonly Dictionary<string, RedSocialItem> _redesPorNombre;
 
@@ -43,25 +43,25 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private bool _estaCambiandoContrasena;
 
         public PerfilVistaModelo(
-            IPerfilServicio perfilService,
-            ISeleccionarAvatarServicio seleccionarAvatarService,
-            ICambioContrasenaServicio cambioContrasenaService,
-            IRecuperacionCuentaServicio recuperacionCuentaDialogService,
-            IAvatarServicio avatarService)
+            IPerfilServicio perfilServicio,
+            ISeleccionarAvatarServicio seleccionarAvatarServicio,
+            ICambioContrasenaServicio cambioContrasenaServicio,
+            IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
+            IAvatarServicio avatarServicio)
         {
-            _perfilService = perfilService ?? throw new ArgumentNullException(nameof(perfilService));
-            _seleccionarAvatarService = seleccionarAvatarService ?? throw new ArgumentNullException(nameof(seleccionarAvatarService));
-            _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
-            _recuperacionCuentaDialogService = recuperacionCuentaDialogService ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogService));
-            _avatarService = avatarService ?? throw new ArgumentNullException(nameof(avatarService));
+            _perfilServicio = perfilServicio ?? throw new ArgumentNullException(nameof(perfilServicio));
+            _seleccionarAvatarServicio = seleccionarAvatarServicio ?? throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
+            _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
+            _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
+            _avatarServicio = avatarServicio ?? throw new ArgumentNullException(nameof(avatarServicio));
 
             RedesSociales = CrearRedesSociales();
             _redesPorNombre = RedesSociales.ToDictionary(r => r.Nombre, StringComparer.OrdinalIgnoreCase);
 
-            GuardarCambiosCommand = new ComandoAsincrono(_ => GuardarCambiosAsync(), _ => !EstaProcesando);
-            SeleccionarAvatarCommand = new ComandoAsincrono(_ => SeleccionarAvatarAsync(), _ => !EstaProcesando);
-            CambiarContrasenaCommand = new ComandoAsincrono(_ => CambiarContrasenaAsync(), _ => !EstaProcesando && !EstaCambiandoContrasena);
-            CerrarCommand = new ComandoDelegado(_ => CerrarAccion?.Invoke());
+            GuardarCambiosComando = new ComandoAsincrono(_ => GuardarCambiosAsync(), _ => !EstaProcesando);
+            SeleccionarAvatarComando = new ComandoAsincrono(_ => SeleccionarAvatarAsync(), _ => !EstaProcesando);
+            CambiarContrasenaComando = new ComandoAsincrono(_ => CambiarContrasenaAsync(), _ => !EstaProcesando && !EstaCambiandoContrasena);
+            CerrarComando = new ComandoDelegado(_ => CerrarAccion?.Invoke());
         }
 
         public string Usuario
@@ -115,9 +115,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _estaProcesando, value))
                 {
-                    ((IComandoNotificable)GuardarCambiosCommand).NotificarPuedeEjecutar();
-                    ((IComandoNotificable)SeleccionarAvatarCommand).NotificarPuedeEjecutar();
-                    ((IComandoNotificable)CambiarContrasenaCommand).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)GuardarCambiosComando).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)SeleccionarAvatarComando).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)CambiarContrasenaComando).NotificarPuedeEjecutar();
                 }
             }
         }
@@ -129,18 +129,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _estaCambiandoContrasena, value))
                 {
-                    ((IComandoNotificable)CambiarContrasenaCommand).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)CambiarContrasenaComando).NotificarPuedeEjecutar();
                 }
             }
         }
 
-        public IComandoAsincrono GuardarCambiosCommand { get; }
+        public IComandoAsincrono GuardarCambiosComando { get; }
 
-        public IComandoAsincrono SeleccionarAvatarCommand { get; }
+        public IComandoAsincrono SeleccionarAvatarComando { get; }
 
-        public IComandoAsincrono CambiarContrasenaCommand { get; }
+        public IComandoAsincrono CambiarContrasenaComando { get; }
 
-        public ICommand CerrarCommand { get; }
+        public ICommand CerrarComando { get; }
 
         public Action CerrarAccion { get; set; }
 
@@ -163,7 +163,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 await CargarCatalogoAvataresAsync().ConfigureAwait(true);
 
-                DTOs.UsuarioDTO perfil = await _perfilService
+                DTOs.UsuarioDTO perfil = await _perfilServicio
                     .ObtenerPerfilAsync(sesion.IdUsuario).ConfigureAwait(true);
 
                 if (perfil == null)
@@ -186,7 +186,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private async Task SeleccionarAvatarAsync()
         {
-            ObjetoAvatar avatar = await _seleccionarAvatarService
+            ObjetoAvatar avatar = await _seleccionarAvatarServicio
                 .SeleccionarAvatarAsync(AvatarSeleccionadoRutaRelativa).ConfigureAwait(true);
 
             if (avatar == null)
@@ -265,7 +265,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            var solicitud = new DTOs.ActualizarPerfilDTO
+            var solicitud = new DTOs.ActualizacionPerfilDTO
             {
                 UsuarioId = _usuarioId,
                 Nombre = nombre,
@@ -281,7 +281,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await _perfilService
+                DTOs.ResultadoOperacionDTO resultado = await _perfilServicio
                     .ActualizarPerfilAsync(solicitud).ConfigureAwait(true);
 
                 if (resultado == null)
@@ -328,8 +328,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogService
-                    .RecuperarCuentaAsync(Correo, _cambioContrasenaService).ConfigureAwait(true);
+                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
+                    .RecuperarCuentaAsync(Correo, _cambioContrasenaServicio).ConfigureAwait(true);
 
                 if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
@@ -349,7 +349,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void AplicarPerfil(DTOs.UsuarioDTO perfil)
         {
-            _usuarioId = perfil.IdUsuario;
+            _usuarioId = perfil.UsuarioId;
             Usuario = perfil.NombreUsuario;
             Correo = perfil.Correo;
             Nombre = perfil.Nombre;
@@ -492,7 +492,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             var dto = new DTOs.UsuarioDTO
             {
-                IdUsuario = sesion.IdUsuario,
+                UsuarioId = sesion.IdUsuario,
                 JugadorId = sesion.JugadorId,
                 NombreUsuario = sesion.NombreUsuario,
                 Nombre = nombreActual,
@@ -523,7 +523,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             try
             {
-                IReadOnlyList<ObjetoAvatar> avatares = await _avatarService.ObtenerCatalogoAsync()
+                IReadOnlyList<ObjetoAvatar> avatares = await _avatarServicio.ObtenerCatalogoAsync()
                     .ConfigureAwait(true);
 
                 if (avatares != null && avatares.Count > 0)
