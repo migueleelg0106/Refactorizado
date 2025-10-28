@@ -11,7 +11,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 {
     public class CambioContrasenaServicio : ICambioContrasenaServicio
     {
-        private const string Endpoint = "BasicHttpBinding_ICambiarContrasenaManejador";
+        private const string Endpoint = "BasicHttpBinding_ICambioContrasenaManejador";
 
         public async Task<DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(string identificador)
         {
