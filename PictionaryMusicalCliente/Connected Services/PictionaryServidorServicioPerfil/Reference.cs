@@ -22,10 +22,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioPerfil {
         System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.UsuarioDTO> ObtenerPerfilAsync(int idUsuario);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPerfilManejador/ActualizarPerfil", ReplyAction="http://tempuri.org/IPerfilManejador/ActualizarPerfilResponse")]
-        global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarPerfil(global::Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud);
+        global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarPerfil(global::Servicios.Contratos.DTOs.ActualizacionPerfilDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPerfilManejador/ActualizarPerfil", ReplyAction="http://tempuri.org/IPerfilManejador/ActualizarPerfilResponse")]
-        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(global::Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud);
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(global::Servicios.Contratos.DTOs.ActualizacionPerfilDTO solicitud);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -63,11 +63,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioPerfil {
             return base.Channel.ObtenerPerfilAsync(idUsuario);
         }
         
-        public global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarPerfil(global::Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud) {
+        public global::Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarPerfil(global::Servicios.Contratos.DTOs.ActualizacionPerfilDTO solicitud) {
             return base.Channel.ActualizarPerfil(solicitud);
         }
         
-        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(global::Servicios.Contratos.DTOs.ActualizarPerfilDTO solicitud) {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(global::Servicios.Contratos.DTOs.ActualizacionPerfilDTO solicitud) {
             return base.Channel.ActualizarPerfilAsync(solicitud);
         }
     }

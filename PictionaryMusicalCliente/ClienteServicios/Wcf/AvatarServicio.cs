@@ -14,7 +14,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
     public class AvatarServicio : IAvatarServicio
     {
-        private const string CatalogoAvataresEndpoint = "BasicHttpBinding_ICatalogoAvatares";
+        private const string CatalogoAvataresEndpoint = "BasicHttpBinding_ICatalogoAvataresManejador";
 
         public async Task<IReadOnlyList<ObjetoAvatar>> ObtenerCatalogoAsync()
         {
@@ -52,13 +52,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             return null;
         }
 
-        private async Task<T> EjecutarCatalogoAsync<T>(Func<PictionaryServidorServicioAvatares.CatalogoAvataresClient, Task<T>> operacion)
+        private async Task<T> EjecutarCatalogoAsync<T>(Func<PictionaryServidorServicioAvatares.CatalogoAvataresManejadorClient, Task<T>> operacion)
         {
-            var cliente = new PictionaryServidorServicioAvatares.CatalogoAvataresClient(CatalogoAvataresEndpoint);
+            var cliente = new PictionaryServidorServicioAvatares.CatalogoAvataresManejadorClient(CatalogoAvataresEndpoint);
 
             try
             {
-                return await WcfClienteAyudante.UsarAsync(cliente, operacion).ConfigureAwait(false);
+                return await WcfClienteAyudante.UsarAsincrono(cliente, operacion).ConfigureAwait(false);
             }
             catch (FaultException ex)
             {

@@ -9,20 +9,20 @@ namespace PictionaryMusicalCliente.Utilidades.Idiomas
 {
     public class LocalizacionContexto : INotifyPropertyChanged
     {
-        private readonly ILocalizacionServicio _localizacionService;
+        private readonly ILocalizacionServicio _localizacionServicio;
 
         public LocalizacionContexto()
             : this(LocalizacionServicio.Instancia)
         {
         }
 
-        public LocalizacionContexto(ILocalizacionServicio localizacionService)
+        public LocalizacionContexto(ILocalizacionServicio localizacionServicio)
         {
-            _localizacionService = localizacionService ?? throw new ArgumentNullException(nameof(localizacionService));
+            _localizacionServicio = localizacionServicio ?? throw new ArgumentNullException(nameof(localizacionServicio));
             WeakEventManager<ILocalizacionServicio, EventArgs>.AddHandler(
-                _localizacionService,
+                _localizacionServicio,
                 nameof(ILocalizacionServicio.IdiomaActualizado),
-                LocalizacionServiceOnIdiomaActualizado);
+                LocalizacionServicioEnIdiomaActualizado);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -40,7 +40,7 @@ namespace PictionaryMusicalCliente.Utilidades.Idiomas
             }
         }
 
-        private void LocalizacionServiceOnIdiomaActualizado(object sender, EventArgs e)
+        private void LocalizacionServicioEnIdiomaActualizado(object sender, EventArgs e)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
         }

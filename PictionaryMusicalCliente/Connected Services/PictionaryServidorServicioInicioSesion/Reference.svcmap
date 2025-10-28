@@ -21,14 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/InicioSesion" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8086/Pictionary/InicioSesion/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="InicioSesion.disco" MetadataType="Disco" ID="cb788a12-5545-4fab-8270-96a1b785a42d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?disco" />
-    <MetadataFile FileName="InicioSesionManejador.wsdl" MetadataType="Wsdl" ID="39a57a93-8abc-478a-9b2d-6751110edd58" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?wsdl" />
-    <MetadataFile FileName="InicioSesion.xsd" MetadataType="Schema" ID="43949c43-87f8-4360-b011-09452613c233" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?xsd=xsd1" />
-    <MetadataFile FileName="InicioSesion1.xsd" MetadataType="Schema" ID="3bf0510b-43d5-4f67-ac47-80885162f3ea" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?xsd=xsd0" />
-    <MetadataFile FileName="InicioSesion2.xsd" MetadataType="Schema" ID="2420de9f-2b1e-41c1-aa92-da53287a5109" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion?xsd=xsd2" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="b98af7fe-a545-4565-afb9-2e91699ef1a4" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="9133ea20-e8f2-4e92-8dd4-2a7725589aa9" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="78d5acdb-0dac-4587-9139-a793ce0922ef" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="2c0feb4a-421b-4ed1-b7a3-e2c32103df8b" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

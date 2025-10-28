@@ -16,40 +16,40 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
     public class SolicitudesVistaModelo : BaseVistaModelo, IDisposable
     {
-        private readonly IAmigosServicio _amigosService;
+        private readonly IAmigosServicio _amigosServicio;
         private readonly string _usuarioActual;
         private bool _estaProcesando;
 
-        public SolicitudesVistaModelo(IAmigosServicio amigosService)
+        public SolicitudesVistaModelo(IAmigosServicio amigosServicio)
         {
-            _amigosService = amigosService ?? throw new ArgumentNullException(nameof(amigosService));
+            _amigosServicio = amigosServicio ?? throw new ArgumentNullException(nameof(amigosServicio));
             _usuarioActual = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
 
             Solicitudes = new ObservableCollection<SolicitudAmistadEntrada>();
 
-            AceptarSolicitudCommand = new ComandoAsincrono(param => ResponderSolicitudAsync(param as SolicitudAmistadEntrada),
+            AceptarSolicitudComando = new ComandoAsincrono(param => ResponderSolicitudAsync(param as SolicitudAmistadEntrada),
                 param => PuedeAceptar(param as SolicitudAmistadEntrada));
-            RechazarSolicitudCommand = new ComandoAsincrono(param => RechazarSolicitudAsync(param as SolicitudAmistadEntrada),
+            RechazarSolicitudComando = new ComandoAsincrono(param => RechazarSolicitudAsync(param as SolicitudAmistadEntrada),
                 param => PuedeRechazar(param as SolicitudAmistadEntrada));
-            CerrarCommand = new ComandoDelegado(_ => Cerrar?.Invoke());
+            CerrarComando = new ComandoDelegado(_ => Cerrar?.Invoke());
 
-            _amigosService.SolicitudesActualizadas += AmigosService_SolicitudesActualizadas;
-            ActualizarSolicitudes(_amigosService.SolicitudesPendientes);
+            _amigosServicio.SolicitudesActualizadas += SolicitudesActualizadas;
+            ActualizarSolicitudes(_amigosServicio.SolicitudesPendientes);
         }
 
         public ObservableCollection<SolicitudAmistadEntrada> Solicitudes { get; }
 
-        public IComandoAsincrono AceptarSolicitudCommand { get; }
+        public IComandoAsincrono AceptarSolicitudComando { get; }
 
-        public IComandoAsincrono RechazarSolicitudCommand { get; }
+        public IComandoAsincrono RechazarSolicitudComando { get; }
 
-        public ICommand CerrarCommand { get; }
+        public ICommand CerrarComando { get; }
 
         public Action Cerrar { get; set; }
 
         public void Dispose()
         {
-            _amigosService.SolicitudesActualizadas -= AmigosService_SolicitudesActualizadas;
+            _amigosServicio.SolicitudesActualizadas -= SolicitudesActualizadas;
         }
 
         private bool PuedeAceptar(SolicitudAmistadEntrada entrada)
@@ -72,13 +72,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             {
                 if (EstablecerPropiedad(ref _estaProcesando, value))
                 {
-                    AceptarSolicitudCommand?.NotificarPuedeEjecutar();
-                    RechazarSolicitudCommand?.NotificarPuedeEjecutar();
+                    AceptarSolicitudComando?.NotificarPuedeEjecutar();
+                    RechazarSolicitudComando?.NotificarPuedeEjecutar();
                 }
             }
         }
 
-        private void AmigosService_SolicitudesActualizadas(object sender, IReadOnlyCollection<DTOs.SolicitudAmistadDTO> solicitudes)
+        private void SolicitudesActualizadas(object sender, IReadOnlyCollection<DTOs.SolicitudAmistadDTO> solicitudes)
         {
             EjecutarEnDispatcher(() => ActualizarSolicitudes(solicitudes));
         }
@@ -137,7 +137,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                await _amigosService
+                await _amigosServicio
                     .ResponderSolicitudAsync(entrada.Solicitud.UsuarioEmisor, entrada.Solicitud.UsuarioReceptor)
                     .ConfigureAwait(true);
 
@@ -164,7 +164,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                await _amigosService
+                await _amigosServicio
                     .EliminarAmigoAsync(entrada.Solicitud.UsuarioEmisor, entrada.Solicitud.UsuarioReceptor)
                     .ConfigureAwait(true);
 

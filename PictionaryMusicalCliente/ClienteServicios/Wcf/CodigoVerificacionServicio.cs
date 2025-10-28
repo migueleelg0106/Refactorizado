@@ -24,7 +24,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             try
             {
                 return await WcfClienteAyudante
-                    .UsarAsync(cliente, c => c.SolicitarCodigoVerificacionAsync(solicitud))
+                    .UsarAsincrono(cliente, c => c.SolicitarCodigoVerificacionAsync(solicitud))
                     .ConfigureAwait(false);
             }
             catch (FaultException ex)
@@ -59,13 +59,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             try
             {
-                var dto = new DTOs.ReenviarCodigoVerificacionDTO
+                var reenvioCodigoVerificacionDto = new DTOs.ReenvioCodigoVerificacionDTO
                 {
                     TokenCodigo = tokenCodigo.Trim()
                 };
 
                 return await WcfClienteAyudante
-                    .UsarAsync(cliente, c => c.ReenviarCodigoVerificacionAsync(dto))
+                    .UsarAsincrono(cliente, c => c.ReenviarCodigoVerificacionAsync(reenvioCodigoVerificacionDto))
                     .ConfigureAwait(false);
             }
             catch (FaultException ex)
@@ -103,14 +103,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             try
             {
-                var dto = new DTOs.ConfirmarCodigoDTO
+                var confirmacionCodigoDto = new DTOs.ConfirmacionCodigoDTO
                 {
                     TokenCodigo = tokenCodigo,
                     CodigoIngresado = codigoIngresado
                 };
 
                 return await WcfClienteAyudante
-                    .UsarAsync(cliente, c => c.ConfirmarCodigoVerificacionAsync(dto))
+                    .UsarAsincrono(cliente, c => c.ConfirmarCodigoVerificacionAsync(confirmacionCodigoDto))
                     .ConfigureAwait(false);
             }
             catch (FaultException ex)

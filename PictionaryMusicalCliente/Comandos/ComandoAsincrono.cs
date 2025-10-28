@@ -10,17 +10,17 @@ namespace PictionaryMusicalCliente.Comandos
     /// </summary>
     public class ComandoAsincrono : IComandoAsincrono
     {
-        private readonly Func<object, Task> _ejecutarAsync;
+        private readonly Func<object, Task> _ejecutarAsincrono;
         private readonly Predicate<object> _puedeEjecutar;
         private bool _estaEjecutando;
 
         /// <summary>
         /// Inicializa una nueva instancia del comando asincrónico.
         /// </summary>
-        /// <param name="ejecutarAsync">Función que representa la ejecución del comando.</param>
+        /// <param name="ejecutarAsincrono">Función que representa la ejecución del comando.</param>
         /// <param name="puedeEjecutar">Función opcional para determinar si el comando puede ejecutarse.</param>
-        public ComandoAsincrono(Func<Task> ejecutarAsync, Func<bool> puedeEjecutar = null)
-            : this(ejecutarAsync != null ? new Func<object, Task>(_ => ejecutarAsync()) : null,
+        public ComandoAsincrono(Func<Task> ejecutarAsincrono, Func<bool> puedeEjecutar = null)
+            : this(ejecutarAsincrono != null ? new Func<object, Task>(_ => ejecutarAsincrono()) : null,
                   puedeEjecutar != null ? new Predicate<object>(_ => puedeEjecutar()) : null)
         {
         }
@@ -28,11 +28,11 @@ namespace PictionaryMusicalCliente.Comandos
         /// <summary>
         /// Inicializa una nueva instancia del comando asincrónico con acceso al parámetro.
         /// </summary>
-        /// <param name="ejecutarAsync">Función que representa la ejecución del comando.</param>
+        /// <param name="ejecutarAsincrono">Función que representa la ejecución del comando.</param>
         /// <param name="puedeEjecutar">Función opcional para determinar si el comando puede ejecutarse.</param>
-        public ComandoAsincrono(Func<object, Task> ejecutarAsync, Predicate<object> puedeEjecutar = null)
+        public ComandoAsincrono(Func<object, Task> ejecutarAsincrono, Predicate<object> puedeEjecutar = null)
         {
-            _ejecutarAsync = ejecutarAsync ?? throw new ArgumentNullException(nameof(ejecutarAsync));
+            _ejecutarAsincrono = ejecutarAsincrono ?? throw new ArgumentNullException(nameof(ejecutarAsincrono));
             _puedeEjecutar = puedeEjecutar;
         }
 
@@ -50,11 +50,11 @@ namespace PictionaryMusicalCliente.Comandos
         /// <inheritdoc />
         public async void Execute(object parameter)
         {
-            await EjecutarAsync(parameter);
+            await EjecutarAsincrono(parameter);
         }
 
         /// <inheritdoc />
-        public async Task EjecutarAsync(object parametro)
+        public async Task EjecutarAsincrono(object parametro)
         {
             if (!CanExecute(parametro))
             {
@@ -65,7 +65,7 @@ namespace PictionaryMusicalCliente.Comandos
             {
                 _estaEjecutando = true;
                 NotificarPuedeEjecutar();
-                await _ejecutarAsync(parametro).ConfigureAwait(true);
+                await _ejecutarAsincrono(parametro).ConfigureAwait(true);
             }
             finally
             {

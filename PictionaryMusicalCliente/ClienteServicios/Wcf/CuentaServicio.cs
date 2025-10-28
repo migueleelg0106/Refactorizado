@@ -2,7 +2,6 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using DTOs = global::Servicios.Contratos.DTOs;
@@ -22,9 +21,8 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
 
             try
             {
-                // Llamada directa con el mismo DTO del server
                 return await WcfClienteAyudante
-                    .UsarAsync(cliente, c => c.RegistrarCuentaAsync(solicitud))
+                    .UsarAsincrono(cliente, c => c.RegistrarCuentaAsync(solicitud))
                     .ConfigureAwait(false);
             }
             catch (FaultException ex)

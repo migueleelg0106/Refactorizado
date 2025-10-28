@@ -22,16 +22,16 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCuenta {
         System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoVerificacionAsync(global::Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacionResponse")]
-        global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(global::Servicios.Contratos.DTOs.ReenviarCodigoVerificacionDTO solicitud);
+        global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(global::Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacionResponse")]
-        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(global::Servicios.Contratos.DTOs.ReenviarCodigoVerificacionDTO solicitud);
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(global::Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacionResponse")]
-        global::Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(global::Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
+        global::Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(global::Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacionResponse")]
-        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(global::Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion);
+        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(global::Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/RegistrarCuenta", ReplyAction="http://tempuri.org/ICuentaManejador/RegistrarCuentaResponse")]
         global::Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO RegistrarCuenta(global::Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
@@ -75,19 +75,19 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCuenta {
             return base.Channel.SolicitarCodigoVerificacionAsync(nuevaCuenta);
         }
         
-        public global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(global::Servicios.Contratos.DTOs.ReenviarCodigoVerificacionDTO solicitud) {
+        public global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(global::Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud) {
             return base.Channel.ReenviarCodigoVerificacion(solicitud);
         }
         
-        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(global::Servicios.Contratos.DTOs.ReenviarCodigoVerificacionDTO solicitud) {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(global::Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud) {
             return base.Channel.ReenviarCodigoVerificacionAsync(solicitud);
         }
         
-        public global::Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(global::Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
+        public global::Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(global::Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoVerificacion(confirmacion);
         }
         
-        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(global::Servicios.Contratos.DTOs.ConfirmarCodigoDTO confirmacion) {
+        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(global::Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoVerificacionAsync(confirmacion);
         }
         

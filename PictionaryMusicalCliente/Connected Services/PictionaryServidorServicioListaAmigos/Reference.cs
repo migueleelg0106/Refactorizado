@@ -37,8 +37,8 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IListaAmigosManejadorCallback {
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IListaAmigosManejador/ListaAmigosActualizada")]
-        void ListaAmigosActualizada(global::Servicios.Contratos.DTOs.AmigoDTO[] amigos);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IListaAmigosManejador/NotificarListaAmigosActualizada")]
+        void NotificarListaAmigosActualizada(global::Servicios.Contratos.DTOs.AmigoDTO[] amigos);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]

@@ -20,27 +20,27 @@ namespace PictionaryMusicalCliente
             InitializeComponent();
 
 
-            IInicioSesionServicio inicioSesionService = new InicioSesionServicio();
-            ICambioContrasenaServicio cambioContrasenaService = new CambioContrasenaServicio();
-            IVerificarCodigoDialogoServicio verificarCodigoDialogService = new VerificarCodigoDialogoServicio();
-            IRecuperacionCuentaServicio recuperacionCuentaDialogService =
-                new RecuperacionCuentaDialogoServicio(verificarCodigoDialogService);
-            ILocalizacionServicio localizacionService = LocalizacionServicio.Instancia;
+            IInicioSesionServicio inicioSesionServicio = new InicioSesionServicio();
+            ICambioContrasenaServicio cambioContrasenaServicio = new CambioContrasenaServicio();
+            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio = new VerificacionCodigoDialogoServicio();
+            IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio =
+                new RecuperacionCuentaDialogoServicio(verificarCodigoDialogoServicio);
+            ILocalizacionServicio localizacionServicio = LocalizacionServicio.Instancia;
 
             var vistaModelo = new InicioSesionVistaModelo(
-                inicioSesionService,
-                cambioContrasenaService,
-                recuperacionCuentaDialogService,
-                localizacionService)
+                inicioSesionServicio,
+                cambioContrasenaServicio,
+                recuperacionCuentaDialogoServicio,
+                localizacionServicio)
             {
                 AbrirCrearCuenta = () =>
                 {
-                    var ventana = new CrearCuenta();
+                    var ventana = new CreacionCuenta();
                     ventana.ShowDialog();
                 },
                 IniciarSesionInvitado = () =>
                 {
-                    var ventana = new UnirsePartidaInvitado();
+                    var ventana = new IngresoPartidaInvitado();
                     ventana.ShowDialog();
                 },
                 CerrarAccion = Close
@@ -66,7 +66,7 @@ namespace PictionaryMusicalCliente
 
         private void MarcarCamposInvalidos(IList<string> camposInvalidos)
         {
-            ControlVisual.RestablecerEstadoCampo(bloqueTextoUsuario);
+            ControlVisual.RestablecerEstadoCampo(campoTextoUsuario);
             ControlVisual.RestablecerEstadoCampo(bloqueContrasenaContrasena);
 
             if (camposInvalidos == null)
@@ -79,7 +79,7 @@ namespace PictionaryMusicalCliente
                 switch (campo)
                 {
                     case nameof(InicioSesionVistaModelo.Identificador):
-                        ControlVisual.MarcarCampoInvalido(bloqueTextoUsuario);
+                        ControlVisual.MarcarCampoInvalido(campoTextoUsuario);
                         break;
                     case InicioSesionVistaModelo.CampoContrasena:
                         ControlVisual.MarcarCampoInvalido(bloqueContrasenaContrasena);

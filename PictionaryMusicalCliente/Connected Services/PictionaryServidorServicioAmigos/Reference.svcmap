@@ -21,14 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/Amigos" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8086/Pictionary/Amigos/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="AmigosManejador.wsdl" MetadataType="Wsdl" ID="2453ddf1-9399-4392-b738-87177ac575e2" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?wsdl" />
-    <MetadataFile FileName="Amigos.xsd" MetadataType="Schema" ID="25458336-67ee-4a70-9799-c0ae793c6233" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd0" />
-    <MetadataFile FileName="Amigos.disco" MetadataType="Disco" ID="8028dacc-57f6-41dc-8e41-2df5a80ac2e4" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?disco" />
-    <MetadataFile FileName="Amigos1.xsd" MetadataType="Schema" ID="3bd0effc-8d56-4ae3-9575-1327a1812e29" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd2" />
-    <MetadataFile FileName="Amigos2.xsd" MetadataType="Schema" ID="f809793b-c8ff-40f5-9169-cd8038e1c04d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos?xsd=xsd1" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="1fe46315-2074-4a0f-bdb8-01a41e68c209" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="6dab0c1f-3b24-4610-a0b8-290c03dae864" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="b8ae3e3c-42ec-439b-ad4c-51fce78b6848" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="5fce858a-2ee7-48bd-a43a-445e568bd107" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Amigos/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

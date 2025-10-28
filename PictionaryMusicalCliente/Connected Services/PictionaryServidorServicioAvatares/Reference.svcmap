@@ -21,14 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/Avatares" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8086/Pictionary/Avatares/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="CatalogoAvatares.wsdl" MetadataType="Wsdl" ID="b79b88c2-ec35-431e-b51f-087a34fa051e" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?wsdl" />
-    <MetadataFile FileName="Avatares.xsd" MetadataType="Schema" ID="90593d1e-c36a-4d18-ad67-df093a1ddb91" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?xsd=xsd0" />
-    <MetadataFile FileName="Avatares.disco" MetadataType="Disco" ID="df2703f5-37e9-4008-a71d-60ba6bd721e9" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?disco" />
-    <MetadataFile FileName="Avatares1.xsd" MetadataType="Schema" ID="08369e26-948a-438e-8ec0-96fdb61f024f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?xsd=xsd1" />
-    <MetadataFile FileName="Avatares2.xsd" MetadataType="Schema" ID="b3bbd1ad-0f53-4b11-8b60-146a9bc7bf99" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares?xsd=xsd2" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="93079666-770e-4e3a-8a82-479350c9970f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="33d5fce1-fe1c-4a1d-bec4-9b3f4dfab5ab" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="265ab109-f22c-4bec-83e4-a10d15413a5a" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="66e3bc4a-fdba-4964-ad78-6a36d980b1d6" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8A49B294-44FD-44E0-8747-B38167D2420B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Servicios</RootNamespace>
+    <AssemblyName>Servicios</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BCrypt.Net-Next, Version=4.0.3.0, Culture=neutral, PublicKeyToken=1e11be04b6288443, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt.Net-Next.4.0.3\lib\net472\BCrypt.Net-Next.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Contratos\IAmigosManejador.cs" />
+    <Compile Include="Contratos\IAmigosManejadorCallback.cs" />
+    <Compile Include="Contratos\ICambioContrasenaManejador.cs" />
+    <Compile Include="Contratos\ICatalogoAvataresManejador.cs" />
+    <Compile Include="Contratos\ICerradoSesionManejador.cs" />
+    <Compile Include="Contratos\IChatManejador.cs" />
+    <Compile Include="Contratos\IClasificacionManejador.cs" />
+    <Compile Include="Contratos\ICodigoVerificacionManejador.cs" />
+    <Compile Include="Contratos\IConfiguracionManejador.cs" />
+    <Compile Include="Contratos\ICuentaManejador.cs" />
+    <Compile Include="Contratos\ICursoPartidaManejador.cs" />
+    <Compile Include="Contratos\IInicioPartidaManejador.cs" />
+    <Compile Include="Contratos\IInicioSesionInvitadoManejador.cs" />
+    <Compile Include="Contratos\IInicioSesionManejador.cs" />
+    <Compile Include="Contratos\IInvitacionesManejador.cs" />
+    <Compile Include="Contratos\IJugadoresManejador.cs" />
+    <Compile Include="Contratos\ILienzoManejador.cs" />
+    <Compile Include="Contratos\IListaAmigosManejador.cs" />
+    <Compile Include="Contratos\IListaAmigosManejadorCallback.cs" />
+    <Compile Include="Contratos\INotificacionManejador.cs" />
+    <Compile Include="Contratos\IPerfilManejador.cs" />
+    <Compile Include="Contratos\ISalasManejador.cs" />
+    <Compile Include="Contratos\ISalidaSalaManager.cs" />
+    <Compile Include="Contratos\DTOs\ActualizacionContrasenaDTO.cs" />
+    <Compile Include="Contratos\DTOs\ClasificacionUsuarioDTO.cs" />
+    <Compile Include="Contratos\DTOs\ConfirmacionCodigoDTO.cs" />
+    <Compile Include="Contratos\DTOs\CredencialesInicioSesionDTO.cs" />
+    <Compile Include="Contratos\DTOs\NuevaCuentaDTO.cs" />
+    <Compile Include="Contratos\DTOs\ReenvioCodigoDTO.cs" />
+    <Compile Include="Contratos\DTOs\ReenvioCodigoVerificacionDTO.cs" />
+    <Compile Include="Contratos\DTOs\ResultadoInicioSesionDTO.cs" />
+    <Compile Include="Contratos\DTOs\ActualizacionPerfilDTO.cs" />
+    <Compile Include="Contratos\DTOs\ResultadoOperacionDTO.cs" />
+    <Compile Include="Contratos\DTOs\ResultadoRegistroCuentaDTO.cs" />
+    <Compile Include="Contratos\DTOs\ResultadoSolicitudCodigoDTO.cs" />
+    <Compile Include="Contratos\DTOs\ResultadoSolicitudRecuperacionDTO.cs" />
+    <Compile Include="Contratos\DTOs\SolicitudRecuperarCuentaDTO.cs" />
+    <Compile Include="Contratos\DTOs\SolicitudAmistadDTO.cs" />
+    <Compile Include="Contratos\DTOs\AmigoDTO.cs" />
+    <Compile Include="Contratos\DTOs\UsuarioDTO.cs" />
+    <Compile Include="Contratos\DTOs\AvatarDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Servicios\CatalogoAvataresManejador.cs" />
+    <Compile Include="Servicios\AmigosManejador.cs" />
+    <Compile Include="Servicios\ListaAmigosManejador.cs" />
+    <Compile Include="Servicios\ClasificacionManejador.cs" />
+    <Compile Include="Servicios\CodigoVerificacionManejador.cs" />
+    <Compile Include="Servicios\CodigoVerificacionServicio.cs" />
+    <Compile Include="Servicios\CuentaManejador.cs" />
+    <Compile Include="Servicios\InicioSesionManejador.cs" />
+    <Compile Include="Servicios\CambioContrasenaManejador.cs" />
+    <Compile Include="Servicios\PerfilManejador.cs" />
+    <Compile Include="Servicios\Utilidades\CorreoCodigoVerificacionNotificador.cs" />
+    <Compile Include="Servicios\Utilidades\ICodigoVerificacionNotificador.cs" />
+    <Compile Include="Servicios\Utilidades\CodigoVerificacionGenerador.cs" />
+    <Compile Include="Servicios\Utilidades\TokenGenerador.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Datos\Datos.csproj">
+      <Project>{985ee861-0e91-4f61-9090-abf706083eeb}</Project>
+      <Name>Datos</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+</Project>

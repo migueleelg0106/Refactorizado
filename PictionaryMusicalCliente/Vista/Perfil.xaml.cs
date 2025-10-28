@@ -20,20 +20,20 @@ namespace PictionaryMusicalCliente
         {
             InitializeComponent();
 
-            IPerfilServicio perfilService = new PerfilServicio();
-            IAvatarServicio avatarService = new AvatarServicio();
-            ISeleccionarAvatarServicio seleccionarAvatarService = new SeleccionarAvatarDialogoServicio(avatarService);
-            ICambioContrasenaServicio cambioContrasenaService = new CambioContrasenaServicio();
-            IVerificarCodigoDialogoServicio verificarCodigoDialogService = new VerificarCodigoDialogoServicio();
-            IRecuperacionCuentaServicio recuperacionCuentaDialogService =
-                new RecuperacionCuentaDialogoServicio(verificarCodigoDialogService);
+            IPerfilServicio perfilServicio = new PerfilServicio();
+            IAvatarServicio avatarServicio = new AvatarServicio();
+            ISeleccionarAvatarServicio seleccionarAvatarServicio = new SeleccionAvatarDialogoServicio(avatarServicio);
+            ICambioContrasenaServicio cambioContrasenaServicio = new CambioContrasenaServicio();
+            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio = new VerificacionCodigoDialogoServicio();
+            IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio =
+                new RecuperacionCuentaDialogoServicio(verificarCodigoDialogoServicio);
 
             var vistaModelo = new PerfilVistaModelo(
-                perfilService,
-                seleccionarAvatarService,
-                cambioContrasenaService,
-                recuperacionCuentaDialogService,
-                avatarService)
+                perfilServicio,
+                seleccionarAvatarServicio,
+                cambioContrasenaServicio,
+                recuperacionCuentaDialogoServicio,
+                avatarServicio)
             {
                 CerrarAccion = Close
             };
@@ -74,8 +74,8 @@ namespace PictionaryMusicalCliente
 
         private void MarcarCamposInvalidos(IList<string> camposInvalidos)
         {
-            ControlVisual.RestablecerEstadoCampo(bloqueTextoNombre);
-            ControlVisual.RestablecerEstadoCampo(bloqueTextoApellido);
+            ControlVisual.RestablecerEstadoCampo(campoTextoNombre);
+            ControlVisual.RestablecerEstadoCampo(campoTextoApellido);
 
             if (camposInvalidos == null)
             {
@@ -84,12 +84,12 @@ namespace PictionaryMusicalCliente
 
             if (camposInvalidos.Contains(nameof(PerfilVistaModelo.Nombre)))
             {
-                ControlVisual.MarcarCampoInvalido(bloqueTextoNombre);
+                ControlVisual.MarcarCampoInvalido(campoTextoNombre);
             }
 
             if (camposInvalidos.Contains(nameof(PerfilVistaModelo.Apellido)))
             {
-                ControlVisual.MarcarCampoInvalido(bloqueTextoApellido);
+                ControlVisual.MarcarCampoInvalido(campoTextoApellido);
             }
         }
     }

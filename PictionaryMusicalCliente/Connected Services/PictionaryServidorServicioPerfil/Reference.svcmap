@@ -21,14 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/Perfil" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8086/Pictionary/Perfil/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Perfil.xsd" MetadataType="Schema" ID="27827356-82cd-4210-acf2-1e16cb42f142" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?xsd=xsd0" />
-    <MetadataFile FileName="Perfil.disco" MetadataType="Disco" ID="96093ae9-9e43-4ffd-b926-6a42ebac9565" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?disco" />
-    <MetadataFile FileName="PerfilManejador.wsdl" MetadataType="Wsdl" ID="6730e332-25c9-426c-bad5-d9402ea878ce" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?wsdl" />
-    <MetadataFile FileName="Perfil1.xsd" MetadataType="Schema" ID="3c2e0ef0-b8aa-45a7-b96e-2a925a8869aa" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?xsd=xsd1" />
-    <MetadataFile FileName="Perfil2.xsd" MetadataType="Schema" ID="0ab0b154-9889-4e91-8544-0ca67872d8e0" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil?xsd=xsd2" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="fea252ef-6c6c-4a45-b951-bc7231f20097" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="24155459-3678-484c-9c63-16a4929f4d8e" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="3ff0675f-53ec-4c3c-8a6e-3258d63914f6" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="4a8436f4-ec30-46ab-8421-ec6e73b6e62d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Perfil/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

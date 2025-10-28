@@ -18,7 +18,7 @@
                            FontFamily="Comic Sans MS" FontSize="18"
                            FontWeight="Bold" Margin="0,0,0,10"/>
 
-                <TextBlock x:Name="textoMensaje"
+                <TextBlock x:Name="bloqueTextoMensaje"
                            TextWrapping="Wrap" TextAlignment="Center"
                            FontFamily="Comic Sans MS" FontSize="14"
                            Margin="0,0,0,20"/>
@@ -28,7 +28,7 @@
                         FontFamily="Comic Sans MS" FontWeight="Bold"
                         Background="White" BorderBrush="Black"
                         HorizontalAlignment="Center" IsDefault="True"
-                        Click="botonAceptar"/>
+                        Click="BotonAceptar"/>
             </StackPanel>
         </Border>
     </Grid>

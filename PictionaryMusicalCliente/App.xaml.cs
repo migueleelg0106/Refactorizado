@@ -14,16 +14,16 @@ namespace PictionaryMusicalCliente
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            var localizacionService = LocalizacionServicio.Instancia;
+            var localizacionServicio = LocalizacionServicio.Instancia;
             string codigoIdioma = Settings.Default.idiomaCodigo;
 
             try
             {
-                localizacionService.EstablecerIdioma(codigoIdioma);
+                localizacionServicio.EstablecerIdioma(codigoIdioma);
             }
             catch (CultureNotFoundException)
             {
-                localizacionService.EstablecerCultura(CultureInfo.CurrentUICulture);
+                localizacionServicio.EstablecerCultura(CultureInfo.CurrentUICulture);
             }
 
             base.OnStartup(e);

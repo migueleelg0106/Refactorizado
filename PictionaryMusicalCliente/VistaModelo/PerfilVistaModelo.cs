@@ -2,32 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
+using System.Linq; 
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Modelo.Catalogos;
+using PictionaryMusicalCliente.Modelo; 
+using PictionaryMusicalCliente.Modelo.Catalogos; 
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios;
+using PictionaryMusicalCliente.Servicios; 
 using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Sesiones;
-using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using PictionaryMusicalCliente.Sesiones; 
+using PictionaryMusicalCliente.Utilidades; 
+using PictionaryMusicalCliente.Servicios.Wcf.Helpers; 
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using DTOs = global::Servicios.Contratos.DTOs;
+
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
     public class PerfilVistaModelo : BaseVistaModelo
     {
         private const int LongitudMaximaRedSocial = 50;
-        private readonly IPerfilServicio _perfilService;
-        private readonly ISeleccionarAvatarServicio _seleccionarAvatarService;
-        private readonly ICambioContrasenaServicio _cambioContrasenaService;
-        private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogService;
-        private readonly IAvatarServicio _avatarService;
+        private readonly IPerfilServicio _perfilServicio;
+        private readonly ISeleccionarAvatarServicio _seleccionarAvatarServicio;
+        private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
+        private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogoServicio;
+        private readonly IAvatarServicio _avatarServicio;
 
         private readonly Dictionary<string, RedSocialItem> _redesPorNombre;
 
@@ -42,72 +43,37 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private bool _estaProcesando;
         private bool _estaCambiandoContrasena;
 
+
         public PerfilVistaModelo(
-            IPerfilServicio perfilService,
-            ISeleccionarAvatarServicio seleccionarAvatarService,
-            ICambioContrasenaServicio cambioContrasenaService,
-            IRecuperacionCuentaServicio recuperacionCuentaDialogService,
-            IAvatarServicio avatarService)
+            IPerfilServicio perfilServicio,
+            ISeleccionarAvatarServicio seleccionarAvatarServicio,
+            ICambioContrasenaServicio cambioContrasenaServicio,
+            IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
+            IAvatarServicio avatarServicio)
         {
-            _perfilService = perfilService ?? throw new ArgumentNullException(nameof(perfilService));
-            _seleccionarAvatarService = seleccionarAvatarService ?? throw new ArgumentNullException(nameof(seleccionarAvatarService));
-            _cambioContrasenaService = cambioContrasenaService ?? throw new ArgumentNullException(nameof(cambioContrasenaService));
-            _recuperacionCuentaDialogService = recuperacionCuentaDialogService ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogService));
-            _avatarService = avatarService ?? throw new ArgumentNullException(nameof(avatarService));
+            _perfilServicio = perfilServicio ?? throw new ArgumentNullException(nameof(perfilServicio));
+            _seleccionarAvatarServicio = seleccionarAvatarServicio ?? throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
+            _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
+            _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
+            _avatarServicio = avatarServicio ?? throw new ArgumentNullException(nameof(avatarServicio));
 
             RedesSociales = CrearRedesSociales();
             _redesPorNombre = RedesSociales.ToDictionary(r => r.Nombre, StringComparer.OrdinalIgnoreCase);
 
-            GuardarCambiosCommand = new ComandoAsincrono(_ => GuardarCambiosAsync(), _ => !EstaProcesando);
-            SeleccionarAvatarCommand = new ComandoAsincrono(_ => SeleccionarAvatarAsync(), _ => !EstaProcesando);
-            CambiarContrasenaCommand = new ComandoAsincrono(_ => CambiarContrasenaAsync(), _ => !EstaProcesando && !EstaCambiandoContrasena);
-            CerrarCommand = new ComandoDelegado(_ => CerrarAccion?.Invoke());
+            GuardarCambiosComando = new ComandoAsincrono(_ => GuardarCambiosAsync(), _ => !EstaProcesando);
+            SeleccionarAvatarComando = new ComandoAsincrono(_ => SeleccionarAvatarAsync(), _ => !EstaProcesando);
+            CambiarContrasenaComando = new ComandoAsincrono(_ => CambiarContrasenaAsync(), _ => !EstaProcesando && !EstaCambiandoContrasena);
+            CerrarComando = new ComandoDelegado(_ => CerrarAccion?.Invoke());
         }
 
-        public string Usuario
-        {
-            get => _usuario;
-            private set => EstablecerPropiedad(ref _usuario, value);
-        }
-
-        public string Correo
-        {
-            get => _correo;
-            private set => EstablecerPropiedad(ref _correo, value);
-        }
-
-        public string Nombre
-        {
-            get => _nombre;
-            set => EstablecerPropiedad(ref _nombre, value);
-        }
-
-        public string Apellido
-        {
-            get => _apellido;
-            set => EstablecerPropiedad(ref _apellido, value);
-        }
-
-        public string AvatarSeleccionadoNombre
-        {
-            get => _avatarSeleccionadoNombre;
-            private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value);
-        }
-
-        public string AvatarSeleccionadoRutaRelativa
-        {
-            get => _avatarSeleccionadoRutaRelativa;
-            private set => EstablecerPropiedad(ref _avatarSeleccionadoRutaRelativa, value);
-        }
-
-        public ImageSource AvatarSeleccionadoImagen
-        {
-            get => _avatarSeleccionadoImagen;
-            private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value);
-        }
-
+        public string Usuario { get => _usuario; private set => EstablecerPropiedad(ref _usuario, value); }
+        public string Correo { get => _correo; private set => EstablecerPropiedad(ref _correo, value); }
+        public string Nombre { get => _nombre; set => EstablecerPropiedad(ref _nombre, value); }
+        public string Apellido { get => _apellido; set => EstablecerPropiedad(ref _apellido, value); }
+        public string AvatarSeleccionadoNombre { get => _avatarSeleccionadoNombre; private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value); }
+        public string AvatarSeleccionadoRutaRelativa { get => _avatarSeleccionadoRutaRelativa; private set => EstablecerPropiedad(ref _avatarSeleccionadoRutaRelativa, value); }
+        public ImageSource AvatarSeleccionadoImagen { get => _avatarSeleccionadoImagen; private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value); }
         public ObservableCollection<RedSocialItem> RedesSociales { get; }
-
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -115,13 +81,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _estaProcesando, value))
                 {
-                    ((IComandoNotificable)GuardarCambiosCommand).NotificarPuedeEjecutar();
-                    ((IComandoNotificable)SeleccionarAvatarCommand).NotificarPuedeEjecutar();
-                    ((IComandoNotificable)CambiarContrasenaCommand).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)GuardarCambiosComando).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)SeleccionarAvatarComando).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)CambiarContrasenaComando).NotificarPuedeEjecutar();
                 }
             }
         }
-
         public bool EstaCambiandoContrasena
         {
             get => _estaCambiandoContrasena;
@@ -129,22 +94,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _estaCambiandoContrasena, value))
                 {
-                    ((IComandoNotificable)CambiarContrasenaCommand).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)CambiarContrasenaComando).NotificarPuedeEjecutar();
                 }
             }
         }
-
-        public IComandoAsincrono GuardarCambiosCommand { get; }
-
-        public IComandoAsincrono SeleccionarAvatarCommand { get; }
-
-        public IComandoAsincrono CambiarContrasenaCommand { get; }
-
-        public ICommand CerrarCommand { get; }
-
+        public IComandoAsincrono GuardarCambiosComando { get; }
+        public IComandoAsincrono SeleccionarAvatarComando { get; }
+        public IComandoAsincrono CambiarContrasenaComando { get; }
+        public ICommand CerrarComando { get; }
         public Action CerrarAccion { get; set; }
-
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
+
 
         public async Task CargarPerfilAsync()
         {
@@ -163,7 +123,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 await CargarCatalogoAvataresAsync().ConfigureAwait(true);
 
-                DTOs.UsuarioDTO perfil = await _perfilService
+                DTOs.UsuarioDTO perfil = await _perfilServicio
                     .ObtenerPerfilAsync(sesion.IdUsuario).ConfigureAwait(true);
 
                 if (perfil == null)
@@ -186,90 +146,43 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private async Task SeleccionarAvatarAsync()
         {
-            ObjetoAvatar avatar = await _seleccionarAvatarService
+            ObjetoAvatar avatar = await _seleccionarAvatarServicio
                 .SeleccionarAvatarAsync(AvatarSeleccionadoRutaRelativa).ConfigureAwait(true);
 
-            if (avatar == null)
-            {
-                return;
-            }
+            if (avatar == null) return; 
 
             EstablecerAvatar(avatar);
         }
 
         private async Task GuardarCambiosAsync()
         {
-            string nombre = Nombre?.Trim();
-            string apellido = Apellido?.Trim();
-
             MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
             LimpiarErroresRedesSociales();
 
-            var camposInvalidos = new List<string>();
+            var (sonCamposValidos, errorCampos, camposInvalidos) = ValidarCamposPrincipales();
+            var (sonRedesValidas, errorRedes) = ValidarRedesSociales();
 
-            bool nombreVacio = string.IsNullOrWhiteSpace(nombre);
-            bool apellidoVacio = string.IsNullOrWhiteSpace(apellido);
-
-            if (nombreVacio || apellidoVacio)
+            if (!sonCamposValidos || !sonRedesValidas)
             {
-                if (nombreVacio) camposInvalidos.Add(nameof(Nombre));
-                if (apellidoVacio) camposInvalidos.Add(nameof(Apellido));
+                var todosInvalidos = camposInvalidos ?? Enumerable.Empty<string>();
+                if (!sonRedesValidas) todosInvalidos = todosInvalidos.Concat(new[] { "RedesSociales" });
 
-                MostrarCamposInvalidos?.Invoke(camposInvalidos);
-                AvisoAyudante.Mostrar(Lang.errorTextoCamposInvalidosGenerico);
-                return;
-            }
+                MostrarCamposInvalidos?.Invoke(todosInvalidos.ToList());
 
-            string mensajeError = null;
-
-            DTOs.ResultadoOperacionDTO validacionNombre = ValidacionEntrada.ValidarNombre(nombre);
-            if (validacionNombre?.OperacionExitosa != true)
-            {
-                camposInvalidos.Add(nameof(Nombre));
-                if (mensajeError == null)
-                    mensajeError = validacionNombre?.Mensaje;
-            }
-
-            DTOs.ResultadoOperacionDTO validacionApellido = ValidacionEntrada.ValidarApellido(apellido);
-            if (validacionApellido?.OperacionExitosa != true)
-            {
-                camposInvalidos.Add(nameof(Apellido));
-                if (mensajeError == null)
-                    mensajeError = validacionApellido?.Mensaje;
-            }
-
-            if (string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa))
-            {
-                camposInvalidos.Add(nameof(AvatarSeleccionadoRutaRelativa));
-                if (mensajeError == null)
-                    mensajeError = Lang.errorTextoSeleccionAvatarValido;
-            }
-
-            DTOs.ResultadoOperacionDTO validacionRedes = ValidarRedesSociales();
-            if (validacionRedes?.OperacionExitosa != true)
-            {
-                camposInvalidos.Add("RedesSociales");
-                if (mensajeError == null)
-                    mensajeError = validacionRedes?.Mensaje;
-            }
-
-            if (camposInvalidos.Count > 0)
-            {
-                if (camposInvalidos.Count > 1)
+                string mensajeMostrar = Lang.errorTextoCamposInvalidosGenerico;
+                if (todosInvalidos.Count() == 1) 
                 {
-                    mensajeError = Lang.errorTextoCamposInvalidosGenerico;
+                    mensajeMostrar = errorCampos ?? errorRedes ?? mensajeMostrar;
                 }
-
-                MostrarCamposInvalidos?.Invoke(camposInvalidos);
-                AvisoAyudante.Mostrar(mensajeError ?? Lang.errorTextoCamposInvalidosGenerico);
+                AvisoAyudante.Mostrar(mensajeMostrar);
                 return;
             }
 
-            var solicitud = new DTOs.ActualizarPerfilDTO
+            var solicitud = new DTOs.ActualizacionPerfilDTO
             {
                 UsuarioId = _usuarioId,
-                Nombre = nombre,
-                Apellido = apellido,
+                Nombre = Nombre.Trim(), 
+                Apellido = Apellido.Trim(),
                 AvatarRutaRelativa = AvatarSeleccionadoRutaRelativa,
                 Instagram = ObtenerIdentificador("Instagram"),
                 Facebook = ObtenerIdentificador("Facebook"),
@@ -281,7 +194,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await _perfilService
+                DTOs.ResultadoOperacionDTO resultado = await _perfilServicio
                     .ActualizarPerfilAsync(solicitud).ConfigureAwait(true);
 
                 if (resultado == null)
@@ -290,20 +203,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     return;
                 }
 
-                if (!resultado.OperacionExitosa)
-                {
-                    mensajeError = MensajeServidorAyudante.Localizar(
-                        resultado.Mensaje,
-                        Lang.errorTextoActualizarPerfil);
-                    AvisoAyudante.Mostrar(mensajeError);
-                    return;
-                }
-
-                ActualizarSesion();
-                string mensajeExito = MensajeServidorAyudante.Localizar(
+                string mensajeResultado = MensajeServidorAyudante.Localizar(
                     resultado.Mensaje,
-                    Lang.avisoTextoPerfilActualizado);
-                AvisoAyudante.Mostrar(mensajeExito);
+                    resultado.OperacionExitosa ? Lang.avisoTextoPerfilActualizado : Lang.errorTextoActualizarPerfil);
+
+                AvisoAyudante.Mostrar(mensajeResultado);
+
+                if (resultado.OperacionExitosa)
+                {
+                    ActualizarSesion(); 
+                }
             }
             catch (ExcepcionServicio ex)
             {
@@ -313,6 +222,66 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 EstaProcesando = false;
             }
+        }
+
+        private (bool EsValido, string MensajeError, List<string> CamposInvalidos) ValidarCamposPrincipales()
+        {
+            var camposInvalidos = new List<string>();
+            string primerError = null;
+
+            // Use the helper method
+            ValidarCampo(ValidacionEntrada.ValidarNombre(Nombre?.Trim()), nameof(Nombre), camposInvalidos, ref primerError);
+            ValidarCampo(ValidacionEntrada.ValidarApellido(Apellido?.Trim()), nameof(Apellido), camposInvalidos, ref primerError);
+
+            if (string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa))
+            {
+                camposInvalidos.Add(nameof(AvatarSeleccionadoRutaRelativa)); 
+                primerError ??= Lang.errorTextoSeleccionAvatarValido;
+            }
+
+            return (camposInvalidos.Count == 0, primerError, camposInvalidos);
+        }
+
+        private void ValidarCampo(DTOs.ResultadoOperacionDTO resultado, string nombreCampo, List<string> invalidos, ref string primerError)
+        {
+            if (resultado?.OperacionExitosa != true)
+            {
+                invalidos.Add(nombreCampo);
+                primerError ??= resultado?.Mensaje;
+            }
+        }
+
+        private (bool EsValido, string MensajeError) ValidarRedesSociales()
+        {
+            string primerMensaje = null;
+            bool algunaInvalida = false;
+
+            foreach (RedSocialItem item in RedesSociales)
+            {
+                string valor = item.Identificador;
+                if (string.IsNullOrWhiteSpace(valor))
+                {
+                    item.TieneError = false; 
+                    continue;
+                }
+
+                string normalizado = valor.Trim();
+                if (normalizado.Length > LongitudMaximaRedSocial)
+                {
+                    item.TieneError = true;
+                    algunaInvalida = true;
+                    primerMensaje ??= string.Format(
+                            CultureInfo.CurrentCulture,
+                            Lang.errorTextoIdentificadorRedSocialLongitud,
+                            item.Nombre,
+                            LongitudMaximaRedSocial);
+                }
+                else
+                {
+                    item.TieneError = false; 
+                }
+            }
+            return (!algunaInvalida, primerMensaje);
         }
 
         private async Task CambiarContrasenaAsync()
@@ -328,8 +297,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogService
-                    .RecuperarCuentaAsync(Correo, _cambioContrasenaService).ConfigureAwait(true);
+                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
+                    .RecuperarCuentaAsync(Correo, _cambioContrasenaServicio).ConfigureAwait(true);
 
                 if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
@@ -342,14 +311,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
             finally
             {
-                EstaCambiandoContrasena = false;
+                EstaCambiandoContrasena = false; 
                 EstaProcesando = false;
             }
         }
 
         private void AplicarPerfil(DTOs.UsuarioDTO perfil)
         {
-            _usuarioId = perfil.IdUsuario;
+            _usuarioId = perfil.UsuarioId;
             Usuario = perfil.NombreUsuario;
             Correo = perfil.Correo;
             Nombre = perfil.Nombre;
@@ -376,14 +345,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 EstablecerAvatar(avatar);
             }
         }
-
         private void EstablecerAvatar(ObjetoAvatar avatar)
         {
-            if (avatar == null)
-            {
-                return;
-            }
-
+            if (avatar == null) return;
             AvatarSeleccionadoNombre = avatar.Nombre;
             AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
             AvatarSeleccionadoImagen = AvatarAyudante.ObtenerImagen(avatar);
@@ -394,9 +358,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             if (_redesPorNombre.TryGetValue(redSocial, out RedSocialItem item))
             {
                 item.Identificador = valor;
+                item.TieneError = false; 
             }
         }
-
         private string ObtenerIdentificador(string redSocial)
         {
             if (_redesPorNombre.TryGetValue(redSocial, out RedSocialItem item))
@@ -404,46 +368,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 string valor = item.Identificador?.Trim();
                 return string.IsNullOrWhiteSpace(valor) ? null : valor;
             }
-
             return null;
         }
 
-        private DTOs.ResultadoOperacionDTO ValidarRedesSociales()
-        {
-            bool algunaInvalida = false;
-            string mensaje = null;
-
-            foreach (RedSocialItem item in RedesSociales)
-            {
-                string valor = item.Identificador;
-                if (string.IsNullOrWhiteSpace(valor))
-                {
-                    continue;
-                }
-
-                string normalizado = valor.Trim();
-                if (normalizado.Length > LongitudMaximaRedSocial)
-                {
-                    item.TieneError = true;
-                    algunaInvalida = true;
-
-                    if (mensaje == null)
-                    {
-                        mensaje = string.Format(
-                            CultureInfo.CurrentCulture,
-                            Lang.errorTextoIdentificadorRedSocialLongitud,
-                            item.Nombre,
-                            LongitudMaximaRedSocial);
-                    }
-                }
-            }
-
-            return new DTOs.ResultadoOperacionDTO
-            {
-                OperacionExitosa = !algunaInvalida,
-                Mensaje = algunaInvalida ? mensaje ?? Lang.errorTextoIdentificadorRedSocialLongitud : null
-            };
-        }
 
         private void LimpiarErroresRedesSociales()
         {
@@ -463,7 +390,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 CrearRedSocial("Discord")
             };
         }
-
         private static RedSocialItem CrearRedSocial(string nombre)
         {
             ImageSource icono = CatalogoImagenesPerfilLocales.ObtenerIconoRedSocial(nombre);
@@ -473,62 +399,51 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private void ActualizarSesion()
         {
             UsuarioAutenticado sesion = SesionUsuarioActual.Instancia.Usuario;
-            if (sesion == null || sesion.IdUsuario <= 0)
-            {
-                return;
-            }
-
-            string rutaRelativa = string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa)
-                ? sesion.AvatarRutaRelativa
-                : AvatarSeleccionadoRutaRelativa;
-
-            ObjetoAvatar avatar = AvatarAyudante.ObtenerAvatarPorRuta(rutaRelativa);
-            string nombreActual = string.IsNullOrWhiteSpace(Nombre)
-                ? sesion.Nombre
-                : Nombre.Trim();
-            string apellidoActual = string.IsNullOrWhiteSpace(Apellido)
-                ? sesion.Apellido
-                : Apellido.Trim();
+            if (sesion == null || sesion.IdUsuario <= 0) return;
 
             var dto = new DTOs.UsuarioDTO
             {
-                IdUsuario = sesion.IdUsuario,
+                UsuarioId = _usuarioId,
                 JugadorId = sesion.JugadorId,
-                NombreUsuario = sesion.NombreUsuario,
-                Nombre = nombreActual,
-                Apellido = apellidoActual,
-                Correo = sesion.Correo,
-                AvatarId = avatar?.Id ?? sesion.AvatarId,
-                AvatarRutaRelativa = rutaRelativa,
+                NombreUsuario = Usuario,
+                Nombre = Nombre?.Trim(),
+                Apellido = Apellido?.Trim(),
+                Correo = Correo,
+                AvatarId = AvatarAyudante.ObtenerAvatarPorRuta(AvatarSeleccionadoRutaRelativa)?.Id ?? sesion.AvatarId,
+                AvatarRutaRelativa = AvatarSeleccionadoRutaRelativa,
                 Instagram = ObtenerIdentificador("Instagram"),
                 Facebook = ObtenerIdentificador("Facebook"),
                 X = ObtenerIdentificador("X"),
                 Discord = ObtenerIdentificador("Discord")
             };
-
             SesionUsuarioActual.Instancia.EstablecerUsuario(dto);
         }
-
         private void ActualizarSesion(DTOs.UsuarioDTO perfil)
         {
-            if (perfil == null)
-            {
-                return;
-            }
-
+            if (perfil == null) return;
             SesionUsuarioActual.Instancia.EstablecerUsuario(perfil);
         }
-
+        
         private async Task CargarCatalogoAvataresAsync()
         {
             try
             {
-                IReadOnlyList<ObjetoAvatar> avatares = await _avatarService.ObtenerCatalogoAsync()
-                    .ConfigureAwait(true);
-
+                IReadOnlyList<ObjetoAvatar> avatares = await _avatarServicio.ObtenerCatalogoAsync().ConfigureAwait(true);
                 if (avatares != null && avatares.Count > 0)
                 {
                     AvatarAyudante.ActualizarCatalogo(avatares);
+                    if (!string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa))
+                    {
+                        EstablecerAvatarDesdeRuta(AvatarSeleccionadoRutaRelativa, _usuarioId); 
+                        var currentAvatar = AvatarAyudante.ObtenerAvatarPorRuta(AvatarSeleccionadoRutaRelativa);
+                        EstablecerAvatar(currentAvatar ?? AvatarAyudante.ObtenerAvatarPredeterminado());
+
+                    }
+                    else
+                    {
+                        EstablecerAvatar(AvatarAyudante.ObtenerAvatarPredeterminado());
+                    }
+
                 }
             }
             catch (ExcepcionServicio ex)
@@ -549,20 +464,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
 
             public string Nombre { get; }
-
             public ImageSource RutaIcono { get; }
-
-            public string Identificador
-            {
-                get => _identificador;
-                set => EstablecerPropiedad(ref _identificador, value);
-            }
-
-            public bool TieneError
-            {
-                get => _tieneError;
-                set => EstablecerPropiedad(ref _tieneError, value);
-            }
+            public string Identificador { get => _identificador; set => EstablecerPropiedad(ref _identificador, value); }
+            public bool TieneError { get => _tieneError; set => EstablecerPropiedad(ref _tieneError, value); }
         }
+
     }
 }

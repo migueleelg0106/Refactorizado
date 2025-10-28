@@ -21,14 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/CambiarContrasena" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:8086/Pictionary/CambiarContrasena/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="CambiarContrasena.disco" MetadataType="Disco" ID="370b85a4-cdbb-4eca-b581-077b006d7a25" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?disco" />
-    <MetadataFile FileName="CambiarContrasena.xsd" MetadataType="Schema" ID="6fb4e74b-6fba-4b73-ba65-aa1d8e92488f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?xsd=xsd0" />
-    <MetadataFile FileName="CambiarContrasena1.xsd" MetadataType="Schema" ID="7d4a6ca7-680f-4e58-ba00-d4d0e298bd5e" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?xsd=xsd2" />
-    <MetadataFile FileName="CambiarContrasenaManejador.wsdl" MetadataType="Wsdl" ID="36dba903-6a28-43f5-b651-17d089e1579f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?wsdl" />
-    <MetadataFile FileName="CambiarContrasena2.xsd" MetadataType="Schema" ID="48b779d7-777b-4638-bce2-b96428befb7c" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena?xsd=xsd1" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="1a5aad18-6965-4cd3-9c05-539b22f48a6d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="500e7545-30b7-4bcb-bb8f-b5151c62f47f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="f4574d38-9107-45db-8a32-01acef67f883" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="8d597c63-d098-4c61-9f30-bb7c0d60bf93" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
