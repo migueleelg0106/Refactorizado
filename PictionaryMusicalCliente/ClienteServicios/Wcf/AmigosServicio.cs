@@ -1,5 +1,5 @@
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios;
+using PictionaryMusicalCliente.Servicios; 
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using System;
@@ -263,6 +263,24 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                    ex is OperationCanceledException;
         }
 
+        private async void ReiniciarClienteConSuscripcion()
+        {
+            string usuario = _usuarioSuscrito;
+            if (string.IsNullOrWhiteSpace(usuario)) return;
+
+            await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
+
+            try
+            {
+                await SuscribirAsync(usuario).ConfigureAwait(false);
+            }
+            catch
+            {
+                //Registrar en bitácora
+            }
+        }
+
+
         private PictionaryServidorServicioAmigos.AmigosManejadorClient CrearCliente()
         {
             var contexto = new InstanceContext(this);
@@ -282,6 +300,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 NotificarSolicitudesActualizadas();
                 return;
             }
+
 
             try
             {
@@ -360,6 +379,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             lock (_solicitudesBloqueo)
                 _solicitudes.Clear();
         }
+
 
         private void NotificarSolicitudesActualizadas()
         {
