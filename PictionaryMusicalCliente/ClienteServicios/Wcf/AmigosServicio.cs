@@ -263,24 +263,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                    ex is OperationCanceledException;
         }
 
-        private async void ReiniciarClienteConSuscripcion()
-        {
-            string usuario = _usuarioSuscrito;
-            if (string.IsNullOrWhiteSpace(usuario)) return;
-
-            await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
-
-            try
-            {
-                await SuscribirAsync(usuario).ConfigureAwait(false);
-            }
-            catch
-            {
-                //Registrar en bitácora
-            }
-        }
-
-
         private PictionaryServidorServicioAmigos.AmigosManejadorClient CrearCliente()
         {
             var contexto = new InstanceContext(this);

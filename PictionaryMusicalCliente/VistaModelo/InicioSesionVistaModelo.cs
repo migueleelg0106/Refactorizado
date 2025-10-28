@@ -170,7 +170,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            // Éxito
             if (resultado.Usuario != null)
             {
                 SesionUsuarioActual.Instancia.EstablecerUsuario(resultado.Usuario);

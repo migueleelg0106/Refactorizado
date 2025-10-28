@@ -54,7 +54,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             _ = CargarCatalogoAvataresAsync();
         }
 
-        // ... [Propiedades públicas sin cambios] ...
         public string Usuario { get => _usuario; set => EstablecerPropiedad(ref _usuario, value); }
         public string Nombre { get => _nombre; set => EstablecerPropiedad(ref _nombre, value); }
         public string Apellido { get => _apellido; set => EstablecerPropiedad(ref _apellido, value); }

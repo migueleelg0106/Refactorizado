@@ -229,7 +229,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             var camposInvalidos = new List<string>();
             string primerError = null;
 
-            // Use the helper method
             ValidarCampo(ValidacionEntrada.ValidarNombre(Nombre?.Trim()), nameof(Nombre), camposInvalidos, ref primerError);
             ValidarCampo(ValidacionEntrada.ValidarApellido(Apellido?.Trim()), nameof(Apellido), camposInvalidos, ref primerError);
 
