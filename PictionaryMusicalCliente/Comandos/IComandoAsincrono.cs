@@ -12,6 +12,6 @@ namespace PictionaryMusicalCliente.Comandos
         /// </summary>
         /// <param name="parametro">Parámetro que se pasa al comando.</param>
         /// <returns>Tarea que representa la ejecución del comando.</returns>
-        Task EjecutarAsincrono(object parametro);
+        Task EjecutarAsync(object parametro);
     }
 }

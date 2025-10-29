@@ -50,11 +50,11 @@ namespace PictionaryMusicalCliente.Comandos
         /// <inheritdoc />
         public async void Execute(object parameter)
         {
-            await EjecutarAsincrono(parameter);
+            await EjecutarAsync(parameter);
         }
 
         /// <inheritdoc />
-        public async Task EjecutarAsincrono(object parametro)
+        public async Task EjecutarAsync(object parametro)
         {
             if (!CanExecute(parametro))
             {
