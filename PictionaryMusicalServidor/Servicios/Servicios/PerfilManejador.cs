@@ -13,11 +13,12 @@ namespace Servicios.Servicios
 {
     public class PerfilManejador : IPerfilManejador
     {
-        private const int LongitudMaximaRedSocial = 50;
+        // CONSTANTE MOVIDA a PerfilValidador
         private static readonly ILog _logger = LogManager.GetLogger(typeof(PerfilManejador));
 
         public UsuarioDTO ObtenerPerfil(int idUsuario)
         {
+            // Este método ya estaba bien (CC baja, SRP correcto)
             if (idUsuario <= 0)
             {
                 throw new FaultException("Los datos proporcionados no son válidos para obtener el perfil.");
@@ -76,39 +77,14 @@ namespace Servicios.Servicios
 
         public ResultadoOperacionDTO ActualizarPerfil(ActualizacionPerfilDTO solicitud)
         {
-            if (solicitud == null)
+            // --- INICIO REFACTORIZACIÓN ---
+            // 1. Delegamos toda la validación de la solicitud a la nueva clase.
+            ResultadoOperacionDTO validacion = PerfilValidador.ValidarActualizacion(solicitud);
+            if (!validacion.OperacionExitosa)
             {
-                throw new FaultException("La solicitud de actualización es obligatoria.");
+                return validacion;
             }
-
-            if (solicitud.UsuarioId <= 0)
-            {
-                return CrearResultadoFallo("El identificador de usuario es inválido.");
-            }
-
-            string nombre = solicitud.Nombre?.Trim();
-            if (string.IsNullOrWhiteSpace(nombre) || nombre.Length > 50)
-            {
-                return CrearResultadoFallo("El nombre es obligatorio y no debe exceder 50 caracteres.");
-            }
-
-            string apellido = solicitud.Apellido?.Trim();
-            if (string.IsNullOrWhiteSpace(apellido) || apellido.Length > 50)
-            {
-                return CrearResultadoFallo("El apellido es obligatorio y no debe exceder 50 caracteres.");
-            }
-
-            string rutaAvatar = solicitud.AvatarRutaRelativa?.Trim();
-            if (string.IsNullOrWhiteSpace(rutaAvatar))
-            {
-                return CrearResultadoFallo("Selecciona un avatar válido.");
-            }
-
-            ResultadoOperacionDTO validacionRedes = ValidarRedesSociales(solicitud);
-            if (!validacionRedes.OperacionExitosa)
-            {
-                return validacionRedes;
-            }
+            // --- FIN REFACTORIZACIÓN ---
 
             try
             {
@@ -118,6 +94,8 @@ namespace Servicios.Servicios
                         .Include(u => u.Jugador.RedSocial)
                         .FirstOrDefault(u => u.idUsuario == solicitud.UsuarioId);
 
+                    // Estas validaciones son de LÓGICA DE NEGOCIO (existencia),
+                    // por lo que permanecen aquí.
                     if (usuario == null)
                     {
                         return CrearResultadoFallo("No se encontró el usuario especificado.");
@@ -131,14 +109,15 @@ namespace Servicios.Servicios
                     }
 
                     var avatarRepositorio = new AvatarRepositorio(contexto);
-                    Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(rutaAvatar);
+                    Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(solicitud.AvatarRutaRelativa);
                     if (avatar == null)
                     {
                         return CrearResultadoFallo("El avatar seleccionado no existe.");
                     }
 
-                    jugador.Nombre = nombre;
-                    jugador.Apellido = apellido;
+                    // Aplicamos los valores (ya validados)
+                    jugador.Nombre = solicitud.Nombre.Trim();
+                    jugador.Apellido = solicitud.Apellido.Trim();
                     jugador.Avatar_idAvatar = avatar.idAvatar;
 
                     RedSocial redSocial = jugador.RedSocial.FirstOrDefault();
@@ -152,6 +131,7 @@ namespace Servicios.Servicios
                         jugador.RedSocial.Add(redSocial);
                     }
 
+                    // Usamos el normalizador para limpiar los strings antes de guardar
                     redSocial.Instagram = NormalizarRedSocial(solicitud.Instagram);
                     redSocial.facebook = NormalizarRedSocial(solicitud.Facebook);
                     redSocial.x = NormalizarRedSocial(solicitud.X);
@@ -181,46 +161,15 @@ namespace Servicios.Servicios
                 : new BaseDatosPruebaEntities1(conexion);
         }
 
-        private static ResultadoOperacionDTO ValidarRedesSociales(ActualizacionPerfilDTO solicitud)
-        {
-            ResultadoOperacionDTO resultado = ValidarRedSocial("Instagram", solicitud.Instagram);
-            if (!resultado.OperacionExitosa)
-            {
-                return resultado;
-            }
+        // --- MÉTODOS DE VALIDACIÓN ELIMINADOS ---
+        // ValidarRedesSociales()
+        // ValidarRedSocial()
+        // ResultadoOperacionExitoso()
 
-            resultado = ValidarRedSocial("Facebook", solicitud.Facebook);
-            if (!resultado.OperacionExitosa)
-            {
-                return resultado;
-            }
-
-            resultado = ValidarRedSocial("X", solicitud.X);
-            if (!resultado.OperacionExitosa)
-            {
-                return resultado;
-            }
-
-            return ValidarRedSocial("Discord", solicitud.Discord);
-        }
-
-        private static ResultadoOperacionDTO ValidarRedSocial(string nombre, string valor)
-        {
-            if (string.IsNullOrWhiteSpace(valor))
-            {
-                return ResultadoOperacionExitoso();
-            }
-
-            string normalizado = valor.Trim();
-            if (normalizado.Length > LongitudMaximaRedSocial)
-            {
-                return CrearResultadoFallo(
-                    $"El identificador de {nombre} no debe exceder {LongitudMaximaRedSocial} caracteres.");
-            }
-
-            return ResultadoOperacionExitoso();
-        }
-
+        /// <summary>
+        /// Este método se queda, ya que es un normalizador de datos,
+        /// no un validador. Se usa para preparar los datos para la BD.
+        /// </summary>
         private static string NormalizarRedSocial(string valor)
         {
             if (string.IsNullOrWhiteSpace(valor))
@@ -232,20 +181,16 @@ namespace Servicios.Servicios
             return normalizado.Length == 0 ? null : normalizado;
         }
 
+        /// <summary>
+        /// Este método se queda, ya que lo usa tanto la lógica de negocio
+        /// como el bloque catch.
+        /// </summary>
         private static ResultadoOperacionDTO CrearResultadoFallo(string mensaje)
         {
             return new ResultadoOperacionDTO
             {
                 OperacionExitosa = false,
                 Mensaje = mensaje
-            };
-        }
-
-        private static ResultadoOperacionDTO ResultadoOperacionExitoso()
-        {
-            return new ResultadoOperacionDTO
-            {
-                OperacionExitosa = true
             };
         }
     }

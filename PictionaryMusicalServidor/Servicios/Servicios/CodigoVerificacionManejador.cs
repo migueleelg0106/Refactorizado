@@ -2,7 +2,9 @@ using Servicios.Contratos;
 using System;
 using log4net;
 using Servicios.Contratos.DTOs;
-using Servicios.Servicios.Utilidades;
+// Removimos "Servicios.Servicios.Utilidades"
+// Agregamos el using a los nuevos servicios
+using Servicios.Servicios;
 
 namespace Servicios.Servicios
 {
@@ -14,7 +16,8 @@ namespace Servicios.Servicios
         {
             try
             {
-                return CodigoVerificacionServicio.SolicitarCodigo(nuevaCuenta);
+                // DELEGA A: ServicioVerificacionRegistro
+                return ServicioVerificacionRegistro.SolicitarCodigo(nuevaCuenta);
             }
             catch (Exception ex)
             {
@@ -31,7 +34,8 @@ namespace Servicios.Servicios
         {
             try
             {
-                return CodigoVerificacionServicio.ReenviarCodigo(solicitud);
+                // DELEGA A: ServicioVerificacionRegistro
+                return ServicioVerificacionRegistro.ReenviarCodigo(solicitud);
             }
             catch (Exception ex)
             {
@@ -48,7 +52,8 @@ namespace Servicios.Servicios
         {
             try
             {
-                return CodigoVerificacionServicio.ConfirmarCodigo(confirmacion);
+                // DELEGA A: ServicioVerificacionRegistro
+                return ServicioVerificacionRegistro.ConfirmarCodigo(confirmacion);
             }
             catch (Exception ex)
             {
@@ -65,7 +70,8 @@ namespace Servicios.Servicios
         {
             try
             {
-                return CodigoVerificacionServicio.SolicitarCodigoRecuperacion(solicitud);
+                // DELEGA A: ServicioRecuperacionCuenta
+                return ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
             }
             catch (Exception ex)
             {
@@ -82,7 +88,8 @@ namespace Servicios.Servicios
         {
             try
             {
-                return CodigoVerificacionServicio.ConfirmarCodigoRecuperacion(confirmacion);
+                // DELEGA A: ServicioRecuperacionCuenta
+                return ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
             }
             catch (Exception ex)
             {

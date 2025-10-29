@@ -6,6 +6,9 @@ using Datos.DAL.Implementaciones;
 using Datos.Modelo;
 using Datos.Utilidades;
 using BCryptNet = BCrypt.Net.BCrypt;
+// Agregamos el using a los nuevos servicios
+using Servicios.Servicios;
+using System.Linq; // Necesario para la validación
 
 namespace Servicios.Servicios
 {
@@ -20,85 +23,64 @@ namespace Servicios.Servicios
                 throw new ArgumentNullException(nameof(nuevaCuenta));
             }
 
-            if (!CodigoVerificacionServicio.EstaVerificacionConfirmada(nuevaCuenta))
-            {
-                return new ResultadoRegistroCuentaDTO
-                {
-                    RegistroExitoso = false,
-                    Mensaje = "La cuenta no ha sido verificada."
-                };
-            }
-
             try
             {
                 using (var contexto = CrearContexto())
-                using (var transaccion = contexto.Database.BeginTransaction())
                 {
-                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                    var jugadorRepositorio = new JugadorRepositorio(contexto);
-                    var clasificacionRepositorio = new ClasificacionRepositorio(contexto);
-                    var avatarRepositorio = new AvatarRepositorio(contexto);
-
-                    bool usuarioRegistrado = usuarioRepositorio.ExisteNombreUsuario(nuevaCuenta.Usuario);
-                    bool correoRegistrado = jugadorRepositorio.ExisteCorreo(nuevaCuenta.Correo);
-
-                    if (usuarioRegistrado || correoRegistrado)
+                    // --- INICIO REFACTORIZACIÓN (Reducción de CC) ---
+                    // 1. Validaciones extraídas a un método privado
+                    ResultadoRegistroCuentaDTO validacion = ValidarPrecondicionesRegistro(contexto, nuevaCuenta);
+                    if (!validacion.RegistroExitoso)
                     {
+                        return validacion;
+                    }
+                    // --- FIN REFACTORIZACIÓN ---
+
+                    using (var transaccion = contexto.Database.BeginTransaction())
+                    {
+                        var avatarRepositorio = new AvatarRepositorio(contexto);
+                        Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(nuevaCuenta.AvatarRutaRelativa);
+                        // Esta validación se deja aquí porque requiere el repositorio dentro del contexto
+                        if (avatar == null)
+                        {
+                            return new ResultadoRegistroCuentaDTO
+                            {
+                                RegistroExitoso = false,
+                                Mensaje = "Avatar no válido."
+                            };
+                        }
+
+                        var clasificacionRepositorio = new ClasificacionRepositorio(contexto);
+                        var clasificacion = clasificacionRepositorio.CrearClasificacionInicial();
+
+                        var jugadorRepositorio = new JugadorRepositorio(contexto);
+                        var jugador = jugadorRepositorio.CrearJugador(new Jugador
+                        {
+                            Nombre = nuevaCuenta.Nombre,
+                            Apellido = nuevaCuenta.Apellido,
+                            Correo = nuevaCuenta.Correo,
+                            Avatar_idAvatar = avatar.idAvatar,
+                            Clasificacion_idClasificacion = clasificacion.idClasificacion
+                        });
+
+                        var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                        usuarioRepositorio.CrearUsuario(new Usuario
+                        {
+                            Nombre_Usuario = nuevaCuenta.Usuario,
+                            Contrasena = BCryptNet.HashPassword(nuevaCuenta.Contrasena),
+                            Jugador_idJugador = jugador.idJugador
+                        });
+
+                        transaccion.Commit();
+
+                        // Limpiamos la verificación SÓLO si todo fue exitoso
+                        ServicioVerificacionRegistro.LimpiarVerificacion(nuevaCuenta);
+
                         return new ResultadoRegistroCuentaDTO
                         {
-                            RegistroExitoso = false,
-                            UsuarioRegistrado = usuarioRegistrado,
-                            CorreoRegistrado = correoRegistrado,
-                            Mensaje = null
+                            RegistroExitoso = true
                         };
                     }
-
-                    if (string.IsNullOrWhiteSpace(nuevaCuenta.AvatarRutaRelativa))
-                    {
-                        return new ResultadoRegistroCuentaDTO
-                        {
-                            RegistroExitoso = false,
-                            Mensaje = "Avatar no válido."
-                        };
-                    }
-
-                    Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(nuevaCuenta.AvatarRutaRelativa);
-
-                    if (avatar == null)
-                    {
-                        return new ResultadoRegistroCuentaDTO
-                        {
-                            RegistroExitoso = false,
-                            Mensaje = "Avatar no válido."
-                        };
-                    }
-
-                    var clasificacion = clasificacionRepositorio.CrearClasificacionInicial();
-
-                    var jugador = jugadorRepositorio.CrearJugador(new Jugador
-                    {
-                        Nombre = nuevaCuenta.Nombre,
-                        Apellido = nuevaCuenta.Apellido,
-                        Correo = nuevaCuenta.Correo,
-                        Avatar_idAvatar = avatar.idAvatar,
-                        Clasificacion_idClasificacion = clasificacion.idClasificacion
-                    });
-
-                    usuarioRepositorio.CrearUsuario(new Usuario
-                    {
-                        Nombre_Usuario = nuevaCuenta.Usuario,
-                        Contrasena = BCryptNet.HashPassword(nuevaCuenta.Contrasena),
-                        Jugador_idJugador = jugador.idJugador
-                    });
-
-                    transaccion.Commit();
-
-                    CodigoVerificacionServicio.LimpiarVerificacion(nuevaCuenta);
-
-                    return new ResultadoRegistroCuentaDTO
-                    {
-                        RegistroExitoso = true
-                    };
                 }
             }
             catch (Exception ex)
@@ -112,6 +94,51 @@ namespace Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// NUEVO MÉTODO PRIVADO: Extrae validaciones para reducir CC en RegistrarCuenta.
+        /// </summary>
+        private ResultadoRegistroCuentaDTO ValidarPrecondicionesRegistro(BaseDatosPruebaEntities1 contexto, NuevaCuentaDTO nuevaCuenta)
+        {
+            // 1. Validar que el código fue confirmado
+            if (!ServicioVerificacionRegistro.EstaVerificacionConfirmada(nuevaCuenta))
+            {
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    Mensaje = "La cuenta no ha sido verificada."
+                };
+            }
+
+            // 2. Validar existencia de usuario y correo
+            // (Optimizamos esto para hacer una sola consulta si es posible, pero lo mantenemos como estaba)
+            bool usuarioRegistrado = contexto.Usuario.Any(u => u.Nombre_Usuario == nuevaCuenta.Usuario);
+            bool correoRegistrado = contexto.Jugador.Any(j => j.Correo == nuevaCuenta.Correo);
+
+            if (usuarioRegistrado || correoRegistrado)
+            {
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    UsuarioRegistrado = usuarioRegistrado,
+                    CorreoRegistrado = correoRegistrado,
+                    Mensaje = null
+                };
+            }
+
+            // 3. Validar Avatar (Validación básica, la existencia se valida después)
+            if (string.IsNullOrWhiteSpace(nuevaCuenta.AvatarRutaRelativa))
+            {
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    Mensaje = "Avatar no válido."
+                };
+            }
+
+            return new ResultadoRegistroCuentaDTO { RegistroExitoso = true }; // Pasa todas las validaciones
+        }
+
+
         private static BaseDatosPruebaEntities1 CrearContexto()
         {
             string conexion = Conexion.ObtenerConexion();
@@ -120,19 +147,22 @@ namespace Servicios.Servicios
                 : new BaseDatosPruebaEntities1(conexion);
         }
 
+        // DELEGA A: ServicioVerificacionRegistro
         public ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(NuevaCuentaDTO nuevaCuenta)
         {
-            return CodigoVerificacionServicio.SolicitarCodigo(nuevaCuenta);
+            return ServicioVerificacionRegistro.SolicitarCodigo(nuevaCuenta);
         }
 
+        // DELEGA A: ServicioVerificacionRegistro
         public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenvioCodigoVerificacionDTO solicitud)
         {
-            return CodigoVerificacionServicio.ReenviarCodigo(solicitud);
+            return ServicioVerificacionRegistro.ReenviarCodigo(solicitud);
         }
 
+        // DELEGA A: ServicioVerificacionRegistro
         public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmacionCodigoDTO confirmacion)
         {
-            return CodigoVerificacionServicio.ConfirmarCodigo(confirmacion);
+            return ServicioVerificacionRegistro.ConfirmarCodigo(confirmacion);
         }
     }
 }

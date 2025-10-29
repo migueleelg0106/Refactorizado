@@ -122,11 +122,15 @@
     <Compile Include="Servicios\ListaAmigosManejador.cs" />
     <Compile Include="Servicios\ClasificacionManejador.cs" />
     <Compile Include="Servicios\CodigoVerificacionManejador.cs" />
-    <Compile Include="Servicios\CodigoVerificacionServicio.cs" />
     <Compile Include="Servicios\CuentaManejador.cs" />
     <Compile Include="Servicios\InicioSesionManejador.cs" />
     <Compile Include="Servicios\CambioContrasenaManejador.cs" />
     <Compile Include="Servicios\PerfilManejador.cs" />
+    <Compile Include="Servicios\PerfilValidador.cs" />
+    <Compile Include="Servicios\ServicioAmistad.cs" />
+    <Compile Include="Servicios\ServicioNotificacionCodigos.cs" />
+    <Compile Include="Servicios\ServicioRecuperacionCuenta.cs" />
+    <Compile Include="Servicios\ServicioVerificacionRegistro.cs" />
     <Compile Include="Servicios\Utilidades\CorreoCodigoVerificacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\ICodigoVerificacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\CodigoVerificacionGenerador.cs" />

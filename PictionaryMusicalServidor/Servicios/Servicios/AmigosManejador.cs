@@ -8,6 +8,7 @@ using Datos.Modelo;
 using log4net;
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
+using System.Collections.Generic; // Agregado
 
 namespace Servicios.Servicios
 {
@@ -24,25 +25,31 @@ namespace Servicios.Servicios
                 throw new FaultException("El nombre de usuario es obligatorio para suscribirse a las notificaciones.");
             }
 
+            Usuario usuario;
+            string nombreNormalizado;
+            IAmigosManejadorCallback callback;
+
             try
             {
-                using var contexto = CrearContexto();
-                var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
-
-                if (usuario == null)
+                using (var contexto = CrearContexto())
                 {
-                    throw new FaultException("El usuario especificado no existe.");
-                }
+                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                    usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
 
-                string nombreNormalizado = ObtenerNombreNormalizado(usuario.Nombre_Usuario, nombreUsuario);
+                    if (usuario == null)
+                    {
+                        throw new FaultException("El usuario especificado no existe.");
+                    }
+
+                    nombreNormalizado = ObtenerNombreNormalizado(usuario.Nombre_Usuario, nombreUsuario);
+                }
 
                 if (string.IsNullOrWhiteSpace(nombreNormalizado))
                 {
                     throw new FaultException("El usuario especificado no existe.");
                 }
 
-                IAmigosManejadorCallback callback = ObtenerCallbackActual();
+                callback = ObtenerCallbackActual();
                 _suscripciones.AddOrUpdate(nombreNormalizado, callback, (_, __) => callback);
 
                 if (!string.Equals(nombreUsuario, nombreNormalizado, StringComparison.Ordinal))
@@ -57,59 +64,49 @@ namespace Servicios.Servicios
                     canal.Faulted += (_, __) => RemoverSuscripcion(nombreNormalizado);
                 }
 
-                var amigoRepositorio = new AmigoRepositorio(contexto);
-                var solicitudesPendientes = amigoRepositorio.ObtenerSolicitudesPendientes(usuario.idUsuario);
-
-                if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
-                {
-                    return;
-                }
-
-                foreach (var solicitud in solicitudesPendientes)
-                {
-                    if (solicitud.UsuarioReceptor != usuario.idUsuario)
-                    {
-                        continue;
-                    }
-
-                    string emisor = solicitud.Usuario?.Nombre_Usuario;
-                    string receptor = solicitud.Usuario1?.Nombre_Usuario;
-
-                    if (string.IsNullOrWhiteSpace(emisor) || string.IsNullOrWhiteSpace(receptor))
-                    {
-                        continue;
-                    }
-
-                    var dto = new SolicitudAmistadDTO
-                    {
-                        UsuarioEmisor = emisor,
-                        UsuarioReceptor = receptor,
-                        SolicitudAceptada = solicitud.Estado
-                    };
-
-                    NotificarSolicitud(nombreNormalizado, dto);
-                }
+                // --- INICIO REFACTORIZACIÓN (Reducción de CC) ---
+                // Se extrae la lógica de notificación de pendientes a un método separado
+                NotificarSolicitudesPendientesAlSuscribir(nombreNormalizado, usuario.idUsuario);
+                // --- FIN REFACTORIZACIÓN ---
             }
             catch (FaultException)
             {
                 throw;
             }
-            catch (ArgumentException ex)
+            catch (Exception ex) // Captura genérica para errores de BD o lógicos
             {
-                _logger.Warn("Datos inválidos al recuperar las solicitudes pendientes de amistad", ex);
-                throw new FaultException(ex.Message);
+                _logger.Error("Error al suscribir o notificar solicitudes pendientes", ex);
+                throw new FaultException("Ocurrió un error al procesar la suscripción.");
             }
-            catch (InvalidOperationException ex)
+        }
+
+        /// <summary>
+        /// NUEVO MÉTODO PRIVADO: Encapsula la lógica de notificar
+        /// solicitudes pendientes al suscribirse.
+        /// </summary>
+        private void NotificarSolicitudesPendientesAlSuscribir(string nombreNormalizado, int usuarioId)
+        {
+            try
             {
-                _logger.Error("Estado inválido al recuperar las solicitudes pendientes de amistad", ex);
-                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
+                List<SolicitudAmistadDTO> solicitudesDTO = ServicioAmistad.ObtenerSolicitudesPendientesDTO(usuarioId);
+
+                if (solicitudesDTO == null || solicitudesDTO.Count == 0)
+                {
+                    return;
+                }
+
+                foreach (var dto in solicitudesDTO)
+                {
+                    NotificarSolicitud(nombreNormalizado, dto);
+                }
             }
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al recuperar las solicitudes pendientes de amistad", ex);
-                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
+                // No lanzamos FaultException aquí para no interrumpir la suscripción principal
             }
         }
+
 
         public void CancelarSuscripcion(string nombreUsuario)
         {
@@ -126,32 +123,31 @@ namespace Servicios.Servicios
             ValidarNombreUsuario(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
             ValidarNombreUsuario(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
 
-            if (string.Equals(nombreUsuarioEmisor, nombreUsuarioReceptor, StringComparison.OrdinalIgnoreCase))
-            {
-                throw new FaultException("No es posible enviarse una solicitud de amistad a sí mismo.");
-            }
+            // La validación de "no enviarse a sí mismo" se mueve al servicio
 
             try
             {
-                using var contexto = CrearContexto();
-                var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                var amigoRepositorio = new AmigoRepositorio(contexto);
+                Usuario usuarioEmisor;
+                Usuario usuarioReceptor;
 
-                Usuario usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
-                Usuario usuarioReceptor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioReceptor);
-
-                if (usuarioEmisor == null || usuarioReceptor == null)
+                using (var contexto = CrearContexto())
                 {
-                    throw new FaultException("Alguno de los usuarios especificados no existe.");
+                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                    usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
+                    usuarioReceptor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioReceptor);
+
+                    if (usuarioEmisor == null || usuarioReceptor == null)
+                    {
+                        throw new FaultException("Alguno de los usuarios especificados no existe.");
+                    }
+
+                    // --- INICIO REFACTORIZACIÓN ---
+                    // Se delega la lógica de negocio (ExisteRelacion, CrearSolicitud) al servicio
+                    ServicioAmistad.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
+                    // --- FIN REFACTORIZACIÓN ---
                 }
 
-                if (amigoRepositorio.ExisteRelacion(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario))
-                {
-                    throw new FaultException("Ya existe una solicitud o relación de amistad entre los usuarios.");
-                }
-
-                amigoRepositorio.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
-
+                // La lógica de notificación permanece aquí
                 string nombreEmisor = ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
                 string nombreReceptor = ObtenerNombreNormalizado(usuarioReceptor.Nombre_Usuario, nombreUsuarioReceptor);
 
@@ -164,16 +160,19 @@ namespace Servicios.Servicios
 
                 NotificarSolicitud(nombreReceptor, solicitud);
             }
+            // --- INICIO REFACTORIZACIÓN ---
+            // Se capturan las excepciones de reglas de negocio del servicio
+            catch (InvalidOperationException ex)
+            {
+                _logger.Warn("Regla de negocio violada al enviar solicitud de amistad", ex);
+                throw new FaultException(ex.Message);
+            }
             catch (ArgumentException ex)
             {
                 _logger.Warn("Datos inválidos al enviar la solicitud de amistad", ex);
                 throw new FaultException(ex.Message);
             }
-            catch (InvalidOperationException ex)
-            {
-                _logger.Error("Estado inválido al enviar la solicitud de amistad", ex);
-                throw new FaultException("No fue posible completar la solicitud de amistad.");
-            }
+            // --- FIN REFACTORIZACIÓN ---
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al enviar la solicitud de amistad", ex);
@@ -186,16 +185,14 @@ namespace Servicios.Servicios
             ValidarNombreUsuario(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
             ValidarNombreUsuario(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
 
-            string nombreEmisorNormalizado = null;
-            string nombreReceptorNormalizado = null;
+            string nombreEmisorNormalizado;
+            string nombreReceptorNormalizado;
 
             try
             {
                 using (var contexto = CrearContexto())
                 {
                     var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                    var amigoRepositorio = new AmigoRepositorio(contexto);
-
                     Usuario usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
                     Usuario usuarioReceptor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioReceptor);
 
@@ -204,41 +201,26 @@ namespace Servicios.Servicios
                         throw new FaultException("Alguno de los usuarios especificados no existe.");
                     }
 
-                    var relacion = amigoRepositorio.ObtenerRelacion(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
+                    // --- INICIO REFACTORIZACIÓN ---
+                    // Se delega toda la lógica de validación y actualización al servicio
+                    ServicioAmistad.AceptarSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
+                    // --- FIN REFACTORIZACIÓN ---
 
-                    if (relacion != null)
+                    nombreEmisorNormalizado = ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
+                    nombreReceptorNormalizado = ObtenerNombreNormalizado(usuarioReceptor.Nombre_Usuario, nombreUsuarioReceptor);
+
+                    var solicitud = new SolicitudAmistadDTO
                     {
-                        if (relacion.UsuarioReceptor != usuarioReceptor.idUsuario)
-                        {
-                            throw new FaultException("Solo el receptor de la solicitud puede aceptarla.");
-                        }
+                        UsuarioEmisor = nombreEmisorNormalizado,
+                        UsuarioReceptor = nombreReceptorNormalizado,
+                        SolicitudAceptada = true
+                    };
 
-                        if (relacion.Estado)
-                        {
-                            throw new FaultException("La solicitud de amistad ya fue aceptada con anterioridad.");
-                        }
-
-                        amigoRepositorio.ActualizarEstado(relacion, true);
-
-                        nombreEmisorNormalizado = ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
-                        nombreReceptorNormalizado = ObtenerNombreNormalizado(usuarioReceptor.Nombre_Usuario, nombreUsuarioReceptor);
-
-                        var solicitud = new SolicitudAmistadDTO
-                        {
-                            UsuarioEmisor = nombreEmisorNormalizado,
-                            UsuarioReceptor = nombreReceptorNormalizado,
-                            SolicitudAceptada = true
-                        };
-
-                        NotificarSolicitud(nombreEmisorNormalizado, solicitud);
-                        NotificarSolicitud(nombreReceptorNormalizado, solicitud);
-                    }
-                    else
-                    {
-                        throw new FaultException("No existe una solicitud de amistad entre los usuarios.");
-                    }
+                    NotificarSolicitud(nombreEmisorNormalizado, solicitud);
+                    NotificarSolicitud(nombreReceptorNormalizado, solicitud);
                 }
 
+                // La notificación al ListaAmigosManejador queda fuera de la transacción/contexto
                 ListaAmigosManejador.NotificarCambioAmistad(nombreEmisorNormalizado);
                 ListaAmigosManejador.NotificarCambioAmistad(nombreReceptorNormalizado);
             }
@@ -246,16 +228,19 @@ namespace Servicios.Servicios
             {
                 throw;
             }
+            // --- INICIO REFACTORIZACIÓN ---
+            // Se capturan las excepciones de reglas de negocio del servicio
+            catch (InvalidOperationException ex)
+            {
+                _logger.Warn("Regla de negocio violada al aceptar solicitud de amistad", ex);
+                throw new FaultException(ex.Message);
+            }
             catch (ArgumentException ex)
             {
                 _logger.Warn("Datos inválidos al aceptar la solicitud de amistad", ex);
                 throw new FaultException(ex.Message);
             }
-            catch (InvalidOperationException ex)
-            {
-                _logger.Error("Estado inválido al aceptar la solicitud de amistad", ex);
-                throw new FaultException("No fue posible aceptar la solicitud de amistad.");
-            }
+            // --- FIN REFACTORIZACIÓN ---
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al aceptar la solicitud de amistad", ex);
@@ -268,21 +253,17 @@ namespace Servicios.Servicios
             ValidarNombreUsuario(nombreUsuarioA, nameof(nombreUsuarioA));
             ValidarNombreUsuario(nombreUsuarioB, nameof(nombreUsuarioB));
 
-            if (string.Equals(nombreUsuarioA, nombreUsuarioB, StringComparison.OrdinalIgnoreCase))
-            {
-                throw new FaultException("No es posible eliminar una relación consigo mismo.");
-            }
-
-            string nombreUsuarioANormalizado = null;
-            string nombreUsuarioBNormalizado = null;
+            string nombreUsuarioANormalizado;
+            string nombreUsuarioBNormalizado;
 
             try
             {
+                Amigo relacionEliminada;
+                int idUsuarioA;
+
                 using (var contexto = CrearContexto())
                 {
                     var usuarioRepositorio = new UsuarioRepositorio(contexto);
-                    var amigoRepositorio = new AmigoRepositorio(contexto);
-
                     Usuario usuarioA = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioA);
                     Usuario usuarioB = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioB);
 
@@ -291,35 +272,34 @@ namespace Servicios.Servicios
                         throw new FaultException("Alguno de los usuarios especificados no existe.");
                     }
 
-                    var relacion = amigoRepositorio.ObtenerRelacion(usuarioA.idUsuario, usuarioB.idUsuario);
+                    idUsuarioA = usuarioA.idUsuario;
 
-                    if (relacion != null)
-                    {
-                        amigoRepositorio.EliminarRelacion(relacion);
+                    // --- INICIO REFACTORIZACIÓN ---
+                    // Se delega la lógica de eliminación al servicio.
+                    // El servicio retorna la relación eliminada para poder notificar.
+                    relacionEliminada = ServicioAmistad.EliminarAmistad(usuarioA.idUsuario, usuarioB.idUsuario);
+                    // --- FIN REFACTORIZACIÓN ---
 
-                        nombreUsuarioANormalizado = ObtenerNombreNormalizado(usuarioA.Nombre_Usuario, nombreUsuarioA);
-                        nombreUsuarioBNormalizado = ObtenerNombreNormalizado(usuarioB.Nombre_Usuario, nombreUsuarioB);
-
-                        bool usuarioAEsEmisor = relacion.UsuarioEmisor == usuarioA.idUsuario;
-                        string emisor = usuarioAEsEmisor ? nombreUsuarioANormalizado : nombreUsuarioBNormalizado;
-                        string receptor = usuarioAEsEmisor ? nombreUsuarioBNormalizado : nombreUsuarioANormalizado;
-
-                        var solicitud = new SolicitudAmistadDTO
-                        {
-                            UsuarioEmisor = emisor,
-                            UsuarioReceptor = receptor,
-                            SolicitudAceptada = false
-                        };
-
-                        NotificarEliminacion(nombreUsuarioANormalizado, solicitud);
-                        NotificarEliminacion(nombreUsuarioBNormalizado, solicitud);
-                    }
-                    else
-                    {
-                        throw new FaultException("No existe una relación de amistad entre los usuarios.");
-                    }
+                    nombreUsuarioANormalizado = ObtenerNombreNormalizado(usuarioA.Nombre_Usuario, nombreUsuarioA);
+                    nombreUsuarioBNormalizado = ObtenerNombreNormalizado(usuarioB.Nombre_Usuario, nombreUsuarioB);
                 }
 
+                // Lógica de notificación
+                bool usuarioAEsEmisor = relacionEliminada.UsuarioEmisor == idUsuarioA;
+                string emisor = usuarioAEsEmisor ? nombreUsuarioANormalizado : nombreUsuarioBNormalizado;
+                string receptor = usuarioAEsEmisor ? nombreUsuarioBNormalizado : nombreUsuarioANormalizado;
+
+                var solicitud = new SolicitudAmistadDTO
+                {
+                    UsuarioEmisor = emisor,
+                    UsuarioReceptor = receptor,
+                    SolicitudAceptada = false // Se notifica como "no aceptada" (eliminada)
+                };
+
+                NotificarEliminacion(nombreUsuarioANormalizado, solicitud);
+                NotificarEliminacion(nombreUsuarioBNormalizado, solicitud);
+
+                // Notificación al ListaAmigosManejador
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioANormalizado);
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioBNormalizado);
             }
@@ -327,22 +307,26 @@ namespace Servicios.Servicios
             {
                 throw;
             }
+            // --- INICIO REFACTORIZACIÓN ---
+            catch (InvalidOperationException ex)
+            {
+                _logger.Warn("Regla de negocio violada al eliminar amistad", ex);
+                throw new FaultException(ex.Message);
+            }
             catch (ArgumentException ex)
             {
                 _logger.Warn("Datos inválidos al eliminar la relación de amistad", ex);
                 throw new FaultException(ex.Message);
             }
-            catch (InvalidOperationException ex)
-            {
-                _logger.Error("Estado inválido al eliminar la relación de amistad", ex);
-                throw new FaultException("No fue posible eliminar la relación de amistad.");
-            }
+            // --- FIN REFACTORIZACIÓN ---
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al eliminar la relación de amistad", ex);
                 throw new FaultException("No fue posible eliminar la relación de amistad en la base de datos.");
             }
         }
+
+        // --- MÉTODOS PRIVADOS (Sin cambios) ---
 
         private static BaseDatosPruebaEntities1 CrearContexto()
         {
