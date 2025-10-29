@@ -43,7 +43,7 @@ namespace PictionaryMusicalCliente
             DataContext = vistaModelo;
         }
 
-        private async void Perfil_Loaded(object sender, RoutedEventArgs e)
+        private async void Perfil_LoadedAsync(object sender, RoutedEventArgs e)
         {
             if (DataContext is PerfilVistaModelo vistaModelo)
             {

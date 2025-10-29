@@ -44,19 +44,19 @@ namespace PictionaryMusicalCliente
 
             DataContext = _vistaModelo;
 
-            Loaded += VentanaPrincipal_Loaded;
-            Closed += VentanaPrincipal_Closed;
+            Loaded += VentanaPrincipal_LoadedAsync;
+            Closed += VentanaPrincipal_ClosedAsync;
         }
 
-        private async void VentanaPrincipal_Loaded(object sender, RoutedEventArgs e)
+        private async void VentanaPrincipal_LoadedAsync(object sender, RoutedEventArgs e)
         {
             await _vistaModelo.InicializarAsync().ConfigureAwait(true);
         }
 
-        private async void VentanaPrincipal_Closed(object sender, EventArgs e)
+        private async void VentanaPrincipal_ClosedAsync(object sender, EventArgs e)
         {
-            Loaded -= VentanaPrincipal_Loaded;
-            Closed -= VentanaPrincipal_Closed;
+            Loaded -= VentanaPrincipal_LoadedAsync;
+            Closed -= VentanaPrincipal_ClosedAsync;
 
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
 

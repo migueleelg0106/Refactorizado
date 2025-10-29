@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente
             DataContext = vistaModelo;
         }
 
-        private async void Clasificacion_Loaded(object sender, RoutedEventArgs e)
+        private async void Clasificacion_LoadedAsync(object sender, RoutedEventArgs e)
         {
             if (DataContext is ClasificacionVistaModelo vistaModelo)
             {

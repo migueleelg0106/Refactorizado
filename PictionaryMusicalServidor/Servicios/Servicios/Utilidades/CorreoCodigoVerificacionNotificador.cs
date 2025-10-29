@@ -11,7 +11,7 @@ namespace Servicios.Servicios.Utilidades
     {
         private const string AsuntoPredeterminado = "Código de verificación";
 
-        public async Task<bool> NotificarAsincrono(string correoDestino, string codigo, string usuarioDestino)
+        public async Task<bool> NotificarAsync(string correoDestino, string codigo, string usuarioDestino)
         {
             if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigo))
             {

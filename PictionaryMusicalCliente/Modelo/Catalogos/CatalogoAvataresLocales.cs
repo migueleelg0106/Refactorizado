@@ -8,7 +8,7 @@ namespace PictionaryMusicalCliente.Modelo.Catalogos
     {
         private const string CarpetaRecursos = "Recursos";
 
-        private static readonly IReadOnlyList<ObjetoAvatar> Avatares = new List<ObjetoAvatar>
+        private static readonly IReadOnlyList<ObjetoAvatar> _avatares = new List<ObjetoAvatar>
         {
             Crear(1, "AC/DC", "ACDC.jpg"),
             Crear(2, "Aleks Syntek", "Aleks_Syntek.jpg"),
@@ -30,7 +30,7 @@ namespace PictionaryMusicalCliente.Modelo.Catalogos
 
         public static IReadOnlyList<ObjetoAvatar> ObtenerAvatares()
         {
-            return Avatares;
+            return _avatares;
         }
 
         private static ObjetoAvatar Crear(int id, string nombre, string archivo)

@@ -195,7 +195,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private async void ReiniciarClienteConSuscripcion()
+        private async void ReiniciarClienteConSuscripcionAsync()
         {
             string usuario = _usuarioSuscrito;
             if (string.IsNullOrWhiteSpace(usuario)) return;
@@ -248,7 +248,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             else
             {
-                ReiniciarClienteConSuscripcion();
+                ReiniciarClienteConSuscripcionAsync();
             }
             ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
         }

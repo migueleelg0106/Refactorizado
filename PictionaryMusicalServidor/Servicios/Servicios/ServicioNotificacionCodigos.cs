@@ -30,7 +30,7 @@ namespace Servicios.Servicios
             {
                 // El código original usaba GetAwaiter().GetResult(), 
                 // mantenemos esa lógica síncrona sobre asíncrona.
-                var tarea = _notificador?.NotificarAsincrono(correoDestino, codigo, usuarioDestino);
+                var tarea = _notificador?.NotificarAsync(correoDestino, codigo, usuarioDestino);
                 if (tarea == null)
                 {
                     return false;

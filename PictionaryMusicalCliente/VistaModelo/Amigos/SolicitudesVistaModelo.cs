@@ -10,6 +10,7 @@ using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.Modelo;
 using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
@@ -197,22 +198,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             {
                 application.Dispatcher.BeginInvoke(accion);
             }
-        }
-
-        public class SolicitudAmistadEntrada
-        {
-            public SolicitudAmistadEntrada(DTOs.SolicitudAmistadDTO solicitud, string nombreUsuario, bool puedeAceptar)
-            {
-                Solicitud = solicitud ?? throw new ArgumentNullException(nameof(solicitud));
-                NombreUsuario = nombreUsuario;
-                PuedeAceptar = puedeAceptar;
-            }
-
-            public DTOs.SolicitudAmistadDTO Solicitud { get; }
-
-            public string NombreUsuario { get; }
-
-            public bool PuedeAceptar { get; }
         }
     }
 }

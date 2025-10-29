@@ -6,7 +6,7 @@
         Title="{x:Static language:Lang.perfilTextoMiPerfil}" Height="500" Width="700"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent"
-        Loaded="Perfil_Loaded">
+        Loaded="Perfil_LoadedAsync">
     <Window.Resources>
         <Style x:Key="RedSocialToggleButtonStyle" TargetType="ToggleButton">
             <Setter Property="Background" Value="Transparent" />

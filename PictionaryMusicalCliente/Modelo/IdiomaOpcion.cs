@@ -1,16 +1,10 @@
 namespace PictionaryMusicalCliente.Modelo
 {
-    public class IdiomaOpcion
+    public class IdiomaOpcion(string codigo, string descripcion)
     {
-        public IdiomaOpcion(string codigo, string descripcion)
-        {
-            Codigo = codigo;
-            Descripcion = descripcion;
-        }
+        public string Codigo { get; } = codigo;
 
-        public string Codigo { get; }
-
-        public string Descripcion { get; }
+        public string Descripcion { get; } = descripcion;
 
         public override string ToString()
         {

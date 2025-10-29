@@ -169,7 +169,7 @@
             </Border>
 
             <ScrollViewer Grid.Row="1" Background="White" BorderBrush="Black" BorderThickness="1">
-                <StackPanel x:Name="PanelApilableChat" Margin="6"/>
+                <StackPanel x:Name="panelApilableChat" Margin="6"/>
             </ScrollViewer>
 
             <TextBox Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1" MaxLength="200"/>

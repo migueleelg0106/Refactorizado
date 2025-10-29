@@ -30,7 +30,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogoServicio;
         private readonly IAvatarServicio _avatarServicio;
 
-        private readonly Dictionary<string, RedSocialItem> _redesPorNombre;
+        private readonly Dictionary<string, RedSocialItemVistaModelo> _redesPorNombre;
 
         private int _usuarioId;
         private string _usuario;
@@ -73,7 +73,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public string AvatarSeleccionadoNombre { get => _avatarSeleccionadoNombre; private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value); }
         public string AvatarSeleccionadoRutaRelativa { get => _avatarSeleccionadoRutaRelativa; private set => EstablecerPropiedad(ref _avatarSeleccionadoRutaRelativa, value); }
         public ImageSource AvatarSeleccionadoImagen { get => _avatarSeleccionadoImagen; private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value); }
-        public ObservableCollection<RedSocialItem> RedesSociales { get; }
+        public ObservableCollection<RedSocialItemVistaModelo> RedesSociales { get; }
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -165,7 +165,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             if (!sonCamposValidos || !sonRedesValidas)
             {
                 var todosInvalidos = camposInvalidos ?? Enumerable.Empty<string>();
-                if (!sonRedesValidas) todosInvalidos = todosInvalidos.Concat(new[] { "RedesSociales" });
+                if (!sonRedesValidas) todosInvalidos = todosInvalidos.Concat(new[] 
+                { 
+                    "RedesSociales" 
+                });
 
                 MostrarCamposInvalidos?.Invoke(todosInvalidos.ToList());
 
@@ -255,7 +258,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             string primerMensaje = null;
             bool algunaInvalida = false;
 
-            foreach (RedSocialItem item in RedesSociales)
+            foreach (RedSocialItemVistaModelo item in RedesSociales)
             {
                 string valor = item.Identificador;
                 if (string.IsNullOrWhiteSpace(valor))
@@ -354,7 +357,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void EstablecerIdentificador(string redSocial, string valor)
         {
-            if (_redesPorNombre.TryGetValue(redSocial, out RedSocialItem item))
+            if (_redesPorNombre.TryGetValue(redSocial, out RedSocialItemVistaModelo item))
             {
                 item.Identificador = valor;
                 item.TieneError = false; 
@@ -362,7 +365,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         }
         private string ObtenerIdentificador(string redSocial)
         {
-            if (_redesPorNombre.TryGetValue(redSocial, out RedSocialItem item))
+            if (_redesPorNombre.TryGetValue(redSocial, out RedSocialItemVistaModelo item))
             {
                 string valor = item.Identificador?.Trim();
                 return string.IsNullOrWhiteSpace(valor) ? null : valor;
@@ -373,15 +376,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void LimpiarErroresRedesSociales()
         {
-            foreach (RedSocialItem redSocial in RedesSociales)
+            foreach (RedSocialItemVistaModelo redSocial in RedesSociales)
             {
                 redSocial.TieneError = false;
             }
         }
 
-        private ObservableCollection<RedSocialItem> CrearRedesSociales()
+        private ObservableCollection<RedSocialItemVistaModelo> CrearRedesSociales()
         {
-            return new ObservableCollection<RedSocialItem>
+            return new ObservableCollection<RedSocialItemVistaModelo>
             {
                 CrearRedSocial("Instagram"),
                 CrearRedSocial("Facebook"),
@@ -389,10 +392,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 CrearRedSocial("Discord")
             };
         }
-        private static RedSocialItem CrearRedSocial(string nombre)
+        private static RedSocialItemVistaModelo CrearRedSocial(string nombre)
         {
             ImageSource icono = CatalogoImagenesPerfilLocales.ObtenerIconoRedSocial(nombre);
-            return new RedSocialItem(nombre, icono);
+            return new RedSocialItemVistaModelo(nombre, icono);
         }
 
         private void ActualizarSesion()
@@ -451,22 +454,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        public class RedSocialItem : BaseVistaModelo
+        public class RedSocialItemVistaModelo(string nombre, ImageSource icono) : BaseVistaModelo
         {
             private string _identificador;
             private bool _tieneError;
 
-            public RedSocialItem(string nombre, ImageSource icono)
-            {
-                Nombre = nombre ?? throw new ArgumentNullException(nameof(nombre));
-                RutaIcono = icono;
-            }
-
-            public string Nombre { get; }
-            public ImageSource RutaIcono { get; }
+            public string Nombre { get; } = nombre ?? throw new ArgumentNullException(nameof(nombre));
+            public ImageSource RutaIcono { get; } = icono;
             public string Identificador { get => _identificador; set => EstablecerPropiedad(ref _identificador, value); }
             public bool TieneError { get => _tieneError; set => EstablecerPropiedad(ref _tieneError, value); }
         }
-
     }
 }

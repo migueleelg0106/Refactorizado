@@ -436,39 +436,5 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             IniciarJuegoComando?.NotificarPuedeEjecutar();
         }
-
-        public class OpcionEntero
-        {
-            public OpcionEntero(int valor)
-            {
-                Valor = valor;
-                Descripcion = valor.ToString(CultureInfo.CurrentCulture);
-            }
-
-            public int Valor { get; }
-            public string Descripcion { get; }
-            public override string ToString() => Descripcion;
-        }
-
-        public class OpcionTexto
-        {
-            public OpcionTexto(string clave, string descripcion)
-            {
-                Clave = clave;
-                Descripcion = descripcion;
-            }
-
-            public string Clave { get; }
-            public string Descripcion { get; }
-            public override string ToString() => Descripcion;
-        }
-    }
-
-    public class ConfiguracionPartida
-    {
-        public int NumeroRondas { get; set; }
-        public int TiempoPorRondaSegundos { get; set; }
-        public string IdiomaCanciones { get; set; }
-        public string Dificultad { get; set; }
     }
 }
