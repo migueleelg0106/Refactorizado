@@ -8,7 +8,7 @@ using Datos.Modelo;
 using log4net;
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
-using System.Collections.Generic; // Agregado
+using System.Collections.Generic; 
 
 namespace Servicios.Servicios
 {
@@ -64,26 +64,20 @@ namespace Servicios.Servicios
                     canal.Faulted += (_, __) => RemoverSuscripcion(nombreNormalizado);
                 }
 
-                // --- INICIO REFACTORIZACIÓN (Reducción de CC) ---
-                // Se extrae la lógica de notificación de pendientes a un método separado
                 NotificarSolicitudesPendientesAlSuscribir(nombreNormalizado, usuario.idUsuario);
-                // --- FIN REFACTORIZACIÓN ---
             }
             catch (FaultException)
             {
                 throw;
             }
-            catch (Exception ex) // Captura genérica para errores de BD o lógicos
+            catch (Exception ex) 
             {
                 _logger.Error("Error al suscribir o notificar solicitudes pendientes", ex);
                 throw new FaultException("Ocurrió un error al procesar la suscripción.");
             }
         }
 
-        /// <summary>
-        /// NUEVO MÉTODO PRIVADO: Encapsula la lógica de notificar
-        /// solicitudes pendientes al suscribirse.
-        /// </summary>
+ 
         private void NotificarSolicitudesPendientesAlSuscribir(string nombreNormalizado, int usuarioId)
         {
             try
@@ -103,7 +97,6 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al recuperar las solicitudes pendientes de amistad", ex);
-                // No lanzamos FaultException aquí para no interrumpir la suscripción principal
             }
         }
 
@@ -123,7 +116,6 @@ namespace Servicios.Servicios
             ValidarNombreUsuario(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
             ValidarNombreUsuario(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
 
-            // La validación de "no enviarse a sí mismo" se mueve al servicio
 
             try
             {
@@ -141,13 +133,9 @@ namespace Servicios.Servicios
                         throw new FaultException("Alguno de los usuarios especificados no existe.");
                     }
 
-                    // --- INICIO REFACTORIZACIÓN ---
-                    // Se delega la lógica de negocio (ExisteRelacion, CrearSolicitud) al servicio
                     ServicioAmistad.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
-                    // --- FIN REFACTORIZACIÓN ---
                 }
 
-                // La lógica de notificación permanece aquí
                 string nombreEmisor = ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
                 string nombreReceptor = ObtenerNombreNormalizado(usuarioReceptor.Nombre_Usuario, nombreUsuarioReceptor);
 
@@ -160,8 +148,6 @@ namespace Servicios.Servicios
 
                 NotificarSolicitud(nombreReceptor, solicitud);
             }
-            // --- INICIO REFACTORIZACIÓN ---
-            // Se capturan las excepciones de reglas de negocio del servicio
             catch (InvalidOperationException ex)
             {
                 _logger.Warn("Regla de negocio violada al enviar solicitud de amistad", ex);
@@ -172,7 +158,6 @@ namespace Servicios.Servicios
                 _logger.Warn("Datos inválidos al enviar la solicitud de amistad", ex);
                 throw new FaultException(ex.Message);
             }
-            // --- FIN REFACTORIZACIÓN ---
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al enviar la solicitud de amistad", ex);
@@ -201,10 +186,7 @@ namespace Servicios.Servicios
                         throw new FaultException("Alguno de los usuarios especificados no existe.");
                     }
 
-                    // --- INICIO REFACTORIZACIÓN ---
-                    // Se delega toda la lógica de validación y actualización al servicio
                     ServicioAmistad.AceptarSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
-                    // --- FIN REFACTORIZACIÓN ---
 
                     nombreEmisorNormalizado = ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
                     nombreReceptorNormalizado = ObtenerNombreNormalizado(usuarioReceptor.Nombre_Usuario, nombreUsuarioReceptor);
@@ -220,7 +202,6 @@ namespace Servicios.Servicios
                     NotificarSolicitud(nombreReceptorNormalizado, solicitud);
                 }
 
-                // La notificación al ListaAmigosManejador queda fuera de la transacción/contexto
                 ListaAmigosManejador.NotificarCambioAmistad(nombreEmisorNormalizado);
                 ListaAmigosManejador.NotificarCambioAmistad(nombreReceptorNormalizado);
             }
@@ -228,8 +209,6 @@ namespace Servicios.Servicios
             {
                 throw;
             }
-            // --- INICIO REFACTORIZACIÓN ---
-            // Se capturan las excepciones de reglas de negocio del servicio
             catch (InvalidOperationException ex)
             {
                 _logger.Warn("Regla de negocio violada al aceptar solicitud de amistad", ex);
@@ -240,7 +219,6 @@ namespace Servicios.Servicios
                 _logger.Warn("Datos inválidos al aceptar la solicitud de amistad", ex);
                 throw new FaultException(ex.Message);
             }
-            // --- FIN REFACTORIZACIÓN ---
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al aceptar la solicitud de amistad", ex);
@@ -274,17 +252,12 @@ namespace Servicios.Servicios
 
                     idUsuarioA = usuarioA.idUsuario;
 
-                    // --- INICIO REFACTORIZACIÓN ---
-                    // Se delega la lógica de eliminación al servicio.
-                    // El servicio retorna la relación eliminada para poder notificar.
                     relacionEliminada = ServicioAmistad.EliminarAmistad(usuarioA.idUsuario, usuarioB.idUsuario);
-                    // --- FIN REFACTORIZACIÓN ---
 
                     nombreUsuarioANormalizado = ObtenerNombreNormalizado(usuarioA.Nombre_Usuario, nombreUsuarioA);
                     nombreUsuarioBNormalizado = ObtenerNombreNormalizado(usuarioB.Nombre_Usuario, nombreUsuarioB);
                 }
 
-                // Lógica de notificación
                 bool usuarioAEsEmisor = relacionEliminada.UsuarioEmisor == idUsuarioA;
                 string emisor = usuarioAEsEmisor ? nombreUsuarioANormalizado : nombreUsuarioBNormalizado;
                 string receptor = usuarioAEsEmisor ? nombreUsuarioBNormalizado : nombreUsuarioANormalizado;
@@ -293,13 +266,12 @@ namespace Servicios.Servicios
                 {
                     UsuarioEmisor = emisor,
                     UsuarioReceptor = receptor,
-                    SolicitudAceptada = false // Se notifica como "no aceptada" (eliminada)
+                    SolicitudAceptada = false 
                 };
 
                 NotificarEliminacion(nombreUsuarioANormalizado, solicitud);
                 NotificarEliminacion(nombreUsuarioBNormalizado, solicitud);
 
-                // Notificación al ListaAmigosManejador
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioANormalizado);
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioBNormalizado);
             }
@@ -307,7 +279,6 @@ namespace Servicios.Servicios
             {
                 throw;
             }
-            // --- INICIO REFACTORIZACIÓN ---
             catch (InvalidOperationException ex)
             {
                 _logger.Warn("Regla de negocio violada al eliminar amistad", ex);
@@ -318,7 +289,6 @@ namespace Servicios.Servicios
                 _logger.Warn("Datos inválidos al eliminar la relación de amistad", ex);
                 throw new FaultException(ex.Message);
             }
-            // --- FIN REFACTORIZACIÓN ---
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al eliminar la relación de amistad", ex);
@@ -326,7 +296,6 @@ namespace Servicios.Servicios
             }
         }
 
-        // --- MÉTODOS PRIVADOS (Sin cambios) ---
 
         private static BaseDatosPruebaEntities1 CrearContexto()
         {

@@ -2,8 +2,6 @@ using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
 using System;
 using log4net;
-// Agregamos el using a los nuevos servicios
-using Servicios.Servicios;
 
 namespace Servicios.Servicios
 {
@@ -15,7 +13,6 @@ namespace Servicios.Servicios
         {
             try
             {
-                // DELEGA A: ServicioRecuperacionCuenta
                 return ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
             }
             catch (Exception ex)
@@ -33,7 +30,6 @@ namespace Servicios.Servicios
         {
             try
             {
-                // DELEGA A: ServicioRecuperacionCuenta
                 return ServicioRecuperacionCuenta.ReenviarCodigoRecuperacion(solicitud);
             }
             catch (Exception ex)
@@ -51,7 +47,6 @@ namespace Servicios.Servicios
         {
             try
             {
-                // DELEGA A: ServicioRecuperacionCuenta
                 return ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
             }
             catch (Exception ex)
@@ -70,7 +65,6 @@ namespace Servicios.Servicios
         {
             try
             {
-                // DELEGA A: ServicioRecuperacionCuenta
                 return ServicioRecuperacionCuenta.ActualizarContrasena(solicitud);
             }
             catch (Exception ex)

@@ -9,9 +9,7 @@ using System.Data.Entity;
 
 namespace Servicios.Servicios
 {
-    /// <summary>
-    /// Maneja la lógica y el estado en memoria para la recuperación de contraseñas.
-    /// </summary>
+
     internal static class ServicioRecuperacionCuenta
     {
         private const int MinutosExpiracionCodigo = 5;

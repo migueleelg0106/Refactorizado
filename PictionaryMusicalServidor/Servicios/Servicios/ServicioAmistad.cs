@@ -9,16 +9,10 @@ using Servicios.Contratos.DTOs;
 
 namespace Servicios.Servicios
 {
-    /// <summary>
-    /// Nueva clase interna estática.
-    /// Contiene toda la lógica de negocio y acceso a datos para las relaciones de amistad.
-    /// No sabe nada sobre WCF o callbacks.
-    /// </summary>
+
     internal static class ServicioAmistad
     {
-        /// <summary>
-        /// Obtiene las solicitudes de amistad PENDIENTES que ha RECIBIDO un usuario.
-        /// </summary>
+
         public static List<SolicitudAmistadDTO> ObtenerSolicitudesPendientesDTO(int usuarioId)
         {
             using (var contexto = CrearContexto())
@@ -34,14 +28,13 @@ namespace Servicios.Servicios
                 var resultadoDTOs = new List<SolicitudAmistadDTO>();
                 foreach (var solicitud in solicitudesPendientes)
                 {
-                    // La lógica original solo notificaba si el usuario es el RECEPTOR
                     if (solicitud.UsuarioReceptor != usuarioId)
                     {
                         continue;
                     }
 
-                    string emisor = solicitud.Usuario?.Nombre_Usuario; // UsuarioEmisor
-                    string receptor = solicitud.Usuario1?.Nombre_Usuario; // UsuarioReceptor
+                    string emisor = solicitud.Usuario?.Nombre_Usuario; 
+                    string receptor = solicitud.Usuario1?.Nombre_Usuario; 
 
                     if (string.IsNullOrWhiteSpace(emisor) || string.IsNullOrWhiteSpace(receptor))
                     {
@@ -59,10 +52,6 @@ namespace Servicios.Servicios
             }
         }
 
-        /// <summary>
-        /// Crea una nueva solicitud de amistad.
-        /// Lanza excepciones si las reglas de negocio se violan.
-        /// </summary>
         public static void CrearSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
             if (usuarioEmisorId == usuarioReceptorId)
@@ -82,10 +71,6 @@ namespace Servicios.Servicios
             }
         }
 
-        /// <summary>
-        /// Acepta una solicitud de amistad.
-        /// Lanza excepciones si las reglas de negocio se violan.
-        /// </summary>
         public static void AceptarSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
             using (var contexto = CrearContexto())
@@ -98,7 +83,6 @@ namespace Servicios.Servicios
                     throw new InvalidOperationException("No existe una solicitud de amistad entre los usuarios.");
                 }
 
-                // Valida que quien acepta es el receptor real de la solicitud
                 if (relacion.UsuarioReceptor != usuarioReceptorId)
                 {
                     throw new InvalidOperationException("Solo el receptor de la solicitud puede aceptarla.");
@@ -113,11 +97,6 @@ namespace Servicios.Servicios
             }
         }
 
-        /// <summary>
-        /// Elimina una relación de amistad o una solicitud.
-        /// Lanza excepciones si no se encuentra.
-        /// Retorna la relación eliminada para fines de notificación.
-        /// </summary>
         public static Amigo EliminarAmistad(int usuarioAId, int usuarioBId)
         {
             if (usuarioAId == usuarioBId)
@@ -148,11 +127,6 @@ namespace Servicios.Servicios
                 : new BaseDatosPruebaEntities1(conexion);
         }
 
-        // --- AGREGAR ESTE MÉTODO A ServicioAmistad.cs ---
-
-        /// <summary>
-        /// Obtiene la lista de amigos de un usuario (por su ID) y la mapea a DTOs.
-        /// </summary>
         public static List<AmigoDTO> ObtenerAmigosDTO(int usuarioId)
         {
             using (var contexto = CrearContexto())

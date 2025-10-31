@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.ServiceModel;
@@ -11,8 +9,6 @@ using Datos.Utilidades;
 using log4net;
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
-// Agregamos el using a nuestro servicio de negocio
-using Servicios.Servicios;
 
 namespace Servicios.Servicios
 {
@@ -30,10 +26,7 @@ namespace Servicios.Servicios
             List<AmigoDTO> amigosActuales;
             try
             {
-                // --- REFACTORIZACIÓN ---
-                // Se llama al nuevo método helper que delega al servicio
                 amigosActuales = ObtenerAmigosPorNombre(nombreUsuario);
-                // --- FIN REFACTORIZACIÓN ---
             }
             catch (FaultException)
             {
@@ -80,10 +73,7 @@ namespace Servicios.Servicios
 
             try
             {
-                // --- REFACTORIZACIÓN ---
-                // Se llama al nuevo método helper que delega al servicio
                 return ObtenerAmigosPorNombre(nombreUsuario);
-                // --- FIN REFACTORIZACIÓN ---
             }
             catch (FaultException)
             {
@@ -116,14 +106,7 @@ namespace Servicios.Servicios
             NotificarLista(nombreUsuario);
         }
 
-        // --- MÉTODO ELIMINADO ---
-        // Se eliminó ObtenerAmigosInterno(string nombreUsuario)
 
-        // --- NUEVO MÉTODO HELPER ---
-        /// <summary>
-        /// Obtiene la lista de amigos consultando el nombre de usuario,
-        /// validando su existencia y delegando la lógica de BD al ServicioAmistad.
-        /// </summary>
         private static List<AmigoDTO> ObtenerAmigosPorNombre(string nombreUsuario)
         {
             using var contexto = CrearContexto();
@@ -136,20 +119,15 @@ namespace Servicios.Servicios
                 throw new FaultException("El usuario especificado no existe.");
             }
 
-            // Delega la consulta y mapeo al servicio de negocio
             return ServicioAmistad.ObtenerAmigosDTO(usuario.idUsuario);
         }
-        // --- FIN NUEVO MÉTODO ---
 
 
         private static void NotificarLista(string nombreUsuario)
         {
             try
             {
-                // --- REFACTORIZACIÓN ---
-                // Se llama al nuevo método helper que delega al servicio
                 var amigos = ObtenerAmigosPorNombre(nombreUsuario);
-                // --- FIN REFACTORIZACIÓN ---
                 NotificarLista(nombreUsuario, amigos);
             }
             catch (FaultException ex)
@@ -179,7 +157,6 @@ namespace Servicios.Servicios
 
         private static void NotificarLista(string nombreUsuario, List<AmigoDTO> amigos)
         {
-            // Esta lógica es de WCF y está bien aquí (CC baja)
             if (!_suscripciones.TryGetValue(nombreUsuario, out var callback))
             {
                 return;
@@ -205,7 +182,6 @@ namespace Servicios.Servicios
 
         private static IListaAmigosManejadorCallback ObtenerCallbackActual()
         {
-            // Esta lógica es de WCF y está bien aquí (CC baja)
             var contexto = OperationContext.Current;
             if (contexto != null)
             {
@@ -223,7 +199,6 @@ namespace Servicios.Servicios
 
         private static void RemoverSuscripcion(string nombreUsuario)
         {
-            // Esta lógica es de WCF y está bien aquí (CC baja)
             if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
                 return;

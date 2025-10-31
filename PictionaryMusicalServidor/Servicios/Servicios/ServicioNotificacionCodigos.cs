@@ -3,10 +3,7 @@ using System.Threading.Tasks;
 
 namespace Servicios.Servicios
 {
-    /// <summary>
-    /// Maneja la abstracción del envío de notificaciones de códigos (ej. email).
-    /// Mantiene la instancia estática del notificador.
-    /// </summary>
+
     internal static class ServicioNotificacionCodigos
     {
         private static ICodigoVerificacionNotificador _notificador = new CorreoCodigoVerificacionNotificador();
@@ -16,9 +13,6 @@ namespace Servicios.Servicios
             _notificador = notificador ?? new CorreoCodigoVerificacionNotificador();
         }
 
-        /// <summary>
-        /// Envía una notificación de código al destinatario.
-        /// </summary>
         public static bool EnviarNotificacion(string correoDestino, string codigo, string usuarioDestino)
         {
             if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigo))
@@ -28,8 +22,7 @@ namespace Servicios.Servicios
 
             try
             {
-                // El código original usaba GetAwaiter().GetResult(), 
-                // mantenemos esa lógica síncrona sobre asíncrona.
+  
                 var tarea = _notificador?.NotificarAsync(correoDestino, codigo, usuarioDestino);
                 if (tarea == null)
                 {
