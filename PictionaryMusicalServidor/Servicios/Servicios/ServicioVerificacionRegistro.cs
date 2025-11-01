@@ -8,9 +8,7 @@ using Servicios.Servicios.Utilidades;
 
 namespace Servicios.Servicios
 {
-    /// <summary>
-    /// Maneja la lógica y el estado en memoria para la verificación de nuevas cuentas.
-    /// </summary>
+
     internal static class ServicioVerificacionRegistro
     {
         private const int MinutosExpiracionCodigo = 5;

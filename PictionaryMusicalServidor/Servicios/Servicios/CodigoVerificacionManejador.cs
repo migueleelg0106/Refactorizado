@@ -2,9 +2,8 @@ using Servicios.Contratos;
 using System;
 using log4net;
 using Servicios.Contratos.DTOs;
-// Removimos "Servicios.Servicios.Utilidades"
-// Agregamos el using a los nuevos servicios
-using Servicios.Servicios;
+
+
 
 namespace Servicios.Servicios
 {
@@ -16,7 +15,6 @@ namespace Servicios.Servicios
         {
             try
             {
-                // DELEGA A: ServicioVerificacionRegistro
                 return ServicioVerificacionRegistro.SolicitarCodigo(nuevaCuenta);
             }
             catch (Exception ex)
@@ -34,7 +32,6 @@ namespace Servicios.Servicios
         {
             try
             {
-                // DELEGA A: ServicioVerificacionRegistro
                 return ServicioVerificacionRegistro.ReenviarCodigo(solicitud);
             }
             catch (Exception ex)
@@ -52,7 +49,6 @@ namespace Servicios.Servicios
         {
             try
             {
-                // DELEGA A: ServicioVerificacionRegistro
                 return ServicioVerificacionRegistro.ConfirmarCodigo(confirmacion);
             }
             catch (Exception ex)
@@ -70,7 +66,6 @@ namespace Servicios.Servicios
         {
             try
             {
-                // DELEGA A: ServicioRecuperacionCuenta
                 return ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
             }
             catch (Exception ex)
@@ -88,7 +83,6 @@ namespace Servicios.Servicios
         {
             try
             {
-                // DELEGA A: ServicioRecuperacionCuenta
                 return ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
             }
             catch (Exception ex)

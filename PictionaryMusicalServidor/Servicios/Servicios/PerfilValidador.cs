@@ -2,9 +2,7 @@
 
 namespace Servicios.Servicios
 {
-    /// <summary>
-    /// Nueva clase estática responsable de validar las solicitudes de actualización de perfil.
-    /// </summary>
+
     internal static class PerfilValidador
     {
         private const int LongitudMaximaRedSocial = 50;

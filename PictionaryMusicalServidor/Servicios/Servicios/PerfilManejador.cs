@@ -13,12 +13,10 @@ namespace Servicios.Servicios
 {
     public class PerfilManejador : IPerfilManejador
     {
-        // CONSTANTE MOVIDA a PerfilValidador
         private static readonly ILog _logger = LogManager.GetLogger(typeof(PerfilManejador));
 
         public UsuarioDTO ObtenerPerfil(int idUsuario)
         {
-            // Este método ya estaba bien (CC baja, SRP correcto)
             if (idUsuario <= 0)
             {
                 throw new FaultException("Los datos proporcionados no son válidos para obtener el perfil.");
@@ -77,14 +75,12 @@ namespace Servicios.Servicios
 
         public ResultadoOperacionDTO ActualizarPerfil(ActualizacionPerfilDTO solicitud)
         {
-            // --- INICIO REFACTORIZACIÓN ---
-            // 1. Delegamos toda la validación de la solicitud a la nueva clase.
+
             ResultadoOperacionDTO validacion = PerfilValidador.ValidarActualizacion(solicitud);
             if (!validacion.OperacionExitosa)
             {
                 return validacion;
             }
-            // --- FIN REFACTORIZACIÓN ---
 
             try
             {
@@ -94,8 +90,7 @@ namespace Servicios.Servicios
                         .Include(u => u.Jugador.RedSocial)
                         .FirstOrDefault(u => u.idUsuario == solicitud.UsuarioId);
 
-                    // Estas validaciones son de LÓGICA DE NEGOCIO (existencia),
-                    // por lo que permanecen aquí.
+
                     if (usuario == null)
                     {
                         return CrearResultadoFallo("No se encontró el usuario especificado.");
@@ -115,7 +110,6 @@ namespace Servicios.Servicios
                         return CrearResultadoFallo("El avatar seleccionado no existe.");
                     }
 
-                    // Aplicamos los valores (ya validados)
                     jugador.Nombre = solicitud.Nombre.Trim();
                     jugador.Apellido = solicitud.Apellido.Trim();
                     jugador.Avatar_idAvatar = avatar.idAvatar;
@@ -131,7 +125,6 @@ namespace Servicios.Servicios
                         jugador.RedSocial.Add(redSocial);
                     }
 
-                    // Usamos el normalizador para limpiar los strings antes de guardar
                     redSocial.Instagram = NormalizarRedSocial(solicitud.Instagram);
                     redSocial.facebook = NormalizarRedSocial(solicitud.Facebook);
                     redSocial.x = NormalizarRedSocial(solicitud.X);
@@ -161,15 +154,7 @@ namespace Servicios.Servicios
                 : new BaseDatosPruebaEntities1(conexion);
         }
 
-        // --- MÉTODOS DE VALIDACIÓN ELIMINADOS ---
-        // ValidarRedesSociales()
-        // ValidarRedSocial()
-        // ResultadoOperacionExitoso()
 
-        /// <summary>
-        /// Este método se queda, ya que es un normalizador de datos,
-        /// no un validador. Se usa para preparar los datos para la BD.
-        /// </summary>
         private static string NormalizarRedSocial(string valor)
         {
             if (string.IsNullOrWhiteSpace(valor))
@@ -181,10 +166,7 @@ namespace Servicios.Servicios
             return normalizado.Length == 0 ? null : normalizado;
         }
 
-        /// <summary>
-        /// Este método se queda, ya que lo usa tanto la lógica de negocio
-        /// como el bloque catch.
-        /// </summary>
+
         private static ResultadoOperacionDTO CrearResultadoFallo(string mensaje)
         {
             return new ResultadoOperacionDTO
