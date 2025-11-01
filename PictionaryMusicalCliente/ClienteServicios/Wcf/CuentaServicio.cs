@@ -22,7 +22,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             try
             {
                 return await WcfClienteAyudante
-                    .UsarAsincrono(cliente, c => c.RegistrarCuentaAsync(solicitud))
+                    .UsarAsincronoAsync(cliente, c => c.RegistrarCuentaAsync(solicitud))
                     .ConfigureAwait(false);
             }
             catch (FaultException ex)

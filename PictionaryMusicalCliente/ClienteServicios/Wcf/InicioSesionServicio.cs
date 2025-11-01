@@ -25,7 +25,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             try
             {
                 var resultadoDto = await WcfClienteAyudante
-                    .UsarAsincrono(cliente, c => c.IniciarSesionAsync(solicitud))
+                    .UsarAsincronoAsync(cliente, c => c.IniciarSesionAsync(solicitud))
                     .ConfigureAwait(false);
 
                 if (resultadoDto == null)

@@ -6,7 +6,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
 {
     public static class WcfClienteAyudante
     {
-        public static async Task<TResult> UsarAsincrono<TClient, TResult>(
+        public static async Task<TResult> UsarAsincronoAsync<TClient, TResult>(
             TClient cliente,
             Func<TClient, Task<TResult>> operacion)
             where TClient : class, ICommunicationObject
@@ -26,34 +26,6 @@ namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
                 TResult resultado = await operacion(cliente).ConfigureAwait(false);
                 Cerrar(cliente);
                 return resultado;
-            }
-            catch
-            {
-                //Se propaga la excepción en dónde sea llamada
-                Abortar(cliente);
-                throw;
-            }
-        }
-
-        public static async Task UsarAsincrono<TClient>(
-            TClient cliente,
-            Func<TClient, Task> operacion)
-            where TClient : class, ICommunicationObject
-        {
-            if (cliente == null)
-            {
-                throw new ArgumentNullException(nameof(cliente));
-            }
-
-            if (operacion == null)
-            {
-                throw new ArgumentNullException(nameof(operacion));
-            }
-
-            try
-            {
-                await operacion(cliente).ConfigureAwait(false);
-                Cerrar(cliente);
             }
             catch
             {

@@ -23,7 +23,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             try
             {
                 DTOs.UsuarioDTO perfilDto = await WcfClienteAyudante
-                    .UsarAsincrono(cliente, c => c.ObtenerPerfilAsync(usuarioId))
+                    .UsarAsincronoAsync(cliente, c => c.ObtenerPerfilAsync(usuarioId))
                     .ConfigureAwait(false);
 
                 return perfilDto;
@@ -75,7 +75,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             try
             {
                 DTOs.ResultadoOperacionDTO resultado = await WcfClienteAyudante
-                    .UsarAsincrono(cliente, c => c.ActualizarPerfilAsync(solicitud))
+                    .UsarAsincronoAsync(cliente, c => c.ActualizarPerfilAsync(solicitud))
                     .ConfigureAwait(false);
 
                 if (resultado == null)
@@ -131,7 +131,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             try
             {
                 DTOs.AvatarDTO[] avatares = await WcfClienteAyudante
-                    .UsarAsincrono(cliente, c => c.ObtenerAvataresDisponiblesAsync())
+                    .UsarAsincronoAsync(cliente, c => c.ObtenerAvataresDisponiblesAsync())
                     .ConfigureAwait(false);
 
                 IReadOnlyList<ObjetoAvatar> lista = AvatarServicioAyudante.Convertir(avatares);

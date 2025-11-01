@@ -58,7 +58,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             try
             {
-                return await WcfClienteAyudante.UsarAsincrono(cliente, operacion).ConfigureAwait(false);
+                return await WcfClienteAyudante.UsarAsincronoAsync(cliente, operacion).ConfigureAwait(false);
             }
             catch (FaultException ex)
             {

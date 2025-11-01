@@ -17,7 +17,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
                 throw new ArgumentNullException(nameof(solicitud));
 
             var cliente = new PictionaryServidorServicioCodigoVerificacion.CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
-            return WcfClienteAyudante.UsarAsincrono(cliente, c => c.SolicitarCodigoVerificacionAsync(solicitud));
+            return WcfClienteAyudante.UsarAsincronoAsync(cliente, c => c.SolicitarCodigoVerificacionAsync(solicitud));
         }
 
         public static Task<DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(string identificador)
@@ -28,7 +28,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
                 Identificador = identificador?.Trim()
             };
 
-            return WcfClienteAyudante.UsarAsincrono(cliente, c => c.SolicitarCodigoRecuperacionAsync(solicitud));
+            return WcfClienteAyudante.UsarAsincronoAsync(cliente, c => c.SolicitarCodigoRecuperacionAsync(solicitud));
         }
 
         public static Task<DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
@@ -40,7 +40,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
                 CodigoIngresado = codigoIngresado?.Trim()
             };
 
-            return WcfClienteAyudante.UsarAsincrono(cliente, c => c.ConfirmarCodigoVerificacionAsync(solicitud));
+            return WcfClienteAyudante.UsarAsincronoAsync(cliente, c => c.ConfirmarCodigoVerificacionAsync(solicitud));
         }
 
         public static Task<DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(string tokenCodigo, string codigoIngresado)
@@ -52,7 +52,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
                 CodigoIngresado = codigoIngresado?.Trim()
             };
 
-            return WcfClienteAyudante.UsarAsincrono(cliente, c => c.ConfirmarCodigoRecuperacionAsync(solicitud));
+            return WcfClienteAyudante.UsarAsincronoAsync(cliente, c => c.ConfirmarCodigoRecuperacionAsync(solicitud));
         }
 
         public static Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
@@ -63,7 +63,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
                 TokenCodigo = tokenCodigo?.Trim()
             };
 
-            return WcfClienteAyudante.UsarAsincrono(cliente, c => c.ReenviarCodigoVerificacionAsync(solicitud));
+            return WcfClienteAyudante.UsarAsincronoAsync(cliente, c => c.ReenviarCodigoVerificacionAsync(solicitud));
         }
 
         public static Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(string tokenCodigo)
@@ -74,7 +74,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
                 TokenCodigo = tokenCodigo?.Trim()
             };
 
-            return WcfClienteAyudante.UsarAsincrono(cliente, c => c.ReenviarCodigoRecuperacionAsync(solicitud));
+            return WcfClienteAyudante.UsarAsincronoAsync(cliente, c => c.ReenviarCodigoRecuperacionAsync(solicitud));
         }
     }
 }

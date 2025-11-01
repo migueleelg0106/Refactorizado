@@ -96,7 +96,7 @@ namespace PictionaryMusicalCliente.Servicios.Wcf
             };
 
             DTOs.ResultadoOperacionDTO resultado = await EjecutarConManejoDeErroresAsync(
-                () => WcfClienteAyudante.UsarAsincrono(cliente, c => c.ActualizarContrasenaAsync(solicitud)),
+                () => WcfClienteAyudante.UsarAsincronoAsync(cliente, c => c.ActualizarContrasenaAsync(solicitud)),
                 Lang.errorTextoServidorActualizarContrasena
             ).ConfigureAwait(false);
 
