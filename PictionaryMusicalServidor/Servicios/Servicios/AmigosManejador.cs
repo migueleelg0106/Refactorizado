@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Data.Entity.Core;
 using System.ServiceModel;
 using Datos.DAL.Implementaciones;
 using Datos.Utilidades;
@@ -38,7 +39,7 @@ namespace Servicios.Servicios
 
                     if (usuario == null)
                     {
-                        throw new FaultException("El usuario especificado no existe.");
+                        throw new FaultException("No se encontró el usuario especificado.");
                     }
 
                     nombreNormalizado = ObtenerNombreNormalizado(usuario.Nombre_Usuario, nombreUsuario);
@@ -46,7 +47,7 @@ namespace Servicios.Servicios
 
                 if (string.IsNullOrWhiteSpace(nombreNormalizado))
                 {
-                    throw new FaultException("El usuario especificado no existe.");
+                    throw new FaultException("No se encontró el usuario especificado.");
                 }
 
                 callback = ObtenerCallbackActual();
@@ -70,10 +71,15 @@ namespace Servicios.Servicios
             {
                 throw;
             }
-            catch (Exception ex) 
+            catch (DataException ex)
             {
-                _logger.Error("Error al suscribir o notificar solicitudes pendientes", ex);
-                throw new FaultException("Ocurrió un error al procesar la suscripción.");
+                _logger.Error("Error de datos al suscribir o notificar solicitudes pendientes", ex);
+                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
+            }
+            catch (EntityException ex)
+            {
+                _logger.Error("Error de base de datos al suscribir o notificar solicitudes pendientes", ex);
+                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
             }
         }
 

@@ -116,7 +116,7 @@ namespace Servicios.Servicios
 
             if (usuario == null)
             {
-                throw new FaultException("El usuario especificado no existe.");
+                throw new FaultException("No se encontró el usuario especificado.");
             }
 
             return ServicioAmistad.ObtenerAmigosDTO(usuario.idUsuario);

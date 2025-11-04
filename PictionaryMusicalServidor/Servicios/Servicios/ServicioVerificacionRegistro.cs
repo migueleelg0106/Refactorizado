@@ -12,7 +12,6 @@ namespace Servicios.Servicios
     internal static class ServicioVerificacionRegistro
     {
         private const int MinutosExpiracionCodigo = 5;
-        private const string MensajeErrorEnvioCodigo = "No fue posible enviar el código de verificación.";
 
         private static readonly ConcurrentDictionary<string, SolicitudCodigoPendiente> _solicitudes =
             new ConcurrentDictionary<string, SolicitudCodigoPendiente>();
@@ -39,7 +38,7 @@ namespace Servicios.Servicios
                         CodigoEnviado = false,
                         UsuarioRegistrado = usuarioRegistrado,
                         CorreoRegistrado = correoRegistrado,
-                        Mensaje = null
+                        Mensaje = "El correo o usuario ya está registrado."
                     };
                 }
             }
@@ -54,7 +53,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = MensajeErrorEnvioCodigo
+                    Mensaje = "No fue posible procesar la solicitud de verificación."
                 };
             }
 
@@ -86,7 +85,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "Solicitud no encontrada"
+                    Mensaje = "No se encontró una solicitud de verificación activa."
                 };
             }
 
@@ -106,7 +105,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = MensajeErrorEnvioCodigo
+                    Mensaje = "No fue posible reenviar el código de verificación."
                 };
             }
 
@@ -129,7 +128,7 @@ namespace Servicios.Servicios
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = "Solicitud no encontrada"
+                    Mensaje = "No se encontró una solicitud de verificación activa."
                 };
             }
 
@@ -139,7 +138,7 @@ namespace Servicios.Servicios
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = "Código expirado"
+                    Mensaje = "El código de verificación ha expirado. Inicie el proceso nuevamente."
                 };
             }
 
@@ -148,7 +147,7 @@ namespace Servicios.Servicios
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = "Código incorrecto"
+                    Mensaje = "El código ingresado no es correcto."
                 };
             }
 
