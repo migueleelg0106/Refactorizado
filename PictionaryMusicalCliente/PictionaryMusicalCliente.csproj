@@ -655,10 +655,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Recursos\Audio-Encendido.png" />
-    <Resource Include="Recursos\Audio-Apagado.png" />
-    <Resource Include="Recursos\inicio_sesion_musica.mp3" />
-    <Resource Include="Recursos\ventana_principal_musica.mp3" />
+    <Resource Include="Recursos\Audio_Encendido.png" />
+    <Resource Include="Recursos\Audio_Apagado.png" />
+    <Content Include="Recursos\inicio_sesion_musica.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\ventana_principal_musica.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

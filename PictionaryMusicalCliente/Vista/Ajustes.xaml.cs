@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using PictionaryMusicalCliente.ClienteServicios;
+using System.Windows.Controls;
 
 namespace PictionaryMusicalCliente
 {
@@ -7,9 +9,14 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class Ajustes : Window
     {
-        public Ajustes()
+        private readonly ServicioMusica _servicioMusica;
+
+        public Ajustes(ServicioMusica servicioMusica)
         {
             InitializeComponent();
+            _servicioMusica = servicioMusica;
+
+            deslizadorVolumen.Value = _servicioMusica.Volume;
         }
 
         private void BotonConfirmar(object sender, RoutedEventArgs e)
@@ -22,6 +29,14 @@ namespace PictionaryMusicalCliente
             TerminacionSesion cerrarSesion = new TerminacionSesion();
             cerrarSesion.Owner = this;
             cerrarSesion.ShowDialog();
+        }
+
+        private void DeslizadorVolumen_CambioValor(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_servicioMusica != null)
+            {
+                _servicioMusica.Volume = e.NewValue;
+            }
         }
     }
 }

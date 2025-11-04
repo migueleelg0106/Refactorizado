@@ -70,11 +70,29 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Volumen de las canciones.
+        /// </summary>
+        public static string ajustesPartidaTextoVolumenCanciones {
+            get {
+                return ResourceManager.GetString("ajustesPartidaTextoVolumenCanciones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a CERRAR SESIÓN.
         /// </summary>
         public static string ajustesPrincipalTextoCerrarSesion {
             get {
                 return ResourceManager.GetString("ajustesPrincipalTextoCerrarSesion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Volumen de la música.
+        /// </summary>
+        public static string ajustesVolumenFondo {
+            get {
+                return ResourceManager.GetString("ajustesVolumenFondo", resourceCulture);
             }
         }
         
@@ -1416,15 +1434,6 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string globalTextoUsuario {
             get {
                 return ResourceManager.GetString("globalTextoUsuario", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a Volumen de las canciones.
-        /// </summary>
-        public static string globalTextoVolumenCanciones {
-            get {
-                return ResourceManager.GetString("globalTextoVolumenCanciones", resourceCulture);
             }
         }
         

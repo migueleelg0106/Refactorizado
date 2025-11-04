@@ -20,8 +20,8 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static language:Lang.globalTextoVolumenCanciones}" FontFamily="Comic Sans MS" FontSize="14" VerticalAlignment="Center"/>
-                    <Slider Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static language:Lang.ajustesVolumenFondo}" FontFamily="Comic Sans MS" FontSize="14" VerticalAlignment="Center"/>
+                    <Slider x:Name="deslizadorVolumen" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" Minimum="0.0" Maximum="1.0" ValueChanged="DeslizadorVolumen_CambioValor"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static language:Lang.globalTextoEfectosSonido}" FontFamily="Comic Sans MS" FontSize="14" VerticalAlignment="Center" Margin="0,15,0,0"/>
                     <CheckBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Margin="94,19,84,0" IsChecked="True"/>

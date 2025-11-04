@@ -360,7 +360,7 @@
   <data name="invitacionTextoInvitado" xml:space="preserve">
     <value> te invitó a unirse a su partida!</value>
   </data>
-  <data name="globalTextoVolumenCanciones" xml:space="preserve">
+  <data name="ajustesPartidaTextoVolumenCanciones" xml:space="preserve">
     <value>Volumen de las canciones</value>
   </data>
   <data name="globalTextoEfectosSonido" xml:space="preserve">
@@ -692,5 +692,8 @@
   </data>
   <data name="errorTextoCamposInvalidosGenerico" xml:space="preserve">
     <value>Hay datos inválidos o campos vacíos, por favor verifique sus datos.</value>
+  </data>
+  <data name="ajustesVolumenFondo" xml:space="preserve">
+    <value>Volumen de la música</value>
   </data>
 </root>

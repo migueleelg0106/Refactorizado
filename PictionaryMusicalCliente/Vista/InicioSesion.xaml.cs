@@ -1,15 +1,18 @@
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
+using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Servicios.Dialogos;
+using PictionaryMusicalCliente.Servicios.Idiomas;
 using PictionaryMusicalCliente.Servicios.Wcf;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
-using PictionaryMusicalCliente.Servicios.Idiomas;
-using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace PictionaryMusicalCliente
 {
@@ -97,6 +100,19 @@ namespace PictionaryMusicalCliente
         {
             _servicioMusica.Detener();
             _servicioMusica.Dispose();
+        }
+
+        private void BotonAudio_Click(object sender, RoutedEventArgs e)
+        {
+            bool estaSilenciado = _servicioMusica.AlternarSilencio();
+
+            if (estaSilenciado) {
+                imagenBotonAudio.Source = new BitmapImage(new Uri("/Recursos/Audio_Apagado.png", UriKind.Relative));
+            }
+            else
+            {
+                imagenBotonAudio.Source = new BitmapImage(new Uri("/Recursos/Audio_Encendido.png", UriKind.Relative));
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
-using System;
-using System.Windows;
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
@@ -7,11 +6,15 @@ using PictionaryMusicalCliente.Servicios.Idiomas;
 using PictionaryMusicalCliente.Servicios.Wcf;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using System;
+using System.Windows;
 
 namespace PictionaryMusicalCliente
 {
     public partial class VentanaPrincipal : Window
     {
+        private readonly ServicioMusica _servicioMusica;
+
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IAmigosServicio _amigosServicio;
         private readonly VentanaPrincipalVistaModelo _vistaModelo;
@@ -19,6 +22,9 @@ namespace PictionaryMusicalCliente
         public VentanaPrincipal()
         {
             InitializeComponent();
+
+            _servicioMusica = new ServicioMusica();
+            _servicioMusica.ReproducirEnBucle("ventana_principal_musica.mp3");
 
             _listaAmigosServicio = new ListaAmigosServicio();
             _amigosServicio = new AmigosServicio();
@@ -29,7 +35,7 @@ namespace PictionaryMusicalCliente
                 _amigosServicio)
             {
                 AbrirPerfil = () => MostrarDialogo(new Perfil()),
-                AbrirAjustes = () => MostrarDialogo(new Ajustes()),
+                AbrirAjustes = () => MostrarDialogo(new Ajustes(_servicioMusica)),
                 AbrirComoJugar = () => MostrarDialogo(new ComoJugar()),
                 AbrirClasificacion = () => MostrarDialogo(new Clasificacion()),
                 AbrirBuscarAmigo = () => MostrarDialogo(new BusquedaAmigo(_amigosServicio)),
@@ -93,6 +99,12 @@ namespace PictionaryMusicalCliente
             };
 
             ventana.Show();
+        }
+
+        private void VentanaPrincipal_Cerrado(object sender, System.EventArgs e)
+        {
+            _servicioMusica.Detener();
+            _servicioMusica.Dispose();
         }
     }
 }

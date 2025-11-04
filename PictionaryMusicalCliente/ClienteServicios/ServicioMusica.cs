@@ -8,8 +8,10 @@ namespace PictionaryMusicalCliente.ClienteServicios
     {
         private readonly MediaPlayer _reproductor;
         private bool _desechado;
+        private double _volumenGuardado;
 
         public bool EstaReproduciendo { get; private set; }
+        public bool EstaSilenciado { get; private set; }
 
         public double Volume
         {
@@ -18,6 +20,12 @@ namespace PictionaryMusicalCliente.ClienteServicios
             {
                 double clamped = Math.Max(0, Math.Min(1, value));
                 _reproductor.Volume = clamped;
+
+                EstaSilenciado = (clamped == 0);
+                if (!EstaSilenciado)
+                {
+                    _volumenGuardado = clamped;
+                }
             }
         }
 
@@ -28,6 +36,24 @@ namespace PictionaryMusicalCliente.ClienteServicios
             _reproductor.MediaOpened += EnMedioAbierto;
             _reproductor.MediaFailed += EnMedioFallido;
             this.Volume = 0.4;
+            EstaSilenciado = false;
+        }
+
+        /// <summary>
+        /// Alterna el estado de silencio (mute) del reproductor.
+        /// </summary>
+        /// <returns>Devuelve true si el reproductor está AHORA silenciado, false si no lo está.</returns>
+        public bool AlternarSilencio()
+        {
+            if (EstaSilenciado)
+            {
+                this.Volume = _volumenGuardado;
+            }
+            else
+            {
+                this.Volume = 0;
+            }
+            return EstaSilenciado;
         }
 
         public void ReproducirEnBucle(string nombreArchivo)
@@ -46,7 +72,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
             try
             {
-                var uri = new Uri($"pack://application:,,,/Recursos/{nombreArchivo}", UriKind.Absolute);
+                var uri = new Uri($"Recursos/{nombreArchivo}", UriKind.Relative);
                 _reproductor.Open(uri);
             }
             catch (UriFormatException ex)

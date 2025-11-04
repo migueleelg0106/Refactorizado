@@ -23,6 +23,29 @@
             </VisualBrush>
         </Grid.Background>
 
+        <Button HorizontalAlignment="Left" VerticalAlignment="Top" 
+        Margin="20,20,0,0" Width="69" Height="69"
+        Click="BotonAudio_Click" Cursor="Hand"
+        Background="Transparent" 
+        BorderThickness="0">
+
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+
+            <Image x:Name="imagenBotonAudio" 
+           Source="/Recursos/Audio_Encendido.png" 
+           Stretch="UniformToFill" Height="67" Width="66"/>
+        </Button>
+
         <!-- Título -->
         <Image Source="/Recursos/PictionaryMusicalLogo.png"
            HorizontalAlignment="Center"

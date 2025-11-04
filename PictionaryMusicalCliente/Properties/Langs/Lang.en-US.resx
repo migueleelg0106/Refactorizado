@@ -361,8 +361,8 @@
   <data name="invitacionTextoInvitado" xml:space="preserve">
     <value> has invited you to join his game!</value>
   </data>
-  <data name="globalTextoVolumenCanciones" xml:space="preserve">
-    <value>Volume of the songs</value>
+  <data name="ajustesPartidaTextoVolumenCanciones" xml:space="preserve">
+    <value>Song volume</value>
   </data>
   <data name="globalTextoEfectosSonido" xml:space="preserve">
     <value>Sound effects volume</value>
@@ -701,5 +701,8 @@
   </data>
   <data name="errorTextoCamposInvalidosGenerico" xml:space="preserve">
     <value>There are invalid or empty fields, please verify your information.</value>
+  </data>
+  <data name="ajustesVolumenFondo" xml:space="preserve">
+    <value>Music volume</value>
   </data>
 </root>
