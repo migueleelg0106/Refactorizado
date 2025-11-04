@@ -85,7 +85,7 @@ namespace Servicios.Servicios
 
                 if (relacion.UsuarioReceptor != usuarioReceptorId)
                 {
-                    throw new InvalidOperationException("Solo el receptor de la solicitud puede aceptarla.");
+                    throw new InvalidOperationException("No fue posible aceptar la solicitud de amistad.");
                 }
 
                 if (relacion.Estado)
@@ -101,7 +101,7 @@ namespace Servicios.Servicios
         {
             if (usuarioAId == usuarioBId)
             {
-                throw new InvalidOperationException("No es posible eliminar una relación consigo mismo.");
+                throw new InvalidOperationException("No fue posible eliminar la relación de amistad.");
             }
 
             using (var contexto = CrearContexto())

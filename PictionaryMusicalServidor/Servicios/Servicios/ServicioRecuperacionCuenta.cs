@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Data;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using Datos.Modelo;
 using Datos.Utilidades;
 using Servicios.Contratos.DTOs;
@@ -13,7 +17,6 @@ namespace Servicios.Servicios
     internal static class ServicioRecuperacionCuenta
     {
         private const int MinutosExpiracionCodigo = 5;
-        private const string MensajeErrorEnvioCodigo = "No fue posible enviar el código de verificación.";
 
         private static readonly ConcurrentDictionary<string, SolicitudRecuperacionPendiente> _solicitudesRecuperacion =
             new ConcurrentDictionary<string, SolicitudRecuperacionPendiente>();
@@ -32,7 +35,7 @@ namespace Servicios.Servicios
                 {
                     CuentaEncontrada = false,
                     CodigoEnviado = false,
-                    Mensaje = "Identificador requerido"
+                    Mensaje = "Debe proporcionar el usuario o correo registrado."
                 };
             }
 
@@ -46,7 +49,7 @@ namespace Servicios.Servicios
                     {
                         CuentaEncontrada = false,
                         CodigoEnviado = false,
-                        Mensaje = null
+                        Mensaje = "No se encontró una cuenta con el usuario o correo proporcionado."
                     };
                 }
 
@@ -75,7 +78,7 @@ namespace Servicios.Servicios
                     {
                         CuentaEncontrada = true,
                         CodigoEnviado = false,
-                        Mensaje = MensajeErrorEnvioCodigo
+                        Mensaje = "No fue posible iniciar la recuperación de la cuenta."
                     };
                 }
 
@@ -103,7 +106,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "Solicitud no encontrada"
+                    Mensaje = "No se encontró una solicitud de recuperación activa."
                 };
             }
 
@@ -113,7 +116,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "Código expirado"
+                    Mensaje = "El código de verificación ha expirado. Solicite uno nuevo."
                 };
             }
 
@@ -136,7 +139,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = MensajeErrorEnvioCodigo
+                    Mensaje = "No fue posible reenviar el código de recuperación."
                 };
             }
 
@@ -159,7 +162,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "Solicitud no encontrada"
+                    Mensaje = "No se encontró una solicitud de recuperación activa."
                 };
             }
 
@@ -169,7 +172,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "Código expirado"
+                    Mensaje = "El código de verificación ha expirado. Solicite uno nuevo."
                 };
             }
 
@@ -178,7 +181,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "Código incorrecto"
+                    Mensaje = "El código ingresado no es correcto."
                 };
             }
 
@@ -204,7 +207,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "Solicitud no encontrada"
+                    Mensaje = "No se encontró una solicitud de recuperación activa."
                 };
             }
 
@@ -213,7 +216,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "Código no confirmado"
+                    Mensaje = "No hay una solicitud de recuperación vigente."
                 };
             }
 
@@ -223,7 +226,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "Solicitud expirada"
+                    Mensaje = "La solicitud de recuperación no es válida."
                 };
             }
 
@@ -238,7 +241,7 @@ namespace Servicios.Servicios
                         return new ResultadoOperacionDTO
                         {
                             OperacionExitosa = false,
-                            Mensaje = "Usuario no encontrado"
+                            Mensaje = "No se encontró el usuario especificado."
                         };
                     }
 
@@ -253,12 +256,36 @@ namespace Servicios.Servicios
                     OperacionExitosa = true
                 };
             }
-            catch (Exception ex)
+            catch (DbEntityValidationException)
             {
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = ex.Message
+                    Mensaje = "No fue posible actualizar la contraseña."
+                };
+            }
+            catch (DbUpdateException)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "No fue posible actualizar la contraseña."
+                };
+            }
+            catch (DataException)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "No fue posible actualizar la contraseña."
+                };
+            }
+            catch (EntityException)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "No fue posible actualizar la contraseña."
                 };
             }
         }
