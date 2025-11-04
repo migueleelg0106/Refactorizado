@@ -9,7 +9,7 @@ using Datos.Modelo;
 using log4net;
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 
 namespace Servicios.Servicios
 {
@@ -71,19 +71,19 @@ namespace Servicios.Servicios
             {
                 throw;
             }
-            catch (DataException ex)
-            {
-                _logger.Error("Error de datos al suscribir o notificar solicitudes pendientes", ex);
-                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
-            }
             catch (EntityException ex)
             {
                 _logger.Error("Error de base de datos al suscribir o notificar solicitudes pendientes", ex);
                 throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
             }
+            catch (DataException ex)
+            {
+                _logger.Error("Error de datos al suscribir o notificar solicitudes pendientes", ex);
+                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
+            }
         }
 
- 
+
         private void NotificarSolicitudesPendientesAlSuscribir(string nombreNormalizado, int usuarioId)
         {
             try
@@ -272,7 +272,7 @@ namespace Servicios.Servicios
                 {
                     UsuarioEmisor = emisor,
                     UsuarioReceptor = receptor,
-                    SolicitudAceptada = false 
+                    SolicitudAceptada = false
                 };
 
                 NotificarEliminacion(nombreUsuarioANormalizado, solicitud);

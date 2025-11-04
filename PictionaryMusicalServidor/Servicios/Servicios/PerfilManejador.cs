@@ -70,14 +70,14 @@ namespace Servicios.Servicios
             {
                 throw;
             }
-            catch (DataException ex)
-            {
-                _logger.Error("Error de datos al obtener el perfil del usuario", ex);
-                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
-            }
             catch (EntityException ex)
             {
                 _logger.Error("Error de base de datos al obtener el perfil del usuario", ex);
+                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
+            }
+            catch (DataException ex)
+            {
+                _logger.Error("Error de datos al obtener el perfil del usuario", ex);
                 throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
             }
             catch (InvalidOperationException ex)
@@ -163,14 +163,14 @@ namespace Servicios.Servicios
                 _logger.Error("Error de actualización de base de datos al actualizar el perfil", ex);
                 return CrearResultadoFallo("No fue posible actualizar el perfil.");
             }
-            catch (DataException ex)
-            {
-                _logger.Error("Error de datos al actualizar el perfil", ex);
-                return CrearResultadoFallo("No fue posible actualizar el perfil.");
-            }
             catch (EntityException ex)
             {
                 _logger.Error("Error de base de datos al actualizar el perfil", ex);
+                return CrearResultadoFallo("No fue posible actualizar el perfil.");
+            }
+            catch (DataException ex)
+            {
+                _logger.Error("Error de datos al actualizar el perfil", ex);
                 return CrearResultadoFallo("No fue posible actualizar el perfil.");
             }
             catch (InvalidOperationException ex)

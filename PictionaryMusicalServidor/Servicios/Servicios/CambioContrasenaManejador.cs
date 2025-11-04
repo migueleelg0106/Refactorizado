@@ -28,18 +28,18 @@ namespace Servicios.Servicios
                     Mensaje = "Los datos proporcionados no son válidos para recuperar la cuenta."
                 };
             }
-            catch (DataException ex)
+            catch (EntityException ex)
             {
-                _logger.Error("Error de datos al solicitar código de recuperación", ex);
+                _logger.Error("Error de base de datos al solicitar código de recuperación", ex);
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CodigoEnviado = false,
                     Mensaje = "No fue posible procesar la recuperación de la cuenta."
                 };
             }
-            catch (EntityException ex)
+            catch (DataException ex)
             {
-                _logger.Error("Error de base de datos al solicitar código de recuperación", ex);
+                _logger.Error("Error de datos al solicitar código de recuperación", ex);
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CodigoEnviado = false,
@@ -63,18 +63,18 @@ namespace Servicios.Servicios
                     Mensaje = "Los datos proporcionados no son válidos para reenviar el código."
                 };
             }
-            catch (DataException ex)
+            catch (EntityException ex)
             {
-                _logger.Error("Error de datos al reenviar código de recuperación", ex);
+                _logger.Error("Error de base de datos al reenviar código de recuperación", ex);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
                     Mensaje = "No fue posible reenviar el código de recuperación."
                 };
             }
-            catch (EntityException ex)
+            catch (DataException ex)
             {
-                _logger.Error("Error de base de datos al reenviar código de recuperación", ex);
+                _logger.Error("Error de datos al reenviar código de recuperación", ex);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -98,18 +98,18 @@ namespace Servicios.Servicios
                     Mensaje = "Los datos proporcionados no son válidos para confirmar el código."
                 };
             }
-            catch (DataException ex)
+            catch (EntityException ex)
             {
-                _logger.Error("Error de datos al confirmar código de recuperación", ex);
+                _logger.Error("Error de base de datos al confirmar código de recuperación", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
                     Mensaje = "No fue posible confirmar el código de recuperación."
                 };
             }
-            catch (EntityException ex)
+            catch (DataException ex)
             {
-                _logger.Error("Error de base de datos al confirmar código de recuperación", ex);
+                _logger.Error("Error de datos al confirmar código de recuperación", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -152,18 +152,18 @@ namespace Servicios.Servicios
                     Mensaje = "No fue posible actualizar la contraseña."
                 };
             }
-            catch (DataException ex)
+            catch (EntityException ex)
             {
-                _logger.Error("Error de datos al actualizar la contraseña", ex);
+                _logger.Error("Error de base de datos al actualizar la contraseña", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
                     Mensaje = "No fue posible actualizar la contraseña."
                 };
             }
-            catch (EntityException ex)
+            catch (DataException ex)
             {
-                _logger.Error("Error de base de datos al actualizar la contraseña", ex);
+                _logger.Error("Error de datos al actualizar la contraseña", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,

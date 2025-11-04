@@ -264,6 +264,14 @@ namespace Servicios.Servicios
                     Mensaje = "No fue posible actualizar la contraseña."
                 };
             }
+            catch (EntityException)
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = "No fue posible actualizar la contraseña."
+                };
+            }
             catch (DbUpdateException)
             {
                 return new ResultadoOperacionDTO
@@ -273,14 +281,6 @@ namespace Servicios.Servicios
                 };
             }
             catch (DataException)
-            {
-                return new ResultadoOperacionDTO
-                {
-                    OperacionExitosa = false,
-                    Mensaje = "No fue posible actualizar la contraseña."
-                };
-            }
-            catch (EntityException)
             {
                 return new ResultadoOperacionDTO
                 {
