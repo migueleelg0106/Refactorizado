@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ClienteServicios\ServicioMusica.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\ServicioCodigoRecuperacionAdaptador.cs" />
     <Compile Include="Comandos\Comando.cs" />
     <Compile Include="Comandos\ComandoAsincrono.cs" />
@@ -652,6 +653,12 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Recursos\Audio-Encendido.png" />
+    <Resource Include="Recursos\Audio-Apagado.png" />
+    <Resource Include="Recursos\inicio_sesion_musica.mp3" />
+    <Resource Include="Recursos\ventana_principal_musica.mp3" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

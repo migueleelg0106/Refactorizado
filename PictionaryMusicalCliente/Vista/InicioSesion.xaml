@@ -5,7 +5,8 @@
         xmlns:localizacion="clr-namespace:PictionaryMusicalCliente.Utilidades.Idiomas"
         Title="{Binding [tituloTextoInicioSesion], Source={StaticResource Localizacion}}" Height="650" Width="800"
         WindowStartupLocation="CenterScreen"
-        Background="White">
+        Background="White"
+        Closed="InicioSesion_Cerrado">
 
     <Window.Resources>
         <convertidores:ConvertidorBooleanoInverso x:Key="BooleanoInverso"/>

@@ -9,16 +9,21 @@ using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using PictionaryMusicalCliente.Servicios.Idiomas;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios;
 
 namespace PictionaryMusicalCliente
 {
     public partial class InicioSesion : Window
     {
+        private readonly ServicioMusica _servicioMusica;
+
         public InicioSesion()
         {
             Resources["Localizacion"] = new Utilidades.Idiomas.LocalizacionContexto();
             InitializeComponent();
 
+            _servicioMusica = new ServicioMusica();
+            _servicioMusica.ReproducirEnBucle("inicio_sesion_musica.mp3");
 
             IInicioSesionServicio inicioSesionServicio = new InicioSesionServicio();
             ICambioContrasenaServicio cambioContrasenaServicio = new CambioContrasenaServicio();
@@ -86,6 +91,12 @@ namespace PictionaryMusicalCliente
                         break;
                 }
             }
+        }
+
+        private void InicioSesion_Cerrado(object sender, System.EventArgs e)
+        {
+            _servicioMusica.Detener();
+            _servicioMusica.Dispose();
         }
     }
 }
