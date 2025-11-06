@@ -1,3 +1,14 @@
+using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Modelo; 
+using PictionaryMusicalCliente.Modelo.Catalogos; 
+using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Servicios; 
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Servicios.Wcf.Helpers; 
+using PictionaryMusicalCliente.Sesiones; 
+using PictionaryMusicalCliente.Utilidades; 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,16 +17,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Modelo; 
-using PictionaryMusicalCliente.Modelo.Catalogos; 
-using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios; 
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Sesiones; 
-using PictionaryMusicalCliente.Utilidades; 
-using PictionaryMusicalCliente.Servicios.Wcf.Helpers; 
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using DTOs = global::Servicios.Contratos.DTOs;
 
 
@@ -60,10 +61,29 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             RedesSociales = CrearRedesSociales();
             _redesPorNombre = RedesSociales.ToDictionary(r => r.Nombre, StringComparer.OrdinalIgnoreCase);
 
-            GuardarCambiosComando = new ComandoAsincrono(_ => GuardarCambiosAsync(), _ => !EstaProcesando);
-            SeleccionarAvatarComando = new ComandoAsincrono(_ => SeleccionarAvatarAsync(), _ => !EstaProcesando);
-            CambiarContrasenaComando = new ComandoAsincrono(_ => CambiarContrasenaAsync(), _ => !EstaProcesando && !EstaCambiandoContrasena);
-            CerrarComando = new ComandoDelegado(_ => CerrarAccion?.Invoke());
+            GuardarCambiosComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await GuardarCambiosAsync();
+            }, _ => !EstaProcesando);
+
+            SeleccionarAvatarComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await SeleccionarAvatarAsync();
+            }, _ => !EstaProcesando);
+
+            CambiarContrasenaComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await CambiarContrasenaAsync();
+            }, _ => !EstaProcesando && !EstaCambiandoContrasena);
+
+            CerrarComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                CerrarAccion?.Invoke();
+            });
         }
 
         public string Usuario { get => _usuario; private set => EstablecerPropiedad(ref _usuario, value); }
@@ -112,6 +132,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (sesion == null || sesion.IdUsuario <= 0)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
                 CerrarAccion?.Invoke();
                 return;
@@ -128,6 +149,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (perfil == null)
                 {
+                    ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorObtenerPerfil);
                     return;
                 }
@@ -136,6 +158,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorObtenerPerfil);
             }
             finally
@@ -164,6 +187,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (!sonCamposValidos || !sonRedesValidas)
             {
+                ManejadorSonido.ReproducirError();
                 var todosInvalidos = camposInvalidos ?? Enumerable.Empty<string>();
                 if (!sonRedesValidas) todosInvalidos = todosInvalidos.Concat(new[] 
                 { 
@@ -202,6 +226,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado == null)
                 {
+                    ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorActualizarPerfil);
                     return;
                 }
@@ -214,11 +239,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado.OperacionExitosa)
                 {
+                    ManejadorSonido.ReproducirExito();
                     ActualizarSesion(); 
                 }
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorActualizarPerfil);
             }
             finally
@@ -290,6 +317,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             if (string.IsNullOrWhiteSpace(Correo))
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoIniciarCambioContrasena);
                 return;
             }
@@ -304,11 +332,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
+                    ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(resultado.Mensaje);
+                }
+                else if(resultado?.OperacionExitosa == true)
+                {
+                    ManejadorSonido.ReproducirExito();
                 }
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoIniciarCambioContrasena);
             }
             finally

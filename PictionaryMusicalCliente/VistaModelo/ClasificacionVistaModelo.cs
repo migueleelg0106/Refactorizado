@@ -1,13 +1,14 @@
+using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Servicios;
+using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.Utilidades;
 using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
@@ -26,9 +27,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             _clasificacionOriginal = Array.Empty<DTOs.ClasificacionUsuarioDTO>();
             _clasificacion = new ObservableCollection<DTOs.ClasificacionUsuarioDTO>();
 
-            OrdenarPorRondasComando = new ComandoDelegado(_ => OrdenarPorRondas(), _ => PuedeOrdenar());
-            OrdenarPorPuntosComando = new ComandoDelegado(_ => OrdenarPorPuntos(), _ => PuedeOrdenar());
-            CerrarComando = new ComandoDelegado(_ => CerrarAccion?.Invoke());
+            OrdenarPorRondasComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                OrdenarPorRondas();
+            }, _ => PuedeOrdenar());
+
+            OrdenarPorPuntosComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                OrdenarPorPuntos();
+            }, _ => PuedeOrdenar());
+
+            CerrarComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                CerrarAccion?.Invoke();
+            });
         }
 
         public ObservableCollection<DTOs.ClasificacionUsuarioDTO> Clasificacion

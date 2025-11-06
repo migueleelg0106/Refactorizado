@@ -18,14 +18,14 @@ namespace PictionaryMusicalCliente
 {
     public partial class InicioSesion : Window
     {
-        private readonly ServicioMusica _servicioMusica;
+        private readonly MusicaManejador _servicioMusica;
 
         public InicioSesion()
         {
             Resources["Localizacion"] = new Utilidades.Idiomas.LocalizacionContexto();
             InitializeComponent();
 
-            _servicioMusica = new ServicioMusica();
+            _servicioMusica = new MusicaManejador();
             _servicioMusica.ReproducirEnBucle("inicio_sesion_musica.mp3");
 
             IInicioSesionServicio inicioSesionServicio = new InicioSesionServicio();

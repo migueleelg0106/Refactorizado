@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
@@ -14,6 +7,14 @@ using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Utilidades;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
@@ -44,10 +45,29 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
             _localizacionServicio = localizacionServicio ?? throw new ArgumentNullException(nameof(localizacionServicio));
 
-            IniciarSesionComando = new ComandoAsincrono(_ => IniciarSesionAsync(), _ => !EstaProcesando);
-            RecuperarCuentaComando = new ComandoAsincrono(_ => RecuperarCuentaAsync(), _ => !EstaProcesando);
-            AbrirCrearCuentaComando = new ComandoDelegado(_ => AbrirCrearCuenta?.Invoke());
-            IniciarSesionInvitadoComando = new ComandoDelegado(_ => IniciarSesionInvitado?.Invoke());
+            IniciarSesionComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await IniciarSesionAsync();
+            }, _ => !EstaProcesando);
+
+            RecuperarCuentaComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await RecuperarCuentaAsync();
+            }, _ => !EstaProcesando);
+
+            AbrirCrearCuentaComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                AbrirCrearCuenta?.Invoke();
+            });
+
+            IniciarSesionInvitadoComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                IniciarSesionInvitado?.Invoke();
+            });
 
             CargarIdiomas();
         }
@@ -98,6 +118,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             var (esValido, identificadorTrimmed) = ValidarEntradasYMostrarErrores();
             if (!esValido)
             {
+                ManejadorSonido.ReproducirError();
                 return;
             }
 
@@ -118,6 +139,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorInicioSesion);
             }
             finally
@@ -160,12 +182,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             if (resultado == null)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoServidorInicioSesion);
                 return;
             }
 
             if (!resultado.InicioSesionExitoso)
             {
+                ManejadorSonido.ReproducirError();
                 MostrarErrorInicioSesion(resultado);
                 return;
             }
@@ -175,6 +199,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 SesionUsuarioActual.Instancia.EstablecerUsuario(resultado.Usuario);
             }
 
+            ManejadorSonido.ReproducirExito();
             InicioSesionCompletado?.Invoke(resultado);
             CerrarAccion?.Invoke();
         }
@@ -202,6 +227,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (string.IsNullOrWhiteSpace(identificador))
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoIdentificadorRecuperacionRequerido);
                 return;
             }
@@ -215,11 +241,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
+                    ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(resultado.Mensaje);
                 }
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorSolicitudCambioContrasena);
             }
             finally

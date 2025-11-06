@@ -67,7 +67,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ClienteServicios\ServicioMusica.cs" />
+    <Compile Include="Utilidades\MusicaManejador.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\ServicioCodigoRecuperacionAdaptador.cs" />
     <Compile Include="Comandos\Comando.cs" />
     <Compile Include="Comandos\ComandoAsincrono.cs" />
@@ -165,6 +165,7 @@
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvisoAyudante.cs" />
     <Compile Include="Utilidades\ControlVisual.cs" />
     <Compile Include="Utilidades\Idiomas\LocalizacionContexto.cs" />
+    <Compile Include="Utilidades\SonidoManejador.cs" />
     <Compile Include="Utilidades\ValidacionEntrada.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvatarRutaAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvatarServicioAyudante.cs" />
@@ -660,10 +661,25 @@
   <ItemGroup>
     <Resource Include="Recursos\Audio_Encendido.png" />
     <Resource Include="Recursos\Audio_Apagado.png" />
+    <Content Include="Recursos\Adivinador.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Dibujante.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\error.MP3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\exito.MP3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Recursos\inicio_sesion_musica.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Recursos\PictionaryIcono.ico" />
+    <Content Include="Recursos\piano_boton.MP3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Recursos\ventana_principal_musica.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

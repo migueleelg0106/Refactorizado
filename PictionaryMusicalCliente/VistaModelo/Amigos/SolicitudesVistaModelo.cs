@@ -1,16 +1,17 @@
+using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Servicios;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Sesiones;
+using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Sesiones;
-using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.Modelo;
 using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
@@ -28,11 +29,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             Solicitudes = new ObservableCollection<SolicitudAmistadEntrada>();
 
-            AceptarSolicitudComando = new ComandoAsincrono(param => ResponderSolicitudAsync(param as SolicitudAmistadEntrada),
-                param => PuedeAceptar(param as SolicitudAmistadEntrada));
-            RechazarSolicitudComando = new ComandoAsincrono(param => RechazarSolicitudAsync(param as SolicitudAmistadEntrada),
-                param => PuedeRechazar(param as SolicitudAmistadEntrada));
-            CerrarComando = new ComandoDelegado(_ => Cerrar?.Invoke());
+            AceptarSolicitudComando = new ComandoAsincrono(async param =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await ResponderSolicitudAsync(param as SolicitudAmistadEntrada);
+            }, param => PuedeAceptar(param as SolicitudAmistadEntrada));
+
+            RechazarSolicitudComando = new ComandoAsincrono(async param =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await RechazarSolicitudAsync(param as SolicitudAmistadEntrada);
+            }, param => PuedeRechazar(param as SolicitudAmistadEntrada));
+
+            CerrarComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                Cerrar?.Invoke();
+            });
 
             _amigosServicio.SolicitudesActualizadas += SolicitudesActualizadas;
             ActualizarSolicitudes(_amigosServicio.SolicitudesPendientes);
@@ -142,10 +155,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     .ResponderSolicitudAsync(entrada.Solicitud.UsuarioEmisor, entrada.Solicitud.UsuarioReceptor)
                     .ConfigureAwait(true);
 
+                ManejadorSonido.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudAceptada);
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
@@ -169,10 +184,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     .EliminarAmigoAsync(entrada.Solicitud.UsuarioEmisor, entrada.Solicitud.UsuarioReceptor)
                     .ConfigureAwait(true);
 
+                ManejadorSonido.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudCancelada);
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally

@@ -13,7 +13,7 @@ namespace PictionaryMusicalCliente
 {
     public partial class VentanaPrincipal : Window
     {
-        private readonly ServicioMusica _servicioMusica;
+        private readonly MusicaManejador _servicioMusica;
 
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IAmigosServicio _amigosServicio;
@@ -23,7 +23,7 @@ namespace PictionaryMusicalCliente
         {
             InitializeComponent();
 
-            _servicioMusica = new ServicioMusica();
+            _servicioMusica = new MusicaManejador();
             _servicioMusica.ReproducirEnBucle("ventana_principal_musica.mp3");
 
             _listaAmigosServicio = new ListaAmigosServicio();
@@ -93,12 +93,13 @@ namespace PictionaryMusicalCliente
 
         private void MostrarVentanaJuego()
         {
-            var ventana = new VentanaJuego
-            {
-                Owner = this
-            };
+            _servicioMusica.Detener();
+            _servicioMusica.Dispose();
 
-            ventana.Show();
+            var ventanaJuego = new VentanaJuego();
+            ventanaJuego.Show();
+
+            this.Close();
         }
 
         private void VentanaPrincipal_Cerrado(object sender, System.EventArgs e)

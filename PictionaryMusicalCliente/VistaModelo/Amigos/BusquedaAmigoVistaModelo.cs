@@ -1,12 +1,13 @@
-using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Servicios;
 using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Utilidades;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
@@ -22,8 +23,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             _amigosServicio = amigosServicio ?? throw new ArgumentNullException(nameof(amigosServicio));
             _usuarioActual = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
 
-            EnviarSolicitudComando = new ComandoAsincrono(_ => EnviarSolicitudAsync(), _ => PuedeEnviarSolicitud());
-            CancelarComando = new ComandoDelegado(_ => Cancelado?.Invoke());
+            EnviarSolicitudComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await EnviarSolicitudAsync();
+            }, _ => PuedeEnviarSolicitud());
+
+            CancelarComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                Cancelado?.Invoke();
+            });
         }
 
         public string NombreUsuarioBusqueda
@@ -85,11 +95,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             try
             {
                 await _amigosServicio.EnviarSolicitudAsync(_usuarioActual, nombreAmigo).ConfigureAwait(true);
+                ManejadorSonido.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudEnviada);
                 SolicitudEnviada?.Invoke();
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();  
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally

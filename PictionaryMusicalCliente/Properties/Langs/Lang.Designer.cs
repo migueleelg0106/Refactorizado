@@ -61,6 +61,24 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a ¡Intenta adivinar la canción en el tiempo restante!.
+        /// </summary>
+        public static string adivinadorTextoContenido {
+            get {
+                return ResourceManager.GetString("adivinadorTextoContenido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ADIVINADOR.
+        /// </summary>
+        public static string adivinadorTextoTitulo {
+            get {
+                return ResourceManager.GetString("adivinadorTextoTitulo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a SALIR DE LA PARTIDA.
         /// </summary>
         public static string ajustesPartidaTextoSalirPartida {
@@ -534,6 +552,24 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string crearCuentaTextoExitosoTitulo {
             get {
                 return ResourceManager.GetString("crearCuentaTextoExitosoTitulo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡Dibuja la canción para que los demás jugadores adivinen!.
+        /// </summary>
+        public static string dibujanteTextoContenido {
+            get {
+                return ResourceManager.GetString("dibujanteTextoContenido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a DIBUJANTE.
+        /// </summary>
+        public static string dibujanteTextoTitulo {
+            get {
+                return ResourceManager.GetString("dibujanteTextoTitulo", resourceCulture);
             }
         }
         

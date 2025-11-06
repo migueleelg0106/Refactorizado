@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
@@ -21,7 +22,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
 
             Avatares = new ObservableCollection<ObjetoAvatar>(avatares);
-            ConfirmarSeleccionComando = new ComandoDelegado(ConfirmarSeleccion);
+            ConfirmarSeleccionComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                ConfirmarSeleccion();
+            });
         }
 
         public ObservableCollection<ObjetoAvatar> Avatares { get; }
@@ -42,6 +47,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             if (AvatarSeleccionado == null)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoSeleccionAvatarValido);
                 return;
             }

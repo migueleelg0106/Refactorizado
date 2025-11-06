@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace PictionaryMusicalCliente.ClienteServicios
 {
-    public class ServicioMusica : IDisposable
+    public class MusicaManejador : IDisposable
     {
         private readonly MediaPlayer _reproductor;
         private bool _desechado;
@@ -29,7 +29,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
             }
         }
 
-        public ServicioMusica()
+        public MusicaManejador()
         {
             _reproductor = new MediaPlayer();
             _reproductor.MediaEnded += EnMedioTerminado;

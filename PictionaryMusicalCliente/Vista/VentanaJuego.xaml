@@ -15,15 +15,12 @@
             <ColumnDefinition Width="320"/>
         </Grid.ColumnDefinitions>
 
-        <!-- ======= Panel Izquierdo ======= -->
         <StackPanel Grid.Column="0" Margin="8" Background="Wheat">
 
-            <!-- Invitaciones a amigos -->
             <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2"  CornerRadius="3">
                 <ListBox  FontFamily="Comic Sans MS" Height="148"/>
             </Border>
 
-            <!-- Fragmento: Invitar por correo -->
             <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3">
                 <StackPanel Margin="8">
                     <TextBlock Text="{x:Static language:Lang.globalTextoCorreo}" FontWeight="Bold" Margin="0,0,0,6" HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
@@ -32,14 +29,14 @@
                 </StackPanel>
             </Border>
 
-            <!-- Fragmento: Código -->
             <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Width="147">
                 <StackPanel Margin="8">
                     <TextBlock Text="{x:Static language:Lang.partidaTextoCodigo}" FontWeight="Bold" Margin="0,0,0,0" FontFamily="Comic Sans MS"/>
                 </StackPanel>
             </Border>
+            <Button Content="Dibujante" Click="Dibujante_Click"/>
+            <Button Content="Adivinador" Click="Adivinador_Click"/>
 
-            <!-- Fragmento: Ajustes -->
             <StackPanel Margin="0,300,0,0">
                 <Button Name="botonAjustesPartida" Content="{x:Static language:Lang.globalTextoAjustes}" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
                 Height="35" Width="107" FontFamily="Comic Sans MS" Click="BotonAjustes"/>
@@ -47,7 +44,6 @@
 
         </StackPanel>
 
-        <!-- ======= Panel Central ======= -->
         <Grid Grid.Column="1" Margin="8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
@@ -55,7 +51,6 @@
                 <RowDefinition Height="90"/>
             </Grid.RowDefinitions>
 
-            <!-- Encabezado -->
             <DockPanel Grid.Row="0" Background="Red">
                 <TextBlock Text="{x:Static language:Lang.partidaTextoRonda}" Foreground="Black" FontSize="18"
                            VerticalAlignment="Center" Margin="10,0,0,0" FontFamily="Comic Sans MS"/>
@@ -63,39 +58,29 @@
                            HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Comic Sans MS"/>
             </DockPanel>
 
-            <!-- Lienzo con borde y herramientas (ocultos hasta iniciar) -->
             <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Background="White">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
-                        <!-- Área de dibujo (oculta al inicio) -->
                         <RowDefinition Height="Auto" />
-                        <!-- Botón Iniciar -->
                     </Grid.RowDefinitions>
 
-                    <!-- ===== Área de dibujo (OCULTA) ===== -->
                     <Grid x:Name="cuadriculaDibujo" Grid.Row="0" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <!-- Barra de herramientas -->
                             <RowDefinition Height="*"/>
-                            <!-- Lienzo -->
                         </Grid.RowDefinitions>
 
-                        <!-- Barra de herramientas (solo iconos) -->
                         <DockPanel Grid.Row="0" Margin="4">
-                            <!-- Herramientas -->
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="0,0,8,0">
                                 <ToggleButton x:Name="toggleBotonLapiz" Content="✏️" Width="40" Height="32" Margin="0,0,4,0"
-                                        Cursor="Hand" Click="ToggleBotonLapiz_Click"/>
+                                              Cursor="Hand" Click="ToggleBotonLapiz_Click"/>
                                 <ToggleButton x:Name="toggleBotonBorrador" Content="🧼" Width="40" Height="32" Margin="0,0,4,0"
-                                        Cursor="Hand" Click="ToggleBotonBorrador_Click"/>
+                                              Cursor="Hand" Click="ToggleBotonBorrador_Click"/>
                                 <Button x:Name="botonLimpiar" Content="🧹" Width="40" Height="32" Margin="0,0,4,0"
                                         Click="BotonBorrar_Click"/>
-
                             </StackPanel>
 
-                            <!-- Grosor -->
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="0,0,8,0">
                                 <Button Tag="2" Click="Grosor_Click" Width="28" Height="28" Margin="2">
                                     <Ellipse Width="6" Height="6" Fill="Black"/>
@@ -108,7 +93,6 @@
                                 </Button>
                             </StackPanel>
 
-                            <!-- Colores -->
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                 <Button Tag="Black" Click="Color_Click" Width="28" Height="28" Margin="2">
                                     <Ellipse Width="18" Height="18" Fill="Black" Stroke="#333" StrokeThickness="0.5"/>
@@ -131,31 +115,68 @@
                             </StackPanel>
                         </DockPanel>
 
-                        <!-- Lienzo -->
                         <InkCanvas x:Name="ink" Grid.Row="1" Margin="4" Background="White"/>
                     </Grid>
 
-                    <!-- ===== Botón Iniciar partida ===== -->
                     <Button x:Name="botonIniciarPartida"
-                Grid.Row="1"
-                Content="{x:Static language:Lang.partidaAdminTextoIniciarPartida}"
-                Width="150" Height="42"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Margin="0,8,0,10"
-                FontFamily="Comic Sans MS" FontWeight="Bold"
-                Background="White" BorderBrush="Black"
-                Click="BotonIniciarPartida"/>
+                            Grid.Row="1"
+                            Content="{x:Static language:Lang.partidaAdminTextoIniciarPartida}"
+                            Width="150" Height="42"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="0,8,0,10"
+                            FontFamily="Comic Sans MS" FontWeight="Bold"
+                            Background="White" BorderBrush="Black"
+                            Click="BotonIniciarPartida"/>
                 </Grid>
             </Border>
 
+            <Grid x:Name="OverlayDibujante"
+                  Grid.Row="1"
+                  Visibility="Collapsed"
+                  Margin="20"
+                  Cursor="Hand"
+                  Background="Transparent"
+                  MouseLeftButtonDown="Overlay_MouseLeftButtonDown"
+                  ToolTip="Clic para cerrar">
 
+                <Image Source="/Recursos/Dibujante.png" Stretch="Uniform"/>
 
-            <!-- Franja roja inferior (reservada a otros datos) -->
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="{x:Static language:Lang.dibujanteTextoTitulo}" 
+                               FontFamily="Comic Sans MS" FontSize="36" FontWeight="Black" Foreground="Black"
+                               HorizontalAlignment="Center"/>
+
+                    <TextBlock Text="{x:Static language:Lang.dibujanteTextoContenido}" 
+                               FontFamily="Comic Sans MS" FontSize="10" FontStyle="Italic" Foreground="Black"
+                               HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid x:Name="OverlayAdivinador"
+                  Grid.Row="1"
+                  Visibility="Collapsed"
+                  Margin="20"
+                  Cursor="Hand"
+                  Background="Transparent"
+                  MouseLeftButtonDown="Overlay_MouseLeftButtonDown"
+                  ToolTip="Clic para cerrar">
+
+                <Image Source="/Recursos/Adivinador.png" Stretch="Uniform"/>
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="{x:Static language:Lang.adivinadorTextoTitulo}"
+                               FontFamily="Comic Sans MS" FontSize="36" FontWeight="Black" Foreground="Black"
+                               HorizontalAlignment="Center"/>
+
+                    <TextBlock Text="{x:Static language:Lang.adivinadorTextoContenido}"
+                               FontFamily="Comic Sans MS" FontSize="12" FontStyle="Italic" Foreground="Black"
+                               HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Grid>
             <Grid Grid.Row="2" Background="Red"/>
         </Grid>
 
-        <!-- ======= Panel Derecho (Chat) ======= -->
         <Grid Grid.Column="2" Margin="8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>

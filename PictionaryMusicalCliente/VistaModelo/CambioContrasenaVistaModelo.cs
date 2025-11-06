@@ -1,3 +1,4 @@
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
@@ -25,8 +26,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             _tokenCodigo = tokenCodigo ?? throw new ArgumentNullException(nameof(tokenCodigo));
             _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
 
-            ConfirmarComando = new ComandoAsincrono(_ => ConfirmarAsync(), _ => !EstaProcesando);
-            CancelarComando = new ComandoDelegado(Cancelar);
+            ConfirmarComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await ConfirmarAsync();
+            }, _ => !EstaProcesando);
+
+            CancelarComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                Cancelar();
+            });
         }
 
         public string NuevaContrasena
@@ -66,6 +76,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             var camposInvalidos = ValidarEntradas();
             if (camposInvalidos != null && camposInvalidos.Count > 0)
             {
+                ManejadorSonido.ReproducirError();
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
                 return; 
             }
@@ -132,11 +143,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado == null)
                 {
+                    ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoActualizarContrasena);
                     return null; 
                 }
 
                 string mensaje = resultado.Mensaje ?? (resultado.OperacionExitosa ? Lang.avisoTextoContrasenaActualizada : Lang.errorTextoActualizarContrasena);
+                if (resultado.OperacionExitosa)
+                {
+                    ManejadorSonido.ReproducirExito();
+                }
+                else
+                {
+                    ManejadorSonido.ReproducirError();
+                }
                 AvisoAyudante.Mostrar(mensaje);
                 resultado.Mensaje = mensaje; 
 
@@ -144,6 +164,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoActualizarContrasena);
                 return null; 
             }

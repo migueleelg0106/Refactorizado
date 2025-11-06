@@ -1,15 +1,16 @@
+using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Servicios;
+using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
 using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
@@ -46,9 +47,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ?? throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));
             _avatarServicio = avatarServicio ?? throw new ArgumentNullException(nameof(avatarServicio));
 
-            CrearCuentaComando = new ComandoAsincrono(_ => CrearCuentaAsync(), _ => !EstaProcesando);
-            CancelarComando = new ComandoDelegado(Cancelar);
-            SeleccionarAvatarComando = new ComandoAsincrono(_ => SeleccionarAvatarAsync());
+            CrearCuentaComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await CrearCuentaAsync();
+            }, _ => !EstaProcesando);
+
+            CancelarComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                Cancelar();
+            });
+
+            SeleccionarAvatarComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await SeleccionarAvatarAsync();
+            });
 
             EstablecerAvatarPredeterminado();
             _ = CargarCatalogoAvataresAsync();
@@ -89,12 +104,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 var (esValido, solicitud) = ValidarEntradasYMostrarErrores();
                 if (!esValido) 
                 {
+                    ManejadorSonido.ReproducirError();
                     return;
                 }
                 await EjecutarFlujoDeRegistroAsync(solicitud).ConfigureAwait(true);
             }
             catch (ExcepcionServicio ex) 
             {
+                ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoRegistrarCuentaMasTarde);
             }
             finally
@@ -126,6 +143,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             var (codigoEnviado, resultadoSolicitud, errorDuplicado) = await SolicitarCodigoRegistroYValidarRespuesta(solicitud).ConfigureAwait(true);
             if (!codigoEnviado) 
             {
+                ManejadorSonido.ReproducirError();
                 if (errorDuplicado) 
                 {
                     MostrarErroresCamposDuplicados();
@@ -136,17 +154,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             var (verificacionExitosa, _) = await MostrarDialogoVerificacionYValidarRespuesta(resultadoSolicitud).ConfigureAwait(true);
             if (!verificacionExitosa) 
             {
+                ManejadorSonido.ReproducirError();
                 return;
             }
 
             var (registroExitoso, _) = await RegistrarCuentaYValidarRespuesta(solicitud).ConfigureAwait(true);
             if (registroExitoso) 
             {
+                ManejadorSonido.ReproducirExito();
                 MostrarMensaje?.Invoke(Lang.crearCuentaTextoExitosoMensaje); 
                 CerrarAccion?.Invoke(); 
             }
             else 
             {
+                ManejadorSonido.ReproducirError();
                 MostrarErroresCamposDuplicados();
             }
         }

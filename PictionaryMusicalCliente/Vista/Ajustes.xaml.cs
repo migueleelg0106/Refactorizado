@@ -9,9 +9,9 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class Ajustes : Window
     {
-        private readonly ServicioMusica _servicioMusica;
+        private readonly MusicaManejador _servicioMusica;
 
-        public Ajustes(ServicioMusica servicioMusica)
+        public Ajustes(MusicaManejador servicioMusica)
         {
             InitializeComponent();
             _servicioMusica = servicioMusica;

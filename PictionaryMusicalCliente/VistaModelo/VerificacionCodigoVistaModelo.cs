@@ -1,13 +1,14 @@
+using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Servicios;
+using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
-using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
-using PictionaryMusicalCliente.Utilidades;
 using DTOs = global::Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
@@ -37,9 +38,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             _tokenCodigo = tokenCodigo ?? throw new ArgumentNullException(nameof(tokenCodigo));
             _codigoVerificacionServicio = codigoVerificacionServicio ?? throw new ArgumentNullException(nameof(codigoVerificacionServicio));
 
-            VerificarCodigoComando = new ComandoAsincrono(_ => VerificarCodigoAsync());
-            ReenviarCodigoComando = new ComandoAsincrono(_ => ReenviarCodigoAsync(), _ => PuedeReenviar);
-            CancelarComando = new ComandoDelegado(Cancelar);
+            VerificarCodigoComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await VerificarCodigoAsync();
+            });
+
+            ReenviarCodigoComando = new ComandoAsincrono(async _ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                await ReenviarCodigoAsync();
+            }, _ => PuedeReenviar);
+
+            CancelarComando = new ComandoDelegado(_ =>
+            {
+                ManejadorSonido.ReproducirClick();
+                Cancelar();
+            });
 
             _temporizadorReenvio = new DispatcherTimer
             {
@@ -113,6 +128,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (string.IsNullOrWhiteSpace(CodigoVerificacion))
             {
+                ManejadorSonido.ReproducirError();
                 MarcarCodigoInvalido?.Invoke(true);
                 AvisoAyudante.Mostrar(Lang.errorTextoCodigoVerificacionRequerido);
                 return;
@@ -127,6 +143,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado == null)
                 {
+                    ManejadorSonido.ReproducirError();
                     MarcarCodigoInvalido?.Invoke(true);
                     AvisoAyudante.Mostrar(Lang.errorTextoVerificarCodigo);
                     return;
@@ -134,6 +151,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (!resultado.RegistroExitoso)
                 {
+                    ManejadorSonido.ReproducirError();
                     string mensaje = MensajeServidorAyudante.Localizar(resultado.Mensaje, Lang.errorTextoCodigoIncorrecto);
                     resultado.Mensaje = mensaje;
                     MarcarCodigoInvalido?.Invoke(true);
@@ -149,12 +167,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     return;
                 }
 
+                ManejadorSonido.ReproducirExito();
                 MarcarCodigoInvalido?.Invoke(false);
                 DetenerTemporizadores();
                 VerificacionCompletada?.Invoke(resultado);
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 MarcarCodigoInvalido?.Invoke(true);
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoVerificarCodigo);
             }
@@ -178,6 +198,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 if (resultado?.CodigoEnviado == true)
                 {
+                    ManejadorSonido.ReproducirExito();
                     if (!string.IsNullOrWhiteSpace(resultado.TokenCodigo))
                     {
                         _tokenCodigo = resultado.TokenCodigo;
@@ -187,11 +208,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
                 else
                 {
+                    ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(resultado?.Mensaje ?? Lang.errorTextoSolicitarNuevoCodigo);
                 }
             }
             catch (ExcepcionServicio ex)
             {
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoSolicitarNuevoCodigo);
             }
         }

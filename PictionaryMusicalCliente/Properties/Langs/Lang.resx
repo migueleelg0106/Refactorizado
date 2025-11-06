@@ -696,4 +696,16 @@
   <data name="ajustesVolumenFondo" xml:space="preserve">
     <value>Volumen de la música</value>
   </data>
+  <data name="dibujanteTextoTitulo" xml:space="preserve">
+    <value>DIBUJANTE</value>
+  </data>
+  <data name="dibujanteTextoContenido" xml:space="preserve">
+    <value>¡Dibuja la canción para que los demás jugadores adivinen!</value>
+  </data>
+  <data name="adivinadorTextoTitulo" xml:space="preserve">
+    <value>ADIVINADOR</value>
+  </data>
+  <data name="adivinadorTextoContenido" xml:space="preserve">
+    <value>¡Intenta adivinar la canción en el tiempo restante!</value>
+  </data>
 </root>
