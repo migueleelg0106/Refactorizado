@@ -16,23 +16,30 @@ namespace PictionaryMusicalCliente
         private Color _color = Colors.Black;
         private bool _syncingToolUI = false;
 
-        private DispatcherTimer _temporizador;
+        private DispatcherTimer _overlayTimer;
+        private DispatcherTimer _temporizador; // <-- nuevo timer para el contador
+        private int _contador = 30;
 
         public VentanaJuego()
         {
             InitializeComponent();
-            
+
+            // Timer de overlays
+            _overlayTimer = new DispatcherTimer();
+            _overlayTimer.Interval = TimeSpan.FromSeconds(5);
+            _overlayTimer.Tick += OverlayTimer_Tick;
+
+            // Timer del contador
             _temporizador = new DispatcherTimer();
-            _temporizador.Interval = TimeSpan.FromSeconds(5);
-            _temporizador.Tick += OverlayTimer_Tick;
+            _temporizador.Interval = TimeSpan.FromSeconds(1);
+            _temporizador.Tick += Temporizador_Tick;
         }
 
         private void BotonInvitarCorreo(object sender, RoutedEventArgs e)
         {
-            // de momento esta aqui para la prueba de la ventana pero esto ira cuando se implemente la funcion de expulsar jugador que es la que tenemos duda
             ExpulsionJugador expulsarJugador = new ExpulsionJugador();
             expulsarJugador.ShowDialog();
-            // esto igual es momentaneo en lo que se hace lo de los botones dinamicos de esa lista
+
             InvitacionAmigos invitarAmigos = new InvitacionAmigos();
             invitarAmigos.ShowDialog();
         }
@@ -62,7 +69,6 @@ namespace PictionaryMusicalCliente
         {
             if (ink == null) return;
 
-            // Evita que cambiar IsChecked dispare Click/Checked en cascada
             _syncingToolUI = true;
             if (toggleBotonLapiz != null) toggleBotonLapiz.IsChecked = isPencil;
             if (toggleBotonBorrador != null) toggleBotonBorrador.IsChecked = !isPencil;
@@ -76,16 +82,15 @@ namespace PictionaryMusicalCliente
             else ActualizarEraserShape();
         }
 
-        // Handlers de los ToggleButton basados en Click
         private void ToggleBotonLapiz_Click(object sender, RoutedEventArgs e)
         {
-            if (_syncingToolUI) return;   // click provocado por SetTool
+            if (_syncingToolUI) return;
             SetTool(true);
         }
 
         private void ToggleBotonBorrador_Click(object sender, RoutedEventArgs e)
         {
-            if (_syncingToolUI) return;   // click provocado por SetTool
+            if (_syncingToolUI) return;
             SetTool(false);
         }
 
@@ -135,13 +140,15 @@ namespace PictionaryMusicalCliente
         {
             ink?.Strokes.Clear();
         }
+
         private void Dibujante_Click(object sender, RoutedEventArgs e)
         {
             OverlayAdivinador.Visibility = Visibility.Collapsed;
             OverlayDibujante.Visibility = Visibility.Visible;
 
-            _temporizador.Stop();
-            _temporizador.Start();
+            _overlayTimer.Stop();
+            _overlayTimer.Start();
+
         }
 
         private void Adivinador_Click(object sender, RoutedEventArgs e)
@@ -149,26 +156,64 @@ namespace PictionaryMusicalCliente
             OverlayDibujante.Visibility = Visibility.Collapsed;
             OverlayAdivinador.Visibility = Visibility.Visible;
 
-            _temporizador.Stop();
-            _temporizador.Start();
+            _overlayTimer.Stop();
+            _overlayTimer.Start();
+
         }
 
-        private void Overlay_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Overlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            _temporizador.Stop();
-
+            _overlayTimer.Stop();
             if (sender is UIElement element)
-            {
                 element.Visibility = Visibility.Collapsed;
-            }
         }
 
         private void OverlayTimer_Tick(object sender, EventArgs e)
         {
-            _temporizador.Stop();
-
+            _overlayTimer.Stop();
             OverlayDibujante.Visibility = Visibility.Collapsed;
             OverlayAdivinador.Visibility = Visibility.Collapsed;
+            IniciarTemporizador();
+
         }
+
+        private void IniciarTemporizador()
+        {
+            _contador = 30;
+            txtContador.Text = _contador.ToString();
+            txtContador.Foreground = Brushes.Black;
+
+            campoTextoPalabraAdivinar.Visibility = Visibility.Visible;
+            gridInfoCancion.Visibility = Visibility.Visible;
+
+            campoTextoPalabraAdivinar.Text = "Gasolina";
+            txtArtista.Text = "Artista: Daddy Yankee";
+            txtGenero.Text = "Género: Reggaeton";
+
+            _temporizador.Start();
+        }
+
+        private void Temporizador_Tick(object sender, EventArgs e)
+        {
+            _contador--;
+            txtContador.Text = _contador.ToString();
+
+            if (_contador <= 10)
+            {
+                txtContador.Foreground = Brushes.Red;
+            }
+
+            if (_contador <= 0)
+            {
+                _temporizador.Stop();
+                txtContador.Text = "0";
+
+                campoTextoPalabraAdivinar.Visibility = Visibility.Collapsed;
+                gridInfoCancion.Visibility = Visibility.Collapsed;
+
+                MessageBox.Show("¡Tiempo terminado!");
+            }
+        }
+
     }
 }

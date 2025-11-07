@@ -51,11 +51,46 @@
                 <RowDefinition Height="90"/>
             </Grid.RowDefinitions>
 
-            <DockPanel Grid.Row="0" Background="Red">
-                <TextBlock Text="{x:Static language:Lang.partidaTextoRonda}" Foreground="Black" FontSize="18"
-                           VerticalAlignment="Center" Margin="10,0,0,0" FontFamily="Comic Sans MS"/>
-                <TextBlock Text="-------" Foreground="Black" FontSize="20" FontWeight="Bold"
-                           HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Comic Sans MS"/>
+            <DockPanel Grid.Row="0" Background="Red" LastChildFill="False">
+
+                <!-- Texto: "Ronda" -->
+                <TextBlock Text="{x:Static language:Lang.partidaTextoRonda}" 
+               Foreground="Black" FontSize="18"
+               VerticalAlignment="Center" Margin="10,0,0,0"
+               FontFamily="Comic Sans MS"
+               DockPanel.Dock="Left"/>
+
+                <!-- Número de ronda -->
+                <TextBlock Text="3"
+               Foreground="Black" FontSize="18" FontWeight="Bold"
+               VerticalAlignment="Center" Margin="5,0,0,0"
+               FontFamily="Comic Sans MS"
+               DockPanel.Dock="Left"/>
+
+                <!-- Contador circular -->
+                <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
+                    <Ellipse Width="50" Height="50" Fill="White" Stroke="Black" StrokeThickness="2"/>
+                    <TextBlock x:Name="txtContador"
+                   Text="30"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Foreground="Black"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontFamily="Comic Sans MS"/>
+                </Grid>
+
+                <!-- Texto centrado: nombre de lo que se dibuja -->
+                <TextBlock x:Name="campoTextoPalabraAdivinar"
+               Text="Gasolina"
+               Foreground="Black"
+               FontSize="25"
+               FontWeight="Bold"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"
+               FontFamily="Comic Sans MS"
+               DockPanel.Dock="Top"
+               Visibility="Collapsed"/>
             </DockPanel>
 
             <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Background="White">
@@ -174,7 +209,34 @@
                                HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0"/>
                 </StackPanel>
             </Grid>
-            <Grid Grid.Row="2" Background="Red"/>
+            
+            <Grid Grid.Row="2" Background="Red">
+
+                <Grid x:Name="gridInfoCancion" 
+                      Background="Transparent"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Visibility="Collapsed">
+
+                    <StackPanel VerticalAlignment="Center" Margin="10,0,10,0">
+                        <TextBlock x:Name="txtArtista"
+                                   Text="Artista: Daddy Yankee"
+                                   Foreground="Black"
+                                   FontFamily="Comic Sans MS"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,2"/>
+                        <TextBlock x:Name="txtGenero"
+                                   Text="Género: Reggaeton"
+                                   Foreground="Black"
+                                   FontFamily="Comic Sans MS"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
         </Grid>
 
         <Grid Grid.Column="2" Margin="8">
