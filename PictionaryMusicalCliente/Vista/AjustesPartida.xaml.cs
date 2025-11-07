@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using PictionaryMusicalCliente.Utilidades;
+using System.Windows;
 
 namespace PictionaryMusicalCliente
 {
@@ -7,9 +8,13 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class AjustesPartida : Window
     {
-        public AjustesPartida()
+        private readonly CancionManejador _servicioCancion;
+        public AjustesPartida(CancionManejador servicioCancion)
         {
             InitializeComponent();
+            _servicioCancion = servicioCancion;
+
+            deslizadorVolumen.Value = _servicioCancion.Volumen;
         }
 
         private void BotonConfirmar(object sender, RoutedEventArgs e)
@@ -21,6 +26,14 @@ namespace PictionaryMusicalCliente
             ConfirmacionSalirPartida confirmacionSalirPartida = new ConfirmacionSalirPartida();
             confirmacionSalirPartida.Owner = this;
             confirmacionSalirPartida.ShowDialog();
+        }
+
+        private void DeslizadorVolumen_CambioValor(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_servicioCancion != null)
+            {
+                _servicioCancion.Volumen = e.NewValue;
+            }
         }
     }
 }

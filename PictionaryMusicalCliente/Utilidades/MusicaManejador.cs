@@ -13,7 +13,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         public bool EstaReproduciendo { get; private set; }
         public bool EstaSilenciado { get; private set; }
 
-        public double Volume
+        public double Volumen
         {
             get => _reproductor.Volume;
             set
@@ -35,7 +35,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
             _reproductor.MediaEnded += EnMedioTerminado;
             _reproductor.MediaOpened += EnMedioAbierto;
             _reproductor.MediaFailed += EnMedioFallido;
-            this.Volume = 0.4;
+            this.Volumen = 0.4;
             EstaSilenciado = false;
         }
 
@@ -47,11 +47,11 @@ namespace PictionaryMusicalCliente.ClienteServicios
         {
             if (EstaSilenciado)
             {
-                this.Volume = _volumenGuardado;
+                this.Volumen = _volumenGuardado;
             }
             else
             {
-                this.Volume = 0;
+                this.Volumen = 0;
             }
             return EstaSilenciado;
         }

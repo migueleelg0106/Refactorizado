@@ -178,7 +178,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 if (EstablecerPropiedad(ref _idiomaSeleccionado, value) && value != null)
                 {
-                    _localizacionServicio.EstablecerIdioma(value.Codigo);
                     ActualizarEstadoIniciarJuego();
                 }
             }
@@ -307,8 +306,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 {
                     new OpcionTexto("facil", Lang.principalTextoFacil),
                     new OpcionTexto("media", Lang.principalTextoMedia),
-                    new OpcionTexto("dificil", Lang.principalTextoDificil),
-                    new OpcionTexto("mixto", Lang.principalTextoMixto)
+                    new OpcionTexto("dificil", Lang.principalTextoDificil)
                 });
             DificultadSeleccionada = DificultadesDisponibles.FirstOrDefault();
         }
@@ -334,7 +332,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             var opciones = new[]
             {
                 new IdiomaOpcion("es-MX", Lang.idiomaTextoEspañol),
-                new IdiomaOpcion("en-US", Lang.idiomaTextoIngles)
+                new IdiomaOpcion("en-US", Lang.idiomaTextoIngles),
+                new IdiomaOpcion("mixto", Lang.principalTextoMixto)
             };
 
             if (IdiomasDisponibles == null)

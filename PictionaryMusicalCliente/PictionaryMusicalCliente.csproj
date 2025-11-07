@@ -112,6 +112,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Utilidades\CancionManejador.cs" />
     <Compile Include="Utilidades\MusicaManejador.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\ServicioCodigoRecuperacionAdaptador.cs" />
     <Compile Include="Comandos\Comando.cs" />
@@ -595,16 +596,36 @@
     <Content Include="Recursos\Adivinador.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Recursos\Canciones\Black_Or_White_Michael_Jackson.mp3" />
-    <Content Include="Recursos\Canciones\Bocanada_Gustavo_Cerati.mp3" />
-    <Content Include="Recursos\Canciones\Dont_Stop_The_Music_Rihanna.mp3" />
-    <Content Include="Recursos\Canciones\Earth_Song_Michael_Jackson.mp3" />
-    <Content Include="Recursos\Canciones\Gasolina_Daddy_Yankee.mp3" />
-    <Content Include="Recursos\Canciones\La_Nave_Del_Olvido_Jose_Jose.MP3" />
-    <Content Include="Recursos\Canciones\Man_In_The_Mirror_Michael_Jackson.mp3" />
-    <Content Include="Recursos\Canciones\Pupilas_De_Gato_Luis_Miguel.mp3" />
-    <Content Include="Recursos\Canciones\Redbone_Childish_Gambino.mp3" />
-    <Content Include="Recursos\Canciones\Tiburon_Proyecto_Uno.mp3" />
+    <Content Include="Recursos\Canciones\Black_Or_White_Michael_Jackson.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Canciones\Bocanada_Gustavo_Cerati.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Canciones\Dont_Stop_The_Music_Rihanna.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Canciones\Earth_Song_Michael_Jackson.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Canciones\Gasolina_Daddy_Yankee.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Canciones\La_Nave_Del_Olvido_Jose_Jose.MP3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Canciones\Man_In_The_Mirror_Michael_Jackson.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Canciones\Pupilas_De_Gato_Luis_Miguel.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Canciones\Redbone_Childish_Gambino.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Recursos\Canciones\Tiburon_Proyecto_Uno.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Recursos\Dibujante.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

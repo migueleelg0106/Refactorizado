@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using PictionaryMusicalCliente.ClienteServicios;
-using System.Windows.Controls;
 
 namespace PictionaryMusicalCliente
 {
@@ -16,7 +15,7 @@ namespace PictionaryMusicalCliente
             InitializeComponent();
             _servicioMusica = servicioMusica;
 
-            deslizadorVolumen.Value = _servicioMusica.Volume;
+            deslizadorVolumen.Value = _servicioMusica.Volumen;
         }
 
         private void BotonConfirmar(object sender, RoutedEventArgs e)
@@ -35,7 +34,7 @@ namespace PictionaryMusicalCliente
         {
             if (_servicioMusica != null)
             {
-                _servicioMusica.Volume = e.NewValue;
+                _servicioMusica.Volumen = e.NewValue;
             }
         }
     }

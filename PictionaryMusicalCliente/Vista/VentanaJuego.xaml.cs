@@ -1,4 +1,7 @@
-﻿using System;
+﻿using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
@@ -11,6 +14,8 @@ namespace PictionaryMusicalCliente
 {
     public partial class VentanaJuego : Window
     {
+        private readonly CancionManejador _manejadorCancion;
+
         private bool _juegoIniciado = false;
         private double _grosor = 6;
         private Color _color = Colors.Black;
@@ -23,6 +28,8 @@ namespace PictionaryMusicalCliente
         public VentanaJuego()
         {
             InitializeComponent();
+
+            _manejadorCancion = new CancionManejador();
 
             // Timer de overlays
             _overlayTimer = new DispatcherTimer();
@@ -46,7 +53,7 @@ namespace PictionaryMusicalCliente
 
         private void BotonAjustes(object sender, RoutedEventArgs e)
         {
-            AjustesPartida ajustesPartida = new AjustesPartida();
+            AjustesPartida ajustesPartida = new AjustesPartida(_manejadorCancion);
             ajustesPartida.Owner = this;
             ajustesPartida.ShowDialog();
         }
@@ -149,6 +156,7 @@ namespace PictionaryMusicalCliente
             _overlayTimer.Stop();
             _overlayTimer.Start();
 
+            _manejadorCancion.Reproducir("Gasolina_Daddy_Yankee.mp3");
         }
 
         private void Adivinador_Click(object sender, RoutedEventArgs e)
@@ -211,7 +219,7 @@ namespace PictionaryMusicalCliente
                 campoTextoPalabraAdivinar.Visibility = Visibility.Collapsed;
                 gridInfoCancion.Visibility = Visibility.Collapsed;
 
-                MessageBox.Show("¡Tiempo terminado!");
+                AvisoAyudante.Mostrar("¡Tiempo terminado!");
             }
         }
 
