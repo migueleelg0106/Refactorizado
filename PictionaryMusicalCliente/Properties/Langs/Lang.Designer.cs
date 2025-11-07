@@ -115,15 +115,6 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ADVERTENCIA.
-        /// </summary>
-        public static string alertaTextoAviso {
-            get {
-                return ResourceManager.GetString("alertaTextoAviso", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a No fue posible aceptar la solicitud de amistad..
         /// </summary>
         public static string amigosErrorAceptarSolicitud {

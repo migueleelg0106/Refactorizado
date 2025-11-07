@@ -12,11 +12,7 @@
                 Padding="20" CornerRadius="3"
                 HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel Width="240" VerticalAlignment="Center">
-
-                <TextBlock Text="{x:Static language:Lang.alertaTextoAviso}"
-                           TextWrapping="Wrap" TextAlignment="Center"
-                           FontFamily="Comic Sans MS" FontSize="18"
-                           FontWeight="Bold" Margin="0,0,0,10"/>
+                <Image Source="/Recursos/Informacion.png" Height="69" Width="94"></Image>
 
                 <TextBlock x:Name="bloqueTextoMensaje"
                            TextWrapping="Wrap" TextAlignment="Center"

@@ -471,9 +471,6 @@
   <data name="partidaTextoPartidaEnCurso" xml:space="preserve">
     <value>Ongoing game</value>
   </data>
-  <data name="alertaTextoAviso" xml:space="preserve">
-    <value>WARNING</value>
-  </data>
   <data name="avisoTextoCodigoDescripcionCambio" xml:space="preserve">
     <value>Enter the code we sent to confirm the password change.</value>
   </data>

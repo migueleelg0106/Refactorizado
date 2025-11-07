@@ -635,6 +635,7 @@
     <Content Include="Recursos\exito.MP3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Recursos\Informacion.png" />
     <Content Include="Recursos\inicio_sesion_musica.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

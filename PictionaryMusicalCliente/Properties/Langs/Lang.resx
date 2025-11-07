@@ -462,9 +462,6 @@
   <data name="partidaTextoPartidaEnCurso" xml:space="preserve">
     <value>Partida en curso</value>
   </data>
-  <data name="alertaTextoAviso" xml:space="preserve">
-    <value>ADVERTENCIA</value>
-  </data>
   <data name="avisoTextoCodigoDescripcionCambio" xml:space="preserve">
     <value>Ingresa el código que enviamos para confirmar el cambio de contraseña.</value>
   </data>
