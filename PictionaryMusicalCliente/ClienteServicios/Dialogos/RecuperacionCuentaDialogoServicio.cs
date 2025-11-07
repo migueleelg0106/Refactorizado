@@ -4,12 +4,11 @@ using System.Windows;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using DTOs = global::Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.Servicios.Dialogos
+namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 {
     public class RecuperacionCuentaDialogoServicio : IRecuperacionCuentaServicio
     {

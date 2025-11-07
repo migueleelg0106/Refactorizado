@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace PictionaryMusicalCliente.Servicios.Abstracciones
+namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
 {
     public interface ILocalizacionServicio
     {

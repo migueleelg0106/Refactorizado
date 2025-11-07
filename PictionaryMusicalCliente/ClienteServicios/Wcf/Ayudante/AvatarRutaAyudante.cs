@@ -1,4 +1,4 @@
-namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
     public static class AvatarRutaAyudante
     {

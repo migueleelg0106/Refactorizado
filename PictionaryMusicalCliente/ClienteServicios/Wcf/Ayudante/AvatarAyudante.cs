@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 
-namespace PictionaryMusicalCliente.Utilidades
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
     internal static class AvatarAyudante
     {

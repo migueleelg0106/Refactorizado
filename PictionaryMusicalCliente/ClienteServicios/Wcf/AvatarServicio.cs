@@ -1,9 +1,7 @@
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;

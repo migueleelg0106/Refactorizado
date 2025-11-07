@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DTOs = global::Servicios.Contratos.DTOs;
+using DTOs = Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.Servicios.Abstracciones
+namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
 {
     public interface IAmigosServicio : IDisposable
     {

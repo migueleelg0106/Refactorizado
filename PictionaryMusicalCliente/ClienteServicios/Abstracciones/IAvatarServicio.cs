@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
 
-namespace PictionaryMusicalCliente.Servicios.Abstracciones
+namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
 {
     public interface IAvatarServicio
     {

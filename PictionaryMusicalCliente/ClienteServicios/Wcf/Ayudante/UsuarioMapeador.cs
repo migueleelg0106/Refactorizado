@@ -1,7 +1,7 @@
 using PictionaryMusicalCliente.Sesiones;
 using DTOs = global::Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
     /// <summary>
     /// Expone operaciones auxiliares para mantener sincronizada la sesin del usuario.

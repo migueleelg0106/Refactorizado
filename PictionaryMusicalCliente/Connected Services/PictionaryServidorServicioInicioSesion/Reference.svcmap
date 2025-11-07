@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="bd0119ed-379e-4b31-89df-afe52b32abc1" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="6950bc0a-3698-483b-90ce-33f786d34375" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -21,13 +21,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/InicioSesion/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="http://localhost:8507/Pictionary/InicioSesion" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="b98af7fe-a545-4565-afb9-2e91699ef1a4" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="9133ea20-e8f2-4e92-8dd4-2a7725589aa9" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="78d5acdb-0dac-4587-9139-a793ce0922ef" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="2c0feb4a-421b-4ed1-b7a3-e2c32103df8b" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
+    <MetadataFile FileName="InicioSesion.xsd" MetadataType="Schema" ID="9a2eb0df-9ecb-45e8-b649-6aca1885de4e" SourceId="1" SourceUrl="http://localhost:8507/Pictionary/InicioSesion?xsd=xsd0" />
+    <MetadataFile FileName="InicioSesion.disco" MetadataType="Disco" ID="18cf9cde-c30c-4b88-8c45-cc9775de9667" SourceId="1" SourceUrl="http://localhost:8507/Pictionary/InicioSesion?disco" />
+    <MetadataFile FileName="InicioSesion1.xsd" MetadataType="Schema" ID="454868c2-acb3-40bd-9828-fddace69c021" SourceId="1" SourceUrl="http://localhost:8507/Pictionary/InicioSesion?xsd=xsd1" />
+    <MetadataFile FileName="InicioSesion2.xsd" MetadataType="Schema" ID="5b5d97ad-5e03-488e-b5c6-8b1214733b53" SourceId="1" SourceUrl="http://localhost:8507/Pictionary/InicioSesion?xsd=xsd2" />
+    <MetadataFile FileName="InicioSesionManejador.wsdl" MetadataType="Wsdl" ID="b3bf7ad0-300a-4072-8dd7-ec12cf833895" SourceId="1" SourceUrl="http://localhost:8507/Pictionary/InicioSesion?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

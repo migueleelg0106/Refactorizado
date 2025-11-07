@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="0051f9eb-1fcb-4134-b834-211b580611de" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="9b404f25-218f-47fa-8d99-ccd365c68dd7" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -21,13 +21,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/CodigoVerificacion/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="http://localhost:8503/Pictionary/CodigoVerificacion" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="8280372d-7dd8-4b8c-8634-9d43e193d976" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="580f57d3-ca16-435e-ba37-da7e2d357a80" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="ffbf7d6f-22ab-47e6-a3b2-87f0c4162d91" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="048dca1e-68a8-493b-92c1-9f22d4a1e966" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion/mex" />
+    <MetadataFile FileName="CodigoVerificacion.xsd" MetadataType="Schema" ID="3428db28-c7a1-49f1-851a-7f7cb3beb9ce" SourceId="1" SourceUrl="http://localhost:8503/Pictionary/CodigoVerificacion?xsd=xsd1" />
+    <MetadataFile FileName="CodigoVerificacionManejador.wsdl" MetadataType="Wsdl" ID="6fbb1637-dcdf-4436-a017-07cf0e8b5968" SourceId="1" SourceUrl="http://localhost:8503/Pictionary/CodigoVerificacion?wsdl" />
+    <MetadataFile FileName="CodigoVerificacion1.xsd" MetadataType="Schema" ID="e085e9dd-9586-4ce0-9dd4-ba22de2722f6" SourceId="1" SourceUrl="http://localhost:8503/Pictionary/CodigoVerificacion?xsd=xsd2" />
+    <MetadataFile FileName="CodigoVerificacion.disco" MetadataType="Disco" ID="0422f652-e701-44c1-8a84-351d93a0f9b5" SourceId="1" SourceUrl="http://localhost:8503/Pictionary/CodigoVerificacion?disco" />
+    <MetadataFile FileName="CodigoVerificacion2.xsd" MetadataType="Schema" ID="35a6b0d8-462f-4093-9075-3fc398e9ba12" SourceId="1" SourceUrl="http://localhost:8503/Pictionary/CodigoVerificacion?xsd=xsd0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

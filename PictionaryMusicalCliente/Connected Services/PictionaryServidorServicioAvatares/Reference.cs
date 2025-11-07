@@ -16,10 +16,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAvatares {
     public interface ICatalogoAvataresManejador {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponiblesResponse")]
-        global::Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles();
+        Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponibles", ReplyAction="http://tempuri.org/ICatalogoAvataresManejador/ObtenerAvataresDisponiblesResponse")]
-        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync();
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,11 +49,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioAvatares {
                 base(binding, remoteAddress) {
         }
         
-        public global::Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles() {
+        public Servicios.Contratos.DTOs.AvatarDTO[] ObtenerAvataresDisponibles() {
             return base.Channel.ObtenerAvataresDisponibles();
         }
         
-        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync() {
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AvatarDTO[]> ObtenerAvataresDisponiblesAsync() {
             return base.Channel.ObtenerAvataresDisponiblesAsync();
         }
     }

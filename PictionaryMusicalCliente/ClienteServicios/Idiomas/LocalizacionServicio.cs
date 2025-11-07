@@ -3,9 +3,9 @@ using System.Globalization;
 using System.Threading;
 using PictionaryMusicalCliente.Properties;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 
-namespace PictionaryMusicalCliente.Servicios.Idiomas
+namespace PictionaryMusicalCliente.ClienteServicios.Idiomas
 {
     public sealed class LocalizacionServicio : ILocalizacionServicio
     {

@@ -2,14 +2,13 @@ using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios;
-using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using DTOs = global::Servicios.Contratos.DTOs;
+using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {

@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using ICodigoVerificacionCli = PictionaryMusicalCliente.ClienteServicios.Abstracciones.ICodigoVerificacionServicio;
 using DTOs = global::Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.Servicios.Dialogos
+namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 {
     public class VerificacionCodigoDialogoServicio : IVerificacionCodigoDialogoServicio
     {

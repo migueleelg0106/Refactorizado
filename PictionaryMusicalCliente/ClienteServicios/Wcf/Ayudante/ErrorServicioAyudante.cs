@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.ServiceModel;
 
-namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
     public static class ErrorServicioAyudante
     {

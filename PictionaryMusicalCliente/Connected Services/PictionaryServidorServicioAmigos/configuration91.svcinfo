@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="1LqL4oGbD8IGQ5D9xLY3bE0xBbphTtiS37DYR+rtg08=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="xDYInLRsPh0yeHsl4f5xfLcPoeBod/Ec4c7CcdhvESU=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="netTcpBinding" name="NetTcpBinding_IAmigosManejador">
       <properties>
@@ -215,10 +215,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WSDualHttpBinding_IAmigosManejador" contract="PictionaryServidorServicioAmigos.IAmigosManejador" bindingType="wsDualHttpBinding" address="http://0.0.0.0:8086/Pictionary/Amigos/Amigos" bindingConfiguration="WSDualHttpBinding_IAmigosManejador">
+    <endpoint name="WSDualHttpBinding_IAmigosManejador" contract="PictionaryServidorServicioAmigos.IAmigosManejador" bindingType="wsDualHttpBinding" address="http://localhost:8515/Pictionary/Amigos/Amigos" bindingConfiguration="WSDualHttpBinding_IAmigosManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://0.0.0.0:8086/Pictionary/Amigos/Amigos</serializedValue>
+          <serializedValue>http://localhost:8515/Pictionary/Amigos/Amigos</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -300,10 +300,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="NetTcpBinding_IAmigosManejador" contract="PictionaryServidorServicioAmigos.IAmigosManejador" bindingType="netTcpBinding" address="net.tcp://0.0.0.0:8096/Pictionary/Amigos/Amigos" bindingConfiguration="NetTcpBinding_IAmigosManejador">
+    <endpoint name="NetTcpBinding_IAmigosManejador" contract="PictionaryServidorServicioAmigos.IAmigosManejador" bindingType="netTcpBinding" address="net.tcp://localhost:8516/Pictionary/Amigos/Amigos" bindingConfiguration="NetTcpBinding_IAmigosManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>net.tcp://0.0.0.0:8096/Pictionary/Amigos/Amigos</serializedValue>
+          <serializedValue>net.tcp://localhost:8516/Pictionary/Amigos/Amigos</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

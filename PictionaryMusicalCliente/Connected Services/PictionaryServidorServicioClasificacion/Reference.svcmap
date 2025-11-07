@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="37ae96cf-e0c5-4337-8d32-27284d57700b" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="bd60adc0-3a79-488a-8508-bba2ccbc238e" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -21,13 +21,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/Clasificacion/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="http://localhost:8511/Pictionary/Clasificacion" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="c84c68b9-1796-4185-8682-c0d0e6672d64" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="3c3e2467-9097-4462-be4a-8aaf57387ba9" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="b2214ebb-55a1-4bc0-ba12-6e09222d0b71" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="d3ac6194-b6ee-415c-9d55-14735d5e0967" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion/mex" />
+    <MetadataFile FileName="Clasificacion.disco" MetadataType="Disco" ID="9a09c8eb-fa39-404b-ae74-72d3fa22d6c3" SourceId="1" SourceUrl="http://localhost:8511/Pictionary/Clasificacion?disco" />
+    <MetadataFile FileName="Clasificacion.xsd" MetadataType="Schema" ID="b4300b95-e934-48e4-82e3-ccbda6df08f5" SourceId="1" SourceUrl="http://localhost:8511/Pictionary/Clasificacion?xsd=xsd1" />
+    <MetadataFile FileName="ClasificacionManejador.wsdl" MetadataType="Wsdl" ID="fdec9a3c-ee06-4898-be7a-57a8482285e4" SourceId="1" SourceUrl="http://localhost:8511/Pictionary/Clasificacion?wsdl" />
+    <MetadataFile FileName="Clasificacion1.xsd" MetadataType="Schema" ID="218d1268-2c04-4a01-a6ea-6a780c70123c" SourceId="1" SourceUrl="http://localhost:8511/Pictionary/Clasificacion?xsd=xsd0" />
+    <MetadataFile FileName="Clasificacion2.xsd" MetadataType="Schema" ID="7efe6054-9bc8-45da-8cde-d1923df20ff8" SourceId="1" SourceUrl="http://localhost:8511/Pictionary/Clasificacion?xsd=xsd2" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -1,10 +1,9 @@
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Servicios.Idiomas;
-using PictionaryMusicalCliente.Servicios.Wcf;
-using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Idiomas;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using System;
 using System.Windows;

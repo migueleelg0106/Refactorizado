@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace PictionaryMusicalCliente.Utilidades
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
     public static class AvisoAyudante
     {

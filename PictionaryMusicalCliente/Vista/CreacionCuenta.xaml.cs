@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Servicios.Dialogos;
-using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Dialogos;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 

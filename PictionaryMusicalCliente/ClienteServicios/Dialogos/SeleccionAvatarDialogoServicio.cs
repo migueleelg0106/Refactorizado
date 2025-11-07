@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 
-namespace PictionaryMusicalCliente.Servicios.Dialogos
+namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 {
     public class SeleccionAvatarDialogoServicio : ISeleccionarAvatarServicio
     {

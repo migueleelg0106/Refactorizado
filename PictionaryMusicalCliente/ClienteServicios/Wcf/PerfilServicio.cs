@@ -1,15 +1,14 @@
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using DTOs = global::Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.Servicios.Wcf
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
     public class PerfilServicio : IPerfilServicio
     {

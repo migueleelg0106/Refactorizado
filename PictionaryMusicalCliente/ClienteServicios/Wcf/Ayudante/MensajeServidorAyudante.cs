@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using LangResources = PictionaryMusicalCliente.Properties.Langs;
 
-namespace PictionaryMusicalCliente.Servicios.Wcf.Helpers
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
     public static class MensajeServidorAyudante
     {

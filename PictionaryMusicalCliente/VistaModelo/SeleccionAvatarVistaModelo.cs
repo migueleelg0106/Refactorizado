@@ -2,7 +2,7 @@ using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

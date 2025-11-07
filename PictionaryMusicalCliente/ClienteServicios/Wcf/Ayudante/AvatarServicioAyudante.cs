@@ -5,9 +5,9 @@ using System.Net;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using PictionaryMusicalCliente.Modelo;
-using DTOs = global::Servicios.Contratos.DTOs;
+using DTOs = Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
     internal static class AvatarServicioAyudante
     {

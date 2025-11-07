@@ -28,17 +28,17 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos {
         System.Threading.Tasks.Task CancelarSuscripcionAsync(string nombreUsuario);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IListaAmigosManejador/ObtenerAmigos", ReplyAction="http://tempuri.org/IListaAmigosManejador/ObtenerAmigosResponse")]
-        global::Servicios.Contratos.DTOs.AmigoDTO[] ObtenerAmigos(string nombreUsuario);
+        Servicios.Contratos.DTOs.AmigoDTO[] ObtenerAmigos(string nombreUsuario);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IListaAmigosManejador/ObtenerAmigos", ReplyAction="http://tempuri.org/IListaAmigosManejador/ObtenerAmigosResponse")]
-        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.AmigoDTO[]> ObtenerAmigosAsync(string nombreUsuario);
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AmigoDTO[]> ObtenerAmigosAsync(string nombreUsuario);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IListaAmigosManejadorCallback {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IListaAmigosManejador/NotificarListaAmigosActualizada")]
-        void NotificarListaAmigosActualizada(global::Servicios.Contratos.DTOs.AmigoDTO[] amigos);
+        void NotificarListaAmigosActualizada(Servicios.Contratos.DTOs.AmigoDTO[] amigos);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -85,11 +85,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioListaAmigos {
             return base.Channel.CancelarSuscripcionAsync(nombreUsuario);
         }
         
-        public global::Servicios.Contratos.DTOs.AmigoDTO[] ObtenerAmigos(string nombreUsuario) {
+        public Servicios.Contratos.DTOs.AmigoDTO[] ObtenerAmigos(string nombreUsuario) {
             return base.Channel.ObtenerAmigos(nombreUsuario);
         }
         
-        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.AmigoDTO[]> ObtenerAmigosAsync(string nombreUsuario) {
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.AmigoDTO[]> ObtenerAmigosAsync(string nombreUsuario) {
             return base.Channel.ObtenerAmigosAsync(nombreUsuario);
         }
     }

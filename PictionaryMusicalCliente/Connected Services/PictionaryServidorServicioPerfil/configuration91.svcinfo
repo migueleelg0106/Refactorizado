@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="Nw3C+z1JltZD+P+/rVO0bmsL3yzbuvrZc07UaYcgMtU=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="bcQkntPwrTUGyDPgYkyvJbE3O2dgZjpdkEvfJP1QZ30=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_IPerfilManejador">
       <properties>
@@ -230,10 +230,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_IPerfilManejador" contract="PictionaryServidorServicioPerfil.IPerfilManejador" bindingType="basicHttpBinding" address="http://0.0.0.0:8086/Pictionary/Perfil/Perfil" bindingConfiguration="BasicHttpBinding_IPerfilManejador">
+    <endpoint name="BasicHttpBinding_IPerfilManejador" contract="PictionaryServidorServicioPerfil.IPerfilManejador" bindingType="basicHttpBinding" address="http://localhost:8513/Pictionary/Perfil/Perfil" bindingConfiguration="BasicHttpBinding_IPerfilManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://0.0.0.0:8086/Pictionary/Perfil/Perfil</serializedValue>
+          <serializedValue>http://localhost:8513/Pictionary/Perfil/Perfil</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -315,10 +315,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="NetTcpBinding_IPerfilManejador" contract="PictionaryServidorServicioPerfil.IPerfilManejador" bindingType="netTcpBinding" address="net.tcp://0.0.0.0:8096/Pictionary/Perfil/Perfil" bindingConfiguration="NetTcpBinding_IPerfilManejador">
+    <endpoint name="NetTcpBinding_IPerfilManejador" contract="PictionaryServidorServicioPerfil.IPerfilManejador" bindingType="netTcpBinding" address="net.tcp://localhost:8514/Pictionary/Perfil/Perfil" bindingConfiguration="NetTcpBinding_IPerfilManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>net.tcp://0.0.0.0:8096/Pictionary/Perfil/Perfil</serializedValue>
+          <serializedValue>net.tcp://localhost:8514/Pictionary/Perfil/Perfil</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

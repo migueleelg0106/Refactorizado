@@ -1,13 +1,12 @@
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using DTOs = global::Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.Servicios.Wcf
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
     public class CambioContrasenaServicio : ICambioContrasenaServicio
     {

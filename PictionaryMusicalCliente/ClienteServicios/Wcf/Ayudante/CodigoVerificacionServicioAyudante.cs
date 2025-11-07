@@ -1,9 +1,8 @@
-using PictionaryMusicalCliente.Servicios.Wcf.Helpers;
 using System;
 using System.Threading.Tasks;
 using DTOs = global::Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
     public static class CodigoVerificacionServicioAyudante
     {

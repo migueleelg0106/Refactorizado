@@ -1,10 +1,8 @@
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Servicios.Dialogos;
-using PictionaryMusicalCliente.Servicios.Idiomas;
-using PictionaryMusicalCliente.Servicios.Wcf;
+using PictionaryMusicalCliente.ClienteServicios.Dialogos;
+using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using System;

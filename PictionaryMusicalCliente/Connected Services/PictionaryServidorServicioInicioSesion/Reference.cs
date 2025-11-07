@@ -16,10 +16,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioInicioSesion {
     public interface IInicioSesionManejador {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInicioSesionManejador/IniciarSesion", ReplyAction="http://tempuri.org/IInicioSesionManejador/IniciarSesionResponse")]
-        global::Servicios.Contratos.DTOs.ResultadoInicioSesionDTO IniciarSesion(global::Servicios.Contratos.DTOs.CredencialesInicioSesionDTO credenciales);
+        Servicios.Contratos.DTOs.ResultadoInicioSesionDTO IniciarSesion(Servicios.Contratos.DTOs.CredencialesInicioSesionDTO credenciales);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInicioSesionManejador/IniciarSesion", ReplyAction="http://tempuri.org/IInicioSesionManejador/IniciarSesionResponse")]
-        System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoInicioSesionDTO> IniciarSesionAsync(global::Servicios.Contratos.DTOs.CredencialesInicioSesionDTO credenciales);
+        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoInicioSesionDTO> IniciarSesionAsync(Servicios.Contratos.DTOs.CredencialesInicioSesionDTO credenciales);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,11 +49,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioInicioSesion {
                 base(binding, remoteAddress) {
         }
         
-        public global::Servicios.Contratos.DTOs.ResultadoInicioSesionDTO IniciarSesion(global::Servicios.Contratos.DTOs.CredencialesInicioSesionDTO credenciales) {
+        public Servicios.Contratos.DTOs.ResultadoInicioSesionDTO IniciarSesion(Servicios.Contratos.DTOs.CredencialesInicioSesionDTO credenciales) {
             return base.Channel.IniciarSesion(credenciales);
         }
         
-        public System.Threading.Tasks.Task<global::Servicios.Contratos.DTOs.ResultadoInicioSesionDTO> IniciarSesionAsync(global::Servicios.Contratos.DTOs.CredencialesInicioSesionDTO credenciales) {
+        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoInicioSesionDTO> IniciarSesionAsync(Servicios.Contratos.DTOs.CredencialesInicioSesionDTO credenciales) {
             return base.Channel.IniciarSesionAsync(credenciales);
         }
     }

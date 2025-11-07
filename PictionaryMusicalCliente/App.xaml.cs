@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Globalization;
 using PictionaryMusicalCliente.Properties;
-using PictionaryMusicalCliente.Servicios.Idiomas;
+using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 
 namespace PictionaryMusicalCliente
 {

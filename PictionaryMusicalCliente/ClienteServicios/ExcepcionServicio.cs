@@ -1,6 +1,6 @@
 using System;
 
-namespace PictionaryMusicalCliente.Servicios
+namespace PictionaryMusicalCliente.ClienteServicios
 {
     public enum TipoErrorServicio
     {

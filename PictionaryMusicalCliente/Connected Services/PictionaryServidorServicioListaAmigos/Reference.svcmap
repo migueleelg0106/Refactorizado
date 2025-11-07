@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="e482d07e-6e23-42ca-9257-56ec5c338529" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="d958aec9-92e9-442f-8597-608ecacd1a85" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -21,13 +21,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/ListaAmigos/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="http://localhost:8517/Pictionary/ListaAmigos" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="35616223-dbc3-4751-bd15-ea53a75047c2" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="f67e02f7-7bfa-4fcc-bc34-8200eaae245a" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="c641584e-e4a9-495c-a150-cf713dba5fc3" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="2f1d55a0-e629-4152-86d8-0d89527a73e9" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos/mex" />
+    <MetadataFile FileName="ListaAmigosManejador.wsdl" MetadataType="Wsdl" ID="d5051af6-300a-46d2-91bd-193438ee4995" SourceId="1" SourceUrl="http://localhost:8517/Pictionary/ListaAmigos?wsdl" />
+    <MetadataFile FileName="ListaAmigos.disco" MetadataType="Disco" ID="d16221f0-bd16-4108-a3f8-78fc0cccbea7" SourceId="1" SourceUrl="http://localhost:8517/Pictionary/ListaAmigos?disco" />
+    <MetadataFile FileName="ListaAmigos.xsd" MetadataType="Schema" ID="25666205-80fa-4fa1-bdc6-5e91e6201a48" SourceId="1" SourceUrl="http://localhost:8517/Pictionary/ListaAmigos?xsd=xsd1" />
+    <MetadataFile FileName="ListaAmigos1.xsd" MetadataType="Schema" ID="87fa26e3-6ae5-43e1-854f-5ef09d520abc" SourceId="1" SourceUrl="http://localhost:8517/Pictionary/ListaAmigos?xsd=xsd0" />
+    <MetadataFile FileName="ListaAmigos2.xsd" MetadataType="Schema" ID="2274f539-fe4a-441c-8b01-228c3fb42941" SourceId="1" SourceUrl="http://localhost:8517/Pictionary/ListaAmigos?xsd=xsd2" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

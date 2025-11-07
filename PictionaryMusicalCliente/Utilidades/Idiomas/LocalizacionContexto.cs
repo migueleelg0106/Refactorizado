@@ -2,8 +2,8 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Servicios.Abstracciones;
-using PictionaryMusicalCliente.Servicios.Idiomas;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 
 namespace PictionaryMusicalCliente.Utilidades.Idiomas
 {

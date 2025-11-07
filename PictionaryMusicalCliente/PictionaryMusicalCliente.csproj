@@ -67,13 +67,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Utilidades\MusicaManejador.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\ServicioCodigoRecuperacionAdaptador.cs" />
-    <Compile Include="Comandos\Comando.cs" />
-    <Compile Include="Comandos\ComandoAsincrono.cs" />
-    <Compile Include="Comandos\ComandoDelegado.cs" />
-    <Compile Include="Comandos\IComandoAsincrono.cs" />
-    <Compile Include="Comandos\IComandoNotificable.cs" />
     <Compile Include="Connected Services\PictionaryServidorServicioAmigos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -119,6 +112,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Utilidades\MusicaManejador.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\ServicioCodigoRecuperacionAdaptador.cs" />
+    <Compile Include="Comandos\Comando.cs" />
+    <Compile Include="Comandos\ComandoAsincrono.cs" />
+    <Compile Include="Comandos\ComandoDelegado.cs" />
+    <Compile Include="Comandos\IComandoAsincrono.cs" />
+    <Compile Include="Comandos\IComandoNotificable.cs" />
     <Compile Include="Convertidores\ConvertidorBooleanoInverso.cs" />
     <Compile Include="Convertidores\ConvertidorBooleanoVisibilidad.cs" />
     <Compile Include="Convertidores\ConvertidorCadenaVaciaVisibilidad.cs" />
@@ -291,118 +291,105 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\service.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\service.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\service1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\Servicios.Contratos.DTOs.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\service.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\service.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\AmigosManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\service1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\Servicios.Contratos.DTOs.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\service.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\service.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\CatalogoAvataresManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\service1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\Servicios.Contratos.DTOs.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioClasificacion\service.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioClasificacion\service.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasenaManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioClasificacion\service1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Servicios.Contratos.DTOs.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\service.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\service.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\ClasificacionManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\service1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\Servicios.Contratos.DTOs.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\service.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\service.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacionManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\service1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\Servicios.Contratos.DTOs.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\service.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\service.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\CuentaManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesion.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\service1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesion1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\Servicios.Contratos.DTOs.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesion2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\service.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\service.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesionManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\service1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\Servicios.Contratos.DTOs.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioPerfil\service.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioPerfil\service.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigosManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioPerfil\service1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioPerfil\Servicios.Contratos.DTOs.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil2.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\PerfilManejador.wsdl" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AmigoDTO.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AmigoDTO1.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AvatarDTO.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AvatarDTO1.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ClasificacionUsuarioDTO.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ClasificacionUsuarioDTO1.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoInicioSesionDTO.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoInicioSesionDTO1.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoOperacionDTO.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoOperacionDTO1.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoOperacionDTO2.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO1.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO2.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO1.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO2.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO1.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO2.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.UsuarioDTO.datasource" />
-    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.UsuarioDTO1.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -427,17 +414,6 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAmigos\" />
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAvatares\" />
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCambioContrasena\" />
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioClasificacion\" />
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\" />
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCuenta\" />
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioInicioSesion\" />
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioListaAmigos\" />
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioPerfil\" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Recursos\Aleks_Syntek.jpg" />
     <Resource Include="Recursos\Anuel_AA.jpg" />
     <Resource Include="Recursos\Bad_Bunny.jpg" />
@@ -452,54 +428,6 @@
     <Resource Include="Recursos\Taylor_Swift.jpg" />
     <Resource Include="Recursos\The_Weeknd.jpg" />
     <Resource Include="Recursos\Travis_Scott.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioClasificacion\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioClasificacion\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioPerfil\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioPerfil\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioPerfil\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Vista\Ajustes.xaml">
@@ -592,75 +520,78 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Recursos\Aceptar.png" />
     <Resource Include="Recursos\Rechazar.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAmigos\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\PictionaryServidorServicioCuenta\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Recursos\PictionaryMusicalLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Recursos\Audio_Encendido.png" />
+    <Resource Include="Recursos\Audio_Apagado.png" />
+    <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\CodigoVerificacion.disco" />
     <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Recursos\Audio_Encendido.png" />
-    <Resource Include="Recursos\Audio_Apagado.png" />
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioAvatares\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioCuenta\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesion.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioInicioSesion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioClasificacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Perfil.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioPerfil\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\ListaAmigos.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioListaAmigos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioAmigos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Recursos\Adivinador.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -683,6 +614,17 @@
     <Content Include="Recursos\ventana_principal_musica.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAmigos\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAvatares\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCambioContrasena\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioClasificacion\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCuenta\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioInicioSesion\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioListaAmigos\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioPerfil\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
