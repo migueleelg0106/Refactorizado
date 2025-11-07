@@ -17,7 +17,7 @@ namespace PictionaryMusicalCliente
         private bool _syncingToolUI = false;
 
         private DispatcherTimer _overlayTimer;
-        private DispatcherTimer _temporizador; // <-- nuevo timer para el contador
+        private DispatcherTimer _temporizador; 
         private int _contador = 30;
 
         public VentanaJuego()
