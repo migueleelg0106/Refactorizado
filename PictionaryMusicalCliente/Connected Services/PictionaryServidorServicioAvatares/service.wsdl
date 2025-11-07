@@ -54,12 +54,12 @@
   </wsdl:binding>
   <wsdl:service name="CatalogoAvataresManejador">
     <wsdl:port name="BasicHttpBinding_ICatalogoAvataresManejador" binding="tns:BasicHttpBinding_ICatalogoAvataresManejador">
-      <soap:address location="http://0.0.0.0:8086/Pictionary/Avatares/Avatares" />
+      <soap:address location="https://192.168.101.15:8086/Pictionary/Avatares/Avatares" />
     </wsdl:port>
     <wsdl:port name="NetTcpBinding_ICatalogoAvataresManejador" binding="tns:NetTcpBinding_ICatalogoAvataresManejador">
-      <soap12:address location="net.tcp://0.0.0.0:8096/Pictionary/Avatares/Avatares" />
+      <soap12:address location="net.tcp://192.168.101.15:8096/Pictionary/Avatares/Avatares" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://0.0.0.0:8096/Pictionary/Avatares/Avatares</wsa10:Address>
+        <wsa10:Address>net.tcp://192.168.101.15:8096/Pictionary/Avatares/Avatares</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
   </wsdl:service>

@@ -82,12 +82,12 @@
   </wsdl:binding>
   <wsdl:service name="PerfilManejador">
     <wsdl:port name="BasicHttpBinding_IPerfilManejador" binding="tns:BasicHttpBinding_IPerfilManejador">
-      <soap:address location="http://0.0.0.0:8086/Pictionary/Perfil/Perfil" />
+      <soap:address location="https://192.168.101.15:8086/Pictionary/Perfil/Perfil" />
     </wsdl:port>
     <wsdl:port name="NetTcpBinding_IPerfilManejador" binding="tns:NetTcpBinding_IPerfilManejador">
-      <soap12:address location="net.tcp://0.0.0.0:8096/Pictionary/Perfil/Perfil" />
+      <soap12:address location="net.tcp://192.168.101.15:8096/Pictionary/Perfil/Perfil" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://0.0.0.0:8096/Pictionary/Perfil/Perfil</wsa10:Address>
+        <wsa10:Address>net.tcp://192.168.101.15:8096/Pictionary/Perfil/Perfil</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
   </wsdl:service>

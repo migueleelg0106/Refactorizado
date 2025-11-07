@@ -21,13 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/CodigoVerificacion/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="https://192.168.101.15:8086/Pictionary/CodigoVerificacion/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="8280372d-7dd8-4b8c-8634-9d43e193d976" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="580f57d3-ca16-435e-ba37-da7e2d357a80" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="ffbf7d6f-22ab-47e6-a3b2-87f0c4162d91" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="048dca1e-68a8-493b-92c1-9f22d4a1e966" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CodigoVerificacion/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="8280372d-7dd8-4b8c-8634-9d43e193d976" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/CodigoVerificacion/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="580f57d3-ca16-435e-ba37-da7e2d357a80" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/CodigoVerificacion/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="ffbf7d6f-22ab-47e6-a3b2-87f0c4162d91" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/CodigoVerificacion/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="048dca1e-68a8-493b-92c1-9f22d4a1e966" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/CodigoVerificacion/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

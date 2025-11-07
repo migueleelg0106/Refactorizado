@@ -216,15 +216,15 @@
   </wsdl:binding>
   <wsdl:service name="AmigosManejador">
     <wsdl:port name="WSDualHttpBinding_IAmigosManejador" binding="tns:WSDualHttpBinding_IAmigosManejador">
-      <soap12:address location="http://0.0.0.0:8086/Pictionary/Amigos/Amigos" />
+      <soap12:address location="https://192.168.101.15:8086/Pictionary/Amigos/Amigos" />
       <wsa10:EndpointReference>
-        <wsa10:Address>http://0.0.0.0:8086/Pictionary/Amigos/Amigos</wsa10:Address>
+        <wsa10:Address>https://192.168.101.15:8086/Pictionary/Amigos/Amigos</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
     <wsdl:port name="NetTcpBinding_IAmigosManejador" binding="tns:NetTcpBinding_IAmigosManejador">
-      <soap12:address location="net.tcp://0.0.0.0:8096/Pictionary/Amigos/Amigos" />
+      <soap12:address location="net.tcp://192.168.101.15:8096/Pictionary/Amigos/Amigos" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://0.0.0.0:8096/Pictionary/Amigos/Amigos</wsa10:Address>
+        <wsa10:Address>net.tcp://192.168.101.15:8096/Pictionary/Amigos/Amigos</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
   </wsdl:service>

@@ -11,7 +11,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Helpers
 {
     internal static class AvatarServicioAyudante
     {
-        private const string BaseImagenesRemotas = "http://localhost:8086/";
+        private const string BaseImagenesRemotas = "https://192.168.101.15:8086/";
 
         public static IReadOnlyList<ObjetoAvatar> Convertir(DTOs.AvatarDTO[] avatares)
         {

@@ -166,12 +166,12 @@
   </wsdl:binding>
   <wsdl:service name="CodigoVerificacionManejador">
     <wsdl:port name="BasicHttpBinding_ICodigoVerificacionManejador" binding="tns:BasicHttpBinding_ICodigoVerificacionManejador">
-      <soap:address location="http://0.0.0.0:8086/Pictionary/CodigoVerificacion/CodigoVerificacion" />
+      <soap:address location="https://192.168.101.15:8086/Pictionary/CodigoVerificacion/CodigoVerificacion" />
     </wsdl:port>
     <wsdl:port name="NetTcpBinding_ICodigoVerificacionManejador" binding="tns:NetTcpBinding_ICodigoVerificacionManejador">
-      <soap12:address location="net.tcp://0.0.0.0:8096/Pictionary/CodigoVerificacion/CodigoVerificacion" />
+      <soap12:address location="net.tcp://192.168.101.15:8096/Pictionary/CodigoVerificacion/CodigoVerificacion" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://0.0.0.0:8096/Pictionary/CodigoVerificacion/CodigoVerificacion</wsa10:Address>
+        <wsa10:Address>net.tcp://192.168.101.15:8096/Pictionary/CodigoVerificacion/CodigoVerificacion</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
   </wsdl:service>

@@ -138,12 +138,12 @@
   </wsdl:binding>
   <wsdl:service name="CambioContrasenaManejador">
     <wsdl:port name="BasicHttpBinding_ICambioContrasenaManejador" binding="tns:BasicHttpBinding_ICambioContrasenaManejador">
-      <soap:address location="http://0.0.0.0:8086/Pictionary/CambiarContrasena/CambiarContrasena" />
+      <soap:address location="https://192.168.101.15:8086/Pictionary/CambiarContrasena/CambiarContrasena" />
     </wsdl:port>
     <wsdl:port name="NetTcpBinding_ICambioContrasenaManejador" binding="tns:NetTcpBinding_ICambioContrasenaManejador">
-      <soap12:address location="net.tcp://0.0.0.0:8096/Pictionary/CambiarContrasena/CambiarContrasena" />
+      <soap12:address location="net.tcp://192.168.101.15:8096/Pictionary/CambiarContrasena/CambiarContrasena" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://0.0.0.0:8096/Pictionary/CambiarContrasena/CambiarContrasena</wsa10:Address>
+        <wsa10:Address>net.tcp://192.168.101.15:8096/Pictionary/CambiarContrasena/CambiarContrasena</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
   </wsdl:service>

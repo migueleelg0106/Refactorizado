@@ -21,13 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/CambiarContrasena/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="https://192.168.101.15:8086/Pictionary/CambiarContrasena/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="1a5aad18-6965-4cd3-9c05-539b22f48a6d" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="500e7545-30b7-4bcb-bb8f-b5151c62f47f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="f4574d38-9107-45db-8a32-01acef67f883" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="8d597c63-d098-4c61-9f30-bb7c0d60bf93" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/CambiarContrasena/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="1a5aad18-6965-4cd3-9c05-539b22f48a6d" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/CambiarContrasena/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="500e7545-30b7-4bcb-bb8f-b5151c62f47f" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/CambiarContrasena/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="f4574d38-9107-45db-8a32-01acef67f883" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/CambiarContrasena/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="8d597c63-d098-4c61-9f30-bb7c0d60bf93" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/CambiarContrasena/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

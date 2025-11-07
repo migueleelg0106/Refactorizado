@@ -21,13 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/Clasificacion/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="https://192.168.101.15:8086/Pictionary/Clasificacion/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="c84c68b9-1796-4185-8682-c0d0e6672d64" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="3c3e2467-9097-4462-be4a-8aaf57387ba9" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="b2214ebb-55a1-4bc0-ba12-6e09222d0b71" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="d3ac6194-b6ee-415c-9d55-14735d5e0967" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Clasificacion/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="c84c68b9-1796-4185-8682-c0d0e6672d64" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/Clasificacion/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="3c3e2467-9097-4462-be4a-8aaf57387ba9" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/Clasificacion/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="b2214ebb-55a1-4bc0-ba12-6e09222d0b71" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/Clasificacion/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="d3ac6194-b6ee-415c-9d55-14735d5e0967" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/Clasificacion/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

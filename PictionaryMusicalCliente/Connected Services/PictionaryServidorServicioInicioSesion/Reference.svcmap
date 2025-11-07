@@ -21,13 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/InicioSesion/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="https://192.168.101.15:8086/Pictionary/InicioSesion/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="b98af7fe-a545-4565-afb9-2e91699ef1a4" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="9133ea20-e8f2-4e92-8dd4-2a7725589aa9" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="78d5acdb-0dac-4587-9139-a793ce0922ef" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="2c0feb4a-421b-4ed1-b7a3-e2c32103df8b" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/InicioSesion/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="b98af7fe-a545-4565-afb9-2e91699ef1a4" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/InicioSesion/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="9133ea20-e8f2-4e92-8dd4-2a7725589aa9" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/InicioSesion/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="78d5acdb-0dac-4587-9139-a793ce0922ef" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/InicioSesion/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="2c0feb4a-421b-4ed1-b7a3-e2c32103df8b" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/InicioSesion/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -230,10 +230,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_ICodigoVerificacionManejador" contract="PictionaryServidorServicioCodigoVerificacion.ICodigoVerificacionManejador" bindingType="basicHttpBinding" address="http://0.0.0.0:8086/Pictionary/CodigoVerificacion/CodigoVerificacion" bindingConfiguration="BasicHttpBinding_ICodigoVerificacionManejador">
+    <endpoint name="BasicHttpBinding_ICodigoVerificacionManejador" contract="PictionaryServidorServicioCodigoVerificacion.ICodigoVerificacionManejador" bindingType="basicHttpBinding" address="https://192.168.101.15:8086/Pictionary/CodigoVerificacion/CodigoVerificacion" bindingConfiguration="BasicHttpBinding_ICodigoVerificacionManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://0.0.0.0:8086/Pictionary/CodigoVerificacion/CodigoVerificacion</serializedValue>
+          <serializedValue>https://192.168.101.15:8086/Pictionary/CodigoVerificacion/CodigoVerificacion</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -315,10 +315,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="NetTcpBinding_ICodigoVerificacionManejador" contract="PictionaryServidorServicioCodigoVerificacion.ICodigoVerificacionManejador" bindingType="netTcpBinding" address="net.tcp://0.0.0.0:8096/Pictionary/CodigoVerificacion/CodigoVerificacion" bindingConfiguration="NetTcpBinding_ICodigoVerificacionManejador">
+    <endpoint name="NetTcpBinding_ICodigoVerificacionManejador" contract="PictionaryServidorServicioCodigoVerificacion.ICodigoVerificacionManejador" bindingType="netTcpBinding" address="net.tcp://192.168.101.15:8096/Pictionary/CodigoVerificacion/CodigoVerificacion" bindingConfiguration="NetTcpBinding_ICodigoVerificacionManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>net.tcp://0.0.0.0:8096/Pictionary/CodigoVerificacion/CodigoVerificacion</serializedValue>
+          <serializedValue>net.tcp://192.168.101.15:8096/Pictionary/CodigoVerificacion/CodigoVerificacion</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

@@ -54,12 +54,12 @@
   </wsdl:binding>
   <wsdl:service name="ClasificacionManejador">
     <wsdl:port name="BasicHttpBinding_IClasificacionManejador" binding="tns:BasicHttpBinding_IClasificacionManejador">
-      <soap:address location="http://0.0.0.0:8086/Pictionary/Clasificacion/Clasificacion" />
+      <soap:address location="https://192.168.101.15:8086/Pictionary/Clasificacion/Clasificacion" />
     </wsdl:port>
     <wsdl:port name="NetTcpBinding_IClasificacionManejador" binding="tns:NetTcpBinding_IClasificacionManejador">
-      <soap12:address location="net.tcp://0.0.0.0:8096/Pictionary/Clasificacion/Clasificacion" />
+      <soap12:address location="net.tcp://192.168.101.15:8096/Pictionary/Clasificacion/Clasificacion" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://0.0.0.0:8096/Pictionary/Clasificacion/Clasificacion</wsa10:Address>
+        <wsa10:Address>net.tcp://192.168.101.15:8096/Pictionary/Clasificacion/Clasificacion</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
   </wsdl:service>

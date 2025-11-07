@@ -215,10 +215,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WSDualHttpBinding_IListaAmigosManejador" contract="PictionaryServidorServicioListaAmigos.IListaAmigosManejador" bindingType="wsDualHttpBinding" address="http://0.0.0.0:8086/Pictionary/ListaAmigos/ListaAmigos" bindingConfiguration="WSDualHttpBinding_IListaAmigosManejador">
+    <endpoint name="WSDualHttpBinding_IListaAmigosManejador" contract="PictionaryServidorServicioListaAmigos.IListaAmigosManejador" bindingType="wsDualHttpBinding" address="https://192.168.101.15:8086/Pictionary/ListaAmigos/ListaAmigos" bindingConfiguration="WSDualHttpBinding_IListaAmigosManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://0.0.0.0:8086/Pictionary/ListaAmigos/ListaAmigos</serializedValue>
+          <serializedValue>https://192.168.101.15:8086/Pictionary/ListaAmigos/ListaAmigos</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -300,10 +300,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="NetTcpBinding_IListaAmigosManejador" contract="PictionaryServidorServicioListaAmigos.IListaAmigosManejador" bindingType="netTcpBinding" address="net.tcp://0.0.0.0:8096/Pictionary/ListaAmigos/ListaAmigos" bindingConfiguration="NetTcpBinding_IListaAmigosManejador">
+    <endpoint name="NetTcpBinding_IListaAmigosManejador" contract="PictionaryServidorServicioListaAmigos.IListaAmigosManejador" bindingType="netTcpBinding" address="net.tcp://192.168.101.15:8096/Pictionary/ListaAmigos/ListaAmigos" bindingConfiguration="NetTcpBinding_IListaAmigosManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>net.tcp://0.0.0.0:8096/Pictionary/ListaAmigos/ListaAmigos</serializedValue>
+          <serializedValue>net.tcp://192.168.101.15:8096/Pictionary/ListaAmigos/ListaAmigos</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

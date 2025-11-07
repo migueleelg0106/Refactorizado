@@ -21,13 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/ListaAmigos/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="https://192.168.101.15:8086/Pictionary/ListaAmigos/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="35616223-dbc3-4751-bd15-ea53a75047c2" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="f67e02f7-7bfa-4fcc-bc34-8200eaae245a" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="c641584e-e4a9-495c-a150-cf713dba5fc3" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="2f1d55a0-e629-4152-86d8-0d89527a73e9" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/ListaAmigos/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="35616223-dbc3-4751-bd15-ea53a75047c2" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/ListaAmigos/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="f67e02f7-7bfa-4fcc-bc34-8200eaae245a" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/ListaAmigos/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="c641584e-e4a9-495c-a150-cf713dba5fc3" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/ListaAmigos/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="2f1d55a0-e629-4152-86d8-0d89527a73e9" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/ListaAmigos/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

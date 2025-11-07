@@ -142,15 +142,15 @@
   </wsdl:binding>
   <wsdl:service name="ListaAmigosManejador">
     <wsdl:port name="WSDualHttpBinding_IListaAmigosManejador" binding="tns:WSDualHttpBinding_IListaAmigosManejador">
-      <soap12:address location="http://0.0.0.0:8086/Pictionary/ListaAmigos/ListaAmigos" />
+      <soap12:address location="https://192.168.101.15:8086/Pictionary/ListaAmigos/ListaAmigos" />
       <wsa10:EndpointReference>
-        <wsa10:Address>http://0.0.0.0:8086/Pictionary/ListaAmigos/ListaAmigos</wsa10:Address>
+        <wsa10:Address>https://192.168.101.15:8086/Pictionary/ListaAmigos/ListaAmigos</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
     <wsdl:port name="NetTcpBinding_IListaAmigosManejador" binding="tns:NetTcpBinding_IListaAmigosManejador">
-      <soap12:address location="net.tcp://0.0.0.0:8096/Pictionary/ListaAmigos/ListaAmigos" />
+      <soap12:address location="net.tcp://192.168.101.15:8096/Pictionary/ListaAmigos/ListaAmigos" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://0.0.0.0:8096/Pictionary/ListaAmigos/ListaAmigos</wsa10:Address>
+        <wsa10:Address>net.tcp://192.168.101.15:8096/Pictionary/ListaAmigos/ListaAmigos</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
   </wsdl:service>

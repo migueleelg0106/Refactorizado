@@ -21,13 +21,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8086/Pictionary/Avatares/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="https://192.168.101.15:8086/Pictionary/Avatares/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="93079666-770e-4e3a-8a82-479350c9970f" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="33d5fce1-fe1c-4a1d-bec4-9b3f4dfab5ab" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="265ab109-f22c-4bec-83e4-a10d15413a5a" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares/mex" />
-    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="66e3bc4a-fdba-4964-ad78-6a36d980b1d6" SourceId="1" SourceUrl="http://localhost:8086/Pictionary/Avatares/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="93079666-770e-4e3a-8a82-479350c9970f" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/Avatares/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="33d5fce1-fe1c-4a1d-bec4-9b3f4dfab5ab" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/Avatares/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="265ab109-f22c-4bec-83e4-a10d15413a5a" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/Avatares/mex" />
+    <MetadataFile FileName="Servicios.Contratos.DTOs.xsd" MetadataType="Schema" ID="66e3bc4a-fdba-4964-ad78-6a36d980b1d6" SourceId="1" SourceUrl="https://192.168.101.15:8086/Pictionary/Avatares/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
