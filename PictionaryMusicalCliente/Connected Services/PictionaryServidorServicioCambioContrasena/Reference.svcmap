@@ -24,11 +24,11 @@
     <MetadataSource Address="http://localhost:8509/Pictionary/CambioContrasena" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="CambioContrasenaManejador1.wsdl" MetadataType="Wsdl" ID="0e2b7b60-b822-4735-83cc-14fa0cea6978" SourceId="1" SourceUrl="http://192.168.1.19:8509/Pictionary/CambioContrasena?wsdl" />
-    <MetadataFile FileName="CambioContrasena3.xsd" MetadataType="Schema" ID="cdb25b10-ab36-4629-853f-c0e63b4da24a" SourceId="1" SourceUrl="http://192.168.1.19:8509/Pictionary/CambioContrasena?xsd=xsd0" />
-    <MetadataFile FileName="CambioContrasena31.xsd" MetadataType="Schema" ID="6db2e0e0-ee4d-4906-aca0-6131e687e3f4" SourceId="1" SourceUrl="http://192.168.1.19:8509/Pictionary/CambioContrasena?xsd=xsd2" />
-    <MetadataFile FileName="CambioContrasena1.disco" MetadataType="Disco" ID="478bd8e2-0e22-49fe-afaa-f4960ea845b9" SourceId="1" SourceUrl="http://192.168.1.19:8509/Pictionary/CambioContrasena?disco" />
-    <MetadataFile FileName="CambioContrasena32.xsd" MetadataType="Schema" ID="7faf2d68-b7c3-4446-9c91-fdd552c49295" SourceId="1" SourceUrl="http://192.168.1.19:8509/Pictionary/CambioContrasena?xsd=xsd1" />
+    <MetadataFile FileName="CambioContrasena.xsd" MetadataType="Schema" ID="5468c036-1998-435a-8240-68f11fc70989" SourceId="1" SourceUrl="http://localhost:8509/Pictionary/CambioContrasena?xsd=xsd1" />
+    <MetadataFile FileName="CambioContrasena.disco" MetadataType="Disco" ID="e88e207e-6193-4941-9657-68f3cba964c1" SourceId="1" SourceUrl="http://localhost:8509/Pictionary/CambioContrasena?disco" />
+    <MetadataFile FileName="CambioContrasena1.xsd" MetadataType="Schema" ID="8ba19b2c-95ea-4f24-a554-5d4f5d12e69f" SourceId="1" SourceUrl="http://localhost:8509/Pictionary/CambioContrasena?xsd=xsd2" />
+    <MetadataFile FileName="CambioContrasena2.xsd" MetadataType="Schema" ID="6c2bb57d-ac10-4ed3-b184-0e0952b0b131" SourceId="1" SourceUrl="http://localhost:8509/Pictionary/CambioContrasena?xsd=xsd0" />
+    <MetadataFile FileName="CambioContrasenaManejador.wsdl" MetadataType="Wsdl" ID="64abb9ab-b338-4a86-b691-86772492fead" SourceId="1" SourceUrl="http://localhost:8509/Pictionary/CambioContrasena?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
