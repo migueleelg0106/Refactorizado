@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="UdLE3OaBIXA/7NCL8veypVQl7GhaO8iP2SaShkY1KLA=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="f/K8hz3B3ih2oba29QIeSLRijffe3fazwUeLyFVDUuc=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_ICambioContrasenaManejador">
       <properties>
@@ -230,10 +230,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_ICambioContrasenaManejador" contract="PictionaryServidorServicioCambioContrasena.ICambioContrasenaManejador" bindingType="basicHttpBinding" address="http://localhost:8509/Pictionary/CambioContrasena/CambiarContrasena" bindingConfiguration="BasicHttpBinding_ICambioContrasenaManejador">
+    <endpoint name="BasicHttpBinding_ICambioContrasenaManejador" contract="PictionaryServidorServicioCambioContrasena.ICambioContrasenaManejador" bindingType="basicHttpBinding" address="http://192.168.1.19:8509/Pictionary/CambioContrasena/CambioContrasena" bindingConfiguration="BasicHttpBinding_ICambioContrasenaManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:8509/Pictionary/CambioContrasena/CambiarContrasena</serializedValue>
+          <serializedValue>http://192.168.1.19:8509/Pictionary/CambioContrasena/CambioContrasena</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -315,10 +315,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="NetTcpBinding_ICambioContrasenaManejador" contract="PictionaryServidorServicioCambioContrasena.ICambioContrasenaManejador" bindingType="netTcpBinding" address="net.tcp://localhost:8510/Pictionary/CambioContrasena/CambiarContrasena" bindingConfiguration="NetTcpBinding_ICambioContrasenaManejador">
+    <endpoint name="NetTcpBinding_ICambioContrasenaManejador" contract="PictionaryServidorServicioCambioContrasena.ICambioContrasenaManejador" bindingType="netTcpBinding" address="net.tcp://192.168.1.19:8510/Pictionary/CambioContrasena/CambioContrasena" bindingConfiguration="NetTcpBinding_ICambioContrasenaManejador">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>net.tcp://localhost:8510/Pictionary/CambioContrasena/CambiarContrasena</serializedValue>
+          <serializedValue>net.tcp://192.168.1.19:8510/Pictionary/CambioContrasena/CambioContrasena</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

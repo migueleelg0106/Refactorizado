@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using DTOs = global::Servicios.Contratos.DTOs;
+using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
 {

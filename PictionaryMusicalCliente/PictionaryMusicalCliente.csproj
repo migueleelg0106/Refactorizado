@@ -311,16 +311,16 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioAvatares\CatalogoAvataresManejador.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena1.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena31.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena2.xsd">
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena32.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasenaManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasenaManejador1.wsdl" />
     <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -557,7 +557,6 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena.disco" />
     <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\configuration91.svcinfo" />
     <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\configuration.svcinfo" />
     <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\Reference.svcmap">
@@ -592,6 +591,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena1.disco" />
     <Content Include="Recursos\Adivinador.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

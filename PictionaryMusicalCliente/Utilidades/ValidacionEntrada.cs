@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 using PictionaryMusicalCliente.Properties.Langs;
-using DTOs = global::Servicios.Contratos.DTOs;
+using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Utilidades
 {

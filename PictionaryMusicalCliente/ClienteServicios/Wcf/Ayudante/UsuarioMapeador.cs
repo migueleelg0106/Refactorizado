@@ -1,5 +1,5 @@
 using PictionaryMusicalCliente.Sesiones;
-using DTOs = global::Servicios.Contratos.DTOs;
+using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
