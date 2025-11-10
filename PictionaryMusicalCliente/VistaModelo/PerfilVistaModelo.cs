@@ -27,7 +27,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly ISeleccionarAvatarServicio _seleccionarAvatarServicio;
         private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
         private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogoServicio;
-        private readonly IAvatarServicio _avatarServicio;
 
         private readonly Dictionary<string, RedSocialItemVistaModelo> _redesPorNombre;
 
@@ -37,7 +36,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private string _nombre;
         private string _apellido;
         private string _avatarSeleccionadoNombre;
-        private string _avatarSeleccionadoRutaRelativa;
+        private int _avatarSeleccionadoId;
         private ImageSource _avatarSeleccionadoImagen;
         private bool _estaProcesando;
         private bool _estaCambiandoContrasena;
@@ -47,14 +46,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             IPerfilServicio perfilServicio,
             ISeleccionarAvatarServicio seleccionarAvatarServicio,
             ICambioContrasenaServicio cambioContrasenaServicio,
-            IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
-            IAvatarServicio avatarServicio)
+            IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio)
         {
             _perfilServicio = perfilServicio ?? throw new ArgumentNullException(nameof(perfilServicio));
             _seleccionarAvatarServicio = seleccionarAvatarServicio ?? throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
             _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
             _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
-            _avatarServicio = avatarServicio ?? throw new ArgumentNullException(nameof(avatarServicio));
 
             RedesSociales = CrearRedesSociales();
             _redesPorNombre = RedesSociales.ToDictionary(r => r.Nombre, StringComparer.OrdinalIgnoreCase);
@@ -89,7 +86,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public string Nombre { get => _nombre; set => EstablecerPropiedad(ref _nombre, value); }
         public string Apellido { get => _apellido; set => EstablecerPropiedad(ref _apellido, value); }
         public string AvatarSeleccionadoNombre { get => _avatarSeleccionadoNombre; private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value); }
-        public string AvatarSeleccionadoRutaRelativa { get => _avatarSeleccionadoRutaRelativa; private set => EstablecerPropiedad(ref _avatarSeleccionadoRutaRelativa, value); }
+        public int AvatarSeleccionadoId { get => _avatarSeleccionadoId; private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value); }
         public ImageSource AvatarSeleccionadoImagen { get => _avatarSeleccionadoImagen; private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value); }
         public ObservableCollection<RedSocialItemVistaModelo> RedesSociales { get; }
         public bool EstaProcesando
@@ -140,8 +137,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             try
             {
-                await CargarCatalogoAvataresAsync().ConfigureAwait(true);
-
                 DTOs.UsuarioDTO perfil = await _perfilServicio
                     .ObtenerPerfilAsync(sesion.IdUsuario).ConfigureAwait(true);
 
@@ -168,7 +163,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private async Task SeleccionarAvatarAsync()
         {
             ObjetoAvatar avatar = await _seleccionarAvatarServicio
-                .SeleccionarAvatarAsync(AvatarSeleccionadoRutaRelativa).ConfigureAwait(true);
+                .SeleccionarAvatarAsync(AvatarSeleccionadoId).ConfigureAwait(true);
 
             if (avatar == null) return; 
 
@@ -208,7 +203,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 UsuarioId = _usuarioId,
                 Nombre = Nombre.Trim(), 
                 Apellido = Apellido.Trim(),
-                AvatarRutaRelativa = AvatarSeleccionadoRutaRelativa,
+                AvatarId = AvatarSeleccionadoId,
                 Instagram = ObtenerIdentificador("Instagram"),
                 Facebook = ObtenerIdentificador("Facebook"),
                 X = ObtenerIdentificador("X"),
@@ -260,9 +255,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             ValidarCampo(ValidacionEntrada.ValidarNombre(Nombre?.Trim()), nameof(Nombre), camposInvalidos, ref primerError);
             ValidarCampo(ValidacionEntrada.ValidarApellido(Apellido?.Trim()), nameof(Apellido), camposInvalidos, ref primerError);
 
-            if (string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa))
+            if (AvatarSeleccionadoId <= 0)
             {
-                camposInvalidos.Add(nameof(AvatarSeleccionadoRutaRelativa)); 
+                camposInvalidos.Add("Avatar");
                 primerError ??= Lang.errorTextoSeleccionAvatarValido;
             }
 
@@ -358,7 +353,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             Nombre = perfil.Nombre;
             Apellido = perfil.Apellido;
 
-            EstablecerAvatarDesdeRuta(perfil.AvatarRutaRelativa, perfil.AvatarId);
+            EstablecerAvatarPorId(perfil.AvatarId);
 
             EstablecerIdentificador("Instagram", perfil.Instagram);
             EstablecerIdentificador("Facebook", perfil.Facebook);
@@ -368,11 +363,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             ActualizarSesion(perfil);
         }
 
-        private void EstablecerAvatarDesdeRuta(string rutaRelativa, int avatarId)
+        private void EstablecerAvatarPorId(int avatarId)
         {
-            ObjetoAvatar avatar = AvatarAyudante.ObtenerAvatarPorRuta(rutaRelativa)
-                ?? AvatarAyudante.ObtenerAvatarPorId(avatarId)
-                ?? AvatarAyudante.ObtenerAvatarPredeterminado();
+            var avatares = CatalogoAvataresLocales.ObtenerAvatares();
+            ObjetoAvatar avatar = CatalogoAvataresLocales.ObtenerPorId(avatarId);
+
+            if (avatar == null && avatares != null && avatares.Count > 0)
+            {
+                avatar = avatares[0];
+            }
 
             if (avatar != null)
             {
@@ -383,8 +382,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             if (avatar == null) return;
             AvatarSeleccionadoNombre = avatar.Nombre;
-            AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
-            AvatarSeleccionadoImagen = AvatarAyudante.ObtenerImagen(avatar);
+            AvatarSeleccionadoId = avatar.Id;
+            AvatarSeleccionadoImagen = avatar.Imagen;
         }
 
         private void EstablecerIdentificador(string redSocial, string valor)
@@ -443,8 +442,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 Nombre = Nombre?.Trim(),
                 Apellido = Apellido?.Trim(),
                 Correo = Correo,
-                AvatarId = AvatarAyudante.ObtenerAvatarPorRuta(AvatarSeleccionadoRutaRelativa)?.Id ?? sesion.AvatarId,
-                AvatarRutaRelativa = AvatarSeleccionadoRutaRelativa,
+                AvatarId = AvatarSeleccionadoId,
                 Instagram = ObtenerIdentificador("Instagram"),
                 Facebook = ObtenerIdentificador("Facebook"),
                 X = ObtenerIdentificador("X"),
@@ -456,34 +454,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         {
             if (perfil == null) return;
             SesionUsuarioActual.Instancia.EstablecerUsuario(perfil);
-        }
-        
-        private async Task CargarCatalogoAvataresAsync()
-        {
-            try
-            {
-                IReadOnlyList<ObjetoAvatar> avatares = await _avatarServicio.ObtenerCatalogoAsync().ConfigureAwait(true);
-                if (avatares != null && avatares.Count > 0)
-                {
-                    AvatarAyudante.ActualizarCatalogo(avatares);
-                    if (!string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa))
-                    {
-                        EstablecerAvatarDesdeRuta(AvatarSeleccionadoRutaRelativa, _usuarioId); 
-                        var currentAvatar = AvatarAyudante.ObtenerAvatarPorRuta(AvatarSeleccionadoRutaRelativa);
-                        EstablecerAvatar(currentAvatar ?? AvatarAyudante.ObtenerAvatarPredeterminado());
-
-                    }
-                    else
-                    {
-                        EstablecerAvatar(AvatarAyudante.ObtenerAvatarPredeterminado());
-                    }
-
-                }
-            }
-            catch (ExcepcionServicio ex)
-            {
-                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorInformacionAvatar);
-            }
         }
 
         public class RedSocialItemVistaModelo(string nombre, ImageSource icono) : BaseVistaModelo

@@ -19,8 +19,6 @@ namespace Datos.Modelo
         {
             this.Expulsion = new HashSet<Expulsion>();
             this.RedSocial = new HashSet<RedSocial>();
-            this.Solicitud = new HashSet<Solicitud>();
-            this.Solicitud1 = new HashSet<Solicitud>();
             this.Usuario = new HashSet<Usuario>();
         }
     
@@ -28,19 +26,14 @@ namespace Datos.Modelo
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Correo { get; set; }
-        public int Avatar_idAvatar { get; set; }
+        public int Id_Avatar { get; set; }
         public int Clasificacion_idClasificacion { get; set; }
     
-        public virtual Avatar Avatar { get; set; }
         public virtual Clasificacion Clasificacion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Expulsion> Expulsion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RedSocial> RedSocial { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Solicitud> Solicitud { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Solicitud> Solicitud1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Usuario> Usuario { get; set; }
     }

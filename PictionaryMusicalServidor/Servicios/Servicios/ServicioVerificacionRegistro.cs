@@ -201,7 +201,7 @@ namespace Servicios.Servicios
                 Nombre = original.Nombre,
                 Apellido = original.Apellido,
                 Contrasena = original.Contrasena,
-                AvatarRutaRelativa = original.AvatarRutaRelativa
+                AvatarId = original.AvatarId
             };
         }
 

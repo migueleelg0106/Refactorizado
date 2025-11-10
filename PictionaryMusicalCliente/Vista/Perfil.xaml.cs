@@ -19,8 +19,7 @@ namespace PictionaryMusicalCliente
             InitializeComponent();
 
             IPerfilServicio perfilServicio = new PerfilServicio();
-            IAvatarServicio avatarServicio = new AvatarServicio();
-            ISeleccionarAvatarServicio seleccionarAvatarServicio = new SeleccionAvatarDialogoServicio(avatarServicio);
+            ISeleccionarAvatarServicio seleccionarAvatarServicio = new SeleccionAvatarDialogoServicio();
             ICambioContrasenaServicio cambioContrasenaServicio = new CambioContrasenaServicio();
             IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio = new VerificacionCodigoDialogoServicio();
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio =
@@ -30,8 +29,7 @@ namespace PictionaryMusicalCliente
                 perfilServicio,
                 seleccionarAvatarServicio,
                 cambioContrasenaServicio,
-                recuperacionCuentaDialogoServicio,
-                avatarServicio)
+                recuperacionCuentaDialogoServicio)
             {
                 CerrarAccion = Close
             };

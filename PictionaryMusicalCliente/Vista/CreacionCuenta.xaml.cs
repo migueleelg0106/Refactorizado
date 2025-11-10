@@ -20,16 +20,14 @@ namespace PictionaryMusicalCliente
 
             var codigoVerificacionServicio = new CodigoVerificacionServicio();
             var cuentaServicio = new CuentaServicio();
-            IAvatarServicio avatarServicio = new AvatarServicio();
-            var seleccionarAvatarServicio = new SeleccionAvatarDialogoServicio(avatarServicio);
+            var seleccionarAvatarServicio = new SeleccionAvatarDialogoServicio();
             var verificarCodigoDialogoServicio = new VerificacionCodigoDialogoServicio();
 
             _vistaModelo = new CreacionCuentaVistaModelo(
                 codigoVerificacionServicio,
                 cuentaServicio,
                 seleccionarAvatarServicio,
-                verificarCodigoDialogoServicio,
-                avatarServicio);
+                verificarCodigoDialogoServicio);
 
             _vistaModelo.CerrarAccion = Close;
             _vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;

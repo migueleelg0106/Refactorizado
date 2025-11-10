@@ -72,11 +72,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Connected Services\PictionaryServidorServicioAvatares\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioCambioContrasena\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -128,7 +123,6 @@
     <Compile Include="Modelo\ConfiguracionPartida.cs" />
     <Compile Include="Modelo\ObjetoAvatar.cs" />
     <Compile Include="Modelo\IdiomaOpcion.cs" />
-    <Compile Include="ClienteServicios\Abstracciones\IAvatarServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\ICambioContrasenaServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\IAmigosServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\IListaAmigosServicio.cs" />
@@ -147,7 +141,6 @@
     <Compile Include="ClienteServicios\Dialogos\VerificacionCodigoDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Idiomas\LocalizacionServicio.cs" />
     <Compile Include="ClienteServicios\ExcepcionServicio.cs" />
-    <Compile Include="ClienteServicios\Wcf\AvatarServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\CambioContrasenaServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\ClasificacionServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\CodigoVerificacionServicio.cs" />
@@ -162,14 +155,11 @@
     <Compile Include="Modelo\SolicitudAmistadEntrada.cs" />
     <Compile Include="Sesiones\SesionUsuarioActual.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\AvatarAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvisoAyudante.cs" />
     <Compile Include="Utilidades\ControlVisual.cs" />
     <Compile Include="Utilidades\Idiomas\LocalizacionContexto.cs" />
     <Compile Include="Utilidades\SonidoManejador.cs" />
     <Compile Include="Utilidades\ValidacionEntrada.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\AvatarRutaAyudante.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\AvatarServicioAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\CodigoVerificacionServicioAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\ErrorServicioAyudante.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\MensajeServidorAyudante.cs" />
@@ -302,16 +292,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioAmigos\AmigosManejador.wsdl" />
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\CatalogoAvataresManejador.wsdl" />
     <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -537,13 +517,6 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\Avatares.disco" />
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration91.svcinfo" />
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\configuration.svcinfo" />
-    <None Include="Connected Services\PictionaryServidorServicioAvatares\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
     <None Include="Connected Services\PictionaryServidorServicioCuenta\Cuenta.disco" />
     <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration91.svcinfo" />
     <None Include="Connected Services\PictionaryServidorServicioCuenta\configuration.svcinfo" />
@@ -649,7 +622,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAmigos\" />
-    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAvatares\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCambioContrasena\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioClasificacion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\" />

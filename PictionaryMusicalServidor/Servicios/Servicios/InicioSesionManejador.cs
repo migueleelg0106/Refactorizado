@@ -86,7 +86,6 @@ namespace Servicios.Servicios
         private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities1 contexto, string identificador)
         {
             var usuariosPorNombre = contexto.Usuario
-                .Include(u => u.Jugador.Avatar)
                 .Where(u => u.Nombre_Usuario == identificador)
                 .ToList();
 
@@ -99,7 +98,6 @@ namespace Servicios.Servicios
             }
 
             var usuariosPorCorreo = contexto.Usuario
-                .Include(u => u.Jugador.Avatar)
                 .Where(u => u.Jugador.Correo == identificador)
                 .ToList();
 
@@ -119,8 +117,7 @@ namespace Servicios.Servicios
                 Nombre = jugador?.Nombre,
                 Apellido = jugador?.Apellido,
                 Correo = jugador?.Correo,
-                AvatarId = jugador?.Avatar_idAvatar ?? 0,
-                AvatarRutaRelativa = jugador?.Avatar?.Avatar_Ruta
+                AvatarId = jugador?.Id_Avatar ?? 0,
             };
         }
     }

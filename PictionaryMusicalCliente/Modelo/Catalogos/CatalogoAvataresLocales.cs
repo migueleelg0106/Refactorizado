@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media.Imaging;
 
 namespace PictionaryMusicalCliente.Modelo.Catalogos
@@ -8,37 +9,50 @@ namespace PictionaryMusicalCliente.Modelo.Catalogos
     {
         private const string CarpetaRecursos = "Recursos";
 
-        private static readonly IReadOnlyList<ObjetoAvatar> _avatares = new List<ObjetoAvatar>
+        private static readonly Dictionary<int, ObjetoAvatar> _diccionarioAvatares;
+        private static readonly IReadOnlyList<ObjetoAvatar> _listaAvatares;
+
+        static CatalogoAvataresLocales()
         {
-            Crear(1, "AC/DC", "ACDC.jpg"),
-            Crear(2, "Aleks Syntek", "Aleks_Syntek.jpg"),
-            Crear(3, "Anuel AA", "Anuel_AA.jpg"),
-            Crear(4, "Bad Bunny", "Bad_Bunny.jpg"),
-            Crear(5, "Britney Spears", "Britney_Spears.jpg"),
-            Crear(6, "Bruno Mars", "Bruno_Mars.jpg"),
-            Crear(7, "Drake", "Drake.jpg"),
-            Crear(8, "Guns N' Roses", "Guns_N_Roses.jpg"),
-            Crear(9, "J Balvin", "J_Balvin.jpg"),
-            Crear(10, "José José", "Jose_Jose.jpg"),
-            Crear(11, "Kanye West", "Kanye_West.jpg"),
-            Crear(12, "Luis Miguel", "Luis_Miguel.jpg"),
-            Crear(13, "Mariah Carey", "Mariah_Carey.jpg"),
-            Crear(14, "Taylor Swift", "Taylor_Swift.jpg"),
-            Crear(15, "The Weeknd", "The_Weeknd.jpg"),
-            Crear(16, "Travis Scott", "Travis_Scott.jpg")
-        };
+            _listaAvatares = new List<ObjetoAvatar>
+            {
+                Crear(1, "AC/DC", "ACDC.jpg"),
+                Crear(2, "Aleks Syntek", "Aleks_Syntek.jpg"),
+                Crear(3, "Anuel AA", "Anuel_AA.jpg"),
+                Crear(4, "Bad Bunny", "Bad_Bunny.jpg"),
+                Crear(5, "Britney Spears", "Britney_Spears.jpg"),
+                Crear(6, "Bruno Mars", "Bruno_Mars.jpg"),
+                Crear(7, "Drake", "Drake.jpg"),
+                Crear(8, "Guns N' Roses", "Guns_N_Roses.jpg"),
+                Crear(9, "J Balvin", "J_Balvin.jpg"),
+                Crear(10, "José José", "Jose_Jose.jpg"),
+                Crear(11, "Kanye West", "Kanye_West.jpg"),
+                Crear(12, "Luis Miguel", "Luis_Miguel.jpg"),
+                Crear(13, "Mariah Carey", "Mariah_Carey.jpg"),
+                Crear(14, "Taylor Swift", "Taylor_Swift.jpg"),
+                Crear(15, "The Weeknd", "The_Weeknd.jpg"),
+                Crear(16, "Travis Scott", "Travis_Scott.jpg")
+            };
+
+            _diccionarioAvatares = _listaAvatares.ToDictionary(a => a.Id);
+        }
 
         public static IReadOnlyList<ObjetoAvatar> ObtenerAvatares()
         {
-            return _avatares;
+            return _listaAvatares;
+        }
+
+        public static ObjetoAvatar ObtenerPorId(int id)
+        {
+            return _diccionarioAvatares.TryGetValue(id, out var avatar) ? avatar : null;
         }
 
         private static ObjetoAvatar Crear(int id, string nombre, string archivo)
         {
-            string rutaRelativa = $"{CarpetaRecursos}/{archivo}";
-            var uri = new Uri($"pack://application:,,,/{rutaRelativa}", UriKind.Absolute);
+            var uri = new Uri($"pack://application:,,,/{CarpetaRecursos}/{archivo}", UriKind.Absolute);
             var imagen = new BitmapImage(uri);
-            return new ObjetoAvatar(id, nombre, imagen, rutaRelativa, null);
+
+            return new ObjetoAvatar(id, nombre, imagen);
         }
     }
 }

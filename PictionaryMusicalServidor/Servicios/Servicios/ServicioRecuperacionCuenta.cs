@@ -65,7 +65,6 @@ namespace Servicios.Servicios
                     NombreUsuario = usuario.Nombre_Usuario,
                     Nombre = usuario.Jugador?.Nombre,
                     Apellido = usuario.Jugador?.Apellido,
-                    AvatarRutaRelativa = usuario.Jugador?.Avatar?.Avatar_Ruta,
                     Codigo = codigo,
                     Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo),
                     Confirmado = false
@@ -314,7 +313,6 @@ namespace Servicios.Servicios
         {
             var usuariosPorNombre = contexto.Usuario
                 .Include(u => u.Jugador)
-                .Include(u => u.Jugador.Avatar)
                 .Where(u => u.Nombre_Usuario == identificador)
                 .ToList();
 
@@ -328,7 +326,6 @@ namespace Servicios.Servicios
 
             var usuariosPorCorreo = contexto.Usuario
                 .Include(u => u.Jugador)
-                .Include(u => u.Jugador.Avatar)
                 .Where(u => u.Jugador.Correo == identificador)
                 .ToList();
 

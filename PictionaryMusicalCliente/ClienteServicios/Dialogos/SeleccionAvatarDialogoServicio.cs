@@ -1,101 +1,75 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using System.Windows.Markup;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 {
     public class SeleccionAvatarDialogoServicio : ISeleccionarAvatarServicio
     {
-        private readonly IAvatarServicio _avatarServicio;
-
-        public SeleccionAvatarDialogoServicio(IAvatarServicio avatarServicio)
+        public SeleccionAvatarDialogoServicio()
         {
-            _avatarServicio = avatarServicio ?? throw new ArgumentNullException(nameof(avatarServicio));
         }
 
-        public async Task<ObjetoAvatar> SeleccionarAvatarAsync(string avatarSeleccionadoRutaRelativa = null)
+        public Task<ObjetoAvatar> SeleccionarAvatarAsync(int avatarSeleccionadoId = 0)
         {
-            (IReadOnlyList<ObjetoAvatar> avatares, string mensajeError, bool mostrarMensaje) = await ObtenerAvataresAsync()
-                .ConfigureAwait(true);
-
-            if (mostrarMensaje && !string.IsNullOrWhiteSpace(mensajeError))
-            {
-                AvisoAyudante.Mostrar(mensajeError);
-            }
+            var avatares = CatalogoAvataresLocales.ObtenerAvatares();
 
             if (avatares == null || avatares.Count == 0)
             {
-                return null;
+                AvisoAyudante.Mostrar("No se pudieron cargar los avatares.");
+                return Task.FromResult<ObjetoAvatar>(null);
             }
 
-            var ventana = new SeleccionAvatar();
-            var vistaModelo = new SeleccionAvatarVistaModelo(avatares);
-            var finalizacion = new TaskCompletionSource<ObjetoAvatar>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var finalizacion = new TaskCompletionSource<ObjetoAvatar>();
 
-            if (!string.IsNullOrWhiteSpace(avatarSeleccionadoRutaRelativa))
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                vistaModelo.AvatarSeleccionado = vistaModelo.Avatares
-                    .FirstOrDefault(a => AvatarAyudante.SonRutasEquivalentes(
-                        a.RutaRelativa,
-                        avatarSeleccionadoRutaRelativa));
-            }
-
-            vistaModelo.SeleccionConfirmada = avatar =>
-            {
-                finalizacion.TrySetResult(avatar);
-            };
-
-            vistaModelo.CerrarAccion = () => ventana.Close();
-
-            ventana.DataContext = vistaModelo;
-
-            ventana.Closed += (_, __) =>
-            {
-                if (!finalizacion.Task.IsCompleted)
+                try
                 {
-                    finalizacion.TrySetResult(null);
+                    var ventana = new SeleccionAvatar();
+                    var vistaModelo = new SeleccionAvatarVistaModelo(avatares);
+
+                    if (avatarSeleccionadoId > 0)
+                    {
+                        vistaModelo.AvatarSeleccionado = CatalogoAvataresLocales.ObtenerPorId(avatarSeleccionadoId);
+                    }
+
+                    vistaModelo.SeleccionConfirmada = avatar =>
+                    {
+                        finalizacion.TrySetResult(avatar);
+                    };
+
+                    vistaModelo.CerrarAccion = () => ventana.Close();
+
+                    ventana.DataContext = vistaModelo;
+
+                    ventana.Closed += (_, __) =>
+                    {
+                        if (!finalizacion.Task.IsCompleted)
+                        {
+                            finalizacion.TrySetResult(null);
+                        }
+                    };
+
+                    ventana.ShowDialog();
                 }
-            };
-
-            ventana.ShowDialog();
-
-            return await finalizacion.Task.ConfigureAwait(true);
-        }
-
-        private async Task<(IReadOnlyList<ObjetoAvatar> Avatares, string MensajeError, bool MostrarMensaje)> ObtenerAvataresAsync()
-        {
-            string mensajeError = null;
-
-            try
-            {
-                IReadOnlyList<ObjetoAvatar> avatares = await _avatarServicio.ObtenerCatalogoAsync()
-                    .ConfigureAwait(true);
-
-                if (avatares != null && avatares.Count > 0)
+                catch (XamlParseException ex)
                 {
-                    AvatarAyudante.ActualizarCatalogo(avatares);
-                    return (avatares, null, false);
+                    finalizacion.TrySetException(new InvalidOperationException("Error al cargar la interfaz de selección de avatar.", ex));
                 }
-            }
-            catch (ExcepcionServicio ex)
-            {
-                mensajeError = ex.Message ?? Lang.errorTextoServidorInformacionAvatar;
-            }
+                catch (InvalidOperationException ex)
+                {
+                    finalizacion.TrySetException(ex);
+                }
+            });
 
-            IReadOnlyList<ObjetoAvatar> locales = AvatarAyudante.ObtenerAvatares();
-
-            if (locales == null || locales.Count == 0)
-            {
-                return (Array.Empty<ObjetoAvatar>(), mensajeError ?? Lang.errorTextoServidorInformacionAvatar, true);
-            }
-
-            return (locales, mensajeError, false);
+            return finalizacion.Task;
         }
     }
 }

@@ -1,9 +1,10 @@
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly ICuentaServicio _cuentaServicio;
         private readonly ISeleccionarAvatarServicio _seleccionarAvatarServicio;
         private readonly IVerificacionCodigoDialogoServicio _verificarCodigoDialogoServicio;
-        private readonly IAvatarServicio _avatarServicio;
 
         private string _usuario;
         private string _nombre;
@@ -28,7 +28,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private string _correo;
         private string _contrasena;
         private ImageSource _avatarSeleccionadoImagen;
-        private string _avatarSeleccionadoRutaRelativa;
+        private int _avatarSeleccionadoId;
         private bool _mostrarErrorUsuario;
         private bool _mostrarErrorCorreo;
         private bool _estaProcesando;
@@ -37,14 +37,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             ICodigoVerificacionServicio codigoVerificacionServicio,
             ICuentaServicio cuentaServicio,
             ISeleccionarAvatarServicio seleccionarAvatarServicio,
-            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio,
-            IAvatarServicio avatarServicio)
+            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio)
         {
             _codigoVerificacionServicio = codigoVerificacionServicio ?? throw new ArgumentNullException(nameof(codigoVerificacionServicio));
             _cuentaServicio = cuentaServicio ?? throw new ArgumentNullException(nameof(cuentaServicio));
             _seleccionarAvatarServicio = seleccionarAvatarServicio ?? throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
             _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ?? throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));
-            _avatarServicio = avatarServicio ?? throw new ArgumentNullException(nameof(avatarServicio));
 
             CrearCuentaComando = new ComandoAsincrono(async _ =>
             {
@@ -65,7 +63,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             });
 
             EstablecerAvatarPredeterminado();
-            _ = CargarCatalogoAvataresAsync();
         }
 
         public string Usuario { get => _usuario; set => EstablecerPropiedad(ref _usuario, value); }
@@ -74,7 +71,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public string Correo { get => _correo; set => EstablecerPropiedad(ref _correo, value); }
         public string Contrasena { get => _contrasena; set => EstablecerPropiedad(ref _contrasena, value); }
         public ImageSource AvatarSeleccionadoImagen { get => _avatarSeleccionadoImagen; private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value); }
-        public string AvatarSeleccionadoRutaRelativa { get => _avatarSeleccionadoRutaRelativa; private set => EstablecerPropiedad(ref _avatarSeleccionadoRutaRelativa, value); }
+        public int AvatarSeleccionadoId { get => _avatarSeleccionadoId; private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value); }
         public bool MostrarErrorUsuario { get => _mostrarErrorUsuario; private set => EstablecerPropiedad(ref _mostrarErrorUsuario, value); }
         public bool MostrarErrorCorreo { get => _mostrarErrorCorreo; private set => EstablecerPropiedad(ref _mostrarErrorCorreo, value); }
         public bool EstaProcesando
@@ -196,10 +193,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             ValidarCampo(ValidacionEntrada.ValidarCorreo(Correo), nameof(Correo), camposInvalidos, ref primerMensajeError);
             ValidarCampo(ValidacionEntrada.ValidarContrasena(Contrasena), nameof(Contrasena), camposInvalidos, ref primerMensajeError);
 
-            if (string.IsNullOrWhiteSpace(AvatarSeleccionadoRutaRelativa)) 
+            if (AvatarSeleccionadoId <= 0)
             {
                 camposInvalidos.Add("Avatar");
-                primerMensajeError ??= Lang.errorTextoSeleccionAvatarValido; 
+                primerMensajeError ??= Lang.errorTextoSeleccionAvatarValido;
             }
 
             if (camposInvalidos.Count > 0) 
@@ -214,7 +211,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 Apellido = Apellido,
                 Correo = Correo,
                 Contrasena = Contrasena,
-                AvatarRutaRelativa = AvatarSeleccionadoRutaRelativa
+                AvatarId = AvatarSeleccionadoId
             };
             return (solicitud, camposInvalidos, primerMensajeError);
         }
@@ -316,38 +313,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private async Task SeleccionarAvatarAsync()
         {
             ObjetoAvatar avatar = await _seleccionarAvatarServicio
-                .SeleccionarAvatarAsync(AvatarSeleccionadoRutaRelativa).ConfigureAwait(true);
+                .SeleccionarAvatarAsync(AvatarSeleccionadoId).ConfigureAwait(true);
 
             if (avatar == null) return;
 
-            AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
-            AvatarSeleccionadoImagen = AvatarAyudante.ObtenerImagen(avatar);
+            AvatarSeleccionadoId = avatar.Id;
+            AvatarSeleccionadoImagen = avatar.Imagen;
         }
 
         private void EstablecerAvatarPredeterminado()
         {
-            ObjetoAvatar avatar = AvatarAyudante.ObtenerAvatarPredeterminado();
-            if (avatar != null)
+            var avatares = CatalogoAvataresLocales.ObtenerAvatares();
+            if (avatares != null && avatares.Count > 0)
             {
-                AvatarSeleccionadoRutaRelativa = avatar.RutaRelativa;
-                AvatarSeleccionadoImagen = AvatarAyudante.ObtenerImagen(avatar);
-            }
-        }
-
-        private async Task CargarCatalogoAvataresAsync()
-        {
-            try
-            {
-                IReadOnlyList<ObjetoAvatar> avatares = await _avatarServicio.ObtenerCatalogoAsync().ConfigureAwait(true);
-                if (avatares != null && avatares.Count > 0)
-                {
-                    AvatarAyudante.ActualizarCatalogo(avatares);
-                    EstablecerAvatarPredeterminado();
-                }
-            }
-            catch (ExcepcionServicio)
-            {
-                // AvatarAyudante gestiona el respaldo del catálogo local
+                var avatar = avatares[0];
+                AvatarSeleccionadoId = avatar.Id;
+                AvatarSeleccionadoImagen = avatar.Imagen;
             }
         }
     }

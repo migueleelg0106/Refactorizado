@@ -40,7 +40,6 @@ namespace PictionaryMusicalCliente.Modelo
             Apellido = dto.Apellido;
             Correo = dto.Correo;
             AvatarId = dto.AvatarId;
-            AvatarRutaRelativa = dto.AvatarRutaRelativa;
             Instagram = dto.Instagram;
             Facebook = dto.Facebook;
             X = dto.X;

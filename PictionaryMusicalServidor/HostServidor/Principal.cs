@@ -20,7 +20,6 @@ namespace HostServidor
 
             using (var hostCuenta = new ServiceHost(typeof(Servicios.Servicios.CuentaManejador)))
             using (var hostCodigo = new ServiceHost(typeof(Servicios.Servicios.CodigoVerificacionManejador)))
-            using (var hostAvatares = new ServiceHost(typeof(Servicios.Servicios.CatalogoAvataresManejador)))
             using (var hostInicioSesion = new ServiceHost(typeof(Servicios.Servicios.InicioSesionManejador)))
             using (var hostCambioContrasena = new ServiceHost(typeof(Servicios.Servicios.CambioContrasenaManejador)))
             using (var hostClasificacion = new ServiceHost(typeof(Servicios.Servicios.ClasificacionManejador)))
@@ -42,13 +41,6 @@ namespace HostServidor
                     foreach (var ep in hostCodigo.Description.Endpoints)
                     {
                         _bitacora.Info($"Codigo -> {ep.Address} ({ep.Binding.Name})");
-                    }
-
-                    hostAvatares.Open();
-                    _bitacora.Info("Servicio Avatares iniciado.");
-                    foreach (var ep in hostAvatares.Description.Endpoints)
-                    {
-                        _bitacora.Info($"Avatares -> {ep.Address} ({ep.Binding.Name})");
                     }
 
                     hostInicioSesion.Open();
@@ -114,7 +106,6 @@ namespace HostServidor
                 }
                 finally
                 {
-                    CerrarFormaSegura(hostAvatares);
                     CerrarFormaSegura(hostCodigo);
                     CerrarFormaSegura(hostCuenta);
                     CerrarFormaSegura(hostInicioSesion);

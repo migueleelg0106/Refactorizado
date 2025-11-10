@@ -31,8 +31,7 @@ namespace Servicios.Servicios
                 return CrearResultadoFallo("El apellido es obligatorio y no debe exceder 50 caracteres.");
             }
 
-            string rutaAvatar = solicitud.AvatarRutaRelativa?.Trim();
-            if (string.IsNullOrWhiteSpace(rutaAvatar))
+            if (solicitud.AvatarId <= 0)
             {
                 return CrearResultadoFallo("Selecciona un avatar válido.");
             }

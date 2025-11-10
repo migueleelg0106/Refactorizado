@@ -54,12 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\Implementaciones\AmigoRepositorio.cs" />
-    <Compile Include="DAL\Implementaciones\AvatarRepositorio.cs" />
     <Compile Include="DAL\Implementaciones\ClasificacionRepositorio.cs" />
     <Compile Include="DAL\Implementaciones\JugadorRepositorio.cs" />
     <Compile Include="DAL\Implementaciones\UsuarioRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IAmigoRepositorio.cs" />
-    <Compile Include="DAL\Interfaces\IAvatarRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IClasificacionRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IJugadorRepositorio.cs" />
     <Compile Include="DAL\Interfaces\IUsuarioRepositorio.cs" />
@@ -67,9 +65,6 @@
       <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\Artista.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Modelo\Avatar.cs">
       <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\BaseDatosPruebaEntities1.cs" />
@@ -106,7 +101,13 @@
     <Compile Include="Modelo\RedSocial.cs">
       <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
     </Compile>
-    <Compile Include="Modelo\Solicitud.cs">
+    <Compile Include="Modelo\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\sp_helpdiagrams_Result.cs">
+      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\sysdiagrams.cs">
       <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\Usuario.cs">

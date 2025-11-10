@@ -10,7 +10,5 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
         Task<DTOs.UsuarioDTO> ObtenerPerfilAsync(int usuarioId);
 
         Task<DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(DTOs.ActualizacionPerfilDTO solicitud);
-
-        Task<IReadOnlyList<ObjetoAvatar>> ObtenerAvataresDisponiblesAsync();
     }
 }

@@ -6,7 +6,6 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.ServiceModel;
-using Datos.DAL.Implementaciones;
 using Datos.Modelo;
 using Datos.Utilidades;
 using Servicios.Contratos;
@@ -31,7 +30,6 @@ namespace Servicios.Servicios
                 using (BaseDatosPruebaEntities1 contexto = CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
-                        .Include(u => u.Jugador.Avatar)
                         .Include(u => u.Jugador.RedSocial)
                         .FirstOrDefault(u => u.idUsuario == idUsuario);
 
@@ -57,8 +55,7 @@ namespace Servicios.Servicios
                         Nombre = jugador.Nombre,
                         Apellido = jugador.Apellido,
                         Correo = jugador.Correo,
-                        AvatarId = jugador.Avatar_idAvatar,
-                        AvatarRutaRelativa = jugador.Avatar?.Avatar_Ruta,
+                        AvatarId = jugador.Id_Avatar,
                         Instagram = redSocial?.Instagram,
                         Facebook = redSocial?.facebook,
                         X = redSocial?.x,
@@ -117,16 +114,9 @@ namespace Servicios.Servicios
                         return CrearResultadoFallo("No existe un jugador asociado al usuario especificado.");
                     }
 
-                    var avatarRepositorio = new AvatarRepositorio(contexto);
-                    Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(solicitud.AvatarRutaRelativa);
-                    if (avatar == null)
-                    {
-                        return CrearResultadoFallo("El avatar seleccionado no existe.");
-                    }
-
                     jugador.Nombre = solicitud.Nombre.Trim();
                     jugador.Apellido = solicitud.Apellido.Trim();
-                    jugador.Avatar_idAvatar = avatar.idAvatar;
+                    jugador.Id_Avatar = solicitud.AvatarId;
 
                     RedSocial redSocial = jugador.RedSocial.FirstOrDefault();
                     if (redSocial == null)

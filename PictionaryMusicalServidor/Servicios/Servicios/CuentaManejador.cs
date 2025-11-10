@@ -33,17 +33,6 @@ namespace Servicios.Servicios
 
                     using (var transaccion = contexto.Database.BeginTransaction())
                     {
-                        var avatarRepositorio = new AvatarRepositorio(contexto);
-                        Avatar avatar = avatarRepositorio.ObtenerAvatarPorRuta(nuevaCuenta.AvatarRutaRelativa);
-                        if (avatar == null)
-                        {
-                            return new ResultadoRegistroCuentaDTO
-                            {
-                                RegistroExitoso = false,
-                                Mensaje = "Avatar no válido."
-                            };
-                        }
-
                         var clasificacionRepositorio = new ClasificacionRepositorio(contexto);
                         var clasificacion = clasificacionRepositorio.CrearClasificacionInicial();
 
@@ -53,7 +42,7 @@ namespace Servicios.Servicios
                             Nombre = nuevaCuenta.Nombre,
                             Apellido = nuevaCuenta.Apellido,
                             Correo = nuevaCuenta.Correo,
-                            Avatar_idAvatar = avatar.idAvatar,
+                            Id_Avatar = nuevaCuenta.AvatarId,
                             Clasificacion_idClasificacion = clasificacion.idClasificacion
                         });
 
@@ -112,7 +101,7 @@ namespace Servicios.Servicios
                 };
             }
 
-            if (string.IsNullOrWhiteSpace(nuevaCuenta.AvatarRutaRelativa))
+            if (nuevaCuenta.AvatarId <= 0)
             {
                 return new ResultadoRegistroCuentaDTO
                 {

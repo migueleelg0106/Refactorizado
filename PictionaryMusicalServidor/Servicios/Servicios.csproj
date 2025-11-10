@@ -78,7 +78,6 @@
     <Compile Include="Contratos\IAmigosManejador.cs" />
     <Compile Include="Contratos\IAmigosManejadorCallback.cs" />
     <Compile Include="Contratos\ICambioContrasenaManejador.cs" />
-    <Compile Include="Contratos\ICatalogoAvataresManejador.cs" />
     <Compile Include="Contratos\ICerradoSesionManejador.cs" />
     <Compile Include="Contratos\IChatManejador.cs" />
     <Compile Include="Contratos\IClasificacionManejador.cs" />
@@ -115,9 +114,7 @@
     <Compile Include="Contratos\DTOs\SolicitudAmistadDTO.cs" />
     <Compile Include="Contratos\DTOs\AmigoDTO.cs" />
     <Compile Include="Contratos\DTOs\UsuarioDTO.cs" />
-    <Compile Include="Contratos\DTOs\AvatarDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Servicios\CatalogoAvataresManejador.cs" />
     <Compile Include="Servicios\AmigosManejador.cs" />
     <Compile Include="Servicios\ListaAmigosManejador.cs" />
     <Compile Include="Servicios\ClasificacionManejador.cs" />
