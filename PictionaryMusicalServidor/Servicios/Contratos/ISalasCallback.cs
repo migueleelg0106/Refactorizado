@@ -1,4 +1,5 @@
 ﻿using System.ServiceModel;
+using Servicios.Contratos.DTOs;
 
 namespace Servicios.Contratos
 {
@@ -9,5 +10,8 @@ namespace Servicios.Contratos
 
         [OperationContract(IsOneWay = true)]
         void NotificarJugadorSalio(string codigoSala, string nombreJugador);
+
+        [OperationContract(IsOneWay = true)]
+        void NotificarListaSalasActualizada(DTOs.SalaDTO[] salas);
     }
 }

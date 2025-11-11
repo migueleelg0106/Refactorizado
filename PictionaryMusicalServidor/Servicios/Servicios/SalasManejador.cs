@@ -14,6 +14,7 @@ namespace Servicios.Servicios
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(SalasManejador));
         private static readonly ConcurrentDictionary<string, SalaInterna> _salas = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<Guid, ISalasCallback> _suscripciones = new();
 
         public SalaDTO CrearSala(string nombreCreador, ConfiguracionPartidaDTO configuracion)
         {
@@ -33,6 +34,7 @@ namespace Servicios.Servicios
                     throw new FaultException("No se pudo crear la sala.");
                 }
 
+                NotificarListaSalasATodos();
                 return sala.ToDto();
             }
             catch (FaultException)
@@ -59,7 +61,10 @@ namespace Servicios.Servicios
                     throw new FaultException("No se encontró la sala especificada.");
 
                 var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
-                return sala.AgregarJugador(nombreUsuario.Trim(), callback, notificar: true);
+                var resultado = sala.AgregarJugador(nombreUsuario.Trim(), callback, notificar: true);
+                
+                NotificarListaSalasATodos();
+                return resultado;
             }
             catch (FaultException)
             {
@@ -101,6 +106,8 @@ namespace Servicios.Servicios
 
                 if (sala.DebeEliminarse)
                     _salas.TryRemove(codigoSala.Trim(), out _);
+
+                NotificarListaSalasATodos();
             }
             catch (FaultException)
             {
@@ -110,6 +117,51 @@ namespace Servicios.Servicios
             {
                 _logger.Error($"Error inesperado al abandonar la sala {codigoSala}", ex);
                 throw new FaultException("Ocurrió un error inesperado al abandonar la sala.");
+            }
+        }
+
+        public void SuscribirListaSalas()
+        {
+            try
+            {
+                var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
+                var sessionId = Guid.NewGuid();
+                
+                _suscripciones.AddOrUpdate(sessionId, callback, (_, __) => callback);
+
+                var canal = OperationContext.Current?.Channel;
+                if (canal != null)
+                {
+                    canal.Closed += (_, __) => _suscripciones.TryRemove(sessionId, out _);
+                    canal.Faulted += (_, __) => _suscripciones.TryRemove(sessionId, out _);
+                }
+
+                NotificarListaSalas(callback);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error inesperado al suscribirse a la lista de salas.", ex);
+                throw new FaultException("Ocurrió un error inesperado al suscribirse a la lista de salas.");
+            }
+        }
+
+        public void CancelarSuscripcionListaSalas()
+        {
+            try
+            {
+                var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
+                var keysToRemove = _suscripciones.Where(kvp => ReferenceEquals(kvp.Value, callback))
+                    .Select(kvp => kvp.Key)
+                    .ToList();
+
+                foreach (var key in keysToRemove)
+                {
+                    _suscripciones.TryRemove(key, out _);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error inesperado al cancelar suscripción a la lista de salas.", ex);
             }
         }
 
@@ -151,6 +203,44 @@ namespace Servicios.Servicios
 
             if (string.IsNullOrWhiteSpace(configuracion.Dificultad))
                 throw new FaultException("La dificultad es obligatoria.");
+        }
+
+        private static void NotificarListaSalasATodos()
+        {
+            var salas = _salas.Values.Select(s => s.ToDto()).ToArray();
+
+            foreach (var kvp in _suscripciones)
+            {
+                try
+                {
+                    kvp.Value.NotificarListaSalasActualizada(salas);
+                }
+                catch (CommunicationException)
+                {
+                    _suscripciones.TryRemove(kvp.Key, out _);
+                }
+                catch (TimeoutException)
+                {
+                    _suscripciones.TryRemove(kvp.Key, out _);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn($"Error al notificar actualización de lista de salas al cliente", ex);
+                }
+            }
+        }
+
+        private static void NotificarListaSalas(ISalasCallback callback)
+        {
+            try
+            {
+                var salas = _salas.Values.Select(s => s.ToDto()).ToArray();
+                callback.NotificarListaSalasActualizada(salas);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("Error al notificar lista de salas inicial", ex);
+            }
         }
 
 
