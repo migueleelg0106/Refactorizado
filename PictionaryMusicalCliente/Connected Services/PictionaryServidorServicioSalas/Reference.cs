@@ -38,6 +38,18 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/AbandonarSala", ReplyAction="http://tempuri.org/ISalasManejador/AbandonarSalaResponse")]
         System.Threading.Tasks.Task AbandonarSalaAsync(string codigoSala, string nombreUsuario);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/SuscribirListaSalas", ReplyAction="http://tempuri.org/ISalasManejador/SuscribirListaSalasResponse")]
+        void SuscribirListaSalas();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/SuscribirListaSalas", ReplyAction="http://tempuri.org/ISalasManejador/SuscribirListaSalasResponse")]
+        System.Threading.Tasks.Task SuscribirListaSalasAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/CancelarSuscripcionListaSalas", ReplyAction="http://tempuri.org/ISalasManejador/CancelarSuscripcionListaSalasResponse")]
+        void CancelarSuscripcionListaSalas();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/CancelarSuscripcionListaSalas", ReplyAction="http://tempuri.org/ISalasManejador/CancelarSuscripcionListaSalasResponse")]
+        System.Threading.Tasks.Task CancelarSuscripcionListaSalasAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -48,6 +60,12 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarJugadorSalio")]
         void NotificarJugadorSalio(string codigoSala, string nombreJugador);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarListaSalasActualizada")]
+        void NotificarListaSalasActualizada(Servicios.Contratos.DTOs.SalaDTO[] salas);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarSalaActualizada")]
+        void NotificarSalaActualizada(Servicios.Contratos.DTOs.SalaDTO sala);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -108,6 +126,22 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         public System.Threading.Tasks.Task AbandonarSalaAsync(string codigoSala, string nombreUsuario) {
             return base.Channel.AbandonarSalaAsync(codigoSala, nombreUsuario);
+        }
+        
+        public void SuscribirListaSalas() {
+            base.Channel.SuscribirListaSalas();
+        }
+        
+        public System.Threading.Tasks.Task SuscribirListaSalasAsync() {
+            return base.Channel.SuscribirListaSalasAsync();
+        }
+        
+        public void CancelarSuscripcionListaSalas() {
+            base.Channel.CancelarSuscripcionListaSalas();
+        }
+        
+        public System.Threading.Tasks.Task CancelarSuscripcionListaSalasAsync() {
+            return base.Channel.CancelarSuscripcionListaSalasAsync();
         }
     }
 }

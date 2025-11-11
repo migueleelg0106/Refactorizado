@@ -132,8 +132,8 @@ namespace Servicios.Servicios
                 var canal = OperationContext.Current?.Channel;
                 if (canal != null)
                 {
-                    canal.Closed += (_, __) => _suscripciones.TryRemove(sessionId, out _);
-                    canal.Faulted += (_, __) => _suscripciones.TryRemove(sessionId, out _);
+                    canal.Closed += (_, __) => _suscripciones.TryRemove(sessionId, out ISalasCallback _);
+                    canal.Faulted += (_, __) => _suscripciones.TryRemove(sessionId, out ISalasCallback _);
                 }
 
                 NotificarListaSalas(callback);

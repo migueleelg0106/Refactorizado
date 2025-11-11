@@ -56,6 +56,26 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="SuscribirListaSalas">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SuscribirListaSalasResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CancelarSuscripcionListaSalas">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CancelarSuscripcionListaSalasResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="NotificarJugadorSeUnio">
     <xs:complexType>
       <xs:sequence>
@@ -69,6 +89,20 @@
       <xs:sequence>
         <xs:element minOccurs="0" name="codigoSala" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="nombreJugador" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarListaSalasActualizada">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="salas" nillable="true" type="q5:ArrayOfSalaDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarSalaActualizada">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="sala" nillable="true" type="q6:SalaDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
