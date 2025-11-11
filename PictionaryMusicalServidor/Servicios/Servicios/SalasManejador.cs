@@ -211,7 +211,7 @@ namespace Servicios.Servicios
                             {
                                 try 
                                 { 
-                                    kvp.Value.JugadorSeUnio(Codigo, nombreUsuario); 
+                                    kvp.Value.NotificarJugadorSeUnio(Codigo, nombreUsuario); 
                                 }
                                 catch 
                                 { 
@@ -236,7 +236,7 @@ namespace Servicios.Servicios
 
                     foreach (var kvp in _callbacks)
                     {
-                        try { kvp.Value.JugadorSalio(Codigo, nombreUsuario); }
+                        try { kvp.Value.NotificarJugadorSalio(Codigo, nombreUsuario); }
                         catch 
                         {  
 
