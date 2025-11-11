@@ -1,11 +1,14 @@
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo
 {
@@ -14,6 +17,8 @@ namespace PictionaryMusicalCliente.VistaModelo
         private readonly CancionManejador _manejadorCancion;
         private readonly DispatcherTimer _overlayTimer;
         private readonly DispatcherTimer _temporizador;
+        private readonly ISalasServicio _salasServicio;
+        private readonly DTOs.SalaDTO _sala;
 
         private bool _juegoIniciado;
         private double _grosor;
@@ -33,9 +38,14 @@ namespace PictionaryMusicalCliente.VistaModelo
         private string _textoGenero;
         private string _textoBotonIniciarPartida;
         private bool _botonIniciarPartidaHabilitado;
+        private string _codigoSala;
+        private ObservableCollection<string> _jugadores;
 
-        public VentanaJuegoVistaModelo()
+        public VentanaJuegoVistaModelo(DTOs.SalaDTO sala, ISalasServicio salasServicio)
         {
+            _sala = sala ?? throw new ArgumentNullException(nameof(sala));
+            _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
+
             _manejadorCancion = new CancionManejador();
 
             _grosor = 6;
@@ -52,6 +62,12 @@ namespace PictionaryMusicalCliente.VistaModelo
             _visibilidadInfoCancion = Visibility.Collapsed;
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
             _botonIniciarPartidaHabilitado = true;
+
+            _codigoSala = _sala.Codigo;
+            _jugadores = new ObservableCollection<string>(_sala.Jugadores ?? new string[0]);
+
+            _salasServicio.JugadorSeUnio += SalasServicio_JugadorSeUnio;
+            _salasServicio.JugadorSalio += SalasServicio_JugadorSalio;
 
             _overlayTimer = new DispatcherTimer();
             _overlayTimer.Interval = TimeSpan.FromSeconds(5);
@@ -181,6 +197,18 @@ namespace PictionaryMusicalCliente.VistaModelo
         {
             get => _botonIniciarPartidaHabilitado;
             set => EstablecerPropiedad(ref _botonIniciarPartidaHabilitado, value);
+        }
+
+        public string CodigoSala
+        {
+            get => _codigoSala;
+            set => EstablecerPropiedad(ref _codigoSala, value);
+        }
+
+        public ObservableCollection<string> Jugadores
+        {
+            get => _jugadores;
+            set => EstablecerPropiedad(ref _jugadores, value);
         }
 
         public ICommand InvitarCorreoComando { get; private set; }
@@ -359,6 +387,36 @@ namespace PictionaryMusicalCliente.VistaModelo
 
                 MostrarMensaje?.Invoke("¡Tiempo terminado!");
             }
+        }
+
+        private void SalasServicio_JugadorSeUnio(object sender, string nombreJugador)
+        {
+            EjecutarEnDispatcher(() =>
+            {
+                if (!Jugadores.Contains(nombreJugador))
+                {
+                    Jugadores.Add(nombreJugador);
+                }
+            });
+        }
+
+        private void SalasServicio_JugadorSalio(object sender, string nombreJugador)
+        {
+            EjecutarEnDispatcher(() =>
+            {
+                Jugadores.Remove(nombreJugador);
+            });
+        }
+
+        private static void EjecutarEnDispatcher(Action accion)
+        {
+            if (accion == null) return;
+            var dispatcher = Application.Current?.Dispatcher;
+
+            if (dispatcher == null || dispatcher.CheckAccess())
+                accion();
+            else
+                dispatcher.BeginInvoke(accion);
         }
     }
 }
