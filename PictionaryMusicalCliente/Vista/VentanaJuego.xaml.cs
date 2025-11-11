@@ -34,6 +34,14 @@ namespace PictionaryMusicalCliente
             };
 
             DataContext = _vistaModelo;
+            
+            Closed += VentanaJuego_ClosedAsync;
+        }
+
+        private async void VentanaJuego_ClosedAsync(object sender, EventArgs e)
+        {
+            Closed -= VentanaJuego_ClosedAsync;
+            await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
         }
 
         private void AbrirDialogo(Window ventana)

@@ -2,8 +2,10 @@ using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Sesiones;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -19,6 +21,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         private readonly DispatcherTimer _temporizador;
         private readonly ISalasServicio _salasServicio;
         private readonly DTOs.SalaDTO _sala;
+        private readonly string _nombreUsuarioSesion;
 
         private bool _juegoIniciado;
         private double _grosor;
@@ -45,6 +48,8 @@ namespace PictionaryMusicalCliente.VistaModelo
         {
             _sala = sala ?? throw new ArgumentNullException(nameof(sala));
             _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
+
+            _nombreUsuarioSesion = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
 
             _manejadorCancion = new CancionManejador();
 
@@ -417,6 +422,24 @@ namespace PictionaryMusicalCliente.VistaModelo
                 accion();
             else
                 dispatcher.BeginInvoke(accion);
+        }
+
+        public async Task FinalizarAsync()
+        {
+            _salasServicio.JugadorSeUnio -= SalasServicio_JugadorSeUnio;
+            _salasServicio.JugadorSalio -= SalasServicio_JugadorSalio;
+
+            if (_sala != null && !string.IsNullOrWhiteSpace(_sala.Codigo) && !string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
+            {
+                try
+                {
+                    await _salasServicio.AbandonarSalaAsync(_sala.Codigo, _nombreUsuarioSesion).ConfigureAwait(false);
+                }
+                catch
+                {
+                    // Ignorar errores al abandonar la sala
+                }
+            }
         }
     }
 }
