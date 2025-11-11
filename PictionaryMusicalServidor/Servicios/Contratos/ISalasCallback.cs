@@ -13,5 +13,8 @@ namespace Servicios.Contratos
 
         [OperationContract(IsOneWay = true)]
         void NotificarListaSalasActualizada(DTOs.SalaDTO[] salas);
+
+        [OperationContract(IsOneWay = true)]
+        void NotificarSalaActualizada(DTOs.SalaDTO sala);
     }
 }

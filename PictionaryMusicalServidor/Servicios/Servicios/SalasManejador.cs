@@ -295,18 +295,21 @@ namespace Servicios.Servicios
 
                     if (notificar)
                     {
+                        var salaActualizada = ToDto();
+
                         foreach (var kvp in _callbacks)
                         {
-                            if (!string.Equals(kvp.Key, nombreUsuario, StringComparison.OrdinalIgnoreCase))
-                            {
-                                try 
-                                { 
-                                    kvp.Value.NotificarJugadorSeUnio(Codigo, nombreUsuario); 
+                            try 
+                            { 
+                                if (!string.Equals(kvp.Key, nombreUsuario, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    kvp.Value.NotificarJugadorSeUnio(Codigo, nombreUsuario);
                                 }
-                                catch 
-                                { 
-
-                                }
+                                kvp.Value.NotificarSalaActualizada(salaActualizada);
+                            }
+                            catch 
+                            { 
+                                // Ignored
                             }
                         }
                     }
@@ -324,12 +327,18 @@ namespace Servicios.Servicios
 
                     _callbacks.Remove(nombreUsuario);
 
+                    var salaActualizada = ToDto();
+
                     foreach (var kvp in _callbacks)
                     {
-                        try { kvp.Value.NotificarJugadorSalio(Codigo, nombreUsuario); }
+                        try 
+                        { 
+                            kvp.Value.NotificarJugadorSalio(Codigo, nombreUsuario);
+                            kvp.Value.NotificarSalaActualizada(salaActualizada);
+                        }
                         catch 
                         {  
-
+                            // Ignored
                         }
                     }
 

@@ -10,6 +10,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
         event EventHandler<string> JugadorSeUnio;
         event EventHandler<string> JugadorSalio;
         event EventHandler<IReadOnlyList<DTOs.SalaDTO>> ListaSalasActualizada;
+        event EventHandler<DTOs.SalaDTO> SalaActualizada;
 
         Task<DTOs.SalaDTO> CrearSalaAsync(string nombreCreador, DTOs.ConfiguracionPartidaDTO configuracion);
 

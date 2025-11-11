@@ -25,6 +25,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         public event EventHandler<string> JugadorSeUnio;
         public event EventHandler<string> JugadorSalio;
         public event EventHandler<IReadOnlyList<DTOs.SalaDTO>> ListaSalasActualizada;
+        public event EventHandler<DTOs.SalaDTO> SalaActualizada;
 
         public IReadOnlyList<DTOs.SalaDTO> ListaSalasActual
         {
@@ -196,6 +197,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
 
             ListaSalasActualizada?.Invoke(this, lista);
+        }
+
+        public void NotificarSalaActualizada(DTOs.SalaDTO sala)
+        {
+            SalaActualizada?.Invoke(this, sala);
         }
 
         public async Task SuscribirListaSalasAsync()
