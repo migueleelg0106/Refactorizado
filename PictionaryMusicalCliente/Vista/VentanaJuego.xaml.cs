@@ -1,227 +1,97 @@
 ﻿using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
-using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Ink;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
-using LangResources = PictionaryMusicalCliente.Properties.Langs;
 
 namespace PictionaryMusicalCliente
 {
     public partial class VentanaJuego : Window
     {
-        private readonly CancionManejador _manejadorCancion;
-
-        private bool _juegoIniciado = false;
-        private double _grosor = 6;
-        private Color _color = Colors.Black;
-        private bool _syncingToolUI = false;
-
-        private DispatcherTimer _overlayTimer;
-        private DispatcherTimer _temporizador; 
-        private int _contador = 30;
+        private readonly VentanaJuegoVistaModelo _vistaModelo;
 
         public VentanaJuego()
         {
             InitializeComponent();
 
-            _manejadorCancion = new CancionManejador();
+            _vistaModelo = new VentanaJuegoVistaModelo
+            {
+                AbrirExpulsionJugador = () => AbrirDialogo(new ExpulsionJugador()),
+                AbrirInvitacionAmigos = () => AbrirDialogo(new InvitacionAmigos()),
+                AbrirAjustesPartida = manejadorCancion =>
+                {
+                    var ajustes = new AjustesPartida(manejadorCancion);
+                    AbrirDialogo(ajustes);
+                },
+                NotificarCambioHerramienta = EstablecerHerramienta,
+                AplicarEstiloLapiz = AplicarEstiloLapiz,
+                ActualizarFormaGoma = ActualizarFormaGoma,
+                LimpiarTrazos = () => ink?.Strokes.Clear(),
+                MostrarMensaje = AvisoAyudante.Mostrar
+            };
 
-            // Timer de overlays
-            _overlayTimer = new DispatcherTimer();
-            _overlayTimer.Interval = TimeSpan.FromSeconds(5);
-            _overlayTimer.Tick += OverlayTimer_Tick;
-
-            // Timer del contador
-            _temporizador = new DispatcherTimer();
-            _temporizador.Interval = TimeSpan.FromSeconds(1);
-            _temporizador.Tick += Temporizador_Tick;
+            DataContext = _vistaModelo;
         }
 
-        private void BotonInvitarCorreo(object sender, RoutedEventArgs e)
+        private void AbrirDialogo(Window ventana)
         {
-            ExpulsionJugador expulsarJugador = new ExpulsionJugador();
-            expulsarJugador.ShowDialog();
+            if (ventana == null)
+            {
+                return;
+            }
 
-            InvitacionAmigos invitarAmigos = new InvitacionAmigos();
-            invitarAmigos.ShowDialog();
+            ventana.Owner = this;
+            ventana.ShowDialog();
         }
 
-        private void BotonAjustes(object sender, RoutedEventArgs e)
+        private void EstablecerHerramienta(bool esLapiz)
         {
-            AjustesPartida ajustesPartida = new AjustesPartida(_manejadorCancion);
-            ajustesPartida.Owner = this;
-            ajustesPartida.ShowDialog();
-        }
+            if (ink == null)
+            {
+                return;
+            }
 
-        private void BotonIniciarPartida(object sender, RoutedEventArgs e)
-        {
-            if (_juegoIniciado) return;
-            _juegoIniciado = true;
-
-            cuadriculaDibujo.Visibility = Visibility.Visible;
-            SetTool(true);
-            AplicarEstiloLapiz();
-            ActualizarEraserShape();
-
-            botonIniciarPartida.IsEnabled = false;
-            botonIniciarPartida.Content = LangResources.Lang.partidaTextoPartidaEnCurso;
-        }
-
-        private void SetTool(bool isPencil)
-        {
-            if (ink == null) return;
-
-            _syncingToolUI = true;
-            if (toggleBotonLapiz != null) toggleBotonLapiz.IsChecked = isPencil;
-            if (toggleBotonBorrador != null) toggleBotonBorrador.IsChecked = !isPencil;
-            _syncingToolUI = false;
-
-            ink.EditingMode = isPencil
+            ink.EditingMode = esLapiz
                 ? InkCanvasEditingMode.Ink
                 : InkCanvasEditingMode.EraseByPoint;
 
-            if (isPencil) AplicarEstiloLapiz();
-            else ActualizarEraserShape();
-        }
-
-        private void ToggleBotonLapiz_Click(object sender, RoutedEventArgs e)
-        {
-            if (_syncingToolUI) return;
-            SetTool(true);
-        }
-
-        private void ToggleBotonBorrador_Click(object sender, RoutedEventArgs e)
-        {
-            if (_syncingToolUI) return;
-            SetTool(false);
+            if (esLapiz)
+            {
+                AplicarEstiloLapiz();
+            }
+            else
+            {
+                ActualizarFormaGoma();
+            }
         }
 
         private void AplicarEstiloLapiz()
         {
-            if (ink == null) return;
+            if (ink == null)
+            {
+                return;
+            }
+
             ink.DefaultDrawingAttributes = new DrawingAttributes
             {
-                Color = _color,
-                Width = _grosor,
-                Height = _grosor,
+                Color = _vistaModelo.Color,
+                Width = _vistaModelo.Grosor,
+                Height = _vistaModelo.Grosor,
                 FitToCurve = false,
                 IgnorePressure = true
             };
         }
 
-        private void ActualizarEraserShape()
+        private void ActualizarFormaGoma()
         {
-            if (ink == null) return;
-            var size = Math.Max(1, _grosor);
+            if (ink == null)
+            {
+                return;
+            }
+
+            var size = Math.Max(1, _vistaModelo.Grosor);
             ink.EraserShape = new EllipseStylusShape(size, size);
         }
-
-        private void Grosor_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && double.TryParse(btn.Tag?.ToString(), out var nuevo))
-            {
-                _grosor = nuevo;
-                if (ink?.EditingMode == InkCanvasEditingMode.Ink)
-                    AplicarEstiloLapiz();
-                else
-                    ActualizarEraserShape();
-            }
-        }
-
-        private void Color_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.Tag is string colorName)
-            {
-                _color = (Color)ColorConverter.ConvertFromString(colorName);
-                SetTool(true);
-                AplicarEstiloLapiz();
-            }
-        }
-
-        private void BotonBorrar_Click(object sender, RoutedEventArgs e)
-        {
-            ink?.Strokes.Clear();
-        }
-
-        private void Dibujante_Click(object sender, RoutedEventArgs e)
-        {
-            OverlayAdivinador.Visibility = Visibility.Collapsed;
-            OverlayDibujante.Visibility = Visibility.Visible;
-
-            _overlayTimer.Stop();
-            _overlayTimer.Start();
-
-            _manejadorCancion.Reproducir("Gasolina_Daddy_Yankee.mp3");
-        }
-
-        private void Adivinador_Click(object sender, RoutedEventArgs e)
-        {
-            OverlayDibujante.Visibility = Visibility.Collapsed;
-            OverlayAdivinador.Visibility = Visibility.Visible;
-
-            _overlayTimer.Stop();
-            _overlayTimer.Start();
-
-        }
-
-        private void Overlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            _overlayTimer.Stop();
-            if (sender is UIElement element)
-                element.Visibility = Visibility.Collapsed;
-        }
-
-        private void OverlayTimer_Tick(object sender, EventArgs e)
-        {
-            _overlayTimer.Stop();
-            OverlayDibujante.Visibility = Visibility.Collapsed;
-            OverlayAdivinador.Visibility = Visibility.Collapsed;
-            IniciarTemporizador();
-
-        }
-
-        private void IniciarTemporizador()
-        {
-            _contador = 30;
-            txtContador.Text = _contador.ToString();
-            txtContador.Foreground = Brushes.Black;
-
-            campoTextoPalabraAdivinar.Visibility = Visibility.Visible;
-            gridInfoCancion.Visibility = Visibility.Visible;
-
-            campoTextoPalabraAdivinar.Text = "Gasolina";
-            txtArtista.Text = "Artista: Daddy Yankee";
-            txtGenero.Text = "Género: Reggaeton";
-
-            _temporizador.Start();
-        }
-
-        private void Temporizador_Tick(object sender, EventArgs e)
-        {
-            _contador--;
-            txtContador.Text = _contador.ToString();
-
-            if (_contador <= 10)
-            {
-                txtContador.Foreground = Brushes.Red;
-            }
-
-            if (_contador <= 0)
-            {
-                _temporizador.Stop();
-                txtContador.Text = "0";
-
-                campoTextoPalabraAdivinar.Visibility = Visibility.Collapsed;
-                gridInfoCancion.Visibility = Visibility.Collapsed;
-
-                AvisoAyudante.Mostrar("¡Tiempo terminado!");
-            }
-        }
-
     }
 }
