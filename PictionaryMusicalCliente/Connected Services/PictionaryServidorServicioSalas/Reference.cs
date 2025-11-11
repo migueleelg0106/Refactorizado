@@ -43,11 +43,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface ISalasManejadorCallback {
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/JugadorSeUnio")]
-        void JugadorSeUnio(string codigoSala, string nombreJugador);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarJugadorSeUnio")]
+        void NotificarJugadorSeUnio(string codigoSala, string nombreJugador);
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/JugadorSalio")]
-        void JugadorSalio(string codigoSala, string nombreJugador);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarJugadorSalio")]
+        void NotificarJugadorSalio(string codigoSala, string nombreJugador);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]

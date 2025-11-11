@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Ink;
 using System.Windows.Media;
 using DTOs = Servicios.Contratos.DTOs;
+using System.Windows.Controls;
 
 namespace PictionaryMusicalCliente
 {

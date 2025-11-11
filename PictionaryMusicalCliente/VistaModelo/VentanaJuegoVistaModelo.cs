@@ -377,11 +377,6 @@ namespace PictionaryMusicalCliente.VistaModelo
             _contador--;
             TextoContador = _contador.ToString();
 
-            if (_contador <= 10)
-            {
-                ColorContador = Brushes.Red;
-            }
-
             if (_contador <= 0)
             {
                 _temporizador.Stop();

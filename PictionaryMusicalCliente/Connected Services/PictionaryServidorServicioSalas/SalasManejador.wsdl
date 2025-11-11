@@ -53,11 +53,11 @@
   <wsdl:message name="ISalasManejador_AbandonarSala_OutputMessage">
     <wsdl:part name="parameters" element="tns:AbandonarSalaResponse" />
   </wsdl:message>
-  <wsdl:message name="ISalasManejador_JugadorSeUnio_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:JugadorSeUnio" />
+  <wsdl:message name="ISalasManejador_NotificarJugadorSeUnio_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarJugadorSeUnio" />
   </wsdl:message>
-  <wsdl:message name="ISalasManejador_JugadorSalio_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:JugadorSalio" />
+  <wsdl:message name="ISalasManejador_NotificarJugadorSalio_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarJugadorSalio" />
   </wsdl:message>
   <wsdl:portType name="ISalasManejador">
     <wsdl:operation name="CrearSala">
@@ -76,11 +76,11 @@
       <wsdl:input wsaw:Action="http://tempuri.org/ISalasManejador/AbandonarSala" message="tns:ISalasManejador_AbandonarSala_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/AbandonarSalaResponse" message="tns:ISalasManejador_AbandonarSala_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="JugadorSeUnio">
-      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/JugadorSeUnio" message="tns:ISalasManejador_JugadorSeUnio_OutputCallbackMessage" />
+    <wsdl:operation name="NotificarJugadorSeUnio">
+      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/NotificarJugadorSeUnio" message="tns:ISalasManejador_NotificarJugadorSeUnio_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation name="JugadorSalio">
-      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/JugadorSalio" message="tns:ISalasManejador_JugadorSalio_OutputCallbackMessage" />
+    <wsdl:operation name="NotificarJugadorSalio">
+      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/NotificarJugadorSalio" message="tns:ISalasManejador_NotificarJugadorSalio_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSDualHttpBinding_ISalasManejador" type="tns:ISalasManejador">
@@ -122,14 +122,14 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="JugadorSeUnio">
-      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/JugadorSeUnio" style="document" />
+    <wsdl:operation name="NotificarJugadorSeUnio">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarJugadorSeUnio" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="JugadorSalio">
-      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/JugadorSalio" style="document" />
+    <wsdl:operation name="NotificarJugadorSalio">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarJugadorSalio" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
@@ -174,14 +174,14 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="JugadorSeUnio">
-      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/JugadorSeUnio" style="document" />
+    <wsdl:operation name="NotificarJugadorSeUnio">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarJugadorSeUnio" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="JugadorSalio">
-      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/JugadorSalio" style="document" />
+    <wsdl:operation name="NotificarJugadorSalio">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarJugadorSalio" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
