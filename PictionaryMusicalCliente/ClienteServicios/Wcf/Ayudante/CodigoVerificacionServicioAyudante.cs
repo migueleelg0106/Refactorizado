@@ -8,7 +8,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
     {
         private const string CodigoVerificacionEndpoint = "BasicHttpBinding_ICodigoVerificacionManejador";
         private const string CuentaEndpoint = "BasicHttpBinding_ICuentaManejador";
-        private const string CambioContrasenaEndpoint = "BasicHttpBinding_ICambiarContrasenaManejador";
+        private const string CambioContrasenaEndpoint = "BasicHttpBinding_ICambioContrasenaManejador";
 
         public static Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(DTOs.NuevaCuentaDTO solicitud)
         {
