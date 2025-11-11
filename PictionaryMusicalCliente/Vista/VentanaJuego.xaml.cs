@@ -13,12 +13,15 @@ namespace PictionaryMusicalCliente
     public partial class VentanaJuego : Window
     {
         private readonly VentanaJuegoVistaModelo _vistaModelo;
+        private readonly ISalasServicio _salasServicio;
 
         public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio)
         {
             InitializeComponent();
 
-            _vistaModelo = new VentanaJuegoVistaModelo(sala, salasServicio)
+            _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
+
+            _vistaModelo = new VentanaJuegoVistaModelo(sala, _salasServicio)
             {
                 AbrirExpulsionJugador = () => AbrirDialogo(new ExpulsionJugador()),
                 AbrirInvitacionAmigos = () => AbrirDialogo(new InvitacionAmigos()),
@@ -43,6 +46,8 @@ namespace PictionaryMusicalCliente
         {
             Closed -= VentanaJuego_ClosedAsync;
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
+
+            _salasServicio?.Dispose();
         }
 
         private void AbrirDialogo(Window ventana)
