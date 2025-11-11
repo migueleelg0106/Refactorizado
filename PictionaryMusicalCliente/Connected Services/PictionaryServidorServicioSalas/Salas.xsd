@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8519/Pictionary/Salas?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="ConfiguracionPartidaDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Dificultad" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdiomaCanciones" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NumeroRondas" type="xs:int" />
+      <xs:element minOccurs="0" name="TiempoPorRondaSegundos" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConfiguracionPartidaDTO" nillable="true" type="tns:ConfiguracionPartidaDTO" />
+  <xs:complexType name="SalaDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Codigo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Configuracion" nillable="true" type="tns:ConfiguracionPartidaDTO" />
+      <xs:element minOccurs="0" name="Creador" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Jugadores" nillable="true" type="q1:ArrayOfstring" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SalaDTO" nillable="true" type="tns:SalaDTO" />
+  <xs:complexType name="ArrayOfSalaDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SalaDTO" nillable="true" type="tns:SalaDTO" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSalaDTO" nillable="true" type="tns:ArrayOfSalaDTO" />
+</xs:schema>

@@ -75,28 +75,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contratos\DTOs\ConfiguracionPartidaDTO.cs" />
+    <Compile Include="Contratos\DTOs\SalaDTO.cs" />
     <Compile Include="Contratos\IAmigosManejador.cs" />
     <Compile Include="Contratos\IAmigosManejadorCallback.cs" />
     <Compile Include="Contratos\ICambioContrasenaManejador.cs" />
-    <Compile Include="Contratos\ICerradoSesionManejador.cs" />
     <Compile Include="Contratos\IChatManejador.cs" />
     <Compile Include="Contratos\IClasificacionManejador.cs" />
     <Compile Include="Contratos\ICodigoVerificacionManejador.cs" />
-    <Compile Include="Contratos\IConfiguracionManejador.cs" />
     <Compile Include="Contratos\ICuentaManejador.cs" />
     <Compile Include="Contratos\ICursoPartidaManejador.cs" />
     <Compile Include="Contratos\IInicioPartidaManejador.cs" />
     <Compile Include="Contratos\IInicioSesionInvitadoManejador.cs" />
     <Compile Include="Contratos\IInicioSesionManejador.cs" />
     <Compile Include="Contratos\IInvitacionesManejador.cs" />
-    <Compile Include="Contratos\IJugadoresManejador.cs" />
     <Compile Include="Contratos\ILienzoManejador.cs" />
     <Compile Include="Contratos\IListaAmigosManejador.cs" />
     <Compile Include="Contratos\IListaAmigosManejadorCallback.cs" />
-    <Compile Include="Contratos\INotificacionManejador.cs" />
     <Compile Include="Contratos\IPerfilManejador.cs" />
+    <Compile Include="Contratos\ISalasCallback.cs" />
     <Compile Include="Contratos\ISalasManejador.cs" />
-    <Compile Include="Contratos\ISalidaSalaManager.cs" />
     <Compile Include="Contratos\DTOs\ActualizacionContrasenaDTO.cs" />
     <Compile Include="Contratos\DTOs\ClasificacionUsuarioDTO.cs" />
     <Compile Include="Contratos\DTOs\ConfirmacionCodigoDTO.cs" />
@@ -124,6 +122,7 @@
     <Compile Include="Servicios\CambioContrasenaManejador.cs" />
     <Compile Include="Servicios\PerfilManejador.cs" />
     <Compile Include="Servicios\PerfilValidador.cs" />
+    <Compile Include="Servicios\SalasManejador.cs" />
     <Compile Include="Servicios\ServicioAmistad.cs" />
     <Compile Include="Servicios\ServicioNotificacionCodigos.cs" />
     <Compile Include="Servicios\ServicioRecuperacionCuenta.cs" />
