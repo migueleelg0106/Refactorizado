@@ -19,5 +19,11 @@ namespace Servicios.Contratos
 
         [OperationContract]
         void AbandonarSala(string codigoSala, string nombreUsuario);
+
+        [OperationContract]
+        void SuscribirListaSalas();
+
+        [OperationContract]
+        void CancelarSuscripcionListaSalas();
     }
 }

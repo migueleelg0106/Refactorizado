@@ -73,6 +73,7 @@ namespace PictionaryMusicalCliente.VistaModelo
 
             _salasServicio.JugadorSeUnio += SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio += SalasServicio_JugadorSalio;
+            _salasServicio.SalaActualizada += SalasServicio_SalaActualizada;
 
             _overlayTimer = new DispatcherTimer();
             _overlayTimer.Interval = TimeSpan.FromSeconds(5);
@@ -408,6 +409,27 @@ namespace PictionaryMusicalCliente.VistaModelo
             });
         }
 
+        private void SalasServicio_SalaActualizada(object sender, DTOs.SalaDTO sala)
+        {
+            if (sala == null || !string.Equals(sala.Codigo, _codigoSala, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            EjecutarEnDispatcher(() =>
+            {
+                Jugadores.Clear();
+                if (sala.Jugadores != null)
+                {
+                    foreach (var jugador in sala.Jugadores)
+                    {
+                        if (!string.IsNullOrWhiteSpace(jugador))
+                        {
+                            Jugadores.Add(jugador);
+                        }
+                    }
+                }
+            });
+        }
+
         private static void EjecutarEnDispatcher(Action accion)
         {
             if (accion == null) return;
@@ -423,6 +445,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         {
             _salasServicio.JugadorSeUnio -= SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio -= SalasServicio_JugadorSalio;
+            _salasServicio.SalaActualizada -= SalasServicio_SalaActualizada;
 
             if (_sala != null && !string.IsNullOrWhiteSpace(_sala.Codigo) && !string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
             {
