@@ -18,6 +18,7 @@ namespace PictionaryMusicalCliente
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IAmigosServicio _amigosServicio;
         private readonly ISalasServicio _salasServicio;
+        private bool _abrioVentanaJuego;
         private readonly VentanaPrincipalVistaModelo _vistaModelo;
 
         public VentanaPrincipal()
@@ -71,7 +72,11 @@ namespace PictionaryMusicalCliente
 
             _listaAmigosServicio?.Dispose();
             _amigosServicio?.Dispose();
-            _salasServicio?.Dispose();
+
+            if (!_abrioVentanaJuego)
+            {
+                _salasServicio?.Dispose();
+            }
         }
 
         private bool? MostrarConfirmacionEliminar(string amigo)
@@ -99,6 +104,8 @@ namespace PictionaryMusicalCliente
         {
             _servicioMusica.Detener();
             _servicioMusica.Dispose();
+
+            _abrioVentanaJuego = true;
 
             var ventanaJuego = new VentanaJuego(sala, _salasServicio);
             ventanaJuego.Show();
