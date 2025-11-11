@@ -155,12 +155,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        public void JugadorSeUnio(string codigoSala, string nombreJugador)
+        public void NotificarJugadorSeUnio(string codigoSala, string nombreJugador)
         {
             JugadorSeUnio?.Invoke(this, nombreJugador);
         }
 
-        public void JugadorSalio(string codigoSala, string nombreJugador)
+        public void NotificarJugadorSalio(string codigoSala, string nombreJugador)
         {
             JugadorSalio?.Invoke(this, nombreJugador);
         }
