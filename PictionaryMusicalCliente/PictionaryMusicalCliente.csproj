@@ -67,6 +67,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ClienteServicios\Abstracciones\ISalasServicio.cs" />
+    <Compile Include="ClienteServicios\Wcf\SalasServicio.cs" />
     <Compile Include="Connected Services\PictionaryServidorServicioAmigos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -103,6 +105,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioPerfil\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioSalas\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -179,6 +186,7 @@
     <Compile Include="VistaModelo\PerfilVistaModelo.cs" />
     <Compile Include="VistaModelo\SeleccionAvatarVistaModelo.cs" />
     <Compile Include="VistaModelo\CreacionCuentaVistaModelo.cs" />
+    <Compile Include="VistaModelo\VentanaJuegoVistaModelo.cs" />
     <Compile Include="VistaModelo\VentanaPrincipalVistaModelo.cs" />
     <Compile Include="VistaModelo\VerificacionCodigoVistaModelo.cs" />
     <Compile Include="Vista\Ajustes.xaml.cs">
@@ -362,6 +370,19 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioPerfil\PerfilManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioSalas\Salas.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioSalas\Salas1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioSalas\Salas2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioSalas\Salas3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioSalas\SalasManejador.wsdl" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AmigoDTO.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AvatarDTO.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ClasificacionUsuarioDTO.datasource" />
@@ -370,6 +391,7 @@
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO.datasource" />
+    <None Include="Properties\DataSources\Servicios.Contratos.DTOs.SalaDTO1.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.UsuarioDTO.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
@@ -566,6 +588,13 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioSalas\Salas.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioSalas\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioSalas\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioSalas\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Recursos\Adivinador.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -629,6 +658,7 @@
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioInicioSesion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioListaAmigos\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioPerfil\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioSalas\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

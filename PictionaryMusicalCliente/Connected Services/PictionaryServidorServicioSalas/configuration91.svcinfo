@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="M97VbPekdCxoTak5tjaOmXgLNURPyAwiAN4NVwLiIw4=">
+<SavedWcfConfigurationInformation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9.1" CheckSum="htUU5bScpyNGXUyNj6TBlzGCFaTo36XGYC7OoyKpbtc=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="netTcpBinding" name="NetTcpBinding_ISalasManejador">
+    <bindingConfiguration bindingType="netTcpBinding" name="NetTcpBinding_ISalasManejador1">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetTcpBinding_ISalasManejador</serializedValue>
+          <serializedValue>NetTcpBinding_ISalasManejador1</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -119,10 +119,10 @@
         </property>
       </properties>
     </bindingConfiguration>
-    <bindingConfiguration bindingType="wsDualHttpBinding" name="WSDualHttpBinding_ISalasManejador">
+    <bindingConfiguration bindingType="wsDualHttpBinding" name="WSDualHttpBinding_ISalasManejador1">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSDualHttpBinding_ISalasManejador</serializedValue>
+          <serializedValue>WSDualHttpBinding_ISalasManejador1</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -215,7 +215,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WSDualHttpBinding_ISalasManejador" contract="PictionaryServidorServicioSalas.ISalasManejador" bindingType="wsDualHttpBinding" address="http://localhost:8519/Pictionary/Salas/Salas" bindingConfiguration="WSDualHttpBinding_ISalasManejador">
+    <endpoint name="WSDualHttpBinding_ISalasManejador1" contract="PictionaryServidorServicioSalas.ISalasManejador" bindingType="wsDualHttpBinding" address="http://localhost:8519/Pictionary/Salas/Salas" bindingConfiguration="WSDualHttpBinding_ISalasManejador1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://localhost:8519/Pictionary/Salas/Salas</serializedValue>
@@ -227,7 +227,7 @@
           <serializedValue>wsDualHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSDualHttpBinding_ISalasManejador</serializedValue>
+          <serializedValue>WSDualHttpBinding_ISalasManejador1</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>PictionaryServidorServicioSalas.ISalasManejador</serializedValue>
@@ -290,7 +290,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSDualHttpBinding_ISalasManejador</serializedValue>
+          <serializedValue>WSDualHttpBinding_ISalasManejador1</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -300,7 +300,7 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="NetTcpBinding_ISalasManejador" contract="PictionaryServidorServicioSalas.ISalasManejador" bindingType="netTcpBinding" address="net.tcp://localhost:8520/Pictionary/Salas/Salas" bindingConfiguration="NetTcpBinding_ISalasManejador">
+    <endpoint name="NetTcpBinding_ISalasManejador1" contract="PictionaryServidorServicioSalas.ISalasManejador" bindingType="netTcpBinding" address="net.tcp://localhost:8520/Pictionary/Salas/Salas" bindingConfiguration="NetTcpBinding_ISalasManejador1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>net.tcp://localhost:8520/Pictionary/Salas/Salas</serializedValue>
@@ -312,7 +312,7 @@
           <serializedValue>netTcpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetTcpBinding_ISalasManejador</serializedValue>
+          <serializedValue>NetTcpBinding_ISalasManejador1</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>PictionaryServidorServicioSalas.ISalasManejador</serializedValue>
@@ -375,7 +375,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>NetTcpBinding_ISalasManejador</serializedValue>
+          <serializedValue>NetTcpBinding_ISalasManejador1</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
