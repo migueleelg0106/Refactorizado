@@ -7,6 +7,7 @@ using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using System;
 using System.Windows;
+using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente
 {
@@ -16,6 +17,7 @@ namespace PictionaryMusicalCliente
 
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IAmigosServicio _amigosServicio;
+        private readonly ISalasServicio _salasServicio;
         private readonly VentanaPrincipalVistaModelo _vistaModelo;
 
         public VentanaPrincipal()
@@ -27,11 +29,13 @@ namespace PictionaryMusicalCliente
 
             _listaAmigosServicio = new ListaAmigosServicio();
             _amigosServicio = new AmigosServicio();
+            _salasServicio = new SalasServicio();
 
             _vistaModelo = new VentanaPrincipalVistaModelo(
                 LocalizacionServicio.Instancia,
                 _listaAmigosServicio,
-                _amigosServicio)
+                _amigosServicio,
+                _salasServicio)
             {
                 AbrirPerfil = () => MostrarDialogo(new Perfil()),
                 AbrirAjustes = () => MostrarDialogo(new Ajustes(_servicioMusica)),
@@ -41,8 +45,8 @@ namespace PictionaryMusicalCliente
                 AbrirSolicitudes = () => MostrarDialogo(new Solicitudes(_amigosServicio)),
                 ConfirmarEliminarAmigo = MostrarConfirmacionEliminar,
                 AbrirInvitaciones = () => MostrarDialogo(new Invitaciones()),
-                IniciarJuego = _ => MostrarVentanaJuego(),
-                UnirseSala = _ => AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida)
+                IniciarJuego = MostrarVentanaJuego,
+                UnirseSala = MostrarVentanaJuego
             };
 
             _vistaModelo.MostrarMensaje = AvisoAyudante.Mostrar;
@@ -67,6 +71,7 @@ namespace PictionaryMusicalCliente
 
             _listaAmigosServicio?.Dispose();
             _amigosServicio?.Dispose();
+            _salasServicio?.Dispose();
         }
 
         private bool? MostrarConfirmacionEliminar(string amigo)
@@ -90,12 +95,12 @@ namespace PictionaryMusicalCliente
             ventana.ShowDialog();
         }
 
-        private void MostrarVentanaJuego()
+        private void MostrarVentanaJuego(DTOs.SalaDTO sala)
         {
             _servicioMusica.Detener();
             _servicioMusica.Dispose();
 
-            var ventanaJuego = new VentanaJuego();
+            var ventanaJuego = new VentanaJuego(sala, _salasServicio);
             ventanaJuego.Show();
 
             this.Close();

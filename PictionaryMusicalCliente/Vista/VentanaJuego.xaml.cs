@@ -1,9 +1,11 @@
 ﻿using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo;
 using System;
 using System.Windows;
 using System.Windows.Ink;
 using System.Windows.Media;
+using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente
 {
@@ -11,11 +13,11 @@ namespace PictionaryMusicalCliente
     {
         private readonly VentanaJuegoVistaModelo _vistaModelo;
 
-        public VentanaJuego()
+        public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio)
         {
             InitializeComponent();
 
-            _vistaModelo = new VentanaJuegoVistaModelo
+            _vistaModelo = new VentanaJuegoVistaModelo(sala, salasServicio)
             {
                 AbrirExpulsionJugador = () => AbrirDialogo(new ExpulsionJugador()),
                 AbrirInvitacionAmigos = () => AbrirDialogo(new InvitacionAmigos()),
@@ -32,6 +34,14 @@ namespace PictionaryMusicalCliente
             };
 
             DataContext = _vistaModelo;
+            
+            Closed += VentanaJuego_ClosedAsync;
+        }
+
+        private async void VentanaJuego_ClosedAsync(object sender, EventArgs e)
+        {
+            Closed -= VentanaJuego_ClosedAsync;
+            await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
         }
 
         private void AbrirDialogo(Window ventana)

@@ -18,7 +18,10 @@
         <StackPanel Grid.Column="0" Margin="8" Background="Wheat">
 
             <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2"  CornerRadius="3">
-                <ListBox  FontFamily="Comic Sans MS" Height="148"/>
+                <StackPanel>
+                    <TextBlock Text="{x:Static language:Lang.principalTextoAmigos}" FontWeight="Bold" FontFamily="Comic Sans MS" HorizontalAlignment="Center" Margin="4"/>
+                    <ListBox ItemsSource="{Binding Jugadores}" FontFamily="Comic Sans MS" Height="120" Margin="4"/>
+                </StackPanel>
             </Border>
 
             <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3">
@@ -29,9 +32,10 @@
                 </StackPanel>
             </Border>
 
-            <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Width="147">
+            <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3">
                 <StackPanel Margin="8">
-                    <TextBlock Text="{x:Static language:Lang.partidaTextoCodigo}" FontWeight="Bold" Margin="0,0,0,0" FontFamily="Comic Sans MS"/>
+                    <TextBlock Text="{x:Static language:Lang.partidaTextoCodigo}" FontWeight="Bold" Margin="0,0,0,6" HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
+                    <TextBlock Text="{Binding CodigoSala}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
                 </StackPanel>
             </Border>
             <Button Content="Dibujante" Command="{Binding MostrarOverlayDibujanteComando}"/>

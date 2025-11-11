@@ -37,22 +37,25 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly ILocalizacionServicio _localizacionServicio;
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IAmigosServicio _amigosServicio;
+        private readonly ISalasServicio _salasServicio;
 
         private bool _suscripcionActiva;
 
         public VentanaPrincipalVistaModelo()
-            : this(LocalizacionServicio.Instancia, new ListaAmigosServicio(), new AmigosServicio())
+            : this(LocalizacionServicio.Instancia, new ListaAmigosServicio(), new AmigosServicio(), new SalasServicio())
         {
         }
 
         public VentanaPrincipalVistaModelo(
             ILocalizacionServicio localizacionServicio,
             IListaAmigosServicio listaAmigosServicio,
-            IAmigosServicio amigosServicio)
+            IAmigosServicio amigosServicio,
+            ISalasServicio salasServicio)
         {
             _localizacionServicio = localizacionServicio ?? throw new ArgumentNullException(nameof(localizacionServicio));
             _listaAmigosServicio = listaAmigosServicio ?? throw new ArgumentNullException(nameof(listaAmigosServicio));
             _amigosServicio = amigosServicio ?? throw new ArgumentNullException(nameof(amigosServicio));
+            _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
 
             _listaAmigosServicio.ListaActualizada += ListaActualizada;
 
@@ -104,16 +107,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 await EjecutarEliminarAmigoAsync(param as DTOs.AmigoDTO);
             }, param => param is DTOs.AmigoDTO);
 
-            UnirseSalaComando = new ComandoDelegado(_ =>
+            UnirseSalaComando = new ComandoAsincrono(async _ =>
             {
                 ManejadorSonido.ReproducirClick();
-                UnirseSalaInterno();
+                await UnirseSalaInternoAsync();
             });
 
-            IniciarJuegoComando = new ComandoDelegado(_ =>
+            IniciarJuegoComando = new ComandoAsincrono(async _ =>
             {
                 ManejadorSonido.ReproducirClick();
-                IniciarJuegoInterno();
+                await IniciarJuegoInternoAsync();
             }, _ => PuedeIniciarJuego());
         }
 
@@ -224,8 +227,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public ICommand AbrirSolicitudesComando { get; }
         public IComandoAsincrono EliminarAmigoComando { get; }
         public ICommand AbrirInvitacionesComando { get; }
-        public ICommand UnirseSalaComando { get; }
-        public IComandoNotificable IniciarJuegoComando { get; }
+        public IComandoAsincrono UnirseSalaComando { get; }
+        public IComandoAsincrono IniciarJuegoComando { get; }
 
         public Action AbrirPerfil { get; set; }
         public Action AbrirAjustes { get; set; }
@@ -235,8 +238,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public Action AbrirSolicitudes { get; set; }
         public Func<string, bool?> ConfirmarEliminarAmigo { get; set; }
         public Action AbrirInvitaciones { get; set; }
-        public Action<string> UnirseSala { get; set; }
-        public Action<ConfiguracionPartida> IniciarJuego { get; set; }
+        public Action<DTOs.SalaDTO> UnirseSala { get; set; }
+        public Action<DTOs.SalaDTO> IniciarJuego { get; set; }
         public Action<string> MostrarMensaje { get; set; }
 
         public async Task InicializarAsync()
@@ -427,7 +430,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        private void UnirseSalaInterno()
+        private async Task UnirseSalaInternoAsync()
         {
             string codigo = CodigoSala?.Trim();
             if (string.IsNullOrWhiteSpace(codigo))
@@ -437,16 +440,27 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            if (UnirseSala != null)
-                UnirseSala.Invoke(codigo);
-            else
+            if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
             {
                 ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke(Lang.errorTextoNoEncuentraPartida);
+                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+                return;
+            }
+
+            try
+            {
+                var sala = await _salasServicio.UnirseSalaAsync(codigo, _nombreUsuarioSesion).ConfigureAwait(true);
+                ManejadorSonido.ReproducirExito();
+                UnirseSala?.Invoke(sala);
+            }
+            catch (ExcepcionServicio ex)
+            {
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoNoEncuentraPartida);
             }
         }
 
-        private void IniciarJuegoInterno()
+        private async Task IniciarJuegoInternoAsync()
         {
             if (!PuedeIniciarJuego())
             {
@@ -455,7 +469,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 return;
             }
 
-            var configuracion = new ConfiguracionPartida
+            if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
+            {
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+                return;
+            }
+
+            var configuracion = new DTOs.ConfiguracionPartidaDTO
             {
                 NumeroRondas = NumeroRondasSeleccionada?.Valor ?? 0,
                 TiempoPorRondaSegundos = TiempoRondaSeleccionada?.Valor ?? 0,
@@ -463,12 +484,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 Dificultad = DificultadSeleccionada?.Clave
             };
 
-            if (IniciarJuego != null)
-                IniciarJuego.Invoke(configuracion);
-            else
+            try
+            {
+                var sala = await _salasServicio.CrearSalaAsync(_nombreUsuarioSesion, configuracion).ConfigureAwait(true);
+                ManejadorSonido.ReproducirExito();
+                IniciarJuego?.Invoke(sala);
+            }
+            catch (ExcepcionServicio ex)
             {
                 ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
                 
         }
