@@ -708,6 +708,9 @@
   <data name="invitarCorreoTextoEnviado" xml:space="preserve">
     <value>¡Invitación enviada con éxito!</value>
   </data>
+  <data name="invitarCorreoTextoJugadorYaEnSala" xml:space="preserve">
+    <value>El jugador con el correo ingresado ya está en la sala.</value>
+  </data>
   <data name="errorTextoEnviarCorreo" xml:space="preserve">
     <value>Error al enviar la invitación. Por favor, verifique el correo electrónico e intente nuevamente.</value>
   </data>

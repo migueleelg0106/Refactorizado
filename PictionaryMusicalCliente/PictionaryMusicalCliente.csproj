@@ -136,6 +136,7 @@
     <Compile Include="ClienteServicios\Abstracciones\IListaAmigosServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\ICodigoVerificacionServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\IClasificacionServicio.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IInvitacionesServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\ICuentaServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\ILocalizacionServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\IInicioSesionServicio.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="ClienteServicios\Wcf\ClasificacionServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\CodigoVerificacionServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\CuentaServicio.cs" />
+    <Compile Include="ClienteServicios\Wcf\InvitacionesServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\AmigosServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\ListaAmigosServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\InicioSesionServicio.cs" />
@@ -165,7 +167,6 @@
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvisoAyudante.cs" />
     <Compile Include="Utilidades\ControlVisual.cs" />
-    <Compile Include="Utilidades\CorreoInvitacionManejador.cs" />
     <Compile Include="Utilidades\Idiomas\LocalizacionContexto.cs" />
     <Compile Include="Utilidades\SonidoManejador.cs" />
     <Compile Include="Utilidades\ValidacionEntrada.cs" />

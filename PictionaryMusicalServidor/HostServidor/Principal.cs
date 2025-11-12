@@ -27,6 +27,7 @@ namespace HostServidor
             using (var hostAmigos = new ServiceHost(typeof(Servicios.Servicios.AmigosManejador)))
             using (var hostListaAmigos = new ServiceHost(typeof(Servicios.Servicios.ListaAmigosManejador)))
             using (var hostSalas = new ServiceHost(typeof(Servicios.Servicios.SalasManejador)))
+            using (var hostInvitaciones = new ServiceHost(typeof(Servicios.Servicios.InvitacionesManejador)))
             {
                 try
                 {
@@ -93,6 +94,13 @@ namespace HostServidor
                         _bitacora.Info($"Salas -> {ep.Address} ({ep.Binding.Name})");
                     }
 
+                    hostInvitaciones.Open();
+                    _bitacora.Info("Servicio Invitaciones iniciado.");
+                    foreach (var ep in hostInvitaciones.Description.Endpoints)
+                    {
+                        _bitacora.Info($"Invitaciones -> {ep.Address} ({ep.Binding.Name})");
+                    }
+
                     Console.WriteLine("Servicios arriba. ENTER para salir.");
                     Console.ReadLine();
                 }
@@ -123,6 +131,7 @@ namespace HostServidor
                     CerrarFormaSegura(hostAmigos);
                     CerrarFormaSegura(hostListaAmigos);
                     CerrarFormaSegura(hostSalas);
+                    CerrarFormaSegura(hostInvitaciones);
                     _bitacora.Info("Host detenido.");
                 }
             }

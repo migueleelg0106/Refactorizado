@@ -3,17 +3,16 @@ using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace PictionaryMusicalCliente.Utilidades
+namespace Servicios.Servicios.Utilidades
 {
-    public class CorreoInvitacionManejador
+    internal static class CorreoInvitacionNotificador
     {
-        private const string AsuntoPredeterminado = "Invitación a Partida - Pictionary Musical";
+        private const string AsuntoPredeterminado = "Invitación a partida";
 
-        public async Task<bool> EnviarInvitacionAsync(string correoDestino, string codigoPartida)
+        public static bool EnviarInvitacion(string correoDestino, string codigoSala, string creador)
         {
-            if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigoPartida))
+            if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigoSala))
             {
                 return false;
             }
@@ -23,7 +22,7 @@ namespace PictionaryMusicalCliente.Utilidades
             string host = ObtenerConfiguracion("CorreoHost", "Correo.Smtp.Host");
             string usuarioSmtp = ObtenerConfiguracion("CorreoUsuario", "Correo.Smtp.Usuario");
             string puertoConfigurado = ObtenerConfiguracion("CorreoPuerto", "Correo.Smtp.Puerto");
-            string asunto = ObtenerConfiguracion("CorreoAsunto", "Correo.Invitacion.Asunto") ?? AsuntoPredeterminado;
+            string asunto = ObtenerConfiguracion("CorreoAsuntoInvitacion", "Correo.Invitacion.Asunto") ?? AsuntoPredeterminado;
 
             bool.TryParse(ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"), out bool habilitarSsl);
 
@@ -42,7 +41,7 @@ namespace PictionaryMusicalCliente.Utilidades
                 puerto = 587;
             }
 
-            string cuerpoHtml = ConstruirCuerpoMensaje(codigoPartida);
+            string cuerpoHtml = ConstruirCuerpoMensaje(codigoSala, creador);
 
             try
             {
@@ -59,7 +58,7 @@ namespace PictionaryMusicalCliente.Utilidades
                             clienteSmtp.Credentials = new NetworkCredential(usuarioSmtp, contrasena);
                         }
 
-                        await clienteSmtp.SendMailAsync(mensajeCorreo).ConfigureAwait(false);
+                        clienteSmtp.Send(mensajeCorreo);
                     }
                 }
 
@@ -95,16 +94,21 @@ namespace PictionaryMusicalCliente.Utilidades
             return null;
         }
 
-        private static string ConstruirCuerpoMensaje(string codigoPartida)
+        private static string ConstruirCuerpoMensaje(string codigoSala, string creador)
         {
             var cuerpoHtml = new StringBuilder();
             cuerpoHtml.Append("<html><body>");
-            cuerpoHtml.Append("<h2>¡Te han invitado a una partida de Pictionary Musical!</h2>");
-            cuerpoHtml.Append("<p>Has recibido una invitación para unirte a una partida.</p>");
-            cuerpoHtml.Append("<p>El código de la partida es:</p>");
-            cuerpoHtml.Append($"<h1 style='color: #4CAF50;'>{codigoPartida}</h1>");
-            cuerpoHtml.Append("<p>Ingresa este código en la aplicación para unirte a la partida.</p>");
-            cuerpoHtml.Append("<p>¡Diviértete!</p>");
+            cuerpoHtml.Append("<h2>¡Has sido invitado a una partida de Pictionary Musical!</h2>");
+
+            if (!string.IsNullOrWhiteSpace(creador))
+            {
+                cuerpoHtml.Append($"<p>{creador} te ha invitado a su sala.</p>");
+            }
+
+            cuerpoHtml.Append("<p>Utiliza el siguiente código para unirte:</p>");
+            cuerpoHtml.Append($"<h1 style='color:#4CAF50;'>{codigoSala}</h1>");
+            cuerpoHtml.Append("<p>Ingresa el código en la aplicación para unirte a la partida.</p>");
+            cuerpoHtml.Append("<p>¡Te esperamos!</p>");
             cuerpoHtml.Append("</body></html>");
 
             return cuerpoHtml.ToString();

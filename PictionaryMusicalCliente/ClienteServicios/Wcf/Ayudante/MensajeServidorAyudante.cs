@@ -20,6 +20,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             new Dictionary<string, Func<string>>(StringComparer.Ordinal)
             {
                 ["No fue posible procesar la solicitud de verificación."] = () => LangResources.Lang.errorTextoProcesarSolicitudVerificacion,
+                ["El jugador con el correo ingresado ya está en la sala."] = () => LangResources.Lang.invitarCorreoTextoJugadorYaEnSala,
+                ["No fue posible enviar la invitación por correo electrónico."] = () => LangResources.Lang.errorTextoEnviarCorreo,
+                ["No fue posible enviar la invitación por un error inesperado."] = () => LangResources.Lang.errorTextoEnviarCorreo,
+                ["Ocurrió un problema al procesar la invitación."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
+                ["Invitación enviada correctamente."] = () => LangResources.Lang.invitarCorreoTextoEnviado,
+                ["El correo electrónico proporcionado no es válido."] = () => LangResources.Lang.errorTextoCorreoInvalido,
+                ["No se encontró la sala especificada."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
+                ["La solicitud de invitación no es válida."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
+                ["Los datos proporcionados no son válidos para enviar la invitación."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
                 ["Se envió un código de verificación al correo proporcionado."] = () => LangResources.Lang.avisoTextoCodigoEnviado,
                 ["La solicitud de verificación no es válida."] = () => LangResources.Lang.errorTextoSolicitudVerificacionInvalida,
                 ["No se encontró una solicitud de verificación activa."] = () => LangResources.Lang.errorTextoSolicitudVerificacionActiva,

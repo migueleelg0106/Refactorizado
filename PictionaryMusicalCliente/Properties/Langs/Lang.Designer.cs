@@ -1571,6 +1571,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("invitarCorreoTextoEnviado", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a El jugador con el correo ingresado ya está en la sala..
+        /// </summary>
+        public static string invitarCorreoTextoJugadorYaEnSala {
+            get {
+                return ResourceManager.GetString("invitarCorreoTextoJugadorYaEnSala", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Busca una cadena traducida similar a ¡INICIAR PARTIDA!.

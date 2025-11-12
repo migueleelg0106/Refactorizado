@@ -717,6 +717,9 @@
   <data name="invitarCorreoTextoEnviado" xml:space="preserve">
     <value>Invitation sent successfully!</value>
   </data>
+  <data name="invitarCorreoTextoJugadorYaEnSala" xml:space="preserve">
+    <value>The player associated with that email is already in the room.</value>
+  </data>
   <data name="errorTextoEnviarCorreo" xml:space="preserve">
     <value>Error sending invitation. Please check the email address and try again.</value>
   </data>
