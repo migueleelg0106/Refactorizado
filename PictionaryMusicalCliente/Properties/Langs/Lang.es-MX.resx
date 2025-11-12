@@ -729,7 +729,7 @@ aciertan o cuando se acaba el tiempo.
     <value>No se encontró una partida con el código ingresado. Intente con otro distinto.</value>
   </data>
   <data name="errorTextoSalaLlena" xml:space="preserve">
-    <value>La sala ya alcanzó el máximo de 4 jugadores.</value>
+    <value>La sala a la que intentas unirte está llena.</value>
   </data>
   <data name="errorTextoNombresInvitadoAgotados" xml:space="preserve">
     <value>No hay nombres de invitado disponibles en esta sala. Intente de nuevo más tarde.</value>

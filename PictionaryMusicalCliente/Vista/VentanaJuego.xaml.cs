@@ -16,6 +16,7 @@ namespace PictionaryMusicalCliente
         private readonly VentanaJuegoVistaModelo _vistaModelo;
         private readonly ISalasServicio _salasServicio;
         private readonly Action _accionAlCerrar;
+        private readonly bool _esInvitado;
 
         public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio, bool esInvitado = false, string nombreJugador = null, Action accionAlCerrar = null)
         {
@@ -23,6 +24,7 @@ namespace PictionaryMusicalCliente
 
             _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
             _accionAlCerrar = accionAlCerrar;
+            _esInvitado = esInvitado;
 
             _vistaModelo = new VentanaJuegoVistaModelo(sala, _salasServicio, new InvitacionesServicio(), nombreJugador, esInvitado)
             {
@@ -42,6 +44,8 @@ namespace PictionaryMusicalCliente
 
             Closed += VentanaJuego_ClosedAsync;
         }
+
+        public bool EsInvitado => _esInvitado;
 
         private async void VentanaJuego_ClosedAsync(object sender, EventArgs e)
         {
