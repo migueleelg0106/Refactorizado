@@ -164,6 +164,7 @@
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvisoAyudante.cs" />
     <Compile Include="Utilidades\ControlVisual.cs" />
+    <Compile Include="Utilidades\CorreoInvitacionManejador.cs" />
     <Compile Include="Utilidades\Idiomas\LocalizacionContexto.cs" />
     <Compile Include="Utilidades\SonidoManejador.cs" />
     <Compile Include="Utilidades\ValidacionEntrada.cs" />
@@ -227,12 +228,6 @@
     </Compile>
     <Compile Include="Vista\InicioSesion.xaml.cs">
       <DependentUpon>InicioSesion.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Vista\Invitaciones.xaml.cs">
-      <DependentUpon>Invitaciones.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Vista\InvitacionAmigos.xaml.cs">
-      <DependentUpon>InvitacionAmigos.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vista\Perfil.xaml.cs">
       <DependentUpon>Perfil.xaml</DependentUpon>
@@ -482,14 +477,6 @@
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Vista\InicioSesion.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
-    <Page Include="Vista\Invitaciones.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
-    <Page Include="Vista\InvitacionAmigos.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>

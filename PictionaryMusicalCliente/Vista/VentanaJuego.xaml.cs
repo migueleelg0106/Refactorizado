@@ -23,8 +23,6 @@ namespace PictionaryMusicalCliente
 
             _vistaModelo = new VentanaJuegoVistaModelo(sala, _salasServicio)
             {
-                AbrirExpulsionJugador = () => AbrirDialogo(new ExpulsionJugador()),
-                AbrirInvitacionAmigos = () => AbrirDialogo(new InvitacionAmigos()),
                 AbrirAjustesPartida = manejadorCancion =>
                 {
                     var ajustes = new AjustesPartida(manejadorCancion);

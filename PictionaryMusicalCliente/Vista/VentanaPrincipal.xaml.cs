@@ -45,7 +45,6 @@ namespace PictionaryMusicalCliente
                 AbrirBuscarAmigo = () => MostrarDialogo(new BusquedaAmigo(_amigosServicio)),
                 AbrirSolicitudes = () => MostrarDialogo(new Solicitudes(_amigosServicio)),
                 ConfirmarEliminarAmigo = MostrarConfirmacionEliminar,
-                AbrirInvitaciones = () => MostrarDialogo(new Invitaciones()),
                 IniciarJuego = MostrarVentanaJuego,
                 UnirseSala = MostrarVentanaJuego
             };

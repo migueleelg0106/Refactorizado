@@ -95,11 +95,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 ManejadorSonido.ReproducirClick();
                 AbrirSolicitudes?.Invoke();
             });
-            AbrirInvitacionesComando = new ComandoDelegado(_ =>
-            {
-                ManejadorSonido.ReproducirClick();
-                AbrirInvitaciones?.Invoke();
-            });
 
             EliminarAmigoComando = new ComandoAsincrono(async param =>
             {
@@ -226,7 +221,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public ICommand AbrirBuscarAmigoComando { get; }
         public ICommand AbrirSolicitudesComando { get; }
         public IComandoAsincrono EliminarAmigoComando { get; }
-        public ICommand AbrirInvitacionesComando { get; }
         public IComandoAsincrono UnirseSalaComando { get; }
         public IComandoAsincrono IniciarJuegoComando { get; }
 
@@ -237,7 +231,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         public Action AbrirBuscarAmigo { get; set; }
         public Action AbrirSolicitudes { get; set; }
         public Func<string, bool?> ConfirmarEliminarAmigo { get; set; }
-        public Action AbrirInvitaciones { get; set; }
         public Action<DTOs.SalaDTO> UnirseSala { get; set; }
         public Action<DTOs.SalaDTO> IniciarJuego { get; set; }
         public Action<string> MostrarMensaje { get; set; }

@@ -27,7 +27,7 @@
             <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3">
                 <StackPanel Margin="8">
                     <TextBlock Text="{x:Static language:Lang.globalTextoCorreo}" FontWeight="Bold" Margin="0,0,0,6" HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
-                    <TextBox Height="28" Margin="0,0,0,6" MaxLength="50"/>
+                    <TextBox x:Name="campoTextoCorreoInvitacion" Height="28" Margin="0,0,0,6" MaxLength="50" Text="{Binding CorreoInvitacion, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="{x:Static language:Lang.partidaAdminTextoInvitarCorreo}" Background="LightGreen" FontFamily="Comic Sans MS" Command="{Binding InvitarCorreoComando}"/>
                 </StackPanel>
             </Border>

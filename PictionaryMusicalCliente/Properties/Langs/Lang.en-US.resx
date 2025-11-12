@@ -714,4 +714,10 @@
   <data name="adivinadorTextoContenido" xml:space="preserve">
     <value>Try to guess the song before time runs out!</value>
   </data>
+  <data name="invitarCorreoTextoEnviado" xml:space="preserve">
+    <value>Invitation sent successfully!</value>
+  </data>
+  <data name="errorTextoEnviarCorreo" xml:space="preserve">
+    <value>Error sending invitation. Please check the email address and try again.</value>
+  </data>
 </root>
