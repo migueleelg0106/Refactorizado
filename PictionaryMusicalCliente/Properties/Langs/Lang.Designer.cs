@@ -923,31 +923,22 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("errorTextoNoEncuentraPartida", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Busca una cadena traducida similar a La sala ya alcanzó el máximo de 4 jugadores.
-        /// </summary>
-        public static string errorTextoSalaLlena {
-            get {
-                return ResourceManager.GetString("errorTextoSalaLlena", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Busca una cadena traducida similar a No hay nombres de invitado disponibles en esta sala. Intente de nuevo más tarde.
-        /// </summary>
-        public static string errorTextoNombresInvitadoAgotados {
-            get {
-                return ResourceManager.GetString("errorTextoNombresInvitadoAgotados", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a El nombre es obligatorio y no debe exceder 50 caracteres..
         /// </summary>
         public static string errorTextoNombreObligatorioLongitud {
             get {
                 return ResourceManager.GetString("errorTextoNombreObligatorioLongitud", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a No hay nombres de invitado disponibles en esta sala. Intente de nuevo más tarde..
+        /// </summary>
+        public static string errorTextoNombresInvitadoAgotados {
+            get {
+                return ResourceManager.GetString("errorTextoNombresInvitadoAgotados", resourceCulture);
             }
         }
         
@@ -984,6 +975,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string errorTextoRegistrarCuentaMasTarde {
             get {
                 return ResourceManager.GetString("errorTextoRegistrarCuentaMasTarde", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La sala a la que intentas unirte está llena..
+        /// </summary>
+        public static string errorTextoSalaLlena {
+            get {
+                return ResourceManager.GetString("errorTextoSalaLlena", resourceCulture);
             }
         }
         
@@ -1560,6 +1560,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string invitacionTextoInvitado {
             get {
                 return ResourceManager.GetString("invitacionTextoInvitado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a MusicoFeliz|BuenDibujante|MelodiaMagica|RitmoCreativo|ArtistaSonriente|NotaImaginativa|CancionJuguetona|PincelMelodico|AcordeLudico|VersoColorido|BateriaFantastica|TrovadorLuz|HarmonicoAlegre|CantorBrillante|BailarinArmonioso.
+        /// </summary>
+        public static string invitadoNombres {
+            get {
+                return ResourceManager.GetString("invitadoNombres", resourceCulture);
             }
         }
         

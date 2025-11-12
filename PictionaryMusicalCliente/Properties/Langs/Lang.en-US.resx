@@ -619,7 +619,7 @@
     <value>The selected avatar could not be identified. Please try again.</value>
   </data>
   <data name="invitadoNombres" xml:space="preserve">
-    <value>HappyMusician|GreatSketcher|MagicMelody|CreativeRhythm|SmilingArtist|ImaginativeNote|PlayfulSong|MelodicBrush|LivelyChord|ColorfulVerse|FantasticDrummer|BrightTroubadour|CheerfulHarmony|BrilliantSinger|GroovyDancer</value>
+    <value>HappyMusician|GreatSketcher|MagicMelody|CreativeRhythm|SmilingArtist|ImaginativeNote|PlayfulSong|MelodicDance|JustDancer|RomanticSinger|TheOldSchool|RiftDancer|CheerfulHarmony|BrilliantSinger|GroovyDancer</value>
   </data>
   <data name="errorTextoIdentificadorRecuperacionRequerido" xml:space="preserve">
     <value>Enter the registered username or e-mail to recover the password.</value>
