@@ -716,4 +716,10 @@ aciertan o cuando se acaba el tiempo.
   <data name="adivinadorTextoContenido" xml:space="preserve">
     <value>¡Intenta adivinar la canción en el tiempo restante!</value>
   </data>
+  <data name="invitarCorreoTextoEnviado" xml:space="preserve">
+    <value>¡Invitación enviada con éxito!</value>
+  </data>
+  <data name="errorTextoEnviarCorreo" xml:space="preserve">
+    <value>Error al enviar la invitación. Por favor, verifique el correo electrónico e intente nuevamente.</value>
+  </data>
 </root>

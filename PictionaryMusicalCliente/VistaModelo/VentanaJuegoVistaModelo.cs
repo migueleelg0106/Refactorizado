@@ -43,6 +43,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         private bool _botonIniciarPartidaHabilitado;
         private string _codigoSala;
         private ObservableCollection<string> _jugadores;
+        private string _correoInvitacion;
 
         public VentanaJuegoVistaModelo(DTOs.SalaDTO sala, ISalasServicio salasServicio)
         {
@@ -217,6 +218,12 @@ namespace PictionaryMusicalCliente.VistaModelo
             set => EstablecerPropiedad(ref _jugadores, value);
         }
 
+        public string CorreoInvitacion
+        {
+            get => _correoInvitacion;
+            set => EstablecerPropiedad(ref _correoInvitacion, value);
+        }
+
         public ICommand InvitarCorreoComando { get; private set; }
         public ICommand AbrirAjustesComando { get; private set; }
         public ICommand IniciarPartidaComando { get; private set; }
@@ -229,8 +236,6 @@ namespace PictionaryMusicalCliente.VistaModelo
         public ICommand MostrarOverlayAdivinadorComando { get; private set; }
         public ICommand CerrarOverlayComando { get; private set; }
 
-        public Action AbrirExpulsionJugador { get; set; }
-        public Action AbrirInvitacionAmigos { get; set; }
         public Action<CancionManejador> AbrirAjustesPartida { get; set; }
         public Action<bool> NotificarCambioHerramienta { get; set; }
         public Action AplicarEstiloLapiz { get; set; }
@@ -240,7 +245,7 @@ namespace PictionaryMusicalCliente.VistaModelo
 
         private void InicializarComandos()
         {
-            InvitarCorreoComando = new ComandoDelegado(_ => EjecutarInvitarCorreo());
+            InvitarCorreoComando = new ComandoAsincrono(async _ => await EjecutarInvitarCorreoAsync());
             AbrirAjustesComando = new ComandoDelegado(_ => EjecutarAbrirAjustes());
             IniciarPartidaComando = new ComandoDelegado(_ => EjecutarIniciarPartida());
             SeleccionarLapizComando = new ComandoDelegado(_ => EjecutarSeleccionarLapiz());
@@ -253,10 +258,47 @@ namespace PictionaryMusicalCliente.VistaModelo
             CerrarOverlayComando = new ComandoDelegado(_ => EjecutarCerrarOverlay());
         }
 
-        private void EjecutarInvitarCorreo()
+        private async Task EjecutarInvitarCorreoAsync()
         {
-            AbrirExpulsionJugador?.Invoke();
-            AbrirInvitacionAmigos?.Invoke();
+            string correo = CorreoInvitacion?.Trim();
+
+            if (string.IsNullOrWhiteSpace(correo))
+            {
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke(Lang.errorTextoCorreoInvalido);
+                return;
+            }
+
+            var resultadoValidacion = ValidacionEntrada.ValidarCorreo(correo);
+            if (!resultadoValidacion.OperacionExitosa)
+            {
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke(resultadoValidacion.Mensaje ?? Lang.errorTextoCorreoInvalido);
+                return;
+            }
+
+            try
+            {
+                var correoManejador = new CorreoInvitacionManejador();
+                bool enviado = await correoManejador.EnviarInvitacionAsync(correo, _codigoSala).ConfigureAwait(true);
+
+                if (enviado)
+                {
+                    ManejadorSonido.ReproducirExito();
+                    MostrarMensaje?.Invoke(Lang.invitarCorreoTextoEnviado);
+                    CorreoInvitacion = string.Empty;
+                }
+                else
+                {
+                    ManejadorSonido.ReproducirError();
+                    MostrarMensaje?.Invoke(Lang.errorTextoEnviarCorreo);
+                }
+            }
+            catch (Exception)
+            {
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke(Lang.errorTextoEnviarCorreo);
+            }
         }
 
         private void EjecutarAbrirAjustes()

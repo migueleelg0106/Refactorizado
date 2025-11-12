@@ -283,15 +283,6 @@
                         </Grid>
                     </Grid>
                 </Border>
-
-                <Button Grid.Row="1"
-                        Content="{x:Static language:Lang.globalTextoInvitaciones}"
-                        Margin="0,20,0,0"
-                        Padding="10"
-                        Background="White"
-                        BorderBrush="Black"
-                        FontFamily="Comic Sans MS"
-                        Command="{Binding AbrirInvitacionesComando}"/>
             </Grid>
         </Grid>
     </Grid>
