@@ -13,25 +13,38 @@ namespace PictionaryMusicalCliente.Utilidades
 
         public async Task<bool> EnviarInvitacionAsync(string correoDestino, string codigoPartida)
         {
-            if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigoPartida))
+            if (!ValidarParametrosEntrada(correoDestino, codigoPartida))
             {
                 return false;
             }
 
+            ConfiguracionCorreo configuracion = ObtenerConfiguracionCorreo();
+            if (!configuracion.EsValida())
+            {
+                return false;
+            }
+
+            string cuerpoHtml = ConstruirCuerpoMensaje(codigoPartida);
+
+            return await IntentarEnviarCorreoAsync(configuracion, correoDestino, cuerpoHtml).ConfigureAwait(false);
+        }
+
+        private static bool ValidarParametrosEntrada(string correoDestino, string codigoPartida)
+        {
+            return !string.IsNullOrWhiteSpace(correoDestino) && !string.IsNullOrWhiteSpace(codigoPartida);
+        }
+
+        private ConfiguracionCorreo ObtenerConfiguracionCorreo()
+        {
             string remitente = ObtenerConfiguracion("CorreoRemitente", "Correo.Remitente.Direccion");
             string contrasena = ObtenerConfiguracion("CorreoPassword", "Correo.Smtp.Contrasena");
             string host = ObtenerConfiguracion("CorreoHost", "Correo.Smtp.Host");
             string usuarioSmtp = ObtenerConfiguracion("CorreoUsuario", "Correo.Smtp.Usuario");
             string puertoConfigurado = ObtenerConfiguracion("CorreoPuerto", "Correo.Smtp.Puerto");
             string asunto = ObtenerConfiguracion("CorreoAsunto", "Correo.Invitacion.Asunto") ?? AsuntoPredeterminado;
-
+            
             bool.TryParse(ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"), out bool habilitarSsl);
-
-            if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
-            {
-                return false;
-            }
-
+            
             if (string.IsNullOrWhiteSpace(usuarioSmtp))
             {
                 usuarioSmtp = remitente;
@@ -42,21 +55,33 @@ namespace PictionaryMusicalCliente.Utilidades
                 puerto = 587;
             }
 
-            string cuerpoHtml = ConstruirCuerpoMensaje(codigoPartida);
+            return new ConfiguracionCorreo
+            {
+                Remitente = remitente,
+                Contrasena = contrasena,
+                Host = host,
+                UsuarioSmtp = usuarioSmtp,
+                Puerto = puerto,
+                HabilitarSsl = habilitarSsl,
+                Asunto = asunto
+            };
+        }
 
+        private static async Task<bool> IntentarEnviarCorreoAsync(ConfiguracionCorreo configuracion, string correoDestino, string cuerpoHtml)
+        {
             try
             {
-                using (var mensajeCorreo = new MailMessage(remitente, correoDestino, asunto, cuerpoHtml))
+                using (var mensajeCorreo = new MailMessage(configuracion.Remitente, correoDestino, configuracion.Asunto, cuerpoHtml))
                 {
                     mensajeCorreo.IsBodyHtml = true;
 
-                    using (var clienteSmtp = new SmtpClient(host, puerto))
+                    using (var clienteSmtp = new SmtpClient(configuracion.Host, configuracion.Puerto))
                     {
-                        clienteSmtp.EnableSsl = habilitarSsl;
+                        clienteSmtp.EnableSsl = configuracion.HabilitarSsl;
 
-                        if (!string.IsNullOrWhiteSpace(contrasena))
+                        if (!string.IsNullOrWhiteSpace(configuracion.Contrasena))
                         {
-                            clienteSmtp.Credentials = new NetworkCredential(usuarioSmtp, contrasena);
+                            clienteSmtp.Credentials = new NetworkCredential(configuracion.UsuarioSmtp, configuracion.Contrasena);
                         }
 
                         await clienteSmtp.SendMailAsync(mensajeCorreo).ConfigureAwait(false);
@@ -65,7 +90,31 @@ namespace PictionaryMusicalCliente.Utilidades
 
                 return true;
             }
-            catch (Exception)
+            catch (SmtpFailedRecipientsException)
+            {
+                return false;
+            }
+            catch (SmtpException)
+            {
+                return false;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+            catch (ArgumentNullException)
+            {
+                return false;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+            catch (ObjectDisposedException)
             {
                 return false;
             }
@@ -108,6 +157,22 @@ namespace PictionaryMusicalCliente.Utilidades
             cuerpoHtml.Append("</body></html>");
 
             return cuerpoHtml.ToString();
+        }
+
+        private class ConfiguracionCorreo
+        {
+            public string Remitente { get; set; }
+            public string Contrasena { get; set; }
+            public string Host { get; set; }
+            public string UsuarioSmtp { get; set; }
+            public int Puerto { get; set; }
+            public bool HabilitarSsl { get; set; }
+            public string Asunto { get; set; }
+
+            public bool EsValida()
+            {
+                return !string.IsNullOrWhiteSpace(Remitente) && !string.IsNullOrWhiteSpace(Host);
+            }
         }
     }
 }
