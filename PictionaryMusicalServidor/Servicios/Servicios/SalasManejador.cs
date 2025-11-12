@@ -261,6 +261,7 @@ namespace Servicios.Servicios
 
         private class SalaInterna
         {
+            private const int MaximoJugadores = 4;
             private readonly object _sync = new();
             private readonly Dictionary<string, ISalasCallback> _callbacks = new(StringComparer.OrdinalIgnoreCase);
 
@@ -302,7 +303,7 @@ namespace Servicios.Servicios
                         return ToDto();
                     }
 
-                    if (Jugadores.Count >= 4)
+                    if (ContarJugadoresActivos() >= MaximoJugadores)
                         throw new FaultException("La sala está llena.");
 
                     Jugadores.Add(nombreUsuario);
@@ -337,7 +338,7 @@ namespace Servicios.Servicios
             {
                 lock (_sync)
                 {
-                    if (!Jugadores.Remove(nombreUsuario))
+                    if (Jugadores.RemoveAll(j => string.Equals(j, nombreUsuario, StringComparison.OrdinalIgnoreCase)) == 0)
                         return;
 
                     _callbacks.Remove(nombreUsuario);
@@ -360,6 +361,11 @@ namespace Servicios.Servicios
                     if (string.Equals(nombreUsuario, Creador, StringComparison.OrdinalIgnoreCase) || Jugadores.Count == 0)
                         DebeEliminarse = true;
                 }
+            }
+
+            private int ContarJugadoresActivos()
+            {
+                return Jugadores.Count(jugador => !string.IsNullOrWhiteSpace(jugador));
             }
         }
     }

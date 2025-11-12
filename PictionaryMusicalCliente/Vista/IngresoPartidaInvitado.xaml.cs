@@ -17,6 +17,7 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class IngresoPartidaInvitado : Window
     {
+        private const int MaximoJugadoresSala = 4;
         private readonly ISalasServicio _salasServicio;
         private readonly ILocalizacionServicio _localizacionServicio;
         private bool _estaProcesando;
@@ -143,7 +144,13 @@ namespace PictionaryMusicalCliente
             }
             catch (ExcepcionServicio ex)
             {
-                return ResultadoUnionInvitado.Error(ex.Message ?? Lang.errorTextoNoEncuentraPartida);
+                if (!string.IsNullOrWhiteSpace(ex?.Message)
+                    && string.Equals(ex.Message, Lang.errorTextoSalaLlena, StringComparison.OrdinalIgnoreCase))
+                {
+                    return ResultadoUnionInvitado.SalaLlena();
+                }
+
+                return ResultadoUnionInvitado.Error(ex?.Message ?? Lang.errorTextoNoEncuentraPartida);
             }
             catch (Exception)
             {
@@ -159,7 +166,7 @@ namespace PictionaryMusicalCliente
             }
 
             int jugadoresValidos = sala.Jugadores.Count(jugador => !string.IsNullOrWhiteSpace(jugador));
-            return jugadoresValidos > 4;
+            return jugadoresValidos > MaximoJugadoresSala;
         }
 
         private static bool NombreDuplicado(DTOs.SalaDTO sala, string nombreInvitado)

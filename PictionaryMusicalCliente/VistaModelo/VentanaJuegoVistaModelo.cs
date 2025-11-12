@@ -5,7 +5,9 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Sesiones;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -18,6 +20,8 @@ namespace PictionaryMusicalCliente.VistaModelo
 {
     public class VentanaJuegoVistaModelo : BaseVistaModelo
     {
+        private const int MaximoJugadoresSala = 4;
+        private static readonly StringComparer ComparadorJugadores = StringComparer.OrdinalIgnoreCase;
         private readonly CancionManejador _manejadorCancion;
         private readonly DispatcherTimer _overlayTimer;
         private readonly DispatcherTimer _temporizador;
@@ -84,7 +88,8 @@ namespace PictionaryMusicalCliente.VistaModelo
             _botonIniciarPartidaHabilitado = true;
 
             _codigoSala = _sala.Codigo;
-            _jugadores = new ObservableCollection<string>(_sala.Jugadores ?? new string[0]);
+            _jugadores = new ObservableCollection<string>();
+            ActualizarJugadores(_sala.Jugadores);
             _puedeInvitarPorCorreo = true;
 
             _salasServicio.JugadorSeUnio += SalasServicio_JugadorSeUnio;
@@ -479,10 +484,22 @@ namespace PictionaryMusicalCliente.VistaModelo
         {
             EjecutarEnDispatcher(() =>
             {
-                if (!Jugadores.Contains(nombreJugador))
+                if (string.IsNullOrWhiteSpace(nombreJugador))
                 {
-                    Jugadores.Add(nombreJugador);
+                    return;
                 }
+
+                if (Jugadores.Any(j => string.Equals(j, nombreJugador, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return;
+                }
+
+                if (Jugadores.Count >= MaximoJugadoresSala)
+                {
+                    return;
+                }
+
+                Jugadores.Add(nombreJugador);
             });
         }
 
@@ -490,7 +507,18 @@ namespace PictionaryMusicalCliente.VistaModelo
         {
             EjecutarEnDispatcher(() =>
             {
-                Jugadores.Remove(nombreJugador);
+                if (string.IsNullOrWhiteSpace(nombreJugador))
+                {
+                    return;
+                }
+
+                string jugadorExistente = Jugadores
+                    .FirstOrDefault(j => string.Equals(j, nombreJugador, StringComparison.OrdinalIgnoreCase));
+
+                if (jugadorExistente != null)
+                {
+                    Jugadores.Remove(jugadorExistente);
+                }
             });
         }
 
@@ -501,18 +529,45 @@ namespace PictionaryMusicalCliente.VistaModelo
 
             EjecutarEnDispatcher(() =>
             {
-                Jugadores.Clear();
-                if (sala.Jugadores != null)
-                {
-                    foreach (var jugador in sala.Jugadores)
-                    {
-                        if (!string.IsNullOrWhiteSpace(jugador))
-                        {
-                            Jugadores.Add(jugador);
-                        }
-                    }
-                }
+                ActualizarJugadores(sala.Jugadores);
             });
+        }
+
+        private void ActualizarJugadores(IEnumerable<string> jugadores)
+        {
+            if (Jugadores == null)
+            {
+                Jugadores = new ObservableCollection<string>();
+            }
+
+            Jugadores.Clear();
+
+            if (jugadores == null)
+            {
+                return;
+            }
+
+            var jugadoresUnicos = new HashSet<string>(ComparadorJugadores);
+
+            foreach (string jugador in jugadores)
+            {
+                if (string.IsNullOrWhiteSpace(jugador))
+                {
+                    continue;
+                }
+
+                if (!jugadoresUnicos.Add(jugador))
+                {
+                    continue;
+                }
+
+                Jugadores.Add(jugador);
+
+                if (jugadoresUnicos.Count >= MaximoJugadoresSala)
+                {
+                    break;
+                }
+            }
         }
 
         private static void EjecutarEnDispatcher(Action accion)
