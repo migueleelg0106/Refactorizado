@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="f16e9fbb-9b0b-409e-8b16-f21fbb97b658" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="c4fa0945-8328-4230-afd4-19c81b34ab99" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,12 +22,12 @@
     <MetadataSource Address="http://localhost:8519/Pictionary/Salas" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Salas.xsd" MetadataType="Schema" ID="356b941b-a3f7-4ea6-8ba5-e40894b28057" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?xsd=xsd2" />
-    <MetadataFile FileName="Salas1.xsd" MetadataType="Schema" ID="21228a97-191b-461c-952e-f65f43f374ef" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?xsd=xsd1" />
-    <MetadataFile FileName="Salas2.xsd" MetadataType="Schema" ID="9de08181-0d45-42c8-820d-4cc91f4e9ee5" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?xsd=xsd0" />
-    <MetadataFile FileName="Salas.disco" MetadataType="Disco" ID="1620c88e-232e-42d5-b73a-a60facff9aee" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?disco" />
-    <MetadataFile FileName="SalasManejador.wsdl" MetadataType="Wsdl" ID="ec642256-4606-4f6f-80c0-c821808c07e7" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?wsdl" />
-    <MetadataFile FileName="Salas3.xsd" MetadataType="Schema" ID="5a42911d-620e-463c-8953-678a3e219295" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?xsd=xsd3" />
+    <MetadataFile FileName="Salas.xsd" MetadataType="Schema" ID="861ed793-ae9b-4119-9193-964fff43b2d1" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?xsd=xsd2" />
+    <MetadataFile FileName="Salas1.xsd" MetadataType="Schema" ID="9d940347-e0a6-42f1-b93a-280c0762fdb6" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?xsd=xsd1" />
+    <MetadataFile FileName="Salas2.xsd" MetadataType="Schema" ID="c71182d6-213c-4dc0-b3de-8e3bb97fb78d" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?xsd=xsd0" />
+    <MetadataFile FileName="Salas.disco" MetadataType="Disco" ID="2a790059-d110-4131-8057-408a8b53c51c" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?disco" />
+    <MetadataFile FileName="SalasManejador.wsdl" MetadataType="Wsdl" ID="c3c3fd20-8f4b-428c-aef6-eefcdb1423e4" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?wsdl" />
+    <MetadataFile FileName="Salas3.xsd" MetadataType="Schema" ID="53182635-7d5e-4838-a02b-342eb30f6203" SourceId="1" SourceUrl="http://localhost:8519/Pictionary/Salas?xsd=xsd3" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

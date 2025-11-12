@@ -586,6 +586,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena.disco" />
     <None Include="Connected Services\PictionaryServidorServicioAmigos\Amigos.disco" />
     <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration91.svcinfo" />
     <None Include="Connected Services\PictionaryServidorServicioAmigos\configuration.svcinfo" />
@@ -593,18 +594,17 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasena.disco" />
-    <None Include="Connected Services\PictionaryServidorServicioSalas\Salas.disco" />
-    <None Include="Connected Services\PictionaryServidorServicioSalas\configuration91.svcinfo" />
-    <None Include="Connected Services\PictionaryServidorServicioSalas\configuration.svcinfo" />
-    <None Include="Connected Services\PictionaryServidorServicioSalas\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
     <None Include="Connected Services\PictionaryServidorServicioInvitaciones\Invitaciones.disco" />
     <None Include="Connected Services\PictionaryServidorServicioInvitaciones\configuration91.svcinfo" />
     <None Include="Connected Services\PictionaryServidorServicioInvitaciones\configuration.svcinfo" />
     <None Include="Connected Services\PictionaryServidorServicioInvitaciones\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioSalas\Salas.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioSalas\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioSalas\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioSalas\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

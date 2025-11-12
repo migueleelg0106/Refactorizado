@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="c9b92028-ad81-4a4d-a139-44f97bb7886a" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="96e32e17-452e-442c-b920-2112b4e22810" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,11 +22,11 @@
     <MetadataSource Address="http://localhost:8521/Pictionary/Invitaciones" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Invitaciones.xsd" MetadataType="Schema" ID="2e180f2c-7467-414c-a439-fe84e569a88c" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?xsd=xsd0" />
-    <MetadataFile FileName="Invitaciones.disco" MetadataType="Disco" ID="d7679638-3583-4fdd-a79a-02899f6bf045" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?disco" />
-    <MetadataFile FileName="Invitaciones1.xsd" MetadataType="Schema" ID="196e7f06-29ab-48d4-b06f-57d8c90ded37" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?xsd=xsd1" />
-    <MetadataFile FileName="InvitacionesManejador.wsdl" MetadataType="Wsdl" ID="828a88bd-cdb5-499b-86e8-7226d90e92e6" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?wsdl" />
-    <MetadataFile FileName="Invitaciones2.xsd" MetadataType="Schema" ID="507e5867-2418-4606-abb2-31f37029e523" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?xsd=xsd2" />
+    <MetadataFile FileName="Invitaciones.xsd" MetadataType="Schema" ID="ed9b431b-6cb2-4c47-9a08-ed88e5f0fae5" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?xsd=xsd0" />
+    <MetadataFile FileName="Invitaciones.disco" MetadataType="Disco" ID="36888884-dd05-49dc-90a2-3cff0bd5df28" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?disco" />
+    <MetadataFile FileName="Invitaciones1.xsd" MetadataType="Schema" ID="517cdb1d-4b02-4566-b427-3d40421056f4" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?xsd=xsd1" />
+    <MetadataFile FileName="InvitacionesManejador.wsdl" MetadataType="Wsdl" ID="b2cab200-061f-4bc8-8eed-027f0d48b122" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?wsdl" />
+    <MetadataFile FileName="Invitaciones2.xsd" MetadataType="Schema" ID="77765165-3a86-4e6a-ad0d-cf300fc3c858" SourceId="1" SourceUrl="http://localhost:8521/Pictionary/Invitaciones?xsd=xsd2" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
