@@ -449,7 +449,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             catch (ExcepcionServicio ex)
             {
                 ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoNoEncuentraPartida);
+                string mensaje = ex?.Message;
+
+                if (!string.IsNullOrWhiteSpace(mensaje)
+                    && string.Equals(mensaje, Lang.errorTextoSalaLlena, StringComparison.OrdinalIgnoreCase))
+                {
+                    MostrarMensaje?.Invoke(Lang.errorTextoSalaLlena);
+                }
+                else
+                {
+                    MostrarMensaje?.Invoke(mensaje ?? Lang.errorTextoNoEncuentraPartida);
+                }
             }
         }
 
