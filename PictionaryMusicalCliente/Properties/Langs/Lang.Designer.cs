@@ -916,7 +916,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se encontró la partida.
+        ///   Busca una cadena traducida similar a No se encontró una partida con el código ingresado. Intente con otro distinto..
         /// </summary>
         public static string errorTextoNoEncuentraPartida {
             get {
@@ -1571,7 +1571,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("invitarCorreoTextoEnviado", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a El jugador con el correo ingresado ya está en la sala..
         /// </summary>

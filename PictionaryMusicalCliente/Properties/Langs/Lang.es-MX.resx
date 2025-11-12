@@ -337,9 +337,6 @@
   <data name="eliminarAmigoTextoConfirmacion" xml:space="preserve">
     <value>¿Está seguro de querer eliminar de su lista de amigos a </value>
   </data>
-  <data name="errorTextoNoEncuentraPartida" xml:space="preserve">
-    <value>No se encontró la partida</value>
-  </data>
   <data name="principalTextoTitulo" xml:space="preserve">
     <value>Ventana Principal</value>
   </data>
@@ -724,5 +721,8 @@ aciertan o cuando se acaba el tiempo.
   </data>
   <data name="errorTextoEnviarCorreo" xml:space="preserve">
     <value>Error al enviar la invitación. Por favor, verifique el correo electrónico e intente nuevamente.</value>
+  </data>
+  <data name="errorTextoNoEncuentraPartida" xml:space="preserve">
+    <value>No se encontró una partida con el código ingresado. Intente con otro distinto.</value>
   </data>
 </root>

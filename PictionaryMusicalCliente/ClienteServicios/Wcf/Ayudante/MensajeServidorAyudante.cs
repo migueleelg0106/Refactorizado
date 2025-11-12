@@ -26,7 +26,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
                 ["Ocurrió un problema al procesar la invitación."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
                 ["Invitación enviada correctamente."] = () => LangResources.Lang.invitarCorreoTextoEnviado,
                 ["El correo electrónico proporcionado no es válido."] = () => LangResources.Lang.errorTextoCorreoInvalido,
-                ["No se encontró la sala especificada."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
+                ["No se encontró la sala especificada."] = () => LangResources.Lang.errorTextoNoEncuentraPartida,
                 ["La solicitud de invitación no es válida."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
                 ["Los datos proporcionados no son válidos para enviar la invitación."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
                 ["Se envió un código de verificación al correo proporcionado."] = () => LangResources.Lang.avisoTextoCodigoEnviado,

@@ -337,9 +337,6 @@
   <data name="eliminarAmigoTextoConfirmacion" xml:space="preserve">
     <value>Are you sure you want to remove </value>
   </data>
-  <data name="errorTextoNoEncuentraPartida" xml:space="preserve">
-    <value>The game was not found</value>
-  </data>
   <data name="principalTextoTitulo" xml:space="preserve">
     <value>Lobby</value>
   </data>
@@ -722,5 +719,8 @@
   </data>
   <data name="errorTextoEnviarCorreo" xml:space="preserve">
     <value>Error sending invitation. Please check the email address and try again.</value>
+  </data>
+  <data name="errorTextoNoEncuentraPartida" xml:space="preserve">
+    <value>No game was found with the code entered. Please try a different one.</value>
   </data>
 </root>
