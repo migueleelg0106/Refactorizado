@@ -817,6 +817,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Error al enviar la invitación. Por favor, verifique el correo electrónico e intente nuevamente..
+        /// </summary>
+        public static string errorTextoEnviarCorreo {
+            get {
+                return ResourceManager.GetString("errorTextoEnviarCorreo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a No se pudo enviar el código de verificación. Verifique la información e intente de nuevo..
         /// </summary>
         public static string errorTextoEnvioCodigoVerificacionDatos {
@@ -1551,6 +1560,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string invitarAmigosTextoInvitarAmigos {
             get {
                 return ResourceManager.GetString("invitarAmigosTextoInvitarAmigos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡Invitación enviada con éxito!.
+        /// </summary>
+        public static string invitarCorreoTextoEnviado {
+            get {
+                return ResourceManager.GetString("invitarCorreoTextoEnviado", resourceCulture);
             }
         }
         

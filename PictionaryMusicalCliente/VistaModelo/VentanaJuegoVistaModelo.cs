@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using PictionaryMusicalCliente.ClienteServicios;
 using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo
@@ -294,10 +295,29 @@ namespace PictionaryMusicalCliente.VistaModelo
                     MostrarMensaje?.Invoke(Lang.errorTextoEnviarCorreo);
                 }
             }
-            catch (Exception)
+            catch (System.Net.Mail.SmtpException smtpEx)
             {
+                System.Diagnostics.Debug.WriteLine($"[Error SMTP]: {smtpEx.Message}");
                 ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke(Lang.errorTextoEnviarCorreo);
+                MostrarMensaje?.Invoke("Error al contactar el servidor de correo.");
+            }
+            catch (System.Net.Http.HttpRequestException httpEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Error HTTP]: {httpEx.Message}");
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke("Error de conexión con el servicio de invitaciones.");
+            }
+            catch (System.Threading.Tasks.TaskCanceledException taskEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Error Tarea Cancelada]: {taskEx.Message}");
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke("La operación tardó demasiado y fue cancelada.");
+            }
+            catch (System.TimeoutException timeoutEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Error Timeout]: {timeoutEx.Message}");
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke("Se agotó el tiempo de espera para enviar la invitación.");
             }
         }
 
