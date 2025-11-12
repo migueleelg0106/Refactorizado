@@ -727,7 +727,7 @@
     <value>No game was found with the code entered. Please try a different one.</value>
   </data>
   <data name="errorTextoSalaLlena" xml:space="preserve">
-    <value>The room is already full (maximum 4 players).</value>
+    <value>The room you're trying to join is full.</value>
   </data>
   <data name="errorTextoNombresInvitadoAgotados" xml:space="preserve">
     <value>No guest aliases are available in this room. Please try again later.</value>

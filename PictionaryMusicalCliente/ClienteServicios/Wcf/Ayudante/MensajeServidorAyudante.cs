@@ -30,6 +30,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
                 ["La solicitud de invitación no es válida."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
                 ["Los datos proporcionados no son válidos para enviar la invitación."] = () => LangResources.Lang.errorTextoErrorProcesarSolicitud,
                 ["Se envió un código de verificación al correo proporcionado."] = () => LangResources.Lang.avisoTextoCodigoEnviado,
+                ["La sala está llena."] = () => LangResources.Lang.errorTextoSalaLlena,
                 ["La solicitud de verificación no es válida."] = () => LangResources.Lang.errorTextoSolicitudVerificacionInvalida,
                 ["No se encontró una solicitud de verificación activa."] = () => LangResources.Lang.errorTextoSolicitudVerificacionActiva,
                 ["El código de verificación ha expirado. Inicie el proceso nuevamente."] = () => LangResources.Lang.avisoTextoCodigoExpirado,
