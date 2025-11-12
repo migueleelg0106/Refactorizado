@@ -41,7 +41,7 @@
             <Button Content="Dibujante" Command="{Binding MostrarOverlayDibujanteComando}"/>
             <Button Content="Adivinador" Command="{Binding MostrarOverlayAdivinadorComando}"/>
 
-            <StackPanel Margin="0,300,0,0">
+            <StackPanel Margin="10,220,0,0">
                 <Button Name="botonAjustesPartida" Content="{x:Static language:Lang.globalTextoAjustes}" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
                 Height="35" Width="107" FontFamily="Comic Sans MS" Command="{Binding AbrirAjustesComando}"/>
             </StackPanel>
