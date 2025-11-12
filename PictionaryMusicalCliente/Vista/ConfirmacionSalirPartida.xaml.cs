@@ -20,8 +20,7 @@ namespace PictionaryMusicalCliente
             if (Owner?.Owner is VentanaJuego ventanaJuego && ventanaJuego.EsInvitado)
             {
                 debeAbrirVentanaPrincipal = false;
-                ventanaJuego.DeshabilitarAccionAlCerrar();
-                ventanaDestino = new InicioSesion();
+                ventanaJuego.PrepararCierrePorAplicacion();
             }
 
             if (debeAbrirVentanaPrincipal)

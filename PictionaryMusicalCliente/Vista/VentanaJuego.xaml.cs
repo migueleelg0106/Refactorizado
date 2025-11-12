@@ -19,6 +19,7 @@ namespace PictionaryMusicalCliente
         private readonly Action _accionAlCerrar;
         private readonly bool _esInvitado;
         private bool _ejecutarAccionAlCerrar = true;
+        private bool _cierreIniciadoPorAplicacion;
 
         public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio, bool esInvitado = false, string nombreJugador = null, Action accionAlCerrar = null)
         {
@@ -55,20 +56,16 @@ namespace PictionaryMusicalCliente
             _ejecutarAccionAlCerrar = false;
         }
 
+        public void PrepararCierrePorAplicacion()
+        {
+            _cierreIniciadoPorAplicacion = true;
+        }
+
         private void VentanaJuego_Closing(object sender, CancelEventArgs e)
         {
-            if (_accionAlCerrar != null && _ejecutarAccionAlCerrar && _esInvitado)
+            if (_esInvitado && !_cierreIniciadoPorAplicacion)
             {
                 _ejecutarAccionAlCerrar = false;
-
-                if (!Dispatcher.CheckAccess())
-                {
-                    Dispatcher.Invoke(_accionAlCerrar);
-                }
-                else
-                {
-                    _accionAlCerrar();
-                }
             }
         }
 
@@ -80,7 +77,7 @@ namespace PictionaryMusicalCliente
 
             _salasServicio?.Dispose();
 
-            if (_accionAlCerrar != null && _ejecutarAccionAlCerrar)
+            if (_accionAlCerrar != null && _ejecutarAccionAlCerrar && (!_esInvitado || _cierreIniciadoPorAplicacion))
             {
                 if (!Dispatcher.CheckAccess())
                 {
