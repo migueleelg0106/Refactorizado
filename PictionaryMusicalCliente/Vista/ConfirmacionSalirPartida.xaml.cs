@@ -15,17 +15,21 @@ namespace PictionaryMusicalCliente
         private void BotonAceptarSalirPartida(object sender, RoutedEventArgs e)
         {
             bool debeAbrirVentanaPrincipal = true;
+            Window ventanaDestino = null;
 
             if (Owner?.Owner is VentanaJuego ventanaJuego && ventanaJuego.EsInvitado)
             {
                 debeAbrirVentanaPrincipal = false;
+                ventanaJuego.DeshabilitarAccionAlCerrar();
+                ventanaDestino = new InicioSesion();
             }
 
             if (debeAbrirVentanaPrincipal)
             {
-                var ventanaPrincipal = new VentanaPrincipal();
-                ventanaPrincipal.Show();
+                ventanaDestino = new VentanaPrincipal();
             }
+
+            ventanaDestino?.Show();
 
             (Owner as Window)?.Close();
             (Owner?.Owner as Window)?.Close();

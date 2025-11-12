@@ -3,6 +3,7 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using PictionaryMusicalCliente.VistaModelo;
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Ink;
 using System.Windows.Media;
@@ -17,6 +18,7 @@ namespace PictionaryMusicalCliente
         private readonly ISalasServicio _salasServicio;
         private readonly Action _accionAlCerrar;
         private readonly bool _esInvitado;
+        private bool _ejecutarAccionAlCerrar = true;
 
         public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio, bool esInvitado = false, string nombreJugador = null, Action accionAlCerrar = null)
         {
@@ -42,19 +44,43 @@ namespace PictionaryMusicalCliente
 
             DataContext = _vistaModelo;
 
+            Closing += VentanaJuego_Closing;
             Closed += VentanaJuego_ClosedAsync;
         }
 
         public bool EsInvitado => _esInvitado;
 
+        public void DeshabilitarAccionAlCerrar()
+        {
+            _ejecutarAccionAlCerrar = false;
+        }
+
+        private void VentanaJuego_Closing(object sender, CancelEventArgs e)
+        {
+            if (_accionAlCerrar != null && _ejecutarAccionAlCerrar && _esInvitado)
+            {
+                _ejecutarAccionAlCerrar = false;
+
+                if (!Dispatcher.CheckAccess())
+                {
+                    Dispatcher.Invoke(_accionAlCerrar);
+                }
+                else
+                {
+                    _accionAlCerrar();
+                }
+            }
+        }
+
         private async void VentanaJuego_ClosedAsync(object sender, EventArgs e)
         {
             Closed -= VentanaJuego_ClosedAsync;
+            Closing -= VentanaJuego_Closing;
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
 
             _salasServicio?.Dispose();
 
-            if (_accionAlCerrar != null)
+            if (_accionAlCerrar != null && _ejecutarAccionAlCerrar)
             {
                 if (!Dispatcher.CheckAccess())
                 {
