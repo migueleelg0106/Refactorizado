@@ -1,7 +1,8 @@
-﻿<Window x:Class="PictionaryMusicalCliente.IngresoPartidaInvitado"
+<Window x:Class="PictionaryMusicalCliente.IngresoPartidaInvitado"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
+        xmlns:utilidades="clr-namespace:PictionaryMusicalCliente.Utilidades"
         Title="{x:Static language:Lang.globalTextoIngreseCodigoPartida}"
         Height="300" Width="300"
         WindowStartupLocation="CenterScreen"
@@ -20,7 +21,8 @@
                 <TextBox x:Name="campoTextoCodigoPartida"
                          Height="30" Margin="0,12,0,16"
                          FontFamily="Comic Sans MS" HorizontalAlignment="Center" Width="186"
-                         MaxLength="6"/>
+                         MaxLength="6"
+                         utilidades:EntradaNumerica.SoloNumeros="True"/>
 
                 <Button x:Name="botonUnirsePartida"
                         Content="{x:Static language:Lang.globalTextoUnirse}"

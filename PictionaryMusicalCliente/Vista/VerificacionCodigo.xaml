@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
         xmlns:convertidores="clr-namespace:PictionaryMusicalCliente.Convertidores"
+        xmlns:utilidades="clr-namespace:PictionaryMusicalCliente.Utilidades"
         Title="{x:Static language:Lang.cambiarContrasenaTextoCodigoVerificacion}"
         Height="300" Width="400"
         WindowStartupLocation="CenterScreen"
@@ -26,6 +27,7 @@
                          Height="30" Margin="0,12,0,16" FontFamily="Comic Sans MS"
                          HorizontalAlignment="Center" Width="237"
                          MaxLength="6"
+                         utilidades:EntradaNumerica.SoloNumeros="True"
                          Text="{Binding CodigoVerificacion, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <Button Content="{x:Static language:Lang.cambiarContrasenaTextoVerificar}"

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
+        xmlns:utilidades="clr-namespace:PictionaryMusicalCliente.Utilidades"
         mc:Ignorable="d"
         Title="{x:Static language:Lang.principalTextoTitulo}"
         Height="620" Width="1000"
@@ -110,6 +111,7 @@
                                  Height="25"
                                  FontFamily="Comic Sans MS"
                                  MaxLength="6"
+                                 utilidades:EntradaNumerica.SoloNumeros="True"
                                  Text="{Binding CodigoSala, UpdateSourceTrigger=PropertyChanged}"/>
                         <Button Grid.Row="3"
                                 Content="{x:Static language:Lang.globalTextoUnirse}"
