@@ -165,6 +165,21 @@ namespace Servicios.Servicios
             }
         }
 
+        internal static SalaDTO ObtenerSalaPorCodigo(string codigoSala)
+        {
+            if (string.IsNullOrWhiteSpace(codigoSala))
+            {
+                return null;
+            }
+
+            if (_salas.TryGetValue(codigoSala.Trim(), out var sala))
+            {
+                return sala.ToDto();
+            }
+
+            return null;
+        }
+
 
         private static string GenerarCodigoSala()
         {

@@ -112,6 +112,7 @@
     <Compile Include="Contratos\DTOs\SolicitudAmistadDTO.cs" />
     <Compile Include="Contratos\DTOs\AmigoDTO.cs" />
     <Compile Include="Contratos\DTOs\UsuarioDTO.cs" />
+    <Compile Include="Contratos\DTOs\InvitacionSalaDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\AmigosManejador.cs" />
     <Compile Include="Servicios\ListaAmigosManejador.cs" />
@@ -123,11 +124,13 @@
     <Compile Include="Servicios\PerfilManejador.cs" />
     <Compile Include="Servicios\PerfilValidador.cs" />
     <Compile Include="Servicios\SalasManejador.cs" />
+    <Compile Include="Servicios\InvitacionesManejador.cs" />
     <Compile Include="Servicios\ServicioAmistad.cs" />
     <Compile Include="Servicios\ServicioNotificacionCodigos.cs" />
     <Compile Include="Servicios\ServicioRecuperacionCuenta.cs" />
     <Compile Include="Servicios\ServicioVerificacionRegistro.cs" />
     <Compile Include="Servicios\Utilidades\CorreoCodigoVerificacionNotificador.cs" />
+    <Compile Include="Servicios\Utilidades\CorreoInvitacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\ICodigoVerificacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\CodigoVerificacionGenerador.cs" />
     <Compile Include="Servicios\Utilidades\TokenGenerador.cs" />

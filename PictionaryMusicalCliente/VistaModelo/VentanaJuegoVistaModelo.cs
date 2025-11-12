@@ -2,6 +2,7 @@ using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Sesiones;
 using System;
 using System.Collections.ObjectModel;
@@ -21,6 +22,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         private readonly DispatcherTimer _overlayTimer;
         private readonly DispatcherTimer _temporizador;
         private readonly ISalasServicio _salasServicio;
+        private readonly IInvitacionesServicio _invitacionesServicio;
         private readonly DTOs.SalaDTO _sala;
         private readonly string _nombreUsuarioSesion;
 
@@ -46,10 +48,11 @@ namespace PictionaryMusicalCliente.VistaModelo
         private ObservableCollection<string> _jugadores;
         private string _correoInvitacion;
 
-        public VentanaJuegoVistaModelo(DTOs.SalaDTO sala, ISalasServicio salasServicio)
+        public VentanaJuegoVistaModelo(DTOs.SalaDTO sala, ISalasServicio salasServicio, IInvitacionesServicio invitacionesServicio)
         {
             _sala = sala ?? throw new ArgumentNullException(nameof(sala));
             _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
+            _invitacionesServicio = invitacionesServicio ?? throw new ArgumentNullException(nameof(invitacionesServicio));
 
             _nombreUsuarioSesion = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
 
@@ -280,10 +283,11 @@ namespace PictionaryMusicalCliente.VistaModelo
 
             try
             {
-                var correoManejador = new CorreoInvitacionManejador();
-                bool enviado = await correoManejador.EnviarInvitacionAsync(correo, _codigoSala).ConfigureAwait(true);
+                var resultado = await _invitacionesServicio
+                    .EnviarInvitacionAsync(_codigoSala, correo)
+                    .ConfigureAwait(true);
 
-                if (enviado)
+                if (resultado != null && resultado.OperacionExitosa)
                 {
                     ManejadorSonido.ReproducirExito();
                     MostrarMensaje?.Invoke(Lang.invitarCorreoTextoEnviado);
@@ -292,32 +296,23 @@ namespace PictionaryMusicalCliente.VistaModelo
                 else
                 {
                     ManejadorSonido.ReproducirError();
-                    MostrarMensaje?.Invoke(Lang.errorTextoEnviarCorreo);
+                    string mensaje = MensajeServidorAyudante.Localizar(
+                        resultado?.Mensaje,
+                        Lang.errorTextoEnviarCorreo);
+                    MostrarMensaje?.Invoke(mensaje);
                 }
             }
-            catch (System.Net.Mail.SmtpException smtpEx)
+            catch (ExcepcionServicio ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[Error SMTP]: {smtpEx.Message}");
+                System.Diagnostics.Debug.WriteLine($"[Error Servicio Invitaciones]: {ex.Message}");
                 ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke("Error al contactar el servidor de correo.");
+                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
             }
-            catch (System.Net.Http.HttpRequestException httpEx)
+            catch (ArgumentException ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[Error HTTP]: {httpEx.Message}");
+                System.Diagnostics.Debug.WriteLine($"[Error Invitaciones - Argumento inválido]: {ex.Message}");
                 ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke("Error de conexión con el servicio de invitaciones.");
-            }
-            catch (System.Threading.Tasks.TaskCanceledException taskEx)
-            {
-                System.Diagnostics.Debug.WriteLine($"[Error Tarea Cancelada]: {taskEx.Message}");
-                ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke("La operación tardó demasiado y fue cancelada.");
-            }
-            catch (System.TimeoutException timeoutEx)
-            {
-                System.Diagnostics.Debug.WriteLine($"[Error Timeout]: {timeoutEx.Message}");
-                ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke("Se agotó el tiempo de espera para enviar la invitación.");
+                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
             }
         }
 

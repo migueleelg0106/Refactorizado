@@ -1,5 +1,6 @@
-﻿using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using PictionaryMusicalCliente.VistaModelo;
 using System;
 using System.Windows;
@@ -21,7 +22,7 @@ namespace PictionaryMusicalCliente
 
             _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
 
-            _vistaModelo = new VentanaJuegoVistaModelo(sala, _salasServicio)
+            _vistaModelo = new VentanaJuegoVistaModelo(sala, _salasServicio, new InvitacionesServicio())
             {
                 AbrirAjustesPartida = manejadorCancion =>
                 {
@@ -36,7 +37,7 @@ namespace PictionaryMusicalCliente
             };
 
             DataContext = _vistaModelo;
-            
+
             Closed += VentanaJuego_ClosedAsync;
         }
 
