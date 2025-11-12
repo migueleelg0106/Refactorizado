@@ -123,6 +123,7 @@
     <Compile Include="Utilidades\CancionManejador.cs" />
     <Compile Include="Utilidades\MusicaManejador.cs" />
     <Compile Include="Utilidades\EntradaNumerica.cs" />
+    <Compile Include="Utilidades\NombreInvitadoGenerador.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\ServicioCodigoRecuperacionAdaptador.cs" />
     <Compile Include="Comandos\Comando.cs" />
     <Compile Include="Comandos\ComandoAsincrono.cs" />
