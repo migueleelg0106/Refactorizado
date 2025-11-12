@@ -365,7 +365,7 @@ namespace Servicios.Servicios
 
             private int ContarJugadoresActivos()
             {
-                return Jugadores.Count(jugador => !string.IsNullOrWhiteSpace(jugador));
+                return Jugadores.Count;
             }
         }
     }
