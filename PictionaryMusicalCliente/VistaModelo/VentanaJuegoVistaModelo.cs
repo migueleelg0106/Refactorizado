@@ -25,6 +25,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         private readonly IInvitacionesServicio _invitacionesServicio;
         private readonly DTOs.SalaDTO _sala;
         private readonly string _nombreUsuarioSesion;
+        private readonly bool _esInvitado;
 
         private bool _juegoIniciado;
         private double _grosor;
@@ -47,14 +48,23 @@ namespace PictionaryMusicalCliente.VistaModelo
         private string _codigoSala;
         private ObservableCollection<string> _jugadores;
         private string _correoInvitacion;
+        private bool _puedeInvitarPorCorreo;
 
-        public VentanaJuegoVistaModelo(DTOs.SalaDTO sala, ISalasServicio salasServicio, IInvitacionesServicio invitacionesServicio)
+        public VentanaJuegoVistaModelo(
+            DTOs.SalaDTO sala,
+            ISalasServicio salasServicio,
+            IInvitacionesServicio invitacionesServicio,
+            string nombreJugador = null,
+            bool esInvitado = false)
         {
             _sala = sala ?? throw new ArgumentNullException(nameof(sala));
             _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
             _invitacionesServicio = invitacionesServicio ?? throw new ArgumentNullException(nameof(invitacionesServicio));
 
-            _nombreUsuarioSesion = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
+            _esInvitado = esInvitado;
+            _nombreUsuarioSesion = !string.IsNullOrWhiteSpace(nombreJugador)
+                ? nombreJugador
+                : SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
 
             _manejadorCancion = new CancionManejador();
 
@@ -75,6 +85,7 @@ namespace PictionaryMusicalCliente.VistaModelo
 
             _codigoSala = _sala.Codigo;
             _jugadores = new ObservableCollection<string>(_sala.Jugadores ?? new string[0]);
+            _puedeInvitarPorCorreo = true;
 
             _salasServicio.JugadorSeUnio += SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio += SalasServicio_JugadorSalio;
@@ -89,6 +100,8 @@ namespace PictionaryMusicalCliente.VistaModelo
             _temporizador.Tick += Temporizador_Tick;
 
             InicializarComandos();
+
+            PuedeInvitarPorCorreo = !_esInvitado;
         }
 
         public bool JuegoIniciado
@@ -228,6 +241,21 @@ namespace PictionaryMusicalCliente.VistaModelo
             set => EstablecerPropiedad(ref _correoInvitacion, value);
         }
 
+        public bool PuedeInvitarPorCorreo
+        {
+            get => _puedeInvitarPorCorreo;
+            private set
+            {
+                if (EstablecerPropiedad(ref _puedeInvitarPorCorreo, value))
+                {
+                    if (InvitarCorreoComando is IComandoNotificable notificable)
+                    {
+                        notificable.NotificarPuedeEjecutar();
+                    }
+                }
+            }
+        }
+
         public ICommand InvitarCorreoComando { get; private set; }
         public ICommand AbrirAjustesComando { get; private set; }
         public ICommand IniciarPartidaComando { get; private set; }
@@ -249,7 +277,7 @@ namespace PictionaryMusicalCliente.VistaModelo
 
         private void InicializarComandos()
         {
-            InvitarCorreoComando = new ComandoAsincrono(async _ => await EjecutarInvitarCorreoAsync());
+            InvitarCorreoComando = new ComandoAsincrono(async _ => await EjecutarInvitarCorreoAsync(), _ => PuedeInvitarPorCorreo);
             AbrirAjustesComando = new ComandoDelegado(_ => EjecutarAbrirAjustes());
             IniciarPartidaComando = new ComandoDelegado(_ => EjecutarIniciarPartida());
             SeleccionarLapizComando = new ComandoDelegado(_ => EjecutarSeleccionarLapiz());

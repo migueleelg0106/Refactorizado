@@ -609,6 +609,9 @@
   <data name="errorTextoIdentificarAvatar" xml:space="preserve">
     <value>No se pudo identificar el avatar seleccionado. Intente nuevamente.</value>
   </data>
+  <data name="invitadoNombres" xml:space="preserve">
+    <value>MusicoFeliz|BuenDibujante|MelodiaMagica|RitmoCreativo|ArtistaSonriente|NotaImaginativa|CancionJuguetona|PincelMelodico|AcordeLudico|VersoColorido|BateriaFantastica|TrovadorLuz|HarmonicoAlegre|CantorBrillante|BailarinArmonioso</value>
+  </data>
   <data name="errorTextoIdentificadorRecuperacionRequerido" xml:space="preserve">
     <value>Ingrese el usuario o correo registrado para recuperar la contraseña.</value>
   </data>
@@ -713,5 +716,11 @@
   </data>
   <data name="errorTextoNoEncuentraPartida" xml:space="preserve">
     <value>No se encontró una partida con el código ingresado. Intente con otro distinto.</value>
+  </data>
+  <data name="errorTextoSalaLlena" xml:space="preserve">
+    <value>La sala ya alcanzó el máximo de 4 jugadores.</value>
+  </data>
+  <data name="errorTextoNombresInvitadoAgotados" xml:space="preserve">
+    <value>No hay nombres de invitado disponibles en esta sala. Intente de nuevo más tarde.</value>
   </data>
 </root>

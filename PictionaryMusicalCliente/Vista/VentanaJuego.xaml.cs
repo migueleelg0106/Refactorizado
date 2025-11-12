@@ -15,14 +15,16 @@ namespace PictionaryMusicalCliente
     {
         private readonly VentanaJuegoVistaModelo _vistaModelo;
         private readonly ISalasServicio _salasServicio;
+        private readonly Action _accionAlCerrar;
 
-        public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio)
+        public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio, bool esInvitado = false, string nombreJugador = null, Action accionAlCerrar = null)
         {
             InitializeComponent();
 
             _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
+            _accionAlCerrar = accionAlCerrar;
 
-            _vistaModelo = new VentanaJuegoVistaModelo(sala, _salasServicio, new InvitacionesServicio())
+            _vistaModelo = new VentanaJuegoVistaModelo(sala, _salasServicio, new InvitacionesServicio(), nombreJugador, esInvitado)
             {
                 AbrirAjustesPartida = manejadorCancion =>
                 {
@@ -47,6 +49,18 @@ namespace PictionaryMusicalCliente
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
 
             _salasServicio?.Dispose();
+
+            if (_accionAlCerrar != null)
+            {
+                if (!Dispatcher.CheckAccess())
+                {
+                    Dispatcher.Invoke(_accionAlCerrar);
+                }
+                else
+                {
+                    _accionAlCerrar();
+                }
+            }
         }
 
         private void AbrirDialogo(Window ventana)

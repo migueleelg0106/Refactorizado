@@ -45,8 +45,40 @@ namespace PictionaryMusicalCliente
                 },
                 IniciarSesionInvitado = () =>
                 {
-                    var ventana = new IngresoPartidaInvitado();
+                    var salasServicio = new SalasServicio();
+                    bool seUnioSala = false;
+
+                    var ventana = new IngresoPartidaInvitado(localizacionServicio, salasServicio)
+                    {
+                        Owner = this
+                    };
+
+                    ventana.SalaUnida = (sala, nombreInvitado) =>
+                    {
+                        seUnioSala = true;
+                        _servicioMusica.Detener();
+
+                        var ventanaJuego = new VentanaJuego(
+                            sala,
+                            salasServicio,
+                            esInvitado: true,
+                            nombreJugador: nombreInvitado,
+                            accionAlCerrar: () =>
+                            {
+                                var inicioSesion = new InicioSesion();
+                                inicioSesion.Show();
+                            });
+
+                        ventanaJuego.Show();
+                        Close();
+                    };
+
                     ventana.ShowDialog();
+
+                    if (!seUnioSala)
+                    {
+                        salasServicio.Dispose();
+                    }
                 },
                 CerrarAccion = Close
             };

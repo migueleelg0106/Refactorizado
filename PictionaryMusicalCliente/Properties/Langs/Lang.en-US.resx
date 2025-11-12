@@ -618,6 +618,9 @@
   <data name="errorTextoIdentificarAvatar" xml:space="preserve">
     <value>The selected avatar could not be identified. Please try again.</value>
   </data>
+  <data name="invitadoNombres" xml:space="preserve">
+    <value>HappyMusician|GreatSketcher|MagicMelody|CreativeRhythm|SmilingArtist|ImaginativeNote|PlayfulSong|MelodicBrush|LivelyChord|ColorfulVerse|FantasticDrummer|BrightTroubadour|CheerfulHarmony|BrilliantSinger|GroovyDancer</value>
+  </data>
   <data name="errorTextoIdentificadorRecuperacionRequerido" xml:space="preserve">
     <value>Enter the registered username or e-mail to recover the password.</value>
   </data>
@@ -722,5 +725,11 @@
   </data>
   <data name="errorTextoNoEncuentraPartida" xml:space="preserve">
     <value>No game was found with the code entered. Please try a different one.</value>
+  </data>
+  <data name="errorTextoSalaLlena" xml:space="preserve">
+    <value>The room is already full (maximum 4 players).</value>
+  </data>
+  <data name="errorTextoNombresInvitadoAgotados" xml:space="preserve">
+    <value>No guest aliases are available in this room. Please try again later.</value>
   </data>
 </root>
