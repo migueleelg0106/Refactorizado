@@ -19,6 +19,7 @@ namespace PictionaryMusicalCliente
         private readonly Action _accionAlCerrar;
         private readonly bool _esInvitado;
         private bool _ejecutarAccionAlCerrar = true;
+        private bool _cerrandoAplicacionCompleta;
 
         public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio, bool esInvitado = false, string nombreJugador = null, Action accionAlCerrar = null)
         {
@@ -57,18 +58,11 @@ namespace PictionaryMusicalCliente
 
         private void VentanaJuego_Closing(object sender, CancelEventArgs e)
         {
-            if (_accionAlCerrar != null && _ejecutarAccionAlCerrar && _esInvitado)
+            _cerrandoAplicacionCompleta = DebeCerrarAplicacionPorCierreDeVentana();
+
+            if (_cerrandoAplicacionCompleta)
             {
                 _ejecutarAccionAlCerrar = false;
-
-                if (!Dispatcher.CheckAccess())
-                {
-                    Dispatcher.Invoke(_accionAlCerrar);
-                }
-                else
-                {
-                    _accionAlCerrar();
-                }
             }
         }
 
@@ -80,7 +74,7 @@ namespace PictionaryMusicalCliente
 
             _salasServicio?.Dispose();
 
-            if (_accionAlCerrar != null && _ejecutarAccionAlCerrar)
+            if (_accionAlCerrar != null && _ejecutarAccionAlCerrar && !_cerrandoAplicacionCompleta)
             {
                 if (!Dispatcher.CheckAccess())
                 {
@@ -91,6 +85,31 @@ namespace PictionaryMusicalCliente
                     _accionAlCerrar();
                 }
             }
+        }
+
+        private bool DebeCerrarAplicacionPorCierreDeVentana()
+        {
+            var aplicacion = Application.Current;
+
+            if (aplicacion?.Dispatcher?.HasShutdownStarted == true || aplicacion?.Dispatcher?.HasShutdownFinished == true)
+            {
+                return true;
+            }
+
+            if (aplicacion == null)
+            {
+                return true;
+            }
+
+            foreach (Window ventana in aplicacion.Windows)
+            {
+                if (!ReferenceEquals(ventana, this) && ventana.IsVisible)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void AbrirDialogo(Window ventana)
