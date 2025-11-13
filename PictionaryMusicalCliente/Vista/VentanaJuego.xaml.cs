@@ -21,6 +21,7 @@ namespace PictionaryMusicalCliente
         private readonly bool _esInvitado;
         private bool _ejecutarAccionAlCerrar = true;
         private bool _cerrandoAplicacionCompleta;
+        private bool _cerrandoPorExpulsion;
 
         public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio, bool esInvitado = false, string nombreJugador = null, Action accionAlCerrar = null)
         {
@@ -54,6 +55,8 @@ namespace PictionaryMusicalCliente
                 },
                 CerrarVentana = () =>
                 {
+                    _cerrandoPorExpulsion = true;
+
                     if (!Dispatcher.CheckAccess())
                     {
                         Dispatcher.Invoke(() => Close());
@@ -80,6 +83,12 @@ namespace PictionaryMusicalCliente
 
         private void VentanaJuego_Closing(object sender, CancelEventArgs e)
         {
+            if (_cerrandoPorExpulsion)
+            {
+                _cerrandoAplicacionCompleta = false;
+                return;
+            }
+
             _cerrandoAplicacionCompleta = DebeCerrarAplicacionPorCierreDeVentana();
 
             if (_cerrandoAplicacionCompleta)
