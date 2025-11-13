@@ -1636,6 +1636,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible obtener el correo del jugador..
+        /// </summary>
+        public static string invitarAmigosTextoCorreoNoDisponible {
+            get {
+                return ResourceManager.GetString("invitarAmigosTextoCorreoNoDisponible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a INVITADO.
         /// </summary>
         public static string invitarAmigosTextoInvitado {
@@ -1652,7 +1661,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("invitarAmigosTextoInvitarAmigos", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a No tienes amigos por invitar.
         /// </summary>
@@ -1661,7 +1670,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("invitarAmigosTextoSinAmigos", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a ¡Ya se invitó a este jugador!.
         /// </summary>
@@ -1670,16 +1679,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("invitarAmigosTextoYaInvitado", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Busca una cadena traducida similar a No fue posible obtener el correo del jugador..
-        /// </summary>
-        public static string invitarAmigosTextoCorreoNoDisponible {
-            get {
-                return ResourceManager.GetString("invitarAmigosTextoCorreoNoDisponible", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a ¡Invitación enviada con éxito!.
         /// </summary>
@@ -1731,6 +1731,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string partidaTextoCodigo {
             get {
                 return ResourceManager.GetString("partidaTextoCodigo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a JUGADORES.
+        /// </summary>
+        public static string partidaTextoJugadores {
+            get {
+                return ResourceManager.GetString("partidaTextoJugadores", resourceCulture);
             }
         }
         

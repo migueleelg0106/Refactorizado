@@ -23,7 +23,7 @@
 
             <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2"  CornerRadius="3">
                 <StackPanel>
-                    <TextBlock Text="{x:Static language:Lang.principalTextoAmigos}" FontWeight="Bold" FontFamily="Comic Sans MS" HorizontalAlignment="Center" Margin="4"/>
+                    <TextBlock Text="{x:Static language:Lang.partidaTextoJugadores}" FontWeight="Bold" FontFamily="Comic Sans MS" HorizontalAlignment="Center" Margin="4"/>
                     <ItemsControl ItemsSource="{Binding Jugadores}" FontFamily="Comic Sans MS" Margin="4">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>

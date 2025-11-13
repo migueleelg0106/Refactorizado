@@ -741,7 +741,28 @@
   <data name="errorTextoNombresInvitadoAgotados" xml:space="preserve">
     <value>No guest aliases are available in this room. Please try again later.</value>
   </data>
+  <data name="expulsarJugadorTextoConfirmacion" xml:space="preserve">
+    <value>Are you sure you want to remove {0} from the room?</value>
+  </data>
+  <data name="expulsarJugadorTextoTitulo" xml:space="preserve">
+    <value>Remove Player</value>
+  </data>
+  <data name="expulsarJugadorTextoConfirmar" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="expulsarJugadorTextoCancelar" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="expulsarJugadorTextoExito" xml:space="preserve">
+    <value>Player removed from the room.</value>
+  </data>
   <data name="errorTextoExpulsarJugador" xml:space="preserve">
     <value>Error ejecting the player from the room.</value>
+  </data>
+  <data name="expulsarJugadorTextoFuisteExpulsado" xml:space="preserve">
+    <value>You have been removed from the room.</value>
+  </data>
+  <data name="partidaTextoJugadores" xml:space="preserve">
+    <value>PLAYERS</value>
   </data>
 </root>

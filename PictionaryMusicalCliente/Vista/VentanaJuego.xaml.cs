@@ -6,11 +6,10 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Ink;
-using System.Windows.Media;
 using DTOs = Servicios.Contratos.DTOs;
 using System.Windows.Controls;
-using PictionaryMusicalCliente.Properties.Langs;
 using System.Threading.Tasks;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 
 namespace PictionaryMusicalCliente
 {

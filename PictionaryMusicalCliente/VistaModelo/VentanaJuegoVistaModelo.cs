@@ -319,7 +319,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         private void InicializarComandos()
         {
             InvitarCorreoComando = new ComandoAsincrono(async _ => await EjecutarInvitarCorreoAsync(), _ => PuedeInvitarPorCorreo);
-            InvitarAmigosComando = new ComandoAsincrono(async _ => await EjecutarInvitarAmigosAsync(), () => PuedeInvitarAmigos);
+            InvitarAmigosComando = new ComandoAsincrono(async () => await EjecutarInvitarAmigosAsync(), () => PuedeInvitarAmigos);
             AbrirAjustesComando = new ComandoDelegado(_ => EjecutarAbrirAjustes());
             IniciarPartidaComando = new ComandoDelegado(_ => EjecutarIniciarPartida());
             SeleccionarLapizComando = new ComandoDelegado(_ => EjecutarSeleccionarLapiz());

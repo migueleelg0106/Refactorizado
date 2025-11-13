@@ -753,4 +753,7 @@
   <data name="expulsarJugadorTextoFuisteExpulsado" xml:space="preserve">
     <value>Has sido expulsado de la sala.</value>
   </data>
+  <data name="partidaTextoJugadores" xml:space="preserve">
+    <value>JUGADORES</value>
+  </data>
 </root>

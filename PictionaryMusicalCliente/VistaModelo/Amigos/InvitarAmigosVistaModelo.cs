@@ -170,7 +170,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             NombreUsuario = amigo.NombreUsuario ?? string.Empty;
             _invitacionEnviada = invitacionEnviada;
 
-            InvitarCommand = new ComandoAsincrono(async _ =>
+            InvitarCommand = new ComandoAsincrono(async () =>
             {
                 ManejadorSonido.ReproducirClick();
                 await _padre.InvitarAsync(this).ConfigureAwait(true);
