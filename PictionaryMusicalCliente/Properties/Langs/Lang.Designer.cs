@@ -185,7 +185,16 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("amigosErrorRecuperarSolicitudes", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No tienes solicitudes de amistad pendientes..
+        /// </summary>
+        public static string amigosAvisoSinSolicitudesPendientes {
+            get {
+                return ResourceManager.GetString("amigosAvisoSinSolicitudesPendientes", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Busca una cadena traducida similar a Ya existe una solicitud o relación de amistad entre los usuarios..
         /// </summary>
