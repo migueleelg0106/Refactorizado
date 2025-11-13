@@ -25,5 +25,8 @@ namespace Servicios.Contratos
 
         [OperationContract]
         void CancelarSuscripcionListaSalas();
+
+        [OperationContract]
+        void ExpulsarJugador(string codigoSala, string nombreHost, string nombreJugadorAExpulsar);
     }
 }

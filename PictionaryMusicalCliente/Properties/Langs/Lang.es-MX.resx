@@ -734,4 +734,22 @@ aciertan o cuando se acaba el tiempo.
   <data name="errorTextoNombresInvitadoAgotados" xml:space="preserve">
     <value>No hay nombres de invitado disponibles en esta sala. Intente de nuevo más tarde.</value>
   </data>
+  <data name="expulsarJugadorTextoConfirmacion" xml:space="preserve">
+    <value>¿Estás seguro de que quieres sacar a {0} de la sala?</value>
+  </data>
+  <data name="expulsarJugadorTextoConfirmar" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="expulsarJugadorTextoCancelar" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="expulsarJugadorTextoExito" xml:space="preserve">
+    <value>Jugador expulsado de la sala.</value>
+  </data>
+  <data name="errorTextoExpulsarJugador" xml:space="preserve">
+    <value>Error al expulsar al jugador de la sala.</value>
+  </data>
+  <data name="expulsarJugadorTextoFuisteExpulsado" xml:space="preserve">
+    <value>Has sido expulsado de la sala.</value>
+  </data>
 </root>

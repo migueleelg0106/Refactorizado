@@ -40,7 +40,27 @@ namespace PictionaryMusicalCliente
                 AplicarEstiloLapiz = AplicarEstiloLapiz,
                 ActualizarFormaGoma = ActualizarFormaGoma,
                 LimpiarTrazos = () => ink?.Strokes.Clear(),
-                MostrarMensaje = AvisoAyudante.Mostrar
+                MostrarMensaje = AvisoAyudante.Mostrar,
+                MostrarConfirmacion = mensaje =>
+                {
+                    var resultado = MessageBox.Show(
+                        mensaje,
+                        Lang.expulsarJugadorTextoConfirmar,
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+                    return resultado == MessageBoxResult.Yes;
+                },
+                CerrarVentana = () =>
+                {
+                    if (!Dispatcher.CheckAccess())
+                    {
+                        Dispatcher.Invoke(() => Close());
+                    }
+                    else
+                    {
+                        Close();
+                    }
+                }
             };
 
             DataContext = _vistaModelo;
