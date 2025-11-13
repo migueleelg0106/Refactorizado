@@ -24,6 +24,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
         public event EventHandler<string> JugadorSeUnio;
         public event EventHandler<string> JugadorSalio;
+        public event EventHandler<string> JugadorExpulsado;
         public event EventHandler<IReadOnlyList<DTOs.SalaDTO>> ListaSalasActualizada;
         public event EventHandler<DTOs.SalaDTO> SalaActualizada;
 
@@ -176,6 +177,54 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
+        public async Task ExpulsarJugadorAsync(string codigoSala, string nombreHost, string nombreJugadorAExpulsar)
+        {
+            if (string.IsNullOrWhiteSpace(codigoSala))
+                throw new ArgumentException("El código de sala es obligatorio.", nameof(codigoSala));
+
+            if (string.IsNullOrWhiteSpace(nombreHost))
+                throw new ArgumentException("El nombre del host es obligatorio.", nameof(nombreHost));
+
+            if (string.IsNullOrWhiteSpace(nombreJugadorAExpulsar))
+                throw new ArgumentException("El nombre del jugador a expulsar es obligatorio.", nameof(nombreJugadorAExpulsar));
+
+            await _semaforo.WaitAsync().ConfigureAwait(false);
+
+            try
+            {
+                var cliente = ObtenerOCrearCliente();
+
+                try
+                {
+                    await cliente.ExpulsarJugadorAsync(codigoSala, nombreHost, nombreJugadorAExpulsar).ConfigureAwait(false);
+                }
+                catch (FaultException ex)
+                {
+                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
+                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                }
+                catch (EndpointNotFoundException ex)
+                {
+                    CerrarCliente();
+                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                }
+                catch (TimeoutException ex)
+                {
+                    CerrarCliente();
+                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                }
+                catch (CommunicationException ex)
+                {
+                    CerrarCliente();
+                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                }
+            }
+            finally
+            {
+                _semaforo.Release();
+            }
+        }
+
         public void NotificarJugadorSeUnio(string codigoSala, string nombreJugador)
         {
             JugadorSeUnio?.Invoke(this, nombreJugador);
@@ -184,6 +233,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         public void NotificarJugadorSalio(string codigoSala, string nombreJugador)
         {
             JugadorSalio?.Invoke(this, nombreJugador);
+        }
+
+        public void NotificarJugadorExpulsado(string codigoSala, string nombreJugador)
+        {
+            JugadorExpulsado?.Invoke(this, nombreJugador);
         }
 
         public void NotificarListaSalasActualizada(DTOs.SalaDTO[] salas)

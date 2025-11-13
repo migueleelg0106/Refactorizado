@@ -165,6 +165,37 @@ namespace Servicios.Servicios
             }
         }
 
+        public void ExpulsarJugador(string codigoSala, string nombreHost, string nombreJugadorAExpulsar)
+        {
+            ValidarNombreUsuario(nombreHost, nameof(nombreHost));
+            ValidarNombreUsuario(nombreJugadorAExpulsar, nameof(nombreJugadorAExpulsar));
+
+            if (string.IsNullOrWhiteSpace(codigoSala))
+                throw new FaultException("El parámetro codigoSala es obligatorio.");
+
+            try
+            {
+                if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
+                    throw new FaultException("No se encontró la sala especificada.");
+
+                sala.ExpulsarJugador(nombreHost.Trim(), nombreJugadorAExpulsar.Trim());
+
+                if (sala.DebeEliminarse)
+                    _salas.TryRemove(codigoSala.Trim(), out _);
+
+                NotificarListaSalasATodos();
+            }
+            catch (FaultException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error inesperado al expulsar jugador de la sala {codigoSala}", ex);
+                throw new FaultException("Ocurrió un error inesperado al expulsar al jugador.");
+            }
+        }
+
         internal static SalaDTO ObtenerSalaPorCodigo(string codigoSala)
         {
             if (string.IsNullOrWhiteSpace(codigoSala))
@@ -360,6 +391,60 @@ namespace Servicios.Servicios
 
                     if (string.Equals(nombreUsuario, Creador, StringComparison.OrdinalIgnoreCase) || Jugadores.Count == 0)
                         DebeEliminarse = true;
+                }
+            }
+
+            public void ExpulsarJugador(string nombreHost, string nombreJugadorAExpulsar)
+            {
+                lock (_sync)
+                {
+                    if (!string.Equals(nombreHost, Creador, StringComparison.OrdinalIgnoreCase))
+                        throw new FaultException("Solo el creador de la sala puede expulsar jugadores.");
+
+                    if (string.Equals(nombreJugadorAExpulsar, Creador, StringComparison.OrdinalIgnoreCase))
+                        throw new FaultException("El creador de la sala no puede ser expulsado.");
+
+                    if (!Jugadores.Contains(nombreJugadorAExpulsar, StringComparer.OrdinalIgnoreCase))
+                        throw new FaultException("El jugador especificado no está en la sala.");
+
+                    // Obtener el callback del jugador expulsado antes de removerlo
+                    ISalasCallback callbackExpulsado = null;
+                    if (_callbacks.ContainsKey(nombreJugadorAExpulsar))
+                    {
+                        callbackExpulsado = _callbacks[nombreJugadorAExpulsar];
+                    }
+
+                    Jugadores.RemoveAll(j => string.Equals(j, nombreJugadorAExpulsar, StringComparison.OrdinalIgnoreCase));
+                    _callbacks.Remove(nombreJugadorAExpulsar);
+
+                    var salaActualizada = ToDto();
+
+                    // Notificar al jugador expulsado
+                    if (callbackExpulsado != null)
+                    {
+                        try
+                        {
+                            callbackExpulsado.NotificarJugadorExpulsado(Codigo, nombreJugadorAExpulsar);
+                        }
+                        catch
+                        {
+                            // Ignored
+                        }
+                    }
+
+                    // Notificar a los demás jugadores
+                    foreach (var kvp in _callbacks)
+                    {
+                        try
+                        {
+                            kvp.Value.NotificarJugadorSalio(Codigo, nombreJugadorAExpulsar);
+                            kvp.Value.NotificarSalaActualizada(salaActualizada);
+                        }
+                        catch
+                        {
+                            // Ignored
+                        }
+                    }
                 }
             }
 

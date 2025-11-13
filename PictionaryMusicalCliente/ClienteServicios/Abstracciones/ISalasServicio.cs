@@ -9,6 +9,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
     {
         event EventHandler<string> JugadorSeUnio;
         event EventHandler<string> JugadorSalio;
+        event EventHandler<string> JugadorExpulsado;
         event EventHandler<IReadOnlyList<DTOs.SalaDTO>> ListaSalasActualizada;
         event EventHandler<DTOs.SalaDTO> SalaActualizada;
 
@@ -17,6 +18,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
         Task<DTOs.SalaDTO> UnirseSalaAsync(string codigoSala, string nombreUsuario);
 
         Task AbandonarSalaAsync(string codigoSala, string nombreUsuario);
+
+        Task ExpulsarJugadorAsync(string codigoSala, string nombreHost, string nombreJugadorAExpulsar);
 
         Task SuscribirListaSalasAsync();
 

@@ -16,5 +16,8 @@ namespace Servicios.Contratos
 
         [OperationContract(IsOneWay = true)]
         void NotificarSalaActualizada(DTOs.SalaDTO sala);
+
+        [OperationContract(IsOneWay = true)]
+        void NotificarJugadorExpulsado(string codigoSala, string nombreJugador);
     }
 }
