@@ -65,6 +65,12 @@
   <wsdl:message name="ISalasManejador_CancelarSuscripcionListaSalas_OutputMessage">
     <wsdl:part name="parameters" element="tns:CancelarSuscripcionListaSalasResponse" />
   </wsdl:message>
+  <wsdl:message name="ISalasManejador_ExpulsarJugador_InputMessage">
+    <wsdl:part name="parameters" element="tns:ExpulsarJugador" />
+  </wsdl:message>
+  <wsdl:message name="ISalasManejador_ExpulsarJugador_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ExpulsarJugadorResponse" />
+  </wsdl:message>
   <wsdl:message name="ISalasManejador_NotificarJugadorSeUnio_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:NotificarJugadorSeUnio" />
   </wsdl:message>
@@ -76,6 +82,9 @@
   </wsdl:message>
   <wsdl:message name="ISalasManejador_NotificarSalaActualizada_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:NotificarSalaActualizada" />
+  </wsdl:message>
+  <wsdl:message name="ISalasManejador_NotificarJugadorExpulsado_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarJugadorExpulsado" />
   </wsdl:message>
   <wsdl:portType name="ISalasManejador">
     <wsdl:operation name="CrearSala">
@@ -102,6 +111,10 @@
       <wsdl:input wsaw:Action="http://tempuri.org/ISalasManejador/CancelarSuscripcionListaSalas" message="tns:ISalasManejador_CancelarSuscripcionListaSalas_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/CancelarSuscripcionListaSalasResponse" message="tns:ISalasManejador_CancelarSuscripcionListaSalas_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="ExpulsarJugador">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISalasManejador/ExpulsarJugador" message="tns:ISalasManejador_ExpulsarJugador_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/ExpulsarJugadorResponse" message="tns:ISalasManejador_ExpulsarJugador_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="NotificarJugadorSeUnio">
       <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/NotificarJugadorSeUnio" message="tns:ISalasManejador_NotificarJugadorSeUnio_OutputCallbackMessage" />
     </wsdl:operation>
@@ -113,6 +126,9 @@
     </wsdl:operation>
     <wsdl:operation name="NotificarSalaActualizada">
       <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/NotificarSalaActualizada" message="tns:ISalasManejador_NotificarSalaActualizada_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorExpulsado">
+      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/NotificarJugadorExpulsado" message="tns:ISalasManejador_NotificarJugadorExpulsado_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSDualHttpBinding_ISalasManejador" type="tns:ISalasManejador">
@@ -172,6 +188,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ExpulsarJugador">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/ExpulsarJugador" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="NotificarJugadorSeUnio">
       <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarJugadorSeUnio" style="document" />
       <wsdl:output>
@@ -192,6 +217,12 @@
     </wsdl:operation>
     <wsdl:operation name="NotificarSalaActualizada">
       <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarSalaActualizada" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorExpulsado">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarJugadorExpulsado" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
@@ -254,6 +285,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ExpulsarJugador">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/ExpulsarJugador" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="NotificarJugadorSeUnio">
       <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarJugadorSeUnio" style="document" />
       <wsdl:output>
@@ -274,6 +314,12 @@
     </wsdl:operation>
     <wsdl:operation name="NotificarSalaActualizada">
       <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarSalaActualizada" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorExpulsado">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarJugadorExpulsado" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>

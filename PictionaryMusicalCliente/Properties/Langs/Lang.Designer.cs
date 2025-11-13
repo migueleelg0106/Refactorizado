@@ -853,6 +853,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Error al expulsar al jugador de la sala..
+        /// </summary>
+        public static string errorTextoExpulsarJugador {
+            get {
+                return ResourceManager.GetString("errorTextoExpulsarJugador", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Ingrese el usuario o correo registrado para recuperar la contraseña..
         /// </summary>
         public static string errorTextoIdentificadorRecuperacionRequerido {
@@ -1227,6 +1236,60 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string errorTextoVerificarCodigo {
             get {
                 return ResourceManager.GetString("errorTextoVerificarCodigo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cancelar.
+        /// </summary>
+        public static string expulsarJugadorTextoCancelar {
+            get {
+                return ResourceManager.GetString("expulsarJugadorTextoCancelar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¿Estás seguro de que quieres sacar a {0} de la sala?.
+        /// </summary>
+        public static string expulsarJugadorTextoConfirmacion {
+            get {
+                return ResourceManager.GetString("expulsarJugadorTextoConfirmacion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Confirmar.
+        /// </summary>
+        public static string expulsarJugadorTextoConfirmar {
+            get {
+                return ResourceManager.GetString("expulsarJugadorTextoConfirmar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Jugador expulsado de la sala..
+        /// </summary>
+        public static string expulsarJugadorTextoExito {
+            get {
+                return ResourceManager.GetString("expulsarJugadorTextoExito", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Has sido expulsado de la sala..
+        /// </summary>
+        public static string expulsarJugadorTextoFuisteExpulsado {
+            get {
+                return ResourceManager.GetString("expulsarJugadorTextoFuisteExpulsado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Expulsar Jugador.
+        /// </summary>
+        public static string expulsarJugadorTextoTitulo {
+            get {
+                return ResourceManager.GetString("expulsarJugadorTextoTitulo", resourceCulture);
             }
         }
         

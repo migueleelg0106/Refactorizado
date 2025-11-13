@@ -50,6 +50,12 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/CancelarSuscripcionListaSalas", ReplyAction="http://tempuri.org/ISalasManejador/CancelarSuscripcionListaSalasResponse")]
         System.Threading.Tasks.Task CancelarSuscripcionListaSalasAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/ExpulsarJugador", ReplyAction="http://tempuri.org/ISalasManejador/ExpulsarJugadorResponse")]
+        void ExpulsarJugador(string codigoSala, string nombreHost, string nombreJugadorAExpulsar);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/ExpulsarJugador", ReplyAction="http://tempuri.org/ISalasManejador/ExpulsarJugadorResponse")]
+        System.Threading.Tasks.Task ExpulsarJugadorAsync(string codigoSala, string nombreHost, string nombreJugadorAExpulsar);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -66,6 +72,9 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarSalaActualizada")]
         void NotificarSalaActualizada(Servicios.Contratos.DTOs.SalaDTO sala);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarJugadorExpulsado")]
+        void NotificarJugadorExpulsado(string codigoSala, string nombreJugador);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -142,6 +151,14 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         public System.Threading.Tasks.Task CancelarSuscripcionListaSalasAsync() {
             return base.Channel.CancelarSuscripcionListaSalasAsync();
+        }
+        
+        public void ExpulsarJugador(string codigoSala, string nombreHost, string nombreJugadorAExpulsar) {
+            base.Channel.ExpulsarJugador(codigoSala, nombreHost, nombreJugadorAExpulsar);
+        }
+        
+        public System.Threading.Tasks.Task ExpulsarJugadorAsync(string codigoSala, string nombreHost, string nombreJugadorAExpulsar) {
+            return base.Channel.ExpulsarJugadorAsync(codigoSala, nombreHost, nombreJugadorAExpulsar);
         }
     }
 }

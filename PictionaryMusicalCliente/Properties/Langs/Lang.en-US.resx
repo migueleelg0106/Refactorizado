@@ -732,4 +732,7 @@
   <data name="errorTextoNombresInvitadoAgotados" xml:space="preserve">
     <value>No guest aliases are available in this room. Please try again later.</value>
   </data>
+  <data name="errorTextoExpulsarJugador" xml:space="preserve">
+    <value>Error ejecting the player from the room.</value>
+  </data>
 </root>

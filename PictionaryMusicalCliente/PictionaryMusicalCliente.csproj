@@ -120,6 +120,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\JugadorElemento.cs" />
     <Compile Include="Utilidades\CancionManejador.cs" />
     <Compile Include="Utilidades\MusicaManejador.cs" />
     <Compile Include="Utilidades\EntradaNumerica.cs" />

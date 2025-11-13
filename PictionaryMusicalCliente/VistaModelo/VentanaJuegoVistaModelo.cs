@@ -523,7 +523,6 @@ namespace PictionaryMusicalCliente.VistaModelo
                 {
                     Jugadores.Remove(jugadorExistente);
                 }
-                }
             });
         }
 
