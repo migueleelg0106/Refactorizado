@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo
@@ -28,9 +29,12 @@ namespace PictionaryMusicalCliente.VistaModelo
         private readonly DispatcherTimer _temporizador;
         private readonly ISalasServicio _salasServicio;
         private readonly IInvitacionesServicio _invitacionesServicio;
+        private readonly IListaAmigosServicio _listaAmigosServicio;
+        private readonly IPerfilServicio _perfilServicio;
         private readonly DTOs.SalaDTO _sala;
         private readonly string _nombreUsuarioSesion;
         private readonly bool _esInvitado;
+        private readonly HashSet<int> _amigosInvitados;
 
         private bool _juegoIniciado;
         private double _grosor;
@@ -54,17 +58,22 @@ namespace PictionaryMusicalCliente.VistaModelo
         private ObservableCollection<JugadorElemento> _jugadores;
         private string _correoInvitacion;
         private bool _puedeInvitarPorCorreo;
+        private bool _puedeInvitarAmigos;
 
         public VentanaJuegoVistaModelo(
             DTOs.SalaDTO sala,
             ISalasServicio salasServicio,
             IInvitacionesServicio invitacionesServicio,
+            IListaAmigosServicio listaAmigosServicio,
+            IPerfilServicio perfilServicio,
             string nombreJugador = null,
             bool esInvitado = false)
         {
             _sala = sala ?? throw new ArgumentNullException(nameof(sala));
             _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
             _invitacionesServicio = invitacionesServicio ?? throw new ArgumentNullException(nameof(invitacionesServicio));
+            _listaAmigosServicio = listaAmigosServicio ?? throw new ArgumentNullException(nameof(listaAmigosServicio));
+            _perfilServicio = perfilServicio ?? throw new ArgumentNullException(nameof(perfilServicio));
 
             _esInvitado = esInvitado;
             _nombreUsuarioSesion = !string.IsNullOrWhiteSpace(nombreJugador)
@@ -72,6 +81,7 @@ namespace PictionaryMusicalCliente.VistaModelo
                 : SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
 
             _manejadorCancion = new CancionManejador();
+            _amigosInvitados = new HashSet<int>();
 
             _grosor = 6;
             _color = Colors.Black;
@@ -109,6 +119,7 @@ namespace PictionaryMusicalCliente.VistaModelo
             InicializarComandos();
 
             PuedeInvitarPorCorreo = !_esInvitado;
+            PuedeInvitarAmigos = !_esInvitado;
         }
 
         public bool JuegoIniciado
@@ -255,15 +266,26 @@ namespace PictionaryMusicalCliente.VistaModelo
             {
                 if (EstablecerPropiedad(ref _puedeInvitarPorCorreo, value))
                 {
-                    if (InvitarCorreoComando is IComandoNotificable notificable)
-                    {
-                        notificable.NotificarPuedeEjecutar();
-                    }
+                    NotificarComando(InvitarCorreoComando);
+                    NotificarComando(InvitarAmigosComando);
+                }
+            }
+        }
+
+        public bool PuedeInvitarAmigos
+        {
+            get => _puedeInvitarAmigos;
+            private set
+            {
+                if (EstablecerPropiedad(ref _puedeInvitarAmigos, value))
+                {
+                    NotificarComando(InvitarAmigosComando);
                 }
             }
         }
 
         public ICommand InvitarCorreoComando { get; private set; }
+        public IComandoAsincrono InvitarAmigosComando { get; private set; }
         public ICommand AbrirAjustesComando { get; private set; }
         public ICommand IniciarPartidaComando { get; private set; }
         public ICommand SeleccionarLapizComando { get; private set; }
@@ -284,10 +306,20 @@ namespace PictionaryMusicalCliente.VistaModelo
         public Func<string, bool> MostrarConfirmacion { get; set; }
         public Action CerrarVentana { get; set; }
         public Action<bool> ManejarExpulsion { get; set; }
+        public Func<InvitarAmigosVistaModelo, Task> MostrarInvitarAmigos { get; set; }
+
+        private static void NotificarComando(ICommand comando)
+        {
+            if (comando is IComandoNotificable notificable)
+            {
+                notificable.NotificarPuedeEjecutar();
+            }
+        }
 
         private void InicializarComandos()
         {
             InvitarCorreoComando = new ComandoAsincrono(async _ => await EjecutarInvitarCorreoAsync(), _ => PuedeInvitarPorCorreo);
+            InvitarAmigosComando = new ComandoAsincrono(async _ => await EjecutarInvitarAmigosAsync(), () => PuedeInvitarAmigos);
             AbrirAjustesComando = new ComandoDelegado(_ => EjecutarAbrirAjustes());
             IniciarPartidaComando = new ComandoDelegado(_ => EjecutarIniciarPartida());
             SeleccionarLapizComando = new ComandoDelegado(_ => EjecutarSeleccionarLapiz());
@@ -351,6 +383,73 @@ namespace PictionaryMusicalCliente.VistaModelo
                 System.Diagnostics.Debug.WriteLine($"[Error Invitaciones - Argumento inválido]: {ex.Message}");
                 ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
+            }
+        }
+
+        private async Task EjecutarInvitarAmigosAsync()
+        {
+            ManejadorSonido.ReproducirClick();
+
+            if (_listaAmigosServicio == null || _invitacionesServicio == null || _perfilServicio == null)
+            {
+                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
+            {
+                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+                return;
+            }
+
+            IReadOnlyList<DTOs.AmigoDTO> amigos;
+
+            try
+            {
+                amigos = await _listaAmigosServicio
+                    .ObtenerAmigosAsync(_nombreUsuarioSesion)
+                    .ConfigureAwait(true);
+            }
+            catch (ExcepcionServicio ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Error Servicio Lista Amigos]: {ex.Message}");
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+                return;
+            }
+            catch (ArgumentException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Error Lista Amigos - Argumento inválido]: {ex.Message}");
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+                return;
+            }
+
+            if (amigos == null || amigos.Count == 0)
+            {
+                ManejadorSonido.ReproducirError();
+                MostrarMensaje?.Invoke(Lang.invitarAmigosTextoSinAmigos);
+                return;
+            }
+
+            var vistaModelo = new InvitarAmigosVistaModelo(
+                amigos,
+                _invitacionesServicio,
+                _perfilServicio,
+                _codigoSala,
+                id => _amigosInvitados.Contains(id),
+                id =>
+                {
+                    if (!_amigosInvitados.Contains(id))
+                    {
+                        _amigosInvitados.Add(id);
+                    }
+                },
+                mensaje => MostrarMensaje?.Invoke(mensaje));
+
+            if (MostrarInvitarAmigos != null)
+            {
+                await MostrarInvitarAmigos(vistaModelo).ConfigureAwait(true);
             }
         }
 
