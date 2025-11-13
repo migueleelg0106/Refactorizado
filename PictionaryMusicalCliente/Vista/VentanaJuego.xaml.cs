@@ -10,6 +10,7 @@ using System.Windows.Media;
 using DTOs = Servicios.Contratos.DTOs;
 using System.Windows.Controls;
 using PictionaryMusicalCliente.Properties.Langs;
+using System.Threading.Tasks;
 
 namespace PictionaryMusicalCliente
 {
@@ -17,6 +18,9 @@ namespace PictionaryMusicalCliente
     {
         private readonly VentanaJuegoVistaModelo _vistaModelo;
         private readonly ISalasServicio _salasServicio;
+        private readonly IInvitacionesServicio _invitacionesServicio;
+        private readonly IListaAmigosServicio _listaAmigosServicio;
+        private readonly IPerfilServicio _perfilServicio;
         private readonly Action _accionAlCerrar;
         private readonly bool _esInvitado;
         private bool _ejecutarAccionAlCerrar = true;
@@ -30,7 +34,18 @@ namespace PictionaryMusicalCliente
             _accionAlCerrar = accionAlCerrar;
             _esInvitado = esInvitado;
 
-            _vistaModelo = new VentanaJuegoVistaModelo(sala, _salasServicio, new InvitacionesServicio(), nombreJugador, esInvitado)
+            _invitacionesServicio = new InvitacionesServicio();
+            _listaAmigosServicio = new ListaAmigosServicio();
+            _perfilServicio = new PerfilServicio();
+
+            _vistaModelo = new VentanaJuegoVistaModelo(
+                sala,
+                _salasServicio,
+                _invitacionesServicio,
+                _listaAmigosServicio,
+                _perfilServicio,
+                nombreJugador,
+                esInvitado)
             {
                 AbrirAjustesPartida = manejadorCancion =>
                 {
@@ -89,6 +104,10 @@ namespace PictionaryMusicalCliente
                     {
                         Close();
                     }
+                },
+                MostrarInvitarAmigos = async vistaModeloInvitacion =>
+                {
+                    await MostrarInvitarAmigosAsync(vistaModeloInvitacion).ConfigureAwait(true);
                 }
             };
 
@@ -122,6 +141,7 @@ namespace PictionaryMusicalCliente
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
 
             _salasServicio?.Dispose();
+            _listaAmigosServicio?.Dispose();
 
             if (_accionAlCerrar != null && _ejecutarAccionAlCerrar && !_cerrandoAplicacionCompleta)
             {
@@ -170,6 +190,32 @@ namespace PictionaryMusicalCliente
 
             ventana.Owner = this;
             ventana.ShowDialog();
+        }
+
+        private Task MostrarInvitarAmigosAsync(InvitarAmigosVistaModelo vistaModelo)
+        {
+            if (vistaModelo == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            void MostrarVentana()
+            {
+                var ventana = new InvitarAmigos(vistaModelo)
+                {
+                    Owner = this
+                };
+
+                ventana.ShowDialog();
+            }
+
+            if (!Dispatcher.CheckAccess())
+            {
+                return Dispatcher.InvokeAsync((Action)MostrarVentana).Task;
+            }
+
+            MostrarVentana();
+            return Task.CompletedTask;
         }
 
         private void EstablecerHerramienta(bool esLapiz)

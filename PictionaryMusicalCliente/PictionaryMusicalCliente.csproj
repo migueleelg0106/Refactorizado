@@ -190,6 +190,7 @@
     </Compile>
     <Compile Include="VistaModelo\Amigos\BusquedaAmigoVistaModelo.cs" />
     <Compile Include="VistaModelo\Amigos\EliminacionAmigoVistaModelo.cs" />
+    <Compile Include="VistaModelo\Amigos\InvitarAmigosVistaModelo.cs" />
     <Compile Include="VistaModelo\Amigos\SolicitudesVistaModelo.cs" />
     <Compile Include="VistaModelo\CambioContrasenaVistaModelo.cs" />
     <Compile Include="VistaModelo\ClasificacionVistaModelo.cs" />
@@ -248,6 +249,9 @@
     </Compile>
     <Compile Include="Vista\Solicitudes.xaml.cs">
       <DependentUpon>Solicitudes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\InvitarAmigos.xaml.cs">
+      <DependentUpon>InvitarAmigos.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vista\IngresoPartidaInvitado.xaml.cs">
       <DependentUpon>IngresoPartidaInvitado.xaml</DependentUpon>
@@ -510,6 +514,10 @@
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Vista\Solicitudes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\InvitarAmigos.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>

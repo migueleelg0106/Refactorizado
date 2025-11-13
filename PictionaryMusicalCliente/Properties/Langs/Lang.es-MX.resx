@@ -461,6 +461,15 @@ aciertan o cuando se acaba el tiempo.
   <data name="invitarAmigosTextoInvitado" xml:space="preserve">
     <value>INVITADO</value>
   </data>
+  <data name="invitarAmigosTextoSinAmigos" xml:space="preserve">
+    <value>No tienes amigos por invitar</value>
+  </data>
+  <data name="invitarAmigosTextoYaInvitado" xml:space="preserve">
+    <value>¡Ya se invitó a este jugador!</value>
+  </data>
+  <data name="invitarAmigosTextoCorreoNoDisponible" xml:space="preserve">
+    <value>No fue posible obtener el correo del jugador.</value>
+  </data>
   <data name="ajustesPartidaTextoSalirPartida" xml:space="preserve">
     <value>SALIR DE LA PARTIDA</value>
   </data>

@@ -14,5 +14,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
         Task SuscribirAsync(string nombreUsuario);
 
         Task CancelarSuscripcionAsync(string nombreUsuario);
+
+        Task<IReadOnlyList<DTOs.AmigoDTO>> ObtenerAmigosAsync(string nombreUsuario);
     }
 }

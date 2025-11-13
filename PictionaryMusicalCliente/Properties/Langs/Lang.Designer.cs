@@ -1652,7 +1652,34 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("invitarAmigosTextoInvitarAmigos", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No tienes amigos por invitar.
+        /// </summary>
+        public static string invitarAmigosTextoSinAmigos {
+            get {
+                return ResourceManager.GetString("invitarAmigosTextoSinAmigos", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡Ya se invitó a este jugador!.
+        /// </summary>
+        public static string invitarAmigosTextoYaInvitado {
+            get {
+                return ResourceManager.GetString("invitarAmigosTextoYaInvitado", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No fue posible obtener el correo del jugador..
+        /// </summary>
+        public static string invitarAmigosTextoCorreoNoDisponible {
+            get {
+                return ResourceManager.GetString("invitarAmigosTextoCorreoNoDisponible", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Busca una cadena traducida similar a ¡Invitación enviada con éxito!.
         /// </summary>

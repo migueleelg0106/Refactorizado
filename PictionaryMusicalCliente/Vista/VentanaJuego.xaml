@@ -51,6 +51,13 @@
                 </StackPanel>
             </Border>
 
+            <Button Margin="6"
+                    Content="{x:Static language:Lang.invitarAmigosTextoInvitarAmigos}"
+                    FontFamily="Comic Sans MS"
+                    Background="LightGreen"
+                    Command="{Binding InvitarAmigosComando}"
+                    Visibility="{Binding PuedeInvitarAmigos, Converter={StaticResource BooleanoVisibilidadColapsar}}"/>
+
             <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3"
                     Visibility="{Binding PuedeInvitarPorCorreo, Converter={StaticResource BooleanoVisibilidadColapsar}}">
                 <StackPanel Margin="8">
