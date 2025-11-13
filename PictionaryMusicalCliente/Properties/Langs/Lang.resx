@@ -267,6 +267,9 @@
   <data name="amigosErrorRecuperarSolicitudes" xml:space="preserve">
     <value>No fue posible recuperar las solicitudes de amistad.</value>
   </data>
+  <data name="amigosAvisoSinSolicitudesPendientes" xml:space="preserve">
+    <value>No tienes solicitudes de amistad pendientes.</value>
+  </data>
   <data name="amigosErrorAutoSolicitud" xml:space="preserve">
     <value>No es posible enviarse una solicitud de amistad a sí mismo.</value>
   </data>

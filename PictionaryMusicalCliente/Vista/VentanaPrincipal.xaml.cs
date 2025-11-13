@@ -43,7 +43,7 @@ namespace PictionaryMusicalCliente
                 AbrirComoJugar = () => MostrarDialogo(new ComoJugar()),
                 AbrirClasificacion = () => MostrarDialogo(new Clasificacion()),
                 AbrirBuscarAmigo = () => MostrarDialogo(new BusquedaAmigo(_amigosServicio)),
-                AbrirSolicitudes = () => MostrarDialogo(new Solicitudes(_amigosServicio)),
+                AbrirSolicitudes = MostrarSolicitudes,
                 ConfirmarEliminarAmigo = MostrarConfirmacionEliminar,
                 IniciarJuego = MostrarVentanaJuego,
                 UnirseSala = MostrarVentanaJuego
@@ -97,6 +97,19 @@ namespace PictionaryMusicalCliente
 
             ventana.Owner = this;
             ventana.ShowDialog();
+        }
+
+        private void MostrarSolicitudes()
+        {
+            var solicitudesPendientes = _amigosServicio?.SolicitudesPendientes;
+
+            if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
+            {
+                MostrarDialogo(new Avisos(Lang.amigosAvisoSinSolicitudesPendientes));
+                return;
+            }
+
+            MostrarDialogo(new Solicitudes(_amigosServicio));
         }
 
         private void MostrarVentanaJuego(DTOs.SalaDTO sala)
