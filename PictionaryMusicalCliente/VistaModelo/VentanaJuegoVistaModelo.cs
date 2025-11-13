@@ -632,7 +632,6 @@ namespace PictionaryMusicalCliente.VistaModelo
             {
                 if (string.Equals(nombreJugador, _nombreUsuarioSesion, StringComparison.OrdinalIgnoreCase))
                 {
-                    MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoFuisteExpulsado);
                     if (ManejarExpulsion != null)
                     {
                         ManejarExpulsion.Invoke(_esInvitado);
@@ -641,6 +640,7 @@ namespace PictionaryMusicalCliente.VistaModelo
                     {
                         CerrarVentana?.Invoke();
                     }
+                    MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoFuisteExpulsado);
                 }
             });
         }
