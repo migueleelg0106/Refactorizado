@@ -52,6 +52,33 @@ namespace PictionaryMusicalCliente
                     bool? resultado = ventana.ShowDialog();
                     return resultado == true;
                 },
+                ManejarExpulsion = esInvitadoExpulsado =>
+                {
+                    void EjecutarAccionExpulsion()
+                    {
+                        if (esInvitadoExpulsado)
+                        {
+                            DeshabilitarAccionAlCerrar();
+                        }
+
+                        Window ventanaDestino = esInvitadoExpulsado
+                            ? new InicioSesion()
+                            : new VentanaPrincipal();
+
+                        ventanaDestino.Show();
+
+                        Close();
+                    }
+
+                    if (!Dispatcher.CheckAccess())
+                    {
+                        Dispatcher.Invoke(EjecutarAccionExpulsion);
+                    }
+                    else
+                    {
+                        EjecutarAccionExpulsion();
+                    }
+                },
                 CerrarVentana = () =>
                 {
                     if (!Dispatcher.CheckAccess())
