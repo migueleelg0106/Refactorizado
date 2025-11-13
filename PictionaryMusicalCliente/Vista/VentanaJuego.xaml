@@ -33,18 +33,17 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{Binding Nombre}" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="1" 
-                                            Content="❌" 
-                                            FontSize="12"
-                                            Width="20" 
-                                            Height="20" 
+                                    <Button Grid.Column="1"
                                             Background="Transparent"
                                             BorderThickness="0"
-                                            Foreground="Red"
                                             Command="{Binding ExpulsarComando}"
                                             Visibility="{Binding MostrarBotonExpulsar, Converter={StaticResource BooleanoVisibilidadColapsar}}"
                                             Cursor="Hand"
-                                            ToolTip="Expulsar jugador"/>
+                                            ToolTip="Expulsar jugador">
+                                        <Image Source="/Recursos/Rechazar.png"
+                                               Width="18"
+                                               Height="18"/>
+                                    </Button>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
