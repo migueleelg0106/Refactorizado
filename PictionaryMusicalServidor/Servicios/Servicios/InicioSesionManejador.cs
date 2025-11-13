@@ -43,8 +43,8 @@ namespace Servicios.Servicios
                     {
                         return new ResultadoInicioSesionDTO
                         {
-                            CuentaEncontrada = true,
-                            Mensaje = null
+                            CuentaEncontrada = false,
+                            Mensaje = "Credenciales incorrectas."
                         };
                     }
 

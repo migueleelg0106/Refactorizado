@@ -548,9 +548,6 @@ aciertan o cuando se acaba el tiempo.
   <data name="errorTextoCorreoInvalido" xml:space="preserve">
     <value>Ingrese un correo electrónico válido.</value>
   </data>
-  <data name="errorTextoCuentaNoEncontradaInicioSesion" xml:space="preserve">
-    <value>La cuenta o usuario no se encontró, verifique el dato ingresado.</value>
-  </data>
   <data name="errorTextoCuentaNoEncontradaSesion" xml:space="preserve">
     <value>No se encontró la cuenta asociada a la sesión actual.</value>
   </data>
