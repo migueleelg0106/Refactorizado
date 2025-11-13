@@ -1,25 +1,49 @@
-﻿using System.Windows;
+using System;
+using System.Windows;
+using PictionaryMusicalCliente.VistaModelo.Salas;
 
 namespace PictionaryMusicalCliente
 {
     /// <summary>
-    /// Lógica de interacción para ExpulsarJugador.xaml
+    /// Lógica de interacción para ExpulsionJugador.xaml
     /// </summary>
     public partial class ExpulsionJugador : Window
     {
-        public ExpulsionJugador()
+        private readonly ExpulsionJugadorVistaModelo _vistaModelo;
+
+        public ExpulsionJugador(string mensajeConfirmacion)
+            : this(new ExpulsionJugadorVistaModelo(mensajeConfirmacion))
         {
+        }
+
+        public ExpulsionJugador(ExpulsionJugadorVistaModelo vistaModelo)
+        {
+            _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));
+
             InitializeComponent();
+
+            DataContext = _vistaModelo;
+
+            _vistaModelo.Cerrar += VistaModelo_Cerrar;
+            Closed += ExpulsionJugador_Closed;
         }
 
-        private void BotonExpulsarJugador(object sender, RoutedEventArgs e)
+        private void VistaModelo_Cerrar(bool? resultado)
         {
-            this.Close();
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => VistaModelo_Cerrar(resultado));
+                return;
+            }
+
+            DialogResult = resultado;
+            Close();
         }
 
-        private void BotonCancelarExpulsion(object sender, RoutedEventArgs e)
+        private void ExpulsionJugador_Closed(object sender, EventArgs e)
         {
-            this.Close();
+            Closed -= ExpulsionJugador_Closed;
+            _vistaModelo.Cerrar -= VistaModelo_Cerrar;
         }
     }
 }
