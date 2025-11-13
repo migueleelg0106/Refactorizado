@@ -45,7 +45,7 @@ namespace PictionaryMusicalCliente
                 {
                     var resultado = MessageBox.Show(
                         mensaje,
-                        Lang.expulsarJugadorTextoConfirmar,
+                        Lang.expulsarJugadorTextoTitulo,
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
                     return resultado == MessageBoxResult.Yes;

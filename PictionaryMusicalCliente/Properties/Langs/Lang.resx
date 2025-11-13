@@ -726,6 +726,9 @@
   <data name="expulsarJugadorTextoConfirmacion" xml:space="preserve">
     <value>¿Estás seguro de que quieres sacar a {0} de la sala?</value>
   </data>
+  <data name="expulsarJugadorTextoTitulo" xml:space="preserve">
+    <value>Expulsar Jugador</value>
+  </data>
   <data name="expulsarJugadorTextoConfirmar" xml:space="preserve">
     <value>Confirmar</value>
   </data>
