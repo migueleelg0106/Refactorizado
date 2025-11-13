@@ -283,6 +283,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         public Action<string> MostrarMensaje { get; set; }
         public Func<string, bool> MostrarConfirmacion { get; set; }
         public Action CerrarVentana { get; set; }
+        public Action<bool> ManejarExpulsion { get; set; }
 
         private void InicializarComandos()
         {
@@ -533,7 +534,14 @@ namespace PictionaryMusicalCliente.VistaModelo
                 if (string.Equals(nombreJugador, _nombreUsuarioSesion, StringComparison.OrdinalIgnoreCase))
                 {
                     MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoFuisteExpulsado);
-                    CerrarVentana?.Invoke();
+                    if (ManejarExpulsion != null)
+                    {
+                        ManejarExpulsion.Invoke(_esInvitado);
+                    }
+                    else
+                    {
+                        CerrarVentana?.Invoke();
+                    }
                 }
             });
         }
