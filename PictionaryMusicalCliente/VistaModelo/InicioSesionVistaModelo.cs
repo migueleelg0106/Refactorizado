@@ -204,9 +204,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void MostrarErrorInicioSesion(DTOs.ResultadoInicioSesionDTO resultado)
         {
-            string mensaje = resultado.CuentaEncontrada
-                ? Lang.errorTextoCuentaNoEncontradaInicioSesion
-                : resultado.Mensaje;
+            string mensaje = resultado?.Mensaje;
 
             if (string.IsNullOrWhiteSpace(mensaje))
             {
