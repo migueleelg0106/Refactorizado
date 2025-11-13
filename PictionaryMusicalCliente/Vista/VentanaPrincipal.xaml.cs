@@ -106,7 +106,14 @@ namespace PictionaryMusicalCliente
 
             _abrioVentanaJuego = true;
 
-            var ventanaJuego = new VentanaJuego(sala, _salasServicio);
+            var ventanaJuego = new VentanaJuego(
+                sala, 
+                _salasServicio,
+                accionAlCerrar: () =>
+                {
+                    var ventanaPrincipal = new VentanaPrincipal();
+                    ventanaPrincipal.Show();
+                });
             ventanaJuego.Show();
 
             this.Close();
