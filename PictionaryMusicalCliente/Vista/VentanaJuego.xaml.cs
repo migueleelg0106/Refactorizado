@@ -44,12 +44,13 @@ namespace PictionaryMusicalCliente
                 MostrarMensaje = AvisoAyudante.Mostrar,
                 MostrarConfirmacion = mensaje =>
                 {
-                    var resultado = MessageBox.Show(
-                        mensaje,
-                        Lang.expulsarJugadorTextoTitulo,
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question);
-                    return resultado == MessageBoxResult.Yes;
+                    var ventana = new ExpulsionJugador(mensaje)
+                    {
+                        Owner = this
+                    };
+
+                    bool? resultado = ventana.ShowDialog();
+                    return resultado == true;
                 },
                 CerrarVentana = () =>
                 {
