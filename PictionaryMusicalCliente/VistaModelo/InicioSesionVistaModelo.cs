@@ -5,6 +5,7 @@ using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using PictionaryMusicalCliente.VistaModelo.Salas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,6 +24,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
         private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogoServicio;
         private readonly ILocalizacionServicio _localizacionServicio;
+        private readonly Func<ISalasServicio> _salasServicioFactory;
 
         public const string CampoContrasena = "Contrasena";
 
@@ -36,12 +38,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             IInicioSesionServicio inicioSesionServicio,
             ICambioContrasenaServicio cambioContrasenaServicio,
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
-            ILocalizacionServicio localizacionServicio)
+            ILocalizacionServicio localizacionServicio,
+            Func<ISalasServicio> salasServicioFactory)
         {
             _inicioSesionServicio = inicioSesionServicio ?? throw new ArgumentNullException(nameof(inicioSesionServicio));
             _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
             _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
             _localizacionServicio = localizacionServicio ?? throw new ArgumentNullException(nameof(localizacionServicio));
+            _salasServicioFactory = salasServicioFactory ?? throw new ArgumentNullException(nameof(salasServicioFactory));
 
             IniciarSesionComando = new ComandoAsincrono(async _ =>
             {
@@ -61,11 +65,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 AbrirCrearCuenta?.Invoke();
             });
 
-            IniciarSesionInvitadoComando = new ComandoDelegado(_ =>
+            IniciarSesionInvitadoComando = new ComandoAsincrono(async _ =>
             {
                 ManejadorSonido.ReproducirClick();
-                IniciarSesionInvitado?.Invoke();
-            });
+                await IniciarSesionInvitadoAsync().ConfigureAwait(true);
+            }, _ => !EstaProcesando);
 
             CargarIdiomas();
         }
@@ -92,23 +96,72 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 {
                     ((IComandoNotificable)IniciarSesionComando).NotificarPuedeEjecutar();
                     ((IComandoNotificable)RecuperarCuentaComando).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)IniciarSesionInvitadoComando).NotificarPuedeEjecutar();
                 }
             }
         }
         public IComandoAsincrono IniciarSesionComando { get; }
         public IComandoAsincrono RecuperarCuentaComando { get; }
         public ICommand AbrirCrearCuentaComando { get; }
-        public ICommand IniciarSesionInvitadoComando { get; }
+        public IComandoAsincrono IniciarSesionInvitadoComando { get; }
         public Action AbrirCrearCuenta { get; set; }
-        public Action IniciarSesionInvitado { get; set; }
         public Action<DTOs.ResultadoInicioSesionDTO> InicioSesionCompletado { get; set; }
         public Action CerrarAccion { get; set; }
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
+        public Action<IngresoPartidaInvitadoVistaModelo> MostrarIngresoInvitado { get; set; }
+        public Action<DTOs.SalaDTO, ISalasServicio, string> AbrirVentanaJuegoInvitado { get; set; }
 
 
         public void EstablecerContrasena(string contrasena)
         {
             _contrasena = contrasena;
+        }
+
+        private Task IniciarSesionInvitadoAsync()
+        {
+            ISalasServicio salasServicio = null;
+
+            try
+            {
+                salasServicio = _salasServicioFactory?.Invoke();
+
+                if (salasServicio == null)
+                {
+                    ManejadorSonido.ReproducirError();
+                    AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
+                    return Task.CompletedTask;
+                }
+
+                var vistaModelo = new IngresoPartidaInvitadoVistaModelo(_localizacionServicio, salasServicio);
+
+                vistaModelo.SalaUnida = (sala, nombreInvitado) =>
+                {
+                    AbrirVentanaJuegoInvitado?.Invoke(sala, salasServicio, nombreInvitado);
+                };
+
+                if (MostrarIngresoInvitado == null)
+                {
+                    ManejadorSonido.ReproducirError();
+                    AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
+                    salasServicio.Dispose();
+                    return Task.CompletedTask;
+                }
+
+                MostrarIngresoInvitado(vistaModelo);
+
+                if (!vistaModelo.SeUnioSala)
+                {
+                    salasServicio.Dispose();
+                }
+            }
+            catch (Exception)
+            {
+                salasServicio?.Dispose();
+                ManejadorSonido.ReproducirError();
+                AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
+            }
+
+            return Task.CompletedTask;
         }
 
         private async Task IniciarSesionAsync()

@@ -36,51 +36,54 @@ namespace PictionaryMusicalCliente
                 inicioSesionServicio,
                 cambioContrasenaServicio,
                 recuperacionCuentaDialogoServicio,
-                localizacionServicio)
+                localizacionServicio,
+                () => new SalasServicio())
             {
                 AbrirCrearCuenta = () =>
                 {
                     var ventana = new CreacionCuenta();
                     ventana.ShowDialog();
                 },
-                IniciarSesionInvitado = () =>
-                {
-                    var salasServicio = new SalasServicio();
-                    bool seUnioSala = false;
-
-                    var ventana = new IngresoPartidaInvitado(localizacionServicio, salasServicio)
-                    {
-                        Owner = this
-                    };
-
-                    ventana.SalaUnida = (sala, nombreInvitado) =>
-                    {
-                        seUnioSala = true;
-                        _servicioMusica.Detener();
-
-                        var ventanaJuego = new VentanaJuego(
-                            sala,
-                            salasServicio,
-                            esInvitado: true,
-                            nombreJugador: nombreInvitado,
-                            accionAlCerrar: () =>
-                            {
-                                var inicioSesion = new InicioSesion();
-                                inicioSesion.Show();
-                            });
-
-                        ventanaJuego.Show();
-                        Close();
-                    };
-
-                    ventana.ShowDialog();
-
-                    if (!seUnioSala)
-                    {
-                        salasServicio.Dispose();
-                    }
-                },
                 CerrarAccion = Close
+            };
+
+            vistaModelo.MostrarIngresoInvitado = vistaModeloInvitado =>
+            {
+                if (vistaModeloInvitado == null)
+                {
+                    return;
+                }
+
+                var ventana = new IngresoPartidaInvitado(vistaModeloInvitado)
+                {
+                    Owner = this
+                };
+
+                ventana.ShowDialog();
+            };
+
+            vistaModelo.AbrirVentanaJuegoInvitado = (sala, salasServicio, nombreInvitado) =>
+            {
+                if (sala == null || salasServicio == null)
+                {
+                    return;
+                }
+
+                _servicioMusica.Detener();
+
+                var ventanaJuego = new VentanaJuego(
+                    sala,
+                    salasServicio,
+                    esInvitado: true,
+                    nombreJugador: nombreInvitado,
+                    accionAlCerrar: () =>
+                    {
+                        var inicioSesion = new InicioSesion();
+                        inicioSesion.Show();
+                    });
+
+                ventanaJuego.Show();
+                Close();
             };
 
             vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;

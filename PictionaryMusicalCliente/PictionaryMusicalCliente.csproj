@@ -200,6 +200,7 @@
     <Compile Include="VistaModelo\CreacionCuentaVistaModelo.cs" />
     <Compile Include="VistaModelo\VentanaJuegoVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\ExpulsionJugadorVistaModelo.cs" />
+    <Compile Include="VistaModelo\Salas\IngresoPartidaInvitadoVistaModelo.cs" />
     <Compile Include="VistaModelo\VentanaPrincipalVistaModelo.cs" />
     <Compile Include="VistaModelo\VerificacionCodigoVistaModelo.cs" />
     <Compile Include="Vista\Ajustes.xaml.cs">

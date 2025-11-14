@@ -1,12 +1,17 @@
 <Window x:Class="PictionaryMusicalCliente.IngresoPartidaInvitado"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:convertidores="clr-namespace:PictionaryMusicalCliente.Convertidores"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
         xmlns:utilidades="clr-namespace:PictionaryMusicalCliente.Utilidades"
         Title="{x:Static language:Lang.globalTextoIngreseCodigoPartida}"
         Height="300" Width="300"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent" Cursor="">
+
+    <Window.Resources>
+        <convertidores:ConvertidorBooleanoInverso x:Key="BooleanoInverso"/>
+    </Window.Resources>
 
     <Grid>
         <Border Background="White" BorderBrush="Gray" BorderThickness="2"
@@ -22,6 +27,8 @@
                          Height="30" Margin="0,12,0,16"
                          FontFamily="Comic Sans MS" HorizontalAlignment="Center" Width="186"
                          MaxLength="6"
+                         Text="{Binding CodigoSala, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding EstaProcesando, Converter={StaticResource BooleanoInverso}}"
                          utilidades:EntradaNumerica.SoloNumeros="True"/>
 
                 <Button x:Name="botonUnirsePartida"
@@ -29,7 +36,7 @@
                         Height="44"
                         FontFamily="Comic Sans MS" FontWeight="Bold"
                         Background="White" BorderBrush="Black"
-                        Click="BotonUnirsePartida" IsDefault="True" Width="112"/>
+                        Command="{Binding UnirseSalaComando}" IsDefault="True" Width="112"/>
 
                 <Button x:Name="botonCancelarPartida"
                         Content="{x:Static language:Lang.globalTextoCancelar}"
@@ -37,7 +44,9 @@
                         HorizontalAlignment="Right"
                         FontFamily="Comic Sans MS"
                         Background="White" BorderBrush="Black"
-                        Click="BotonCancelarUnirse" IsCancel="True"/>
+                        Command="{Binding CancelarComando}"
+                        IsEnabled="{Binding EstaProcesando, Converter={StaticResource BooleanoInverso}}"
+                        IsCancel="True"/>
             </StackPanel>
         </Border>
     </Grid>
