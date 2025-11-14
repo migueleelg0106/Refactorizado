@@ -24,10 +24,6 @@ namespace PictionaryMusicalCliente.Utilidades
             CultureInfo culturaEfectiva = cultura ?? CultureInfo.CurrentUICulture;
 
             string opciones = ObtenerOpciones(culturaEfectiva);
-            if (string.IsNullOrWhiteSpace(opciones))
-            {
-                opciones = "InvitadoCreativo|InvitadoArtistico|InvitadoMelodico";
-            }
 
             var nombres = opciones
                 .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
@@ -37,7 +33,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (nombres.Length == 0)
             {
-                return "Invitado";
+                return null;
             }
 
             HashSet<string> nombresNoDisponibles = nombresExcluidos != null
