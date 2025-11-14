@@ -86,7 +86,6 @@
     <Compile Include="Contratos\ICuentaManejador.cs" />
     <Compile Include="Contratos\ICursoPartidaManejador.cs" />
     <Compile Include="Contratos\IInicioPartidaManejador.cs" />
-    <Compile Include="Contratos\IInicioSesionInvitadoManejador.cs" />
     <Compile Include="Contratos\IInicioSesionManejador.cs" />
     <Compile Include="Contratos\IInvitacionesManejador.cs" />
     <Compile Include="Contratos\ILienzoManejador.cs" />
