@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Servicios.Servicios.Utilidades
+namespace PictionaryMusical.Servicios.Servicios.Utilidades
 {
     public interface ICodigoVerificacionNotificador
     {

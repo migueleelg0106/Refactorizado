@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using Datos.Modelo;
-using Datos.Utilidades;
-using Servicios.Contratos.DTOs;
-using Servicios.Servicios.Constantes;
-using Servicios.Servicios.Utilidades;
+using PictionaryMusical.Datos.Modelo;
+using PictionaryMusical.Datos.Utilidades;
+using PictionaryMusical.Servicios.Contratos.DTOs;
+using PictionaryMusical.Servicios.Servicios.Constantes;
+using PictionaryMusical.Servicios.Servicios.Utilidades;
 
-namespace Servicios.Servicios
+namespace PictionaryMusical.Servicios.Servicios
 {
 
     internal static class ServicioVerificacionRegistro

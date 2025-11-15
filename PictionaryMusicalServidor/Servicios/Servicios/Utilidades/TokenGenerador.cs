@@ -1,6 +1,6 @@
 using System;
 
-namespace Servicios.Servicios.Utilidades
+namespace PictionaryMusical.Servicios.Servicios.Utilidades
 {
     internal static class TokenGenerador
     {

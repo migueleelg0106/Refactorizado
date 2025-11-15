@@ -5,15 +5,15 @@ using System.Data;
 using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
-using Datos.Modelo;
-using Datos.Utilidades;
-using Servicios.Contratos.DTOs;
-using Servicios.Servicios.Utilidades;
+using PictionaryMusical.Datos.Modelo;
+using PictionaryMusical.Datos.Utilidades;
+using PictionaryMusical.Servicios.Contratos.DTOs;
+using PictionaryMusical.Servicios.Servicios.Utilidades;
 using System.Data.Entity;
-using Servicios.Servicios.Constantes;
+using PictionaryMusical.Servicios.Servicios.Constantes;
 using log4net;
 
-namespace Servicios.Servicios
+namespace PictionaryMusical.Servicios.Servicios
 {
 
     internal static class ServicioRecuperacionCuenta

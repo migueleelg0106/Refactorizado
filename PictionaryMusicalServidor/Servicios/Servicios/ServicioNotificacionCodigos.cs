@@ -1,7 +1,7 @@
 ﻿using Servicios.Servicios.Utilidades;
 using System.Threading.Tasks;
 
-namespace Servicios.Servicios
+namespace PictionaryMusical.Servicios.Servicios
 {
 
     internal static class ServicioNotificacionCodigos

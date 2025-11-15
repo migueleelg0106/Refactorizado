@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Datos.DAL.Implementaciones;
-using Datos.Modelo;
-using Datos.Utilidades;
-using Servicios.Contratos.DTOs;
+using PictionaryMusical.Datos.DAL.Implementaciones;
+using PictionaryMusical.Datos.Modelo;
+using PictionaryMusical.Datos.Utilidades;
+using PictionaryMusical.Servicios.Contratos.DTOs;
 
-namespace Servicios.Servicios
+namespace PictionaryMusical.Servicios.Servicios
 {
 
     internal static class ServicioAmistad

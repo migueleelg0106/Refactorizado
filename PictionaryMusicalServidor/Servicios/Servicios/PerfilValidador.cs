@@ -1,6 +1,6 @@
 ﻿using Servicios.Contratos.DTOs;
 
-namespace Servicios.Servicios
+namespace PictionaryMusical.Servicios.Servicios
 {
 
     internal static class PerfilValidador

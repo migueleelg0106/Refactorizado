@@ -1,6 +1,6 @@
-using Datos.Modelo;
+using PictionaryMusical.Datos.Modelo;
 
-namespace Datos.DAL.Interfaces
+namespace PictionaryMusical.Datos.DAL.Interfaces
 {
     public interface IJugadorRepositorio
     {

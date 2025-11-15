@@ -6,14 +6,14 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.ServiceModel;
-using Datos.Modelo;
-using Datos.Utilidades;
-using Servicios.Contratos;
-using Servicios.Contratos.DTOs;
+using PictionaryMusical.Datos.Modelo;
+using PictionaryMusical.Datos.Utilidades;
+using PictionaryMusical.Servicios.Contratos;
+using PictionaryMusical.Servicios.Contratos.DTOs;
 using log4net;
-using Servicios.Servicios.Constantes;
+using PictionaryMusical.Servicios.Servicios.Constantes;
 
-namespace Servicios.Servicios
+namespace PictionaryMusical.Servicios.Servicios
 {
     public class PerfilManejador : IPerfilManejador
     {

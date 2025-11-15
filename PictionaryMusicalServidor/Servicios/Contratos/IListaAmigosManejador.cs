@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.ServiceModel;
-using Servicios.Contratos.DTOs;
+using PictionaryMusical.Servicios.Contratos.DTOs;
 
-namespace Servicios.Contratos
+namespace PictionaryMusical.Servicios.Contratos
 {
     [ServiceContract(CallbackContract = typeof(IListaAmigosManejadorCallback))]
     public interface IListaAmigosManejador

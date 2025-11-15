@@ -5,14 +5,14 @@ using System.Data.Entity.Core;
 using System.Linq;
 using System.Text.RegularExpressions;
 using log4net;
-using Datos.Modelo;
-using Datos.Utilidades;
-using Servicios.Contratos;
-using Servicios.Contratos.DTOs;
-using Servicios.Servicios.Utilidades;
-using Servicios.Servicios.Constantes;
+using PictionaryMusical.Datos.Modelo;
+using PictionaryMusical.Datos.Utilidades;
+using PictionaryMusical.Servicios.Contratos;
+using PictionaryMusical.Servicios.Contratos.DTOs;
+using PictionaryMusical.Servicios.Servicios.Utilidades;
+using PictionaryMusical.Servicios.Servicios.Constantes;
 
-namespace Servicios.Servicios
+namespace PictionaryMusical.Servicios.Servicios
 {
     public class InvitacionesManejador : IInvitacionesManejador
     {

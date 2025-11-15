@@ -1,14 +1,14 @@
-using Servicios.Contratos;
+using PictionaryMusical.Servicios.Contratos;
 using System;
 using System.Data;
 using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using log4net;
-using Servicios.Contratos.DTOs;
-using Servicios.Servicios.Constantes;
+using PictionaryMusical.Servicios.Contratos.DTOs;
+using PictionaryMusical.Servicios.Servicios.Constantes;
 
-namespace Servicios.Servicios
+namespace PictionaryMusical.Servicios.Servicios
 {
     public class CodigoVerificacionManejador : ICodigoVerificacionManejador
     {

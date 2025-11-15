@@ -1,7 +1,7 @@
-using Servicios.Contratos;
-using Servicios.Contratos.DTOs;
-using Datos.Modelo;
-using Datos.Utilidades;
+using PictionaryMusical.Servicios.Contratos;
+using PictionaryMusical.Servicios.Contratos.DTOs;
+using PictionaryMusical.Datos.Modelo;
+using PictionaryMusical.Datos.Utilidades;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -9,9 +9,9 @@ using log4net;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Data;
 using System.Data.Entity.Core;
-using Servicios.Servicios.Constantes;
+using PictionaryMusical.Servicios.Servicios.Constantes;
 
-namespace Servicios.Servicios
+namespace PictionaryMusical.Servicios.Servicios
 {
     public class InicioSesionManejador : IInicioSesionManejador
     {

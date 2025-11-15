@@ -1,4 +1,4 @@
-namespace Datos.DAL.Interfaces
+namespace PictionaryMusical.Datos.DAL.Interfaces
 {
     using Datos.Modelo;
 

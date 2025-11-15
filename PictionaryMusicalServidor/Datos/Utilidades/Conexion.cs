@@ -2,7 +2,7 @@
 using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 
-namespace Datos.Utilidades
+namespace PictionaryMusical.Datos.Utilidades
 {
     public static class Conexion
     {
