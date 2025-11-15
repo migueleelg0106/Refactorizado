@@ -6,6 +6,7 @@ using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using log4net;
+using Servicios.Servicios.Constantes;
 
 namespace Servicios.Servicios
 {
@@ -25,7 +26,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "Los datos proporcionados no son válidos para recuperar la cuenta."
+                    Mensaje = MensajesError.DatosRecuperacionInvalidos
                 };
             }
             catch (EntityException ex)
@@ -34,7 +35,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "No fue posible procesar la recuperación de la cuenta."
+                    Mensaje = MensajesError.ErrorRecuperarCuenta
                 };
             }
             catch (DataException ex)
@@ -43,7 +44,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "No fue posible procesar la recuperación de la cuenta."
+                    Mensaje = MensajesError.ErrorRecuperarCuenta
                 };
             }
         }
@@ -60,7 +61,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "Los datos proporcionados no son válidos para reenviar el código."
+                    Mensaje = MensajesError.DatosReenvioCodigo
                 };
             }
             catch (EntityException ex)
@@ -69,7 +70,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "No fue posible reenviar el código de recuperación."
+                    Mensaje = MensajesError.ErrorReenviarCodigo
                 };
             }
             catch (DataException ex)
@@ -78,7 +79,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "No fue posible reenviar el código de recuperación."
+                    Mensaje = MensajesError.ErrorReenviarCodigo
                 };
             }
         }
@@ -95,7 +96,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "Los datos proporcionados no son válidos para confirmar el código."
+                    Mensaje = MensajesError.DatosConfirmacionInvalidos
                 };
             }
             catch (EntityException ex)
@@ -104,7 +105,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible confirmar el código de recuperación."
+                    Mensaje = MensajesError.ErrorConfirmarCodigo
                 };
             }
             catch (DataException ex)
@@ -113,7 +114,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible confirmar el código de recuperación."
+                    Mensaje = MensajesError.ErrorConfirmarCodigo
                 };
             }
         }
@@ -131,7 +132,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "Los datos proporcionados no son válidos para actualizar la contraseña."
+                    Mensaje = MensajesError.DatosActualizacionContrasena
                 };
             }
             catch (DbEntityValidationException ex)
@@ -140,7 +141,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible actualizar la contraseña."
+                    Mensaje = MensajesError.ErrorActualizarContrasena
                 };
             }
             catch (DbUpdateException ex)
@@ -149,7 +150,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible actualizar la contraseña."
+                    Mensaje = MensajesError.ErrorActualizarContrasena
                 };
             }
             catch (EntityException ex)
@@ -158,7 +159,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible actualizar la contraseña."
+                    Mensaje = MensajesError.ErrorActualizarContrasena
                 };
             }
             catch (DataException ex)
@@ -167,7 +168,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible actualizar la contraseña."
+                    Mensaje = MensajesError.ErrorActualizarContrasena
                 };
             }
         }

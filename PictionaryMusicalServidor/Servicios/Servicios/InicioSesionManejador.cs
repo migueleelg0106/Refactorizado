@@ -7,6 +7,9 @@ using System.Data.Entity;
 using System.Linq;
 using log4net;
 using BCryptNet = BCrypt.Net.BCrypt;
+using System.Data;
+using System.Data.Entity.Core;
+using Servicios.Servicios.Constantes;
 
 namespace Servicios.Servicios
 {
@@ -64,13 +67,31 @@ namespace Servicios.Servicios
                     };
                 }
             }
-            catch (Exception ex)
+            catch (EntityException ex)
             {
-                _logger.Error("Error al iniciar sesión", ex);
+                _logger.Error("Error de base de datos al iniciar sesión", ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,
-                    Mensaje = ex.Message
+                    Mensaje = MensajesError.ErrorInicioSesion
+                };
+            }
+            catch (DataException ex)
+            {
+                _logger.Error("Error de datos al iniciar sesión", ex);
+                return new ResultadoInicioSesionDTO
+                {
+                    InicioSesionExitoso = false,
+                    Mensaje = MensajesError.ErrorInicioSesion
+                };
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Error("Operación inválida al iniciar sesión", ex);
+                return new ResultadoInicioSesionDTO
+                {
+                    InicioSesionExitoso = false,
+                    Mensaje = MensajesError.ErrorInicioSesion
                 };
             }
         }

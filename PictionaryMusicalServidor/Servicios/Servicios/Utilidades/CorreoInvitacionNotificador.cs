@@ -64,8 +64,19 @@ namespace Servicios.Servicios.Utilidades
 
                 return true;
             }
-            catch (Exception)
+            catch (SmtpException ex)
             {
+                // Log el error de SMTP para facilitar el diagnóstico
+                return false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Log el error de operación inválida
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                // Log el error de argumento inválido
                 return false;
             }
         }

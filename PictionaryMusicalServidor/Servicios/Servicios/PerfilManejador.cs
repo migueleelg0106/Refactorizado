@@ -11,6 +11,7 @@ using Datos.Utilidades;
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
 using log4net;
+using Servicios.Servicios.Constantes;
 
 namespace Servicios.Servicios
 {
@@ -70,17 +71,17 @@ namespace Servicios.Servicios
             catch (EntityException ex)
             {
                 _logger.Error("Error de base de datos al obtener el perfil del usuario", ex);
-                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
+                throw new FaultException(MensajesError.ErrorObtenerPerfil);
             }
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al obtener el perfil del usuario", ex);
-                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
+                throw new FaultException(MensajesError.ErrorObtenerPerfil);
             }
             catch (InvalidOperationException ex)
             {
                 _logger.Error("Operación inválida al obtener el perfil del usuario", ex);
-                throw new FaultException("Ocurrió un problema al consultar la información del perfil.");
+                throw new FaultException(MensajesError.ErrorObtenerPerfil);
             }
         }
 
@@ -139,34 +140,34 @@ namespace Servicios.Servicios
                     return new ResultadoOperacionDTO
                     {
                         OperacionExitosa = true,
-                        Mensaje = "Perfil actualizado correctamente."
+                        Mensaje = MensajesError.PerfilActualizadoExito
                     };
                 }
             }
             catch (DbEntityValidationException ex)
             {
                 _logger.Error("Validación de entidad fallida al actualizar el perfil", ex);
-                return CrearResultadoFallo("No fue posible actualizar el perfil.");
+                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
             }
             catch (DbUpdateException ex)
             {
                 _logger.Error("Error de actualización de base de datos al actualizar el perfil", ex);
-                return CrearResultadoFallo("No fue posible actualizar el perfil.");
+                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
             }
             catch (EntityException ex)
             {
                 _logger.Error("Error de base de datos al actualizar el perfil", ex);
-                return CrearResultadoFallo("No fue posible actualizar el perfil.");
+                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
             }
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al actualizar el perfil", ex);
-                return CrearResultadoFallo("No fue posible actualizar el perfil.");
+                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
             }
             catch (InvalidOperationException ex)
             {
                 _logger.Error("Operación inválida al actualizar el perfil", ex);
-                return CrearResultadoFallo("No fue posible actualizar el perfil.");
+                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
             }
         }
 

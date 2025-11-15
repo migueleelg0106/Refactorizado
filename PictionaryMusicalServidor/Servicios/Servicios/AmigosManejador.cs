@@ -10,6 +10,7 @@ using log4net;
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
 using System.Collections.Generic;
+using Servicios.Servicios.Constantes;
 
 namespace Servicios.Servicios
 {
@@ -74,12 +75,12 @@ namespace Servicios.Servicios
             catch (EntityException ex)
             {
                 _logger.Error("Error de base de datos al suscribir o notificar solicitudes pendientes", ex);
-                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
+                throw new FaultException(MensajesError.ErrorRecuperarSolicitudes);
             }
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al suscribir o notificar solicitudes pendientes", ex);
-                throw new FaultException("No fue posible recuperar las solicitudes de amistad.");
+                throw new FaultException(MensajesError.ErrorRecuperarSolicitudes);
             }
         }
 
@@ -167,7 +168,7 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al enviar la solicitud de amistad", ex);
-                throw new FaultException("No fue posible almacenar la solicitud de amistad.");
+                throw new FaultException(MensajesError.ErrorAlmacenarSolicitud);
             }
         }
 
@@ -228,7 +229,7 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al aceptar la solicitud de amistad", ex);
-                throw new FaultException("No fue posible actualizar la solicitud de amistad.");
+                throw new FaultException(MensajesError.ErrorActualizarSolicitud);
             }
         }
 
@@ -298,7 +299,7 @@ namespace Servicios.Servicios
             catch (DataException ex)
             {
                 _logger.Error("Error de datos al eliminar la relación de amistad", ex);
-                throw new FaultException("No fue posible eliminar la relación de amistad en la base de datos.");
+                throw new FaultException(MensajesError.ErrorEliminarAmistad);
             }
         }
 
