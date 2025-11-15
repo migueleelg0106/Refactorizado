@@ -117,6 +117,7 @@
     <Compile Include="Servicios\ListaAmigosManejador.cs" />
     <Compile Include="Servicios\ClasificacionManejador.cs" />
     <Compile Include="Servicios\CodigoVerificacionManejador.cs" />
+    <Compile Include="Servicios\Constantes\MensajesError.cs" />
     <Compile Include="Servicios\CuentaManejador.cs" />
     <Compile Include="Servicios\InicioSesionManejador.cs" />
     <Compile Include="Servicios\CambioContrasenaManejador.cs" />
