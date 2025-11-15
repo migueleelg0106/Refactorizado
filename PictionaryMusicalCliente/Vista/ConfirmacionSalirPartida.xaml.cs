@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using PictionaryMusicalCliente.VistaModelo;
 
 namespace PictionaryMusicalCliente
 {
@@ -17,7 +18,9 @@ namespace PictionaryMusicalCliente
             bool debeAbrirVentanaPrincipal = true;
             Window ventanaDestino = null;
 
-            if (Owner?.Owner is VentanaJuego ventanaJuego && ventanaJuego.EsInvitado)
+            if (Owner?.Owner is VentanaJuego ventanaJuego
+                && ventanaJuego.DataContext is VentanaJuegoVistaModelo vistaModelo
+                && vistaModelo.EsInvitado)
             {
                 debeAbrirVentanaPrincipal = false;
                 ventanaJuego.DeshabilitarAccionAlCerrar();
