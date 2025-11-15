@@ -3,10 +3,14 @@ using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using log4net;
+using Servicios.Servicios.Constantes;
 
 namespace Servicios.Servicios.Utilidades
 {
     internal static class CorreoInvitacionNotificador
+    {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(CorreoInvitacionNotificador));
     {
         private const string AsuntoPredeterminado = "Invitación a partida";
 
@@ -64,8 +68,19 @@ namespace Servicios.Servicios.Utilidades
 
                 return true;
             }
-            catch (Exception)
+            catch (SmtpException ex)
             {
+                _logger.Error(MensajesError.Log.CorreoSmtp, ex);
+                return false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Error(MensajesError.Log.CorreoOperacionInvalida, ex);
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.Error(MensajesError.Log.CorreoArgumentoInvalido, ex);
                 return false;
             }
         }

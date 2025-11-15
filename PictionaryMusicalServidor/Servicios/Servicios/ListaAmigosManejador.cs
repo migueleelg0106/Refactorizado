@@ -9,6 +9,7 @@ using Datos.Utilidades;
 using log4net;
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
+using Servicios.Servicios.Constantes;
 
 namespace Servicios.Servicios
 {
@@ -44,8 +45,8 @@ namespace Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al suscribirse a la lista de amigos", ex);
-                throw new FaultException("No fue posible suscribirse a la lista de amigos.");
+                _logger.Error(MensajesError.Log.ListaAmigosSuscribirErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
             }
 
             IListaAmigosManejadorCallback callback = ObtenerCallbackActual();
@@ -91,8 +92,8 @@ namespace Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al obtener la lista de amigos", ex);
-                throw new FaultException("No fue posible recuperar la lista de amigos.");
+                _logger.Error(MensajesError.Log.ListaAmigosObtenerErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
             }
         }
 
