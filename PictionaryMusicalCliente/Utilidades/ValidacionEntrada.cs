@@ -1,5 +1,6 @@
-using System.Text.RegularExpressions;
 using PictionaryMusicalCliente.Properties.Langs;
+using System;
+using System.Text.RegularExpressions;
 using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Utilidades
@@ -8,11 +9,11 @@ namespace PictionaryMusicalCliente.Utilidades
     {
         private static readonly Regex CorreoRegex = new Regex(
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            RegexOptions.Compiled | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
         private static readonly Regex ContrasenaRegex = new Regex(
             @"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-\[\]{};:'"",.<>/?]).{8,15}$",
-            RegexOptions.Compiled);
+            RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
         public static DTOs.ResultadoOperacionDTO ValidarUsuario(string usuario)
         {

@@ -10,11 +10,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
     {
         private static readonly Regex EsperaCodigoRegex = new Regex(
             @"^Debe esperar (\d+) segundos para solicitar un nuevo código\.$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            RegexOptions.Compiled | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
         private static readonly Regex IdentificadorRedSocialRegex = new Regex(
             @"^El identificador de (.+) no debe exceder (\d+) caracteres\.$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            RegexOptions.Compiled | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
 
         private static readonly Dictionary<string, Func<string>> MapaMensajes =
             new Dictionary<string, Func<string>>(StringComparer.Ordinal)
