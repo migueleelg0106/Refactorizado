@@ -11,9 +11,10 @@ namespace Servicios.Servicios.Utilidades
 {
     public class CorreoCodigoVerificacionNotificador : ICodigoVerificacionNotificador
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(CorreoCodigoVerificacionNotificador));
-    {
-        private const string AsuntoPredeterminado = "Código de verificación";
+        private static readonly ILog _logger =
+            LogManager.GetLogger(typeof(CorreoCodigoVerificacionNotificador));
+
+        private const string AsuntoPredeterminado = "Codigo de verificacion";
 
         public async Task<bool> NotificarAsync(string correoDestino, string codigo, string usuarioDestino)
         {
@@ -29,7 +30,9 @@ namespace Servicios.Servicios.Utilidades
             string puertoConfigurado = ObtenerConfiguracion("CorreoPuerto", "Correo.Smtp.Puerto");
             string asunto = ObtenerConfiguracion("CorreoAsunto", "Correo.Codigo.Asunto") ?? AsuntoPredeterminado;
 
-            bool.TryParse(ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"), out bool habilitarSsl);
+            bool.TryParse(
+                ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"),
+                out bool habilitarSsl);
 
             if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
             {
@@ -63,7 +66,9 @@ namespace Servicios.Servicios.Utilidades
                             clienteSmtp.Credentials = new NetworkCredential(usuarioSmtp, contrasena);
                         }
 
-                        await clienteSmtp.SendMailAsync(mensajeCorreo).ConfigureAwait(false);
+                        await clienteSmtp
+                            .SendMailAsync(mensajeCorreo)
+                            .ConfigureAwait(false);
                     }
                 }
 
@@ -101,6 +106,7 @@ namespace Servicios.Servicios.Utilidades
                 }
 
                 string valor = ConfigurationManager.AppSettings[clave];
+
                 if (!string.IsNullOrWhiteSpace(valor))
                 {
                     return valor;
@@ -113,6 +119,7 @@ namespace Servicios.Servicios.Utilidades
         private static string ConstruirCuerpoMensaje(string usuarioDestino, string codigo)
         {
             var cuerpoHtml = new StringBuilder();
+
             cuerpoHtml.Append("<html><body>");
 
             if (!string.IsNullOrWhiteSpace(usuarioDestino))
@@ -124,9 +131,9 @@ namespace Servicios.Servicios.Utilidades
                 cuerpoHtml.Append("<h2>Hola,</h2>");
             }
 
-            cuerpoHtml.Append("<p>Tu código de verificación es:</p>");
+            cuerpoHtml.Append("<p>Tu codigo de verificacion es:</p>");
             cuerpoHtml.Append($"<h1>{codigo}</h1>");
-            cuerpoHtml.Append("<p>Si no solicitaste este código puedes ignorar este mensaje.</p>");
+            cuerpoHtml.Append("<p>Si no solicitaste este codigo puedes ignorar este mensaje.</p>");
             cuerpoHtml.Append("</body></html>");
 
             return cuerpoHtml.ToString();

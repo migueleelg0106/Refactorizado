@@ -40,6 +40,7 @@ C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\ListaAmigosManejador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\ClasificacionManejador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\CodigoVerificacionManejador.cs
+C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\Constantes\MensajesError.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\CuentaManejador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\InicioSesionManejador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\CambioContrasenaManejador.cs

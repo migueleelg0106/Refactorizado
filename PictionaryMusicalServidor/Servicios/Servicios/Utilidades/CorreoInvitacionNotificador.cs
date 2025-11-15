@@ -10,8 +10,9 @@ namespace Servicios.Servicios.Utilidades
 {
     internal static class CorreoInvitacionNotificador
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(CorreoInvitacionNotificador));
-    {
+        private static readonly ILog _logger = 
+            LogManager.GetLogger(typeof(CorreoInvitacionNotificador));
+    
         private const string AsuntoPredeterminado = "Invitación a partida";
 
         public static bool EnviarInvitacion(string correoDestino, string codigoSala, string creador)
