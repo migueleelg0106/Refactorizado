@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Servicios.Contratos.DTOs
+namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
 {
     [DataContract]
     public class ActualizacionContrasenaDTO

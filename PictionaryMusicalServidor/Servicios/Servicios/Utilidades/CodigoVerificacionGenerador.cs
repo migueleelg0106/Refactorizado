@@ -1,6 +1,6 @@
 using System;
 
-namespace Servicios.Servicios.Utilidades
+namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 {
     internal static class CodigoVerificacionGenerador
     {

@@ -1,6 +1,6 @@
 using System.ServiceModel;
 
-namespace Servicios.Contratos
+namespace PictionaryMusicalServidor.Servicios.Contratos
 {
     [ServiceContract(CallbackContract = typeof(IAmigosManejadorCallback))]
     public interface IAmigosManejador

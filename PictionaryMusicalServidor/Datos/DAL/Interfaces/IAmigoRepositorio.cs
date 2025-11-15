@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Datos.Modelo;
+using PictionaryMusicalServidor.Datos.Modelo;
 
-namespace Datos.DAL.Interfaces
+namespace PictionaryMusicalServidor.Datos.DAL.Interfaces
 {
     public interface IAmigoRepositorio
     {

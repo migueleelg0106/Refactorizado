@@ -5,11 +5,11 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using log4net;
-using Servicios.Contratos;
-using Servicios.Contratos.DTOs;
-using Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Contratos;
+using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
-namespace Servicios.Servicios
+namespace PictionaryMusicalServidor.Servicios.Servicios
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class SalasManejador : ISalasManejador

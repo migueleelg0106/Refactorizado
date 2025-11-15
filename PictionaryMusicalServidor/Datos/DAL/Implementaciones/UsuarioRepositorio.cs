@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using Datos.DAL.Interfaces;
-using Datos.Modelo;
+using PictionaryMusicalServidor.Datos.DAL.Interfaces;
+using PictionaryMusicalServidor.Datos.Modelo;
 
-namespace Datos.DAL.Implementaciones
+namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
     {

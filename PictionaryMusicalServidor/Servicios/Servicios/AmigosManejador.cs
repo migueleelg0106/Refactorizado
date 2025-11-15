@@ -3,17 +3,17 @@ using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Entity.Core;
 using System.ServiceModel;
-using Datos.DAL.Implementaciones;
-using Datos.Utilidades;
-using Datos.Modelo;
+using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
+using PictionaryMusicalServidor.Datos.Utilidades;
+using PictionaryMusicalServidor.Datos.Modelo;
 using log4net;
-using Servicios.Contratos;
-using Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Contratos;
+using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using System.Collections.Generic;
 using System.Globalization;
-using Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
-namespace Servicios.Servicios
+namespace PictionaryMusicalServidor.Servicios.Servicios
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class AmigosManejador : IAmigosManejador

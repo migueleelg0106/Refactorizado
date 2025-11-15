@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Datos.Modelo
+namespace PictionaryMusicalServidor.Datos.Modelo
 {
     using System;
     using System.Collections.Generic;

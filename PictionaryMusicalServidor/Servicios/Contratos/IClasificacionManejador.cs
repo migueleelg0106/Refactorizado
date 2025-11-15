@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.ServiceModel;
-using Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
-namespace Servicios.Contratos
+namespace PictionaryMusicalServidor.Servicios.Contratos
 {
     [ServiceContract]
     public interface IClasificacionManejador

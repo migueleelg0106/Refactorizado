@@ -5,9 +5,9 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using log4net;
-using Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
-namespace Servicios.Servicios.Utilidades
+namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 {
     public class CorreoCodigoVerificacionNotificador : ICodigoVerificacionNotificador
     {

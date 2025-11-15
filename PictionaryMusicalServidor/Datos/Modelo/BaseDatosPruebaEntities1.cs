@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Datos.Modelo
+namespace PictionaryMusicalServidor.Datos.Modelo
 {
     public partial class BaseDatosPruebaEntities1
     {

@@ -3,7 +3,7 @@ using System.IO;
 using System.ServiceModel;
 using log4net;
 
-namespace HostServidor
+namespace PictionaryMusicalServidor.HostServidor
 {
     class Principal
     {
@@ -18,16 +18,16 @@ namespace HostServidor
                 _bitacora.Fatal("Excepcion no controlada.", (Exception)e.ExceptionObject);
             };
 
-            using (var hostCuenta = new ServiceHost(typeof(Servicios.Servicios.CuentaManejador)))
-            using (var hostCodigo = new ServiceHost(typeof(Servicios.Servicios.CodigoVerificacionManejador)))
-            using (var hostInicioSesion = new ServiceHost(typeof(Servicios.Servicios.InicioSesionManejador)))
-            using (var hostCambioContrasena = new ServiceHost(typeof(Servicios.Servicios.CambioContrasenaManejador)))
-            using (var hostClasificacion = new ServiceHost(typeof(Servicios.Servicios.ClasificacionManejador)))
-            using (var hostPerfil = new ServiceHost(typeof(Servicios.Servicios.PerfilManejador)))
-            using (var hostAmigos = new ServiceHost(typeof(Servicios.Servicios.AmigosManejador)))
-            using (var hostListaAmigos = new ServiceHost(typeof(Servicios.Servicios.ListaAmigosManejador)))
-            using (var hostSalas = new ServiceHost(typeof(Servicios.Servicios.SalasManejador)))
-            using (var hostInvitaciones = new ServiceHost(typeof(Servicios.Servicios.InvitacionesManejador)))
+            using (var hostCuenta = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.CuentaManejador)))
+            using (var hostCodigo = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.CodigoVerificacionManejador)))
+            using (var hostInicioSesion = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.InicioSesionManejador)))
+            using (var hostCambioContrasena = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.CambioContrasenaManejador)))
+            using (var hostClasificacion = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.ClasificacionManejador)))
+            using (var hostPerfil = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.PerfilManejador)))
+            using (var hostAmigos = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.AmigosManejador)))
+            using (var hostListaAmigos = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.ListaAmigosManejador)))
+            using (var hostSalas = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.SalasManejador)))
+            using (var hostInvitaciones = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.InvitacionesManejador)))
             {
                 try
                 {

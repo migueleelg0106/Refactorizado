@@ -5,7 +5,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Servicios.Contratos
+namespace PictionaryMusicalServidor.Servicios.Contratos
 {
     [ServiceContract]
     public interface IChatManejador
