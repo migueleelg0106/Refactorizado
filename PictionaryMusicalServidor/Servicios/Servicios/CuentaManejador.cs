@@ -124,7 +124,7 @@ namespace Servicios.Servicios
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = "La cuenta no ha sido verificada."
+                    Mensaje = MensajesError.Cliente.CuentaNoVerificada
                 };
             }
 
@@ -147,7 +147,7 @@ namespace Servicios.Servicios
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = "Avatar no válido."
+                    Mensaje = MensajesError.Cliente.AvatarInvalido
                 };
             }
 

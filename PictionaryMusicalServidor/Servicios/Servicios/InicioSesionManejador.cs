@@ -32,7 +32,7 @@ namespace Servicios.Servicios
                 return new ResultadoInicioSesionDTO
                 {
                     CuentaEncontrada = true,
-                    Mensaje = "Credenciales inválidas"
+                    Mensaje = MensajesError.Cliente.CredencialesInvalidas
                 };
             }
 
@@ -47,7 +47,7 @@ namespace Servicios.Servicios
                         return new ResultadoInicioSesionDTO
                         {
                             CuentaEncontrada = false,
-                            Mensaje = "Credenciales incorrectas."
+                            Mensaje = MensajesError.Cliente.CredencialesIncorrectas
                         };
                     }
 
@@ -56,7 +56,7 @@ namespace Servicios.Servicios
                         return new ResultadoInicioSesionDTO
                         {
                             ContrasenaIncorrecta = true,
-                            Mensaje = "Credenciales incorrectas."
+                            Mensaje = MensajesError.Cliente.CredencialesIncorrectas
                         };
                     }
 

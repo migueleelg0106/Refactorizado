@@ -23,7 +23,7 @@ namespace Servicios.Servicios
         {
             if (idUsuario <= 0)
             {
-                throw new FaultException("Los datos proporcionados no son válidos para obtener el perfil.");
+                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
             }
 
             try
@@ -36,14 +36,14 @@ namespace Servicios.Servicios
 
                     if (usuario == null)
                     {
-                        throw new FaultException("No se encontró el usuario especificado.");
+                        throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
                     }
 
                     Jugador jugador = usuario.Jugador;
 
                     if (jugador == null)
                     {
-                        throw new FaultException("No existe un jugador asociado al usuario especificado.");
+                        throw new FaultException(MensajesError.Cliente.JugadorNoAsociado);
                     }
 
                     RedSocial redSocial = jugador.RedSocial.FirstOrDefault();
@@ -63,10 +63,6 @@ namespace Servicios.Servicios
                         Discord = redSocial?.discord
                     };
                 }
-            }
-            catch (FaultException)
-            {
-                throw;
             }
             catch (EntityException ex)
             {
@@ -105,14 +101,14 @@ namespace Servicios.Servicios
 
                     if (usuario == null)
                     {
-                        return CrearResultadoFallo("No se encontró el usuario especificado.");
+                        return CrearResultadoFallo(MensajesError.Cliente.UsuarioNoEncontrado);
                     }
 
                     Jugador jugador = usuario.Jugador;
 
                     if (jugador == null)
                     {
-                        return CrearResultadoFallo("No existe un jugador asociado al usuario especificado.");
+                        return CrearResultadoFallo(MensajesError.Cliente.JugadorNoAsociado);
                     }
 
                     jugador.Nombre = solicitud.Nombre.Trim();
