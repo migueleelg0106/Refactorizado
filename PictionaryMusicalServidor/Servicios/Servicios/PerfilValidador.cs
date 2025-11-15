@@ -1,4 +1,4 @@
-﻿using Servicios.Contratos.DTOs;
+﻿using PictionaryMusical.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusical.Servicios.Servicios
 {
