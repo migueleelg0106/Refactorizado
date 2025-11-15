@@ -104,7 +104,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     _mostrarMensaje?.Invoke(mensaje);
                 }
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 Debug.WriteLine($"[Error Invitaciones Amigos]: {ex.Message}");
                 ManejadorSonido.ReproducirError();

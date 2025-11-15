@@ -172,23 +172,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 if (SalaLlena(sala))
                 {
                     await IntentarAbandonarSalaAsync(sala.Codigo ?? codigo, nombreInvitado).ConfigureAwait(true);
-                    return ResultadoUnionInvitado.SalaLlena();
+                    return ResultadoUnionInvitado.CrearErrorSalaLlena();
                 }
 
                 if (NombreDuplicado(sala, nombreInvitado))
                 {
                     await IntentarAbandonarSalaAsync(sala.Codigo ?? codigo, nombreInvitado).ConfigureAwait(true);
-                    return ResultadoUnionInvitado.NombreDuplicado(sala.Jugadores);
+                    return ResultadoUnionInvitado.CrearErrorNombreDuplicado(sala.Jugadores);
                 }
 
                 return ResultadoUnionInvitado.Exito(sala);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 if (!string.IsNullOrWhiteSpace(ex?.Message)
                     && string.Equals(ex.Message, Lang.errorTextoSalaLlena, StringComparison.OrdinalIgnoreCase))
                 {
-                    return ResultadoUnionInvitado.SalaLlena();
+                    return ResultadoUnionInvitado.CrearErrorSalaLlena();
                 }
 
                 return ResultadoUnionInvitado.Error(ex?.Message ?? Lang.errorTextoNoEncuentraPartida);
@@ -272,12 +272,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return new ResultadoUnionInvitado(EstadoUnionInvitado.SalaNoEncontrada);
             }
 
-            public static ResultadoUnionInvitado SalaLlena()
+            public static ResultadoUnionInvitado CrearErrorSalaLlena()
             {
                 return new ResultadoUnionInvitado(EstadoUnionInvitado.SalaLlena);
             }
 
-            public static ResultadoUnionInvitado NombreDuplicado(IEnumerable<string> jugadores)
+            public static ResultadoUnionInvitado CrearErrorNombreDuplicado(IEnumerable<string> jugadores)
             {
                 return new ResultadoUnionInvitado(EstadoUnionInvitado.NombreDuplicado)
                 {

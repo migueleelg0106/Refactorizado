@@ -24,12 +24,9 @@ namespace PictionaryMusicalCliente
             Application.Current.MainWindow = inicioSesion;
             inicioSesion.Show();
 
-            foreach (Window ventana in ventanasActivas)
+            foreach (var ventana in ventanasActivas.Where(v => v != inicioSesion))
             {
-                if (ventana != inicioSesion)
-                {
-                    ventana.Close();
-                }
+                ventana.Close();
             }
         }
 

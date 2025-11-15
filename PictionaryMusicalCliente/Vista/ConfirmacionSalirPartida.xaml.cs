@@ -31,8 +31,8 @@ namespace PictionaryMusicalCliente
 
             ventanaDestino?.Show();
 
-            (Owner as Window)?.Close();
-            (Owner?.Owner as Window)?.Close();
+            Owner?.Close();
+            Owner?.Owner?.Close();
             Close();
         }
 

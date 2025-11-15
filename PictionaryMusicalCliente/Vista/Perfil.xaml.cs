@@ -58,13 +58,12 @@ namespace PictionaryMusicalCliente
 
         private void RedSocialTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (sender is TextBox textBox && textBox.Tag is ToggleButton toggle)
+            if (sender is TextBox textBox &&
+                textBox.Tag is ToggleButton toggle &&
+                (e.Key == Key.Enter || e.Key == Key.Return || e.Key == Key.Escape))
             {
-                if (e.Key == Key.Enter || e.Key == Key.Return || e.Key == Key.Escape)
-                {
-                    toggle.IsChecked = false;
-                    e.Handled = true;
-                }
+                toggle.IsChecked = false;
+                e.Handled = true;
             }
         }
 

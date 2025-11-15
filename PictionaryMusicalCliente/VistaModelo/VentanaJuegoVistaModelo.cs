@@ -78,7 +78,7 @@ namespace PictionaryMusicalCliente.VistaModelo
             _esInvitado = esInvitado;
             _nombreUsuarioSesion = !string.IsNullOrWhiteSpace(nombreJugador)
                 ? nombreJugador
-                : SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
+                : SesionUsuarioActual.Usuario?.NombreUsuario ?? string.Empty;
 
             _manejadorCancion = new CancionManejador();
             _amigosInvitados = new HashSet<int>();
@@ -372,7 +372,7 @@ namespace PictionaryMusicalCliente.VistaModelo
                     MostrarMensaje?.Invoke(mensaje);
                 }
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[Error Servicio Invitaciones]: {ex.Message}");
                 ManejadorSonido.ReproducirError();
@@ -410,7 +410,7 @@ namespace PictionaryMusicalCliente.VistaModelo
                     .ObtenerAmigosAsync(_nombreUsuarioSesion)
                     .ConfigureAwait(true);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[Error Servicio Lista Amigos]: {ex.Message}");
                 ManejadorSonido.ReproducirError();
@@ -730,7 +730,7 @@ namespace PictionaryMusicalCliente.VistaModelo
                 ManejadorSonido.ReproducirExito();
                 MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoExito);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[Error Servicio Expulsar]: {ex.Message}");
                 ManejadorSonido.ReproducirError();

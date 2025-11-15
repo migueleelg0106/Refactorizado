@@ -24,12 +24,7 @@ namespace PictionaryMusicalCliente.Convertidores
         /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool boolValor)
-            {
-                return !boolValor;
-            }
-
-            return value;
+            return Convert(value, targetType, parameter, culture);
         }
     }
 }

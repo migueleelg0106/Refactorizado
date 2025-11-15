@@ -15,7 +15,7 @@ using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
-    public class SolicitudesVistaModelo : BaseVistaModelo, IDisposable
+    public sealed class SolicitudesVistaModelo : BaseVistaModelo, IDisposable
     {
         private readonly IAmigosServicio _amigosServicio;
         private readonly string _usuarioActual;
@@ -24,7 +24,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         public SolicitudesVistaModelo(IAmigosServicio amigosServicio)
         {
             _amigosServicio = amigosServicio ?? throw new ArgumentNullException(nameof(amigosServicio));
-            _usuarioActual = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
+            _usuarioActual = SesionUsuarioActual.Usuario?.NombreUsuario ?? string.Empty;
 
             Solicitudes = new ObservableCollection<SolicitudAmistadEntrada>();
 
@@ -157,7 +157,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 ManejadorSonido.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudAceptada);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
@@ -186,7 +186,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 ManejadorSonido.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudCancelada);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);

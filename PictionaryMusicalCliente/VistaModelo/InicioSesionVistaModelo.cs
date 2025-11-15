@@ -188,7 +188,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 ProcesarResultadoInicioSesion(resultado);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorInicioSesion);
@@ -255,7 +255,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             CerrarAccion?.Invoke();
         }
 
-        private void MostrarErrorInicioSesion(DTOs.ResultadoInicioSesionDTO resultado)
+        private static void MostrarErrorInicioSesion(DTOs.ResultadoInicioSesionDTO resultado)
         {
             string mensaje = resultado?.Mensaje;
 
@@ -294,7 +294,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     AvisoAyudante.Mostrar(resultado.Mensaje);
                 }
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorSolicitudCambioContrasena);

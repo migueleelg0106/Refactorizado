@@ -12,9 +12,9 @@ namespace PictionaryMusicalCliente.ClienteServicios
         Desconocido
     }
 
-    public class ExcepcionServicio : Exception
+    public class ServicioExcepcion : Exception
     {
-        public ExcepcionServicio(TipoErrorServicio tipo, string mensaje, Exception causa = null)
+        public ServicioExcepcion(TipoErrorServicio tipo, string mensaje, Exception causa = null)
             : base(string.IsNullOrWhiteSpace(mensaje) ? null : mensaje, causa)
         {
             Tipo = tipo;

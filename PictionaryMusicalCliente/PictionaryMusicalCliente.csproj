@@ -157,7 +157,7 @@
     <Compile Include="ClienteServicios\Dialogos\SeleccionAvatarDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Dialogos\VerificacionCodigoDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Idiomas\LocalizacionServicio.cs" />
-    <Compile Include="ClienteServicios\ExcepcionServicio.cs" />
+    <Compile Include="ClienteServicios\ServicioExcepcion.cs" />
     <Compile Include="ClienteServicios\Wcf\CambioContrasenaServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\ClasificacionServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\CodigoVerificacionServicio.cs" />

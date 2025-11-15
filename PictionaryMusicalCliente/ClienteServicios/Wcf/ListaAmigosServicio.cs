@@ -11,7 +11,7 @@ using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
-    public class ListaAmigosServicio : IListaAmigosServicio, PictionaryServidorServicioListaAmigos.IListaAmigosManejadorCallback
+    public sealed class ListaAmigosServicio : IListaAmigosServicio, PictionaryServidorServicioListaAmigos.IListaAmigosManejadorCallback
     {
         private const string Endpoint = "NetTcpBinding_IListaAmigosManejador";
 
@@ -66,27 +66,27 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 {
                     cliente.Abort();
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
                 }
                 catch (EndpointNotFoundException ex)
                 {
                     cliente.Abort();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
                 catch (TimeoutException ex)
                 {
                     cliente.Abort();
-                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 }
                 catch (CommunicationException ex)
                 {
                     cliente.Abort();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
                 catch (InvalidOperationException ex)
                 {
                     cliente.Abort();
-                    throw new ExcepcionServicio(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
                 }
             }
             finally
@@ -126,86 +126,68 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             await _semaforo.WaitAsync().ConfigureAwait(false);
 
             PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente = null;
-            bool clienteTemporal = false;
+            bool esClienteTemporal = false;
 
             try
             {
                 cliente = _cliente ?? CrearCliente();
-                clienteTemporal = _cliente == null;
+                esClienteTemporal = _cliente == null;
 
-                try
+                var amigos = await cliente.ObtenerAmigosAsync(nombreUsuario).ConfigureAwait(false);
+                var lista = Convertir(amigos);
+
+                if (!esClienteTemporal)
                 {
-                    DTOs.AmigoDTO[] amigos = await cliente
-                        .ObtenerAmigosAsync(nombreUsuario)
-                        .ConfigureAwait(false);
-
-                    var lista = Convertir(amigos);
-
-                    if (!clienteTemporal)
-                    {
-                        ActualizarListaInterna(lista);
-                    }
-
-                    if (clienteTemporal)
-                    {
-                        CerrarCliente(cliente);
-                    }
-
-                    return lista;
+                    ActualizarListaInterna(lista);
                 }
-                catch (FaultException ex)
+                else
                 {
-                    if (clienteTemporal)
-                    {
-                        cliente.Abort();
-                    }
-
-                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(
-                        ex,
-                        Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                    CerrarCliente(cliente);
                 }
-                catch (EndpointNotFoundException ex)
-                {
-                    if (clienteTemporal)
-                    {
-                        cliente.Abort();
-                    }
 
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
-                }
-                catch (TimeoutException ex)
-                {
-                    if (clienteTemporal)
-                    {
-                        cliente.Abort();
-                    }
-
-                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
-                }
-                catch (CommunicationException ex)
-                {
-                    if (clienteTemporal)
-                    {
-                        cliente.Abort();
-                    }
-
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    if (clienteTemporal)
-                    {
-                        cliente.Abort();
-                    }
-
-                    throw new ExcepcionServicio(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
-                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ManejarExcepcionWcf(ex, cliente, esClienteTemporal);
             }
             finally
             {
                 _semaforo.Release();
             }
+        }
+
+        private Exception ManejarExcepcionWcf(Exception ex, PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente, bool esTemporal)
+        {
+            if (esTemporal && cliente != null)
+            {
+                cliente.Abort();
+            }
+
+            return ex switch
+            {
+                FaultException fe => new ServicioExcepcion(
+                    TipoErrorServicio.FallaServicio,
+                    ErrorServicioAyudante.ObtenerMensaje(fe, Lang.errorTextoErrorProcesarSolicitud),
+                    fe),
+
+                EndpointNotFoundException or CommunicationException => new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex),
+
+                TimeoutException => new ServicioExcepcion(
+                    TipoErrorServicio.TiempoAgotado,
+                    Lang.errorTextoServidorTiempoAgotado,
+                    ex),
+
+                InvalidOperationException => new ServicioExcepcion(
+                    TipoErrorServicio.OperacionInvalida,
+                    Lang.errorTextoErrorProcesarSolicitud,
+                    ex),
+
+                _ => ex
+            };
         }
 
         public void NotificarListaAmigosActualizada(DTOs.AmigoDTO[] amigos)
@@ -223,18 +205,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
         public void Dispose()
         {
-            _semaforo.Wait();
+            CerrarCliente(_cliente);
+            _cliente = null;
+            _usuarioSuscrito = null;
 
-            try
-            {
-                CerrarCliente(_cliente);
-                _cliente = null;
-                _usuarioSuscrito = null;
-            }
-            finally
-            {
-                _semaforo.Release();
-            }
+            _semaforo?.Dispose();
         }
 
         private PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient CrearCliente()
@@ -266,27 +241,27 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 cliente.Abort();
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
-                throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
                 cliente.Abort();
-                throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
             }
             catch (TimeoutException ex)
             {
                 cliente.Abort();
-                throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
             }
             catch (CommunicationException ex)
             {
                 cliente.Abort();
-                throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
             }
             catch (InvalidOperationException ex)
             {
                 cliente.Abort();
-                throw new ExcepcionServicio(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
             }
         }
 

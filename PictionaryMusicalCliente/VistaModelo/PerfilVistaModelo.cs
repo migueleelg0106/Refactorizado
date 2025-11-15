@@ -22,6 +22,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {
     public class PerfilVistaModelo : BaseVistaModelo
     {
+        private const string RedSocialInstagram = "Instagram";
+        private const string RedSocialFacebook = "Facebook";
+        private const string RedSocialX = "X";
+        private const string RedSocialDiscord = "Discord";
+
         private const int LongitudMaximaRedSocial = 50;
         private readonly IPerfilServicio _perfilServicio;
         private readonly ISeleccionarAvatarServicio _seleccionarAvatarServicio;
@@ -123,7 +128,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         public async Task CargarPerfilAsync()
         {
-            UsuarioAutenticado sesion = SesionUsuarioActual.Instancia.Usuario;
+            UsuarioAutenticado sesion = SesionUsuarioActual.Usuario;
 
             if (sesion == null || sesion.IdUsuario <= 0)
             {
@@ -149,7 +154,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 AplicarPerfil(perfil);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorObtenerPerfil);
@@ -204,10 +209,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 Nombre = Nombre.Trim(), 
                 Apellido = Apellido.Trim(),
                 AvatarId = AvatarSeleccionadoId,
-                Instagram = ObtenerIdentificador("Instagram"),
-                Facebook = ObtenerIdentificador("Facebook"),
-                X = ObtenerIdentificador("X"),
-                Discord = ObtenerIdentificador("Discord")
+                Instagram = ObtenerIdentificador(RedSocialInstagram),
+                Facebook = ObtenerIdentificador(RedSocialFacebook),
+                X = ObtenerIdentificador(RedSocialX),
+                Discord = ObtenerIdentificador(RedSocialDiscord)
             };
 
             EstaProcesando = true;
@@ -236,7 +241,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     ActualizarSesion(); 
                 }
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorActualizarPerfil);
@@ -264,7 +269,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             return (camposInvalidos.Count == 0, primerError, camposInvalidos);
         }
 
-        private void ValidarCampo(DTOs.ResultadoOperacionDTO resultado, string nombreCampo, List<string> invalidos, ref string primerError)
+        private static void ValidarCampo(DTOs.ResultadoOperacionDTO resultado, string nombreCampo, List<string> invalidos, ref string primerError)
         {
             if (resultado?.OperacionExitosa != true)
             {
@@ -333,7 +338,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     ManejadorSonido.ReproducirExito();
                 }
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoIniciarCambioContrasena);
@@ -355,10 +360,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             EstablecerAvatarPorId(perfil.AvatarId);
 
-            EstablecerIdentificador("Instagram", perfil.Instagram);
-            EstablecerIdentificador("Facebook", perfil.Facebook);
-            EstablecerIdentificador("X", perfil.X);
-            EstablecerIdentificador("Discord", perfil.Discord);
+            EstablecerIdentificador(RedSocialInstagram, perfil.Instagram);
+            EstablecerIdentificador(RedSocialFacebook, perfil.Facebook);
+            EstablecerIdentificador(RedSocialX, perfil.X);
+            EstablecerIdentificador(RedSocialDiscord, perfil.Discord);
 
             ActualizarSesion(perfil);
         }
@@ -413,14 +418,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        private ObservableCollection<RedSocialItemVistaModelo> CrearRedesSociales()
+        private static ObservableCollection<RedSocialItemVistaModelo> CrearRedesSociales()
         {
             return new ObservableCollection<RedSocialItemVistaModelo>
             {
-                CrearRedSocial("Instagram"),
-                CrearRedSocial("Facebook"),
-                CrearRedSocial("X"),
-                CrearRedSocial("Discord")
+                CrearRedSocial(RedSocialInstagram),
+                CrearRedSocial(RedSocialFacebook),
+                CrearRedSocial(RedSocialX),
+                CrearRedSocial(RedSocialDiscord)
             };
         }
         private static RedSocialItemVistaModelo CrearRedSocial(string nombre)
@@ -431,7 +436,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void ActualizarSesion()
         {
-            UsuarioAutenticado sesion = SesionUsuarioActual.Instancia.Usuario;
+            UsuarioAutenticado sesion = SesionUsuarioActual.Usuario;
             if (sesion == null || sesion.IdUsuario <= 0) return;
 
             var dto = new DTOs.UsuarioDTO
@@ -443,14 +448,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 Apellido = Apellido?.Trim(),
                 Correo = Correo,
                 AvatarId = AvatarSeleccionadoId,
-                Instagram = ObtenerIdentificador("Instagram"),
-                Facebook = ObtenerIdentificador("Facebook"),
-                X = ObtenerIdentificador("X"),
-                Discord = ObtenerIdentificador("Discord")
+                Instagram = ObtenerIdentificador(RedSocialInstagram),
+                Facebook = ObtenerIdentificador(RedSocialFacebook),
+                X = ObtenerIdentificador(RedSocialX),
+                Discord = ObtenerIdentificador(RedSocialDiscord)
             };
             SesionUsuarioActual.Instancia.EstablecerUsuario(dto);
         }
-        private void ActualizarSesion(DTOs.UsuarioDTO perfil)
+        private static void ActualizarSesion(DTOs.UsuarioDTO perfil)
         {
             if (perfil == null) return;
             SesionUsuarioActual.Instancia.EstablecerUsuario(perfil);

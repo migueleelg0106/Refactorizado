@@ -105,7 +105,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 }
                 await EjecutarFlujoDeRegistroAsync(solicitud).ConfigureAwait(true);
             }
-            catch (ExcepcionServicio ex) 
+            catch (ServicioExcepcion ex) 
             {
                 ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoRegistrarCuentaMasTarde);
@@ -216,7 +216,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             return (solicitud, camposInvalidos, primerMensajeError);
         }
 
-        private void ValidarCampo(DTOs.ResultadoOperacionDTO resultado, string nombreCampo, List<string> invalidos, ref string primerError)
+        private static void ValidarCampo(DTOs.ResultadoOperacionDTO resultado, string nombreCampo, List<string> invalidos, ref string primerError)
         {
             if (resultado?.OperacionExitosa != true)
             {

@@ -16,7 +16,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
         {
         }
 
-        public Task<ObjetoAvatar> SeleccionarAvatarAsync(int avatarSeleccionadoId = 0)
+        public Task<ObjetoAvatar> SeleccionarAvatarAsync(int idAvatar)
         {
             var avatares = CatalogoAvataresLocales.ObtenerAvatares();
 
@@ -35,9 +35,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                     var ventana = new SeleccionAvatar();
                     var vistaModelo = new SeleccionAvatarVistaModelo(avatares);
 
-                    if (avatarSeleccionadoId > 0)
+                    if (idAvatar > 0)
                     {
-                        vistaModelo.AvatarSeleccionado = CatalogoAvataresLocales.ObtenerPorId(avatarSeleccionadoId);
+                        vistaModelo.AvatarSeleccionado = CatalogoAvataresLocales.ObtenerPorId(idAvatar);
                     }
 
                     vistaModelo.SeleccionConfirmada = avatar =>

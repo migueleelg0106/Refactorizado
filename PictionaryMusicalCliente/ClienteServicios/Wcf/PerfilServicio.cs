@@ -29,32 +29,32 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorObtenerPerfil);
-                throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
-                throw new ExcepcionServicio(
+                throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.avisoTextoComunicacionServidorSesion,
                     ex);
             }
             catch (TimeoutException ex)
             {
-                throw new ExcepcionServicio(
+                throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.avisoTextoServidorTiempoSesion,
                     ex);
             }
             catch (CommunicationException ex)
             {
-                throw new ExcepcionServicio(
+                throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.avisoTextoComunicacionServidorSesion,
                     ex);
             }
             catch (InvalidOperationException ex)
             {
-                throw new ExcepcionServicio(
+                throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoPerfilActualizarInformacion,
                     ex);
@@ -88,32 +88,32 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorActualizarPerfil);
-                throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
-                throw new ExcepcionServicio(
+                throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
                     ex);
             }
             catch (TimeoutException ex)
             {
-                throw new ExcepcionServicio(
+                throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
                     ex);
             }
             catch (CommunicationException ex)
             {
-                throw new ExcepcionServicio(
+                throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
                     ex);
             }
             catch (InvalidOperationException ex)
             {
-                throw new ExcepcionServicio(
+                throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
                     ex);

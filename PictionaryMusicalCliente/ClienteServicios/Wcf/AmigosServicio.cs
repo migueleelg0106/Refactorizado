@@ -340,17 +340,17 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             switch (ex)
             {
                 case FaultException faultEx:
-                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, ErrorServicioAyudante.ObtenerMensaje(faultEx, mensajePredeterminado), ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, ErrorServicioAyudante.ObtenerMensaje(faultEx, mensajePredeterminado), ex);
                 case EndpointNotFoundException _:
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 case TimeoutException _:
-                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 case CommunicationException _:
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 case InvalidOperationException _:
-                    throw new ExcepcionServicio(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
                 default:
-                    throw new ExcepcionServicio(TipoErrorServicio.Desconocido, mensajePredeterminado, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Desconocido, mensajePredeterminado, ex);
             }
         }
 
