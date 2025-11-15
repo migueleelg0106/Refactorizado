@@ -10,6 +10,7 @@ using log4net;
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
 using System.Collections.Generic;
+using System.Globalization;
 using Servicios.Servicios.Constantes;
 
 namespace Servicios.Servicios
@@ -24,7 +25,7 @@ namespace Servicios.Servicios
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
-                throw new FaultException("El nombre de usuario es obligatorio para suscribirse a las notificaciones.");
+                throw new FaultException(MensajesError.Cliente.NombreUsuarioObligatorioSuscripcion);
             }
 
             Usuario usuario;
@@ -40,7 +41,7 @@ namespace Servicios.Servicios
 
                     if (usuario == null)
                     {
-                        throw new FaultException("No se encontró el usuario especificado.");
+                        throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
                     }
 
                     nombreNormalizado = ObtenerNombreNormalizado(usuario.Nombre_Usuario, nombreUsuario);
@@ -48,7 +49,7 @@ namespace Servicios.Servicios
 
                 if (string.IsNullOrWhiteSpace(nombreNormalizado))
                 {
-                    throw new FaultException("No se encontró el usuario especificado.");
+                    throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
                 }
 
                 callback = ObtenerCallbackActual();
@@ -67,10 +68,6 @@ namespace Servicios.Servicios
                 }
 
                 NotificarSolicitudesPendientesAlSuscribir(nombreNormalizado, usuario.idUsuario);
-            }
-            catch (FaultException)
-            {
-                throw;
             }
             catch (EntityException ex)
             {
@@ -103,7 +100,7 @@ namespace Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al recuperar las solicitudes pendientes de amistad", ex);
+                _logger.Error(MensajesError.Log.AmistadSolicitudesPendientesErrorDatos, ex);
             }
         }
 
@@ -112,7 +109,7 @@ namespace Servicios.Servicios
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
-                throw new FaultException("El nombre de usuario es obligatorio para cancelar la suscripción.");
+                throw new FaultException(MensajesError.Cliente.NombreUsuarioObligatorioCancelar);
             }
 
             RemoverSuscripcion(nombreUsuario);
@@ -137,7 +134,7 @@ namespace Servicios.Servicios
 
                     if (usuarioEmisor == null || usuarioReceptor == null)
                     {
-                        throw new FaultException("Alguno de los usuarios especificados no existe.");
+                        throw new FaultException(MensajesError.Cliente.UsuariosEspecificadosNoExisten);
                     }
 
                     ServicioAmistad.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
@@ -157,12 +154,12 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn("Regla de negocio violada al enviar solicitud de amistad", ex);
+                _logger.Warn(MensajesError.Log.AmistadEnviarSolicitudReglaNegocio, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorAlmacenarSolicitud);
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn("Datos inválidos al enviar la solicitud de amistad", ex);
+                _logger.Warn(MensajesError.Log.AmistadEnviarSolicitudDatosInvalidos, ex);
                 throw new FaultException(MensajesError.Cliente.DatosInvalidos);
             }
             catch (DataException ex)
@@ -190,7 +187,7 @@ namespace Servicios.Servicios
 
                     if (usuarioEmisor == null || usuarioReceptor == null)
                     {
-                        throw new FaultException("Alguno de los usuarios especificados no existe.");
+                        throw new FaultException(MensajesError.Cliente.UsuariosEspecificadosNoExisten);
                     }
 
                     ServicioAmistad.AceptarSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
@@ -212,18 +209,14 @@ namespace Servicios.Servicios
                 ListaAmigosManejador.NotificarCambioAmistad(nombreEmisorNormalizado);
                 ListaAmigosManejador.NotificarCambioAmistad(nombreReceptorNormalizado);
             }
-            catch (FaultException)
-            {
-                throw;
-            }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn("Regla de negocio violada al aceptar solicitud de amistad", ex);
+                _logger.Warn(MensajesError.Log.AmistadResponderSolicitudReglaNegocio, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorActualizarSolicitud);
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn("Datos inválidos al aceptar la solicitud de amistad", ex);
+                _logger.Warn(MensajesError.Log.AmistadResponderSolicitudDatosInvalidos, ex);
                 throw new FaultException(MensajesError.Cliente.DatosInvalidos);
             }
             catch (DataException ex)
@@ -254,7 +247,7 @@ namespace Servicios.Servicios
 
                     if (usuarioA == null || usuarioB == null)
                     {
-                        throw new FaultException("Alguno de los usuarios especificados no existe.");
+                        throw new FaultException(MensajesError.Cliente.UsuariosEspecificadosNoExisten);
                     }
 
                     idUsuarioA = usuarioA.idUsuario;
@@ -282,18 +275,14 @@ namespace Servicios.Servicios
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioANormalizado);
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioBNormalizado);
             }
-            catch (FaultException)
-            {
-                throw;
-            }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn("Regla de negocio violada al eliminar amistad", ex);
+                _logger.Warn(MensajesError.Log.AmistadEliminarReglaNegocio, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorEliminarAmistad);
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn("Datos inválidos al eliminar la relación de amistad", ex);
+                _logger.Warn(MensajesError.Log.AmistadEliminarDatosInvalidos, ex);
                 throw new FaultException(MensajesError.Cliente.DatosInvalidos);
             }
             catch (DataException ex)
@@ -316,7 +305,8 @@ namespace Servicios.Servicios
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
-                throw new FaultException($"El parámetro {parametro} es obligatorio.");
+                string mensaje = string.Format(CultureInfo.CurrentCulture, MensajesError.Cliente.ParametroObligatorio, parametro);
+                throw new FaultException(mensaje);
             }
         }
 
@@ -343,10 +333,10 @@ namespace Servicios.Servicios
                     return callback;
                 }
 
-                throw new FaultException("No se pudo obtener el canal de retorno para el usuario.");
+                throw new FaultException(MensajesError.Cliente.ErrorObtenerCallbackAmigos);
             }
 
-            throw new FaultException("No se pudo obtener el contexto de la operación para suscribir el callback.");
+            throw new FaultException(MensajesError.Cliente.ErrorContextoOperacionAmigos);
         }
 
         private static void RemoverSuscripcion(string nombreUsuario)
@@ -385,7 +375,7 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn("Error al notificar la solicitud de amistad al usuario", ex);
+                _logger.Warn(MensajesError.Log.AmistadNotificarSolicitudError, ex);
             }
         }
 
@@ -415,7 +405,7 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn("Error al notificar la eliminación de amistad al usuario", ex);
+                _logger.Warn(MensajesError.Log.AmistadNotificarEliminacionError, ex);
             }
         }
     }

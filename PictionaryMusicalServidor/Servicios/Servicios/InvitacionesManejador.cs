@@ -25,7 +25,7 @@ namespace Servicios.Servicios
         {
             if (invitacion == null)
             {
-                return CrearFallo("La solicitud de invitación no es válida.");
+                return CrearFallo(MensajesError.Cliente.SolicitudInvitacionInvalida);
             }
 
             string codigoSala = invitacion.CodigoSala?.Trim();
@@ -33,18 +33,18 @@ namespace Servicios.Servicios
 
             if (string.IsNullOrWhiteSpace(codigoSala) || string.IsNullOrWhiteSpace(correo))
             {
-                return CrearFallo("Los datos proporcionados no son válidos para enviar la invitación.");
+                return CrearFallo(MensajesError.Cliente.DatosInvitacionInvalidos);
             }
 
             if (!CorreoRegex.IsMatch(correo))
             {
-                return CrearFallo("El correo electrónico proporcionado no es válido.");
+                return CrearFallo(MensajesError.Cliente.CorreoInvalido);
             }
 
             var sala = SalasManejador.ObtenerSalaPorCodigo(codigoSala);
             if (sala == null)
             {
-                return CrearFallo("No se encontró la sala especificada.");
+                return CrearFallo(MensajesError.Cliente.SalaNoEncontrada);
             }
 
             try
@@ -60,7 +60,7 @@ namespace Servicios.Servicios
                         if (!string.IsNullOrWhiteSpace(usuario?.Nombre_Usuario)
                             && sala.Jugadores.Contains(usuario.Nombre_Usuario, StringComparer.OrdinalIgnoreCase))
                         {
-                            return CrearFallo("El jugador con el correo ingresado ya está en la sala.");
+                            return CrearFallo(MensajesError.Cliente.CorreoJugadorEnSala);
                         }
                     }
                 }
@@ -69,13 +69,13 @@ namespace Servicios.Servicios
 
                 if (!enviado)
                 {
-                    return CrearFallo("No fue posible enviar la invitación por correo electrónico.");
+                    return CrearFallo(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
                 }
 
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = true,
-                    Mensaje = "Invitación enviada correctamente."
+                    Mensaje = MensajesError.Cliente.InvitacionEnviadaExito
                 };
             }
             catch (EntityException ex)

@@ -4,6 +4,7 @@ using System.Linq;
 using Datos.Modelo;
 using Datos.Utilidades;
 using Servicios.Contratos.DTOs;
+using Servicios.Servicios.Constantes;
 using Servicios.Servicios.Utilidades;
 
 namespace Servicios.Servicios
@@ -38,7 +39,7 @@ namespace Servicios.Servicios
                         CodigoEnviado = false,
                         UsuarioRegistrado = usuarioRegistrado,
                         CorreoRegistrado = correoRegistrado,
-                        Mensaje = "El correo o usuario ya está registrado."
+                        Mensaje = MensajesError.Cliente.UsuarioOCorreoRegistrado
                     };
                 }
             }
@@ -53,7 +54,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "No fue posible procesar la solicitud de verificación."
+                    Mensaje = MensajesError.Cliente.ErrorSolicitudVerificacion
                 };
             }
 
@@ -85,7 +86,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "No se encontró una solicitud de verificación activa."
+                    Mensaje = MensajesError.Cliente.SolicitudVerificacionNoEncontrada
                 };
             }
 
@@ -105,7 +106,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "No fue posible reenviar el código de verificación."
+                    Mensaje = MensajesError.Cliente.ErrorReenviarCodigoVerificacion
                 };
             }
 
@@ -128,7 +129,7 @@ namespace Servicios.Servicios
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = "No se encontró una solicitud de verificación activa."
+                    Mensaje = MensajesError.Cliente.SolicitudVerificacionNoEncontrada
                 };
             }
 
@@ -138,7 +139,7 @@ namespace Servicios.Servicios
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = "El código de verificación ha expirado. Inicie el proceso nuevamente."
+                    Mensaje = MensajesError.Cliente.CodigoVerificacionExpirado
                 };
             }
 
@@ -147,7 +148,7 @@ namespace Servicios.Servicios
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = "El código ingresado no es correcto."
+                    Mensaje = MensajesError.Cliente.CodigoVerificacionIncorrecto
                 };
             }
 

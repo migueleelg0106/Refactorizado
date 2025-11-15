@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using log4net;
@@ -32,15 +33,11 @@ namespace Servicios.Servicios
 
                 if (!_salas.TryAdd(codigo, sala))
                 {
-                    throw new FaultException("No se pudo crear la sala.");
+                    throw new FaultException(MensajesError.Cliente.ErrorCrearSala);
                 }
 
                 NotificarListaSalasATodos();
                 return sala.ToDto();
-            }
-            catch (FaultException)
-            {
-                throw;
             }
             catch (InvalidOperationException ex)
             {
@@ -52,6 +49,16 @@ namespace Servicios.Servicios
                 _logger.Error(MensajesError.Log.SalaCrearComunicacion, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperadoCrearSala);
             }
+            catch (TimeoutException ex)
+            {
+                _logger.Error(MensajesError.Log.SalaCrearTimeout, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoCrearSala);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.SalaCrearErrorGeneral, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoCrearSala);
+            }
         }
 
         public SalaDTO UnirseSala(string codigoSala, string nombreUsuario)
@@ -59,22 +66,18 @@ namespace Servicios.Servicios
             ValidarNombreUsuario(nombreUsuario, nameof(nombreUsuario));
 
             if (string.IsNullOrWhiteSpace(codigoSala))
-                throw new FaultException("El parámetro codigoSala es obligatorio.");
+                throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
 
             try
             {
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
-                    throw new FaultException("No se encontró la sala especificada.");
+                    throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
 
                 var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
                 var resultado = sala.AgregarJugador(nombreUsuario.Trim(), callback, notificar: true);
                 
                 NotificarListaSalasATodos();
                 return resultado;
-            }
-            catch (FaultException)
-            {
-                throw;
             }
             catch (InvalidOperationException ex)
             {
@@ -84,6 +87,16 @@ namespace Servicios.Servicios
             catch (CommunicationException ex)
             {
                 _logger.Error(MensajesError.Log.SalaUnirseComunicacion, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
+            }
+            catch (TimeoutException ex)
+            {
+                _logger.Error(MensajesError.Log.SalaUnirseTimeout, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.SalaUnirseErrorGeneral, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
             }
         }
@@ -99,6 +112,11 @@ namespace Servicios.Servicios
                 _logger.Error(MensajesError.Log.SalaObtenerListaOperacionInvalida, ex);
                 return new List<SalaDTO>();
             }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.SalaObtenerListaErrorGeneral, ex);
+                return new List<SalaDTO>();
+            }
         }
 
         public void AbandonarSala(string codigoSala, string nombreUsuario)
@@ -106,12 +124,12 @@ namespace Servicios.Servicios
             ValidarNombreUsuario(nombreUsuario, nameof(nombreUsuario));
 
             if (string.IsNullOrWhiteSpace(codigoSala))
-                throw new FaultException("El parámetro codigoSala es obligatorio.");
+                throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
 
             try
             {
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
-                    throw new FaultException("No se encontró la sala especificada.");
+                    throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
 
                 sala.RemoverJugador(nombreUsuario.Trim());
 
@@ -120,13 +138,14 @@ namespace Servicios.Servicios
 
                 NotificarListaSalasATodos();
             }
-            catch (FaultException)
-            {
-                throw;
-            }
             catch (InvalidOperationException ex)
             {
                 _logger.Error(MensajesError.Log.SalaAbandonarOperacionInvalida, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoAbandonar);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.SalaAbandonarErrorGeneral, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperadoAbandonar);
             }
         }
@@ -159,6 +178,16 @@ namespace Servicios.Servicios
                 _logger.Error(MensajesError.Log.SalaSuscripcionComunicacion, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperadoSuscripcion);
             }
+            catch (TimeoutException ex)
+            {
+                _logger.Error(MensajesError.Log.SalaSuscripcionTimeout, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoSuscripcion);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.SalaSuscripcionErrorGeneral, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoSuscripcion);
+            }
         }
 
         public void CancelarSuscripcionListaSalas()
@@ -183,6 +212,14 @@ namespace Servicios.Servicios
             {
                 _logger.Error(MensajesError.Log.SalaCancelarSuscripcionComunicacion, ex);
             }
+            catch (TimeoutException ex)
+            {
+                _logger.Error(MensajesError.Log.SalaCancelarSuscripcionTimeout, ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.SalaCancelarSuscripcionErrorGeneral, ex);
+            }
         }
 
         public void ExpulsarJugador(string codigoSala, string nombreHost, string nombreJugadorAExpulsar)
@@ -191,12 +228,12 @@ namespace Servicios.Servicios
             ValidarNombreUsuario(nombreJugadorAExpulsar, nameof(nombreJugadorAExpulsar));
 
             if (string.IsNullOrWhiteSpace(codigoSala))
-                throw new FaultException("El parámetro codigoSala es obligatorio.");
+                throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
 
             try
             {
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
-                    throw new FaultException("No se encontró la sala especificada.");
+                    throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
 
                 sala.ExpulsarJugador(nombreHost.Trim(), nombreJugadorAExpulsar.Trim());
 
@@ -205,13 +242,14 @@ namespace Servicios.Servicios
 
                 NotificarListaSalasATodos();
             }
-            catch (FaultException)
-            {
-                throw;
-            }
             catch (InvalidOperationException ex)
             {
                 _logger.Error(MensajesError.Log.SalaExpulsarOperacionInvalida, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoExpulsar);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.SalaExpulsarErrorGeneral, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperadoExpulsar);
             }
         }
@@ -244,31 +282,34 @@ namespace Servicios.Servicios
                     return codigo;
             }
 
-            throw new FaultException("No se pudo generar un código único para la sala.");
+            throw new FaultException(MensajesError.Cliente.ErrorGenerarCodigo);
         }
 
         private static void ValidarNombreUsuario(string nombreUsuario, string parametro)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
-                throw new FaultException($"El parámetro {parametro} es obligatorio.");
+            {
+                string mensaje = string.Format(CultureInfo.CurrentCulture, MensajesError.Cliente.ParametroObligatorio, parametro);
+                throw new FaultException(mensaje);
+            }
         }
 
         private static void ValidarConfiguracion(ConfiguracionPartidaDTO configuracion)
         {
             if (configuracion == null)
-                throw new FaultException("La configuración de la partida es obligatoria.");
+                throw new FaultException(MensajesError.Cliente.ConfiguracionObligatoria);
 
             if (configuracion.NumeroRondas <= 0)
-                throw new FaultException("El número de rondas debe ser mayor a cero.");
+                throw new FaultException(MensajesError.Cliente.NumeroRondasInvalido);
 
             if (configuracion.TiempoPorRondaSegundos <= 0)
-                throw new FaultException("El tiempo por ronda debe ser mayor a cero.");
+                throw new FaultException(MensajesError.Cliente.TiempoRondaInvalido);
 
             if (string.IsNullOrWhiteSpace(configuracion.IdiomaCanciones))
-                throw new FaultException("El idioma de las canciones es obligatorio.");
+                throw new FaultException(MensajesError.Cliente.IdiomaObligatorio);
 
             if (string.IsNullOrWhiteSpace(configuracion.Dificultad))
-                throw new FaultException("La dificultad es obligatoria.");
+                throw new FaultException(MensajesError.Cliente.DificultadObligatoria);
         }
 
         private static void NotificarListaSalasATodos()
@@ -281,17 +322,23 @@ namespace Servicios.Servicios
                 {
                     kvp.Value.NotificarListaSalasActualizada(salas);
                 }
-                catch (CommunicationException)
+                catch (CommunicationException ex)
                 {
+                    _logger.Warn(MensajesError.Log.SalaNotificarListaComunicacion, ex);
                     _suscripciones.TryRemove(kvp.Key, out _);
                 }
-                catch (TimeoutException)
+                catch (TimeoutException ex)
                 {
+                    _logger.Warn(MensajesError.Log.SalaNotificarListaTimeout, ex);
                     _suscripciones.TryRemove(kvp.Key, out _);
                 }
                 catch (InvalidOperationException ex)
                 {
                     _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(MensajesError.Log.SalaNotificarListaErrorGeneral, ex);
                 }
             }
         }
@@ -305,15 +352,19 @@ namespace Servicios.Servicios
             }
             catch (CommunicationException ex)
             {
-                _logger.Warn(MensajesError.Log.ComunicacionError, ex);
+                _logger.Warn(MensajesError.Log.SalaNotificarListaComunicacion, ex);
             }
             catch (TimeoutException ex)
             {
-                _logger.Warn(MensajesError.Log.ComunicacionTimeout, ex);
+                _logger.Warn(MensajesError.Log.SalaNotificarListaTimeout, ex);
             }
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.SalaNotificarListaErrorGeneral, ex);
             }
         }
 
@@ -363,7 +414,7 @@ namespace Servicios.Servicios
                     }
 
                     if (ContarJugadoresActivos() >= MaximoJugadores)
-                        throw new FaultException("La sala está llena.");
+                        throw new FaultException(MensajesError.Cliente.SalaLlena);
 
                     Jugadores.Add(nombreUsuario);
                     _callbacks[nombreUsuario] = callback;
@@ -374,17 +425,49 @@ namespace Servicios.Servicios
 
                         foreach (var kvp in _callbacks)
                         {
-                            try 
-                            { 
-                                if (!string.Equals(kvp.Key, nombreUsuario, StringComparison.OrdinalIgnoreCase))
+                            if (!string.Equals(kvp.Key, nombreUsuario, StringComparison.OrdinalIgnoreCase))
+                            {
+                                try
                                 {
                                     kvp.Value.NotificarJugadorSeUnio(Codigo, nombreUsuario);
                                 }
+                                catch (CommunicationException ex)
+                                {
+                                    _logger.Warn(MensajesError.Log.SalaNotificarJugadorUnionError, ex);
+                                }
+                                catch (TimeoutException ex)
+                                {
+                                    _logger.Warn(MensajesError.Log.SalaNotificarJugadorUnionError, ex);
+                                }
+                                catch (InvalidOperationException ex)
+                                {
+                                    _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.Error(MensajesError.Log.SalaNotificarJugadorUnionError, ex);
+                                }
+                            }
+
+                            try
+                            {
                                 kvp.Value.NotificarSalaActualizada(salaActualizada);
                             }
-                            catch 
-                            { 
-                                // Ignored
+                            catch (CommunicationException ex)
+                            {
+                                _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
+                            }
+                            catch (TimeoutException ex)
+                            {
+                                _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
+                            }
+                            catch (InvalidOperationException ex)
+                            {
+                                _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.Error(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
                             }
                         }
                     }
@@ -406,14 +489,46 @@ namespace Servicios.Servicios
 
                     foreach (var kvp in _callbacks)
                     {
-                        try 
-                        { 
+                        try
+                        {
                             kvp.Value.NotificarJugadorSalio(Codigo, nombreUsuario);
+                        }
+                        catch (CommunicationException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
+                        }
+
+                        try
+                        {
                             kvp.Value.NotificarSalaActualizada(salaActualizada);
                         }
-                        catch 
-                        {  
-                            // Ignored
+                        catch (CommunicationException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
                         }
                     }
 
@@ -427,13 +542,13 @@ namespace Servicios.Servicios
                 lock (_sync)
                 {
                     if (!string.Equals(nombreHost, Creador, StringComparison.OrdinalIgnoreCase))
-                        throw new FaultException("Solo el creador de la sala puede expulsar jugadores.");
+                        throw new FaultException(MensajesError.Cliente.SalaExpulsionRestringida);
 
                     if (string.Equals(nombreJugadorAExpulsar, Creador, StringComparison.OrdinalIgnoreCase))
-                        throw new FaultException("El creador de la sala no puede ser expulsado.");
+                        throw new FaultException(MensajesError.Cliente.SalaCreadorNoExpulsable);
 
                     if (!Jugadores.Contains(nombreJugadorAExpulsar, StringComparer.OrdinalIgnoreCase))
-                        throw new FaultException("El jugador especificado no está en la sala.");
+                        throw new FaultException(MensajesError.Cliente.SalaJugadorNoExiste);
 
                     // Obtener el callback del jugador expulsado antes de removerlo
                     ISalasCallback callbackExpulsado = null;
@@ -454,9 +569,21 @@ namespace Servicios.Servicios
                         {
                             callbackExpulsado.NotificarJugadorExpulsado(Codigo, nombreJugadorAExpulsar);
                         }
-                        catch
+                        catch (CommunicationException ex)
                         {
-                            // Ignored
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorExpulsionError, ex);
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorExpulsionError, ex);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(MensajesError.Log.SalaNotificarJugadorExpulsionError, ex);
                         }
                     }
 
@@ -466,11 +593,43 @@ namespace Servicios.Servicios
                         try
                         {
                             kvp.Value.NotificarJugadorSalio(Codigo, nombreJugadorAExpulsar);
+                        }
+                        catch (CommunicationException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
+                        }
+
+                        try
+                        {
                             kvp.Value.NotificarSalaActualizada(salaActualizada);
                         }
-                        catch
+                        catch (CommunicationException ex)
                         {
-                            // Ignored
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
                         }
                     }
                 }

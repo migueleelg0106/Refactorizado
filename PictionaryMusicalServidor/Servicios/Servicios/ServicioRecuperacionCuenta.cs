@@ -38,7 +38,7 @@ namespace Servicios.Servicios
                 {
                     CuentaEncontrada = false,
                     CodigoEnviado = false,
-                    Mensaje = "Debe proporcionar el usuario o correo registrado."
+                    Mensaje = MensajesError.Cliente.SolicitudRecuperacionIdentificadorObligatorio
                 };
             }
 
@@ -52,7 +52,7 @@ namespace Servicios.Servicios
                     {
                         CuentaEncontrada = false,
                         CodigoEnviado = false,
-                        Mensaje = "No se encontró una cuenta con el usuario o correo proporcionado."
+                        Mensaje = MensajesError.Cliente.SolicitudRecuperacionCuentaNoEncontrada
                     };
                 }
 
@@ -78,7 +78,7 @@ namespace Servicios.Servicios
                     {
                         CuentaEncontrada = true,
                         CodigoEnviado = false,
-                        Mensaje = "No fue posible iniciar la recuperación de la cuenta."
+                        Mensaje = MensajesError.Cliente.ErrorRecuperarCuenta
                     };
                 }
 
@@ -106,7 +106,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "No se encontró una solicitud de recuperación activa."
+                    Mensaje = MensajesError.Cliente.SolicitudRecuperacionNoEncontrada
                 };
             }
 
@@ -116,7 +116,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "El código de verificación ha expirado. Solicite uno nuevo."
+                    Mensaje = MensajesError.Cliente.CodigoRecuperacionExpirado
                 };
             }
 
@@ -139,7 +139,7 @@ namespace Servicios.Servicios
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
-                    Mensaje = "No fue posible reenviar el código de recuperación."
+                    Mensaje = MensajesError.Cliente.ErrorReenviarCodigoRecuperacion
                 };
             }
 
@@ -162,7 +162,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No se encontró una solicitud de recuperación activa."
+                    Mensaje = MensajesError.Cliente.SolicitudRecuperacionNoEncontrada
                 };
             }
 
@@ -172,7 +172,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "El código de verificación ha expirado. Solicite uno nuevo."
+                    Mensaje = MensajesError.Cliente.CodigoRecuperacionExpirado
                 };
             }
 
@@ -181,7 +181,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "El código ingresado no es correcto."
+                    Mensaje = MensajesError.Cliente.CodigoRecuperacionIncorrecto
                 };
             }
 
@@ -207,7 +207,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No se encontró una solicitud de recuperación activa."
+                    Mensaje = MensajesError.Cliente.SolicitudRecuperacionNoEncontrada
                 };
             }
 
@@ -216,7 +216,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No hay una solicitud de recuperación vigente."
+                    Mensaje = MensajesError.Cliente.SolicitudRecuperacionNoVigente
                 };
             }
 
@@ -226,7 +226,7 @@ namespace Servicios.Servicios
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "La solicitud de recuperación no es válida."
+                    Mensaje = MensajesError.Cliente.SolicitudRecuperacionInvalida
                 };
             }
 
@@ -241,7 +241,7 @@ namespace Servicios.Servicios
                         return new ResultadoOperacionDTO
                         {
                             OperacionExitosa = false,
-                            Mensaje = "No se encontró el usuario especificado."
+                            Mensaje = MensajesError.Cliente.UsuarioNoEncontrado
                         };
                     }
 

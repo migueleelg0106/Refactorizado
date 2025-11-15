@@ -35,70 +35,70 @@ namespace HostServidor
                     _bitacora.Info("Servicio Cuenta iniciado.");
                     foreach (var ep in hostCuenta.Description.Endpoints)
                     {
-                        _bitacora.Info($"Cuenta -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("Cuenta -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     hostCodigo.Open();
                     _bitacora.Info("Servicio Codigo de Verificacion iniciado.");
                     foreach (var ep in hostCodigo.Description.Endpoints)
                     {
-                        _bitacora.Info($"Codigo -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("Codigo -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     hostInicioSesion.Open();
                     _bitacora.Info("Servicio Inicio sesion.");
                     foreach (var ep in hostInicioSesion.Description.Endpoints)
                     {
-                        _bitacora.Info($"InicioSesion -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("InicioSesion -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     hostCambioContrasena.Open();
                     _bitacora.Info("Servicio Cambio contrasena iniciado.");
                     foreach (var ep in hostCambioContrasena.Description.Endpoints)
                     {
-                        _bitacora.Info($"CambioContrasena -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("CambioContrasena -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     hostClasificacion.Open();
                     _bitacora.Info("Servicio Clasificacion iniciado.");
                     foreach (var ep in hostClasificacion.Description.Endpoints)
                     {
-                        _bitacora.Info($"Clasificacion -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("Clasificacion -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     hostPerfil.Open();
                     _bitacora.Info("Servicio Perfil iniciado.");
                     foreach (var ep in hostPerfil.Description.Endpoints)
                     {
-                        _bitacora.Info($"Perfil -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("Perfil -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     hostAmigos.Open();
                     _bitacora.Info("Servicio Amigos iniciado.");
                     foreach (var ep in hostAmigos.Description.Endpoints)
                     {
-                        _bitacora.Info($"Amigos -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("Amigos -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     hostListaAmigos.Open();
                     _bitacora.Info("Servicio Lista de amigos iniciado.");
                     foreach (var ep in hostListaAmigos.Description.Endpoints)
                     {
-                        _bitacora.Info($"ListaAmigos -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("ListaAmigos -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     hostSalas.Open();
                     _bitacora.Info("Servicio Salas iniciado.");
                     foreach (var ep in hostSalas.Description.Endpoints)
                     {
-                        _bitacora.Info($"Salas -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("Salas -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     hostInvitaciones.Open();
                     _bitacora.Info("Servicio Invitaciones iniciado.");
                     foreach (var ep in hostInvitaciones.Description.Endpoints)
                     {
-                        _bitacora.Info($"Invitaciones -> {ep.Address} ({ep.Binding.Name})");
+                        _bitacora.InfoFormat("Invitaciones -> {0} ({1})", ep.Address, ep.Binding.Name);
                     }
 
                     Console.WriteLine("Servicios arriba. ENTER para salir.");
