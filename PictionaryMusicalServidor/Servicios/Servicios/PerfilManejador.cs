@@ -70,18 +70,18 @@ namespace Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al obtener el perfil del usuario", ex);
-                throw new FaultException(MensajesError.ErrorObtenerPerfil);
+                _logger.Error(MensajesError.Log.PerfilObtenerErrorBD, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorObtenerPerfil);
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al obtener el perfil del usuario", ex);
-                throw new FaultException(MensajesError.ErrorObtenerPerfil);
+                _logger.Error(MensajesError.Log.PerfilObtenerErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorObtenerPerfil);
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al obtener el perfil del usuario", ex);
-                throw new FaultException(MensajesError.ErrorObtenerPerfil);
+                _logger.Error(MensajesError.Log.PerfilObtenerOperacionInvalida, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorObtenerPerfil);
             }
         }
 
@@ -140,34 +140,34 @@ namespace Servicios.Servicios
                     return new ResultadoOperacionDTO
                     {
                         OperacionExitosa = true,
-                        Mensaje = MensajesError.PerfilActualizadoExito
+                        Mensaje = MensajesError.Cliente.PerfilActualizadoExito
                     };
                 }
             }
             catch (DbEntityValidationException ex)
             {
-                _logger.Error("Validación de entidad fallida al actualizar el perfil", ex);
-                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
+                _logger.Error(MensajesError.Log.PerfilActualizarValidacionEntidad, ex);
+                return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
             catch (DbUpdateException ex)
             {
-                _logger.Error("Error de actualización de base de datos al actualizar el perfil", ex);
-                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
+                _logger.Error(MensajesError.Log.PerfilActualizarActualizacionBD, ex);
+                return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al actualizar el perfil", ex);
-                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
+                _logger.Error(MensajesError.Log.PerfilActualizarErrorBD, ex);
+                return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al actualizar el perfil", ex);
-                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
+                _logger.Error(MensajesError.Log.PerfilActualizarErrorDatos, ex);
+                return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al actualizar el perfil", ex);
-                return CrearResultadoFallo(MensajesError.ErrorActualizarPerfil);
+                _logger.Error(MensajesError.Log.PerfilActualizarOperacionInvalida, ex);
+                return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
         }
 

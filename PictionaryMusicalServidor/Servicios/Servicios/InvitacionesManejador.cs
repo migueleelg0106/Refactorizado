@@ -80,18 +80,18 @@ namespace Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al enviar la invitación.", ex);
-                return CrearFallo(MensajesError.ErrorProcesarInvitacion);
+                _logger.Error(MensajesError.Log.InvitacionErrorBD, ex);
+                return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al enviar la invitación.", ex);
-                return CrearFallo(MensajesError.ErrorProcesarInvitacion);
+                _logger.Error(MensajesError.Log.InvitacionErrorDatos, ex);
+                return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al enviar la invitación.", ex);
-                return CrearFallo(MensajesError.ErrorInesperadoInvitacion);
+                _logger.Error(MensajesError.Log.InvitacionOperacionInvalida, ex);
+                return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
             }
         }
 

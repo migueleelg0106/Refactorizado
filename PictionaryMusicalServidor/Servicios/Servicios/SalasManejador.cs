@@ -44,13 +44,13 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Error de operación inválida al crear una sala.", ex);
-                throw new FaultException(MensajesError.ErrorInesperadoCrearSala);
+                _logger.Error(MensajesError.Log.SalaCrearOperacionInvalida, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoCrearSala);
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación al crear una sala.", ex);
-                throw new FaultException(MensajesError.ErrorInesperadoCrearSala);
+                _logger.Error(MensajesError.Log.SalaCrearComunicacion, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoCrearSala);
             }
         }
 
@@ -78,13 +78,13 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error($"Error de operación inválida al unirse a la sala {codigoSala}", ex);
-                throw new FaultException(MensajesError.ErrorInesperadoUnirse);
+                _logger.Error(MensajesError.Log.SalaUnirseOperacionInvalida, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
             }
             catch (CommunicationException ex)
             {
-                _logger.Error($"Error de comunicación al unirse a la sala {codigoSala}", ex);
-                throw new FaultException(MensajesError.ErrorInesperadoUnirse);
+                _logger.Error(MensajesError.Log.SalaUnirseComunicacion, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Error de operación inválida al obtener la lista de salas.", ex);
+                _logger.Error(MensajesError.Log.SalaObtenerListaOperacionInvalida, ex);
                 return new List<SalaDTO>();
             }
         }
@@ -126,8 +126,8 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error($"Error de operación inválida al abandonar la sala {codigoSala}", ex);
-                throw new FaultException(MensajesError.ErrorInesperadoAbandonar);
+                _logger.Error(MensajesError.Log.SalaAbandonarOperacionInvalida, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoAbandonar);
             }
         }
 
@@ -151,13 +151,13 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Error de operación inválida al suscribirse a la lista de salas.", ex);
-                throw new FaultException(MensajesError.ErrorInesperadoSuscripcion);
+                _logger.Error(MensajesError.Log.SalaSuscripcionOperacionInvalida, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoSuscripcion);
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación al suscribirse a la lista de salas.", ex);
-                throw new FaultException(MensajesError.ErrorInesperadoSuscripcion);
+                _logger.Error(MensajesError.Log.SalaSuscripcionComunicacion, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoSuscripcion);
             }
         }
 
@@ -177,11 +177,11 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Error de operación inválida al cancelar suscripción a la lista de salas.", ex);
+                _logger.Error(MensajesError.Log.SalaCancelarSuscripcionOperacionInvalida, ex);
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación al cancelar suscripción a la lista de salas.", ex);
+                _logger.Error(MensajesError.Log.SalaCancelarSuscripcionComunicacion, ex);
             }
         }
 
@@ -211,8 +211,8 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error($"Error de operación inválida al expulsar jugador de la sala {codigoSala}", ex);
-                throw new FaultException(MensajesError.ErrorInesperadoExpulsar);
+                _logger.Error(MensajesError.Log.SalaExpulsarOperacionInvalida, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoExpulsar);
             }
         }
 
@@ -291,7 +291,7 @@ namespace Servicios.Servicios
                 }
                 catch (InvalidOperationException ex)
                 {
-                    _logger.Warn($"Error al notificar actualización de lista de salas al cliente", ex);
+                    _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
                 }
             }
         }
@@ -305,15 +305,15 @@ namespace Servicios.Servicios
             }
             catch (CommunicationException ex)
             {
-                _logger.Warn("Error de comunicación al notificar lista de salas inicial", ex);
+                _logger.Warn(MensajesError.Log.ComunicacionError, ex);
             }
             catch (TimeoutException ex)
             {
-                _logger.Warn("Error de timeout al notificar lista de salas inicial", ex);
+                _logger.Warn(MensajesError.Log.ComunicacionTimeout, ex);
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn("Error de operación inválida al notificar lista de salas inicial", ex);
+                _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
             }
         }
 

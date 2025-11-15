@@ -69,29 +69,29 @@ namespace Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al iniciar sesión", ex);
+                _logger.Error(MensajesError.Log.InicioSesionErrorBD, ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,
-                    Mensaje = MensajesError.ErrorInicioSesion
+                    Mensaje = MensajesError.Cliente.ErrorInicioSesion
                 };
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al iniciar sesión", ex);
+                _logger.Error(MensajesError.Log.InicioSesionErrorDatos, ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,
-                    Mensaje = MensajesError.ErrorInicioSesion
+                    Mensaje = MensajesError.Cliente.ErrorInicioSesion
                 };
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al iniciar sesión", ex);
+                _logger.Error(MensajesError.Log.InicioSesionOperacionInvalida, ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,
-                    Mensaje = MensajesError.ErrorInicioSesion
+                    Mensaje = MensajesError.Cliente.ErrorInicioSesion
                 };
             }
         }

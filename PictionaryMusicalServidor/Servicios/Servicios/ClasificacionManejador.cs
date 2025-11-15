@@ -43,17 +43,17 @@ namespace Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al obtener la clasificación de jugadores", ex);
+                _logger.Error(MensajesError.Log.ClasificacionErrorBD, ex);
                 return new List<ClasificacionUsuarioDTO>();
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al obtener la clasificación de jugadores", ex);
+                _logger.Error(MensajesError.Log.ClasificacionErrorDatos, ex);
                 return new List<ClasificacionUsuarioDTO>();
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al obtener la clasificación de jugadores", ex);
+                _logger.Error(MensajesError.Log.ClasificacionOperacionInvalida, ex);
                 return new List<ClasificacionUsuarioDTO>();
             }
         }

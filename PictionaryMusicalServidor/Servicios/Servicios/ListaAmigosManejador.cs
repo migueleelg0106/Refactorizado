@@ -45,8 +45,8 @@ namespace Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al suscribirse a la lista de amigos", ex);
-                throw new FaultException(MensajesError.ErrorSuscripcionAmigos);
+                _logger.Error(MensajesError.Log.ListaAmigosSuscribirErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
             }
 
             IListaAmigosManejadorCallback callback = ObtenerCallbackActual();
@@ -92,8 +92,8 @@ namespace Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al obtener la lista de amigos", ex);
-                throw new FaultException(MensajesError.ErrorRecuperarListaAmigos);
+                _logger.Error(MensajesError.Log.ListaAmigosObtenerErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
             }
         }
 

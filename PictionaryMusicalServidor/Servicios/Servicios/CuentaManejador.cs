@@ -72,47 +72,47 @@ namespace Servicios.Servicios
             }
             catch (DbEntityValidationException ex)
             {
-                _logger.Error("Validación de entidad fallida al registrar la cuenta", ex);
+                _logger.Error(MensajesError.Log.RegistroCuentaValidacionEntidad, ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = MensajesError.ErrorRegistrarCuenta
+                    Mensaje = MensajesError.Cliente.ErrorRegistrarCuenta
                 };
             }
             catch (DbUpdateException ex)
             {
-                _logger.Error("Error de actualización de base de datos al registrar la cuenta", ex);
+                _logger.Error(MensajesError.Log.RegistroCuentaActualizacionBD, ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = MensajesError.ErrorRegistrarCuenta
+                    Mensaje = MensajesError.Cliente.ErrorRegistrarCuenta
                 };
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al registrar la cuenta", ex);
+                _logger.Error(MensajesError.Log.RegistroCuentaErrorBD, ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = MensajesError.ErrorRegistrarCuenta
+                    Mensaje = MensajesError.Cliente.ErrorRegistrarCuenta
                 };
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al registrar la cuenta", ex);
+                _logger.Error(MensajesError.Log.RegistroCuentaErrorDatos, ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = MensajesError.ErrorRegistrarCuenta
+                    Mensaje = MensajesError.Cliente.ErrorRegistrarCuenta
                 };
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al registrar la cuenta", ex);
+                _logger.Error(MensajesError.Log.RegistroCuentaOperacionInvalida, ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
-                    Mensaje = MensajesError.ErrorRegistrarCuenta
+                    Mensaje = MensajesError.Cliente.ErrorRegistrarCuenta
                 };
             }
         }

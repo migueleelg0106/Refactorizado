@@ -260,38 +260,38 @@ namespace Servicios.Servicios
             }
             catch (DbEntityValidationException ex)
             {
-                _logger.Error("Validación de entidad fallida al actualizar la contraseña", ex);
+                _logger.Error(MensajesError.Log.RecuperacionActualizarValidacionEntidad, ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = MensajesError.ErrorActualizarContrasena
+                    Mensaje = MensajesError.Cliente.ErrorActualizarContrasena
                 };
             }
             catch (DbUpdateException ex)
             {
-                _logger.Error("Error de actualización de base de datos al actualizar la contraseña", ex);
+                _logger.Error(MensajesError.Log.RecuperacionActualizarActualizacionBD, ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = MensajesError.ErrorActualizarContrasena
+                    Mensaje = MensajesError.Cliente.ErrorActualizarContrasena
                 };
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al actualizar la contraseña", ex);
+                _logger.Error(MensajesError.Log.RecuperacionActualizarErrorBD, ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = MensajesError.ErrorActualizarContrasena
+                    Mensaje = MensajesError.Cliente.ErrorActualizarContrasena
                 };
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al actualizar la contraseña", ex);
+                _logger.Error(MensajesError.Log.RecuperacionActualizarErrorDatos, ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = MensajesError.ErrorActualizarContrasena
+                    Mensaje = MensajesError.Cliente.ErrorActualizarContrasena
                 };
             }
         }
