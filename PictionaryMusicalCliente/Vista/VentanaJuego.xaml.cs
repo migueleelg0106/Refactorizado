@@ -1,6 +1,5 @@
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.VistaModelo;
 using System;
 using System.ComponentModel;
@@ -16,10 +15,6 @@ namespace PictionaryMusicalCliente
     public partial class VentanaJuego : Window
     {
         private readonly VentanaJuegoVistaModelo _vistaModelo;
-        private readonly ISalasServicio _salasServicio;
-        private readonly IInvitacionesServicio _invitacionesServicio;
-        private readonly IListaAmigosServicio _listaAmigosServicio;
-        private readonly IPerfilServicio _perfilServicio;
         private readonly Action _accionAlCerrar;
         private bool _ejecutarAccionAlCerrar = true;
         private bool _cerrandoAplicacionCompleta;
@@ -28,18 +23,16 @@ namespace PictionaryMusicalCliente
         {
             InitializeComponent();
 
-            _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
+            if (salasServicio == null)
+            {
+                throw new ArgumentNullException(nameof(salasServicio));
+            }
+
             _accionAlCerrar = accionAlCerrar;
-            _invitacionesServicio = new InvitacionesServicio();
-            _listaAmigosServicio = new ListaAmigosServicio();
-            _perfilServicio = new PerfilServicio();
 
             _vistaModelo = new VentanaJuegoVistaModelo(
                 sala,
-                _salasServicio,
-                _invitacionesServicio,
-                _listaAmigosServicio,
-                _perfilServicio,
+                salasServicio,
                 nombreJugador,
                 esInvitado)
             {
@@ -63,16 +56,16 @@ namespace PictionaryMusicalCliente
                     bool? resultado = ventana.ShowDialog();
                     return resultado == true;
                 },
-                ManejarExpulsion = esInvitadoExpulsado =>
+                ManejarExpulsion = destino =>
                 {
                     void EjecutarAccionExpulsion()
                     {
-                        if (esInvitadoExpulsado)
+                        if (destino == VentanaJuegoVistaModelo.DestinoNavegacion.InicioSesion)
                         {
                             DeshabilitarAccionAlCerrar();
                         }
 
-                        Window ventanaDestino = esInvitadoExpulsado
+                        Window ventanaDestino = destino == VentanaJuegoVistaModelo.DestinoNavegacion.InicioSesion
                             ? new InicioSesion()
                             : new VentanaPrincipal();
 
@@ -133,9 +126,6 @@ namespace PictionaryMusicalCliente
             Closed -= VentanaJuego_ClosedAsync;
             Closing -= VentanaJuego_Closing;
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
-
-            _salasServicio?.Dispose();
-            _listaAmigosServicio?.Dispose();
 
             if (_accionAlCerrar != null && _ejecutarAccionAlCerrar && !_cerrandoAplicacionCompleta)
             {
