@@ -21,7 +21,6 @@ namespace PictionaryMusicalCliente
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IPerfilServicio _perfilServicio;
         private readonly Action _accionAlCerrar;
-        private readonly bool _esInvitado;
         private bool _ejecutarAccionAlCerrar = true;
         private bool _cerrandoAplicacionCompleta;
 
@@ -31,8 +30,6 @@ namespace PictionaryMusicalCliente
 
             _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
             _accionAlCerrar = accionAlCerrar;
-            _esInvitado = esInvitado;
-
             _invitacionesServicio = new InvitacionesServicio();
             _listaAmigosServicio = new ListaAmigosServicio();
             _perfilServicio = new PerfilServicio();
@@ -115,8 +112,6 @@ namespace PictionaryMusicalCliente
             Closing += VentanaJuego_Closing;
             Closed += VentanaJuego_ClosedAsync;
         }
-
-        public bool EsInvitado => _esInvitado;
 
         public void DeshabilitarAccionAlCerrar()
         {

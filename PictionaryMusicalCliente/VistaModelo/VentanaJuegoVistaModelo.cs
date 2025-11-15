@@ -284,6 +284,8 @@ namespace PictionaryMusicalCliente.VistaModelo
             }
         }
 
+        public bool EsInvitado => _esInvitado;
+
         public ICommand InvitarCorreoComando { get; private set; }
         public IComandoAsincrono InvitarAmigosComando { get; private set; }
         public ICommand AbrirAjustesComando { get; private set; }
