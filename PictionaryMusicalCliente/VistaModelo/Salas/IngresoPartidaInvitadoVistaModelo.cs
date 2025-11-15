@@ -191,6 +191,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     return ResultadoUnionInvitado.CrearErrorSalaLlena();
                 }
 
+                if (ex?.Tipo == TipoErrorServicio.FallaServicio)
+                {
+                    return ResultadoUnionInvitado.SalaNoEncontrada();
+                }
+
                 return ResultadoUnionInvitado.Error(ex?.Message ?? Lang.errorTextoNoEncuentraPartida);
             }
             catch (Exception)

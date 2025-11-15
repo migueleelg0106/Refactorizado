@@ -455,6 +455,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 {
                     MostrarMensaje?.Invoke(Lang.errorTextoSalaLlena);
                 }
+                else if (ex?.Tipo == TipoErrorServicio.FallaServicio)
+                {
+                    MostrarMensaje?.Invoke(Lang.errorTextoNoEncuentraPartida);
+                }
                 else
                 {
                     MostrarMensaje?.Invoke(mensaje ?? Lang.errorTextoNoEncuentraPartida);
