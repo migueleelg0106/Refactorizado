@@ -1,0 +1,5 @@
+﻿C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\HostServidor\Principal.cs
+C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\HostServidor\Properties\AssemblyInfo.cs
+C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\HostServidor\App.config
+C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\HostServidor\log4net.config
+C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\HostServidor\packages.config
