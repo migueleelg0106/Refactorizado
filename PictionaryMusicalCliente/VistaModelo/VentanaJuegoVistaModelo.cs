@@ -661,11 +661,13 @@ namespace PictionaryMusicalCliente.VistaModelo
                         _esInvitado
                             ? DestinoNavegacion.InicioSesion
                             : DestinoNavegacion.VentanaPrincipal);
-                    else
-                    {
-                        CerrarVentana?.Invoke();
-                    }
+
                     MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoFuisteExpulsado);
+                }
+                else
+                {
+                    var jugador = Jugadores.FirstOrDefault(j => string.Equals(j.Nombre, nombreJugador, StringComparison.OrdinalIgnoreCase));
+                    if (jugador != null) Jugadores.Remove(jugador);
                 }
             });
         }
@@ -782,6 +784,9 @@ namespace PictionaryMusicalCliente.VistaModelo
 
         public async Task FinalizarAsync()
         {
+            _overlayTimer.Stop();
+            _temporizador.Stop();
+
             _salasServicio.JugadorSeUnio -= SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio -= SalasServicio_JugadorSalio;
             _salasServicio.JugadorExpulsado -= SalasServicio_JugadorExpulsado;
