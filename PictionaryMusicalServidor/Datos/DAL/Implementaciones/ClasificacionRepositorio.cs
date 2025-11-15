@@ -1,8 +1,8 @@
 using System;
-using PictionaryMusical.Datos.DAL.Interfaces;
-using PictionaryMusical.Datos.Modelo;
+using PictionaryMusicalServidor.Datos.DAL.Interfaces;
+using PictionaryMusicalServidor.Datos.Modelo;
 
-namespace PictionaryMusical.Datos.DAL.Implementaciones
+namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 {
     public class ClasificacionRepositorio : IClasificacionRepositorio
     {

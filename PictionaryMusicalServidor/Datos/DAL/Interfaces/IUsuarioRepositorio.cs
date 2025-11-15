@@ -1,6 +1,6 @@
-namespace PictionaryMusical.Datos.DAL.Interfaces
+namespace PictionaryMusicalServidor.Datos.DAL.Interfaces
 {
-    using PictionaryMusical.Datos.Modelo;
+    using PictionaryMusicalServidor.Datos.Modelo;
 
     public interface IUsuarioRepositorio
     {

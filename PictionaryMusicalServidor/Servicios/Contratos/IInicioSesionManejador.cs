@@ -1,8 +1,8 @@
 
 using System.ServiceModel;
-using PictionaryMusical.Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
-namespace PictionaryMusical.Servicios.Contratos
+namespace PictionaryMusicalServidor.Servicios.Contratos
 {
     [ServiceContract]
     public interface IInicioSesionManejador

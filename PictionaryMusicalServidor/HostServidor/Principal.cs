@@ -3,7 +3,7 @@ using System.IO;
 using System.ServiceModel;
 using log4net;
 
-namespace PictionaryMusical.HostServidor
+namespace PictionaryMusicalServidor.HostServidor
 {
     class Principal
     {
@@ -18,16 +18,16 @@ namespace PictionaryMusical.HostServidor
                 _bitacora.Fatal("Excepcion no controlada.", (Exception)e.ExceptionObject);
             };
 
-            using (var hostCuenta = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.CuentaManejador)))
-            using (var hostCodigo = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.CodigoVerificacionManejador)))
-            using (var hostInicioSesion = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.InicioSesionManejador)))
-            using (var hostCambioContrasena = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.CambioContrasenaManejador)))
-            using (var hostClasificacion = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.ClasificacionManejador)))
-            using (var hostPerfil = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.PerfilManejador)))
-            using (var hostAmigos = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.AmigosManejador)))
-            using (var hostListaAmigos = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.ListaAmigosManejador)))
-            using (var hostSalas = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.SalasManejador)))
-            using (var hostInvitaciones = new ServiceHost(typeof(PictionaryMusical.Servicios.Servicios.InvitacionesManejador)))
+            using (var hostCuenta = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.CuentaManejador)))
+            using (var hostCodigo = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.CodigoVerificacionManejador)))
+            using (var hostInicioSesion = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.InicioSesionManejador)))
+            using (var hostCambioContrasena = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.CambioContrasenaManejador)))
+            using (var hostClasificacion = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.ClasificacionManejador)))
+            using (var hostPerfil = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.PerfilManejador)))
+            using (var hostAmigos = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.AmigosManejador)))
+            using (var hostListaAmigos = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.ListaAmigosManejador)))
+            using (var hostSalas = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.SalasManejador)))
+            using (var hostInvitaciones = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.InvitacionesManejador)))
             {
                 try
                 {

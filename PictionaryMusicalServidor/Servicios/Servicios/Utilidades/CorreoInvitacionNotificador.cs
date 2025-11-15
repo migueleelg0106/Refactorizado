@@ -4,9 +4,9 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using log4net;
-using PictionaryMusical.Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
-namespace PictionaryMusical.Servicios.Servicios.Utilidades
+namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 {
     internal static class CorreoInvitacionNotificador
     {

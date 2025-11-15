@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace PictionaryMusical.Servicios.Contratos.DTOs
+namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
 {
 
     [DataContract]

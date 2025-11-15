@@ -4,14 +4,14 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core;
 using System.Linq;
-using PictionaryMusical.Datos.Modelo;
-using PictionaryMusical.Datos.Utilidades;
-using PictionaryMusical.Servicios.Contratos;
-using PictionaryMusical.Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Datos.Modelo;
+using PictionaryMusicalServidor.Datos.Utilidades;
+using PictionaryMusicalServidor.Servicios.Contratos;
+using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using log4net;
-using PictionaryMusical.Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
-namespace PictionaryMusical.Servicios.Servicios
+namespace PictionaryMusicalServidor.Servicios.Servicios
 {
     public class ClasificacionManejador : IClasificacionManejador
     {

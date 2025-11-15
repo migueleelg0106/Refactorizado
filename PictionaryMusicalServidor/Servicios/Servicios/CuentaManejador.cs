@@ -1,19 +1,19 @@
-using PictionaryMusical.Servicios.Contratos;
+using PictionaryMusicalServidor.Servicios.Contratos;
 using System;
 using log4net;
-using PictionaryMusical.Servicios.Contratos.DTOs;
-using PictionaryMusical.Datos.DAL.Implementaciones;
-using PictionaryMusical.Datos.Modelo;
-using PictionaryMusical.Datos.Utilidades;
+using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
+using PictionaryMusicalServidor.Datos.Modelo;
+using PictionaryMusicalServidor.Datos.Utilidades;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Linq;
 using System.Data;
 using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
-using PictionaryMusical.Servicios.Servicios.Constantes; 
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes; 
 
-namespace PictionaryMusical.Servicios.Servicios
+namespace PictionaryMusicalServidor.Servicios.Servicios
 {
     public class CuentaManejador : ICuentaManejador
     {
