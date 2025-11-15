@@ -90,6 +90,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props'))" />
     <Error Condition="!Exists('..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets'))" />
+    <Error Condition="!Exists('..\PictionaryMusicalCliente\packages\coverlet.collector.6.0.4\build\netstandard2.0\coverlet.collector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\PictionaryMusicalCliente\packages\coverlet.collector.6.0.4\build\netstandard2.0\coverlet.collector.targets'))" />
   </Target>
   <Import Project="..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets" Condition="Exists('..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets')" />
+  <Import Project="..\PictionaryMusicalCliente\packages\coverlet.collector.6.0.4\build\netstandard2.0\coverlet.collector.targets" Condition="Exists('..\PictionaryMusicalCliente\packages\coverlet.collector.6.0.4\build\netstandard2.0\coverlet.collector.targets')" />
 </Project>

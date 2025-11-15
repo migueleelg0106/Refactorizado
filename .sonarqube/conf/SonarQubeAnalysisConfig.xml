@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AnalysisConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
-  <SonarConfigDir>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\conf</SonarConfigDir>
-  <SonarOutputDir>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\out</SonarOutputDir>
-  <SonarBinDir>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\bin</SonarBinDir>
-  <SonarScannerWorkingDirectory>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente</SonarScannerWorkingDirectory>
+  <SonarConfigDir>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\.sonarqube\conf</SonarConfigDir>
+  <SonarOutputDir>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\.sonarqube\out</SonarOutputDir>
+  <SonarBinDir>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\.sonarqube\bin</SonarBinDir>
+  <SonarScannerWorkingDirectory>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado</SonarScannerWorkingDirectory>
   <JavaExePath>C:\Users\uriel\.sonar\cache\11a61a94d383e755b08b4e5890a13d148bc9f95b7149cbbeec62efb8c75a4a67\OpenJDK17U-jre_x64_windows_hotspot_17.0.13_11.zip_extracted\jdk-17.0.13+11-jre/bin/java.exe</JavaExePath>
   <EngineJarPath>C:\Users\uriel\.sonar\cache\5370664af11ed9502c5e9da2fca3e7b2465b6b01c7248962ef899d0551837b42\sonar-scanner-engine-shaded-25.10.0.114319-all.jar</EngineJarPath>
   <UseSonarScannerCli>false</UseSonarScannerCli>
@@ -18,7 +18,7 @@
     <ConfigSetting Id="TfsUri" />
     <ConfigSetting Id="VsCoverageConverterToolPath" />
     <ConfigSetting Id="UnchangedFilesPath" />
-    <ConfigSetting Id="sonar.pullrequest.cache.basepath" Value="C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente" />
+    <ConfigSetting Id="sonar.pullrequest.cache.basepath" Value="C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado" />
     <ConfigSetting Id="settings.file.path" Value="C:\Users\uriel\.dotnet\tools\.store\dotnet-sonarscanner\11.0.0\dotnet-sonarscanner\11.0.0\tools\netcoreapp3.1\any\SonarQube.Analysis.xml" />
   </AdditionalConfig>
   <ServerSettings>
@@ -152,13 +152,15 @@
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.host.url">http://localhost:9000</Property>
+    <Property Name="sonar.cs.vscoveragexml.reportsPaths">coverage.xml</Property>
+    <Property Name="sonar.exclusions">coverage.xml</Property>
   </LocalSettings>
   <ScannerOptsSettings />
   <AnalyzersSettings>
     <AnalyzerSettings>
       <Language>cs</Language>
-      <RulesetPath>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\conf\Sonar-cs.ruleset</RulesetPath>
-      <DeactivatedRulesetPath>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\conf\Sonar-cs-none.ruleset</DeactivatedRulesetPath>
+      <RulesetPath>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\.sonarqube\conf\Sonar-cs.ruleset</RulesetPath>
+      <DeactivatedRulesetPath>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\.sonarqube\conf\Sonar-cs-none.ruleset</DeactivatedRulesetPath>
       <AnalyzerPlugins>
         <AnalyzerPlugin Key="csharp" Version="10.15.0.120848" StaticResourceName="SonarAnalyzer-csharp-10.15.0.120848.zip">
           <AssemblyPaths>
@@ -168,13 +170,13 @@
         </AnalyzerPlugin>
       </AnalyzerPlugins>
       <AdditionalFilePaths>
-        <Path>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\conf\cs\SonarLint.xml</Path>
+        <Path>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\.sonarqube\conf\cs\SonarLint.xml</Path>
       </AdditionalFilePaths>
     </AnalyzerSettings>
     <AnalyzerSettings>
       <Language>vbnet</Language>
-      <RulesetPath>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\conf\Sonar-vbnet.ruleset</RulesetPath>
-      <DeactivatedRulesetPath>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\conf\Sonar-vbnet-none.ruleset</DeactivatedRulesetPath>
+      <RulesetPath>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\.sonarqube\conf\Sonar-vbnet.ruleset</RulesetPath>
+      <DeactivatedRulesetPath>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\.sonarqube\conf\Sonar-vbnet-none.ruleset</DeactivatedRulesetPath>
       <AnalyzerPlugins>
         <AnalyzerPlugin Key="vbnet" Version="10.15.0.120848" StaticResourceName="SonarAnalyzer-vbnet-10.15.0.120848.zip">
           <AssemblyPaths>
@@ -184,7 +186,7 @@
         </AnalyzerPlugin>
       </AnalyzerPlugins>
       <AdditionalFilePaths>
-        <Path>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\conf\vbnet\SonarLint.xml</Path>
+        <Path>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\.sonarqube\conf\vbnet\SonarLint.xml</Path>
       </AdditionalFilePaths>
     </AnalyzerSettings>
   </AnalyzersSettings>
