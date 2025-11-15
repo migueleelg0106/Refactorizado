@@ -20,7 +20,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         public BusquedaAmigoVistaModelo(IAmigosServicio amigosServicio)
         {
             _amigosServicio = amigosServicio ?? throw new ArgumentNullException(nameof(amigosServicio));
-            _usuarioActual = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
+            _usuarioActual = SesionUsuarioActual.Usuario?.NombreUsuario ?? string.Empty;
 
             EnviarSolicitudComando = new ComandoAsincrono(async _ =>
             {
@@ -98,7 +98,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudEnviada);
                 SolicitudEnviada?.Invoke();
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();  
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);

@@ -16,7 +16,7 @@ namespace PictionaryMusicalCliente.Sesiones
         /// <summary>
         /// Obtiene el usuario actualmente autenticado en la sesión.
         /// </summary>
-        public UsuarioAutenticado Usuario => UsuarioAutenticado.Instancia;
+        public static UsuarioAutenticado Usuario => UsuarioAutenticado.Instancia;
 
         /// <summary>
         /// Indica si hay un usuario autenticado.

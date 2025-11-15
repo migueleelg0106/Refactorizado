@@ -170,7 +170,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 DetenerTemporizadores();
                 VerificacionCompletada?.Invoke(resultado);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 MarcarCodigoInvalido?.Invoke(true);
@@ -210,7 +210,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                     AvisoAyudante.Mostrar(resultado?.Mensaje ?? Lang.errorTextoSolicitarNuevoCodigo);
                 }
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoSolicitarNuevoCodigo);

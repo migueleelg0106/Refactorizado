@@ -109,7 +109,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             };
         }
 
-        private async Task<TResult> EjecutarConManejoDeErroresAsync<TResult>(
+        private static async Task<TResult> EjecutarConManejoDeErroresAsync<TResult>(
             Func<Task<TResult>> operacion,
             string mensajeFallaPredeterminado)
         {
@@ -120,23 +120,23 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             catch (FaultException ex)
             {
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, mensajeFallaPredeterminado);
-                throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
-                throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
             }
             catch (TimeoutException ex)
             {
-                throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
             }
             catch (CommunicationException ex)
             {
-                throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
             }
             catch (InvalidOperationException ex)
             {
-                throw new ExcepcionServicio(TipoErrorServicio.OperacionInvalida, Lang.errorTextoPrepararSolicitudCambioContrasena, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoPrepararSolicitudCambioContrasena, ex);
             }
         }
     }

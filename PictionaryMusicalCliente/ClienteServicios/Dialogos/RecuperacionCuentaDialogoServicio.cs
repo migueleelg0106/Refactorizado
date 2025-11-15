@@ -130,7 +130,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             return finalizacion.Task;
         }
 
-        private string ObtenerMensaje(string mensaje, string fallback)
+        private static string ObtenerMensaje(string mensaje, string fallback)
         {
             return string.IsNullOrWhiteSpace(mensaje) ? fallback : mensaje;
         }

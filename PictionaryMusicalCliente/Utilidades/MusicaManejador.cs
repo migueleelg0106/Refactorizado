@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
                 double clamped = Math.Max(0, Math.Min(1, value));
                 _reproductor.Volume = clamped;
 
-                EstaSilenciado = (clamped == 0);
+                EstaSilenciado = clamped < 0.0001;
                 if (!EstaSilenciado)
                 {
                     _volumenGuardado = clamped;

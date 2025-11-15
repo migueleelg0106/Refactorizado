@@ -146,7 +146,7 @@ namespace PictionaryMusicalCliente
             {
                 if (!Dispatcher.CheckAccess())
                 {
-                    Dispatcher.Invoke(_accionAlCerrar);
+                    await Dispatcher.InvokeAsync(_accionAlCerrar);
                 }
                 else
                 {

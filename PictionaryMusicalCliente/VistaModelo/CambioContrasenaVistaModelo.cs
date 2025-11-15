@@ -162,7 +162,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
                 return resultado; 
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoActualizarContrasena);

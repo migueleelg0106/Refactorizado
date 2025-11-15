@@ -92,7 +92,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 _clasificacionOriginal = clasificacion ?? Array.Empty<DTOs.ClasificacionUsuarioDTO>();
                 ActualizarClasificacion(_clasificacionOriginal);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }

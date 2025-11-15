@@ -11,7 +11,7 @@ using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
-    public class SalasServicio : ISalasServicio, PictionaryServidorServicioSalas.ISalasManejadorCallback
+    public sealed class SalasServicio : ISalasServicio, PictionaryServidorServicioSalas.ISalasManejadorCallback
     {
         private const string Endpoint = "NetTcpBinding_ISalasManejador";
 
@@ -62,22 +62,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 catch (FaultException ex)
                 {
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
                 }
                 catch (EndpointNotFoundException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
                 catch (TimeoutException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 }
                 catch (CommunicationException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
             }
             finally
@@ -107,22 +107,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 catch (FaultException ex)
                 {
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
                 }
                 catch (EndpointNotFoundException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
                 catch (TimeoutException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 }
                 catch (CommunicationException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
             }
             finally
@@ -153,22 +153,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 catch (FaultException ex)
                 {
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
                 }
                 catch (EndpointNotFoundException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
                 catch (TimeoutException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 }
                 catch (CommunicationException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
             }
             finally
@@ -201,22 +201,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 catch (FaultException ex)
                 {
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
                 }
                 catch (EndpointNotFoundException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
                 catch (TimeoutException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 }
                 catch (CommunicationException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
             }
             finally
@@ -279,22 +279,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 catch (FaultException ex)
                 {
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ExcepcionServicio(TipoErrorServicio.FallaServicio, mensaje, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
                 }
                 catch (EndpointNotFoundException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
                 catch (TimeoutException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
                 }
                 catch (CommunicationException ex)
                 {
                     CerrarCliente();
-                    throw new ExcepcionServicio(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
                 }
             }
             finally
@@ -319,7 +319,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch
                 {
-                    // Ignore errors when cancelling subscription
+                    // Ignorar errores cuando se está cancelando una suscripción
                 }
             }
             finally
@@ -330,27 +330,38 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
         public void Dispose()
         {
-            _semaforo.Wait();
+            bool lockTomado = _semaforo.Wait(3000);
 
             try
             {
-                if (_suscrito && _cliente != null)
+                if (lockTomado)
                 {
-                    try
+                    if (_suscrito && _cliente != null)
                     {
-                        _cliente.CancelarSuscripcionListaSalasAsync().Wait();
+                        try
+                        {
+                            Task.Run(async () => await _cliente.CancelarSuscripcionListaSalasAsync())
+                                .Wait(2000);
+                        }
+                        catch
+                        {
+                            // Ignorar errores de red al cerrar, es normal si el servidor cayó.
+                        }
                     }
-                    catch
-                    {
-                        // Ignore errors during disposal
-                    }
+                    CerrarCliente();
                 }
-
-                CerrarCliente();
+                else
+                {
+                    _cliente?.Abort();
+                }
             }
             finally
             {
-                _semaforo.Release();
+                if (lockTomado)
+                {
+                    _semaforo.Release();
+                }
+                _semaforo.Dispose();
             }
         }
 

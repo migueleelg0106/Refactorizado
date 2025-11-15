@@ -59,7 +59,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             _listaAmigosServicio.ListaActualizada += ListaActualizada;
 
-            _nombreUsuarioSesion = SesionUsuarioActual.Instancia.Usuario?.NombreUsuario ?? string.Empty;
+            _nombreUsuarioSesion = SesionUsuarioActual.Usuario?.NombreUsuario ?? string.Empty;
 
             CargarDatosUsuario();
             CargarOpcionesPartida();
@@ -250,7 +250,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 EjecutarEnDispatcher(() => ActualizarAmigos(listaActual));
 
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
@@ -268,7 +268,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 await _listaAmigosServicio.CancelarSuscripcionAsync(_nombreUsuarioSesion).ConfigureAwait(false);
                 await _amigosServicio.CancelarSuscripcionAsync(_nombreUsuarioSesion).ConfigureAwait(false);
             }
-            catch (ExcepcionServicio)
+            catch (ServicioExcepcion)
             {
                 // Ignorado
             }
@@ -371,10 +371,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (amigos != null)
             {
-                foreach (var amigo in amigos)
+                foreach (var amigo in amigos.Where(a => !string.IsNullOrWhiteSpace(a?.NombreUsuario)))
                 {
-                    if (!string.IsNullOrWhiteSpace(amigo?.NombreUsuario))
-                        Amigos.Add(amigo);
+                    Amigos.Add(amigo);
                 }
             }
 
@@ -416,7 +415,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 await _amigosServicio.EliminarAmigoAsync(_nombreUsuarioSesion, amigo.NombreUsuario).ConfigureAwait(true);
                 MostrarMensaje?.Invoke(Lang.amigosTextoAmigoEliminado);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
@@ -446,7 +445,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 ManejadorSonido.ReproducirExito();
                 UnirseSala?.Invoke(sala);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 string mensaje = ex?.Message;
@@ -493,7 +492,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 ManejadorSonido.ReproducirExito();
                 IniciarJuego?.Invoke(sala);
             }
-            catch (ExcepcionServicio ex)
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
