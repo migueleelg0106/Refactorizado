@@ -4,10 +4,14 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
+using Servicios.Servicios.Constantes;
 
 namespace Servicios.Servicios.Utilidades
 {
     public class CorreoCodigoVerificacionNotificador : ICodigoVerificacionNotificador
+    {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(CorreoCodigoVerificacionNotificador));
     {
         private const string AsuntoPredeterminado = "Código de verificación";
 
@@ -65,8 +69,19 @@ namespace Servicios.Servicios.Utilidades
 
                 return true;
             }
-            catch (Exception)
+            catch (SmtpException ex)
             {
+                _logger.Error(MensajesError.Log.CorreoSmtp, ex);
+                return false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Error(MensajesError.Log.CorreoOperacionInvalida, ex);
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.Error(MensajesError.Log.CorreoArgumentoInvalido, ex);
                 return false;
             }
         }

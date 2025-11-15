@@ -10,12 +10,15 @@ using Datos.Utilidades;
 using Servicios.Contratos.DTOs;
 using Servicios.Servicios.Utilidades;
 using System.Data.Entity;
+using Servicios.Servicios.Constantes;
+using log4net;
 
 namespace Servicios.Servicios
 {
 
     internal static class ServicioRecuperacionCuenta
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(ServicioRecuperacionCuenta));
         private const int MinutosExpiracionCodigo = 5;
 
         private static readonly ConcurrentDictionary<string, SolicitudRecuperacionPendiente> _solicitudesRecuperacion =
@@ -63,8 +66,6 @@ namespace Servicios.Servicios
                     UsuarioId = usuario.idUsuario,
                     Correo = usuario.Jugador?.Correo,
                     NombreUsuario = usuario.Nombre_Usuario,
-                    Nombre = usuario.Jugador?.Nombre,
-                    Apellido = usuario.Jugador?.Apellido,
                     Codigo = codigo,
                     Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo),
                     Confirmado = false
@@ -255,36 +256,40 @@ namespace Servicios.Servicios
                     OperacionExitosa = true
                 };
             }
-            catch (DbEntityValidationException)
+            catch (DbEntityValidationException ex)
             {
+                _logger.Error(MensajesError.Log.RecuperacionActualizarValidacionEntidad, ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible actualizar la contraseña."
+                    Mensaje = MensajesError.Cliente.ErrorActualizarContrasena
                 };
             }
-            catch (EntityException)
+            catch (DbUpdateException ex)
             {
+                _logger.Error(MensajesError.Log.RecuperacionActualizarActualizacionBD, ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible actualizar la contraseña."
+                    Mensaje = MensajesError.Cliente.ErrorActualizarContrasena
                 };
             }
-            catch (DbUpdateException)
+            catch (EntityException ex)
             {
+                _logger.Error(MensajesError.Log.RecuperacionActualizarErrorBD, ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible actualizar la contraseña."
+                    Mensaje = MensajesError.Cliente.ErrorActualizarContrasena
                 };
             }
-            catch (DataException)
+            catch (DataException ex)
             {
+                _logger.Error(MensajesError.Log.RecuperacionActualizarErrorDatos, ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
-                    Mensaje = "No fue posible actualizar la contraseña."
+                    Mensaje = MensajesError.Cliente.ErrorActualizarContrasena
                 };
             }
         }
@@ -338,9 +343,6 @@ namespace Servicios.Servicios
             public int UsuarioId { get; set; }
             public string Correo { get; set; }
             public string NombreUsuario { get; set; }
-            public string Nombre { get; set; }
-            public string Apellido { get; set; }
-            public string AvatarRutaRelativa { get; set; }
             public string Codigo { get; set; }
             public DateTime Expira { get; set; }
             public bool Confirmado { get; set; }
