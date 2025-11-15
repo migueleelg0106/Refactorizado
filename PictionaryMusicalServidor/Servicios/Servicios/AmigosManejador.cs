@@ -158,12 +158,12 @@ namespace Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn("Regla de negocio violada al enviar solicitud de amistad", ex);
-                throw new FaultException(ex.Message);
+                throw new FaultException(MensajesError.Cliente.ErrorAlmacenarSolicitud);
             }
             catch (ArgumentException ex)
             {
                 _logger.Warn("Datos inválidos al enviar la solicitud de amistad", ex);
-                throw new FaultException(ex.Message);
+                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
             }
             catch (DataException ex)
             {
@@ -219,12 +219,12 @@ namespace Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn("Regla de negocio violada al aceptar solicitud de amistad", ex);
-                throw new FaultException(ex.Message);
+                throw new FaultException(MensajesError.Cliente.ErrorActualizarSolicitud);
             }
             catch (ArgumentException ex)
             {
                 _logger.Warn("Datos inválidos al aceptar la solicitud de amistad", ex);
-                throw new FaultException(ex.Message);
+                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
             }
             catch (DataException ex)
             {
@@ -289,12 +289,12 @@ namespace Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn("Regla de negocio violada al eliminar amistad", ex);
-                throw new FaultException(ex.Message);
+                throw new FaultException(MensajesError.Cliente.ErrorEliminarAmistad);
             }
             catch (ArgumentException ex)
             {
                 _logger.Warn("Datos inválidos al eliminar la relación de amistad", ex);
-                throw new FaultException(ex.Message);
+                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
             }
             catch (DataException ex)
             {
@@ -385,7 +385,7 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn($"Error al notificar la solicitud de amistad al usuario {nombreUsuario}", ex);
+                _logger.Warn("Error al notificar la solicitud de amistad al usuario", ex);
             }
         }
 
@@ -415,7 +415,7 @@ namespace Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn($"Error al notificar la eliminación de amistad al usuario {nombreUsuario}", ex);
+                _logger.Warn("Error al notificar la eliminación de amistad al usuario", ex);
             }
         }
     }
