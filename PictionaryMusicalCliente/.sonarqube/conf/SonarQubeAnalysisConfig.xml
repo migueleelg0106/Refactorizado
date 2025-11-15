@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AnalysisConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+<AnalysisConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
   <SonarConfigDir>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\conf</SonarConfigDir>
   <SonarOutputDir>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\out</SonarOutputDir>
   <SonarBinDir>C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\.sonarqube\bin</SonarBinDir>
@@ -19,7 +19,7 @@
     <ConfigSetting Id="VsCoverageConverterToolPath" />
     <ConfigSetting Id="UnchangedFilesPath" />
     <ConfigSetting Id="sonar.pullrequest.cache.basepath" Value="C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente" />
-    <ConfigSetting Id="settings.file.path" Value="C:\Users\uriel\Documents\UV uriel\5to Semestre\Tecnologías para la construcción\Descargas para el proyecto\sonarqube\sonarqube community\sonar-scanner-11.0.0.126294-net-framework\SonarQube.Analysis.xml" />
+    <ConfigSetting Id="settings.file.path" Value="C:\Users\uriel\.dotnet\tools\.store\dotnet-sonarscanner\11.0.0\dotnet-sonarscanner\11.0.0\tools\netcoreapp3.1\any\SonarQube.Analysis.xml" />
   </AdditionalConfig>
   <ServerSettings>
     <Property Name="sonar.cs.ignoreHeaderComments">true</Property>
@@ -147,8 +147,8 @@
     <Property Name="sonaranalyzer-vbnet.pluginKey">vbnet</Property>
     <Property Name="sonar.java.jvmframeworkconfig.activate">true</Property>
     <Property Name="sonar.updatecenter.url">https://downloads.sonarsource.com/sonarqube/update/update-center.properties</Property>
-    <Property Name="sonar.core.startTime">15/11/2025 12:19:31 a. m.</Property>
     <Property Name="sonar.core.id">147B411E-AZqGK0ODHPC9tYSm7s_r</Property>
+    <Property Name="sonar.core.startTime">15/11/2025 12:31:24 p. m.</Property>
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.host.url">http://localhost:9000</Property>
