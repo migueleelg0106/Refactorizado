@@ -10,6 +10,7 @@ using Datos.Utilidades;
 using Servicios.Contratos;
 using Servicios.Contratos.DTOs;
 using Servicios.Servicios.Utilidades;
+using Servicios.Servicios.Constantes;
 
 namespace Servicios.Servicios
 {
@@ -79,18 +80,18 @@ namespace Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al enviar la invitación.", ex);
-                return CrearFallo("Ocurrió un problema al procesar la invitación.");
+                _logger.Error(MensajesError.Log.InvitacionErrorBD, ex);
+                return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al enviar la invitación.", ex);
-                return CrearFallo("Ocurrió un problema al procesar la invitación.");
+                _logger.Error(MensajesError.Log.InvitacionErrorDatos, ex);
+                return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.Error("Error inesperado al enviar la invitación.", ex);
-                return CrearFallo("No fue posible enviar la invitación por un error inesperado.");
+                _logger.Error(MensajesError.Log.InvitacionOperacionInvalida, ex);
+                return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
             }
         }
 
