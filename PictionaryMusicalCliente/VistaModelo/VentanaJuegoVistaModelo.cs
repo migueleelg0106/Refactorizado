@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
+using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using DTOs = Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo
@@ -59,6 +60,12 @@ namespace PictionaryMusicalCliente.VistaModelo
         private string _correoInvitacion;
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
+
+        public enum DestinoNavegacion
+        {
+            InicioSesion,
+            VentanaPrincipal
+        }
 
         public VentanaJuegoVistaModelo(
             DTOs.SalaDTO sala,
@@ -120,6 +127,22 @@ namespace PictionaryMusicalCliente.VistaModelo
 
             PuedeInvitarPorCorreo = !_esInvitado;
             PuedeInvitarAmigos = !_esInvitado;
+        }
+
+        public VentanaJuegoVistaModelo(
+            DTOs.SalaDTO sala,
+            ISalasServicio salasServicio,
+            string nombreJugador = null,
+            bool esInvitado = false)
+            : this(
+                sala,
+                salasServicio,
+                new InvitacionesServicio(),
+                new ListaAmigosServicio(),
+                new PerfilServicio(),
+                nombreJugador,
+                esInvitado)
+        {
         }
 
         public bool JuegoIniciado
@@ -307,7 +330,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         public Action<string> MostrarMensaje { get; set; }
         public Func<string, bool> MostrarConfirmacion { get; set; }
         public Action CerrarVentana { get; set; }
-        public Action<bool> ManejarExpulsion { get; set; }
+        public Action<DestinoNavegacion> ManejarExpulsion { get; set; }
         public Func<InvitarAmigosVistaModelo, Task> MostrarInvitarAmigos { get; set; }
 
         private static void NotificarComando(ICommand comando)
@@ -634,10 +657,10 @@ namespace PictionaryMusicalCliente.VistaModelo
             {
                 if (string.Equals(nombreJugador, _nombreUsuarioSesion, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (ManejarExpulsion != null)
-                    {
-                        ManejarExpulsion.Invoke(_esInvitado);
-                    }
+                    ManejarExpulsion?.Invoke(
+                        _esInvitado
+                            ? DestinoNavegacion.InicioSesion
+                            : DestinoNavegacion.VentanaPrincipal);
                     else
                     {
                         CerrarVentana?.Invoke();
@@ -775,6 +798,11 @@ namespace PictionaryMusicalCliente.VistaModelo
                     // Ignorar errores al abandonar la sala
                 }
             }
+
+            (_salasServicio as IDisposable)?.Dispose();
+            (_listaAmigosServicio as IDisposable)?.Dispose();
+            (_invitacionesServicio as IDisposable)?.Dispose();
+            (_perfilServicio as IDisposable)?.Dispose();
         }
     }
 }
