@@ -453,12 +453,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 X = ObtenerIdentificador(RedSocialX),
                 Discord = ObtenerIdentificador(RedSocialDiscord)
             };
-            SesionUsuarioActual.Instancia.EstablecerUsuario(dto);
+            SesionUsuarioActual.EstablecerUsuario(dto);
         }
         private static void ActualizarSesion(DTOs.UsuarioDTO perfil)
         {
             if (perfil == null) return;
-            SesionUsuarioActual.Instancia.EstablecerUsuario(perfil);
+            SesionUsuarioActual.EstablecerUsuario(perfil);
         }
 
         public class RedSocialItemVistaModelo(string nombre, ImageSource icono) : BaseVistaModelo

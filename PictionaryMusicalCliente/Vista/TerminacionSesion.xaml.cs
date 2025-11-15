@@ -18,7 +18,7 @@ namespace PictionaryMusicalCliente
         {
             var ventanasActivas = Application.Current.Windows.Cast<Window>().ToList();
 
-            SesionUsuarioActual.Instancia.CerrarSesion();
+            SesionUsuarioActual.CerrarSesion();
 
             var inicioSesion = new InicioSesion();
             Application.Current.MainWindow = inicioSesion;

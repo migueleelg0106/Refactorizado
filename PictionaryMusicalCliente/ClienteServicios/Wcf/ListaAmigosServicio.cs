@@ -157,7 +157,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private Exception ManejarExcepcionWcf(Exception ex, PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente, bool esTemporal)
+        private static Exception ManejarExcepcionWcf(Exception ex, PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente, bool esTemporal)
         {
             if (esTemporal && cliente != null)
             {

@@ -16,11 +16,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         {
             if (dto == null)
             {
-                SesionUsuarioActual.Instancia.CerrarSesion();
+                SesionUsuarioActual.CerrarSesion();
                 return;
             }
 
-            SesionUsuarioActual.Instancia.EstablecerUsuario(dto);
+            SesionUsuarioActual.EstablecerUsuario(dto);
         }
 
     }

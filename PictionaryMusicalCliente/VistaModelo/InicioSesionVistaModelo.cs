@@ -247,7 +247,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
             if (resultado.Usuario != null)
             {
-                SesionUsuarioActual.Instancia.EstablecerUsuario(resultado.Usuario);
+                SesionUsuarioActual.EstablecerUsuario(resultado.Usuario);
             }
 
             ManejadorSonido.ReproducirExito();

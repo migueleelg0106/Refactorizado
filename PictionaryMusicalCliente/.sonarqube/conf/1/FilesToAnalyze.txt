@@ -38,7 +38,7 @@ C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\P
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\ClienteServicios\Dialogos\SeleccionAvatarDialogoServicio.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\ClienteServicios\Dialogos\VerificacionCodigoDialogoServicio.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\ClienteServicios\Idiomas\LocalizacionServicio.cs
-C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\ClienteServicios\ExcepcionServicio.cs
+C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\ClienteServicios\ServicioExcepcion.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\ClienteServicios\Wcf\CambioContrasenaServicio.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\ClienteServicios\Wcf\ClasificacionServicio.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\ClienteServicios\Wcf\CodigoVerificacionServicio.cs
