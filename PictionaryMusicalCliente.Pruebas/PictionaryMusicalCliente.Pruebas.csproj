@@ -71,12 +71,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PruebasVistaModelo\PruebaAjustesVistaModelo.cs" />
+    <Compile Include="PruebasVistaModelo\PruebaBusquedaAmigosVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaCambioContrasenaVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaClasificacionVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaCreacionCuentaVistaModelo.cs" />
+    <Compile Include="PruebasVistaModelo\PruebaEliminacionAmigoVistaModelo.cs" />
+    <Compile Include="PruebasVistaModelo\PruebaExpulsionJugadorVistaModelo.cs" />
+    <Compile Include="PruebasVistaModelo\PruebaIngresoPartidaVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaInicioSesionVistaModelo.cs" />
+    <Compile Include="PruebasVistaModelo\PruebaInvitarAmigosVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaPerfilVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaSeleccionAvatarVistaModelo.cs" />
+    <Compile Include="PruebasVistaModelo\PruebaSolicitudesVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaVentanaJuegoVistaModelo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaVentanaPrincipalVistaModelo.cs" />
