@@ -3,7 +3,6 @@ using System.Windows.Input;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.VistaModelo;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
