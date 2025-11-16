@@ -144,7 +144,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             var prop = item.GetType().GetProperty("InvitacionEnviada");
             prop.SetValue(item, true);
 
-            item.InvitarCommand.Execute(null);
+            item.InvitarComando.Execute(null);
             await Task.Delay(50);
 
             Assert.AreEqual(Lang.invitarAmigosTextoYaInvitado, mensaje);
@@ -165,7 +165,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             Assert.IsNotNull(fieldInfo, "No se encontró el campo de respaldo de UsuarioId");
             fieldInfo.SetValue(item, 0); 
 
-            item.InvitarCommand.Execute(null);
+            item.InvitarComando.Execute(null);
             await Task.Delay(50);
 
             Assert.AreEqual(Lang.errorTextoErrorProcesarSolicitud, mensaje);
@@ -181,7 +181,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
 
             _mockPerfil.Setup(p => p.ObtenerPerfilAsync(item.UsuarioId)).ReturnsAsync((DTOs.UsuarioDTO)null);
 
-            item.InvitarCommand.Execute(null);
+            item.InvitarComando.Execute(null);
             await Task.Delay(50);
 
             Assert.AreEqual(Lang.invitarAmigosTextoCorreoNoDisponible, mensaje);
@@ -197,7 +197,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
 
             _mockPerfil.Setup(p => p.ObtenerPerfilAsync(item.UsuarioId)).ReturnsAsync(new DTOs.UsuarioDTO { Correo = "" });
 
-            item.InvitarCommand.Execute(null);
+            item.InvitarComando.Execute(null);
             await Task.Delay(50);
 
             Assert.AreEqual(Lang.invitarAmigosTextoCorreoNoDisponible, mensaje);
@@ -226,7 +226,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             _mockInvitaciones.Setup(i => i.EnviarInvitacionAsync(CodigoSala, correo))
                 .ReturnsAsync(new DTOs.ResultadoOperacionDTO { OperacionExitosa = true });
 
-            item.InvitarCommand.Execute(null);
+            item.InvitarComando.Execute(null);
             await Task.Delay(100);
 
             Assert.IsTrue(item.InvitacionEnviada);
@@ -247,7 +247,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             _mockInvitaciones.Setup(i => i.EnviarInvitacionAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new DTOs.ResultadoOperacionDTO { OperacionExitosa = false, Mensaje = "FalloLogico" });
 
-            item.InvitarCommand.Execute(null);
+            item.InvitarComando.Execute(null);
             await Task.Delay(100);
 
             Assert.IsFalse(item.InvitacionEnviada);
@@ -267,7 +267,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             _mockInvitaciones.Setup(i => i.EnviarInvitacionAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorRed", null));
 
-            item.InvitarCommand.Execute(null);
+            item.InvitarComando.Execute(null);
             await Task.Delay(100);
 
             Assert.AreEqual("ErrorRed", mensaje);
@@ -286,7 +286,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             _mockInvitaciones.Setup(i => i.EnviarInvitacionAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new ArgumentException("ArgInvalido"));
 
-            item.InvitarCommand.Execute(null);
+            item.InvitarComando.Execute(null);
             await Task.Delay(100);
 
             Assert.AreEqual("ArgInvalido", mensaje);
@@ -322,10 +322,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         public void Item_EstaProcesando_NotificaComando()
         {
             var item = new AmigoInvitacionItemVistaModelo(new DTOs.AmigoDTO(), _viewModel, false);
-            Assert.IsTrue(item.InvitarCommand.CanExecute(null));
+            Assert.IsTrue(item.InvitarComando.CanExecute(null));
 
             item.EstaProcesando = true;
-            Assert.IsFalse(item.InvitarCommand.CanExecute(null));
+            Assert.IsFalse(item.InvitarComando.CanExecute(null));
         }
     }
 }

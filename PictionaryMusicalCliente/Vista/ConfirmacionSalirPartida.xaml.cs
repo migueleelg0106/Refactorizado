@@ -23,7 +23,7 @@ namespace PictionaryMusicalCliente
                 && vistaModelo.EsInvitado)
             {
                 debeAbrirVentanaPrincipal = false;
-                ventanaJuego.DeshabilitarAccionAlCerrar();
+                vistaModelo.NotificarCierreAplicacionCompleta();
                 ventanaDestino = new InicioSesion();
             }
 

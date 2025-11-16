@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
         Title="{x:Static language:Lang.ajustesPrincipalTextoCerrarSesion}" Height="250" Width="450"
-        
-    WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterOwner"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -17,7 +16,6 @@
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 
-                <!-- Título del Diálogo -->
                 <TextBlock Text="{x:Static language:Lang.ajustesPrincipalTextoCerrarSesion}" 
                            FontFamily="Comic Sans MS" FontSize="24" FontWeight="Bold" 
                            HorizontalAlignment="Center"/>
@@ -28,24 +26,30 @@
                            FontFamily="Comic Sans MS" FontSize="16" 
                            Margin="0,15,0,20"/>
 
-                <!-- Botones de Acción -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                    <Button Content="{x:Static language:Lang.globalTextoAceptar}" 
-                            Grid.Column="0" Margin="0,0,5,0" Height="40" 
-                            FontFamily="Comic Sans MS" FontWeight="Bold" 
-                            Background="White" BorderBrush="Black"
-                            Click="BotonAceptar"/>
+                <Button Grid.Column="0" Margin="0,0,5,0" Height="40"
+                    FontFamily="Comic Sans MS" FontWeight="Bold"
+                    Background="White" BorderBrush="Black"
+                    Command="{Binding AceptarComando}"
+                    Content="{x:Static language:Lang.globalTextoAceptar}">
 
-                    <Button Content="{x:Static language:Lang.globalTextoCancelar}" 
-                            Grid.Column="1" Margin="5,0,0,0" Height="40" 
-                            FontFamily="Comic Sans MS" FontWeight="Bold" 
-                            Background="White" BorderBrush="Black"
-                            Click="BotonCancelar"/>
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="Red"/>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+                <Button Content="{x:Static language:Lang.globalTextoCancelar}"
+                    Grid.Column="1" Margin="5,0,0,0" Height="40"
+                    FontFamily="Comic Sans MS" FontWeight="Bold"
+                    Background="White" BorderBrush="Black"
+                    Command="{Binding CancelarComando}"/>
                 </Grid>
             </StackPanel>
         </Border>

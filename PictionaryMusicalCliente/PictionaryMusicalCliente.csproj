@@ -195,10 +195,12 @@
     <Compile Include="VistaModelo\CambioContrasenaVistaModelo.cs" />
     <Compile Include="VistaModelo\ClasificacionVistaModelo.cs" />
     <Compile Include="VistaModelo\AjustesVistaModelo.cs" />
+    <Compile Include="VistaModelo\AjustesPartidaVistaModelo.cs" />
     <Compile Include="VistaModelo\InicioSesionVistaModelo.cs" />
     <Compile Include="VistaModelo\PerfilVistaModelo.cs" />
     <Compile Include="VistaModelo\SeleccionAvatarVistaModelo.cs" />
     <Compile Include="VistaModelo\CreacionCuentaVistaModelo.cs" />
+    <Compile Include="VistaModelo\TerminacionSesionVistaModelo.cs" />
     <Compile Include="VistaModelo\VentanaJuegoVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\ExpulsionJugadorVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\IngresoPartidaInvitadoVistaModelo.cs" />

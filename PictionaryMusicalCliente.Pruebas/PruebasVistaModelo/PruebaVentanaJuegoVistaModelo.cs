@@ -607,7 +607,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
 
             var itemAmigo = vmAmigosCapturado.Amigos.First();
 
-            itemAmigo.InvitarCommand.Execute(null);
+            itemAmigo.InvitarComando.Execute(null);
 
             await Task.Delay(200);
 

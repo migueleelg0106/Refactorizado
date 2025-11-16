@@ -170,7 +170,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             NombreUsuario = amigo.NombreUsuario ?? string.Empty;
             _invitacionEnviada = invitacionEnviada;
 
-            InvitarCommand = new ComandoAsincrono(async () =>
+            InvitarComando = new ComandoAsincrono(async () =>
             {
                 ManejadorSonido.ReproducirClick();
                 await _padre.InvitarAsync(this).ConfigureAwait(true);
@@ -189,7 +189,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 if (EstablecerPropiedad(ref _invitacionEnviada, value))
                 {
                     NotificarCambio(nameof(TextoBoton));
-                    InvitarCommand.NotificarPuedeEjecutar();
+                    InvitarComando.NotificarPuedeEjecutar();
                 }
             }
         }
@@ -201,7 +201,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             {
                 if (EstablecerPropiedad(ref _estaProcesando, value))
                 {
-                    InvitarCommand.NotificarPuedeEjecutar();
+                    InvitarComando.NotificarPuedeEjecutar();
                 }
             }
         }
@@ -210,7 +210,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             ? Lang.invitarAmigosTextoInvitado
             : Lang.globalTextoInvitar;
 
-        public IComandoAsincrono InvitarCommand { get; }
+        public IComandoAsincrono InvitarComando { get; }
 
         internal void MarcarInvitacionEnviada()
         {

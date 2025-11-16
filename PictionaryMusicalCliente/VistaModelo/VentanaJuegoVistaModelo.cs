@@ -60,6 +60,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         private string _correoInvitacion;
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
+        private bool _aplicacionCerrando;
 
         public enum DestinoNavegacion
         {
@@ -332,6 +333,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         public Action CerrarVentana { get; set; }
         public Action<DestinoNavegacion> ManejarExpulsion { get; set; }
         public Func<InvitarAmigosVistaModelo, Task> MostrarInvitarAmigos { get; set; }
+        public Action<DestinoNavegacion> ManejarNavegacion { get; set; }
 
         private static void NotificarComando(ICommand comando)
         {
@@ -657,10 +659,16 @@ namespace PictionaryMusicalCliente.VistaModelo
             {
                 if (string.Equals(nombreJugador, _nombreUsuarioSesion, StringComparison.OrdinalIgnoreCase))
                 {
-                    ManejarExpulsion?.Invoke(
-                        _esInvitado
-                            ? DestinoNavegacion.InicioSesion
-                            : DestinoNavegacion.VentanaPrincipal);
+                    DestinoNavegacion destino = _esInvitado
+                        ? DestinoNavegacion.InicioSesion
+                        : DestinoNavegacion.VentanaPrincipal;
+
+                    if (destino == DestinoNavegacion.InicioSesion)
+                    {
+                        _aplicacionCerrando = true;
+                    }
+
+                    ManejarNavegacion?.Invoke(destino);
 
                     MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoFuisteExpulsado);
                 }
@@ -809,5 +817,16 @@ namespace PictionaryMusicalCliente.VistaModelo
             (_invitacionesServicio as IDisposable)?.Dispose();
             (_perfilServicio as IDisposable)?.Dispose();
         }
+
+        public void NotificarCierreAplicacionCompleta()
+        {
+            _aplicacionCerrando = true;
+        }
+
+        public bool DebeEjecutarAccionAlCerrar()
+        {
+            return !_aplicacionCerrando;
+        }
+        
     }
 }

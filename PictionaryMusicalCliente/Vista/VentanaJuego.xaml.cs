@@ -5,10 +5,10 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Ink;
-using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using System.Windows.Controls;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
+using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente
 {
@@ -17,9 +17,14 @@ namespace PictionaryMusicalCliente
         private readonly VentanaJuegoVistaModelo _vistaModelo;
         private readonly Action _accionAlCerrar;
         private bool _ejecutarAccionAlCerrar = true;
-        private bool _cerrandoAplicacionCompleta;
+        private bool _cerrandoAplicacionCompleta; 
 
-        public VentanaJuego(DTOs.SalaDTO sala, ISalasServicio salasServicio, bool esInvitado = false, string nombreJugador = null, Action accionAlCerrar = null)
+        public VentanaJuego(
+            SalaDTO sala,
+            ISalasServicio salasServicio,
+            bool esInvitado = false,
+            string nombreJugador = null,
+            Action accionAlCerrar = null)
         {
             InitializeComponent();
 
@@ -34,81 +39,28 @@ namespace PictionaryMusicalCliente
                 sala,
                 salasServicio,
                 nombreJugador,
-                esInvitado)
+                esInvitado); 
+
+            _vistaModelo.AbrirAjustesPartida = manejadorCancion =>
             {
-                AbrirAjustesPartida = manejadorCancion =>
-                {
-                    var ajustes = new AjustesPartida(manejadorCancion);
-                    AbrirDialogo(ajustes);
-                },
-                NotificarCambioHerramienta = EstablecerHerramienta,
-                AplicarEstiloLapiz = AplicarEstiloLapiz,
-                ActualizarFormaGoma = ActualizarFormaGoma,
-                LimpiarTrazos = () => ink?.Strokes.Clear(),
-                MostrarMensaje = AvisoAyudante.Mostrar,
-                MostrarConfirmacion = mensaje =>
-                {
-                    var ventana = new ExpulsionJugador(mensaje)
-                    {
-                        Owner = this
-                    };
-
-                    bool? resultado = ventana.ShowDialog();
-                    return resultado == true;
-                },
-                ManejarExpulsion = destino =>
-                {
-                    void EjecutarAccionExpulsion()
-                    {
-                        if (destino == VentanaJuegoVistaModelo.DestinoNavegacion.InicioSesion)
-                        {
-                            DeshabilitarAccionAlCerrar();
-                        }
-
-                        Window ventanaDestino = destino == VentanaJuegoVistaModelo.DestinoNavegacion.InicioSesion
-                            ? new InicioSesion()
-                            : new VentanaPrincipal();
-
-                        ventanaDestino.Show();
-
-                        Close();
-                    }
-
-                    if (!Dispatcher.CheckAccess())
-                    {
-                        Dispatcher.Invoke(EjecutarAccionExpulsion);
-                    }
-                    else
-                    {
-                        EjecutarAccionExpulsion();
-                    }
-                },
-                CerrarVentana = () =>
-                {
-                    if (!Dispatcher.CheckAccess())
-                    {
-                        Dispatcher.Invoke(() => Close());
-                    }
-                    else
-                    {
-                        Close();
-                    }
-                },
-                MostrarInvitarAmigos = async vistaModeloInvitacion =>
-                {
-                    await MostrarInvitarAmigosAsync(vistaModeloInvitacion).ConfigureAwait(true);
-                }
+                var ajustes = new AjustesPartida(manejadorCancion);
+                AbrirDialogo(ajustes);
             };
+            _vistaModelo.NotificarCambioHerramienta = EstablecerHerramienta;
+            _vistaModelo.AplicarEstiloLapiz = AplicarEstiloLapiz;
+            _vistaModelo.ActualizarFormaGoma = ActualizarFormaGoma;
+            _vistaModelo.LimpiarTrazos = () => ink?.Strokes.Clear();
+            _vistaModelo.MostrarMensaje = AvisoAyudante.Mostrar;
+            _vistaModelo.MostrarConfirmacion = MostrarConfirmacion;
+            _vistaModelo.MostrarInvitarAmigos = MostrarInvitarAmigosAsync;
+
+            _vistaModelo.ManejarNavegacion = destino => EjecutarNavegacion(destino);
+            _vistaModelo.CerrarVentana = () => Close();
 
             DataContext = _vistaModelo;
 
             Closing += VentanaJuego_Closing;
             Closed += VentanaJuego_ClosedAsync;
-        }
-
-        public void DeshabilitarAccionAlCerrar()
-        {
-            _ejecutarAccionAlCerrar = false;
         }
 
         private void VentanaJuego_Closing(object sender, CancelEventArgs e)
@@ -117,14 +69,17 @@ namespace PictionaryMusicalCliente
 
             if (_cerrandoAplicacionCompleta)
             {
-                _ejecutarAccionAlCerrar = false;
+                _vistaModelo.NotificarCierreAplicacionCompleta();
             }
+
+            _ejecutarAccionAlCerrar = _vistaModelo.DebeEjecutarAccionAlCerrar();
         }
 
         private async void VentanaJuego_ClosedAsync(object sender, EventArgs e)
         {
             Closed -= VentanaJuego_ClosedAsync;
             Closing -= VentanaJuego_Closing;
+
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
 
             if (_accionAlCerrar != null && _ejecutarAccionAlCerrar && !_cerrandoAplicacionCompleta)
@@ -137,6 +92,58 @@ namespace PictionaryMusicalCliente
                 {
                     _accionAlCerrar();
                 }
+            }
+        }
+
+        private void EjecutarNavegacion(VentanaJuegoVistaModelo.DestinoNavegacion destino)
+        {
+            Window ventanaDestino = destino == VentanaJuegoVistaModelo.DestinoNavegacion.InicioSesion
+                ? new InicioSesion()
+                : new VentanaPrincipal();
+
+            ventanaDestino.Show();
+            Close(); 
+        }
+
+        private bool MostrarConfirmacion(string mensaje)
+        {
+            var ventana = new ExpulsionJugador(mensaje)
+            {
+                Owner = this
+            };
+
+            bool? resultado = ventana.ShowDialog();
+
+            return resultado == true;
+        }
+
+        private void AbrirDialogo(Window ventana)
+        {
+            if (ventana == null) return;
+            ventana.Owner = this;
+            ventana.ShowDialog();
+        }
+
+        private async Task MostrarInvitarAmigosAsync(InvitarAmigosVistaModelo vistaModelo)
+        {
+            if (vistaModelo == null) return;
+
+            void MostrarVentana()
+            {
+                var ventana = new InvitarAmigos(vistaModelo)
+                {
+                    Owner = this
+                };
+                ventana.ShowDialog();
+            }
+
+            if (!Dispatcher.CheckAccess())
+            {
+                await Dispatcher.InvokeAsync((Action)MostrarVentana);
+            }
+            else
+            {
+                MostrarVentana();
             }
         }
 
@@ -165,49 +172,9 @@ namespace PictionaryMusicalCliente
             return true;
         }
 
-        private void AbrirDialogo(Window ventana)
-        {
-            if (ventana == null)
-            {
-                return;
-            }
-
-            ventana.Owner = this;
-            ventana.ShowDialog();
-        }
-
-        private Task MostrarInvitarAmigosAsync(InvitarAmigosVistaModelo vistaModelo)
-        {
-            if (vistaModelo == null)
-            {
-                return Task.CompletedTask;
-            }
-
-            void MostrarVentana()
-            {
-                var ventana = new InvitarAmigos(vistaModelo)
-                {
-                    Owner = this
-                };
-
-                ventana.ShowDialog();
-            }
-
-            if (!Dispatcher.CheckAccess())
-            {
-                return Dispatcher.InvokeAsync((Action)MostrarVentana).Task;
-            }
-
-            MostrarVentana();
-            return Task.CompletedTask;
-        }
-
         private void EstablecerHerramienta(bool esLapiz)
         {
-            if (ink == null)
-            {
-                return;
-            }
+            if (ink == null) return;
 
             ink.EditingMode = esLapiz
                 ? InkCanvasEditingMode.Ink
@@ -225,10 +192,7 @@ namespace PictionaryMusicalCliente
 
         private void AplicarEstiloLapiz()
         {
-            if (ink == null)
-            {
-                return;
-            }
+            if (ink == null) return;
 
             ink.DefaultDrawingAttributes = new DrawingAttributes
             {
@@ -242,10 +206,7 @@ namespace PictionaryMusicalCliente
 
         private void ActualizarFormaGoma()
         {
-            if (ink == null)
-            {
-                return;
-            }
+            if (ink == null) return;
 
             var size = Math.Max(1, _vistaModelo.Grosor);
             ink.EraserShape = new EllipseStylusShape(size, size);
