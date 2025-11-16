@@ -70,6 +70,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PruebasVistaModelo\PruebaAjustesVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaVentanaJuegoVistaModelo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

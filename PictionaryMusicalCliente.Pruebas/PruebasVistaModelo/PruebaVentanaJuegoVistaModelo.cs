@@ -762,6 +762,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
                 .ThrowsAsync(new Exception("Error de red"));
 
             await _viewModel.FinalizarAsync();
+
+            _mockSalasServicio.Verify(s => s.AbandonarSalaAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         #endregion

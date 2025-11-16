@@ -194,6 +194,7 @@
     <Compile Include="VistaModelo\Amigos\SolicitudesVistaModelo.cs" />
     <Compile Include="VistaModelo\CambioContrasenaVistaModelo.cs" />
     <Compile Include="VistaModelo\ClasificacionVistaModelo.cs" />
+    <Compile Include="VistaModelo\AjustesVistaModelo.cs" />
     <Compile Include="VistaModelo\InicioSesionVistaModelo.cs" />
     <Compile Include="VistaModelo\PerfilVistaModelo.cs" />
     <Compile Include="VistaModelo\SeleccionAvatarVistaModelo.cs" />

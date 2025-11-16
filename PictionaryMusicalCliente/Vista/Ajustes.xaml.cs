@@ -1,41 +1,35 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.VistaModelo;
 
 namespace PictionaryMusicalCliente
 {
     /// <summary>
     /// Lógica de interacción para Ajustes.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage] 
     public partial class Ajustes : Window
     {
-        private readonly MusicaManejador _servicioMusica;
+        private readonly AjustesVistaModelo _viewModel;
 
         public Ajustes(MusicaManejador servicioMusica)
         {
             InitializeComponent();
-            _servicioMusica = servicioMusica;
 
-            deslizadorVolumen.Value = _servicioMusica.Volumen;
-        }
+            _viewModel = new AjustesVistaModelo(servicioMusica);
 
-        private void BotonConfirmar(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void BotonCerrarSesion(object sender, RoutedEventArgs e)
-        {
-            TerminacionSesion cerrarSesion = new TerminacionSesion();
-            cerrarSesion.Owner = this;
-            cerrarSesion.ShowDialog();
-        }
-
-        private void DeslizadorVolumen_CambioValor(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (_servicioMusica != null)
+            _viewModel.OcultarVentana = () => this.Close();
+            _viewModel.MostrarDialogoCerrarSesion = () =>
             {
-                _servicioMusica.Volumen = e.NewValue;
-            }
+                TerminacionSesion cerrarSesion = new TerminacionSesion
+                {
+                    Owner = this
+                };
+                cerrarSesion.ShowDialog();
+            };
+
+            this.DataContext = _viewModel;
         }
     }
 }
