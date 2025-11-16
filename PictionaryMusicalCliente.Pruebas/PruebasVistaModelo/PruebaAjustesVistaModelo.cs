@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.VistaModelo;
 using System;
@@ -54,15 +53,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
 
             double volumenActual = _viewModel.Volumen;
 
-            Assert.AreEqual(volumenEsperado, volumenActual);
+            Assert.AreEqual(volumenEsperado, volumenActual, 0.0001);
         }
 
         [TestMethod]
         public void Prueba_Volumen_Establecer_ActualizaServicio()
         {
             _viewModel.Volumen = 0.3;
-
-            Assert.AreEqual(0.3, _musicaManejadorReal.Volumen);
+            Assert.AreEqual(0.3, _musicaManejadorReal.Volumen, 0.0001);
         }
 
         [TestMethod]
@@ -75,7 +73,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
                     notificacionRecibida = true;
             };
 
-            _viewModel.Volumen = 0.9; 
+            _viewModel.Volumen = 0.9;
 
             Assert.IsTrue(notificacionRecibida, "Debe notificar PropertyChanged al cambiar el volumen.");
         }
@@ -83,7 +81,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         [TestMethod]
         public void Prueba_Volumen_MismoValor_NoDisparaNotificacion()
         {
-            _viewModel.Volumen = 0.5; 
+            _viewModel.Volumen = 0.5;
             bool notificacionRecibida = false;
 
             _viewModel.PropertyChanged += (s, e) =>
@@ -92,17 +90,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
                     notificacionRecibida = true;
             };
 
-            _viewModel.Volumen = 0.5; 
+            _viewModel.Volumen = 0.5;
 
             Assert.IsFalse(notificacionRecibida, "No debe notificar si el valor es idéntico.");
         }
 
         #endregion
 
-        #region Pruebas de Comandos
+        #region Pruebas de Comandos (Cobertura Total de Invoke)
 
         [TestMethod]
-        public void Prueba_ConfirmarComando_Ejecutar_InvocaOcultarVentana()
+        public void Prueba_ConfirmarComando_ConAccion_InvocaOcultarVentana()
         {
             bool accionInvocada = false;
             _viewModel.OcultarVentana = () => accionInvocada = true;
@@ -113,7 +111,22 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         }
 
         [TestMethod]
-        public void Prueba_CerrarSesionComando_Ejecutar_InvocaMostrarDialogo()
+        public void Prueba_ConfirmarComando_SinAccion_NoFalla()
+        {
+            _viewModel.OcultarVentana = null;
+
+            try
+            {
+                _viewModel.ConfirmarComando.Execute(null);
+            }
+            catch (Exception)
+            {
+                Assert.Fail("El comando falló al ejecutarse sin acción asignada.");
+            }
+        }
+
+        [TestMethod]
+        public void Prueba_CerrarSesionComando_ConAccion_InvocaMostrarDialogo()
         {
             bool accionInvocada = false;
             _viewModel.MostrarDialogoCerrarSesion = () => accionInvocada = true;
@@ -121,6 +134,21 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             _viewModel.CerrarSesionComando.Execute(null);
 
             Assert.IsTrue(accionInvocada, "El comando CerrarSesion debe invocar la acción MostrarDialogoCerrarSesion.");
+        }
+
+        [TestMethod]
+        public void Prueba_CerrarSesionComando_SinAccion_NoFalla()
+        {
+            _viewModel.MostrarDialogoCerrarSesion = null;
+
+            try
+            {
+                _viewModel.CerrarSesionComando.Execute(null);
+            }
+            catch (Exception)
+            {
+                Assert.Fail("El comando falló al ejecutarse sin acción asignada.");
+            }
         }
 
         #endregion

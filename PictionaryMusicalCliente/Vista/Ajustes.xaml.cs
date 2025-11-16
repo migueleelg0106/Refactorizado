@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Windows;
+﻿using System.Windows;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.VistaModelo;
 
@@ -8,7 +7,6 @@ namespace PictionaryMusicalCliente
     /// <summary>
     /// Lógica de interacción para Ajustes.xaml
     /// </summary>
-    [ExcludeFromCodeCoverage] 
     public partial class Ajustes : Window
     {
         private readonly AjustesVistaModelo _viewModel;

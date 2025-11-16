@@ -29,7 +29,7 @@ namespace PictionaryMusicalCliente.VistaModelo
             get => _musicaManejador.Volumen;
             set
             {
-                if (_musicaManejador.Volumen != value)
+                if (Math.Abs(_musicaManejador.Volumen - value) > 0.0001)
                 {
                     _musicaManejador.Volumen = value;
                     NotificarCambio(nameof(Volumen));

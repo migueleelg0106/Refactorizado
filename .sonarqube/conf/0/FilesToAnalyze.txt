@@ -71,6 +71,7 @@ C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\P
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\VistaModelo\Amigos\SolicitudesVistaModelo.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\VistaModelo\CambioContrasenaVistaModelo.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\VistaModelo\ClasificacionVistaModelo.cs
+C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\VistaModelo\AjustesVistaModelo.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\VistaModelo\InicioSesionVistaModelo.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\VistaModelo\PerfilVistaModelo.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\VistaModelo\SeleccionAvatarVistaModelo.cs
