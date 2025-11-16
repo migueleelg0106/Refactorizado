@@ -535,14 +535,26 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         [TestMethod]
         public async Task Prueba_InvitarAmigos_NombreUsuarioVacio_MuestraError()
         {
-            var vmSinUser = new VentanaJuegoVistaModelo(_salaDummy, _mockSalasServicio.Object, _mockInvitacionesServicio.Object, _mockListaAmigosServicio.Object, _mockPerfilServicio.Object, nombreJugador: "");
+            var vmSinUser = new VentanaJuegoVistaModelo(
+                _salaDummy,
+                _mockSalasServicio.Object,
+                _mockInvitacionesServicio.Object,
+                _mockListaAmigosServicio.Object,
+                _mockPerfilServicio.Object,
+                nombreJugador: "CualquierCosa"
+            );
+
             string msj = null;
             vmSinUser.MostrarMensaje = (m) => msj = m;
+
+            var campoUsuario = typeof(VentanaJuegoVistaModelo).GetField("_nombreUsuarioSesion", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            campoUsuario.SetValue(vmSinUser, null);
 
             vmSinUser.InvitarAmigosComando.Execute(null);
             await Task.Delay(50);
 
             Assert.AreEqual(Lang.errorTextoErrorProcesarSolicitud, msj);
+
             if (vmSinUser is IDisposable d) d.Dispose();
         }
 
