@@ -63,10 +63,22 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         [TestCleanup]
         public void Limpiar()
         {
+            if (_viewModel != null)
+            {
+                try
+                {
+                    _viewModel.FinalizarAsync().Wait();
+                }
+                catch
+                {
+                    // Ignoramos errores durante la limpieza (a veces el Task ya está cancelado)
+                }
+            }
             if (_viewModel is IDisposable disposableVm)
             {
                 disposableVm.Dispose();
             }
+
             _viewModel = null;
         }
 
