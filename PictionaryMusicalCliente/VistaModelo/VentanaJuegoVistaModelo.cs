@@ -17,7 +17,7 @@ using System.Windows.Threading;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using DTOs = Servicios.Contratos.DTOs;
+using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo
 {

@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using SalaDTO = Servicios.Contratos.DTOs.SalaDTO;
-using AmigoDTO = Servicios.Contratos.DTOs.AmigoDTO;
-using ResultadoOperacionDTO = Servicios.Contratos.DTOs.ResultadoOperacionDTO;
+using SalaDTO = PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO;
+using AmigoDTO = PictionaryMusicalServidor.Servicios.Contratos.DTOs.AmigoDTO;
+using ResultadoOperacionDTO = PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO;
 
 namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
 {
@@ -57,10 +57,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         {
             Assert.AreEqual("123456", _viewModel.CodigoSala);
             Assert.IsTrue(_viewModel.BotonIniciarPartidaHabilitado);
-            Assert.AreEqual(6, _viewModel.Grosor); 
+            Assert.AreEqual(6, _viewModel.Grosor);
             Assert.IsTrue(_viewModel.PuedeInvitarPorCorreo);
             Assert.IsNotNull(_viewModel.Jugadores);
-            Assert.AreEqual(2, _viewModel.Jugadores.Count); 
+            Assert.AreEqual(2, _viewModel.Jugadores.Count);
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         [TestMethod]
         public void Prueba_CambiarColor_ValorValido_ActualizaColorYSeleccionaLapiz()
         {
-            _viewModel.EsHerramientaBorrador = true; 
+            _viewModel.EsHerramientaBorrador = true;
 
             _viewModel.CambiarColorComando.Execute("Blue");
 
@@ -139,7 +139,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
                 .ReturnsAsync(new ResultadoOperacionDTO { OperacionExitosa = true });
 
             _viewModel.InvitarCorreoComando.Execute(null);
-            await Task.Delay(100); 
+            await Task.Delay(100);
 
             Assert.AreEqual(Lang.invitarCorreoTextoEnviado, mensajeMostrado);
             Assert.AreEqual(string.Empty, _viewModel.CorreoInvitacion);
@@ -169,7 +169,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         [TestMethod]
         public void Prueba_JugadorExpulsado_EsOtroJugador_SeEliminaDeLista()
         {
-            string otroJugador = "OtroJugador"; 
+            string otroJugador = "OtroJugador";
             Assert.IsTrue(_viewModel.Jugadores.Any(j => j.Nombre == otroJugador));
 
             _mockSalasServicio.Raise(m => m.JugadorExpulsado += null, null, otroJugador);

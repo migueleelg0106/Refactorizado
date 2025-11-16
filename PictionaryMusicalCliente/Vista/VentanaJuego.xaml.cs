@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Ink;
-using DTOs = Servicios.Contratos.DTOs;
+using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using System.Windows.Controls;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.VistaModelo.Amigos;

@@ -1,4 +1,4 @@
-using PictionaryMusicalCliente.Properties.Langs;
+﻿using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
-using DTOs = Servicios.Contratos.DTOs;
+using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
@@ -206,7 +206,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch
             {
-                //Registrar en bit�cora
+                //Registrar en bitácora
             }
         }
 

@@ -404,6 +404,15 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioSalas\SalasManejador.wsdl" />
+    <None Include="Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.AmigoDTO.datasource" />
+    <None Include="Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.ClasificacionUsuarioDTO.datasource" />
+    <None Include="Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoInicioSesionDTO.datasource" />
+    <None Include="Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO.datasource" />
+    <None Include="Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO.datasource" />
+    <None Include="Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO.datasource" />
+    <None Include="Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO.datasource" />
+    <None Include="Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO.datasource" />
+    <None Include="Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.UsuarioDTO.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AmigoDTO.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.AvatarDTO.datasource" />
     <None Include="Properties\DataSources\Servicios.Contratos.DTOs.ClasificacionUsuarioDTO.datasource" />

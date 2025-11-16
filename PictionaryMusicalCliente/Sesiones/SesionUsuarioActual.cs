@@ -1,5 +1,5 @@
 using System;
-using Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.Modelo;
 
 namespace PictionaryMusicalCliente.Sesiones

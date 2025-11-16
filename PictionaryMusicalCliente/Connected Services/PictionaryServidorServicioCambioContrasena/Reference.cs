@@ -17,31 +17,31 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambioContrasenaManejador/SolicitarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambioContrasenaManejador/SolicitarCodigoRecuperacionResponse" +
             "")]
-        Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambioContrasenaManejador/SolicitarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambioContrasenaManejador/SolicitarCodigoRecuperacionResponse" +
             "")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambioContrasenaManejador/ReenviarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambioContrasenaManejador/ReenviarCodigoRecuperacionResponse")]
-        Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(Servicios.Contratos.DTOs.ReenvioCodigoDTO solicitud);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ReenvioCodigoDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambioContrasenaManejador/ReenviarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambioContrasenaManejador/ReenviarCodigoRecuperacionResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ReenvioCodigoDTO solicitud);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ReenvioCodigoDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambioContrasenaManejador/ConfirmarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambioContrasenaManejador/ConfirmarCodigoRecuperacionResponse" +
             "")]
-        Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambioContrasenaManejador/ConfirmarCodigoRecuperacion", ReplyAction="http://tempuri.org/ICambioContrasenaManejador/ConfirmarCodigoRecuperacionResponse" +
             "")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambioContrasenaManejador/ActualizarContrasena", ReplyAction="http://tempuri.org/ICambioContrasenaManejador/ActualizarContrasenaResponse")]
-        Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarContrasena(Servicios.Contratos.DTOs.ActualizacionContrasenaDTO solicitud);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarContrasena(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ActualizacionContrasenaDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICambioContrasenaManejador/ActualizarContrasena", ReplyAction="http://tempuri.org/ICambioContrasenaManejador/ActualizarContrasenaResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(Servicios.Contratos.DTOs.ActualizacionContrasenaDTO solicitud);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ActualizacionContrasenaDTO solicitud);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -71,35 +71,35 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCambioContrasena {
                 base(binding, remoteAddress) {
         }
         
-        public Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
             return base.Channel.SolicitarCodigoRecuperacion(solicitud);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.SolicitudRecuperarCuentaDTO solicitud) {
             return base.Channel.SolicitarCodigoRecuperacionAsync(solicitud);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(Servicios.Contratos.DTOs.ReenvioCodigoDTO solicitud) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ReenvioCodigoDTO solicitud) {
             return base.Channel.ReenviarCodigoRecuperacion(solicitud);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ReenvioCodigoDTO solicitud) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ReenvioCodigoDTO solicitud) {
             return base.Channel.ReenviarCodigoRecuperacionAsync(solicitud);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO ConfirmarCodigoRecuperacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoRecuperacion(confirmacion);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO> ConfirmarCodigoRecuperacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoRecuperacionAsync(confirmacion);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarContrasena(Servicios.Contratos.DTOs.ActualizacionContrasenaDTO solicitud) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO ActualizarContrasena(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ActualizacionContrasenaDTO solicitud) {
             return base.Channel.ActualizarContrasena(solicitud);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(Servicios.Contratos.DTOs.ActualizacionContrasenaDTO solicitud) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ActualizacionContrasenaDTO solicitud) {
             return base.Channel.ActualizarContrasenaAsync(solicitud);
         }
     }

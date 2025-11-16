@@ -16,10 +16,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioInvitaciones {
     public interface IInvitacionesManejador {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInvitacionesManejador/EnviarInvitacion", ReplyAction="http://tempuri.org/IInvitacionesManejador/EnviarInvitacionResponse")]
-        Servicios.Contratos.DTOs.ResultadoOperacionDTO EnviarInvitacion(Servicios.Contratos.DTOs.InvitacionSalaDTO invitacion);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO EnviarInvitacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.InvitacionSalaDTO invitacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInvitacionesManejador/EnviarInvitacion", ReplyAction="http://tempuri.org/IInvitacionesManejador/EnviarInvitacionResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> EnviarInvitacionAsync(Servicios.Contratos.DTOs.InvitacionSalaDTO invitacion);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO> EnviarInvitacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.InvitacionSalaDTO invitacion);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,11 +49,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioInvitaciones {
                 base(binding, remoteAddress) {
         }
         
-        public Servicios.Contratos.DTOs.ResultadoOperacionDTO EnviarInvitacion(Servicios.Contratos.DTOs.InvitacionSalaDTO invitacion) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO EnviarInvitacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.InvitacionSalaDTO invitacion) {
             return base.Channel.EnviarInvitacion(invitacion);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoOperacionDTO> EnviarInvitacionAsync(Servicios.Contratos.DTOs.InvitacionSalaDTO invitacion) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoOperacionDTO> EnviarInvitacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.InvitacionSalaDTO invitacion) {
             return base.Channel.EnviarInvitacionAsync(invitacion);
         }
     }

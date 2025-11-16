@@ -4,7 +4,7 @@ using PictionaryMusicalCliente.Properties.Langs;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using DTOs = Servicios.Contratos.DTOs;
+using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
@@ -24,12 +24,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 throw new ArgumentException("El correo de destino es obligatorio.", nameof(correoDestino));
             }
 
-            ChannelFactory<Servicios.Contratos.IInvitacionesManejador> fabrica = null;
-            Servicios.Contratos.IInvitacionesManejador canal = null;
+            ChannelFactory<PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador> fabrica = null;
+            PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador canal = null;
 
             try
             {
-                fabrica = new ChannelFactory<Servicios.Contratos.IInvitacionesManejador>(Endpoint);
+                fabrica = new ChannelFactory<PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador>(Endpoint);
                 canal = fabrica.CreateChannel();
 
                 var solicitud = new DTOs.InvitacionSalaDTO
@@ -68,7 +68,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private static void CerrarCanal(Servicios.Contratos.IInvitacionesManejador canal)
+        private static void CerrarCanal(PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador canal)
         {
             if (canal is ICommunicationObject comunicacion)
             {
@@ -90,7 +90,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private static void CerrarFabrica(ChannelFactory<Servicios.Contratos.IInvitacionesManejador> fabrica)
+        private static void CerrarFabrica(ChannelFactory<PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador> fabrica)
         {
             if (fabrica == null)
             {

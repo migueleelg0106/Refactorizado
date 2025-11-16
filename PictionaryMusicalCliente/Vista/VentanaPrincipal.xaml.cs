@@ -7,7 +7,7 @@ using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using System;
 using System.Windows;
-using DTOs = Servicios.Contratos.DTOs;
+using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente
 {

@@ -5,12 +5,7 @@ VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PictionaryMusicalCliente", "PictionaryMusicalCliente.csproj", "{320DC5C2-0C94-4A41-90FF-87B2A82FAACA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PictionaryMusicalCliente.Pruebas", "..\PictionaryMusicalCliente.Pruebas\PictionaryMusicalCliente.Pruebas.csproj", "{3A0652BC-FE5A-403D-B1B7-1AACCEE828AF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{320DC5C2-0C94-4A41-90FF-87B2A82FAACA} = {320DC5C2-0C94-4A41-90FF-87B2A82FAACA}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pruebas", "Pruebas", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PictionaryMusicalCliente.Pruebas", "..\PictionaryMusicalCliente.Pruebas\PictionaryMusicalCliente.Pruebas.csproj", "{A6981B1F-CCDD-49B8-87A5-F59C02DB2DB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,16 +17,13 @@ Global
 		{320DC5C2-0C94-4A41-90FF-87B2A82FAACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{320DC5C2-0C94-4A41-90FF-87B2A82FAACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{320DC5C2-0C94-4A41-90FF-87B2A82FAACA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A0652BC-FE5A-403D-B1B7-1AACCEE828AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A0652BC-FE5A-403D-B1B7-1AACCEE828AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A0652BC-FE5A-403D-B1B7-1AACCEE828AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A0652BC-FE5A-403D-B1B7-1AACCEE828AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6981B1F-CCDD-49B8-87A5-F59C02DB2DB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6981B1F-CCDD-49B8-87A5-F59C02DB2DB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6981B1F-CCDD-49B8-87A5-F59C02DB2DB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6981B1F-CCDD-49B8-87A5-F59C02DB2DB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{3A0652BC-FE5A-403D-B1B7-1AACCEE828AF} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64742354-CAC4-4D54-9DD5-724043579F78}

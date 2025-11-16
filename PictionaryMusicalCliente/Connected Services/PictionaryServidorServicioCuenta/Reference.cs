@@ -16,28 +16,28 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCuenta {
     public interface ICuentaManejador {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/SolicitarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/SolicitarCodigoVerificacionResponse")]
-        Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/SolicitarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/SolicitarCodigoVerificacionResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoVerificacionAsync(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoVerificacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacionResponse")]
-        Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/ReenviarCodigoVerificacionResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacionResponse")]
-        Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacion", ReplyAction="http://tempuri.org/ICuentaManejador/ConfirmarCodigoVerificacionResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/RegistrarCuenta", ReplyAction="http://tempuri.org/ICuentaManejador/RegistrarCuentaResponse")]
-        Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO RegistrarCuenta(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO RegistrarCuenta(PictionaryMusicalServidor.Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICuentaManejador/RegistrarCuenta", ReplyAction="http://tempuri.org/ICuentaManejador/RegistrarCuentaResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -67,35 +67,35 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCuenta {
                 base(binding, remoteAddress) {
         }
         
-        public Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
             return base.Channel.SolicitarCodigoVerificacion(nuevaCuenta);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoVerificacionAsync(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoVerificacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
             return base.Channel.SolicitarCodigoVerificacionAsync(nuevaCuenta);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud) {
             return base.Channel.ReenviarCodigoVerificacion(solicitud);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoVerificacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ReenvioCodigoVerificacionDTO solicitud) {
             return base.Channel.ReenviarCodigoVerificacionAsync(solicitud);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoVerificacion(confirmacion);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoVerificacionAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfirmacionCodigoDTO confirmacion) {
             return base.Channel.ConfirmarCodigoVerificacionAsync(confirmacion);
         }
         
-        public Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO RegistrarCuenta(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO RegistrarCuenta(PictionaryMusicalServidor.Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
             return base.Channel.RegistrarCuenta(nuevaCuenta);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.NuevaCuentaDTO nuevaCuenta) {
             return base.Channel.RegistrarCuentaAsync(nuevaCuenta);
         }
     }

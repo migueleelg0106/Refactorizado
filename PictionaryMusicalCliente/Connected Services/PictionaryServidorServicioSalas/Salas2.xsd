@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:8519/Pictionary/Salas?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" />
+  <xs:import schemaLocation="http://localhost:8519/Pictionary/Salas?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" />
   <xs:element name="CrearSala">
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="nombreCreador" nillable="true" type="xs:string" />
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="configuracion" nillable="true" type="q1:ConfiguracionPartidaDTO" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="configuracion" nillable="true" type="q1:ConfiguracionPartidaDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="CrearSalaResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="CrearSalaResult" nillable="true" type="q2:SalaDTO" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="CrearSalaResult" nillable="true" type="q2:SalaDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -27,7 +27,7 @@
   <xs:element name="UnirseSalaResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="UnirseSalaResult" nillable="true" type="q3:SalaDTO" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="UnirseSalaResult" nillable="true" type="q3:SalaDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -39,7 +39,7 @@
   <xs:element name="ObtenerSalasResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="ObtenerSalasResult" nillable="true" type="q4:ArrayOfSalaDTO" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="ObtenerSalasResult" nillable="true" type="q4:ArrayOfSalaDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -109,14 +109,14 @@
   <xs:element name="NotificarListaSalasActualizada">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="salas" nillable="true" type="q5:ArrayOfSalaDTO" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="salas" nillable="true" type="q5:ArrayOfSalaDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="NotificarSalaActualizada">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Servicios.Contratos.DTOs" minOccurs="0" name="sala" nillable="true" type="q6:SalaDTO" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="sala" nillable="true" type="q6:SalaDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

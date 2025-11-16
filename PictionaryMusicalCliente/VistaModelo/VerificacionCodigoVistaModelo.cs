@@ -7,7 +7,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
-using DTOs = Servicios.Contratos.DTOs;
+using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 {

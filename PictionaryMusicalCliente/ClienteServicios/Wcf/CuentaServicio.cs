@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
-using DTOs = Servicios.Contratos.DTOs;
+using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {

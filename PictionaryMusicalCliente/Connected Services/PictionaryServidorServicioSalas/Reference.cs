@@ -16,22 +16,22 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
     public interface ISalasManejador {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/CrearSala", ReplyAction="http://tempuri.org/ISalasManejador/CrearSalaResponse")]
-        Servicios.Contratos.DTOs.SalaDTO CrearSala(string nombreCreador, Servicios.Contratos.DTOs.ConfiguracionPartidaDTO configuracion);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO CrearSala(string nombreCreador, PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfiguracionPartidaDTO configuracion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/CrearSala", ReplyAction="http://tempuri.org/ISalasManejador/CrearSalaResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.SalaDTO> CrearSalaAsync(string nombreCreador, Servicios.Contratos.DTOs.ConfiguracionPartidaDTO configuracion);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO> CrearSalaAsync(string nombreCreador, PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfiguracionPartidaDTO configuracion);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/UnirseSala", ReplyAction="http://tempuri.org/ISalasManejador/UnirseSalaResponse")]
-        Servicios.Contratos.DTOs.SalaDTO UnirseSala(string codigoSala, string nombreUsuario);
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO UnirseSala(string codigoSala, string nombreUsuario);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/UnirseSala", ReplyAction="http://tempuri.org/ISalasManejador/UnirseSalaResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.SalaDTO> UnirseSalaAsync(string codigoSala, string nombreUsuario);
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO> UnirseSalaAsync(string codigoSala, string nombreUsuario);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/ObtenerSalas", ReplyAction="http://tempuri.org/ISalasManejador/ObtenerSalasResponse")]
-        Servicios.Contratos.DTOs.SalaDTO[] ObtenerSalas();
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO[] ObtenerSalas();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/ObtenerSalas", ReplyAction="http://tempuri.org/ISalasManejador/ObtenerSalasResponse")]
-        System.Threading.Tasks.Task<Servicios.Contratos.DTOs.SalaDTO[]> ObtenerSalasAsync();
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO[]> ObtenerSalasAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/AbandonarSala", ReplyAction="http://tempuri.org/ISalasManejador/AbandonarSalaResponse")]
         void AbandonarSala(string codigoSala, string nombreUsuario);
@@ -68,10 +68,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         void NotificarJugadorSalio(string codigoSala, string nombreJugador);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarListaSalasActualizada")]
-        void NotificarListaSalasActualizada(Servicios.Contratos.DTOs.SalaDTO[] salas);
+        void NotificarListaSalasActualizada(PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO[] salas);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarSalaActualizada")]
-        void NotificarSalaActualizada(Servicios.Contratos.DTOs.SalaDTO sala);
+        void NotificarSalaActualizada(PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO sala);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarJugadorExpulsado")]
         void NotificarJugadorExpulsado(string codigoSala, string nombreJugador);
@@ -105,27 +105,27 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public Servicios.Contratos.DTOs.SalaDTO CrearSala(string nombreCreador, Servicios.Contratos.DTOs.ConfiguracionPartidaDTO configuracion) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO CrearSala(string nombreCreador, PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfiguracionPartidaDTO configuracion) {
             return base.Channel.CrearSala(nombreCreador, configuracion);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.SalaDTO> CrearSalaAsync(string nombreCreador, Servicios.Contratos.DTOs.ConfiguracionPartidaDTO configuracion) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO> CrearSalaAsync(string nombreCreador, PictionaryMusicalServidor.Servicios.Contratos.DTOs.ConfiguracionPartidaDTO configuracion) {
             return base.Channel.CrearSalaAsync(nombreCreador, configuracion);
         }
         
-        public Servicios.Contratos.DTOs.SalaDTO UnirseSala(string codigoSala, string nombreUsuario) {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO UnirseSala(string codigoSala, string nombreUsuario) {
             return base.Channel.UnirseSala(codigoSala, nombreUsuario);
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.SalaDTO> UnirseSalaAsync(string codigoSala, string nombreUsuario) {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO> UnirseSalaAsync(string codigoSala, string nombreUsuario) {
             return base.Channel.UnirseSalaAsync(codigoSala, nombreUsuario);
         }
         
-        public Servicios.Contratos.DTOs.SalaDTO[] ObtenerSalas() {
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO[] ObtenerSalas() {
             return base.Channel.ObtenerSalas();
         }
         
-        public System.Threading.Tasks.Task<Servicios.Contratos.DTOs.SalaDTO[]> ObtenerSalasAsync() {
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO[]> ObtenerSalasAsync() {
             return base.Channel.ObtenerSalasAsync();
         }
         

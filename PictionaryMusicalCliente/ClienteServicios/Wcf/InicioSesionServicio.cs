@@ -5,7 +5,7 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
-using DTOs = Servicios.Contratos.DTOs;
+using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
