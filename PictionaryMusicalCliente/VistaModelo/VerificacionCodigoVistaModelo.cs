@@ -150,18 +150,21 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
                 if (!resultado.RegistroExitoso)
                 {
                     ManejadorSonido.ReproducirError();
-                    string mensaje = MensajeServidorAyudante.Localizar(resultado.Mensaje, Lang.errorTextoCodigoIncorrecto);
-                    resultado.Mensaje = mensaje;
+                    string mensajeOriginal = resultado.Mensaje;
+                    string mensajeLocalizado = MensajeServidorAyudante.Localizar(mensajeOriginal, Lang.errorTextoCodigoIncorrecto);
+                    resultado.Mensaje = mensajeLocalizado;
+
                     MarcarCodigoInvalido?.Invoke(true);
 
-                    if (string.Equals(mensaje, Lang.avisoTextoCodigoExpirado, StringComparison.Ordinal))
+                    if (string.Equals(mensajeLocalizado, Lang.avisoTextoCodigoExpirado, StringComparison.Ordinal) ||
+                        string.Equals(mensajeOriginal, Lang.avisoTextoCodigoExpirado, StringComparison.Ordinal))
                     {
                         DetenerTemporizadores();
                         VerificacionCompletada?.Invoke(resultado);
                         return;
                     }
 
-                    AvisoAyudante.Mostrar(mensaje);
+                    AvisoAyudante.Mostrar(mensajeLocalizado);
                     return;
                 }
 
