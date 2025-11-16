@@ -109,9 +109,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         public void Dispose_DesuscribeEvento()
         {
             _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+
             _viewModel.Dispose();
 
-            _mockAmigosServicio.Raise(m => m.SolicitudesActualizadas += null, null, new List<DTOs.SolicitudAmistadDTO>());
+            var nuevasSolicitudes = new List<DTOs.SolicitudAmistadDTO>
+            {
+                new DTOs.SolicitudAmistadDTO { UsuarioEmisor = "Test", UsuarioReceptor = UsuarioTest }
+            };
+
+            _mockAmigosServicio.Raise(m => m.SolicitudesActualizadas += null, null, nuevasSolicitudes);
+
+            Assert.AreEqual(0, _viewModel.Solicitudes.Count, "El evento no debió procesarse después del Dispose");
         }
 
         [TestMethod]
