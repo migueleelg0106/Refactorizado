@@ -1,4 +1,5 @@
 ﻿C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente.Pruebas\PruebasVistaModelo\PruebaAjustesVistaModelo.cs
+C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente.Pruebas\PruebasVistaModelo\PruebaPerfilVistaModelo.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente.Pruebas\PruebasVistaModelo\PruebaVentanaJuegoVistaModelo.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente.Pruebas\Properties\AssemblyInfo.cs
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente.Pruebas\PruebasVistaModelo\PruebaVentanaPrincipalVistaModelo.cs

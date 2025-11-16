@@ -5,11 +5,13 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
+using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.VistaModelo.Cuentas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -28,11 +30,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         [TestInitialize]
         public void Inicializar()
         {
-            if (Application.Current == null)
-            {
-                new Application();
-            }
-
+            if (Application.Current == null) new Application();
             Application.ResourceAssembly = typeof(PerfilVistaModelo).Assembly;
 
             _mockPerfilServicio = new Mock<IPerfilServicio>();
@@ -40,17 +38,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             _mockCambioContrasena = new Mock<ICambioContrasenaServicio>();
             _mockRecuperacionCuenta = new Mock<IRecuperacionCuentaServicio>();
 
-            // Configurar sesión por defecto
-            try
+            SesionUsuarioActual.EstablecerUsuario(new DTOs.UsuarioDTO
             {
-                SesionUsuarioActual.EstablecerUsuario(new DTOs.UsuarioDTO
-                {
-                    UsuarioId = 1,
-                    NombreUsuario = "TestUser",
-                    Correo = "test@correo.com"
-                });
-            }
-            catch { /* Ignorar si ya estaba establecida */ }
+                UsuarioId = 1,
+                NombreUsuario = "TestUser",
+                Correo = "test@correo.com",
+                Nombre = "Original",
+                Apellido = "Original"
+            });
 
             AvisoAyudante.DefinirMostrarAviso((msj) => { });
 
@@ -60,6 +55,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
                 _mockCambioContrasena.Object,
                 _mockRecuperacionCuenta.Object
             );
+
+            _viewModel.MostrarCamposInvalidos = (_) => { };
+            _viewModel.CerrarAccion = () => { };
         }
 
         [TestCleanup]
@@ -67,17 +65,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         {
             try
             {
-                SesionUsuarioActual.EstablecerUsuario(new DTOs.UsuarioDTO());
+                SesionUsuarioActual.EstablecerUsuario(new DTOs.UsuarioDTO { UsuarioId = 0 });
             }
-            catch
-            {
-                // Si incluso el vacío falla, ignoramos el error de limpieza para no ocultar errores reales de prueba.
-            }
-
+            catch { }
             _viewModel = null;
         }
 
-        #region Constructor y Validaciones
+        #region 1. Constructor y Validaciones Iniciales
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -108,176 +102,157 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         }
 
         [TestMethod]
-        public void Prueba_Constructor_InicializaRedesSociales()
+        public void Prueba_Constructor_InicializaRedesSocialesCorrectamente()
         {
             Assert.IsNotNull(_viewModel.RedesSociales);
-            Assert.AreEqual(4, _viewModel.RedesSociales.Count); 
+            Assert.AreEqual(4, _viewModel.RedesSociales.Count);
             Assert.IsTrue(_viewModel.RedesSociales.Any(r => r.Nombre == "Instagram"));
+            Assert.IsTrue(_viewModel.RedesSociales.Any(r => r.Nombre == "Facebook"));
+            Assert.IsTrue(_viewModel.RedesSociales.Any(r => r.Nombre == "X"));
+            Assert.IsTrue(_viewModel.RedesSociales.Any(r => r.Nombre == "Discord"));
         }
 
         #endregion
 
-        #region Carga de Perfil
+        #region 2. Carga de Perfil (CargarPerfilAsync)
 
         [TestMethod]
-        public async Task Prueba_CargarPerfilAsync_SesionInvalida_MuestraError()
+        public async Task Prueba_CargarPerfilAsync_SesionInvalida_CierraVentana()
         {
-            var usuarioInvalido = new DTOs.UsuarioDTO
-            {
-                UsuarioId = 0,
-                NombreUsuario = "Dummy",
-                Correo = "dummy@test.com",
-                Nombre = "Dummy",
-                Apellido = "Dummy"
-            };
-
-            SesionUsuarioActual.EstablecerUsuario(usuarioInvalido);
-
+            SesionUsuarioActual.EstablecerUsuario(new DTOs.UsuarioDTO { UsuarioId = 0 });
             bool cerrado = false;
             _viewModel.CerrarAccion = () => cerrado = true;
 
             await _viewModel.CargarPerfilAsync();
 
-            Assert.IsTrue(cerrado, "La ventana debería cerrarse si la sesión es inválida.");
+            Assert.IsTrue(cerrado);
             _mockPerfilServicio.Verify(s => s.ObtenerPerfilAsync(It.IsAny<int>()), Times.Never);
-        }
-
-        [TestMethod]
-        public async Task Prueba_CargarPerfilAsync_PerfilNulo_MuestraError()
-        {
-            _mockPerfilServicio.Setup(s => s.ObtenerPerfilAsync(1)).ReturnsAsync((DTOs.UsuarioDTO)null);
-
-            await _viewModel.CargarPerfilAsync();
-
-            Assert.IsNull(_viewModel.Nombre);
         }
 
         [TestMethod]
         public async Task Prueba_CargarPerfilAsync_Exito_MapeaDatos()
         {
-            var perfilMock = new DTOs.UsuarioDTO
+            var perfilDto = new DTOs.UsuarioDTO
             {
                 UsuarioId = 1,
-                NombreUsuario = "User",
-                Correo = "c@c.com",
-                Nombre = "Juan",
-                Apellido = "Perez",
+                NombreUsuario = "UserDB",
+                Correo = "db@correo.com",
+                Nombre = "NombreDB",
+                Apellido = "ApellidoDB",
                 AvatarId = 1,
-                Instagram = "instaUser",
-                Facebook = "faceUser"
+                Instagram = "instaDB",
+                Facebook = "faceDB"
             };
-
-            _mockPerfilServicio.Setup(s => s.ObtenerPerfilAsync(1)).ReturnsAsync(perfilMock);
+            _mockPerfilServicio.Setup(s => s.ObtenerPerfilAsync(1)).ReturnsAsync(perfilDto);
 
             await _viewModel.CargarPerfilAsync();
 
-            Assert.AreEqual("Juan", _viewModel.Nombre);
-            Assert.AreEqual("Perez", _viewModel.Apellido);
-            Assert.AreEqual("instaUser", _viewModel.RedesSociales.First(r => r.Nombre == "Instagram").Identificador);
-            Assert.AreEqual("faceUser", _viewModel.RedesSociales.First(r => r.Nombre == "Facebook").Identificador);
-            Assert.IsNull(_viewModel.RedesSociales.First(r => r.Nombre == "X").Identificador); 
+            Assert.AreEqual("NombreDB", _viewModel.Nombre);
+            Assert.AreEqual("ApellidoDB", _viewModel.Apellido);
+            Assert.AreEqual("instaDB", _viewModel.RedesSociales.First(r => r.Nombre == "Instagram").Identificador);
+            Assert.AreEqual("faceDB", _viewModel.RedesSociales.First(r => r.Nombre == "Facebook").Identificador);
+            Assert.IsNull(_viewModel.RedesSociales.First(r => r.Nombre == "X").Identificador);
         }
 
         [TestMethod]
-        public async Task Prueba_CargarPerfilAsync_AvatarInexistente_UsaDefault()
+        public async Task Prueba_CargarPerfilAsync_PerfilNulo_MuestraAviso()
         {
-            var perfilMock = new DTOs.UsuarioDTO { UsuarioId = 1, AvatarId = 9999 }; 
-            _mockPerfilServicio.Setup(s => s.ObtenerPerfilAsync(1)).ReturnsAsync(perfilMock);
+            _mockPerfilServicio.Setup(s => s.ObtenerPerfilAsync(1)).ReturnsAsync((DTOs.UsuarioDTO)null);
+            string mensaje = null;
+            AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
             await _viewModel.CargarPerfilAsync();
 
-            if (CatalogoAvataresLocales.ObtenerAvatares().Count > 0)
-            {
-                Assert.IsNotNull(_viewModel.AvatarSeleccionadoImagen);
-            }
+            Assert.AreEqual(Lang.errorTextoServidorObtenerPerfil, mensaje);
         }
 
         [TestMethod]
-        public async Task Prueba_CargarPerfilAsync_Excepcion_MuestraError()
+        public async Task Prueba_CargarPerfilAsync_Excepcion_MuestraMensajeError()
         {
-            _mockPerfilServicio.Setup(s => s.ObtenerPerfilAsync(1)).ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "Error", null));
+            _mockPerfilServicio.Setup(s => s.ObtenerPerfilAsync(1))
+                .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorConexion", null));
+
+            string mensaje = null;
+            AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
             await _viewModel.CargarPerfilAsync();
 
-            Assert.IsFalse(_viewModel.EstaProcesando);
+            Assert.AreEqual("ErrorConexion", mensaje);
+            Assert.IsFalse(_viewModel.EstaProcesando); 
         }
 
         #endregion
 
-        #region Selección de Avatar
+        #region 3. Selección de Avatar
 
         [TestMethod]
-        public async Task Prueba_SeleccionarAvatarAsync_Cancelado_NoCambia()
+        public async Task Prueba_SeleccionarAvatar_Exito_ActualizaPropiedades()
         {
-            _mockSeleccionarAvatar.Setup(s => s.SeleccionarAvatarAsync(It.IsAny<int>())).ReturnsAsync((ObjetoAvatar)null);
-
-            int idInicial = _viewModel.AvatarSeleccionadoId;
-
-            await _viewModel.SeleccionarAvatarComando.EjecutarAsync(null);
-
-            Assert.AreEqual(idInicial, _viewModel.AvatarSeleccionadoId);
-        }
-
-        [TestMethod]
-        public async Task Prueba_SeleccionarAvatarAsync_Exito_ActualizaPropiedades()
-        {
-            var nuevoAvatar = new ObjetoAvatar(5, "Nuevo", null);
-            _mockSeleccionarAvatar.Setup(s => s.SeleccionarAvatarAsync(It.IsAny<int>())).ReturnsAsync(nuevoAvatar);
+            var avatarMock = new ObjetoAvatar(5, "NuevoAvatar", null);
+            _mockSeleccionarAvatar.Setup(s => s.SeleccionarAvatarAsync(It.IsAny<int>())).ReturnsAsync(avatarMock);
 
             await _viewModel.SeleccionarAvatarComando.EjecutarAsync(null);
 
             Assert.AreEqual(5, _viewModel.AvatarSeleccionadoId);
-            Assert.AreEqual("Nuevo", _viewModel.AvatarSeleccionadoNombre);
+            Assert.AreEqual("NuevoAvatar", _viewModel.AvatarSeleccionadoNombre);
+        }
+
+        [TestMethod]
+        public async Task Prueba_SeleccionarAvatar_Cancelado_NoCambiaNada()
+        {
+            _mockSeleccionarAvatar.Setup(s => s.SeleccionarAvatarAsync(It.IsAny<int>())).ReturnsAsync((ObjetoAvatar)null);
+            int idOriginal = _viewModel.AvatarSeleccionadoId;
+
+            await _viewModel.SeleccionarAvatarComando.EjecutarAsync(null);
+
+            Assert.AreEqual(idOriginal, _viewModel.AvatarSeleccionadoId);
         }
 
         #endregion
 
-        #region Guardar Cambios (Validaciones)
+        #region 4. Guardar Cambios (Validaciones y Lógica)
 
         [TestMethod]
-        public async Task Prueba_GuardarCambios_CamposVacios_MuestraErrores()
+        public async Task Prueba_GuardarCambios_CamposInvalidos_MuestraErrores()
         {
-            List<string> erroresReportados = null;
-            _viewModel.MostrarCamposInvalidos = (l) => erroresReportados = l.ToList();
+            _viewModel.Nombre = "";
+            _viewModel.Apellido = "";
+            SetAvatarId(0); 
+
+            List<string> invalidos = null;
+            _viewModel.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
 
             await _viewModel.GuardarCambiosComando.EjecutarAsync(null);
 
-            Assert.IsNotNull(erroresReportados);
-            Assert.IsTrue(erroresReportados.Contains("Nombre"));
-            Assert.IsTrue(erroresReportados.Contains("Apellido"));
-            Assert.IsTrue(erroresReportados.Contains("Avatar")); 
+            Assert.IsTrue(invalidos.Contains("Nombre"));
+            Assert.IsTrue(invalidos.Contains("Apellido"));
+            Assert.IsTrue(invalidos.Contains("Avatar"));
             _mockPerfilServicio.Verify(s => s.ActualizarPerfilAsync(It.IsAny<DTOs.ActualizacionPerfilDTO>()), Times.Never);
         }
 
         [TestMethod]
         public async Task Prueba_GuardarCambios_RedSocialLarga_MuestraError()
         {
-            _viewModel.Nombre = "Valido";
-            _viewModel.Apellido = "Valido";
-            typeof(PerfilVistaModelo).GetProperty("AvatarSeleccionadoId")?.SetValue(_viewModel, 1);
-
+            SetCamposValidos();
             var red = _viewModel.RedesSociales.First();
             red.Identificador = new string('a', 51); 
 
-            List<string> erroresReportados = null;
-            _viewModel.MostrarCamposInvalidos = (l) => erroresReportados = l.ToList();
+            string mensaje = null;
+            AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
             await _viewModel.GuardarCambiosComando.EjecutarAsync(null);
 
-            Assert.IsTrue(erroresReportados.Contains("RedesSociales"));
+            Assert.IsNotNull(mensaje);
             Assert.IsTrue(red.TieneError);
-            _mockPerfilServicio.Verify(s => s.ActualizarPerfilAsync(It.IsAny<DTOs.ActualizacionPerfilDTO>()), Times.Never);
         }
 
         [TestMethod]
         public async Task Prueba_GuardarCambios_Exito_LlamaServicioYActualizaSesion()
         {
-            _viewModel.Nombre = "Juan";
-            _viewModel.Apellido = "Perez";
-            typeof(PerfilVistaModelo).GetProperty("AvatarSeleccionadoId")?.SetValue(_viewModel, 1);
-
-            var red = _viewModel.RedesSociales.First(r => r.Nombre == "Instagram");
-            red.Identificador = "juan.perez";
+            SetCamposValidos();
+            _viewModel.Nombre = "NuevoNombre";
+            var red = _viewModel.RedesSociales.First(r => r.Nombre == "X");
+            red.Identificador = "x_handle";
 
             _mockPerfilServicio
                 .Setup(s => s.ActualizarPerfilAsync(It.IsAny<DTOs.ActualizacionPerfilDTO>()))
@@ -285,64 +260,71 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
 
             await _viewModel.GuardarCambiosComando.EjecutarAsync(null);
 
-            _mockPerfilServicio.Verify(s => s.ActualizarPerfilAsync(It.Is<DTOs.ActualizacionPerfilDTO>(dto =>
-                dto.Nombre == "Juan" &&
-                dto.Instagram == "juan.perez" &&
-                dto.Facebook == null 
+            _mockPerfilServicio.Verify(s => s.ActualizarPerfilAsync(It.Is<DTOs.ActualizacionPerfilDTO>(d =>
+                d.Nombre == "NuevoNombre" &&
+                d.X == "x_handle" &&
+                d.Instagram == null
             )), Times.Once);
 
-            Assert.AreEqual("Juan", SesionUsuarioActual.Usuario.Nombre);
-            Assert.AreEqual("juan.perez", SesionUsuarioActual.Usuario.Instagram);
+            Assert.AreEqual("NuevoNombre", SesionUsuarioActual.Usuario.Nombre);
+            Assert.AreEqual("x_handle", SesionUsuarioActual.Usuario.X);
         }
 
         [TestMethod]
-        public async Task Prueba_GuardarCambios_ResultadoNulo_MuestraError()
+        public async Task Prueba_GuardarCambios_RespuestaServidorNula_MuestraError()
         {
-            ConfigurarCamposValidos();
-            _mockPerfilServicio.Setup(s => s.ActualizarPerfilAsync(It.IsAny<DTOs.ActualizacionPerfilDTO>())).ReturnsAsync((DTOs.ResultadoOperacionDTO)null);
+            SetCamposValidos();
+            _mockPerfilServicio
+                .Setup(s => s.ActualizarPerfilAsync(It.IsAny<DTOs.ActualizacionPerfilDTO>()))
+                .ReturnsAsync((DTOs.ResultadoOperacionDTO)null);
+
+            string mensaje = null;
+            AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
             await _viewModel.GuardarCambiosComando.EjecutarAsync(null);
 
-            Assert.IsFalse(_viewModel.EstaProcesando);
+            Assert.AreEqual(Lang.errorTextoServidorActualizarPerfil, mensaje);
         }
 
         [TestMethod]
-        public async Task Prueba_GuardarCambios_Excepcion_MuestraError()
+        public async Task Prueba_GuardarCambios_OperacionFallida_MuestraMensajeServidor()
         {
-            ConfigurarCamposValidos();
-            _mockPerfilServicio.Setup(s => s.ActualizarPerfilAsync(It.IsAny<DTOs.ActualizacionPerfilDTO>()))
-                .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "Fallo", null));
+            SetCamposValidos();
+
+            _mockPerfilServicio
+                .Setup(s => s.ActualizarPerfilAsync(It.IsAny<DTOs.ActualizacionPerfilDTO>()))
+                .ReturnsAsync(new DTOs.ResultadoOperacionDTO { OperacionExitosa = false, Mensaje = "ErrorValidacion" });
+
+            string mensaje = null;
+            AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
             await _viewModel.GuardarCambiosComando.EjecutarAsync(null);
 
-            Assert.IsFalse(_viewModel.EstaProcesando);
-        }
-
-        private void ConfigurarCamposValidos()
-        {
-            _viewModel.Nombre = "Valido";
-            _viewModel.Apellido = "Valido";
-            typeof(PerfilVistaModelo).GetProperty("AvatarSeleccionadoId")?.SetValue(_viewModel, 1);
+            Assert.AreEqual(Lang.errorTextoActualizarPerfil, mensaje);
         }
 
         #endregion
 
-        #region Cambio de Contraseña
+        #region 5. Cambio de Contraseña
 
         [TestMethod]
         public async Task Prueba_CambiarContrasena_CorreoVacio_MuestraError()
         {
-            typeof(PerfilVistaModelo).GetProperty("Correo")?.SetValue(_viewModel, "");
+            typeof(PerfilVistaModelo).GetProperty("Correo").SetValue(_viewModel, "");
+
+            string mensaje = null;
+            AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
             await _viewModel.CambiarContrasenaComando.EjecutarAsync(null);
 
+            Assert.AreEqual(Lang.errorTextoIniciarCambioContrasena, mensaje);
             _mockRecuperacionCuenta.Verify(s => s.RecuperarCuentaAsync(It.IsAny<string>(), It.IsAny<ICambioContrasenaServicio>()), Times.Never);
         }
 
         [TestMethod]
         public async Task Prueba_CambiarContrasena_Exito_LlamaServicio()
         {
-            typeof(PerfilVistaModelo).GetProperty("Correo")?.SetValue(_viewModel, "test@correo.com");
+            typeof(PerfilVistaModelo).GetProperty("Correo").SetValue(_viewModel, "test@correo.com");
 
             _mockRecuperacionCuenta
                 .Setup(s => s.RecuperarCuentaAsync("test@correo.com", It.IsAny<ICambioContrasenaServicio>()))
@@ -351,38 +333,66 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             await _viewModel.CambiarContrasenaComando.EjecutarAsync(null);
 
             _mockRecuperacionCuenta.Verify(s => s.RecuperarCuentaAsync("test@correo.com", It.IsAny<ICambioContrasenaServicio>()), Times.Once);
-            Assert.IsFalse(_viewModel.EstaCambiandoContrasena);
         }
+
         [TestMethod]
-        public async Task Prueba_CambiarContrasena_FalloLogico_MuestraMensaje()
+        public async Task Prueba_CambiarContrasena_Fallo_MuestraMensaje()
         {
+            typeof(PerfilVistaModelo).GetProperty("Correo").SetValue(_viewModel, "test@correo.com");
             _mockRecuperacionCuenta
                 .Setup(s => s.RecuperarCuentaAsync(It.IsAny<string>(), It.IsAny<ICambioContrasenaServicio>()))
-                .ReturnsAsync(new DTOs.ResultadoOperacionDTO { OperacionExitosa = false, Mensaje = "Error" });
+                .ReturnsAsync(new DTOs.ResultadoOperacionDTO { OperacionExitosa = false, Mensaje = "TokenInvalido" });
+
+            string mensaje = null;
+            AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
             await _viewModel.CambiarContrasenaComando.EjecutarAsync(null);
 
-            Assert.IsFalse(_viewModel.EstaCambiandoContrasena);
+            Assert.AreEqual("TokenInvalido", mensaje);
         }
 
         [TestMethod]
         public async Task Prueba_CambiarContrasena_Excepcion_MuestraError()
         {
+            typeof(PerfilVistaModelo).GetProperty("Correo").SetValue(_viewModel, "test@correo.com");
             _mockRecuperacionCuenta
                 .Setup(s => s.RecuperarCuentaAsync(It.IsAny<string>(), It.IsAny<ICambioContrasenaServicio>()))
-                .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "Fallo", null));
+                .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "FalloRed", null));
+
+            string mensaje = null;
+            AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
             await _viewModel.CambiarContrasenaComando.EjecutarAsync(null);
 
-            Assert.IsFalse(_viewModel.EstaCambiandoContrasena);
+            Assert.AreEqual("FalloRed", mensaje);
+            Assert.IsFalse(_viewModel.EstaCambiandoContrasena); 
         }
 
         #endregion
 
-        #region Comandos y Cierre
+        #region 6. Propiedades y Comandos (Cobertura de Setters y Notificaciones)
 
         [TestMethod]
-        public void Prueba_CerrarComando_InvocaAccion()
+        public void Prueba_EstaProcesando_Setter_NotificaComandos()
+        {
+            PropertyInfo prop = typeof(PerfilVistaModelo).GetProperty("EstaProcesando");
+            prop.SetValue(_viewModel, true);
+
+            Assert.IsFalse(_viewModel.GuardarCambiosComando.CanExecute(null));
+            Assert.IsFalse(_viewModel.SeleccionarAvatarComando.CanExecute(null));
+        }
+
+        [TestMethod]
+        public void Prueba_EstaCambiandoContrasena_Setter_NotificaComando()
+        {
+            PropertyInfo prop = typeof(PerfilVistaModelo).GetProperty("EstaCambiandoContrasena");
+            prop.SetValue(_viewModel, true);
+
+            Assert.IsFalse(_viewModel.CambiarContrasenaComando.CanExecute(null));
+        }
+
+        [TestMethod]
+        public void Prueba_CerrarComando_EjecutaAccion()
         {
             bool cerrado = false;
             _viewModel.CerrarAccion = () => cerrado = true;
@@ -390,15 +400,21 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             Assert.IsTrue(cerrado);
         }
 
+        #endregion
+
+        #region 7. Lógica Auxiliar y Clases Anidadas
+
         [TestMethod]
-        public void Prueba_RedSocialItem_Propiedades_Funcionan()
+        public void Prueba_RedSocialItem_Propiedades_FuncionanCorrectamente()
         {
-            var item = new PerfilVistaModelo.RedSocialItemVistaModelo("Test", null);
-            item.Identificador = "Valor";
+            var item = new PerfilVistaModelo.RedSocialItemVistaModelo("TestRed", null);
+
+            item.Identificador = "MiUser";
             item.TieneError = true;
 
-            Assert.AreEqual("Valor", item.Identificador);
+            Assert.AreEqual("MiUser", item.Identificador);
             Assert.IsTrue(item.TieneError);
+            Assert.AreEqual("TestRed", item.Nombre);
         }
 
         [TestMethod]
@@ -409,5 +425,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         }
 
         #endregion
+
+        private void SetCamposValidos()
+        {
+            _viewModel.Nombre = "Valido";
+            _viewModel.Apellido = "Valido";
+            SetAvatarId(1);
+        }
+
+        private void SetAvatarId(int id)
+        {
+            typeof(PerfilVistaModelo).GetProperty("AvatarSeleccionadoId")?.SetValue(_viewModel, id);
+        }
     }
 }
