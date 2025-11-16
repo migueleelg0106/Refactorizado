@@ -152,7 +152,7 @@
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.host.url">http://localhost:9000</Property>
-    <Property Name="sonar.cs.vscoveragexml.reportsPaths">coverage.xml</Property>
+    <Property Name="sonar.cs.opencover.reportsPaths">coverage.xml</Property>
     <Property Name="sonar.exclusions">coverage.xml</Property>
   </LocalSettings>
   <ScannerOptsSettings />

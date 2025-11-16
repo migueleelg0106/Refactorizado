@@ -90,6 +90,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props'))" />
     <Error Condition="!Exists('..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets'))" />
+    <Error Condition="!Exists('..\PictionaryMusicalCliente\packages\OpenCover.4.7.1221\build\OpenCover.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\PictionaryMusicalCliente\packages\OpenCover.4.7.1221\build\OpenCover.targets'))" />
   </Target>
   <Import Project="..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets" Condition="Exists('..\PictionaryMusicalCliente\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets')" />
+  <Import Project="..\PictionaryMusicalCliente\packages\OpenCover.4.7.1221\build\OpenCover.targets" Condition="Exists('..\PictionaryMusicalCliente\packages\OpenCover.4.7.1221\build\OpenCover.targets')" />
 </Project>

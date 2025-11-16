@@ -2,7 +2,7 @@
 <AnalysisInput>
   <Settings>
     <Setting>
-      <Key>sonar.cs.vscoveragexml.reportsPaths</Key>
+      <Key>sonar.cs.opencover.reportsPaths</Key>
       <Value>coverage.xml</Value>
     </Setting>
     <Setting>
