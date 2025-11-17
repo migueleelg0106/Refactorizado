@@ -1,10 +1,11 @@
 using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using PictionaryMusicalCliente.Sesiones;
 using System;
 using System.Collections.Generic;
@@ -461,20 +462,31 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
-                string mensaje = ex?.Message;
+                string mensajeServidor = ex?.Message;
+                string mensajeServidorNormalizado = mensajeServidor?
+                    .Trim()
+                    .TrimEnd('.');
+                string mensajeLocalizado = MensajeServidorAyudante.Localizar(mensajeServidor, null);
 
-                if (!string.IsNullOrWhiteSpace(mensaje)
-                    && string.Equals(mensaje, Lang.errorTextoSalaLlena, StringComparison.OrdinalIgnoreCase))
+                bool esSalaLlena =
+                    !string.IsNullOrWhiteSpace(mensajeServidorNormalizado)
+                    && mensajeServidorNormalizado.IndexOf("La sala está llena", StringComparison.OrdinalIgnoreCase) >= 0;
+
+                bool esSalaNoEncontrada =
+                    !string.IsNullOrWhiteSpace(mensajeServidorNormalizado)
+                    && mensajeServidorNormalizado.IndexOf("No se encontró la sala especificada", StringComparison.OrdinalIgnoreCase) >= 0;
+
+                if (esSalaLlena)
                 {
                     MostrarMensaje?.Invoke(Lang.errorTextoSalaLlena);
                 }
-                else if (ex?.Tipo == TipoErrorServicio.FallaServicio)
+                else if (ex?.Tipo == TipoErrorServicio.FallaServicio || esSalaNoEncontrada)
                 {
                     MostrarMensaje?.Invoke(Lang.errorTextoNoEncuentraPartida);
                 }
                 else
                 {
-                    MostrarMensaje?.Invoke(mensaje ?? Lang.errorTextoNoEncuentraPartida);
+                    MostrarMensaje?.Invoke(mensajeLocalizado ?? Lang.errorTextoErrorProcesarSolicitud);
                 }
             }
         }

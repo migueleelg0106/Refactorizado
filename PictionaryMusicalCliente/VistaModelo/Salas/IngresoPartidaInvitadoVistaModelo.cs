@@ -184,31 +184,31 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
             catch (ServicioExcepcion ex)
             {
-                if (!string.IsNullOrWhiteSpace(ex?.Message))
+                string mensajeServidor = ex?.Message;
+                string mensajeServidorNormalizado = mensajeServidor?
+                    .Trim()
+                    .TrimEnd('.');
+                string mensajeLocalizado = MensajeServidorAyudante.Localizar(mensajeServidor, null);
+
+                bool esSalaLlena =
+                    !string.IsNullOrWhiteSpace(mensajeServidorNormalizado)
+                    && mensajeServidorNormalizado.IndexOf("La sala está llena", StringComparison.OrdinalIgnoreCase) >= 0;
+
+                bool esSalaNoEncontrada =
+                    !string.IsNullOrWhiteSpace(mensajeServidorNormalizado)
+                    && mensajeServidorNormalizado.IndexOf("No se encontró la sala especificada", StringComparison.OrdinalIgnoreCase) >= 0;
+
+                if (esSalaLlena)
                 {
-                    if (string.Equals(ex.Message, Lang.errorTextoSalaLlena, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return ResultadoUnionInvitado.CrearErrorSalaLlena();
-                    }
-
-                    if (string.Equals(ex.Message, Lang.errorTextoNoEncuentraPartida, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return ResultadoUnionInvitado.SalaNoEncontrada();
-                    }
-
-                    return ResultadoUnionInvitado.Error(ex.Message);
+                    return ResultadoUnionInvitado.CrearErrorSalaLlena();
                 }
 
-                if (ex?.Tipo == TipoErrorServicio.FallaServicio)
+                if (ex?.Tipo == TipoErrorServicio.FallaServicio || esSalaNoEncontrada)
                 {
                     return ResultadoUnionInvitado.SalaNoEncontrada();
                 }
 
-                return ResultadoUnionInvitado.Error(Lang.errorTextoNoEncuentraPartida);
-            }
-            catch (Exception)
-            {
-                return ResultadoUnionInvitado.Error(Lang.errorTextoNoEncuentraPartida);
+                return ResultadoUnionInvitado.Error(mensajeLocalizado ?? Lang.errorTextoNoEncuentraPartida);
             }
         }
 
