@@ -275,7 +275,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         public async Task Prueba_UnirseSala_ExcepcionSistema_MuestraErrorDefecto()
         {
             _viewModel.CodigoSala = "123456";
-            _mockSalasServicio.Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new Exception("Boom"));
+            _mockSalasServicio.Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ThrowsAsync(new ServicioExcepcion(
+                    TipoErrorServicio.FallaServicio,
+                    "Error simulado para forzar falla de servicio",
+                    new Exception("Boom")));
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);

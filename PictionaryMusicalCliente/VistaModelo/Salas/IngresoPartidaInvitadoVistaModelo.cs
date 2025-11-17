@@ -189,12 +189,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 bool esSalaLlena = MensajeServidorAyudante.CoincideConMensaje(
                     mensajeServidor,
-                    "La sala est llena",
+                    "La sala está llena",
                     Lang.errorTextoSalaLlena);
 
                 bool esSalaNoEncontrada = MensajeServidorAyudante.CoincideConMensaje(
                     mensajeServidor,
-                    "No se encontr la sala especificada",
+                    "No se encontró la sala especificada",
                     Lang.errorTextoNoEncuentraPartida);
 
                 if (esSalaLlena)

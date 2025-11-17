@@ -79,6 +79,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 NotificarListaSalasATodos();
                 return resultado;
             }
+            catch (FaultException ex)
+            {
+                throw;
+            }
             catch (InvalidOperationException ex)
             {
                 _logger.Error(MensajesError.Log.SalaUnirseOperacionInvalida, ex);
@@ -92,11 +96,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (TimeoutException ex)
             {
                 _logger.Error(MensajesError.Log.SalaUnirseTimeout, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(MensajesError.Log.SalaUnirseErrorGeneral, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
             }
         }
