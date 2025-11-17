@@ -15,17 +15,19 @@ namespace PictionaryMusicalCliente.VistaModelo
         {
             AceptarComando = new ComandoDelegado(_ => EjecutarAceptar());
             CancelarComando = new ComandoDelegado(_ => EjecutarCancelar());
+            CrearVentanaInicioSesion = () => new InicioSesion();
         }
 
         public ICommand AceptarComando { get; }
         public ICommand CancelarComando { get; }
+        public Func<Window> CrearVentanaInicioSesion { get; set; }
 
         private void EjecutarAceptar()
         {
             SesionUsuarioActual.CerrarSesion();
 
             var ventanasActivas = Application.Current.Windows.Cast<Window>().ToList();
-            var inicioSesion = new InicioSesion();
+            var inicioSesion = CrearVentanaInicioSesion?.Invoke() ?? new InicioSesion();
             Application.Current.MainWindow = inicioSesion;
             inicioSesion.Show();
 

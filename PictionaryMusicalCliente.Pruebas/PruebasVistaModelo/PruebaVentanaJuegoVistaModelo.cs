@@ -3,6 +3,7 @@ using Moq;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Pruebas.Utilidades;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.VistaModelo;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
@@ -736,6 +737,113 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             await Task.Delay(50);
 
             Assert.AreEqual("Falla", msj);
+        }
+
+        #endregion
+
+        #region Comportamiento de Cierre y Ventanas
+
+        [TestMethod]
+        public void Prueba_DebeEjecutarAccionAlCerrar_Inicialmente_RegresaTrue()
+        {
+            Assert.IsTrue(_viewModel.DebeEjecutarAccionAlCerrar());
+        }
+
+        [TestMethod]
+        public void Prueba_NotificarCierreAplicacionCompleta_MarcaBandera()
+        {
+            _viewModel.NotificarCierreAplicacionCompleta();
+
+            Assert.IsFalse(_viewModel.DebeEjecutarAccionAlCerrar());
+        }
+
+        [TestMethod]
+        public void Prueba_CerrarVentanaComando_SinVentanasAdicionales_NotificaCierre()
+        {
+            _viewModel.CerrarVentanaComando.Execute(null);
+
+            Assert.IsFalse(_viewModel.DebeEjecutarAccionAlCerrar());
+        }
+
+        [TestMethod]
+        public void Prueba_DebeCerrarAplicacionPorCierreDeVentana_SinAplicacion_RetornaTrue()
+        {
+            bool resultado = StaTestHelper.Ejecutar(() =>
+            {
+                var vm = CrearVistaModeloBasico();
+                bool debeCerrar = vm.DebeCerrarAplicacionPorCierreDeVentana();
+                vm.FinalizarAsync().GetAwaiter().GetResult();
+                return debeCerrar;
+            });
+
+            Assert.IsTrue(resultado);
+        }
+
+        [TestMethod]
+        public void Prueba_DebeCerrarAplicacionPorCierreDeVentana_ConOtraVentanaVisible_RetornaFalse()
+        {
+            bool resultado = StaTestHelper.Ejecutar(() =>
+            {
+                var app = new Application();
+                var ventanaExtra = new Window();
+                ventanaExtra.Show();
+
+                var vm = CrearVistaModeloBasico();
+                bool debeCerrar = vm.DebeCerrarAplicacionPorCierreDeVentana();
+
+                vm.FinalizarAsync().GetAwaiter().GetResult();
+                ventanaExtra.Close();
+                app.Shutdown();
+                return debeCerrar;
+            });
+
+            Assert.IsFalse(resultado);
+        }
+
+        [TestMethod]
+        public void Prueba_CerrarVentanaComando_ConOtraVentanaVisible_NoNotificaCierreCompleto()
+        {
+            bool debeEjecutar = StaTestHelper.Ejecutar(() =>
+            {
+                var app = new Application();
+                var ventanaExtra = new Window();
+                ventanaExtra.Show();
+
+                var vm = CrearVistaModeloBasico();
+                vm.CerrarVentanaComando.Execute(null);
+                bool resultado = vm.DebeEjecutarAccionAlCerrar();
+
+                vm.FinalizarAsync().GetAwaiter().GetResult();
+                ventanaExtra.Close();
+                app.Shutdown();
+                return resultado;
+            });
+
+            Assert.IsTrue(debeEjecutar);
+        }
+
+        private VentanaJuegoVistaModelo CrearVistaModeloBasico()
+        {
+            var sala = new SalaDTO
+            {
+                Codigo = _salaDummy.Codigo,
+                Creador = _salaDummy.Creador,
+                Jugadores = _salaDummy.Jugadores.ToArray()
+            };
+
+            var salasServicio = new Mock<ISalasServicio>();
+            salasServicio
+                .Setup(s => s.AbandonarSalaAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.CompletedTask);
+
+            return new VentanaJuegoVistaModelo(
+                sala,
+                salasServicio.Object,
+                new Mock<IInvitacionesServicio>().Object,
+                new Mock<IListaAmigosServicio>().Object,
+                new Mock<IPerfilServicio>().Object,
+                nombreJugador: UsuarioTest
+            );
         }
 
         #endregion
