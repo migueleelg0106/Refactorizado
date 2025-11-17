@@ -192,20 +192,20 @@
     <Compile Include="VistaModelo\Amigos\EliminacionAmigoVistaModelo.cs" />
     <Compile Include="VistaModelo\Amigos\InvitarAmigosVistaModelo.cs" />
     <Compile Include="VistaModelo\Amigos\SolicitudesVistaModelo.cs" />
-    <Compile Include="VistaModelo\CambioContrasenaVistaModelo.cs" />
-    <Compile Include="VistaModelo\ClasificacionVistaModelo.cs" />
-    <Compile Include="VistaModelo\AjustesVistaModelo.cs" />
-    <Compile Include="VistaModelo\AjustesPartidaVistaModelo.cs" />
-    <Compile Include="VistaModelo\InicioSesionVistaModelo.cs" />
-    <Compile Include="VistaModelo\PerfilVistaModelo.cs" />
-    <Compile Include="VistaModelo\SeleccionAvatarVistaModelo.cs" />
-    <Compile Include="VistaModelo\CreacionCuentaVistaModelo.cs" />
-    <Compile Include="VistaModelo\TerminacionSesionVistaModelo.cs" />
-    <Compile Include="VistaModelo\VentanaJuegoVistaModelo.cs" />
+    <Compile Include="VistaModelo\Perfil\CambioContrasenaVistaModelo.cs" />
+    <Compile Include="VistaModelo\VentanaPrincipal\ClasificacionVistaModelo.cs" />
+    <Compile Include="VistaModelo\Ajustes\AjustesVistaModelo.cs" />
+    <Compile Include="VistaModelo\Ajustes\AjustesPartidaVistaModelo.cs" />
+    <Compile Include="VistaModelo\InicioSesion\InicioSesionVistaModelo.cs" />
+    <Compile Include="VistaModelo\Perfil\PerfilVistaModelo.cs" />
+    <Compile Include="VistaModelo\Perfil\SeleccionAvatarVistaModelo.cs" />
+    <Compile Include="VistaModelo\InicioSesion\CreacionCuentaVistaModelo.cs" />
+    <Compile Include="VistaModelo\Sesion\TerminacionSesionVistaModelo.cs" />
+    <Compile Include="VistaModelo\VentanaJuego\VentanaJuegoVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\ExpulsionJugadorVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\IngresoPartidaInvitadoVistaModelo.cs" />
-    <Compile Include="VistaModelo\VentanaPrincipalVistaModelo.cs" />
-    <Compile Include="VistaModelo\VerificacionCodigoVistaModelo.cs" />
+    <Compile Include="VistaModelo\VentanaPrincipal\VentanaPrincipalVistaModelo.cs" />
+    <Compile Include="VistaModelo\Perfil\VerificacionCodigoVistaModelo.cs" />
     <Compile Include="Vista\Ajustes.xaml.cs">
       <DependentUpon>Ajustes.xaml</DependentUpon>
     </Compile>

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using PictionaryMusicalCliente.ClienteServicios;
-using PictionaryMusicalCliente.VistaModelo;
+using PictionaryMusicalCliente.VistaModelo.Ajustes;
 
 namespace PictionaryMusicalCliente
 {

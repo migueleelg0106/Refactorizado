@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using PictionaryMusicalCliente.VistaModelo.Perfil;
 
 namespace PictionaryMusicalCliente
 {

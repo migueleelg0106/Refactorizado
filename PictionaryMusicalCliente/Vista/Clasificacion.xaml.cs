@@ -1,7 +1,7 @@
 using System.Windows;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using PictionaryMusicalCliente.VistaModelo.VentanaPrincipal;
 
 namespace PictionaryMusicalCliente
 {

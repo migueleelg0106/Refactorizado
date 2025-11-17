@@ -1,10 +1,9 @@
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
-using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using PictionaryMusicalCliente.VistaModelo.VentanaPrincipal;
 using System;
 using System.Windows;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -43,7 +42,7 @@ namespace PictionaryMusicalCliente
                 AbrirComoJugar = () => MostrarDialogo(new ComoJugar()),
                 AbrirClasificacion = () => MostrarDialogo(new Clasificacion()),
                 AbrirBuscarAmigo = () => MostrarDialogo(new BusquedaAmigo(_amigosServicio)),
-                AbrirSolicitudes = MostrarSolicitudes,
+                AbrirSolicitudes = () => MostrarDialogo(new Solicitudes(_amigosServicio)),
                 ConfirmarEliminarAmigo = MostrarConfirmacionEliminar,
                 IniciarJuego = MostrarVentanaJuego,
                 UnirseSala = MostrarVentanaJuego
@@ -99,19 +98,6 @@ namespace PictionaryMusicalCliente
             ventana.ShowDialog();
         }
 
-        private void MostrarSolicitudes()
-        {
-            var solicitudesPendientes = _amigosServicio?.SolicitudesPendientes;
-
-            if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
-            {
-                MostrarDialogo(new Avisos(Lang.amigosAvisoSinSolicitudesPendientes));
-                return;
-            }
-
-            MostrarDialogo(new Solicitudes(_amigosServicio));
-        }
-
         private void MostrarVentanaJuego(DTOs.SalaDTO sala)
         {
             _servicioMusica.Detener();
@@ -122,10 +108,10 @@ namespace PictionaryMusicalCliente
             var ventanaJuego = new VentanaJuego(sala, _salasServicio);
             ventanaJuego.Show();
 
-            this.Close();
+            Close();
         }
 
-        private void VentanaPrincipal_Cerrado(object sender, System.EventArgs e)
+        private void VentanaPrincipal_Cerrado(object sender, EventArgs e)
         {
             _servicioMusica.Detener();
             _servicioMusica.Dispose();

@@ -1,6 +1,6 @@
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
-using PictionaryMusicalCliente.VistaModelo;
+using PictionaryMusicalCliente.VistaModelo.VentanaJuego;
 using System;
 using System.ComponentModel;
 using System.Windows;

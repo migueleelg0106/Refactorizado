@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using PictionaryMusicalCliente.VistaModelo.Perfil;
 using ICodigoVerificacionCli = PictionaryMusicalCliente.ClienteServicios.Abstracciones.ICodigoVerificacionServicio;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 

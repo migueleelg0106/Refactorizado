@@ -4,7 +4,7 @@ using System.Windows;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using PictionaryMusicalCliente.VistaModelo.Perfil;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System.Windows.Markup;
 

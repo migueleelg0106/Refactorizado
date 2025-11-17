@@ -4,7 +4,7 @@ using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using PictionaryMusicalCliente.ClienteServicios.Dialogos;
 using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.VistaModelo.Cuentas;
+using PictionaryMusicalCliente.VistaModelo.InicioSesion;
 using System;
 using System.Collections.Generic;
 using System.Windows;

@@ -1,4 +1,4 @@
-﻿using PictionaryMusicalCliente.VistaModelo; 
+﻿using PictionaryMusicalCliente.VistaModelo.Sesion; 
 using System.Linq;
 using System.Windows;
 

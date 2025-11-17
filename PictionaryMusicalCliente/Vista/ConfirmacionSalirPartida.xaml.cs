@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using PictionaryMusicalCliente.VistaModelo;
+using PictionaryMusicalCliente.VistaModelo.VentanaJuego;
 
 namespace PictionaryMusicalCliente
 {
