@@ -463,18 +463,17 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             {
                 ManejadorSonido.ReproducirError();
                 string mensajeServidor = ex?.Message;
-                string mensajeServidorNormalizado = mensajeServidor?
-                    .Trim()
-                    .TrimEnd('.');
-                string mensajeLocalizado = MensajeServidorAyudante.Localizar(mensajeServidor, null);
+                string mensajeLocalizado = MensajeServidorAyudante.Localizar(mensajeServidor, mensajeServidor);
 
-                bool esSalaLlena =
-                    !string.IsNullOrWhiteSpace(mensajeServidorNormalizado)
-                    && mensajeServidorNormalizado.IndexOf("La sala está llena", StringComparison.OrdinalIgnoreCase) >= 0;
+                bool esSalaLlena = MensajeServidorAyudante.CoincideConMensaje(
+                    mensajeServidor,
+                    "La sala está llena",
+                    Lang.errorTextoSalaLlena);
 
-                bool esSalaNoEncontrada =
-                    !string.IsNullOrWhiteSpace(mensajeServidorNormalizado)
-                    && mensajeServidorNormalizado.IndexOf("No se encontró la sala especificada", StringComparison.OrdinalIgnoreCase) >= 0;
+                bool esSalaNoEncontrada = MensajeServidorAyudante.CoincideConMensaje(
+                    mensajeServidor,
+                    "No se encontró la sala especificada",
+                    Lang.errorTextoNoEncuentraPartida);
 
                 if (esSalaLlena)
                 {
