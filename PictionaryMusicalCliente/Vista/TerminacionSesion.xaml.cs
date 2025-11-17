@@ -1,5 +1,6 @@
-﻿using System.Windows;
-using PictionaryMusicalCliente.VistaModelo; 
+﻿using PictionaryMusicalCliente.VistaModelo; 
+using System.Linq;
+using System.Windows;
 
 namespace PictionaryMusicalCliente
 {
@@ -15,10 +16,28 @@ namespace PictionaryMusicalCliente
             InitializeComponent();
 
             _viewModel = new TerminacionSesionVistaModelo();
-
             _viewModel.OcultarDialogo = () => this.Close();
+            _viewModel.EjecutarCierreSesionYNavegacion = EjecutarNavegacionInicioSesion;
 
             this.DataContext = _viewModel;
+        }
+
+        private void EjecutarNavegacionInicioSesion()
+        {
+            var inicioSesion = new InicioSesion();
+
+            var ventanasACerrar = Application.Current.Windows
+                .Cast<Window>()
+                .Where(v => v != inicioSesion)
+                .ToList();
+
+            inicioSesion.Show();
+            Application.Current.MainWindow = inicioSesion;
+
+            foreach (var ventana in ventanasACerrar)
+            {
+                ventana.Close();
+            }
         }
     }
 }

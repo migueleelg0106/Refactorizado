@@ -335,6 +335,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         public Action CerrarVentana { get; set; }
         public Func<InvitarAmigosVistaModelo, Task> MostrarInvitarAmigos { get; set; }
         public Action<DestinoNavegacion> ManejarNavegacion { get; set; }
+        public Func<bool> ChequearCierreAplicacionGlobal { get; set; }
 
         private static void NotificarComando(ICommand comando)
         {
@@ -574,7 +575,7 @@ namespace PictionaryMusicalCliente.VistaModelo
 
         private void EjecutarCerrarVentana()
         {
-            _cerrandoPorVentana = DebeCerrarAplicacionPorCierreDeVentana();
+            _cerrandoPorVentana = ChequearCierreAplicacionGlobal?.Invoke() ?? true;
 
             if (_cerrandoPorVentana)
             {
@@ -837,31 +838,6 @@ namespace PictionaryMusicalCliente.VistaModelo
         public bool DebeEjecutarAccionAlCerrar()
         {
             return !_aplicacionCerrando;
-        }
-
-        public bool DebeCerrarAplicacionPorCierreDeVentana()
-        {
-            var aplicacion = Application.Current;
-
-            if (aplicacion?.Dispatcher?.HasShutdownStarted == true || aplicacion?.Dispatcher?.HasShutdownFinished == true)
-            {
-                return true;
-            }
-
-            if (aplicacion == null)
-            {
-                return true;
-            }
-
-            foreach (Window ventana in aplicacion.Windows)
-            {
-                if (ventana.IsVisible && ventana.GetType() != typeof(VentanaJuego))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }

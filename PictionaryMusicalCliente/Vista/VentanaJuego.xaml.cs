@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using System.Windows.Input;
+using System.Linq;
 
 namespace PictionaryMusicalCliente
 {
@@ -55,6 +56,8 @@ namespace PictionaryMusicalCliente
 
             _vistaModelo.ManejarNavegacion = EjecutarNavegacion;
             _vistaModelo.CerrarVentana = () => Close();
+
+            _vistaModelo.ChequearCierreAplicacionGlobal = DebeCerrarAplicacionPorCierreDeVentana;
 
             DataContext = _vistaModelo;
 
@@ -183,6 +186,31 @@ namespace PictionaryMusicalCliente
 
             var size = Math.Max(1, _vistaModelo.Grosor);
             ink.EraserShape = new EllipseStylusShape(size, size);
+        }
+
+        private bool DebeCerrarAplicacionPorCierreDeVentana()
+        {
+            var aplicacion = Application.Current;
+
+            if (aplicacion?.Dispatcher?.HasShutdownStarted == true || aplicacion?.Dispatcher?.HasShutdownFinished == true)
+            {
+                return true;
+            }
+
+            if (aplicacion == null)
+            {
+                return true;
+            }
+
+            foreach (Window ventana in aplicacion.Windows)
+            {
+                if (!ReferenceEquals(ventana, this) && ventana.IsVisible)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

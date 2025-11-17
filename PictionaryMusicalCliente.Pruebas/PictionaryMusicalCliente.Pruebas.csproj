@@ -89,7 +89,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaVentanaPrincipalVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\PruebaVerificacionCodigoVistaModelo.cs" />
-    <Compile Include="PruebasVistaModelo\Utilidades\StaTestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

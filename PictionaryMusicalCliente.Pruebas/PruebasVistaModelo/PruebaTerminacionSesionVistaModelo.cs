@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Pruebas.Utilidades;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.VistaModelo;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -30,7 +29,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
 
             Assert.IsNotNull(vistaModelo.AceptarComando);
             Assert.IsNotNull(vistaModelo.CancelarComando);
-            Assert.IsNotNull(vistaModelo.CrearVentanaInicioSesion);
         }
 
         [TestMethod]
@@ -49,34 +47,25 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         public void Prueba_AceptarComando_CierraSesionYMuestraInicio()
         {
             bool dialogoOculto = false;
+            bool navegacionInvocada = false;
 
-            StaTestHelper.Ejecutar(() =>
+            SesionUsuarioActual.EstablecerUsuario(new UsuarioDTO
             {
-                var app = new Application();
-                var ventanaExistente = new VentanaPrueba();
-                ventanaExistente.Show();
-
-                var vistaModelo = new TerminacionSesionVistaModelo();
-                vistaModelo.OcultarDialogo = () => dialogoOculto = true;
-                vistaModelo.CrearVentanaInicioSesion = () => new VentanaPrueba();
-
-                SesionUsuarioActual.EstablecerUsuario(new UsuarioDTO
-                {
-                    UsuarioId = 1,
-                    NombreUsuario = "UsuarioPrueba"
-                });
-
-                vistaModelo.AceptarComando.Execute(null);
-
-                Assert.IsNull(UsuarioAutenticado.Instancia.NombreUsuario);
-                Assert.IsInstanceOfType(Application.Current.MainWindow, typeof(VentanaPrueba));
-                Assert.IsTrue(ventanaExistente.FueCerrada);
-
-                (Application.Current.MainWindow as Window)?.Close();
-                app.Shutdown();
+                UsuarioId = 1,
+                NombreUsuario = "UsuarioPrueba"
             });
 
-            Assert.IsTrue(dialogoOculto);
+            var vistaModelo = new TerminacionSesionVistaModelo();
+
+            vistaModelo.OcultarDialogo = () => dialogoOculto = true;
+            vistaModelo.EjecutarCierreSesionYNavegacion = () => navegacionInvocada = true;
+
+            vistaModelo.AceptarComando.Execute(null);
+
+            Assert.IsNull(UsuarioAutenticado.Instancia.NombreUsuario, "La sesión debe ser nula después de Aceptar.");
+
+            Assert.IsTrue(dialogoOculto, "OcultarDialogo debe ser invocado.");
+            Assert.IsTrue(navegacionInvocada, "EjecutarCierreSesionYNavegacion debe ser invocado para manejar la transición de la UI.");
         }
 
         private class VentanaPrueba : Window
