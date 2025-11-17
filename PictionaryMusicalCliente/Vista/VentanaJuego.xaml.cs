@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using System.Windows.Input;
 
 namespace PictionaryMusicalCliente
 {
@@ -16,8 +17,6 @@ namespace PictionaryMusicalCliente
     {
         private readonly VentanaJuegoVistaModelo _vistaModelo;
         private readonly Action _accionAlCerrar;
-        private bool _ejecutarAccionAlCerrar = true;
-        private bool _cerrandoAplicacionCompleta; 
 
         public VentanaJuego(
             SalaDTO sala,
@@ -39,7 +38,7 @@ namespace PictionaryMusicalCliente
                 sala,
                 salasServicio,
                 nombreJugador,
-                esInvitado); 
+                esInvitado);
 
             _vistaModelo.AbrirAjustesPartida = manejadorCancion =>
             {
@@ -54,7 +53,7 @@ namespace PictionaryMusicalCliente
             _vistaModelo.MostrarConfirmacion = MostrarConfirmacion;
             _vistaModelo.MostrarInvitarAmigos = MostrarInvitarAmigosAsync;
 
-            _vistaModelo.ManejarNavegacion = destino => EjecutarNavegacion(destino);
+            _vistaModelo.ManejarNavegacion = EjecutarNavegacion;
             _vistaModelo.CerrarVentana = () => Close();
 
             DataContext = _vistaModelo;
@@ -65,14 +64,10 @@ namespace PictionaryMusicalCliente
 
         private void VentanaJuego_Closing(object sender, CancelEventArgs e)
         {
-            _cerrandoAplicacionCompleta = DebeCerrarAplicacionPorCierreDeVentana();
-
-            if (_cerrandoAplicacionCompleta)
+            if (_vistaModelo.CerrarVentanaComando.CanExecute(null))
             {
-                _vistaModelo.NotificarCierreAplicacionCompleta();
+                _vistaModelo.CerrarVentanaComando.Execute(null);
             }
-
-            _ejecutarAccionAlCerrar = _vistaModelo.DebeEjecutarAccionAlCerrar();
         }
 
         private async void VentanaJuego_ClosedAsync(object sender, EventArgs e)
@@ -82,7 +77,7 @@ namespace PictionaryMusicalCliente
 
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
 
-            if (_accionAlCerrar != null && _ejecutarAccionAlCerrar && !_cerrandoAplicacionCompleta)
+            if (_accionAlCerrar != null && _vistaModelo.DebeEjecutarAccionAlCerrar())
             {
                 if (!Dispatcher.CheckAccess())
                 {
@@ -102,7 +97,7 @@ namespace PictionaryMusicalCliente
                 : new VentanaPrincipal();
 
             ventanaDestino.Show();
-            Close(); 
+            Close();
         }
 
         private bool MostrarConfirmacion(string mensaje)
@@ -147,33 +142,9 @@ namespace PictionaryMusicalCliente
             }
         }
 
-        private bool DebeCerrarAplicacionPorCierreDeVentana()
-        {
-            var aplicacion = Application.Current;
-
-            if (aplicacion?.Dispatcher?.HasShutdownStarted == true || aplicacion?.Dispatcher?.HasShutdownFinished == true)
-            {
-                return true;
-            }
-
-            if (aplicacion == null)
-            {
-                return true;
-            }
-
-            foreach (Window ventana in aplicacion.Windows)
-            {
-                if (!ReferenceEquals(ventana, this) && ventana.IsVisible)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         private void EstablecerHerramienta(bool esLapiz)
         {
+            var ink = (InkCanvas)this.FindName("ink");
             if (ink == null) return;
 
             ink.EditingMode = esLapiz
@@ -192,7 +163,8 @@ namespace PictionaryMusicalCliente
 
         private void AplicarEstiloLapiz()
         {
-            if (ink == null) return;
+            var ink = (InkCanvas)this.FindName("ink");
+            if (ink == null || _vistaModelo == null) return;
 
             ink.DefaultDrawingAttributes = new DrawingAttributes
             {
@@ -206,7 +178,8 @@ namespace PictionaryMusicalCliente
 
         private void ActualizarFormaGoma()
         {
-            if (ink == null) return;
+            var ink = (InkCanvas)this.FindName("ink");
+            if (ink == null || _vistaModelo == null) return;
 
             var size = Math.Max(1, _vistaModelo.Grosor);
             ink.EraserShape = new EllipseStylusShape(size, size);

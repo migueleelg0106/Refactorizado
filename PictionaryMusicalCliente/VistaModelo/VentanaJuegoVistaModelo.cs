@@ -61,6 +61,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
         private bool _aplicacionCerrando;
+        private bool _cerrandoPorVentana;
 
         public enum DestinoNavegacion
         {
@@ -322,6 +323,7 @@ namespace PictionaryMusicalCliente.VistaModelo
         public ICommand MostrarOverlayDibujanteComando { get; private set; }
         public ICommand MostrarOverlayAdivinadorComando { get; private set; }
         public ICommand CerrarOverlayComando { get; private set; }
+        public ICommand CerrarVentanaComando { get; private set; }
 
         public Action<CancionManejador> AbrirAjustesPartida { get; set; }
         public Action<bool> NotificarCambioHerramienta { get; set; }
@@ -331,7 +333,6 @@ namespace PictionaryMusicalCliente.VistaModelo
         public Action<string> MostrarMensaje { get; set; }
         public Func<string, bool> MostrarConfirmacion { get; set; }
         public Action CerrarVentana { get; set; }
-        public Action<DestinoNavegacion> ManejarExpulsion { get; set; }
         public Func<InvitarAmigosVistaModelo, Task> MostrarInvitarAmigos { get; set; }
         public Action<DestinoNavegacion> ManejarNavegacion { get; set; }
 
@@ -357,6 +358,7 @@ namespace PictionaryMusicalCliente.VistaModelo
             MostrarOverlayDibujanteComando = new ComandoDelegado(_ => EjecutarMostrarOverlayDibujante());
             MostrarOverlayAdivinadorComando = new ComandoDelegado(_ => EjecutarMostrarOverlayAdivinador());
             CerrarOverlayComando = new ComandoDelegado(_ => EjecutarCerrarOverlay());
+            CerrarVentanaComando = new ComandoDelegado(_ => EjecutarCerrarVentana());
         }
 
         private async Task EjecutarInvitarCorreoAsync()
@@ -568,6 +570,16 @@ namespace PictionaryMusicalCliente.VistaModelo
             _overlayTimer.Stop();
             VisibilidadOverlayDibujante = Visibility.Collapsed;
             VisibilidadOverlayAdivinador = Visibility.Collapsed;
+        }
+
+        private void EjecutarCerrarVentana()
+        {
+            _cerrandoPorVentana = DebeCerrarAplicacionPorCierreDeVentana();
+
+            if (_cerrandoPorVentana)
+            {
+                NotificarCierreAplicacionCompleta();
+            }
         }
 
         private void OverlayTimer_Tick(object sender, EventArgs e)
@@ -808,7 +820,6 @@ namespace PictionaryMusicalCliente.VistaModelo
                 }
                 catch
                 {
-                    // Ignorar errores al abandonar la sala
                 }
             }
 
@@ -827,6 +838,30 @@ namespace PictionaryMusicalCliente.VistaModelo
         {
             return !_aplicacionCerrando;
         }
-        
+
+        public bool DebeCerrarAplicacionPorCierreDeVentana()
+        {
+            var aplicacion = Application.Current;
+
+            if (aplicacion?.Dispatcher?.HasShutdownStarted == true || aplicacion?.Dispatcher?.HasShutdownFinished == true)
+            {
+                return true;
+            }
+
+            if (aplicacion == null)
+            {
+                return true;
+            }
+
+            foreach (Window ventana in aplicacion.Windows)
+            {
+                if (ventana.IsVisible && ventana.GetType() != typeof(VentanaJuego))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
