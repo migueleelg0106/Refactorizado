@@ -38,11 +38,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IAmigosServicio _amigosServicio;
         private readonly ISalasServicio _salasServicio;
+        private readonly MusicaManejador _servicioMusica;
 
         private bool _suscripcionActiva;
+        private bool _abrioVentanaJuego;
 
         public VentanaPrincipalVistaModelo()
-            : this(LocalizacionServicio.Instancia, new ListaAmigosServicio(), new AmigosServicio(), new SalasServicio())
+            : this(LocalizacionServicio.Instancia, new ListaAmigosServicio(), new AmigosServicio(), new SalasServicio(), new MusicaManejador())
         {
         }
 
@@ -50,12 +52,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             ILocalizacionServicio localizacionServicio,
             IListaAmigosServicio listaAmigosServicio,
             IAmigosServicio amigosServicio,
-            ISalasServicio salasServicio)
+            ISalasServicio salasServicio,
+            MusicaManejador servicioMusica = null)
         {
             _localizacionServicio = localizacionServicio ?? throw new ArgumentNullException(nameof(localizacionServicio));
             _listaAmigosServicio = listaAmigosServicio ?? throw new ArgumentNullException(nameof(listaAmigosServicio));
             _amigosServicio = amigosServicio ?? throw new ArgumentNullException(nameof(amigosServicio));
             _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
+            _servicioMusica = servicioMusica ?? new MusicaManejador();
 
             _listaAmigosServicio.ListaActualizada += ListaActualizada;
 
@@ -93,7 +97,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             AbrirSolicitudesComando = new ComandoDelegado(_ =>
             {
                 ManejadorSonido.ReproducirClick();
-                AbrirSolicitudes?.Invoke();
+                EjecutarAbrirSolicitudes();
             });
 
             EliminarAmigoComando = new ComandoAsincrono(async param =>
@@ -256,7 +260,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        public async Task FinalizarAsync()
+        public async Task FinalizarAsync() 
         {
             _listaAmigosServicio.ListaActualizada -= ListaActualizada;
 
@@ -276,6 +280,27 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 _suscripcionActiva = false;
             }
+
+            (_listaAmigosServicio as IDisposable)?.Dispose();
+            (_amigosServicio as IDisposable)?.Dispose();
+
+            if (!_abrioVentanaJuego)
+            {
+                (_salasServicio as IDisposable)?.Dispose();
+            }
+        }
+
+        private void EjecutarAbrirSolicitudes() 
+        {
+            var solicitudesPendientes = _amigosServicio?.SolicitudesPendientes;
+
+            if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
+            {
+                MostrarMensaje?.Invoke(Lang.amigosAvisoSinSolicitudesPendientes);
+                return;
+            }
+
+            AbrirSolicitudes?.Invoke();
         }
 
         private void CargarDatosUsuario()
@@ -309,18 +334,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void CargarIdiomas()
         {
-            WeakEventManager<ILocalizacionServicio, EventArgs>.AddHandler(
-                _localizacionServicio,
-                nameof(ILocalizacionServicio.IdiomaActualizado),
-                LocalizacionServicioEnIdiomaActualizado);
-
             ActualizarIdiomasDisponibles(_localizacionServicio.CulturaActual?.Name
                 ?? CultureInfo.CurrentUICulture?.Name);
-        }
-
-        private void LocalizacionServicioEnIdiomaActualizado(object sender, EventArgs e)
-        {
-            ActualizarIdiomasDisponibles(_localizacionServicio.CulturaActual?.Name);
         }
 
         private void ActualizarIdiomasDisponibles(string culturaActual)
@@ -422,9 +437,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             }
         }
 
-        private async Task UnirseSalaInternoAsync()
+        private async Task UnirseSalaInternoAsync() 
         {
             string codigo = CodigoSala?.Trim();
+
             if (string.IsNullOrWhiteSpace(codigo))
             {
                 ManejadorSonido.ReproducirError();
@@ -443,7 +459,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 var sala = await _salasServicio.UnirseSalaAsync(codigo, _nombreUsuarioSesion).ConfigureAwait(true);
                 ManejadorSonido.ReproducirExito();
-                UnirseSala?.Invoke(sala);
+                EjecutarTransicionAJuego(sala); 
             }
             catch (ServicioExcepcion ex)
             {
@@ -494,14 +510,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
             {
                 var sala = await _salasServicio.CrearSalaAsync(_nombreUsuarioSesion, configuracion).ConfigureAwait(true);
                 ManejadorSonido.ReproducirExito();
-                IniciarJuego?.Invoke(sala);
+                EjecutarTransicionAJuego(sala);
             }
             catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
-                
+        }
+
+        private void EjecutarTransicionAJuego(DTOs.SalaDTO sala) 
+        {
+            _servicioMusica?.Detener();
+            _servicioMusica?.Dispose();
+
+            _abrioVentanaJuego = true;
+
+            IniciarJuego?.Invoke(sala);
         }
 
         private bool PuedeIniciarJuego()
@@ -514,7 +539,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Cuentas
 
         private void ActualizarEstadoIniciarJuego()
         {
-            IniciarJuegoComando?.NotificarPuedeEjecutar();
+            (IniciarJuegoComando as ComandoAsincrono)?.NotificarPuedeEjecutar(); 
         }
     }
 }

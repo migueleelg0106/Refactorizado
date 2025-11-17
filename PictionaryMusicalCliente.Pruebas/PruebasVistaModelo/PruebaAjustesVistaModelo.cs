@@ -2,21 +2,24 @@
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.VistaModelo;
 using System;
+using System.ComponentModel; 
+using System.Windows.Input;
+using Moq;
 
 namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
 {
     [TestClass]
     public class PruebaAjustesVistaModelo
     {
-        private MusicaManejador _musicaManejadorReal;
+        private Mock<MusicaManejador> _mockMusicaManejador;
         private AjustesVistaModelo _viewModel;
 
         [TestInitialize]
         public void Inicializar()
         {
-            _musicaManejadorReal = new MusicaManejador();
-            _musicaManejadorReal.Volumen = 0.5;
-            _viewModel = new AjustesVistaModelo(_musicaManejadorReal);
+            _mockMusicaManejador = new Mock<MusicaManejador>(MockBehavior.Loose);
+            _mockMusicaManejador.SetupProperty(m => m.Volumen, 0.5);
+            _viewModel = new AjustesVistaModelo(_mockMusicaManejador.Object);
         }
 
         [TestCleanup]
@@ -49,7 +52,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         public void Prueba_Volumen_Obtener_LeeDelServicio()
         {
             double volumenEsperado = 0.8;
-            _musicaManejadorReal.Volumen = volumenEsperado;
+            _mockMusicaManejador.Object.Volumen = volumenEsperado;
 
             double volumenActual = _viewModel.Volumen;
 
@@ -60,7 +63,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         public void Prueba_Volumen_Establecer_ActualizaServicio()
         {
             _viewModel.Volumen = 0.3;
-            Assert.AreEqual(0.3, _musicaManejadorReal.Volumen, 0.0001);
+            Assert.AreEqual(0.3, _mockMusicaManejador.Object.Volumen, 0.0001);
         }
 
         [TestMethod]

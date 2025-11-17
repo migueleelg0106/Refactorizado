@@ -56,8 +56,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             );
 
             _viewModel.MostrarMensaje = (_) => { };
-            _viewModel.ManejarExpulsion = (_) => { };
-            _viewModel.MostrarConfirmacion = (_) => true; 
+            _viewModel.ManejarNavegacion = (_) => { };
+            _viewModel.CerrarVentana = () => { };
+            _viewModel.MostrarConfirmacion = (_) => true;
         }
 
         [TestCleanup]
@@ -71,7 +72,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
                 }
                 catch
                 {
-                    // Ignoramos errores durante la limpieza (a veces el Task ya está cancelado)
                 }
             }
             if (_viewModel is IDisposable disposableVm)
@@ -361,6 +361,39 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         #region Pruebas de Timers (Reflection)
 
         [TestMethod]
+        public void Prueba_IniciarTemporizador_EstableceEstadoDeJuego()
+        {
+            _viewModel.VisibilidadOverlayDibujante = Visibility.Visible;
+            _viewModel.VisibilidadOverlayAdivinador = Visibility.Visible;
+
+            MethodInfo iniciarTemp = typeof(VentanaJuegoVistaModelo).GetMethod("IniciarTemporizador", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.IsNotNull(iniciarTemp, "Método IniciarTemporizador no encontrado.");
+            iniciarTemp.Invoke(_viewModel, null);
+
+            Assert.AreEqual(Visibility.Visible, _viewModel.VisibilidadPalabraAdivinar);
+            Assert.AreEqual(Visibility.Visible, _viewModel.VisibilidadInfoCancion);
+            Assert.AreEqual("30", _viewModel.TextoContador);
+            Assert.AreEqual("Gasolina", _viewModel.PalabraAdivinar);
+        }
+
+        [TestMethod]
+        public void Prueba_Temporizador_Tick_AlertaRojoSiContadorBajo()
+        {
+            const int ALERTA_TIEMPO = 5;
+
+            FieldInfo campoContador = typeof(VentanaJuegoVistaModelo).GetField("_contador", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.IsNotNull(campoContador, "Campo _contador no encontrado.");
+
+            campoContador.SetValue(_viewModel, ALERTA_TIEMPO + 1);
+
+            MethodInfo tickTemp = typeof(VentanaJuegoVistaModelo).GetMethod("Temporizador_Tick", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.IsNotNull(tickTemp, "Método Temporizador_Tick no encontrado.");
+            tickTemp.Invoke(_viewModel, new object[] { null, EventArgs.Empty });
+
+            Assert.AreEqual((ALERTA_TIEMPO), (int)campoContador.GetValue(_viewModel));
+        }
+
+        [TestMethod]
         public void Prueba_OverlayTimer_Tick_DetieneTimerEIniciaTemporizador()
         {
             MethodInfo metodoTick = typeof(VentanaJuegoVistaModelo).GetMethod("OverlayTimer_Tick", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -509,7 +542,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             var vmMalo = new VentanaJuegoVistaModelo(
                 _salaDummy,
                 _mockSalasServicio.Object,
-                _mockInvitacionesServicio.Object, 
+                _mockInvitacionesServicio.Object,
                 _mockListaAmigosServicio.Object,
                 _mockPerfilServicio.Object,
                 nombreJugador: UsuarioTest
@@ -572,6 +605,39 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         }
 
         [TestMethod]
+        public async Task Prueba_InvitarAmigos_ServicioExcepcion_CapturaError()
+        {
+            _mockListaAmigosServicio
+                .Setup(s => s.ObtenerAmigosAsync(It.IsAny<string>()))
+                .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "Error al cargar amigos", null));
+
+            string msj = null;
+            _viewModel.MostrarMensaje = (m) => msj = m;
+
+            _viewModel.InvitarAmigosComando.Execute(null);
+            await Task.Delay(100);
+
+            Assert.AreEqual("Error al cargar amigos", msj);
+            _mockListaAmigosServicio.Verify(s => s.ObtenerAmigosAsync(It.IsAny<string>()), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task Prueba_InvitarAmigos_ArgumentException_CapturaError()
+        {
+            _mockListaAmigosServicio
+                .Setup(s => s.ObtenerAmigosAsync(It.IsAny<string>()))
+                .ThrowsAsync(new ArgumentException("Argumento de usuario inválido"));
+
+            string msj = null;
+            _viewModel.MostrarMensaje = (m) => msj = m;
+
+            _viewModel.InvitarAmigosComando.Execute(null);
+            await Task.Delay(100);
+
+            Assert.AreEqual("Argumento de usuario inválido", msj);
+        }
+
+        [TestMethod]
         public async Task Prueba_InvitarAmigos_Exito_AbreVentanaYAgregaInvitado()
         {
             int idAmigo = 10;
@@ -612,7 +678,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             await Task.Delay(200);
 
             _mockInvitacionesServicio.Verify(
-                s => s.EnviarInvitacionAsync(It.IsAny<string>(), "amigo@prueba.com"), 
+                s => s.EnviarInvitacionAsync(It.IsAny<string>(), "amigo@prueba.com"),
                 Times.AtLeastOnce,
                 "El servicio no fue llamado. Posible causa: El perfil era nulo o el comando falló.");
         }
@@ -671,6 +737,37 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             Assert.AreEqual(0, _viewModel.Jugadores.Count);
         }
 
+        [TestMethod]
+        public void Prueba_SalaActualizada_ActualizaJugadores()
+        {
+            var salaNueva = new SalaDTO
+            {
+                Codigo = _salaDummy.Codigo,
+                Jugadores = new[] { "Nuevo1", "Nuevo2" }
+            };
+
+            _mockSalasServicio.Raise(m => m.SalaActualizada += null, null, salaNueva);
+
+            Assert.AreEqual(2, _viewModel.Jugadores.Count);
+            Assert.IsTrue(_viewModel.Jugadores.Any(j => j.Nombre == "Nuevo1"));
+            Assert.IsFalse(_viewModel.Jugadores.Any(j => j.Nombre == "Creador"));
+        }
+
+        [TestMethod]
+        public void Prueba_SalaActualizada_CodigoDiferente_NoActualiza()
+        {
+            var salaNueva = new SalaDTO
+            {
+                Codigo = "999999",
+                Jugadores = new[] { "Nuevo1", "Nuevo2" }
+            };
+
+            _mockSalasServicio.Raise(m => m.SalaActualizada += null, null, salaNueva);
+
+            Assert.AreEqual(2, _viewModel.Jugadores.Count);
+            Assert.IsTrue(_viewModel.Jugadores.Any(j => j.Nombre == "Creador"));
+        }
+
         #endregion
 
         #region Expulsión de Jugadores
@@ -678,10 +775,33 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
         [TestMethod]
         public void Prueba_JugadorExpulsado_EsUsuarioActual_NavegaFuera()
         {
-            bool navegacionInvocada = false;
-            _viewModel.ManejarExpulsion = (destino) => navegacionInvocada = true;
+            VentanaJuegoVistaModelo.DestinoNavegacion? destinoCapturado = null;
+            _viewModel.ManejarNavegacion = (destino) => destinoCapturado = destino;
+
             _mockSalasServicio.Raise(m => m.JugadorExpulsado += null, null, UsuarioTest);
-            Assert.IsTrue(navegacionInvocada);
+
+            Assert.AreEqual(VentanaJuegoVistaModelo.DestinoNavegacion.VentanaPrincipal, destinoCapturado);
+            Assert.IsTrue(_viewModel.DebeEjecutarAccionAlCerrar());
+        }
+
+        [TestMethod]
+        public void Prueba_JugadorExpulsado_EsUsuarioInvitado_NavegaASesionYCierraApp()
+        {
+            var vmInvitado = new VentanaJuegoVistaModelo(
+                _salaDummy, _mockSalasServicio.Object, _mockInvitacionesServicio.Object,
+                _mockListaAmigosServicio.Object, _mockPerfilServicio.Object,
+                nombreJugador: UsuarioTest, esInvitado: true);
+
+            VentanaJuegoVistaModelo.DestinoNavegacion? destinoCapturado = null;
+            vmInvitado.ManejarNavegacion = (destino) => destinoCapturado = destino;
+            vmInvitado.MostrarMensaje = (_) => { };
+
+            _mockSalasServicio.Raise(m => m.JugadorExpulsado += null, null, UsuarioTest);
+
+            Assert.IsFalse(vmInvitado.DebeEjecutarAccionAlCerrar());
+            Assert.AreEqual(VentanaJuegoVistaModelo.DestinoNavegacion.InicioSesion, destinoCapturado);
+
+            if (vmInvitado is IDisposable d) d.Dispose();
         }
 
         [TestMethod]
@@ -736,6 +856,20 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo
             await Task.Delay(50);
 
             Assert.AreEqual("Falla", msj);
+        }
+
+        #endregion
+
+        #region Logica de Cierre de App
+
+        [TestMethod]
+        public void Prueba_NotificarCierreAplicacionCompleta_DebeDeshabilitarAccionAlCerrar()
+        {
+            Assert.IsTrue(_viewModel.DebeEjecutarAccionAlCerrar());
+
+            _viewModel.NotificarCierreAplicacionCompleta();
+
+            Assert.IsFalse(_viewModel.DebeEjecutarAccionAlCerrar());
         }
 
         #endregion
