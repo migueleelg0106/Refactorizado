@@ -24,8 +24,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Sesion
         private void EjecutarAceptar()
         {
             SesionUsuarioActual.CerrarSesion();
-
-            var ventanasActivas = Application.Current.Windows.Cast<Window>().ToList();
             EjecutarCierreSesionYNavegacion?.Invoke();
 
             OcultarDialogo?.Invoke();

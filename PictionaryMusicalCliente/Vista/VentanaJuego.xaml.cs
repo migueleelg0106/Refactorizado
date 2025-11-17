@@ -147,10 +147,10 @@ namespace PictionaryMusicalCliente
 
         private void EstablecerHerramienta(bool esLapiz)
         {
-            var ink = (InkCanvas)this.FindName("ink");
-            if (ink == null) return;
+            var lienzoTinta = (InkCanvas)this.FindName("ink");
+            if (lienzoTinta == null) return;
 
-            ink.EditingMode = esLapiz
+            lienzoTinta.EditingMode = esLapiz
                 ? InkCanvasEditingMode.Ink
                 : InkCanvasEditingMode.EraseByPoint;
 
@@ -166,10 +166,10 @@ namespace PictionaryMusicalCliente
 
         private void AplicarEstiloLapiz()
         {
-            var ink = (InkCanvas)this.FindName("ink");
-            if (ink == null || _vistaModelo == null) return;
+            var lienzoTinta = (InkCanvas)this.FindName("ink");
+            if (lienzoTinta == null || _vistaModelo == null) return;
 
-            ink.DefaultDrawingAttributes = new DrawingAttributes
+            lienzoTinta.DefaultDrawingAttributes = new DrawingAttributes
             {
                 Color = _vistaModelo.Color,
                 Width = _vistaModelo.Grosor,
@@ -181,12 +181,13 @@ namespace PictionaryMusicalCliente
 
         private void ActualizarFormaGoma()
         {
-            var ink = (InkCanvas)this.FindName("ink");
-            if (ink == null || _vistaModelo == null) return;
+            var lienzoTinta = (InkCanvas)this.FindName("ink");
+            if (lienzoTinta == null || _vistaModelo == null) return;
 
-            var size = Math.Max(1, _vistaModelo.Grosor);
-            ink.EraserShape = new EllipseStylusShape(size, size);
+            var tamano = Math.Max(1, _vistaModelo.Grosor);
+            lienzoTinta.EraserShape = new EllipseStylusShape(tamano, tamano);
         }
+
 
         private bool DebeCerrarAplicacionPorCierreDeVentana()
         {

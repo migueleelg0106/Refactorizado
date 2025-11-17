@@ -61,7 +61,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
         private bool _aplicacionCerrando;
-        private bool _cerrandoPorVentana;
 
         public enum DestinoNavegacion
         {
@@ -575,9 +574,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
         private void EjecutarCerrarVentana()
         {
-            _cerrandoPorVentana = ChequearCierreAplicacionGlobal?.Invoke() ?? true;
+            bool cerrandoPorVentana = ChequearCierreAplicacionGlobal?.Invoke() ?? true;
 
-            if (_cerrandoPorVentana)
+            if (cerrandoPorVentana)
             {
                 NotificarCierreAplicacionCompleta();
             }
@@ -819,8 +818,10 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 {
                     await _salasServicio.AbandonarSalaAsync(_sala.Codigo, _nombreUsuarioSesion).ConfigureAwait(false);
                 }
-                catch
+                catch (ServicioExcepcion ex)
                 {
+                    System.Diagnostics.Debug.WriteLine(
+                        $"[FinalizarAsync] Error al abandonar sala ({ex.Tipo}): {ex.Message}");
                 }
             }
 

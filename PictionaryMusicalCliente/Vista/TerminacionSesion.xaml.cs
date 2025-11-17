@@ -22,7 +22,7 @@ namespace PictionaryMusicalCliente
             this.DataContext = _viewModel;
         }
 
-        private void EjecutarNavegacionInicioSesion()
+        private static void EjecutarNavegacionInicioSesion()
         {
             var inicioSesion = new InicioSesion();
 
