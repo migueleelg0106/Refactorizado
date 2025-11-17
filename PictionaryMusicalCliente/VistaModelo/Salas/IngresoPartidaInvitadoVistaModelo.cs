@@ -184,10 +184,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
             catch (ServicioExcepcion ex)
             {
-                if (!string.IsNullOrWhiteSpace(ex?.Message)
-                    && string.Equals(ex.Message, Lang.errorTextoSalaLlena, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(ex?.Message))
                 {
-                    return ResultadoUnionInvitado.CrearErrorSalaLlena();
+                    if (string.Equals(ex.Message, Lang.errorTextoSalaLlena, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return ResultadoUnionInvitado.CrearErrorSalaLlena();
+                    }
+
+                    if (string.Equals(ex.Message, Lang.errorTextoNoEncuentraPartida, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return ResultadoUnionInvitado.SalaNoEncontrada();
+                    }
+
+                    return ResultadoUnionInvitado.Error(ex.Message);
                 }
 
                 if (ex?.Tipo == TipoErrorServicio.FallaServicio)
@@ -195,7 +204,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     return ResultadoUnionInvitado.SalaNoEncontrada();
                 }
 
-                return ResultadoUnionInvitado.Error(ex?.Message ?? Lang.errorTextoNoEncuentraPartida);
+                return ResultadoUnionInvitado.Error(Lang.errorTextoNoEncuentraPartida);
             }
             catch (Exception)
             {
