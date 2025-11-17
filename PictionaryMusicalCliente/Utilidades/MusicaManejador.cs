@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -10,8 +11,10 @@ namespace PictionaryMusicalCliente.ClienteServicios
     {
         private readonly MediaPlayer _reproductor;
         private readonly Dispatcher _dispatcher;
+        private readonly bool _entornoWpfDisponible;
         private bool _desechado;
         private double _volumenGuardado;
+        private double _volumenSimulado;
 
         public bool EstaReproduciendo { get; private set; }
         public bool EstaSilenciado { get; private set; }
@@ -20,31 +23,48 @@ namespace PictionaryMusicalCliente.ClienteServicios
         {
             get
             {
+                if (!PuedeUsarMediaPlayer)
+                {
+                    return _volumenSimulado;
+                }
+
                 return _dispatcher.Invoke(() => _reproductor.Volume);
             }
             set
             {
+                double clamped = Math.Max(0, Math.Min(1, value));
+
+                if (!PuedeUsarMediaPlayer)
+                {
+                    _volumenSimulado = clamped;
+                    ActualizarEstadoSilencio(clamped);
+                    return;
+                }
+
                 _dispatcher.Invoke(() =>
                 {
-                    double clamped = Math.Max(0, Math.Min(1, value));
                     _reproductor.Volume = clamped;
-
-                    EstaSilenciado = clamped < 0.0001;
-                    if (!EstaSilenciado)
-                    {
-                        _volumenGuardado = clamped;
-                    }
+                    ActualizarEstadoSilencio(clamped);
                 });
             }
         }
 
         public MusicaManejador()
         {
-            _reproductor = new MediaPlayer();
-            _dispatcher = Application.Current.Dispatcher;
-            _reproductor.MediaEnded += EnMedioTerminado;
-            _reproductor.MediaOpened += EnMedioAbierto;
-            _reproductor.MediaFailed += EnMedioFallido;
+            _entornoWpfDisponible = EsEntornoWpfDisponible();
+            _dispatcher = null;
+            _reproductor = null;
+
+            if (_entornoWpfDisponible)
+            {
+                _dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
+                _reproductor = new MediaPlayer();
+                _reproductor.MediaEnded += EnMedioTerminado;
+                _reproductor.MediaOpened += EnMedioAbierto;
+                _reproductor.MediaFailed += EnMedioFallido;
+            }
+
+            _volumenSimulado = 0.4;
             this.Volumen = 0.4;
             EstaSilenciado = false;
         }
@@ -71,6 +91,12 @@ namespace PictionaryMusicalCliente.ClienteServicios
             if (string.IsNullOrWhiteSpace(nombreArchivo))
             {
                 Debug.WriteLine("El nombre del archivo no puede ser vacio.");
+                return;
+            }
+
+            if (!PuedeUsarMediaPlayer)
+            {
+                EstaReproduciendo = true;
                 return;
             }
 
@@ -104,6 +130,12 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
         public void Pausar()
         {
+            if (!PuedeUsarMediaPlayer)
+            {
+                EstaReproduciendo = false;
+                return;
+            }
+
             _dispatcher.Invoke(() =>
             {
                 if (EstaReproduciendo)
@@ -116,11 +148,17 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
         public void Reanudar()
         {
+            if (!PuedeUsarMediaPlayer)
+            {
+                EstaReproduciendo = true;
+                return;
+            }
+
             _dispatcher.Invoke(() =>
             {
                 if (!EstaReproduciendo)
                 {
-                    _reproductor.Play(); 
+                    _reproductor.Play();
                     EstaReproduciendo = true;
                 }
             });
@@ -128,15 +166,25 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
         private void EnMedioAbierto(object sender, EventArgs e)
         {
+            if (!PuedeUsarMediaPlayer)
+            {
+                return;
+            }
+
             _dispatcher.Invoke(() =>
             {
-                _reproductor.Play(); 
+                _reproductor.Play();
                 EstaReproduciendo = true;
             });
         }
 
         private void EnMedioFallido(object sender, ExceptionEventArgs e)
         {
+            if (!PuedeUsarMediaPlayer)
+            {
+                return;
+            }
+
             _dispatcher.Invoke(() =>
             {
                 EstaReproduciendo = false;
@@ -146,6 +194,12 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
         public virtual void Detener()
         {
+            if (!PuedeUsarMediaPlayer)
+            {
+                EstaReproduciendo = false;
+                return;
+            }
+
             _dispatcher.Invoke(() =>
             {
                 if (EstaReproduciendo)
@@ -158,10 +212,15 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
         public void EnMedioTerminado(object sender, EventArgs e)
         {
+            if (!PuedeUsarMediaPlayer)
+            {
+                return;
+            }
+
             _dispatcher.Invoke(() =>
             {
-                _reproductor.Position = TimeSpan.Zero; 
-                _reproductor.Play(); 
+                _reproductor.Position = TimeSpan.Zero;
+                _reproductor.Play();
                 EstaReproduciendo = true;
             });
         }
@@ -181,18 +240,37 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
             if (disposing)
             {
-                _dispatcher.Invoke(() =>
+                if (PuedeUsarMediaPlayer)
                 {
-                    _reproductor.MediaEnded -= EnMedioTerminado;
-                    _reproductor.MediaOpened -= EnMedioAbierto;
-                    _reproductor.MediaFailed -= EnMedioFallido;
+                    _dispatcher.Invoke(() =>
+                    {
+                        _reproductor.MediaEnded -= EnMedioTerminado;
+                        _reproductor.MediaOpened -= EnMedioAbierto;
+                        _reproductor.MediaFailed -= EnMedioFallido;
 
-                    _reproductor.Stop();
-                    _reproductor.Close();
-                });
+                        _reproductor.Stop();
+                        _reproductor.Close();
+                    });
+                }
             }
 
             _desechado = true;
         }
+
+        private void ActualizarEstadoSilencio(double volumen)
+        {
+            EstaSilenciado = volumen < 0.0001;
+            if (!EstaSilenciado)
+            {
+                _volumenGuardado = volumen;
+            }
+        }
+
+        private static bool EsEntornoWpfDisponible()
+        {
+            return Thread.CurrentThread.GetApartmentState() == ApartmentState.STA;
+        }
+
+        private bool PuedeUsarMediaPlayer => _entornoWpfDisponible && _dispatcher != null && _reproductor != null;
     }
 }
