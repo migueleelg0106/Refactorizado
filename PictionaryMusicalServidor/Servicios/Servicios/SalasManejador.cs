@@ -194,8 +194,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             try
             {
                 var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
-                var keysToRemove = _suscripciones.Where(kvp => ReferenceEquals(kvp.Value, callback))
-                    .Select(kvp => kvp.Key)
+                var keysToRemove = _suscripciones.Where(callbakJugador => ReferenceEquals(callbakJugador.Value, callback))
+                    .Select(callbakJugador => callbakJugador.Key)
                     .ToList();
 
                 foreach (var key in keysToRemove)
@@ -322,21 +322,21 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             var salas = _salas.Values.Select(s => s.ToDto()).ToArray();
 
-            foreach (var kvp in _suscripciones)
+            foreach (var callbakJugador in _suscripciones)
             {
                 try
                 {
-                    kvp.Value.NotificarListaSalasActualizada(salas);
+                    callbakJugador.Value.NotificarListaSalasActualizada(salas);
                 }
                 catch (CommunicationException ex)
                 {
                     _logger.Warn(MensajesError.Log.SalaNotificarListaComunicacion, ex);
-                    _suscripciones.TryRemove(kvp.Key, out _);
+                    _suscripciones.TryRemove(callbakJugador.Key, out _);
                 }
                 catch (TimeoutException ex)
                 {
                     _logger.Warn(MensajesError.Log.SalaNotificarListaTimeout, ex);
-                    _suscripciones.TryRemove(kvp.Key, out _);
+                    _suscripciones.TryRemove(callbakJugador.Key, out _);
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -482,23 +482,25 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             private void NotificarNuevoJugadorYActualizacion(string nombreUsuario, SalaDTO salaActualizada)
             {
-                foreach (var kvp in _callbacks)
+                foreach (var callback in _callbacks
+                    .Where(callbakJugador => !string.Equals(callbakJugador.Key, nombreUsuario, StringComparison.OrdinalIgnoreCase))
+                    .Select(callbakJugador => callbakJugador.Value))
                 {
-                    if (!string.Equals(kvp.Key, nombreUsuario, StringComparison.OrdinalIgnoreCase))
-                    {
-                        NotificarJugadorSeUnio(kvp.Value, nombreUsuario);
-                    }
+                    NotificarJugadorSeUnio(callback, nombreUsuario);
+                }
 
-                    NotificarSalaActualizada(kvp.Value, salaActualizada);
+                foreach (var callback in _callbacks.Select(callbakJugador => callbakJugador.Value))
+                {
+                    NotificarSalaActualizada(callback, salaActualizada);
                 }
             }
 
             private void NotificarSalidaYActualizacion(string nombreJugador, SalaDTO salaActualizada)
             {
-                foreach (var kvp in _callbacks)
+                foreach (var callback in _callbacks.Select(callbakJugador => callbakJugador.Value))
                 {
-                    NotificarJugadorSalio(kvp.Value, nombreJugador);
-                    NotificarSalaActualizada(kvp.Value, salaActualizada);
+                    NotificarJugadorSalio(callback, nombreJugador);
+                    NotificarSalaActualizada(callback, salaActualizada);
                 }
             }
 
