@@ -75,11 +75,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
                 var resultado = sala.AgregarJugador(nombreUsuario.Trim(), callback, notificar: true);
-                
+
                 NotificarListaSalasATodos();
                 return resultado;
             }
-            catch (FaultException ex)
+            catch (FaultException)
             {
                 throw;
             }
@@ -375,7 +375,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         }
 
 
-        private class SalaInterna
+        private sealed class SalaInterna
         {
             private const int MaximoJugadores = 4;
             private readonly object _sync = new();
@@ -409,18 +409,155 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
             }
 
+            private static void EjecutarNotificacion(Action accionNotificacion, string logError)
+            {
+                try
+                {
+                    accionNotificacion();
+                }
+                catch (CommunicationException ex)
+                {
+                    _logger.Warn(logError, ex);
+                }
+                catch (TimeoutException ex)
+                {
+                    _logger.Warn(logError, ex);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(logError, ex);
+                }
+            }
+
+            private void NotificarJugadorSeUnio(ISalasCallback callback, string nombreJugador)
+            {
+                EjecutarNotificacion(
+                    () => callback.NotificarJugadorSeUnio(Codigo, nombreJugador),
+                    MensajesError.Log.SalaNotificarJugadorUnionError);
+            }
+
+            private void NotificarJugadorSalio(ISalasCallback callback, string nombreJugador)
+            {
+                EjecutarNotificacion(
+                    () => callback.NotificarJugadorSalio(Codigo, nombreJugador),
+                    MensajesError.Log.SalaNotificarJugadorSalidaError);
+            }
+
+            private void NotificarJugadorExpulsado(ISalasCallback callback, string nombreJugador)
+            {
+                if (callback == null)
+                {
+                    return;
+                }
+
+                EjecutarNotificacion(
+                    () => callback.NotificarJugadorExpulsado(Codigo, nombreJugador),
+                    MensajesError.Log.SalaNotificarJugadorExpulsionError);
+            }
+
+            private static void NotificarSalaActualizada(ISalasCallback callback, SalaDTO salaActualizada)
+            {
+                EjecutarNotificacion(
+                    () => callback.NotificarSalaActualizada(salaActualizada),
+                    MensajesError.Log.SalaNotificarJugadorActualizacionError);
+            }
+
+
+            private bool JugadorYaExiste(string nombreUsuario)
+            {
+                return Jugadores.Contains(nombreUsuario, StringComparer.OrdinalIgnoreCase);
+            }
+
+            private void ValidarCapacidadSala()
+            {
+                if (ContarJugadoresActivos() >= MaximoJugadores)
+                {
+                    throw new FaultException(MensajesError.Cliente.SalaLlena);
+                }
+            }
+
+            private void NotificarNuevoJugadorYActualizacion(string nombreUsuario, SalaDTO salaActualizada)
+            {
+                foreach (var kvp in _callbacks)
+                {
+                    if (!string.Equals(kvp.Key, nombreUsuario, StringComparison.OrdinalIgnoreCase))
+                    {
+                        NotificarJugadorSeUnio(kvp.Value, nombreUsuario);
+                    }
+
+                    NotificarSalaActualizada(kvp.Value, salaActualizada);
+                }
+            }
+
+            private void NotificarSalidaYActualizacion(string nombreJugador, SalaDTO salaActualizada)
+            {
+                foreach (var kvp in _callbacks)
+                {
+                    NotificarJugadorSalio(kvp.Value, nombreJugador);
+                    NotificarSalaActualizada(kvp.Value, salaActualizada);
+                }
+            }
+
+            private bool RemoverJugadorDeSala(string nombreUsuario)
+            {
+                if (Jugadores.RemoveAll(j => string.Equals(j, nombreUsuario, StringComparison.OrdinalIgnoreCase)) == 0)
+                {
+                    return false;
+                }
+
+                _callbacks.Remove(nombreUsuario);
+                return true;
+            }
+
+            private bool DebeMarcarseParaEliminar(string nombreUsuario)
+            {
+                return string.Equals(nombreUsuario, Creador, StringComparison.OrdinalIgnoreCase)
+                    || Jugadores.Count == 0;
+            }
+
+            private ISalasCallback ObtenerCallback(string nombreJugador)
+            {
+                if (_callbacks.TryGetValue(nombreJugador, out var callback))
+                {
+                    return callback;
+                }
+
+                return null;
+            }
+
+            private void ValidarExpulsion(string nombreHost, string nombreJugadorAExpulsar)
+            {
+                if (!string.Equals(nombreHost, Creador, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new FaultException(MensajesError.Cliente.SalaExpulsionRestringida);
+                }
+
+                if (string.Equals(nombreJugadorAExpulsar, Creador, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new FaultException(MensajesError.Cliente.SalaCreadorNoExpulsable);
+                }
+
+                if (!Jugadores.Contains(nombreJugadorAExpulsar, StringComparer.OrdinalIgnoreCase))
+                {
+                    throw new FaultException(MensajesError.Cliente.SalaJugadorNoExiste);
+                }
+            }
+
             public SalaDTO AgregarJugador(string nombreUsuario, ISalasCallback callback, bool notificar)
             {
                 lock (_sync)
                 {
-                    if (Jugadores.Contains(nombreUsuario, StringComparer.OrdinalIgnoreCase))
+                    if (JugadorYaExiste(nombreUsuario))
                     {
                         _callbacks[nombreUsuario] = callback;
                         return ToDto();
                     }
 
-                    if (ContarJugadoresActivos() >= MaximoJugadores)
-                        throw new FaultException(MensajesError.Cliente.SalaLlena);
+                    ValidarCapacidadSala();
 
                     Jugadores.Add(nombreUsuario);
                     _callbacks[nombreUsuario] = callback;
@@ -428,54 +565,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     if (notificar)
                     {
                         var salaActualizada = ToDto();
-
-                        foreach (var kvp in _callbacks)
-                        {
-                            if (!string.Equals(kvp.Key, nombreUsuario, StringComparison.OrdinalIgnoreCase))
-                            {
-                                try
-                                {
-                                    kvp.Value.NotificarJugadorSeUnio(Codigo, nombreUsuario);
-                                }
-                                catch (CommunicationException ex)
-                                {
-                                    _logger.Warn(MensajesError.Log.SalaNotificarJugadorUnionError, ex);
-                                }
-                                catch (TimeoutException ex)
-                                {
-                                    _logger.Warn(MensajesError.Log.SalaNotificarJugadorUnionError, ex);
-                                }
-                                catch (InvalidOperationException ex)
-                                {
-                                    _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
-                                }
-                                catch (Exception ex)
-                                {
-                                    _logger.Error(MensajesError.Log.SalaNotificarJugadorUnionError, ex);
-                                }
-                            }
-
-                            try
-                            {
-                                kvp.Value.NotificarSalaActualizada(salaActualizada);
-                            }
-                            catch (CommunicationException ex)
-                            {
-                                _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
-                            }
-                            catch (TimeoutException ex)
-                            {
-                                _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
-                            }
-                            catch (InvalidOperationException ex)
-                            {
-                                _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.Error(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
-                            }
-                        }
+                        NotificarNuevoJugadorYActualizacion(nombreUsuario, salaActualizada);
                     }
 
                     return ToDto();
@@ -486,60 +576,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 lock (_sync)
                 {
-                    if (Jugadores.RemoveAll(j => string.Equals(j, nombreUsuario, StringComparison.OrdinalIgnoreCase)) == 0)
-                        return;
-
-                    _callbacks.Remove(nombreUsuario);
-
-                    var salaActualizada = ToDto();
-
-                    foreach (var kvp in _callbacks)
+                    if (!RemoverJugadorDeSala(nombreUsuario))
                     {
-                        try
-                        {
-                            kvp.Value.NotificarJugadorSalio(Codigo, nombreUsuario);
-                        }
-                        catch (CommunicationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
-                        }
-                        catch (TimeoutException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Error(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
-                        }
-
-                        try
-                        {
-                            kvp.Value.NotificarSalaActualizada(salaActualizada);
-                        }
-                        catch (CommunicationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
-                        }
-                        catch (TimeoutException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Error(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
-                        }
+                        return;
                     }
 
-                    if (string.Equals(nombreUsuario, Creador, StringComparison.OrdinalIgnoreCase) || Jugadores.Count == 0)
+                    var salaActualizada = ToDto();
+                    NotificarSalidaYActualizacion(nombreUsuario, salaActualizada);
+
+                    if (DebeMarcarseParaEliminar(nombreUsuario))
+                    {
                         DebeEliminarse = true;
+                    }
                 }
             }
 
@@ -547,99 +595,20 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 lock (_sync)
                 {
-                    if (!string.Equals(nombreHost, Creador, StringComparison.OrdinalIgnoreCase))
-                        throw new FaultException(MensajesError.Cliente.SalaExpulsionRestringida);
+                    ValidarExpulsion(nombreHost, nombreJugadorAExpulsar);
 
-                    if (string.Equals(nombreJugadorAExpulsar, Creador, StringComparison.OrdinalIgnoreCase))
-                        throw new FaultException(MensajesError.Cliente.SalaCreadorNoExpulsable);
-
-                    if (!Jugadores.Contains(nombreJugadorAExpulsar, StringComparer.OrdinalIgnoreCase))
-                        throw new FaultException(MensajesError.Cliente.SalaJugadorNoExiste);
-
-                    // Obtener el callback del jugador expulsado antes de removerlo
-                    ISalasCallback callbackExpulsado = null;
-                    if (_callbacks.ContainsKey(nombreJugadorAExpulsar))
-                    {
-                        callbackExpulsado = _callbacks[nombreJugadorAExpulsar];
-                    }
+                    var callbackExpulsado = ObtenerCallback(nombreJugadorAExpulsar);
 
                     Jugadores.RemoveAll(j => string.Equals(j, nombreJugadorAExpulsar, StringComparison.OrdinalIgnoreCase));
                     _callbacks.Remove(nombreJugadorAExpulsar);
 
                     var salaActualizada = ToDto();
 
-                    // Notificar al jugador expulsado
-                    if (callbackExpulsado != null)
-                    {
-                        try
-                        {
-                            callbackExpulsado.NotificarJugadorExpulsado(Codigo, nombreJugadorAExpulsar);
-                        }
-                        catch (CommunicationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorExpulsionError, ex);
-                        }
-                        catch (TimeoutException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorExpulsionError, ex);
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Error(MensajesError.Log.SalaNotificarJugadorExpulsionError, ex);
-                        }
-                    }
-
-                    // Notificar a los demás jugadores
-                    foreach (var kvp in _callbacks)
-                    {
-                        try
-                        {
-                            kvp.Value.NotificarJugadorSalio(Codigo, nombreJugadorAExpulsar);
-                        }
-                        catch (CommunicationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
-                        }
-                        catch (TimeoutException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Error(MensajesError.Log.SalaNotificarJugadorSalidaError, ex);
-                        }
-
-                        try
-                        {
-                            kvp.Value.NotificarSalaActualizada(salaActualizada);
-                        }
-                        catch (CommunicationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
-                        }
-                        catch (TimeoutException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-                            _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Error(MensajesError.Log.SalaNotificarJugadorActualizacionError, ex);
-                        }
-                    }
+                    NotificarJugadorExpulsado(callbackExpulsado, nombreJugadorAExpulsar);
+                    NotificarSalidaYActualizacion(nombreJugadorAExpulsar, salaActualizada);
                 }
             }
+
 
             private int ContarJugadoresActivos()
             {

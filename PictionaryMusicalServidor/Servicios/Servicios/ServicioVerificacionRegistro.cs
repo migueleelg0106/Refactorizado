@@ -244,7 +244,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             return ($"{usuario}|{correo}").ToLowerInvariant();
         }
 
-        private class SolicitudCodigoPendiente
+        private sealed class SolicitudCodigoPendiente
         {
             public NuevaCuentaDTO DatosCuenta { get; set; }
             public string Codigo { get; set; }

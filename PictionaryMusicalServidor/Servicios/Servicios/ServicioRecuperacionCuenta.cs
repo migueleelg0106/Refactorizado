@@ -374,7 +374,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 .FirstOrDefault(u => string.Equals(u.Jugador?.Correo, identificador, StringComparison.Ordinal));
         }
 
-        private class SolicitudRecuperacionPendiente
+        private sealed class SolicitudRecuperacionPendiente
         {
             public int UsuarioId { get; set; }
             public string Correo { get; set; }
