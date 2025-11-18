@@ -2,7 +2,6 @@ using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
@@ -442,7 +441,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             if (string.IsNullOrWhiteSpace(codigo))
             {
                 ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke(Lang.globalTextoIngreseCodigoPartida);
+                MostrarMensaje?.Invoke(Lang.unirseSalaTextoVacio);
                 return;
             }
 
@@ -461,12 +460,12 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
-                string mensajeServidor = ex?.Message;
-                string mensajePredeterminado = Lang.errorTextoNoEncuentraPartida;
-                string mensajeLocalizado = MensajeServidorAyudante.Localizar(mensajeServidor, mensajePredeterminado);
+                string mensaje = string.IsNullOrWhiteSpace(ex?.Message)
+                    ? Lang.errorTextoNoEncuentraPartida
+                    : ex.Message;
 
                 ManejadorSonido.ReproducirError();
-                MostrarMensaje?.Invoke(mensajeLocalizado);
+                MostrarMensaje?.Invoke(mensaje);
             }
         }
 

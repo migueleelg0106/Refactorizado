@@ -756,4 +756,7 @@
   <data name="partidaTextoJugadores" xml:space="preserve">
     <value>JUGADORES</value>
   </data>
+  <data name="unirseSalaTextoVacio" xml:space="preserve">
+    <value>Ingrese el código de una sala.</value>
+  </data>
 </root>

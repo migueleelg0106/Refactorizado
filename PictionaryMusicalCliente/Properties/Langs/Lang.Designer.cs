@@ -1976,5 +1976,14 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("tituloTextoVentanaPrincipal", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ingrese el código de una sala..
+        /// </summary>
+        public static string unirseSalaTextoVacio {
+            get {
+                return ResourceManager.GetString("unirseSalaTextoVacio", resourceCulture);
+            }
+        }
     }
 }

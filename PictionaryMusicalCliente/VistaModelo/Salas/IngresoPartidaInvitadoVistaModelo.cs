@@ -83,7 +83,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             if (string.IsNullOrWhiteSpace(codigo))
             {
                 ManejadorSonido.ReproducirError();
-                AvisoAyudante.Mostrar(Lang.globalTextoIngreseCodigoPartida);
+                AvisoAyudante.Mostrar(Lang.unirseSalaTextoVacio);
                 return;
             }
 
@@ -184,12 +184,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
             catch (ServicioExcepcion ex)
             {
-                string mensajeServidor = ex?.Message;
-                string mensajePredeterminado = Lang.errorTextoNoEncuentraPartida;
-                string mensajeLocalizado = MensajeServidorAyudante.Localizar(mensajeServidor, mensajePredeterminado);
+                string mensaje = string.IsNullOrWhiteSpace(ex?.Message)
+                    ? Lang.errorTextoNoEncuentraPartida
+                    : ex.Message;
 
                 ManejadorSonido.ReproducirError();
-                return ResultadoUnionInvitado.Error(mensajeLocalizado);
+                return ResultadoUnionInvitado.Error(mensaje);
             }
         }
 

@@ -765,4 +765,7 @@
   <data name="partidaTextoJugadores" xml:space="preserve">
     <value>PLAYERS</value>
   </data>
+  <data name="unirseSalaTextoVacio" xml:space="preserve">
+    <value>Enter a game code.</value>
+  </data>
 </root>
