@@ -1357,7 +1357,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a BUSCAR UN AMIGO.
+        ///   Busca una cadena traducida similar a AGREGAR UN AMIGO.
         /// </summary>
         public static string globalTextoBuscarAmigo {
             get {
