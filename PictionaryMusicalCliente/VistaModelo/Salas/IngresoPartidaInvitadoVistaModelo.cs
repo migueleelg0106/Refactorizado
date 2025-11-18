@@ -185,29 +185,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             catch (ServicioExcepcion ex)
             {
                 string mensajeServidor = ex?.Message;
-                string mensajeLocalizado = MensajeServidorAyudante.Localizar(mensajeServidor, mensajeServidor);
+                string mensajePredeterminado = Lang.errorTextoNoEncuentraPartida;
+                string mensajeLocalizado = MensajeServidorAyudante.Localizar(mensajeServidor, mensajePredeterminado);
 
-                bool esSalaLlena = MensajeServidorAyudante.CoincideConMensaje(
-                    mensajeServidor,
-                    "La sala está llena",
-                    Lang.errorTextoSalaLlena);
-
-                bool esSalaNoEncontrada = MensajeServidorAyudante.CoincideConMensaje(
-                    mensajeServidor,
-                    "No se encontró la sala especificada",
-                    Lang.errorTextoNoEncuentraPartida);
-
-                if (esSalaLlena)
-                {
-                    return ResultadoUnionInvitado.CrearErrorSalaLlena();
-                }
-
-                if (ex?.Tipo == TipoErrorServicio.FallaServicio || esSalaNoEncontrada)
-                {
-                    return ResultadoUnionInvitado.SalaNoEncontrada();
-                }
-
-                return ResultadoUnionInvitado.Error(mensajeLocalizado ?? Lang.errorTextoNoEncuentraPartida);
+                ManejadorSonido.ReproducirError();
+                return ResultadoUnionInvitado.Error(mensajeLocalizado);
             }
         }
 
