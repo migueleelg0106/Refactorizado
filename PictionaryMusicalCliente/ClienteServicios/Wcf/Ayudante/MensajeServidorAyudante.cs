@@ -165,42 +165,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             return LangResources.Lang.errorTextoErrorProcesarSolicitud;
         }
 
-        public static bool CoincideConMensaje(string mensaje, params string[] candidatos)
-        {
-            if (string.IsNullOrWhiteSpace(mensaje) || candidatos == null || candidatos.Length == 0)
-            {
-                return false;
-            }
-
-            string mensajeNormalizado = NormalizarMensaje(mensaje);
-
-            foreach (string candidato in candidatos)
-            {
-                if (string.IsNullOrWhiteSpace(candidato))
-                {
-                    continue;
-                }
-
-                string candidatoNormalizado = NormalizarMensaje(candidato);
-
-                if (!string.IsNullOrEmpty(candidatoNormalizado)
-                    && mensajeNormalizado.IndexOf(candidatoNormalizado, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static string NormalizarMensaje(string mensaje)
-        {
-            return mensaje?
-                .Trim()
-                .TrimEnd('.')
-                ?? string.Empty;
-        }
-
         private static bool TryLocalizarMensajeDinamico(string mensaje, out string traducido)
         {
             Match espera = EsperaCodigoRegex.Match(mensaje);
