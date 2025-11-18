@@ -154,15 +154,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             try
             {
                 var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
-                var sessionId = Guid.NewGuid();
+                var sesionId = Guid.NewGuid();
                 
-                _suscripciones.AddOrUpdate(sessionId, callback, (_, __) => callback);
+                _suscripciones.AddOrUpdate(sesionId, callback, (_, __) => callback);
 
                 var canal = OperationContext.Current?.Channel;
                 if (canal != null)
                 {
-                    canal.Closed += (_, __) => _suscripciones.TryRemove(sessionId, out ISalasCallback _);
-                    canal.Faulted += (_, __) => _suscripciones.TryRemove(sessionId, out ISalasCallback _);
+                    canal.Closed += (_, __) => _suscripciones.TryRemove(sesionId, out ISalasCallback _);
+                    canal.Faulted += (_, __) => _suscripciones.TryRemove(sesionId, out ISalasCallback _);
                 }
 
                 NotificarListaSalas(callback);
