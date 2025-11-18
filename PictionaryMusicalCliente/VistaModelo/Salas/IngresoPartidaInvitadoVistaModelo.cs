@@ -1,4 +1,4 @@
-using PictionaryMusicalCliente.ClienteServicios;
+Ôªøusing PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Comandos;
@@ -189,12 +189,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 bool esSalaLlena = MensajeServidorAyudante.CoincideConMensaje(
                     mensajeServidor,
-                    "La sala est· llena",
+                    "La sala est√° llena",
                     Lang.errorTextoSalaLlena);
 
                 bool esSalaNoEncontrada = MensajeServidorAyudante.CoincideConMensaje(
                     mensajeServidor,
-                    "No se encontrÛ la sala especificada",
+                    "No se encontr√≥ la sala especificada",
                     Lang.errorTextoNoEncuentraPartida);
 
                 if (esSalaLlena)
