@@ -84,7 +84,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         public ResultadoOperacionDTO ActualizarPerfil(ActualizacionPerfilDTO solicitud)
         {
 
-            ResultadoOperacionDTO validacion = PerfilValidador.ValidarActualizacion(solicitud);
+            ResultadoOperacionDTO validacion = EntradaComunValidador.ValidarActualizacionPerfil(solicitud);
             if (!validacion.OperacionExitosa)
             {
                 return validacion;
@@ -111,8 +111,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         return CrearResultadoFallo(MensajesError.Cliente.JugadorNoAsociado);
                     }
 
-                    jugador.Nombre = solicitud.Nombre.Trim();
-                    jugador.Apellido = solicitud.Apellido.Trim();
+                    jugador.Nombre = solicitud.Nombre;
+                    jugador.Apellido = solicitud.Apellido;
                     jugador.Id_Avatar = solicitud.AvatarId;
 
                     RedSocial redSocial = jugador.RedSocial.FirstOrDefault();
@@ -126,10 +126,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         jugador.RedSocial.Add(redSocial);
                     }
 
-                    redSocial.Instagram = NormalizarRedSocial(solicitud.Instagram);
-                    redSocial.facebook = NormalizarRedSocial(solicitud.Facebook);
-                    redSocial.x = NormalizarRedSocial(solicitud.X);
-                    redSocial.discord = NormalizarRedSocial(solicitud.Discord);
+                    redSocial.Instagram = solicitud.Instagram;
+                    redSocial.facebook = solicitud.Facebook;
+                    redSocial.x = solicitud.X;
+                    redSocial.discord = solicitud.Discord;
 
                     contexto.SaveChanges();
 
@@ -173,18 +173,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             return string.IsNullOrWhiteSpace(conexion)
                 ? new BaseDatosPruebaEntities1()
                 : new BaseDatosPruebaEntities1(conexion);
-        }
-
-
-        private static string NormalizarRedSocial(string valor)
-        {
-            if (string.IsNullOrWhiteSpace(valor))
-            {
-                return null;
-            }
-
-            string normalizado = valor.Trim();
-            return normalizado.Length == 0 ? null : normalizado;
         }
 
 

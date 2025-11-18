@@ -24,10 +24,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new ArgumentNullException(nameof(credenciales));
             }
 
-            string identificador = credenciales.Identificador?.Trim();
-            string contrasena = credenciales.Contrasena ?? string.Empty;
+            string identificador = EntradaComunValidador.NormalizarTexto(credenciales.Identificador);
+            string contrasena = credenciales.Contrasena?.Trim();
 
-            if (string.IsNullOrWhiteSpace(identificador) || string.IsNullOrEmpty(contrasena))
+            if (!EntradaComunValidador.EsLongitudValida(identificador) || string.IsNullOrWhiteSpace(contrasena))
             {
                 return new ResultadoInicioSesionDTO
                 {
