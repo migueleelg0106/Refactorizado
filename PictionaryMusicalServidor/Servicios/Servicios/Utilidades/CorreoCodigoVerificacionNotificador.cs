@@ -9,6 +9,7 @@ using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 {
+
     public class CorreoCodigoVerificacionNotificador : ICodigoVerificacionNotificador
     {
         private static readonly ILog _logger =
@@ -49,6 +50,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 puerto = 587;
             }
 
+            if (!habilitarSsl)
+            {
+                _logger.Error("Configuracion invalida: Correo.Smtp.HabilitarSsl debe ser true.");
+                return false;
+            }
+
             string cuerpoHtml = ConstruirCuerpoMensaje(usuarioDestino, codigo);
 
             try
@@ -59,7 +66,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 
                     using (var clienteSmtp = new SmtpClient(host, puerto))
                     {
-                        clienteSmtp.EnableSsl = habilitarSsl;
+                        clienteSmtp.EnableSsl = true;
 
                         if (!string.IsNullOrWhiteSpace(contrasena))
                         {

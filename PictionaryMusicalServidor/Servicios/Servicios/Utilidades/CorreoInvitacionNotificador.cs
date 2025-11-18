@@ -8,13 +8,25 @@ using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 {
+    /// <summary>
+    /// Notificador que envia invitaciones a partidas por correo electronico.
+    /// </summary>
     internal static class CorreoInvitacionNotificador
     {
-        private static readonly ILog _logger = 
+        private static readonly ILog _logger =
             LogManager.GetLogger(typeof(CorreoInvitacionNotificador));
-    
-        private const string AsuntoPredeterminado = "Invitación a partida";
 
+        private const string AsuntoPredeterminado = "Invitacion a partida";
+
+        /// <summary>
+        /// Envia una invitacion a una partida al correo indicado.
+        /// </summary>
+        /// <param name="correoDestino">Correo electronico de destino.</param>
+        /// <param name="codigoSala">Codigo de la sala.</param>
+        /// <param name="creador">Nombre del creador de la sala.</param>
+        /// <returns>
+        /// True si el correo se envio correctamente; false en caso contrario.
+        /// </returns>
         public static bool EnviarInvitacion(string correoDestino, string codigoSala, string creador)
         {
             if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigoSala))
@@ -29,7 +41,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             string puertoConfigurado = ObtenerConfiguracion("CorreoPuerto", "Correo.Smtp.Puerto");
             string asunto = ObtenerConfiguracion("CorreoAsuntoInvitacion", "Correo.Invitacion.Asunto") ?? AsuntoPredeterminado;
 
-            bool.TryParse(ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"), out bool habilitarSsl);
+            bool.TryParse(
+                ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"),
+                out bool habilitarSsl);
 
             if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
             {
@@ -46,6 +60,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 puerto = 587;
             }
 
+            if (!habilitarSsl)
+            {
+                _logger.Error("Configuracion invalida: Correo.Smtp.HabilitarSsl debe ser true.");
+                return false;
+            }
+
             string cuerpoHtml = ConstruirCuerpoMensaje(codigoSala, creador);
 
             try
@@ -56,7 +76,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 
                     using (var clienteSmtp = new SmtpClient(host, puerto))
                     {
-                        clienteSmtp.EnableSsl = habilitarSsl;
+                        clienteSmtp.EnableSsl = true;
 
                         if (!string.IsNullOrWhiteSpace(contrasena))
                         {
@@ -101,6 +121,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 }
 
                 string valor = ConfigurationManager.AppSettings[clave];
+
                 if (!string.IsNullOrWhiteSpace(valor))
                 {
                     return valor;
@@ -113,18 +134,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         private static string ConstruirCuerpoMensaje(string codigoSala, string creador)
         {
             var cuerpoHtml = new StringBuilder();
+
             cuerpoHtml.Append("<html><body>");
-            cuerpoHtml.Append("<h2>¡Has sido invitado a una partida de Pictionary Musical!</h2>");
+            cuerpoHtml.Append("<h2>Has sido invitado a una partida de Pictionary Musical.</h2>");
 
             if (!string.IsNullOrWhiteSpace(creador))
             {
                 cuerpoHtml.Append($"<p>{creador} te ha invitado a su sala.</p>");
             }
 
-            cuerpoHtml.Append("<p>Utiliza el siguiente código para unirte:</p>");
+            cuerpoHtml.Append("<p>Utiliza el siguiente codigo para unirte:</p>");
             cuerpoHtml.Append($"<h1 style='color:#4CAF50;'>{codigoSala}</h1>");
-            cuerpoHtml.Append("<p>Ingresa el código en la aplicación para unirte a la partida.</p>");
-            cuerpoHtml.Append("<p>¡Te esperamos!</p>");
+            cuerpoHtml.Append("<p>Ingresa el codigo en la aplicacion para unirte a la partida.</p>");
+            cuerpoHtml.Append("<p>Te esperamos.</p>");
             cuerpoHtml.Append("</body></html>");
 
             return cuerpoHtml.ToString();

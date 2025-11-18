@@ -17,9 +17,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     public class InvitacionesManejador : IInvitacionesManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(InvitacionesManejador));
+        private static readonly TimeSpan RegexTimeout = TimeSpan.FromMilliseconds(500);
+
         private static readonly Regex CorreoRegex = new Regex(
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            RegexOptions.Compiled | RegexOptions.CultureInvariant,RegexTimeout);
 
         public ResultadoOperacionDTO EnviarInvitacion(InvitacionSalaDTO invitacion)
         {
