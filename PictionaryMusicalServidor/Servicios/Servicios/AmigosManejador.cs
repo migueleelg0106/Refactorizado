@@ -82,7 +82,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         }
 
 
-        private void NotificarSolicitudesPendientesAlSuscribir(string nombreNormalizado, int usuarioId)
+        private static void NotificarSolicitudesPendientesAlSuscribir(string nombreNormalizado, int usuarioId)
         {
             try
             {
@@ -356,7 +356,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             _suscripciones.TryRemove(nombreUsuario, out _);
         }
 
-        private void NotificarSolicitud(string nombreUsuario, SolicitudAmistadDTO solicitud)
+        private static void NotificarSolicitud(string nombreUsuario, SolicitudAmistadDTO solicitud)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
@@ -386,7 +386,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private void NotificarEliminacion(string nombreUsuario, SolicitudAmistadDTO solicitud)
+        private static void NotificarEliminacion(string nombreUsuario, SolicitudAmistadDTO solicitud)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
             {

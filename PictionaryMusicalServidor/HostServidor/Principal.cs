@@ -5,7 +5,7 @@ using log4net;
 
 namespace PictionaryMusicalServidor.HostServidor
 {
-    class Principal
+    static class Principal
     {
         private static readonly ILog _bitacora = LogManager.GetLogger(typeof(Principal));
 

@@ -42,10 +42,10 @@ C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\CodigoVerificacionManejador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\Constantes\MensajesError.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\CuentaManejador.cs
+C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\EntradaComunValidador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\InicioSesionManejador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\CambioContrasenaManejador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\PerfilManejador.cs
-C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\PerfilValidador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\SalasManejador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\InvitacionesManejador.cs
 C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\Servicios\Servicios\ServicioAmistad.cs

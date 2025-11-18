@@ -78,49 +78,64 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
 
             ResultadoOperacionDTO resultado = ValidarCampoObligatorio(
-                ref nuevaCuenta.Usuario,
+                nuevaCuenta.Usuario,
                 EsLongitudValida,
-                MensajesError.Cliente.UsuarioRegistroInvalido);
+                MensajesError.Cliente.UsuarioRegistroInvalido,
+                out string usuarioNormalizado);
             if (resultado != null)
             {
                 return resultado;
             }
 
+            nuevaCuenta.Usuario = usuarioNormalizado;
+
             resultado = ValidarCampoObligatorio(
-                ref nuevaCuenta.Nombre,
+                nuevaCuenta.Nombre,
                 EsLongitudValida,
-                MensajesError.Cliente.NombreRegistroInvalido);
+                MensajesError.Cliente.NombreRegistroInvalido,
+                out string nombreNormalizado);
             if (resultado != null)
             {
                 return resultado;
             }
 
+            nuevaCuenta.Nombre = nombreNormalizado;
+
             resultado = ValidarCampoObligatorio(
-                ref nuevaCuenta.Apellido,
+                nuevaCuenta.Apellido,
                 EsLongitudValida,
-                MensajesError.Cliente.ApellidoRegistroInvalido);
+                MensajesError.Cliente.ApellidoRegistroInvalido,
+                out string apellidoNormalizado);
             if (resultado != null)
             {
                 return resultado;
             }
 
+            nuevaCuenta.Apellido = apellidoNormalizado;
+
             resultado = ValidarCampoObligatorio(
-                ref nuevaCuenta.Correo,
+                nuevaCuenta.Correo,
                 EsCorreoValido,
-                MensajesError.Cliente.CorreoRegistroInvalido);
+                MensajesError.Cliente.CorreoRegistroInvalido,
+                out string correoNormalizado);
             if (resultado != null)
             {
                 return resultado;
             }
 
+            nuevaCuenta.Correo = correoNormalizado;
+
             resultado = ValidarCampoObligatorio(
-                ref nuevaCuenta.Contrasena,
+                nuevaCuenta.Contrasena,
                 EsContrasenaValida,
-                MensajesError.Cliente.ContrasenaRegistroInvalida);
+                MensajesError.Cliente.ContrasenaRegistroInvalida,
+                out string contrasenaNormalizada);
             if (resultado != null)
             {
                 return resultado;
             }
+
+            nuevaCuenta.Contrasena = contrasenaNormalizada;
 
             return CrearResultadoOperacion(true);
         }
@@ -133,22 +148,28 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
 
             ResultadoOperacionDTO resultado = ValidarCampoObligatorio(
-                ref solicitud.Nombre,
+                solicitud.Nombre,
                 EsLongitudValida,
-                MensajesError.Cliente.NombreRegistroInvalido);
+                MensajesError.Cliente.NombreRegistroInvalido,
+                out string nombreNormalizado);
             if (resultado != null)
             {
                 return resultado;
             }
 
+            solicitud.Nombre = nombreNormalizado;
+
             resultado = ValidarCampoObligatorio(
-                ref solicitud.Apellido,
+                solicitud.Apellido,
                 EsLongitudValida,
-                MensajesError.Cliente.ApellidoRegistroInvalido);
+                MensajesError.Cliente.ApellidoRegistroInvalido,
+                out string apellidoNormalizado);
             if (resultado != null)
             {
                 return resultado;
             }
+
+            solicitud.Apellido = apellidoNormalizado;
 
             if (solicitud.AvatarId <= 0)
             {
@@ -165,60 +186,86 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         }
 
         private static ResultadoOperacionDTO ValidarCampoObligatorio(
-            ref string campo,
+            string campo,
             Func<string, bool> regla,
-            string mensajeError)
+            string mensajeError,
+            out string campoNormalizado)
         {
-            string normalizado = NormalizarTexto(campo);
-            if (!regla(normalizado))
+            campoNormalizado = NormalizarTexto(campo);
+            if (!regla(campoNormalizado))
             {
+                campoNormalizado = null;
                 return CrearResultadoOperacion(false, mensajeError);
             }
 
-            campo = normalizado;
             return null;
         }
 
         private static ResultadoOperacionDTO ValidarRedesSociales(ActualizacionPerfilDTO solicitud)
         {
-            ResultadoOperacionDTO resultado = ValidarRedSocial("Instagram", ref solicitud.Instagram);
+            ResultadoOperacionDTO resultado = ValidarRedSocial(
+                "Instagram",
+                solicitud.Instagram,
+                out string instagramNormalizado);
             if (resultado != null)
             {
                 return resultado;
             }
 
-            resultado = ValidarRedSocial("Facebook", ref solicitud.Facebook);
+            solicitud.Instagram = instagramNormalizado;
+
+            resultado = ValidarRedSocial(
+                "Facebook",
+                solicitud.Facebook,
+                out string facebookNormalizado);
             if (resultado != null)
             {
                 return resultado;
             }
 
-            resultado = ValidarRedSocial("X", ref solicitud.X);
+            solicitud.Facebook = facebookNormalizado;
+
+            resultado = ValidarRedSocial(
+                "X",
+                solicitud.X,
+                out string xNormalizado);
             if (resultado != null)
             {
                 return resultado;
             }
 
-            return ValidarRedSocial("Discord", ref solicitud.Discord);
+            solicitud.X = xNormalizado;
+
+            resultado = ValidarRedSocial(
+                "Discord",
+                solicitud.Discord,
+                out string discordNormalizado);
+            if (resultado != null)
+            {
+                return resultado;
+            }
+
+            solicitud.Discord = discordNormalizado;
+
+            return null;
         }
 
-        private static ResultadoOperacionDTO ValidarRedSocial(string nombre, ref string valor)
+        private static ResultadoOperacionDTO ValidarRedSocial(string nombre, string valor, out string valorNormalizado)
         {
-            string normalizado = NormalizarTexto(valor);
-            if (normalizado == null)
+            valorNormalizado = NormalizarTexto(valor);
+            if (valorNormalizado == null)
             {
-                valor = null;
                 return null;
             }
 
-            if (normalizado.Length > LongitudMaximaTexto)
+            if (valorNormalizado.Length > LongitudMaximaTexto)
             {
+                valorNormalizado = null;
                 return CrearResultadoOperacion(
                     false,
                     $"El identificador de {nombre} no debe exceder {LongitudMaximaTexto} caracteres.");
             }
 
-            valor = normalizado;
             return null;
         }
 
