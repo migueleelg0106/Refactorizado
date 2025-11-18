@@ -119,10 +119,10 @@
     <Compile Include="Servicios\CodigoVerificacionManejador.cs" />
     <Compile Include="Servicios\Constantes\MensajesError.cs" />
     <Compile Include="Servicios\CuentaManejador.cs" />
+    <Compile Include="Servicios\EntradaComunValidador.cs" />
     <Compile Include="Servicios\InicioSesionManejador.cs" />
     <Compile Include="Servicios\CambioContrasenaManejador.cs" />
     <Compile Include="Servicios\PerfilManejador.cs" />
-    <Compile Include="Servicios\PerfilValidador.cs" />
     <Compile Include="Servicios\SalasManejador.cs" />
     <Compile Include="Servicios\InvitacionesManejador.cs" />
     <Compile Include="Servicios\ServicioAmistad.cs" />

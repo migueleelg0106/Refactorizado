@@ -203,10 +203,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private static void ValidarNombreUsuario(string nombreUsuario, string parametro)
         {
-            if (string.IsNullOrWhiteSpace(nombreUsuario))
+            string normalizado = nombreUsuario?.Trim();
+
+            if (string.IsNullOrWhiteSpace(normalizado))
             {
                 string mensaje = string.Format(CultureInfo.CurrentCulture, MensajesError.Cliente.ParametroObligatorio, parametro);
                 throw new FaultException(mensaje);
+            }
+
+            if (normalizado.Length > EntradaComunValidador.LongitudMaximaTexto)
+            {
+                throw new FaultException(MensajesError.Cliente.UsuarioRegistroInvalido);
             }
         }
 

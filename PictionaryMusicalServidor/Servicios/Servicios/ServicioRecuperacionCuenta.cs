@@ -31,8 +31,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            string identificador = solicitud.Identificador?.Trim();
-            if (string.IsNullOrWhiteSpace(identificador))
+            string identificador = EntradaComunValidador.NormalizarTexto(solicitud.Identificador);
+            if (!EntradaComunValidador.EsLongitudValida(identificador))
             {
                 return new ResultadoSolicitudRecuperacionDTO
                 {
@@ -101,7 +101,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            if (!_solicitudesRecuperacion.TryGetValue(solicitud.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
+            string token = EntradaComunValidador.NormalizarTexto(solicitud.TokenCodigo);
+            if (!EntradaComunValidador.EsTokenValido(token))
+            {
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = MensajesError.Cliente.DatosReenvioCodigo
+                };
+            }
+
+            if (!_solicitudesRecuperacion.TryGetValue(token, out SolicitudRecuperacionPendiente pendiente))
             {
                 return new ResultadoSolicitudCodigoDTO
                 {
@@ -112,7 +122,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (pendiente.Expira < DateTime.UtcNow)
             {
-                _solicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
+                _solicitudesRecuperacion.TryRemove(token, out _);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -146,7 +156,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             return new ResultadoSolicitudCodigoDTO
             {
                 CodigoEnviado = true,
-                TokenCodigo = solicitud.TokenCodigo
+                TokenCodigo = token
             };
         }
 
@@ -157,7 +167,20 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new ArgumentNullException(nameof(confirmacion));
             }
 
-            if (!_solicitudesRecuperacion.TryGetValue(confirmacion.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
+            string token = EntradaComunValidador.NormalizarTexto(confirmacion.TokenCodigo);
+            string codigoIngresado = EntradaComunValidador.NormalizarTexto(confirmacion.CodigoIngresado);
+
+            if (!EntradaComunValidador.EsTokenValido(token) ||
+                !EntradaComunValidador.EsCodigoVerificacionValido(codigoIngresado))
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = MensajesError.Cliente.DatosConfirmacionInvalidos
+                };
+            }
+
+            if (!_solicitudesRecuperacion.TryGetValue(token, out SolicitudRecuperacionPendiente pendiente))
             {
                 return new ResultadoOperacionDTO
                 {
@@ -168,7 +191,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (pendiente.Expira < DateTime.UtcNow)
             {
-                _solicitudesRecuperacion.TryRemove(confirmacion.TokenCodigo, out _);
+                _solicitudesRecuperacion.TryRemove(token, out _);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -176,7 +199,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 };
             }
 
-            if (!string.Equals(pendiente.Codigo, confirmacion.CodigoIngresado, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(pendiente.Codigo, codigoIngresado, StringComparison.OrdinalIgnoreCase))
             {
                 return new ResultadoOperacionDTO
                 {
@@ -202,7 +225,20 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            if (!_solicitudesRecuperacion.TryGetValue(solicitud.TokenCodigo, out SolicitudRecuperacionPendiente pendiente))
+            string token = EntradaComunValidador.NormalizarTexto(solicitud.TokenCodigo);
+            string contrasena = EntradaComunValidador.NormalizarTexto(solicitud.NuevaContrasena);
+
+            if (!EntradaComunValidador.EsTokenValido(token) ||
+                !EntradaComunValidador.EsContrasenaValida(contrasena))
+            {
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = MensajesError.Cliente.DatosActualizacionContrasena
+                };
+            }
+
+            if (!_solicitudesRecuperacion.TryGetValue(token, out SolicitudRecuperacionPendiente pendiente))
             {
                 return new ResultadoOperacionDTO
                 {
@@ -249,7 +285,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     contexto.SaveChanges();
                 }
 
-                _solicitudesRecuperacion.TryRemove(solicitud.TokenCodigo, out _);
+                _solicitudesRecuperacion.TryRemove(token, out _);
 
                 return new ResultadoOperacionDTO
                 {

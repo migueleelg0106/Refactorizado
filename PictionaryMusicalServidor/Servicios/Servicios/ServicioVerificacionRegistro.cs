@@ -27,6 +27,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new ArgumentNullException(nameof(nuevaCuenta));
             }
 
+            ResultadoOperacionDTO validacionDatos = EntradaComunValidador.ValidarNuevaCuenta(nuevaCuenta);
+            if (!validacionDatos.OperacionExitosa)
+            {
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = validacionDatos.Mensaje
+                };
+            }
+
             using (var contexto = CrearContexto())
             {
                 bool usuarioRegistrado = contexto.Usuario.Any(u => u.Nombre_Usuario == nuevaCuenta.Usuario);
@@ -81,7 +91,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            if (!_solicitudes.TryGetValue(solicitud.TokenCodigo, out SolicitudCodigoPendiente existente))
+            string token = EntradaComunValidador.NormalizarTexto(solicitud.TokenCodigo);
+            if (!EntradaComunValidador.EsTokenValido(token))
+            {
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = MensajesError.Cliente.DatosReenvioCodigo
+                };
+            }
+
+            if (!_solicitudes.TryGetValue(token, out SolicitudCodigoPendiente existente))
             {
                 return new ResultadoSolicitudCodigoDTO
                 {
@@ -113,7 +133,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             return new ResultadoSolicitudCodigoDTO
             {
                 CodigoEnviado = true,
-                TokenCodigo = solicitud.TokenCodigo
+                TokenCodigo = token
             };
         }
 
@@ -124,7 +144,20 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new ArgumentNullException(nameof(confirmacion));
             }
 
-            if (!_solicitudes.TryGetValue(confirmacion.TokenCodigo, out SolicitudCodigoPendiente pendiente))
+            string token = EntradaComunValidador.NormalizarTexto(confirmacion.TokenCodigo);
+            string codigoIngresado = EntradaComunValidador.NormalizarTexto(confirmacion.CodigoIngresado);
+
+            if (!EntradaComunValidador.EsTokenValido(token) ||
+                !EntradaComunValidador.EsCodigoVerificacionValido(codigoIngresado))
+            {
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    Mensaje = MensajesError.Cliente.DatosConfirmacionInvalidos
+                };
+            }
+
+            if (!_solicitudes.TryGetValue(token, out SolicitudCodigoPendiente pendiente))
             {
                 return new ResultadoRegistroCuentaDTO
                 {
@@ -135,7 +168,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (pendiente.Expira < DateTime.UtcNow)
             {
-                _solicitudes.TryRemove(confirmacion.TokenCodigo, out _);
+                _solicitudes.TryRemove(token, out _);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -143,7 +176,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 };
             }
 
-            if (!string.Equals(pendiente.Codigo, confirmacion.CodigoIngresado, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(pendiente.Codigo, codigoIngresado, StringComparison.OrdinalIgnoreCase))
             {
                 return new ResultadoRegistroCuentaDTO
                 {
@@ -152,7 +185,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 };
             }
 
-            _solicitudes.TryRemove(confirmacion.TokenCodigo, out _);
+            _solicitudes.TryRemove(token, out _);
 
             string clave = ObtenerClave(pendiente.DatosCuenta.Usuario, pendiente.DatosCuenta.Correo);
             _verificacionesConfirmadas[clave] = 0;
