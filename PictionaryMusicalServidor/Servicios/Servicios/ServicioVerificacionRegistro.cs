@@ -7,7 +7,10 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
-
+    /// <summary>
+    /// Servicio interno para la gestion de verificacion de registro de nuevas cuentas.
+    /// Valida datos de entrada, genera y envia codigos de verificacion, y confirma el registro.
+    /// </summary>
     internal static class ServicioVerificacionRegistro
     {
         private const int MinutosExpiracionCodigo = 5;

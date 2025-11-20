@@ -13,10 +13,26 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de inicio de sesion.
+    /// Valida las credenciales del usuario, verifica la contrasena encriptada
+    /// y busca usuarios por nombre de usuario o correo electronico.
+    /// </summary>
     public class InicioSesionManejador : IInicioSesionManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(InicioSesionManejador));
 
+        /// <summary>
+        /// Inicia sesion con las credenciales proporcionadas.
+        /// Valida que el identificador y contrasena no esten vacios, busca el usuario por nombre o correo,
+        /// y verifica la contrasena con BCrypt.
+        /// </summary>
+        /// <param name="credenciales">Credenciales del usuario para autenticacion.</param>
+        /// <returns>Resultado del intento de inicio de sesion.</returns>
+        /// <exception cref="ArgumentNullException">Se lanza si credenciales es null.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public ResultadoInicioSesionDTO IniciarSesion(CredencialesInicioSesionDTO credenciales)
         {
             if (credenciales == null)

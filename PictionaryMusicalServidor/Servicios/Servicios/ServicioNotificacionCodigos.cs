@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
-
+    /// <summary>
+    /// Servicio interno para el envio de notificaciones de codigos de verificacion por correo electronico.
+    /// </summary>
     internal static class ServicioNotificacionCodigos
     {
         private static ICodigoVerificacionNotificador _notificador = new CorreoCodigoVerificacionNotificador();

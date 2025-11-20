@@ -13,6 +13,11 @@ using PictionaryMusicalServidor.Servicios.Servicios.Notificadores;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de salas de juego.
+    /// Valida nombres de usuario y configuraciones, gestiona el ciclo de vida de las salas
+    /// y notifica cambios a los clientes suscritos.
+    /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class SalasManejador : ISalasManejador
     {
@@ -20,6 +25,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly ConcurrentDictionary<string, SalaInterna> _salas = new(StringComparer.OrdinalIgnoreCase);
         private static readonly NotificadorSalas _notificador = new(() => _salas.Values);
 
+        /// <summary>
+        /// Crea una nueva sala de juego con la configuracion especificada.
+        /// Valida el nombre del creador y la configuracion, genera un codigo unico y notifica a los clientes.
+        /// </summary>
+        /// <param name="nombreCreador">Nombre del usuario que crea la sala.</param>
+        /// <param name="configuracion">Configuracion de la partida para la sala.</param>
+        /// <returns>Informacion de la sala creada.</returns>
+        /// <exception cref="FaultException">Se lanza cuando hay errores de validacion o de negocio.</exception>
+        /// <exception cref="ArgumentException">Se captura cuando hay datos invalidos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public SalaDTO CrearSala(string nombreCreador, ConfiguracionPartidaDTO configuracion)
         {
             try

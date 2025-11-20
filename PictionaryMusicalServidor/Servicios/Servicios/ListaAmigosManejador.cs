@@ -13,6 +13,10 @@ using PictionaryMusicalServidor.Servicios.Servicios.Notificadores;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de lista de amigos.
+    /// Valida nombres de usuario, gestiona suscripciones y notifica actualizaciones de la lista de amigos.
+    /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class ListaAmigosManejador : IListaAmigosManejador
     {
@@ -20,6 +24,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly ManejadorCallback<IListaAmigosManejadorCallback> _manejadorCallback = new(StringComparer.OrdinalIgnoreCase);
         private static readonly NotificadorListaAmigos _notificador = new(_manejadorCallback);
 
+        /// <summary>
+        /// Suscribe a un usuario para recibir actualizaciones de su lista de amigos.
+        /// Valida el nombre de usuario y notifica la lista actual.
+        /// </summary>
+        /// <param name="nombreUsuario">Nombre del usuario a suscribir.</param>
+        /// <exception cref="FaultException">Se lanza cuando hay errores de validacion o de datos.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Se captura cuando el identificador es invalido.</exception>
+        /// <exception cref="ArgumentException">Se captura cuando hay datos invalidos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
         public void Suscribir(string nombreUsuario)
         {
             List<AmigoDTO> amigosActuales;
@@ -57,6 +70,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Cancela la suscripcion de un usuario para dejar de recibir actualizaciones.
+        /// Valida el nombre de usuario antes de cancelar la suscripcion.
+        /// </summary>
+        /// <param name="nombreUsuario">Nombre del usuario que cancela su suscripcion.</param>
+        /// <exception cref="FaultException">Se lanza cuando hay errores de validacion.</exception>
+        /// <exception cref="ArgumentException">Se captura cuando hay datos invalidos.</exception>
         public void CancelarSuscripcion(string nombreUsuario)
         {
             try
@@ -76,6 +96,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Obtiene la lista de amigos de un usuario.
+        /// Valida el nombre de usuario y recupera las amistades aceptadas.
+        /// </summary>
+        /// <param name="nombreUsuario">Nombre del usuario.</param>
+        /// <returns>Lista de amigos del usuario.</returns>
+        /// <exception cref="FaultException">Se lanza cuando hay errores de validacion o de datos.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Se captura cuando el identificador es invalido.</exception>
+        /// <exception cref="ArgumentException">Se captura cuando hay datos invalidos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
         public List<AmigoDTO> ObtenerAmigos(string nombreUsuario)
         {
             try

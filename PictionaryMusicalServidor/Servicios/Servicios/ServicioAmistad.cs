@@ -10,7 +10,10 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
-
+    /// <summary>
+    /// Servicio interno para la gestion de amistades.
+    /// Valida reglas de negocio, crea, acepta y elimina solicitudes de amistad.
+    /// </summary>
     internal static class ServicioAmistad
     {
 

@@ -15,10 +15,27 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de cuentas de usuario.
+    /// Valida los datos de entrada, verifica que el correo no este duplicado y registra nuevas cuentas.
+    /// </summary>
     public class CuentaManejador : ICuentaManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CuentaManejador));
 
+        /// <summary>
+        /// Registra una nueva cuenta en el sistema.
+        /// Valida que el codigo de verificacion este confirmado, que el usuario y correo no esten duplicados,
+        /// crea la clasificacion inicial, registra el jugador y el usuario, y encripta la contrasena.
+        /// </summary>
+        /// <param name="nuevaCuenta">Datos de la nueva cuenta a registrar.</param>
+        /// <returns>Resultado del registro de la cuenta.</returns>
+        /// <exception cref="ArgumentNullException">Se lanza si nuevaCuenta es null.</exception>
+        /// <exception cref="DbEntityValidationException">Se captura cuando hay errores de validacion de entidades.</exception>
+        /// <exception cref="DbUpdateException">Se captura cuando hay errores al actualizar la base de datos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public ResultadoRegistroCuentaDTO RegistrarCuenta(NuevaCuentaDTO nuevaCuenta)
         {
             if (nuevaCuenta == null)
@@ -164,16 +181,34 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             return new ResultadoRegistroCuentaDTO { RegistroExitoso = true }; 
         }
 
+        /// <summary>
+        /// Solicita el envio de un codigo de verificacion para registrar una nueva cuenta.
+        /// Delega la operacion al servicio de verificacion de registro.
+        /// </summary>
+        /// <param name="nuevaCuenta">Datos de la nueva cuenta a registrar.</param>
+        /// <returns>Resultado de la solicitud del codigo de verificacion.</returns>
         public ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(NuevaCuentaDTO nuevaCuenta)
         {
             return ServicioVerificacionRegistro.SolicitarCodigo(nuevaCuenta);
         }
 
+        /// <summary>
+        /// Reenvia un codigo de verificacion previamente solicitado.
+        /// Delega la operacion al servicio de verificacion de registro.
+        /// </summary>
+        /// <param name="solicitud">Solicitud con el token del codigo a reenviar.</param>
+        /// <returns>Resultado del reenvio del codigo de verificacion.</returns>
         public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenvioCodigoVerificacionDTO solicitud)
         {
             return ServicioVerificacionRegistro.ReenviarCodigo(solicitud);
         }
 
+        /// <summary>
+        /// Confirma un codigo de verificacion ingresado por el usuario.
+        /// Delega la operacion al servicio de verificacion de registro.
+        /// </summary>
+        /// <param name="confirmacion">Datos para confirmar el codigo de verificacion.</param>
+        /// <returns>Resultado de la confirmacion del codigo.</returns>
         public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmacionCodigoDTO confirmacion)
         {
             return ServicioVerificacionRegistro.ConfirmarCodigo(confirmacion);

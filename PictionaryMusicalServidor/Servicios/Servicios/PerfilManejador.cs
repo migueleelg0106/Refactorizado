@@ -15,10 +15,24 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de perfiles de usuario.
+    /// Valida los identificadores, recupera la informacion del perfil y actualiza los datos del usuario.
+    /// </summary>
     public class PerfilManejador : IPerfilManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(PerfilManejador));
 
+        /// <summary>
+        /// Obtiene el perfil completo de un usuario incluyendo redes sociales.
+        /// Valida que el ID sea mayor a 0 y que el usuario exista.
+        /// </summary>
+        /// <param name="idUsuario">Identificador del usuario.</param>
+        /// <returns>Datos del perfil del usuario.</returns>
+        /// <exception cref="ArgumentException">Se lanza si el ID del usuario es invalido.</exception>
+        /// <exception cref="InvalidOperationException">Se lanza si el usuario no existe.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
         public UsuarioDTO ObtenerPerfil(int idUsuario)
         {
             try
@@ -91,6 +105,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Actualiza la informacion del perfil de un usuario.
+        /// Valida los datos de entrada, verifica que el usuario exista y actualiza el jugador y redes sociales.
+        /// </summary>
+        /// <param name="solicitud">Datos actualizados del perfil.</param>
+        /// <returns>Resultado de la actualizacion del perfil.</returns>
+        /// <exception cref="DbEntityValidationException">Se captura cuando hay errores de validacion de entidades.</exception>
+        /// <exception cref="DbUpdateException">Se captura cuando hay errores al actualizar la base de datos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public ResultadoOperacionDTO ActualizarPerfil(ActualizacionPerfilDTO solicitud)
         {
             try

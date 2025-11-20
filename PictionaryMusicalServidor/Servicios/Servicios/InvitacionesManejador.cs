@@ -14,6 +14,10 @@ using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de envio de invitaciones a salas.
+    /// Valida el formato del correo electronico y el codigo de sala antes de enviar la invitacion.
+    /// </summary>
     public class InvitacionesManejador : IInvitacionesManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(InvitacionesManejador));
@@ -23,6 +27,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
             RegexOptions.Compiled | RegexOptions.CultureInvariant,RegexTimeout);
 
+        /// <summary>
+        /// Envia una invitacion por correo electronico para unirse a una sala.
+        /// Valida el formato del correo, verifica que la sala exista y envia la invitacion.
+        /// </summary>
+        /// <param name="invitacion">Datos de la invitacion a enviar.</param>
+        /// <returns>Resultado del envio de la invitacion.</returns>
+        /// <exception cref="ArgumentException">Se captura cuando los datos son invalidos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public ResultadoOperacionDTO EnviarInvitacion(InvitacionSalaDTO invitacion)
         {
             try

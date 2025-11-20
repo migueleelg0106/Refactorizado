@@ -10,10 +10,24 @@ using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de cambio y recuperacion de contrasena.
+    /// Delega las operaciones a servicios especializados y maneja excepciones.
+    /// </summary>
     public class CambioContrasenaManejador : ICambioContrasenaManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CambioContrasenaManejador));
 
+        /// <summary>
+        /// Solicita el envio de un codigo para recuperar la cuenta.
+        /// Valida el identificador y envia el codigo al correo asociado.
+        /// </summary>
+        /// <param name="solicitud">Datos del usuario que solicita recuperar su cuenta.</param>
+        /// <returns>Resultado de la solicitud del codigo de recuperacion.</returns>
+        /// <exception cref="ArgumentNullException">Se captura cuando los datos son nulos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(SolicitudRecuperarCuentaDTO solicitud)
         {
             try
@@ -49,6 +63,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Reenvia un codigo de recuperacion previamente solicitado.
+        /// Valida el token y reenvia el codigo al correo asociado.
+        /// </summary>
+        /// <param name="solicitud">Solicitud con el token del codigo a reenviar.</param>
+        /// <returns>Resultado del reenvio del codigo de recuperacion.</returns>
+        /// <exception cref="ArgumentNullException">Se captura cuando los datos son nulos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
         public ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(ReenvioCodigoDTO solicitud)
         {
             try
@@ -84,6 +107,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Confirma un codigo de recuperacion ingresado por el usuario.
+        /// Valida el codigo y el token para permitir el cambio de contrasena.
+        /// </summary>
+        /// <param name="confirmacion">Datos para confirmar el codigo de recuperacion.</param>
+        /// <returns>Resultado de la confirmacion del codigo.</returns>
+        /// <exception cref="ArgumentNullException">Se captura cuando los datos son nulos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmacionCodigoDTO confirmacion)
         {
             try
@@ -120,6 +153,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         }
 
 
+        /// <summary>
+        /// Actualiza la contrasena de un usuario tras validar el codigo de recuperacion.
+        /// Verifica el token, valida la nueva contrasena y la encripta antes de guardarla.
+        /// </summary>
+        /// <param name="solicitud">Datos con el token y la nueva contrasena.</param>
+        /// <returns>Resultado de la actualizacion de la contrasena.</returns>
+        /// <exception cref="ArgumentNullException">Se captura cuando los datos son nulos.</exception>
+        /// <exception cref="DbEntityValidationException">Se captura cuando hay errores de validacion de entidades.</exception>
+        /// <exception cref="DbUpdateException">Se captura cuando hay errores al actualizar la base de datos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public ResultadoOperacionDTO ActualizarContrasena(ActualizacionContrasenaDTO solicitud)
         {
             try

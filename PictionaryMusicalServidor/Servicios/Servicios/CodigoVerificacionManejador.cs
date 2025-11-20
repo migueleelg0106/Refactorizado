@@ -10,10 +10,23 @@ using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de codigos de verificacion.
+    /// Delega las operaciones de verificacion y recuperacion a servicios especializados y maneja excepciones.
+    /// </summary>
     public class CodigoVerificacionManejador : ICodigoVerificacionManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CodigoVerificacionManejador));
 
+        /// <summary>
+        /// Solicita el envio de un codigo de verificacion para registrar una nueva cuenta.
+        /// Delega la operacion al servicio de verificacion de registro.
+        /// </summary>
+        /// <param name="nuevaCuenta">Datos de la nueva cuenta a registrar.</param>
+        /// <returns>Resultado de la solicitud del codigo de verificacion.</returns>
+        /// <exception cref="ArgumentNullException">Se captura cuando los datos son nulos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
         public ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(NuevaCuentaDTO nuevaCuenta)
         {
             try
@@ -49,6 +62,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Reenvia un codigo de verificacion previamente solicitado.
+        /// Delega la operacion al servicio de verificacion de registro.
+        /// </summary>
+        /// <param name="solicitud">Solicitud con el token del codigo a reenviar.</param>
+        /// <returns>Resultado del reenvio del codigo de verificacion.</returns>
+        /// <exception cref="ArgumentNullException">Se captura cuando los datos son nulos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
         public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenvioCodigoVerificacionDTO solicitud)
         {
             try
@@ -84,6 +106,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Confirma un codigo de verificacion ingresado por el usuario.
+        /// Delega la operacion al servicio de verificacion de registro.
+        /// </summary>
+        /// <param name="confirmacion">Datos para confirmar el codigo de verificacion.</param>
+        /// <returns>Resultado de la confirmacion del codigo.</returns>
+        /// <exception cref="ArgumentNullException">Se captura cuando los datos son nulos.</exception>
+        /// <exception cref="DbEntityValidationException">Se captura cuando hay errores de validacion de entidades.</exception>
+        /// <exception cref="DbUpdateException">Se captura cuando hay errores al actualizar la base de datos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmacionCodigoDTO confirmacion)
         {
             try
@@ -137,6 +171,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Solicita el envio de un codigo para recuperar una cuenta.
+        /// Delega la operacion al servicio de recuperacion de cuenta.
+        /// </summary>
+        /// <param name="solicitud">Datos del usuario que solicita recuperar su cuenta.</param>
+        /// <returns>Resultado de la solicitud del codigo de recuperacion.</returns>
+        /// <exception cref="ArgumentNullException">Se captura cuando los datos son nulos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
         public ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(SolicitudRecuperarCuentaDTO solicitud)
         {
             try
@@ -172,6 +215,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Confirma un codigo de recuperacion ingresado por el usuario.
+        /// Delega la operacion al servicio de recuperacion de cuenta.
+        /// </summary>
+        /// <param name="confirmacion">Datos para confirmar el codigo de recuperacion.</param>
+        /// <returns>Resultado de la confirmacion del codigo.</returns>
+        /// <exception cref="ArgumentNullException">Se captura cuando los datos son nulos.</exception>
+        /// <exception cref="EntityException">Se captura cuando hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se captura cuando hay errores relacionados con los datos.</exception>
+        /// <exception cref="InvalidOperationException">Se captura cuando hay operaciones invalidas.</exception>
         public ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmacionCodigoDTO confirmacion)
         {
             try

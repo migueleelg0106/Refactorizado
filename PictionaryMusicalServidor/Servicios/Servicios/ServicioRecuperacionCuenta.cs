@@ -15,7 +15,10 @@ using log4net;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
-
+    /// <summary>
+    /// Servicio interno para la recuperacion de cuentas mediante codigos de verificacion.
+    /// Valida identificadores, busca usuarios por nombre o correo, genera codigos y actualiza contrasenas.
+    /// </summary>
     internal static class ServicioRecuperacionCuenta
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ServicioRecuperacionCuenta));
