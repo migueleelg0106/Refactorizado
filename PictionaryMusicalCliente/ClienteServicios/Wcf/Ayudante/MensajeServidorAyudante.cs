@@ -242,6 +242,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
                     = () => LangResources.Lang.amigosErrorCompletarSolicitud,
                 ["No fue posible almacenar la solicitud de amistad."]
                     = () => LangResources.Lang.amigosErrorAlmacenarSolicitud,
+                ["No fue posible enviar la solicitud de amistad."]
+                    = () => LangResources.Lang.amigosErrorAlmacenarSolicitud,
                 ["La solicitud de amistad ya fue aceptada con anterioridad."]
                     = () => LangResources.Lang.amigosErrorSolicitudAceptada,
                 ["No existe una solicitud de amistad entre los usuarios."]
