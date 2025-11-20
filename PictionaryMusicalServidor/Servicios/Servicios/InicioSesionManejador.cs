@@ -13,10 +13,26 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de autenticacion de usuarios.
+    /// Valida credenciales comparando identificador (usuario o correo) y contrasena con hash BCrypt.
+    /// Verifica que el identificador y contrasena sean validos antes de buscar el usuario.
+    /// </summary>
     public class InicioSesionManejador : IInicioSesionManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(InicioSesionManejador));
 
+        /// <summary>
+        /// Inicia sesion de un usuario validando sus credenciales.
+        /// Busca el usuario por nombre de usuario o correo, verifica la contrasena con BCrypt,
+        /// y retorna los datos del usuario si es exitoso.
+        /// </summary>
+        /// <param name="credenciales">Credenciales de inicio de sesion del usuario.</param>
+        /// <returns>Resultado del inicio de sesion con datos del usuario si es exitoso.</returns>
+        /// <exception cref="ArgumentNullException">Se lanza si credenciales es null.</exception>
+        /// <exception cref="EntityException">Se lanza si hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se lanza si hay errores de datos durante el inicio de sesion.</exception>
+        /// <exception cref="InvalidOperationException">Se lanza si hay operaciones invalidas durante el inicio de sesion.</exception>
         public ResultadoInicioSesionDTO IniciarSesion(CredencialesInicioSesionDTO credenciales)
         {
             if (credenciales == null)
@@ -96,6 +112,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Busca un usuario por su identificador (nombre de usuario o correo electronico).
+        /// Realiza busqueda primero por nombre de usuario y luego por correo si no se encuentra.
+        /// Usa comparacion exacta (case-sensitive) para garantizar precision.
+        /// </summary>
+        /// <param name="contexto">Contexto de base de datos para consultas.</param>
+        /// <param name="identificador">Nombre de usuario o correo electronico a buscar.</param>
+        /// <returns>Usuario encontrado o null si no existe.</returns>
         private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities1 contexto, string identificador)
         {
             var usuariosPorNombre = contexto.Usuario
@@ -118,6 +142,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 .FirstOrDefault(u => string.Equals(u.Jugador?.Correo, identificador, StringComparison.Ordinal));
         }
 
+        /// <summary>
+        /// Mapea una entidad Usuario a un DTO de usuario.
+        /// Incluye datos del jugador asociado y maneja valores null de forma segura.
+        /// </summary>
+        /// <param name="usuario">Entidad de usuario a mapear.</param>
+        /// <returns>DTO con los datos del usuario.</returns>
         private static UsuarioDTO MapearUsuario(Usuario usuario)
         {
             Jugador jugador = usuario.Jugador;
