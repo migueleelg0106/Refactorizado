@@ -16,9 +16,10 @@ namespace PictionaryMusicalCliente.Comandos
         /// Inicializa una nueva instancia del comando con acciones sin parámetros.
         /// </summary>
         /// <param name="ejecutar">Acción a ejecutar.</param>
-        /// <param name="puedeEjecutar">Función opcional para determinar si el comando puede ejecutarse.</param>
+        /// <param name="puedeEjecutar">Función opcional para determinar validacion.</param>
         public ComandoDelegado(Action ejecutar, Func<bool> puedeEjecutar = null)
-            : this(ejecutar != null ? new Action<object>(_ => ejecutar()) : null,
+            : this(
+                  ejecutar != null ? new Action<object>(_ => ejecutar()) : null,
                   puedeEjecutar != null ? new Predicate<object>(_ => puedeEjecutar()) : null)
         {
         }
@@ -27,8 +28,10 @@ namespace PictionaryMusicalCliente.Comandos
         /// Inicializa una nueva instancia del comando.
         /// </summary>
         /// <param name="ejecutar">Acción a ejecutar.</param>
-        /// <param name="puedeEjecutar">Función opcional para determinar si el comando puede ejecutarse.</param>
-        public ComandoDelegado(Action<object> ejecutar, Predicate<object> puedeEjecutar = null)
+        /// <param name="puedeEjecutar">Función opcional para determinar validacion.</param>
+        public ComandoDelegado(
+            Action<object> ejecutar,
+            Predicate<object> puedeEjecutar = null)
         {
             _ejecutar = ejecutar ?? throw new ArgumentNullException(nameof(ejecutar));
             _puedeEjecutar = puedeEjecutar;

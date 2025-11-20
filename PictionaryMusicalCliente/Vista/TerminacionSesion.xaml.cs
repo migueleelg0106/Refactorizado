@@ -1,25 +1,28 @@
-﻿using PictionaryMusicalCliente.VistaModelo.Sesion; 
+﻿using PictionaryMusicalCliente.VistaModelo.Sesion;
 using System.Linq;
 using System.Windows;
 
 namespace PictionaryMusicalCliente
 {
     /// <summary>
-    /// Lógica de interacción para TerminacionSesion.xaml
+    /// Ventana de dialogo para confirmar y ejecutar el cierre de sesion del usuario.
     /// </summary>
     public partial class TerminacionSesion : Window
     {
-        private readonly TerminacionSesionVistaModelo _viewModel;
+        private readonly TerminacionSesionVistaModelo _vistaModelo;
 
+        /// <summary>
+        /// Inicializa la ventana y configura la logica de navegacion post-cierre.
+        /// </summary>
         public TerminacionSesion()
         {
             InitializeComponent();
 
-            _viewModel = new TerminacionSesionVistaModelo();
-            _viewModel.OcultarDialogo = () => this.Close();
-            _viewModel.EjecutarCierreSesionYNavegacion = EjecutarNavegacionInicioSesion;
+            _vistaModelo = new TerminacionSesionVistaModelo();
+            _vistaModelo.OcultarDialogo = () => Close();
+            _vistaModelo.EjecutarCierreSesionYNavegacion = EjecutarNavegacionInicioSesion;
 
-            this.DataContext = _viewModel;
+            DataContext = _vistaModelo;
         }
 
         private static void EjecutarNavegacionInicioSesion()

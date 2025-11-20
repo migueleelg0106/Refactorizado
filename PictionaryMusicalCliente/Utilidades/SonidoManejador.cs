@@ -5,6 +5,9 @@ using System.Windows.Media;
 
 namespace PictionaryMusicalCliente.ClienteServicios
 {
+    /// <summary>
+    /// Provee metodos estaticos para reproducir efectos de sonido (SFX) cortos.
+    /// </summary>
     public static class ManejadorSonido
     {
         /// <summary>
@@ -16,7 +19,10 @@ namespace PictionaryMusicalCliente.ClienteServicios
         {
             try
             {
-                string rutaSonido = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Recursos", nombreArchivo);
+                string rutaSonido = Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "Recursos",
+                    nombreArchivo);
 
                 if (!File.Exists(rutaSonido))
                 {
@@ -61,16 +67,25 @@ namespace PictionaryMusicalCliente.ClienteServicios
             }
         }
 
+        /// <summary>
+        /// Reproduce el sonido estandar de clic de boton.
+        /// </summary>
         public static void ReproducirClick()
         {
             ReproducirSonido("piano_boton.mp3", 1.0);
         }
 
+        /// <summary>
+        /// Reproduce el sonido estandar de error.
+        /// </summary>
         public static void ReproducirError()
         {
             ReproducirSonido("error.mp3", 0.8);
         }
 
+        /// <summary>
+        /// Reproduce el sonido estandar de exito o confirmacion.
+        /// </summary>
         public static void ReproducirExito()
         {
             ReproducirSonido("exito.mp3", 0.7);

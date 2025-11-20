@@ -4,10 +4,13 @@ using PictionaryMusicalCliente.VistaModelo.VentanaJuego;
 namespace PictionaryMusicalCliente
 {
     /// <summary>
-    /// Lógica de interacción para ConfirmacionSalirPartida.xaml
+    /// Dialogo de confirmacion para abandonar la partida en curso.
     /// </summary>
     public partial class ConfirmacionSalirPartida : Window
     {
+        /// <summary>
+        /// Inicializa el dialogo.
+        /// </summary>
         public ConfirmacionSalirPartida()
         {
             InitializeComponent();

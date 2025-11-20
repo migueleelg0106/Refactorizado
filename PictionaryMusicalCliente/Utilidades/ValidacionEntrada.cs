@@ -5,34 +5,56 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Utilidades
 {
+    /// <summary>
+    /// Provee metodos estaticos para validar la entrada de datos del usuario.
+    /// </summary>
     public static class ValidacionEntrada
     {
         private static readonly Regex CorreoRegex = new Regex(
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+            RegexOptions.Compiled | RegexOptions.CultureInvariant,
+            TimeSpan.FromSeconds(1));
 
         private static readonly Regex ContrasenaRegex = new Regex(
             @"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-\[\]{};:'"",.<>/?]).{8,15}$",
-            RegexOptions.Compiled, TimeSpan.FromSeconds(1));
+            RegexOptions.Compiled,
+            TimeSpan.FromSeconds(1));
 
+        /// <summary>
+        /// Valida que el nombre de usuario no este vacio.
+        /// </summary>
         public static DTOs.ResultadoOperacionDTO ValidarUsuario(string usuario)
         {
             return ValidarCampoObligatorio(usuario, Lang.errorTextoCampoObligatorio);
         }
 
+        /// <summary>
+        /// Valida que el nombre real no este vacio.
+        /// </summary>
         public static DTOs.ResultadoOperacionDTO ValidarNombre(string nombre)
         {
-            return ValidarCampoObligatorio(nombre, Lang.errorTextoNombreObligatorioLongitud);
+            return ValidarCampoObligatorio(
+                nombre,
+                Lang.errorTextoNombreObligatorioLongitud);
         }
 
+        /// <summary>
+        /// Valida que el apellido no este vacio.
+        /// </summary>
         public static DTOs.ResultadoOperacionDTO ValidarApellido(string apellido)
         {
-            return ValidarCampoObligatorio(apellido, Lang.errorTextoApellidoObligatorioLongitud);
+            return ValidarCampoObligatorio(
+                apellido,
+                Lang.errorTextoApellidoObligatorioLongitud);
         }
 
+        /// <summary>
+        /// Valida el formato y presencia del correo electronico.
+        /// </summary>
         public static DTOs.ResultadoOperacionDTO ValidarCorreo(string correo)
         {
-            DTOs.ResultadoOperacionDTO resultado = ValidarCampoObligatorio(correo,
+            DTOs.ResultadoOperacionDTO resultado = ValidarCampoObligatorio(
+                correo,
                 Lang.errorTextoCorreoInvalido);
 
             if (!EsOperacionExitosa(resultado))
@@ -50,6 +72,9 @@ namespace PictionaryMusicalCliente.Utilidades
             return CrearResultadoExitoso();
         }
 
+        /// <summary>
+        /// Valida que la contraseña cumpla con los requisitos de seguridad.
+        /// </summary>
         public static DTOs.ResultadoOperacionDTO ValidarContrasena(string contrasena)
         {
             if (string.IsNullOrWhiteSpace(contrasena))

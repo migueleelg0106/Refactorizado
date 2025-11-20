@@ -4,8 +4,15 @@ using System.Threading.Tasks;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
+    /// <summary>
+    /// Helper para manejar el ciclo de vida de los clientes WCF de forma segura.
+    /// </summary>
     public static class WcfClienteAyudante
     {
+        /// <summary>
+        /// Ejecuta una operacion asincrona en un cliente WCF, asegurando el cierre correcto 
+        /// del canal.
+        /// </summary>
         public static async Task<TResult> UsarAsincronoAsync<TClient, TResult>(
             TClient cliente,
             Func<TClient, Task<TResult>> operacion)
@@ -29,7 +36,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             }
             catch
             {
-                //Se propaga la excepción en dónde sea llamada
+                // Se propaga la excepción en dónde sea llamada
                 Abortar(cliente);
                 throw;
             }
@@ -80,7 +87,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             }
             catch
             {
-                // Ignorado de manera intencional: No se puede hacer nada para manejar una excepción al abortar.
+                // Ignorado de manera intencional: No se puede hacer nada para manejar
+                // una excepcion al abortar.
             }
         }
     }

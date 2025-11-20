@@ -11,19 +11,15 @@
         <Border Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="6">
             <DockPanel Margin="12">
                 <TextBlock Text="{x:Static language:Lang.invitarAmigosTextoInvitarAmigos}"
-                           DockPanel.Dock="Top"
-                           FontSize="20"
-                           FontWeight="Bold"
-                           FontFamily="Comic Sans MS"
-                           HorizontalAlignment="Center"
+                           DockPanel.Dock="Top" FontSize="20" FontWeight="Bold"
+                           FontFamily="Comic Sans MS" HorizontalAlignment="Center"
                            Margin="0,0,0,12"/>
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding Amigos}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0,0,0,1"
-                                        BorderBrush="#FFE0E0E0"
+                                <Border BorderThickness="0,0,0,1" BorderBrush="#FFE0E0E0" 
                                         Padding="6">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -39,11 +35,9 @@
                                         <Button Grid.Column="1"
                                                 Content="{Binding TextoBoton}"
                                                 Command="{Binding InvitarComando}"
-                                                Margin="16,0,0,0"
-                                                Padding="14,6"
+                                                Margin="16,0,0,0" Padding="14,6"
                                                 FontFamily="Comic Sans MS"
-                                                FontWeight="Bold"
-                                                Cursor="Hand">
+                                                FontWeight="Bold" Cursor="Hand">
                                             <Button.Style>
                                                 <Style TargetType="Button">
                                                     <Setter Property="Background" Value="LightGreen"/>

@@ -17,7 +17,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
     public class PruebaVerificacionCodigoVistaModelo
     {
         private Mock<ICodigoVerificacionServicio> _mockServicio;
-        private VerificacionCodigoVistaModelo _viewModel;
+        private VerificacionCodigoVistaModelo _vistaModelo;
         private const string TokenPrueba = "TOKEN_TEST";
 
         [TestInitialize]
@@ -29,7 +29,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
 
             AvisoAyudante.DefinirMostrarAviso((m) => { });
 
-            _viewModel = new VerificacionCodigoVistaModelo(
+            _vistaModelo = new VerificacionCodigoVistaModelo(
                 "Descripcion prueba",
                 TokenPrueba,
                 _mockServicio.Object
@@ -41,7 +41,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         {
             DetenerTimer("_temporizadorReenvio");
             DetenerTimer("_temporizadorExpiracion");
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         private void DetenerTimer(string nombreCampo)
@@ -49,7 +49,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
             try
             {
                 var campo = typeof(VerificacionCodigoVistaModelo).GetField(nombreCampo, BindingFlags.NonPublic | BindingFlags.Instance);
-                if (campo?.GetValue(_viewModel) is System.Windows.Threading.DispatcherTimer timer && timer.IsEnabled)
+                if (campo?.GetValue(_vistaModelo) is System.Windows.Threading.DispatcherTimer timer && timer.IsEnabled)
                 {
                     timer.Stop();
                 }
@@ -83,12 +83,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public void Prueba_Constructor_InicializacionCorrecta()
         {
-            Assert.AreEqual("Descripcion prueba", _viewModel.Descripcion);
-            Assert.IsFalse(_viewModel.PuedeReenviar); 
-            Assert.IsNotNull(_viewModel.TextoBotonReenviar);
-            Assert.IsNotNull(_viewModel.VerificarCodigoComando);
-            Assert.IsNotNull(_viewModel.ReenviarCodigoComando);
-            Assert.IsNotNull(_viewModel.CancelarComando);
+            Assert.AreEqual("Descripcion prueba", _vistaModelo.Descripcion);
+            Assert.IsFalse(_vistaModelo.PuedeReenviar); 
+            Assert.IsNotNull(_vistaModelo.TextoBotonReenviar);
+            Assert.IsNotNull(_vistaModelo.VerificarCodigoComando);
+            Assert.IsNotNull(_vistaModelo.ReenviarCodigoComando);
+            Assert.IsNotNull(_vistaModelo.CancelarComando);
         }
 
         #endregion
@@ -98,17 +98,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public void Prueba_CodigoVerificacion_Setter_GuardaValor()
         {
-            _viewModel.CodigoVerificacion = "123456";
-            Assert.AreEqual("123456", _viewModel.CodigoVerificacion);
+            _vistaModelo.CodigoVerificacion = "123456";
+            Assert.AreEqual("123456", _vistaModelo.CodigoVerificacion);
         }
 
         [TestMethod]
         public void Prueba_EstaVerificando_Setter_NotificaComando()
         {
-            typeof(VerificacionCodigoVistaModelo).GetProperty("EstaVerificando").SetValue(_viewModel, true);
-            Assert.IsFalse(_viewModel.ReenviarCodigoComando.CanExecute(null)); 
+            typeof(VerificacionCodigoVistaModelo).GetProperty("EstaVerificando").SetValue(_vistaModelo, true);
+            Assert.IsFalse(_vistaModelo.ReenviarCodigoComando.CanExecute(null)); 
 
-            typeof(VerificacionCodigoVistaModelo).GetProperty("EstaVerificando").SetValue(_viewModel, false);
+            typeof(VerificacionCodigoVistaModelo).GetProperty("EstaVerificando").SetValue(_vistaModelo, false);
         }
 
         #endregion
@@ -118,13 +118,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Verificar_CodigoVacio_MuestraError()
         {
-            _viewModel.CodigoVerificacion = "";
+            _vistaModelo.CodigoVerificacion = "";
             bool invalidoMarcado = false;
-            _viewModel.MarcarCodigoInvalido = (v) => invalidoMarcado = v;
+            _vistaModelo.MarcarCodigoInvalido = (v) => invalidoMarcado = v;
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.VerificarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.VerificarCodigoComando.EjecutarAsync(null);
 
             Assert.IsTrue(invalidoMarcado);
             Assert.AreEqual(Lang.errorTextoCodigoVerificacionRequerido, mensaje);
@@ -134,18 +134,18 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Verificar_Exito_CompletaProceso()
         {
-            _viewModel.CodigoVerificacion = "123456";
+            _vistaModelo.CodigoVerificacion = "123456";
             var resultadoExito = new DTOs.ResultadoRegistroCuentaDTO { RegistroExitoso = true };
 
             _mockServicio.Setup(s => s.ConfirmarCodigoRegistroAsync(TokenPrueba, "123456"))
                 .ReturnsAsync(resultadoExito);
 
             DTOs.ResultadoRegistroCuentaDTO resultadoRecibido = null;
-            _viewModel.VerificacionCompletada = (r) => resultadoRecibido = r;
+            _vistaModelo.VerificacionCompletada = (r) => resultadoRecibido = r;
             bool invalidoMarcado = true; 
-            _viewModel.MarcarCodigoInvalido = (v) => invalidoMarcado = v;
+            _vistaModelo.MarcarCodigoInvalido = (v) => invalidoMarcado = v;
 
-            await _viewModel.VerificarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.VerificarCodigoComando.EjecutarAsync(null);
 
             Assert.IsNotNull(resultadoRecibido);
             Assert.IsTrue(resultadoRecibido.RegistroExitoso);
@@ -155,7 +155,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Verificar_CodigoIncorrecto_MuestraError()
         {
-            _viewModel.CodigoVerificacion = "MAL";
+            _vistaModelo.CodigoVerificacion = "MAL";
             var resultadoFallo = new DTOs.ResultadoRegistroCuentaDTO { RegistroExitoso = false, Mensaje = "Invalido" };
 
             _mockServicio.Setup(s => s.ConfirmarCodigoRegistroAsync(TokenPrueba, "MAL"))
@@ -164,9 +164,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
             bool invalidoMarcado = false;
-            _viewModel.MarcarCodigoInvalido = (v) => invalidoMarcado = v;
+            _vistaModelo.MarcarCodigoInvalido = (v) => invalidoMarcado = v;
 
-            await _viewModel.VerificarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.VerificarCodigoComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoCodigoIncorrecto, mensaje);
             Assert.IsTrue(invalidoMarcado);
@@ -175,7 +175,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Verificar_CodigoExpirado_FinalizaFlujo()
         {
-            _viewModel.CodigoVerificacion = "OLD";
+            _vistaModelo.CodigoVerificacion = "OLD";
             var resultadoFallo = new DTOs.ResultadoRegistroCuentaDTO
             {
                 RegistroExitoso = false,
@@ -186,9 +186,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
                 .ReturnsAsync(resultadoFallo);
 
             bool completado = false;
-            _viewModel.VerificacionCompletada = (_) => completado = true;
+            _vistaModelo.VerificacionCompletada = (_) => completado = true;
 
-            await _viewModel.VerificarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.VerificarCodigoComando.EjecutarAsync(null);
 
             Assert.IsTrue(completado, "Debe invocar VerificacionCompletada por expiración.");
         }
@@ -196,14 +196,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Verificar_RespuestaNula_MuestraError()
         {
-            _viewModel.CodigoVerificacion = "ANY";
+            _vistaModelo.CodigoVerificacion = "ANY";
             _mockServicio.Setup(s => s.ConfirmarCodigoRegistroAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync((DTOs.ResultadoRegistroCuentaDTO)null);
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.VerificarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.VerificarCodigoComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoVerificarCodigo, mensaje);
         }
@@ -211,14 +211,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Verificar_Excepcion_MuestraError()
         {
-            _viewModel.CodigoVerificacion = "ANY";
+            _vistaModelo.CodigoVerificacion = "ANY";
             _mockServicio.Setup(s => s.ConfirmarCodigoRegistroAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorRed", null));
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.VerificarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.VerificarCodigoComando.EjecutarAsync(null);
 
             Assert.AreEqual("ErrorRed", mensaje);
         }
@@ -230,9 +230,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Reenviar_SiNoPuede_NoHaceNada()
         {
-            typeof(VerificacionCodigoVistaModelo).GetProperty("PuedeReenviar").SetValue(_viewModel, false);
+            typeof(VerificacionCodigoVistaModelo).GetProperty("PuedeReenviar").SetValue(_vistaModelo, false);
 
-            await _viewModel.ReenviarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.ReenviarCodigoComando.EjecutarAsync(null);
 
             _mockServicio.Verify(s => s.ReenviarCodigoRegistroAsync(It.IsAny<string>()), Times.Never);
         }
@@ -240,23 +240,23 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Reenviar_Exito_ReiniciaTimers()
         {
-            typeof(VerificacionCodigoVistaModelo).GetProperty("PuedeReenviar").SetValue(_viewModel, true);
+            typeof(VerificacionCodigoVistaModelo).GetProperty("PuedeReenviar").SetValue(_vistaModelo, true);
 
             var resultado = new DTOs.ResultadoSolicitudCodigoDTO { CodigoEnviado = true, TokenCodigo = "NEW_TOKEN" };
             _mockServicio.Setup(s => s.ReenviarCodigoRegistroAsync(TokenPrueba)).ReturnsAsync(resultado);
 
-            await _viewModel.ReenviarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.ReenviarCodigoComando.EjecutarAsync(null);
 
             _mockServicio.Verify(s => s.ReenviarCodigoRegistroAsync(TokenPrueba), Times.Once);
 
             // Verificamos que se reinició el bloqueo (timer reiniciado)
-            Assert.IsFalse(_viewModel.PuedeReenviar, "Al reenviar, debe bloquearse de nuevo el botón");
+            Assert.IsFalse(_vistaModelo.PuedeReenviar, "Al reenviar, debe bloquearse de nuevo el botón");
         }
 
         [TestMethod]
         public async Task Prueba_Reenviar_Fallo_MuestraError()
         {
-            typeof(VerificacionCodigoVistaModelo).GetProperty("PuedeReenviar").SetValue(_viewModel, true);
+            typeof(VerificacionCodigoVistaModelo).GetProperty("PuedeReenviar").SetValue(_vistaModelo, true);
 
             var resultado = new DTOs.ResultadoSolicitudCodigoDTO { CodigoEnviado = false, Mensaje = "FalloEnvio" };
             _mockServicio.Setup(s => s.ReenviarCodigoRegistroAsync(TokenPrueba)).ReturnsAsync(resultado);
@@ -264,7 +264,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.ReenviarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.ReenviarCodigoComando.EjecutarAsync(null);
 
             Assert.AreEqual("FalloEnvio", mensaje);
         }
@@ -272,14 +272,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Reenviar_Excepcion_MuestraError()
         {
-            typeof(VerificacionCodigoVistaModelo).GetProperty("PuedeReenviar").SetValue(_viewModel, true);
+            typeof(VerificacionCodigoVistaModelo).GetProperty("PuedeReenviar").SetValue(_vistaModelo, true);
             _mockServicio.Setup(s => s.ReenviarCodigoRegistroAsync(TokenPrueba))
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "Error", null));
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.ReenviarCodigoComando.EjecutarAsync(null);
+            await _vistaModelo.ReenviarCodigoComando.EjecutarAsync(null);
 
             Assert.AreEqual("Error", mensaje);
         }
@@ -295,8 +295,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
 
             InvocarMetodoPrivado("TemporizadorReenvioTick", new object[] { null, EventArgs.Empty });
 
-            Assert.IsTrue(_viewModel.PuedeReenviar);
-            Assert.AreEqual(Lang.cambiarContrasenaTextoReenviarCodigo, _viewModel.TextoBotonReenviar);
+            Assert.IsTrue(_vistaModelo.PuedeReenviar);
+            Assert.AreEqual(Lang.cambiarContrasenaTextoReenviarCodigo, _vistaModelo.TextoBotonReenviar);
         }
 
         [TestMethod]
@@ -308,14 +308,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
 
             int segundosActuales = (int)GetCampoPrivado("_segundosRestantes");
             Assert.AreEqual(29, segundosActuales);
-            Assert.IsFalse(_viewModel.PuedeReenviar);
+            Assert.IsFalse(_vistaModelo.PuedeReenviar);
         }
 
         [TestMethod]
         public void Prueba_TemporizadorExpiracion_Tick_Cancela()
         {
             bool cancelado = false;
-            _viewModel.Cancelado = () => cancelado = true;
+            _vistaModelo.Cancelado = () => cancelado = true;
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
@@ -329,9 +329,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         public void Prueba_CancelarComando_DetieneTimersYNotifica()
         {
             bool cancelado = false;
-            _viewModel.Cancelado = () => cancelado = true;
+            _vistaModelo.Cancelado = () => cancelado = true;
 
-            _viewModel.CancelarComando.Execute(null);
+            _vistaModelo.CancelarComando.Execute(null);
 
             Assert.IsTrue(cancelado);
         }
@@ -340,17 +340,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
 
         private void SetCampoPrivado(string nombre, object valor)
         {
-            typeof(VerificacionCodigoVistaModelo).GetField(nombre, BindingFlags.NonPublic | BindingFlags.Instance)?.SetValue(_viewModel, valor);
+            typeof(VerificacionCodigoVistaModelo).GetField(nombre, BindingFlags.NonPublic | BindingFlags.Instance)?.SetValue(_vistaModelo, valor);
         }
 
         private object GetCampoPrivado(string nombre)
         {
-            return typeof(VerificacionCodigoVistaModelo).GetField(nombre, BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(_viewModel);
+            return typeof(VerificacionCodigoVistaModelo).GetField(nombre, BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(_vistaModelo);
         }
 
         private void InvocarMetodoPrivado(string nombre, object[] parametros)
         {
-            typeof(VerificacionCodigoVistaModelo).GetMethod(nombre, BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(_viewModel, parametros);
+            typeof(VerificacionCodigoVistaModelo).GetMethod(nombre, BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(_vistaModelo, parametros);
         }
     }
 }

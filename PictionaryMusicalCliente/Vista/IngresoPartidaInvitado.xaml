@@ -7,7 +7,7 @@
         Title="{x:Static language:Lang.globalTextoIngreseCodigoPartida}"
         Height="300" Width="300"
         WindowStartupLocation="CenterScreen"
-        AllowsTransparency="True" WindowStyle="None" Background="Transparent" Cursor="">
+        AllowsTransparency="True" WindowStyle="None" Background="Transparent">
 
     <Window.Resources>
         <convertidores:ConvertidorBooleanoInverso x:Key="BooleanoInverso"/>
@@ -51,4 +51,3 @@
         </Border>
     </Grid>
 </Window>
-

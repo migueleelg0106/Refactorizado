@@ -12,6 +12,9 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 {
+    /// <summary>
+    /// Gestiona la logica de presentacion para la tabla de clasificacion de jugadores.
+    /// </summary>
     public class ClasificacionVistaModelo : BaseVistaModelo
     {
         private readonly IClasificacionServicio _clasificacionServicio;
@@ -19,9 +22,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private ObservableCollection<DTOs.ClasificacionUsuarioDTO> _clasificacion;
         private bool _estaCargando;
 
+        /// <summary>
+        /// Inicializa el ViewModel con el servicio de clasificacion.
+        /// </summary>
+        /// <param name="clasificacionServicio">Servicio para obtener los datos del ranking.
+        /// </param>
         public ClasificacionVistaModelo(IClasificacionServicio clasificacionServicio)
         {
-            _clasificacionServicio = clasificacionServicio ?? throw new ArgumentNullException(nameof(clasificacionServicio));
+            _clasificacionServicio = clasificacionServicio ??
+                throw new ArgumentNullException(nameof(clasificacionServicio));
 
             _clasificacionOriginal = Array.Empty<DTOs.ClasificacionUsuarioDTO>();
             _clasificacion = new ObservableCollection<DTOs.ClasificacionUsuarioDTO>();
@@ -45,6 +54,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             });
         }
 
+        /// <summary>
+        /// Coleccion observable de la clasificacion actual para mostrar en la vista.
+        /// </summary>
         public ObservableCollection<DTOs.ClasificacionUsuarioDTO> Clasificacion
         {
             get => _clasificacion;
@@ -58,6 +70,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
         }
 
+        /// <summary>
+        /// Indica si se estan recuperando datos del servidor.
+        /// </summary>
         public bool EstaCargando
         {
             get => _estaCargando;
@@ -70,16 +85,34 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
         }
 
+        /// <summary>
+        /// Indica si existen resultados para mostrar en la tabla.
+        /// </summary>
         public bool HayResultados => Clasificacion?.Count > 0;
 
+        /// <summary>
+        /// Comando para ordenar la lista por partidas ganadas.
+        /// </summary>
         public IComandoNotificable OrdenarPorRondasComando { get; }
 
+        /// <summary>
+        /// Comando para ordenar la lista por puntuacion total acumulada.
+        /// </summary>
         public IComandoNotificable OrdenarPorPuntosComando { get; }
 
+        /// <summary>
+        /// Comando para cerrar la ventana.
+        /// </summary>
         public IComandoNotificable CerrarComando { get; }
 
+        /// <summary>
+        /// Accion para cerrar la vista asociada.
+        /// </summary>
         public Action CerrarAccion { get; set; }
 
+        /// <summary>
+        /// Recupera la informacion de clasificacion desde el servicio.
+        /// </summary>
         public async Task CargarClasificacionAsync()
         {
             EstaCargando = true;
@@ -89,7 +122,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
                 IReadOnlyList<DTOs.ClasificacionUsuarioDTO> clasificacion =
                     await _clasificacionServicio.ObtenerTopJugadoresAsync().ConfigureAwait(true);
 
-                _clasificacionOriginal = clasificacion ?? Array.Empty<DTOs.ClasificacionUsuarioDTO>();
+                _clasificacionOriginal = clasificacion ?? Array.Empty
+                    <DTOs.ClasificacionUsuarioDTO>();
                 ActualizarClasificacion(_clasificacionOriginal);
             }
             catch (ServicioExcepcion ex)
@@ -102,10 +136,12 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
         }
 
-        private void ActualizarClasificacion(IEnumerable<DTOs.ClasificacionUsuarioDTO> clasificacion)
+        private void ActualizarClasificacion(
+            IEnumerable<DTOs.ClasificacionUsuarioDTO> clasificacion)
         {
             Clasificacion = new ObservableCollection<DTOs.ClasificacionUsuarioDTO>(
-                clasificacion?.Where(c => c != null) ?? Enumerable.Empty<DTOs.ClasificacionUsuarioDTO>());
+                clasificacion?.Where(c => c != null)
+                ?? Enumerable.Empty<DTOs.ClasificacionUsuarioDTO>());
         }
 
         private void OrdenarPorRondas()

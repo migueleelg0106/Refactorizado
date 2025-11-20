@@ -8,17 +8,29 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
+    /// <summary>
+    /// Servicio para manejar la confirmacion y reenvio de codigos de verificacion.
+    /// </summary>
     public class VerificacionCodigoServicio : IVerificacionCodigoServicio
     {
-        public async Task<DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(string tokenCodigo, string codigoIngresado)
+        /// <summary>
+        /// Valida el codigo ingresado por el usuario contra el token del servidor.
+        /// </summary>
+        public async Task<DTOs.ResultadoRegistroCuentaDTO> ConfirmarCodigoRegistroAsync(
+            string tokenCodigo,
+            string codigoIngresado)
         {
             if (string.IsNullOrWhiteSpace(tokenCodigo))
             {
-                throw new ArgumentException(Lang.errorTextoTokenCodigoObligatorio, nameof(tokenCodigo));
+                throw new ArgumentException(
+                    Lang.errorTextoTokenCodigoObligatorio,
+                    nameof(tokenCodigo));
             }
 
             DTOs.ResultadoRegistroCuentaDTO resultado = await EjecutarOperacionAsync(
-                () => CodigoVerificacionServicioAyudante.ConfirmarCodigoRegistroAsync(tokenCodigo, codigoIngresado),
+                () => CodigoVerificacionServicioAyudante.ConfirmarCodigoRegistroAsync(
+                    tokenCodigo,
+                    codigoIngresado),
                 Lang.errorTextoServidorValidarCodigo).ConfigureAwait(false);
 
             if (resultado == null)
@@ -29,11 +41,17 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             return resultado;
         }
 
-        public async Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(string tokenCodigo)
+        /// <summary>
+        /// Solicita el reenvio del codigo de verificacion.
+        /// </summary>
+        public async Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(
+            string tokenCodigo)
         {
             if (string.IsNullOrWhiteSpace(tokenCodigo))
             {
-                throw new ArgumentException(Lang.errorTextoTokenCodigoObligatorio, nameof(tokenCodigo));
+                throw new ArgumentException(
+                    Lang.errorTextoTokenCodigoObligatorio,
+                    nameof(tokenCodigo));
             }
 
             DTOs.ResultadoSolicitudCodigoDTO resultado = await EjecutarOperacionAsync(
@@ -48,7 +66,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             return resultado;
         }
 
-        private static async Task<T> EjecutarOperacionAsync<T>(Func<Task<T>> operacion, string mensajeErrorPredeterminado)
+        private static async Task<T> EjecutarOperacionAsync<T>(
+            Func<Task<T>> operacion,
+            string mensajeErrorPredeterminado)
         {
             try
             {
@@ -56,7 +76,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, mensajeErrorPredeterminado);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                    ex,
+                    mensajeErrorPredeterminado);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)

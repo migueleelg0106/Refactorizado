@@ -11,7 +11,11 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
-    public sealed class ListaAmigosServicio : IListaAmigosServicio, PictionaryServidorServicioListaAmigos.IListaAmigosManejadorCallback
+    /// <summary>
+    /// Administra la conexion Duplex para mantener actualizada la lista de amigos conectados.
+    /// </summary>
+    public sealed class ListaAmigosServicio : IListaAmigosServicio,
+        PictionaryServidorServicioListaAmigos.IListaAmigosManejadorCallback
     {
         private const string Endpoint = "NetTcpBinding_IListaAmigosManejador";
 
@@ -22,8 +26,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         private PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient _cliente;
         private string _usuarioSuscrito;
 
+        /// <summary>
+        /// Evento que se dispara cuando la lista de amigos cambia en el servidor.
+        /// </summary>
         public event EventHandler<IReadOnlyList<DTOs.AmigoDTO>> ListaActualizada;
 
+        /// <summary>
+        /// Obtiene la coleccion local actual de amigos.
+        /// </summary>
         public IReadOnlyList<DTOs.AmigoDTO> ListaActual
         {
             get
@@ -37,17 +47,26 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
+        /// <summary>
+        /// Establece la conexion y suscripcion para recibir actualizaciones de amigos.
+        /// </summary>
         public async Task SuscribirAsync(string nombreUsuario)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
-                throw new ArgumentException("El nombre de usuario es obligatorio.", nameof(nombreUsuario));
+            {
+                throw new ArgumentException(
+                    "El nombre de usuario es obligatorio.",
+                    nameof(nombreUsuario));
+            }
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
 
             try
             {
-                if (string.Equals(_usuarioSuscrito, nombreUsuario, StringComparison.OrdinalIgnoreCase)
-                    && _cliente != null)
+                if (string.Equals(
+                    _usuarioSuscrito,
+                    nombreUsuario,
+                    StringComparison.OrdinalIgnoreCase) && _cliente != null)
                 {
                     return;
                 }
@@ -65,28 +84,42 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 catch (FaultException ex)
                 {
                     cliente.Abort();
-                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
+                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                        ex,
+                        Lang.errorTextoErrorProcesarSolicitud);
                     throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
                 }
                 catch (EndpointNotFoundException ex)
                 {
                     cliente.Abort();
-                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(
+                        TipoErrorServicio.Comunicacion,
+                        Lang.errorTextoServidorNoDisponible,
+                        ex);
                 }
                 catch (TimeoutException ex)
                 {
                     cliente.Abort();
-                    throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                    throw new ServicioExcepcion(
+                        TipoErrorServicio.TiempoAgotado,
+                        Lang.errorTextoServidorTiempoAgotado,
+                        ex);
                 }
                 catch (CommunicationException ex)
                 {
                     cliente.Abort();
-                    throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                    throw new ServicioExcepcion(
+                        TipoErrorServicio.Comunicacion,
+                        Lang.errorTextoServidorNoDisponible,
+                        ex);
                 }
                 catch (InvalidOperationException ex)
                 {
                     cliente.Abort();
-                    throw new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                    throw new ServicioExcepcion(
+                        TipoErrorServicio.OperacionInvalida,
+                        Lang.errorTextoErrorProcesarSolicitud,
+                        ex);
                 }
             }
             finally
@@ -95,20 +128,32 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
+        /// <summary>
+        /// Cierra la suscripcion y desconecta del servidor.
+        /// </summary>
         public async Task CancelarSuscripcionAsync(string nombreUsuario)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
+            {
                 return;
+            }
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
 
             try
             {
                 if (_cliente == null)
+                {
                     return;
+                }
 
-                if (!string.Equals(_usuarioSuscrito, nombreUsuario, StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(
+                    _usuarioSuscrito,
+                    nombreUsuario,
+                    StringComparison.OrdinalIgnoreCase))
+                {
                     return;
+                }
 
                 await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
             }
@@ -118,10 +163,17 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
+        /// <summary>
+        /// Consulta la lista de amigos directamente al servidor.
+        /// </summary>
         public async Task<IReadOnlyList<DTOs.AmigoDTO>> ObtenerAmigosAsync(string nombreUsuario)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
-                throw new ArgumentException("El nombre de usuario es obligatorio.", nameof(nombreUsuario));
+            {
+                throw new ArgumentException(
+                    "El nombre de usuario es obligatorio.",
+                    nameof(nombreUsuario));
+            }
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
 
@@ -157,7 +209,10 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private static Exception ManejarExcepcionWcf(Exception ex, PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente, bool esTemporal)
+        private static Exception ManejarExcepcionWcf(
+            Exception ex,
+            PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente,
+            bool esTemporal)
         {
             if (esTemporal && cliente != null)
             {
@@ -168,7 +223,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 FaultException fe => new ServicioExcepcion(
                     TipoErrorServicio.FallaServicio,
-                    ErrorServicioAyudante.ObtenerMensaje(fe, Lang.errorTextoErrorProcesarSolicitud),
+                    ErrorServicioAyudante.ObtenerMensaje(fe, 
+                    Lang.errorTextoErrorProcesarSolicitud),
                     fe),
 
                 EndpointNotFoundException or CommunicationException => new ServicioExcepcion(
@@ -190,6 +246,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             };
         }
 
+        /// <summary>
+        /// Callback del servidor: Actualiza la lista local de amigos.
+        /// </summary>
         public void NotificarListaAmigosActualizada(DTOs.AmigoDTO[] amigos)
         {
             var lista = Convertir(amigos);
@@ -203,6 +262,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             ListaActualizada?.Invoke(this, lista);
         }
 
+        /// <summary>
+        /// Libera recursos.
+        /// </summary>
         public void Dispose()
         {
             CerrarCliente(_cliente);
@@ -215,7 +277,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         private PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient CrearCliente()
         {
             var contexto = new InstanceContext(this);
-            return new PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient(contexto, Endpoint);
+            return new PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient(
+                contexto,
+                Endpoint);
         }
 
         private async Task CancelarSuscripcionInternaAsync()
@@ -226,7 +290,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             _usuarioSuscrito = null;
 
             if (cliente == null)
+            {
                 return;
+            }
 
             try
             {
@@ -240,35 +306,52 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             catch (FaultException ex)
             {
                 cliente.Abort();
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoErrorProcesarSolicitud);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                    ex,
+                    Lang.errorTextoErrorProcesarSolicitud);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
                 cliente.Abort();
-                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
             }
             catch (TimeoutException ex)
             {
                 cliente.Abort();
-                throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.TiempoAgotado,
+                    Lang.errorTextoServidorTiempoAgotado,
+                    ex);
             }
             catch (CommunicationException ex)
             {
                 cliente.Abort();
-                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
             }
             catch (InvalidOperationException ex)
             {
                 cliente.Abort();
-                throw new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.OperacionInvalida,
+                    Lang.errorTextoErrorProcesarSolicitud,
+                    ex);
             }
         }
 
-        private static void CerrarCliente(PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente)
+        private static void CerrarCliente(
+            PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente)
         {
             if (cliente == null)
+            {
                 return;
+            }
 
             try
             {
@@ -294,7 +377,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         private static IReadOnlyList<DTOs.AmigoDTO> Convertir(IEnumerable<DTOs.AmigoDTO> amigos)
         {
             if (amigos == null)
+            {
                 return Array.Empty<DTOs.AmigoDTO>();
+            }
 
             var lista = amigos
                 .Where(amigo => amigo != null && !string.IsNullOrWhiteSpace(amigo.NombreUsuario))

@@ -4,13 +4,23 @@ using PictionaryMusicalCliente.VistaModelo.Perfil;
 
 namespace PictionaryMusicalCliente
 {
+    /// <summary>
+    /// Ventana para el ingreso y validacion de codigos de verificacion (correo/recuperacion).
+    /// </summary>
     public partial class VerificacionCodigo : Window
     {
+        /// <summary>
+        /// Inicializa la ventana.
+        /// </summary>
         public VerificacionCodigo()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Configura el contexto de datos y los delegados de interaccion visual.
+        /// </summary>
+        /// <param name="vistaModelo">La logica de negocio para la verificacion.</param>
         public void ConfigurarVistaModelo(VerificacionCodigoVistaModelo vistaModelo)
         {
             if (vistaModelo == null)

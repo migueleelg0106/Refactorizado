@@ -17,7 +17,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
     {
         private Mock<ILocalizacionServicio> _mockLocalizacion;
         private Mock<ISalasServicio> _mockSalasServicio;
-        private IngresoPartidaInvitadoVistaModelo _viewModel;
+        private IngresoPartidaInvitadoVistaModelo _vistaModelo;
 
         [TestInitialize]
         public void Inicializar()
@@ -30,7 +30,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
             _mockLocalizacion.Setup(l => l.CulturaActual).Returns(System.Globalization.CultureInfo.InvariantCulture);
             AvisoAyudante.DefinirMostrarAviso((_) => { });
 
-            _viewModel = new IngresoPartidaInvitadoVistaModelo(
+            _vistaModelo = new IngresoPartidaInvitadoVistaModelo(
                 _mockLocalizacion.Object,
                 _mockSalasServicio.Object
             );
@@ -39,7 +39,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         #region 1. Constructor y Validaciones
@@ -61,10 +61,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public void Prueba_Constructor_InicializacionCorrecta()
         {
-            Assert.IsNotNull(_viewModel.UnirseSalaComando);
-            Assert.IsNotNull(_viewModel.CancelarComando);
-            Assert.IsFalse(_viewModel.EstaProcesando);
-            Assert.IsFalse(_viewModel.SeUnioSala);
+            Assert.IsNotNull(_vistaModelo.UnirseSalaComando);
+            Assert.IsNotNull(_vistaModelo.CancelarComando);
+            Assert.IsFalse(_vistaModelo.EstaProcesando);
+            Assert.IsFalse(_vistaModelo.SeUnioSala);
         }
 
         #endregion
@@ -74,11 +74,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public async Task Prueba_UnirseSala_CodigoVacio_MuestraError()
         {
-            _viewModel.CodigoSala = "   ";
+            _vistaModelo.CodigoSala = "   ";
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.globalTextoIngreseCodigoPartida, mensaje);
             _mockSalasServicio.Verify(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
@@ -87,10 +87,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public async Task Prueba_UnirseSala_YaProcesando_NoHaceNada()
         {
-            typeof(IngresoPartidaInvitadoVistaModelo).GetProperty("EstaProcesando").SetValue(_viewModel, true);
-            _viewModel.CodigoSala = "123456";
+            typeof(IngresoPartidaInvitadoVistaModelo).GetProperty("EstaProcesando").SetValue(_vistaModelo, true);
+            _vistaModelo.CodigoSala = "123456";
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             _mockSalasServicio.Verify(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
@@ -102,7 +102,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public async Task Prueba_UnirseSala_Exito_NavegaYCierra()
         {
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
             var sala = new DTOs.SalaDTO { Codigo = "123456", Jugadores = new[] { "Host" } };
 
             _mockSalasServicio
@@ -111,28 +111,28 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
 
             bool cerrado = false;
             DTOs.SalaDTO salaUnida = null;
-            _viewModel.CerrarVentana = () => cerrado = true;
-            _viewModel.SalaUnida = (s, n) => salaUnida = s;
+            _vistaModelo.CerrarVentana = () => cerrado = true;
+            _vistaModelo.SalaUnida = (s, n) => salaUnida = s;
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.IsTrue(cerrado);
-            Assert.IsTrue(_viewModel.SeUnioSala);
+            Assert.IsTrue(_vistaModelo.SeUnioSala);
             Assert.AreEqual(sala, salaUnida);
-            Assert.IsFalse(_viewModel.EstaProcesando);
+            Assert.IsFalse(_vistaModelo.EstaProcesando);
         }
 
         [TestMethod]
         public async Task Prueba_UnirseSala_SalaNula_MuestraError()
         {
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
             _mockSalasServicio.Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync((DTOs.SalaDTO)null);
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoNoEncuentraPartida, mensaje);
         }
@@ -140,7 +140,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public async Task Prueba_UnirseSala_SalaLlena_AbandonaYMuestraError()
         {
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
             var salaLlena = new DTOs.SalaDTO
             {
                 Codigo = "123456",
@@ -153,7 +153,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             _mockSalasServicio.Verify(s => s.AbandonarSalaAsync("123456", It.IsAny<string>()), Times.Once);
             Assert.AreEqual(Lang.errorTextoSalaLlena, mensaje);
@@ -162,7 +162,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public async Task Prueba_UnirseSala_NombreDuplicado_Reintenta()
         {
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
 
             _mockSalasServicio
                 .Setup(s => s.UnirseSalaAsync("123456", It.IsAny<string>()))
@@ -191,17 +191,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
                     return Task.FromResult(new DTOs.SalaDTO { Codigo = c, Jugadores = new[] { n } });
                 });
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.IsTrue(llamadas >= 2);
             _mockSalasServicio.Verify(s => s.AbandonarSalaAsync("123456", It.IsAny<string>()), Times.AtLeastOnce);
-            Assert.IsTrue(_viewModel.SeUnioSala);
+            Assert.IsTrue(_vistaModelo.SeUnioSala);
         }
 
         [TestMethod]
         public async Task Prueba_UnirseSala_AgotaIntentos_MuestraError()
         {
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
 
             _mockSalasServicio
                 .Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()))
@@ -217,7 +217,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoNombresInvitadoAgotados, mensaje);
         }
@@ -229,14 +229,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public async Task Prueba_UnirseSala_ExcepcionSalaLlena_MuestraMensaje()
         {
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
             var ex = new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoSalaLlena, null);
             _mockSalasServicio.Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(ex);
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoSalaLlena, mensaje);
         }
@@ -244,14 +244,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public async Task Prueba_UnirseSala_ExcepcionNoEncontrada_MuestraMensaje()
         {
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
             var ex = new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorX", null); 
             _mockSalasServicio.Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(ex);
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoNoEncuentraPartida, mensaje);
         }
@@ -259,14 +259,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public async Task Prueba_UnirseSala_ExcepcionGenerica_MuestraMensajeOriginal()
         {
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
             var ex = new ServicioExcepcion(TipoErrorServicio.Desconocido, "ErrorCustom", null);
             _mockSalasServicio.Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(ex);
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual("ErrorCustom", mensaje);
         }
@@ -274,7 +274,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public async Task Prueba_UnirseSala_ExcepcionSistema_MuestraErrorDefecto()
         {
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
             _mockSalasServicio.Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new ServicioExcepcion(
                     TipoErrorServicio.FallaServicio,
@@ -284,7 +284,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoNoEncuentraPartida, mensaje);
         }
@@ -297,9 +297,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         public void Prueba_CancelarComando_CierraVentana()
         {
             bool cerrado = false;
-            _viewModel.CerrarVentana = () => cerrado = true;
+            _vistaModelo.CerrarVentana = () => cerrado = true;
 
-            _viewModel.CancelarComando.Execute(null);
+            _vistaModelo.CancelarComando.Execute(null);
 
             Assert.IsTrue(cerrado);
         }
@@ -320,10 +320,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
             _mockSalasServicio.Setup(s => s.AbandonarSalaAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new Exception("Fallo red al abandonar"));
 
-            _viewModel.CodigoSala = "CODE";
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            _vistaModelo.CodigoSala = "CODE";
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
-            Assert.IsTrue(_viewModel.SeUnioSala);
+            Assert.IsTrue(_vistaModelo.SeUnioSala);
         }
 
         #endregion

@@ -10,12 +10,21 @@ using System.Windows.Markup;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 {
+    /// <summary>
+    /// Gestiona el dialogo modal para que el usuario seleccione su avatar.
+    /// </summary>
     public class SeleccionAvatarDialogoServicio : ISeleccionarAvatarServicio
     {
+        /// <summary>
+        /// Constructor por defecto.
+        /// </summary>
         public SeleccionAvatarDialogoServicio()
         {
         }
 
+        /// <summary>
+        /// Abre la ventana de seleccion y retorna el avatar elegido por el usuario.
+        /// </summary>
         public Task<ObjetoAvatar> SeleccionarAvatarAsync(int idAvatar)
         {
             var avatares = CatalogoAvataresLocales.ObtenerAvatares();
@@ -61,7 +70,10 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 }
                 catch (XamlParseException ex)
                 {
-                    finalizacion.TrySetException(new InvalidOperationException("Error al cargar la interfaz de selección de avatar.", ex));
+                    finalizacion.TrySetException(
+                        new InvalidOperationException(
+                            "Error al cargar la interfaz de selección de avatar.",
+                            ex));
                 }
                 catch (InvalidOperationException ex)
                 {

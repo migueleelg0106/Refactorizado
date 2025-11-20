@@ -5,24 +5,38 @@ using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 {
+    /// <summary>
+    /// ViewModel para la ventana de configuracion global de la aplicacion.
+    /// </summary>
     public class AjustesVistaModelo : BaseVistaModelo
     {
         private readonly MusicaManejador _musicaManejador;
 
+        /// <summary>
+        /// Accion para cerrar la ventana de ajustes.
+        /// </summary>
         public Action OcultarVentana { get; set; }
+
+        /// <summary>
+        /// Accion para abrir el dialogo de cierre de sesion.
+        /// </summary>
         public Action MostrarDialogoCerrarSesion { get; set; }
 
+        /// <summary>
+        /// Inicializa el ViewModel con el manejador de musica global.
+        /// </summary>
+        /// <param name="servicioMusica">Servicio de control de audio.</param>
         public AjustesVistaModelo(MusicaManejador servicioMusica)
         {
-            _musicaManejador = servicioMusica ?? throw new ArgumentNullException(nameof(servicioMusica));
+            _musicaManejador = servicioMusica ??
+                throw new ArgumentNullException(nameof(servicioMusica));
 
             ConfirmarComando = new ComandoDelegado(_ => EjecutarConfirmar());
             CerrarSesionComando = new ComandoDelegado(_ => EjecutarCerrarSesion());
         }
 
         /// <summary>
-        /// Propiedad para el Slider de Volumen.
-        /// El get/set ahora actualiza el servicio directamente.
+        /// Obtiene o establece el volumen global de la musica.
         /// </summary>
         public double Volumen
         {
@@ -37,7 +51,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
             }
         }
 
+        /// <summary>
+        /// Comando para guardar los cambios y cerrar.
+        /// </summary>
         public ICommand ConfirmarComando { get; }
+
+        /// <summary>
+        /// Comando para solicitar el cierre de sesion.
+        /// </summary>
         public ICommand CerrarSesionComando { get; }
 
         private void EjecutarConfirmar()

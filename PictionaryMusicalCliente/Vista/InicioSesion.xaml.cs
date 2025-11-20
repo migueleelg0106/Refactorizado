@@ -13,10 +13,16 @@ using System.Windows.Media.Imaging;
 
 namespace PictionaryMusicalCliente
 {
+    /// <summary>
+    /// Ventana principal de acceso a la aplicacion.
+    /// </summary>
     public partial class InicioSesion : Window
     {
         private readonly MusicaManejador _servicioMusica;
 
+        /// <summary>
+        /// Inicializa la ventana de inicio de sesion y configura dependencias.
+        /// </summary>
         public InicioSesion()
         {
             Resources["Localizacion"] = new Utilidades.Idiomas.LocalizacionContexto();
@@ -27,7 +33,8 @@ namespace PictionaryMusicalCliente
 
             IInicioSesionServicio inicioSesionServicio = new InicioSesionServicio();
             ICambioContrasenaServicio cambioContrasenaServicio = new CambioContrasenaServicio();
-            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio = new VerificacionCodigoDialogoServicio();
+            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio =
+                new VerificacionCodigoDialogoServicio();
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio =
                 new RecuperacionCuentaDialogoServicio(verificarCodigoDialogoServicio);
             ILocalizacionServicio localizacionServicio = LocalizacionServicio.Instancia;
@@ -98,7 +105,8 @@ namespace PictionaryMusicalCliente
 
         private void PasswordBoxChanged(object sender, RoutedEventArgs e)
         {
-            if (DataContext is InicioSesionVistaModelo vistaModelo && sender is PasswordBox passwordBox)
+            if (DataContext is InicioSesionVistaModelo vistaModelo &&
+                sender is PasswordBox passwordBox)
             {
                 vistaModelo.EstablecerContrasena(passwordBox.Password);
             }
@@ -107,7 +115,7 @@ namespace PictionaryMusicalCliente
         private void MarcarCamposInvalidos(IList<string> camposInvalidos)
         {
             ControlVisual.RestablecerEstadoCampo(campoTextoUsuario);
-            ControlVisual.RestablecerEstadoCampo(bloqueContrasenaContrasena);
+            ControlVisual.RestablecerEstadoCampo(campoContrasenaContrasena);
 
             if (camposInvalidos == null)
             {
@@ -122,7 +130,7 @@ namespace PictionaryMusicalCliente
                         ControlVisual.MarcarCampoInvalido(campoTextoUsuario);
                         break;
                     case InicioSesionVistaModelo.CampoContrasena:
-                        ControlVisual.MarcarCampoInvalido(bloqueContrasenaContrasena);
+                        ControlVisual.MarcarCampoInvalido(campoContrasenaContrasena);
                         break;
                 }
             }
@@ -138,12 +146,15 @@ namespace PictionaryMusicalCliente
         {
             bool estaSilenciado = _servicioMusica.AlternarSilencio();
 
-            if (estaSilenciado) {
-                imagenBotonAudio.Source = new BitmapImage(new Uri("/Recursos/Audio_Apagado.png", UriKind.Relative));
+            if (estaSilenciado)
+            {
+                imagenBotonAudio.Source = new BitmapImage(
+                    new Uri("/Recursos/Audio_Apagado.png", UriKind.Relative));
             }
             else
             {
-                imagenBotonAudio.Source = new BitmapImage(new Uri("/Recursos/Audio_Encendido.png", UriKind.Relative));
+                imagenBotonAudio.Source = new BitmapImage(
+                    new Uri("/Recursos/Audio_Encendido.png", UriKind.Relative));
             }
         }
     }

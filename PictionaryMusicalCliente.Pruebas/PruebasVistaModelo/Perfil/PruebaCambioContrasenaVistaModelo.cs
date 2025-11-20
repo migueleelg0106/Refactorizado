@@ -17,23 +17,23 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
     public class PruebaCambioContrasenaVistaModelo
     {
         private Mock<ICambioContrasenaServicio> _mockServicio;
-        private CambioContrasenaVistaModelo _viewModel;
+        private CambioContrasenaVistaModelo _vistaModelo;
         private const string TokenPrueba = "TOKEN123";
 
         [TestInitialize]
         public void Inicializar()
         {
             _mockServicio = new Mock<ICambioContrasenaServicio>();
-            _viewModel = new CambioContrasenaVistaModelo(TokenPrueba, _mockServicio.Object);
+            _vistaModelo = new CambioContrasenaVistaModelo(TokenPrueba, _mockServicio.Object);
 
             AvisoAyudante.DefinirMostrarAviso((m) => { });
-            _viewModel.MostrarCamposInvalidos = (_) => { };
+            _vistaModelo.MostrarCamposInvalidos = (_) => { };
         }
 
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         #region 1. Constructor y Validaciones Nulas
@@ -59,21 +59,21 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public void Prueba_Propiedades_GetSet_Funcionan()
         {
-            _viewModel.NuevaContrasena = "Pass1";
-            Assert.AreEqual("Pass1", _viewModel.NuevaContrasena);
+            _vistaModelo.NuevaContrasena = "Pass1";
+            Assert.AreEqual("Pass1", _vistaModelo.NuevaContrasena);
 
-            _viewModel.ConfirmacionContrasena = "Pass2";
-            Assert.AreEqual("Pass2", _viewModel.ConfirmacionContrasena);
+            _vistaModelo.ConfirmacionContrasena = "Pass2";
+            Assert.AreEqual("Pass2", _vistaModelo.ConfirmacionContrasena);
         }
 
         [TestMethod]
         public void Prueba_EstaProcesando_AfectaComando()
         {
-            typeof(CambioContrasenaVistaModelo).GetProperty("EstaProcesando").SetValue(_viewModel, true);
-            Assert.IsFalse(_viewModel.ConfirmarComando.CanExecute(null));
+            typeof(CambioContrasenaVistaModelo).GetProperty("EstaProcesando").SetValue(_vistaModelo, true);
+            Assert.IsFalse(_vistaModelo.ConfirmarComando.CanExecute(null));
 
-            typeof(CambioContrasenaVistaModelo).GetProperty("EstaProcesando").SetValue(_viewModel, false);
-            Assert.IsTrue(_viewModel.ConfirmarComando.CanExecute(null));
+            typeof(CambioContrasenaVistaModelo).GetProperty("EstaProcesando").SetValue(_vistaModelo, false);
+            Assert.IsTrue(_vistaModelo.ConfirmarComando.CanExecute(null));
         }
 
         #endregion
@@ -83,13 +83,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Confirmar_CamposVacios_MuestraError()
         {
-            _viewModel.NuevaContrasena = "";
-            _viewModel.ConfirmacionContrasena = "";
+            _vistaModelo.NuevaContrasena = "";
+            _vistaModelo.ConfirmacionContrasena = "";
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.ConfirmarComando.EjecutarAsync(null);
+            await _vistaModelo.ConfirmarComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoConfirmacionContrasenaRequerida, mensaje);
             _mockServicio.Verify(s => s.ActualizarContrasenaAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
@@ -98,13 +98,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Confirmar_ContrasenaInvalida_MuestraErrorFormato()
         {
-            _viewModel.NuevaContrasena = "123"; 
-            _viewModel.ConfirmacionContrasena = "123";
+            _vistaModelo.NuevaContrasena = "123"; 
+            _vistaModelo.ConfirmacionContrasena = "123";
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.ConfirmarComando.EjecutarAsync(null);
+            await _vistaModelo.ConfirmarComando.EjecutarAsync(null);
 
             Assert.IsNotNull(mensaje);
             _mockServicio.Verify(s => s.ActualizarContrasenaAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
@@ -113,15 +113,15 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Confirmar_NoCoinciden_MuestraError()
         {
-            _viewModel.NuevaContrasena = "Password123!";
-            _viewModel.ConfirmacionContrasena = "OtraCosa!!!";
+            _vistaModelo.NuevaContrasena = "Password123!";
+            _vistaModelo.ConfirmacionContrasena = "OtraCosa!!!";
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
             List<string> invalidos = null;
-            _viewModel.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
+            _vistaModelo.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
 
-            await _viewModel.ConfirmarComando.EjecutarAsync(null);
+            await _vistaModelo.ConfirmarComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoContrasenasNoCoinciden, mensaje);
             Assert.IsNotNull(invalidos);
@@ -136,19 +136,19 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Confirmar_Exito_InvocaAccion()
         {
-            _viewModel.NuevaContrasena = "Password123!";
-            _viewModel.ConfirmacionContrasena = "Password123!";
+            _vistaModelo.NuevaContrasena = "Password123!";
+            _vistaModelo.ConfirmacionContrasena = "Password123!";
 
             _mockServicio.Setup(s => s.ActualizarContrasenaAsync(TokenPrueba, "Password123!"))
                 .ReturnsAsync(new DTOs.ResultadoOperacionDTO { OperacionExitosa = true });
 
             DTOs.ResultadoOperacionDTO resultadoRecibido = null;
-            _viewModel.CambioContrasenaCompletado = (r) => resultadoRecibido = r;
+            _vistaModelo.CambioContrasenaCompletado = (r) => resultadoRecibido = r;
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.ConfirmarComando.EjecutarAsync(null);
+            await _vistaModelo.ConfirmarComando.EjecutarAsync(null);
 
             Assert.IsNotNull(resultadoRecibido);
             Assert.IsTrue(resultadoRecibido.OperacionExitosa);
@@ -158,8 +158,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Confirmar_FalloLogico_MuestraError()
         {
-            _viewModel.NuevaContrasena = "Password123!";
-            _viewModel.ConfirmacionContrasena = "Password123!";
+            _vistaModelo.NuevaContrasena = "Password123!";
+            _vistaModelo.ConfirmacionContrasena = "Password123!";
 
             _mockServicio.Setup(s => s.ActualizarContrasenaAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new DTOs.ResultadoOperacionDTO { OperacionExitosa = false, Mensaje = "TokenExpirado" });
@@ -167,9 +167,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
             bool completado = false;
-            _viewModel.CambioContrasenaCompletado = (_) => completado = true;
+            _vistaModelo.CambioContrasenaCompletado = (_) => completado = true;
 
-            await _viewModel.ConfirmarComando.EjecutarAsync(null);
+            await _vistaModelo.ConfirmarComando.EjecutarAsync(null);
 
             Assert.IsFalse(completado);
             Assert.AreEqual("TokenExpirado", mensaje);
@@ -178,8 +178,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Confirmar_RespuestaNula_MuestraError()
         {
-            _viewModel.NuevaContrasena = "Password123!";
-            _viewModel.ConfirmacionContrasena = "Password123!";
+            _vistaModelo.NuevaContrasena = "Password123!";
+            _vistaModelo.ConfirmacionContrasena = "Password123!";
 
             _mockServicio.Setup(s => s.ActualizarContrasenaAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync((DTOs.ResultadoOperacionDTO)null);
@@ -187,7 +187,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.ConfirmarComando.EjecutarAsync(null);
+            await _vistaModelo.ConfirmarComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoActualizarContrasena, mensaje);
         }
@@ -195,8 +195,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public async Task Prueba_Confirmar_Excepcion_MuestraError()
         {
-            _viewModel.NuevaContrasena = "Password123!";
-            _viewModel.ConfirmacionContrasena = "Password123!";
+            _vistaModelo.NuevaContrasena = "Password123!";
+            _vistaModelo.ConfirmacionContrasena = "Password123!";
 
             _mockServicio.Setup(s => s.ActualizarContrasenaAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorRed", null));
@@ -204,10 +204,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.ConfirmarComando.EjecutarAsync(null);
+            await _vistaModelo.ConfirmarComando.EjecutarAsync(null);
 
             Assert.AreEqual("ErrorRed", mensaje);
-            Assert.IsFalse(_viewModel.EstaProcesando);
+            Assert.IsFalse(_vistaModelo.EstaProcesando);
         }
 
         #endregion
@@ -218,9 +218,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         public void Prueba_CancelarComando_InvocaAccion()
         {
             bool cancelado = false;
-            _viewModel.Cancelado = () => cancelado = true;
+            _vistaModelo.Cancelado = () => cancelado = true;
 
-            _viewModel.CancelarComando.Execute(null);
+            _vistaModelo.CancelarComando.Execute(null);
 
             Assert.IsTrue(cancelado);
         }

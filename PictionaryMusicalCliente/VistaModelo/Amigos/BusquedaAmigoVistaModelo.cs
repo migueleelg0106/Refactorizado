@@ -10,6 +10,9 @@ using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
+    /// <summary>
+    /// Controla la logica de busqueda y envio de solicitudes de amistad.
+    /// </summary>
     public class BusquedaAmigoVistaModelo : BaseVistaModelo
     {
         private readonly IAmigosServicio _amigosServicio;
@@ -17,9 +20,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         private string _nombreUsuarioBusqueda;
         private bool _estaProcesando;
 
+        /// <summary>
+        /// Inicializa el ViewModel con el servicio de amigos.
+        /// </summary>
+        /// <param name="amigosServicio">Servicio para operaciones de red.</param>
         public BusquedaAmigoVistaModelo(IAmigosServicio amigosServicio)
         {
-            _amigosServicio = amigosServicio ?? throw new ArgumentNullException(nameof(amigosServicio));
+            _amigosServicio = amigosServicio ??
+                throw new ArgumentNullException(nameof(amigosServicio));
             _usuarioActual = SesionUsuarioActual.Usuario?.NombreUsuario ?? string.Empty;
 
             EnviarSolicitudComando = new ComandoAsincrono(async _ =>
@@ -35,6 +43,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             });
         }
 
+        /// <summary>
+        /// Nombre de usuario ingresado para buscar.
+        /// </summary>
         public string NombreUsuarioBusqueda
         {
             get => _nombreUsuarioBusqueda;
@@ -47,6 +58,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
         }
 
+        /// <summary>
+        /// Indica si hay una operacion de red en curso.
+        /// </summary>
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -59,12 +73,24 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
         }
 
+        /// <summary>
+        /// Comando para enviar la solicitud de amistad.
+        /// </summary>
         public IComandoAsincrono EnviarSolicitudComando { get; }
 
+        /// <summary>
+        /// Comando para cancelar y cerrar la ventana.
+        /// </summary>
         public ICommand CancelarComando { get; }
 
+        /// <summary>
+        /// Evento disparado cuando la solicitud se envia con exito.
+        /// </summary>
         public Action SolicitudEnviada { get; set; }
 
+        /// <summary>
+        /// Evento disparado al cancelar.
+        /// </summary>
         public Action Cancelado { get; set; }
 
         private bool PuedeEnviarSolicitud()
@@ -93,14 +119,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                await _amigosServicio.EnviarSolicitudAsync(_usuarioActual, nombreAmigo).ConfigureAwait(true);
+                await _amigosServicio.EnviarSolicitudAsync(
+                    _usuarioActual,
+                    nombreAmigo).ConfigureAwait(true);
+
                 ManejadorSonido.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudEnviada);
                 SolicitudEnviada?.Invoke();
             }
             catch (ServicioExcepcion ex)
             {
-                ManejadorSonido.ReproducirError();  
+                ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally

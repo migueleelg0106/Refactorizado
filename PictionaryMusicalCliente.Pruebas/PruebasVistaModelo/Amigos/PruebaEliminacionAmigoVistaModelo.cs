@@ -8,7 +8,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
     [TestClass]
     public class PruebaEliminacionAmigoVistaModelo
     {
-        private EliminacionAmigoVistaModelo _viewModel;
+        private EliminacionAmigoVistaModelo _vistaModelo;
 
         [TestInitialize]
         public void Inicializar()
@@ -23,45 +23,45 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
             string nombreAmigo = "Juan";
             string mensajeEsperado = string.Concat(Lang.eliminarAmigoTextoConfirmacion, nombreAmigo, "?");
 
-            _viewModel = new EliminacionAmigoVistaModelo(nombreAmigo);
+            _vistaModelo = new EliminacionAmigoVistaModelo(nombreAmigo);
 
-            Assert.AreEqual(mensajeEsperado, _viewModel.MensajeConfirmacion);
-            Assert.IsNotNull(_viewModel.AceptarComando);
-            Assert.IsNotNull(_viewModel.CancelarComando);
+            Assert.AreEqual(mensajeEsperado, _vistaModelo.MensajeConfirmacion);
+            Assert.IsNotNull(_vistaModelo.AceptarComando);
+            Assert.IsNotNull(_vistaModelo.CancelarComando);
         }
 
         [TestMethod]
         public void Prueba_Constructor_NombreNulo_UsaMensajePorDefecto()
         {
-            _viewModel = new EliminacionAmigoVistaModelo(null);
+            _vistaModelo = new EliminacionAmigoVistaModelo(null);
 
-            Assert.AreEqual(Lang.eliminarAmigoTextoConfirmacion, _viewModel.MensajeConfirmacion);
+            Assert.AreEqual(Lang.eliminarAmigoTextoConfirmacion, _vistaModelo.MensajeConfirmacion);
         }
 
         [TestMethod]
         public void Prueba_Constructor_NombreVacio_UsaMensajePorDefecto()
         {
-            _viewModel = new EliminacionAmigoVistaModelo("");
+            _vistaModelo = new EliminacionAmigoVistaModelo("");
 
-            Assert.AreEqual(Lang.eliminarAmigoTextoConfirmacion, _viewModel.MensajeConfirmacion);
+            Assert.AreEqual(Lang.eliminarAmigoTextoConfirmacion, _vistaModelo.MensajeConfirmacion);
         }
 
         [TestMethod]
         public void Prueba_Constructor_NombreEspacios_UsaMensajePorDefecto()
         {
-            _viewModel = new EliminacionAmigoVistaModelo("   ");
+            _vistaModelo = new EliminacionAmigoVistaModelo("   ");
 
-            Assert.AreEqual(Lang.eliminarAmigoTextoConfirmacion, _viewModel.MensajeConfirmacion);
+            Assert.AreEqual(Lang.eliminarAmigoTextoConfirmacion, _vistaModelo.MensajeConfirmacion);
         }
 
         [TestMethod]
         public void Prueba_AceptarComando_InvocaCerrarConTrue()
         {
-            _viewModel = new EliminacionAmigoVistaModelo("Amigo");
+            _vistaModelo = new EliminacionAmigoVistaModelo("Amigo");
             bool? resultadoCierre = null;
-            _viewModel.Cerrar = (r) => resultadoCierre = r;
+            _vistaModelo.Cerrar = (r) => resultadoCierre = r;
 
-            _viewModel.AceptarComando.Execute(null);
+            _vistaModelo.AceptarComando.Execute(null);
 
             Assert.AreEqual(true, resultadoCierre);
         }
@@ -69,11 +69,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestMethod]
         public void Prueba_CancelarComando_InvocaCerrarConFalse()
         {
-            _viewModel = new EliminacionAmigoVistaModelo("Amigo");
+            _vistaModelo = new EliminacionAmigoVistaModelo("Amigo");
             bool? resultadoCierre = null;
-            _viewModel.Cerrar = (r) => resultadoCierre = r;
+            _vistaModelo.Cerrar = (r) => resultadoCierre = r;
 
-            _viewModel.CancelarComando.Execute(null);
+            _vistaModelo.CancelarComando.Execute(null);
 
             Assert.AreEqual(false, resultadoCierre);
         }
@@ -81,12 +81,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestMethod]
         public void Prueba_AceptarComando_SinAccionCerrar_NoFalla()
         {
-            _viewModel = new EliminacionAmigoVistaModelo("Amigo");
-            _viewModel.Cerrar = null;
+            _vistaModelo = new EliminacionAmigoVistaModelo("Amigo");
+            _vistaModelo.Cerrar = null;
 
             try
             {
-                _viewModel.AceptarComando.Execute(null);
+                _vistaModelo.AceptarComando.Execute(null);
             }
             catch
             {
@@ -97,12 +97,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestMethod]
         public void Prueba_CancelarComando_SinAccionCerrar_NoFalla()
         {
-            _viewModel = new EliminacionAmigoVistaModelo("Amigo");
-            _viewModel.Cerrar = null;
+            _vistaModelo = new EliminacionAmigoVistaModelo("Amigo");
+            _vistaModelo.Cerrar = null;
 
             try
             {
-                _viewModel.CancelarComando.Execute(null);
+                _vistaModelo.CancelarComando.Execute(null);
             }
             catch
             {

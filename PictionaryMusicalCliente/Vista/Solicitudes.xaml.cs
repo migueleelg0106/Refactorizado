@@ -7,22 +7,32 @@ using PictionaryMusicalCliente.VistaModelo.Amigos;
 namespace PictionaryMusicalCliente
 {
     /// <summary>
-    /// Lógica de interacción para Solicitudes.xaml
+    /// Ventana para gestionar las solicitudes de amistad pendientes (aceptar/rechazar).
     /// </summary>
     public partial class Solicitudes : Window
     {
         private readonly SolicitudesVistaModelo _vistaModelo;
 
+        /// <summary>
+        /// Inicializa la ventana con el servicio de amigos por defecto.
+        /// </summary>
         public Solicitudes()
             : this(new SolicitudesVistaModelo(new AmigosServicio()))
         {
         }
 
+        /// <summary>
+        /// Inicializa la ventana inyectando una implementacion del servicio.
+        /// </summary>
+        /// <param name="amigosServicio">Servicio de gestion de amigos.</param>
         public Solicitudes(IAmigosServicio amigosServicio)
             : this(new SolicitudesVistaModelo(amigosServicio))
         {
         }
 
+        /// <summary>
+        /// Constructor principal que configura la vista modelo y eventos.
+        /// </summary>
         public Solicitudes(SolicitudesVistaModelo vistaModelo)
         {
             _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));

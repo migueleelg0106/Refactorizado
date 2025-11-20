@@ -13,6 +13,9 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
+    /// <summary>
+    /// Controla el flujo para que un usuario invitado se una a una partida mediante codigo.
+    /// </summary>
     public class IngresoPartidaInvitadoVistaModelo : BaseVistaModelo
     {
         private const int MaximoJugadoresSala = 4;
@@ -23,12 +26,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private bool _estaProcesando;
         private string _codigoSala;
 
+        /// <summary>
+        /// Inicializa el ViewModel.
+        /// </summary>
+        /// <param name="localizacionServicio">Servicio para obtener la cultura actual.</param>
+        /// <param name="salasServicio">Servicio para unirse a la sala.</param>
         public IngresoPartidaInvitadoVistaModelo(
             ILocalizacionServicio localizacionServicio,
             ISalasServicio salasServicio)
         {
-            _localizacionServicio = localizacionServicio ?? throw new ArgumentNullException(nameof(localizacionServicio));
-            _salasServicio = salasServicio ?? throw new ArgumentNullException(nameof(salasServicio));
+            _localizacionServicio = localizacionServicio ??
+                throw new ArgumentNullException(nameof(localizacionServicio));
+            _salasServicio = salasServicio ??
+                throw new ArgumentNullException(nameof(salasServicio));
 
             UnirseSalaComando = new ComandoAsincrono(async _ =>
             {
@@ -43,12 +53,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }, () => !EstaProcesando);
         }
 
+        /// <summary>
+        /// Codigo de sala ingresado por el usuario.
+        /// </summary>
         public string CodigoSala
         {
             get => _codigoSala;
             set => EstablecerPropiedad(ref _codigoSala, value);
         }
 
+        /// <summary>
+        /// Indica si hay una operacion de union en curso.
+        /// </summary>
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -62,14 +78,30 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
+        /// <summary>
+        /// Indica si el proceso de union fue exitoso.
+        /// </summary>
         public bool SeUnioSala { get; private set; }
 
+        /// <summary>
+        /// Comando para intentar unirse a la sala.
+        /// </summary>
         public IComandoAsincrono UnirseSalaComando { get; }
 
+        /// <summary>
+        /// Comando para cancelar y cerrar el dialogo.
+        /// </summary>
         public ICommand CancelarComando { get; }
 
+        /// <summary>
+        /// Accion para cerrar la ventana.
+        /// </summary>
         public Action CerrarVentana { get; set; }
 
+        /// <summary>
+        /// Evento disparado al unirse correctamente, devolviendo los datos de la sala y el 
+        /// nombre generado.
+        /// </summary>
         public Action<DTOs.SalaDTO, string> SalaUnida { get; set; }
 
         private async Task UnirseSalaComoInvitadoAsync()
@@ -102,14 +134,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 for (int intento = 0; intento < maxIntentos; intento++)
                 {
-                    string nombreInvitado = NombreInvitadoGenerador.Generar(culturaActual, nombresReservados);
+                    string nombreInvitado = NombreInvitadoGenerador.Generar(
+                        culturaActual,
+                        nombresReservados);
 
                     if (string.IsNullOrWhiteSpace(nombreInvitado))
                     {
                         break;
                     }
 
-                    ResultadoUnionInvitado resultado = await IntentarUnirseAsync(codigo, nombreInvitado).ConfigureAwait(true);
+                    ResultadoUnionInvitado resultado = await IntentarUnirseAsync(
+                        codigo,
+                        nombreInvitado).ConfigureAwait(true);
 
                     switch (resultado.Estado)
                     {
@@ -143,7 +179,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                         case EstadoUnionInvitado.Error:
                             ManejadorSonido.ReproducirError();
-                            AvisoAyudante.Mostrar(resultado.Mensaje ?? Lang.errorTextoNoEncuentraPartida);
+                            AvisoAyudante.Mostrar(
+                                resultado.Mensaje ?? Lang.errorTextoNoEncuentraPartida);
                             return;
                     }
                 }
@@ -157,11 +194,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        private async Task<ResultadoUnionInvitado> IntentarUnirseAsync(string codigo, string nombreInvitado)
+        private async Task<ResultadoUnionInvitado> IntentarUnirseAsync(
+            string codigo,
+            string nombreInvitado)
         {
             try
             {
-                DTOs.SalaDTO sala = await _salasServicio.UnirseSalaAsync(codigo, nombreInvitado).ConfigureAwait(true);
+                DTOs.SalaDTO sala = await _salasServicio.UnirseSalaAsync(
+                    codigo,
+                    nombreInvitado).ConfigureAwait(true);
 
                 if (sala == null)
                 {
@@ -170,13 +211,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 if (SalaLlena(sala))
                 {
-                    await IntentarAbandonarSalaAsync(sala.Codigo ?? codigo, nombreInvitado).ConfigureAwait(true);
+                    await IntentarAbandonarSalaAsync(
+                        sala.Codigo ?? codigo,
+                        nombreInvitado).ConfigureAwait(true);
                     return ResultadoUnionInvitado.CrearErrorSalaLlena();
                 }
 
                 if (NombreDuplicado(sala, nombreInvitado))
                 {
-                    await IntentarAbandonarSalaAsync(sala.Codigo ?? codigo, nombreInvitado).ConfigureAwait(true);
+                    await IntentarAbandonarSalaAsync(
+                        sala.Codigo ?? codigo,
+                        nombreInvitado).ConfigureAwait(true);
                     return ResultadoUnionInvitado.CrearErrorNombreDuplicado(sala.Jugadores);
                 }
 
@@ -200,7 +245,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return false;
             }
 
-            int jugadoresValidos = sala.Jugadores.Count(jugador => !string.IsNullOrWhiteSpace(jugador));
+            int jugadoresValidos = sala.Jugadores.Count(
+                jugador => !string.IsNullOrWhiteSpace(jugador));
             return jugadoresValidos > MaximoJugadoresSala;
         }
 
@@ -212,7 +258,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
 
             int coincidencias = sala.Jugadores
-                .Count(jugador => string.Equals(jugador?.Trim(), nombreInvitado, StringComparison.OrdinalIgnoreCase));
+                .Count(jugador => string.Equals(
+                    jugador?.Trim(),
+                    nombreInvitado,
+                    StringComparison.OrdinalIgnoreCase));
 
             return coincidencias > 1;
         }
@@ -221,7 +270,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
             try
             {
-                await _salasServicio.AbandonarSalaAsync(codigoSala, nombreInvitado).ConfigureAwait(true);
+                await _salasServicio.AbandonarSalaAsync(
+                    codigoSala,
+                    nombreInvitado).ConfigureAwait(true);
             }
             catch
             {
@@ -271,7 +322,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return new ResultadoUnionInvitado(EstadoUnionInvitado.SalaLlena);
             }
 
-            public static ResultadoUnionInvitado CrearErrorNombreDuplicado(IEnumerable<string> jugadores)
+            public static ResultadoUnionInvitado CrearErrorNombreDuplicado(
+                IEnumerable<string> jugadores)
             {
                 return new ResultadoUnionInvitado(EstadoUnionInvitado.NombreDuplicado)
                 {

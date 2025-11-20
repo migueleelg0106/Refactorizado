@@ -18,7 +18,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
     public class PruebaSolicitudesVistaModelo
     {
         private Mock<IAmigosServicio> _mockAmigosServicio;
-        private SolicitudesVistaModelo _viewModel;
+        private SolicitudesVistaModelo _vistaModelo;
         private const string UsuarioTest = "UsuarioPrueba";
 
         [TestInitialize]
@@ -35,8 +35,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel?.Dispose();
-            _viewModel = null;
+            _vistaModelo?.Dispose();
+            _vistaModelo = null;
             try { SesionUsuarioActual.EstablecerUsuario(new DTOs.UsuarioDTO { UsuarioId = 0 }); } catch { }
         }
 
@@ -51,12 +51,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         public void Constructor_InicializaCorrectamente()
         {
             _mockAmigosServicio.Setup(s => s.SolicitudesPendientes).Returns(new List<DTOs.SolicitudAmistadDTO>());
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
 
-            Assert.IsNotNull(_viewModel.Solicitudes);
-            Assert.IsNotNull(_viewModel.AceptarSolicitudComando);
-            Assert.IsNotNull(_viewModel.RechazarSolicitudComando);
-            Assert.IsNotNull(_viewModel.CerrarComando);
+            Assert.IsNotNull(_vistaModelo.Solicitudes);
+            Assert.IsNotNull(_vistaModelo.AceptarSolicitudComando);
+            Assert.IsNotNull(_vistaModelo.RechazarSolicitudComando);
+            Assert.IsNotNull(_vistaModelo.CerrarComando);
         }
 
         [TestMethod]
@@ -72,16 +72,16 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
             };
 
             _mockAmigosServicio.Setup(s => s.SolicitudesPendientes).Returns(lista);
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
 
-            Assert.AreEqual(1, _viewModel.Solicitudes.Count);
-            Assert.AreEqual("Amigo1", _viewModel.Solicitudes[0].NombreUsuario);
+            Assert.AreEqual(1, _vistaModelo.Solicitudes.Count);
+            Assert.AreEqual("Amigo1", _vistaModelo.Solicitudes[0].NombreUsuario);
         }
 
         [TestMethod]
         public void EventoSolicitudesActualizadas_ActualizaLista()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
             var nuevas = new List<DTOs.SolicitudAmistadDTO>
             {
                 new DTOs.SolicitudAmistadDTO { UsuarioReceptor = UsuarioTest, UsuarioEmisor = "NuevoAmigo", SolicitudAceptada = false }
@@ -89,27 +89,27 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
 
             _mockAmigosServicio.Raise(m => m.SolicitudesActualizadas += null, null, nuevas);
 
-            Assert.AreEqual(1, _viewModel.Solicitudes.Count);
-            Assert.AreEqual("NuevoAmigo", _viewModel.Solicitudes[0].NombreUsuario);
+            Assert.AreEqual(1, _vistaModelo.Solicitudes.Count);
+            Assert.AreEqual("NuevoAmigo", _vistaModelo.Solicitudes[0].NombreUsuario);
         }
 
         [TestMethod]
         public void SolicitudesActualizadas_ListaNula_LimpiaColeccion()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
-            _viewModel.Solicitudes.Add(new SolicitudAmistadEntrada(new DTOs.SolicitudAmistadDTO(), "Test", true));
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo.Solicitudes.Add(new SolicitudAmistadEntrada(new DTOs.SolicitudAmistadDTO(), "Test", true));
 
             _mockAmigosServicio.Raise(m => m.SolicitudesActualizadas += null, null, (List<DTOs.SolicitudAmistadDTO>)null);
 
-            Assert.AreEqual(0, _viewModel.Solicitudes.Count);
+            Assert.AreEqual(0, _vistaModelo.Solicitudes.Count);
         }
 
         [TestMethod]
         public void Dispose_DesuscribeEvento()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
 
-            _viewModel.Dispose();
+            _vistaModelo.Dispose();
 
             var nuevasSolicitudes = new List<DTOs.SolicitudAmistadDTO>
             {
@@ -118,17 +118,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
 
             _mockAmigosServicio.Raise(m => m.SolicitudesActualizadas += null, null, nuevasSolicitudes);
 
-            Assert.AreEqual(0, _viewModel.Solicitudes.Count, "El evento no debió procesarse después del Dispose");
+            Assert.AreEqual(0, _vistaModelo.Solicitudes.Count, "El evento no debió procesarse después del Dispose");
         }
 
         [TestMethod]
         public async Task AceptarSolicitud_Exito_LlamaServicio()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
             var dto = new DTOs.SolicitudAmistadDTO { UsuarioEmisor = "Amigo", UsuarioReceptor = UsuarioTest };
             var entrada = new SolicitudAmistadEntrada(dto, "Amigo", true);
 
-            await _viewModel.AceptarSolicitudComando.EjecutarAsync(entrada);
+            await _vistaModelo.AceptarSolicitudComando.EjecutarAsync(entrada);
 
             _mockAmigosServicio.Verify(s => s.ResponderSolicitudAsync("Amigo", UsuarioTest), Times.Once);
         }
@@ -136,7 +136,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestMethod]
         public async Task AceptarSolicitud_Excepcion_MuestraError()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
             var entrada = new SolicitudAmistadEntrada(new DTOs.SolicitudAmistadDTO(), "A", true);
 
             string mensaje = null;
@@ -145,28 +145,28 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
             _mockAmigosServicio.Setup(s => s.ResponderSolicitudAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorRed", null));
 
-            await _viewModel.AceptarSolicitudComando.EjecutarAsync(entrada);
+            await _vistaModelo.AceptarSolicitudComando.EjecutarAsync(entrada);
 
             Assert.AreEqual("ErrorRed", mensaje);
-            Assert.IsTrue(_viewModel.AceptarSolicitudComando.CanExecute(entrada)); 
+            Assert.IsTrue(_vistaModelo.AceptarSolicitudComando.CanExecute(entrada)); 
         }
 
         [TestMethod]
         public async Task AceptarSolicitud_EntradaNula_NoHaceNada()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
-            await _viewModel.AceptarSolicitudComando.EjecutarAsync(null);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            await _vistaModelo.AceptarSolicitudComando.EjecutarAsync(null);
             _mockAmigosServicio.Verify(s => s.ResponderSolicitudAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [TestMethod]
         public async Task RechazarSolicitud_Exito_LlamaServicio()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
             var dto = new DTOs.SolicitudAmistadDTO { UsuarioEmisor = "Amigo", UsuarioReceptor = UsuarioTest };
             var entrada = new SolicitudAmistadEntrada(dto, "Amigo", true);
 
-            await _viewModel.RechazarSolicitudComando.EjecutarAsync(entrada);
+            await _vistaModelo.RechazarSolicitudComando.EjecutarAsync(entrada);
 
             _mockAmigosServicio.Verify(s => s.EliminarAmigoAsync("Amigo", UsuarioTest), Times.Once);
         }
@@ -174,7 +174,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestMethod]
         public async Task RechazarSolicitud_Excepcion_MuestraError()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
             var entrada = new SolicitudAmistadEntrada(new DTOs.SolicitudAmistadDTO(), "A", true);
 
             string mensaje = null;
@@ -183,7 +183,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
             _mockAmigosServicio.Setup(s => s.EliminarAmigoAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "Fallo", null));
 
-            await _viewModel.RechazarSolicitudComando.EjecutarAsync(entrada);
+            await _vistaModelo.RechazarSolicitudComando.EjecutarAsync(entrada);
 
             Assert.AreEqual("Fallo", mensaje);
         }
@@ -191,19 +191,19 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestMethod]
         public async Task RechazarSolicitud_EntradaNula_NoHaceNada()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
-            await _viewModel.RechazarSolicitudComando.EjecutarAsync(null);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            await _vistaModelo.RechazarSolicitudComando.EjecutarAsync(null);
             _mockAmigosServicio.Verify(s => s.EliminarAmigoAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [TestMethod]
         public void CerrarComando_InvocaAccion()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
             bool cerrado = false;
-            _viewModel.Cerrar = () => cerrado = true;
+            _vistaModelo.Cerrar = () => cerrado = true;
 
-            _viewModel.CerrarComando.Execute(null);
+            _vistaModelo.CerrarComando.Execute(null);
 
             Assert.IsTrue(cerrado);
         }
@@ -211,25 +211,25 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestMethod]
         public void PuedeAceptar_SoloSiEsReceptor()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
             var entradaReceptor = new SolicitudAmistadEntrada(new DTOs.SolicitudAmistadDTO(), "A", true);
             var entradaEmisor = new SolicitudAmistadEntrada(new DTOs.SolicitudAmistadDTO(), "B", false);
 
-            Assert.IsTrue(_viewModel.AceptarSolicitudComando.CanExecute(entradaReceptor));
-            Assert.IsFalse(_viewModel.AceptarSolicitudComando.CanExecute(entradaEmisor));
+            Assert.IsTrue(_vistaModelo.AceptarSolicitudComando.CanExecute(entradaReceptor));
+            Assert.IsFalse(_vistaModelo.AceptarSolicitudComando.CanExecute(entradaEmisor));
         }
 
         [TestMethod]
         public void EstaProcesando_BloqueaComandos()
         {
-            _viewModel = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
+            _vistaModelo = new SolicitudesVistaModelo(_mockAmigosServicio.Object);
             var entrada = new SolicitudAmistadEntrada(new DTOs.SolicitudAmistadDTO(), "A", true);
 
             typeof(SolicitudesVistaModelo).GetProperty("EstaProcesando", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                .SetValue(_viewModel, true);
+                .SetValue(_vistaModelo, true);
 
-            Assert.IsFalse(_viewModel.AceptarSolicitudComando.CanExecute(entrada));
-            Assert.IsFalse(_viewModel.RechazarSolicitudComando.CanExecute(entrada));
+            Assert.IsFalse(_vistaModelo.AceptarSolicitudComando.CanExecute(entrada));
+            Assert.IsFalse(_vistaModelo.RechazarSolicitudComando.CanExecute(entrada));
         }
     }
 }

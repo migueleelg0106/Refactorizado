@@ -768,7 +768,6 @@
   <data name="unirseSalaTextoVacio" xml:space="preserve">
     <value>Enter a game code.</value>
   </data>
-<!-- Missing MensajesError constants -->
   <data name="ApellidoRegistroInvalido" xml:space="preserve">
     <value>Last name is required and must not exceed 50 characters.</value>
   </data>
@@ -1006,7 +1005,6 @@
   <data name="UsuariosEspecificadosNoExisten" xml:space="preserve">
     <value>Some of the specified users do not exist.</value>
   </data>
-
   <data name="SolicitudAmistadMismoUsuario" xml:space="preserve">
     <value>Cannot send a friendship request to yourself.</value>
   </data>
@@ -1024,5 +1022,8 @@
   </data>
   <data name="RelacionAmistadNoExiste" xml:space="preserve">
     <value>There is no friendship between the users.</value>
+  </data>
+  <data name="globalTextoAviso" xml:space="preserve">
+    <value>Warning</value>
   </data>
 </root>

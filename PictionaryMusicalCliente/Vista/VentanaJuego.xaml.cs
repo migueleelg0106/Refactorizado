@@ -14,11 +14,17 @@ using System.Linq;
 
 namespace PictionaryMusicalCliente
 {
+    /// <summary>
+    /// Ventana principal de la partida que gestiona el tablero de dibujo, chat y logica del juego.
+    /// </summary>
     public partial class VentanaJuego : Window
     {
         private readonly VentanaJuegoVistaModelo _vistaModelo;
         private readonly Action _accionAlCerrar;
 
+        /// <summary>
+        /// Inicializa la partida con la configuracion de la sala y el usuario.
+        /// </summary>
         public VentanaJuego(
             SalaDTO sala,
             ISalasServicio salasServicio,
@@ -95,7 +101,8 @@ namespace PictionaryMusicalCliente
 
         private void EjecutarNavegacion(VentanaJuegoVistaModelo.DestinoNavegacion destino)
         {
-            Window ventanaDestino = destino == VentanaJuegoVistaModelo.DestinoNavegacion.InicioSesion
+            Window ventanaDestino = destino == VentanaJuegoVistaModelo.DestinoNavegacion.
+                InicioSesion
                 ? new InicioSesion()
                 : new VentanaPrincipal();
 
@@ -117,14 +124,21 @@ namespace PictionaryMusicalCliente
 
         private void AbrirDialogo(Window ventana)
         {
-            if (ventana == null) return;
+            if (ventana == null)
+            {
+                return;
+            }
+
             ventana.Owner = this;
             ventana.ShowDialog();
         }
 
         private async Task MostrarInvitarAmigosAsync(InvitarAmigosVistaModelo vistaModelo)
         {
-            if (vistaModelo == null) return;
+            if (vistaModelo == null)
+            {
+                return;
+            }
 
             void MostrarVentana()
             {
@@ -148,7 +162,10 @@ namespace PictionaryMusicalCliente
         private void EstablecerHerramienta(bool esLapiz)
         {
             var lienzoTinta = (InkCanvas)this.FindName("ink");
-            if (lienzoTinta == null) return;
+            if (lienzoTinta == null)
+            {
+                return;
+            }
 
             lienzoTinta.EditingMode = esLapiz
                 ? InkCanvasEditingMode.Ink
@@ -167,7 +184,10 @@ namespace PictionaryMusicalCliente
         private void AplicarEstiloLapiz()
         {
             var lienzoTinta = (InkCanvas)this.FindName("ink");
-            if (lienzoTinta == null || _vistaModelo == null) return;
+            if (lienzoTinta == null || _vistaModelo == null)
+            {
+                return;
+            }
 
             lienzoTinta.DefaultDrawingAttributes = new DrawingAttributes
             {
@@ -182,18 +202,21 @@ namespace PictionaryMusicalCliente
         private void ActualizarFormaGoma()
         {
             var lienzoTinta = (InkCanvas)this.FindName("ink");
-            if (lienzoTinta == null || _vistaModelo == null) return;
+            if (lienzoTinta == null || _vistaModelo == null)
+            {
+                return;
+            }
 
             var tamano = Math.Max(1, _vistaModelo.Grosor);
             lienzoTinta.EraserShape = new EllipseStylusShape(tamano, tamano);
         }
 
-
         private bool DebeCerrarAplicacionPorCierreDeVentana()
         {
             var aplicacion = Application.Current;
 
-            if (aplicacion?.Dispatcher?.HasShutdownStarted == true || aplicacion?.Dispatcher?.HasShutdownFinished == true)
+            if (aplicacion?.Dispatcher?.HasShutdownStarted == true ||
+                aplicacion?.Dispatcher?.HasShutdownFinished == true)
             {
                 return true;
             }

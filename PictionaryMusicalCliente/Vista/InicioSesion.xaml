@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:convertidores="clr-namespace:PictionaryMusicalCliente.Convertidores"
         xmlns:localizacion="clr-namespace:PictionaryMusicalCliente.Utilidades.Idiomas"
-        Title="{Binding [tituloTextoInicioSesion], Source={StaticResource Localizacion}}" Height="650" Width="800"
+        Title="{Binding [tituloTextoInicioSesion], Source={StaticResource Localizacion}}" 
+        Height="650" Width="800"
         WindowStartupLocation="CenterScreen"
         Background="White"
         Closed="InicioSesion_Cerrado">
@@ -13,7 +14,6 @@
     </Window.Resources>
 
     <Grid Margin="0,0,0,-6">
-        <!-- Fondo cuadriculado -->
         <Grid.Background>
             <VisualBrush TileMode="Tile" Viewport="0,0,40,40" ViewportUnits="Absolute"
                          Viewbox="0,0,40,40" ViewboxUnits="Absolute">
@@ -24,11 +24,9 @@
         </Grid.Background>
 
         <Button HorizontalAlignment="Left" VerticalAlignment="Top" 
-        Margin="20,20,0,0" Width="69" Height="69"
-        Click="BotonAudio_Click" Cursor="Hand"
-        Background="Transparent" 
-        BorderThickness="0">
-
+                Margin="20,20,0,0" Width="69" Height="69"
+                Click="BotonAudio_Click" Cursor="Hand"
+                Background="Transparent" BorderThickness="0">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Template">
@@ -41,19 +39,14 @@
                 </Style>
             </Button.Style>
 
-            <Image x:Name="imagenBotonAudio" 
-           Source="/Recursos/Audio_Encendido.png" 
-           Stretch="UniformToFill" Height="67" Width="66"/>
+            <Image x:Name="imagenBotonAudio" Source="/Recursos/Audio_Encendido.png" 
+                   Stretch="UniformToFill" Height="67" Width="66"/>
         </Button>
 
-        <!-- Título -->
         <Image Source="/Recursos/PictionaryMusicalLogo.png"
-           HorizontalAlignment="Center"
-           VerticalAlignment="Top"
-           Margin="0,-26,0,0"
-           Height="292"
-           Stretch="Uniform" Width="382"
-           RenderTransformOrigin="0.5,0.5">
+               HorizontalAlignment="Center" VerticalAlignment="Top"
+               Margin="0,-26,0,0" Height="292" Stretch="Uniform" Width="382"
+               RenderTransformOrigin="0.5,0.5">
 
             <Image.RenderTransform>
                 <RotateTransform Angle="0"/>
@@ -63,76 +56,61 @@
                 <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                     <BeginStoryboard>
                         <Storyboard RepeatBehavior="Forever">
-
                             <DoubleAnimation 
                                 Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)" 
-                                From="-5" 
-                                To="5" 
-                                Duration="0:0:2" 
-                                AutoReverse="True"/>
+                                From="-5" To="5" Duration="0:0:2" AutoReverse="True"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
             </Image.Triggers>
         </Image>
 
-
-        <!-- Selector de Idioma -->
         <StackPanel Orientation="Horizontal"
-                HorizontalAlignment="Right" VerticalAlignment="Top"
-                Margin="0,10,20,0">
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Margin="0,10,20,0">
             <Label Content="{Binding [idiomaTextoIdioma], Source={StaticResource Localizacion}}"
-               ContentStringFormat="{}{0}:"
-               FontSize="12" FontFamily="Comic Sans MS"
-               VerticalAlignment="Center"
-               Margin="0,0,5,0"/>
+                   ContentStringFormat="{}{0}:"
+                   FontSize="12" FontFamily="Comic Sans MS"
+                   VerticalAlignment="Center" Margin="0,0,5,0"/>
+
             <ComboBox x:Name="cuadroCombinadoLenguaje" Width="160" FontFamily="Comic Sans MS"
                       ItemsSource="{Binding IdiomasDisponibles}" DisplayMemberPath="Descripcion"
                       SelectedItem="{Binding IdiomaSeleccionado, Mode=TwoWay}"/>
         </StackPanel>
 
-        <!-- Panel central -->
         <Border Background="White" BorderBrush="Gray" BorderThickness="2"
                 Padding="20" CornerRadius="3"
                 HorizontalAlignment="Center" VerticalAlignment="Top"
                 Height="346" Width="460" Margin="0,241,0,0">
 
-            <!-- Usamos Grid con filas bien definidas -->
-            <Grid Cursor="">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <!-- Usuario label -->
                     <RowDefinition Height="Auto"/>
-                    <!-- Usuario textbox -->
                     <RowDefinition Height="Auto"/>
-                    <!-- Contraseña label -->
                     <RowDefinition Height="Auto"/>
-                    <!-- Contraseña box -->
                     <RowDefinition Height="Auto"/>
-                    <!-- Olvidaste contraseña -->
                     <RowDefinition Height="Auto"/>
-                    <!-- Botón entrar -->
                     <RowDefinition Height="Auto"/>
-                    <!-- Botones inferiores -->
                 </Grid.RowDefinitions>
 
-                <!-- Usuario -->
                 <Label Content="{Binding [inicioSesionTextoCorreoUsuario], Source={StaticResource Localizacion}}"
                        ContentStringFormat="{}{0}:"
                        FontSize="12" FontWeight="Bold" FontFamily="Comic Sans MS" Grid.Row="0"/>
+
                 <TextBox x:Name="campoTextoUsuario" Height="30" FontFamily="Comic Sans MS" Grid.Row="1"
                          MaxLength="50"
                          Text="{Binding Identificador, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <!-- Contraseña -->
                 <Label Content="{Binding [globalTextoContrasena], Source={StaticResource Localizacion}}"
                        ContentStringFormat="{}{0}:"
-                       FontSize="12" FontWeight="Bold" FontFamily="Comic Sans MS" Grid.Row="2" Margin="0,10,0,0"/>
-                <PasswordBox x:Name="bloqueContrasenaContrasena" Height="30" FontFamily="Comic Sans MS" Grid.Row="3"
-                             MaxLength="15"
+                       FontSize="12" FontWeight="Bold" FontFamily="Comic Sans MS" Grid.Row="2" 
+                       Margin="0,10,0,0"/>
+
+                <PasswordBox x:Name="campoContrasenaContrasena" Height="30" FontFamily="Comic Sans MS" 
+                             Grid.Row="3" MaxLength="15"
                              PasswordChanged="PasswordBoxChanged"/>
 
-                <!-- Olvidaste contraseña -->
                 <Label Content="{Binding [inicioSesionTextoOlvidasteContrasena], Source={StaticResource Localizacion}}"
                        FontFamily="Comic Sans MS"
                        Foreground="Blue" FontSize="12" Cursor="Hand" Grid.Row="5" Margin="0,10,257,54">
@@ -142,13 +120,12 @@
                 </Label>
 
                 <Button Content="{Binding [inicioSesionTextoEntrar], Source={StaticResource Localizacion}}"
-                FontFamily="Comic Sans MS"
-                FontWeight="Bold" Background="White" BorderBrush="Black"
-                Grid.Row="5" Height="45" Margin="0,46,0,0"
-                Command="{Binding IniciarSesionComando}"
-                IsEnabled="{Binding EstaProcesando, Converter={StaticResource BooleanoInverso}}"/>
+                        FontFamily="Comic Sans MS"
+                        FontWeight="Bold" Background="White" BorderBrush="Black"
+                        Grid.Row="5" Height="45" Margin="0,46,0,0"
+                        Command="{Binding IniciarSesionComando}"
+                        IsEnabled="{Binding EstaProcesando, Converter={StaticResource BooleanoInverso}}"/>
 
-                <!-- Botones inferiores -->
                 <Grid Grid.Row="6" Margin="0,20,0,-80">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="8*"/>
@@ -156,16 +133,14 @@
                     </Grid.ColumnDefinitions>
 
                     <Button Content="{Binding [inicioSesionTextoEntrarInvitado], Source={StaticResource Localizacion}}"
-                    FontFamily="Comic Sans MS"
-                    Background="White" BorderBrush="Black"
-                    Grid.Column="0" Margin="5,0,0,0"
-                    Command="{Binding IniciarSesionInvitadoComando}"/>
+                            FontFamily="Comic Sans MS" Background="White" BorderBrush="Black"
+                            Grid.Column="0" Margin="5,0,0,0"
+                            Command="{Binding IniciarSesionInvitadoComando}"/>
 
                     <Button Content="{Binding [globalTextoCrearCuenta], Source={StaticResource Localizacion}}"
-                    FontFamily="Comic Sans MS"
-                    Background="White" BorderBrush="Black"
-                    Grid.Column="1" Margin="16,0,0,0"
-                    Command="{Binding AbrirCrearCuentaComando}"/>
+                            FontFamily="Comic Sans MS" Background="White" BorderBrush="Black"
+                            Grid.Column="1" Margin="16,0,0,0"
+                            Command="{Binding AbrirCrearCuentaComando}"/>
                 </Grid>
             </Grid>
         </Border>

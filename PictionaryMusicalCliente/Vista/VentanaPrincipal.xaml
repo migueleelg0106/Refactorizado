@@ -46,12 +46,9 @@
 
             <Grid Grid.ColumnSpan="3" IsHitTestVisible="False">
                 <Image Source="/Recursos/PictionaryMusicalLogo.png"
-           HorizontalAlignment="Center"
-           VerticalAlignment="Center"
-           Height="148"
-           Stretch="Uniform" Width="152"
-           
-           RenderTransformOrigin="0.5,0.5">
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Height="148" Stretch="Uniform" Width="152"
+                       RenderTransformOrigin="0.5,0.5">
 
                     <Image.RenderTransform>
                         <RotateTransform Angle="0"/>
@@ -61,13 +58,9 @@
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard RepeatBehavior="Forever">
-
                                     <DoubleAnimation 
-                            Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)" 
-                            From="-5" 
-                            To="5" 
-                            Duration="0:0:2" 
-                            AutoReverse="True"/>
+                                        Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)" 
+                                        From="-5" To="5" Duration="0:0:2" AutoReverse="True"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
@@ -93,7 +86,8 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="10,0">
-                <Border Background="White" BorderBrush="Black" BorderThickness="2" Padding="15" CornerRadius="3">
+                <Border Background="White" BorderBrush="Black" BorderThickness="2" 
+                        Padding="15" CornerRadius="3">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -101,48 +95,37 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
+
                         <TextBlock Text="{x:Static language:Lang.globalTextoUnirseASala}"
                                    Grid.Row="0" HorizontalAlignment="Center"
                                    FontWeight="Bold" FontSize="16" FontFamily="Comic Sans MS"
                                    Margin="0,0,0,10"/>
+
                         <TextBlock Text="{x:Static language:Lang.globalTextoIngreseCodigoPartida}"
                                    Grid.Row="1" FontFamily="Comic Sans MS" Margin="0,5"/>
-                        <TextBox Grid.Row="2"
-                                 Height="25"
-                                 FontFamily="Comic Sans MS"
-                                 MaxLength="6"
+
+                        <TextBox Grid.Row="2" Height="25" FontFamily="Comic Sans MS" MaxLength="6"
                                  utilidades:EntradaNumerica.SoloNumeros="True"
                                  Text="{Binding CodigoSala, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button Grid.Row="3"
-                                Content="{x:Static language:Lang.globalTextoUnirse}"
-                                Margin="0,15,0,0"
-                                Padding="5"
-                                FontWeight="Bold"
-                                Background="White"
-                                BorderBrush="Black"
-                                FontFamily="Comic Sans MS"
+
+                        <Button Grid.Row="3" Content="{x:Static language:Lang.globalTextoUnirse}"
+                                Margin="0,15,0,0" Padding="5" FontWeight="Bold"
+                                Background="White" BorderBrush="Black" FontFamily="Comic Sans MS"
                                 Command="{Binding UnirseSalaComando}"/>
                     </Grid>
                 </Border>
+
                 <Button Content="{x:Static language:Lang.globalTextoComoJugar}"
-                        Margin="0,20,0,0"
-                        Padding="10"
-                        Background="White"
-                        BorderBrush="Black"
-                        FontFamily="Comic Sans MS"
-                        Command="{Binding AbrirComoJugarComando}"/>
+                        Margin="0,20,0,0" Padding="10" Background="White" BorderBrush="Black"
+                        FontFamily="Comic Sans MS" Command="{Binding AbrirComoJugarComando}"/>
+
                 <Button Content="{x:Static language:Lang.globalTextoClasificacion}"
-                        Margin="0,10,0,0"
-                        Padding="10"
-                        Background="White"
-                        BorderBrush="Black"
-                        FontFamily="Comic Sans MS"
-                        Command="{Binding AbrirClasificacionComando}"/>
+                        Margin="0,10,0,0" Padding="10" Background="White" BorderBrush="Black"
+                        FontFamily="Comic Sans MS" Command="{Binding AbrirClasificacionComando}"/>
             </StackPanel>
 
-            <Border Background="White" BorderBrush="Black" BorderThickness="2" Padding="20" CornerRadius="3"
-                    Margin="10,0"
-                    Grid.Column="1">
+            <Border Background="White" BorderBrush="Black" BorderThickness="2" Padding="20" 
+                    CornerRadius="3" Margin="10,0" Grid.Column="1">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -151,53 +134,51 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Text="{x:Static language:Lang.principalTextoCrearSala}"
-                               HorizontalAlignment="Center"
-                               FontWeight="Bold" FontSize="18" FontFamily="Comic Sans MS"/>
+                               HorizontalAlignment="Center" FontWeight="Bold" FontSize="18" 
+                               FontFamily="Comic Sans MS"/>
 
                     <StackPanel Grid.Row="1" VerticalAlignment="Top" Margin="0,41,0,0">
                         <StackPanel Margin="0,5">
                             <TextBlock Text="{x:Static language:Lang.principalTextoNumeroRondas}"
                                        FontFamily="Comic Sans MS" Margin="0,0,0,5"/>
+
                             <ComboBox ItemsSource="{Binding NumeroRondasOpciones}"
                                       SelectedItem="{Binding NumeroRondasSeleccionada, Mode=TwoWay}"
-                                      DisplayMemberPath="Descripcion"
-                                      FontFamily="Comic Sans MS"
+                                      DisplayMemberPath="Descripcion" FontFamily="Comic Sans MS"
                                       SelectedIndex="0"/>
                         </StackPanel>
 
                         <StackPanel Margin="0,5">
                             <TextBlock Text="{x:Static language:Lang.principalTextoTiempoRonda}"
                                        FontFamily="Comic Sans MS" Margin="0,0,0,5"/>
+
                             <ComboBox ItemsSource="{Binding TiempoRondaOpciones}"
                                       SelectedItem="{Binding TiempoRondaSeleccionada, Mode=TwoWay}"
-                                      DisplayMemberPath="Descripcion"
-                                      FontFamily="Comic Sans MS"/>
+                                      DisplayMemberPath="Descripcion" FontFamily="Comic Sans MS"/>
                         </StackPanel>
 
                         <StackPanel Margin="0,5">
                             <TextBlock Text="{x:Static language:Lang.principalTextoIdiomaCanciones}"
                                        FontFamily="Comic Sans MS" Margin="0,0,0,5"/>
+
                             <ComboBox ItemsSource="{Binding IdiomasDisponibles}"
                                       SelectedItem="{Binding IdiomaSeleccionado, Mode=TwoWay}"
-                                      DisplayMemberPath="Descripcion"
-                                      FontFamily="Comic Sans MS"/>
+                                      DisplayMemberPath="Descripcion" FontFamily="Comic Sans MS"/>
                         </StackPanel>
 
                         <StackPanel Margin="0,5">
                             <TextBlock Text="{x:Static language:Lang.principalTextoDificultad}"
                                        FontFamily="Comic Sans MS" Margin="0,0,0,5"/>
+
                             <ComboBox ItemsSource="{Binding DificultadesDisponibles}"
                                       SelectedItem="{Binding DificultadSeleccionada, Mode=TwoWay}"
-                                      DisplayMemberPath="Descripcion"
-                                      FontFamily="Comic Sans MS"/>
+                                      DisplayMemberPath="Descripcion" FontFamily="Comic Sans MS"/>
                         </StackPanel>
                     </StackPanel>
 
-                    <Button Grid.Row="1"
-                            Content="{x:Static language:Lang.principalTextoJugar}"
+                    <Button Grid.Row="1" Content="{x:Static language:Lang.principalTextoJugar}"
                             FontFamily="Comic Sans MS" FontWeight="Bold"
-                            Background="White" BorderBrush="Black"
-                            Margin="0,297,0,0"
+                            Background="White" BorderBrush="Black" Margin="0,297,0,0"
                             Command="{Binding IniciarJuegoComando}" Grid.RowSpan="2"/>
                 </Grid>
             </Border>
@@ -208,7 +189,8 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Background="White" BorderBrush="Black" BorderThickness="2" Padding="15" CornerRadius="3">
+                <Border Grid.Row="0" Background="White" BorderBrush="Black" BorderThickness="2" 
+                        Padding="15" CornerRadius="3">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -216,29 +198,21 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
+
                         <TextBlock Text="{x:Static language:Lang.principalTextoAmigos}"
-                                   Grid.Row="0" HorizontalAlignment="Center"
-                                   FontWeight="Bold" FontSize="16" FontFamily="Comic Sans MS"/>
+                                   Grid.Row="0" HorizontalAlignment="Center" FontWeight="Bold" 
+                                   FontSize="16" FontFamily="Comic Sans MS"/>
+
                         <Button Content="{x:Static language:Lang.globalTextoBuscarAmigo}"
-                                Grid.Row="1"
-                                Margin="0,10,0,0"
-                                Padding="5"
-                                Background="White"
-                                BorderBrush="Black"
-                                FontFamily="Comic Sans MS"
+                                Grid.Row="1" Margin="0,10,0,0" Padding="5" Background="White"
+                                BorderBrush="Black" FontFamily="Comic Sans MS"
                                 Command="{Binding AbrirBuscarAmigoComando}"/>
 
-                        <ListBox Grid.Row="2"
-                                 x:Name="cuadroListaAmigos"
-                                 BorderBrush="Gray"
-                                 BorderThickness="1"
-                                 Margin="0,5,0,0"
-                                 MinHeight="100"
-                                 FontFamily="Comic Sans MS"
-                                 ItemsSource="{Binding Amigos}"
-                                 Background="Transparent"
+                        <ListBox Grid.Row="2" x:Name="cuadroListaAmigos" BorderBrush="Gray"
+                                 BorderThickness="1" Margin="0,5,0,0" MinHeight="100"
+                                 FontFamily="Comic Sans MS" ItemsSource="{Binding Amigos}"
+                                 Background="Transparent" 
                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                 
                                  HorizontalContentAlignment="Stretch">
 
                             <ListBox.ItemTemplate>
@@ -249,20 +223,15 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0"
-                                                   Text="{Binding NombreUsuario}" 
+                                        <TextBlock Grid.Column="0" Text="{Binding NombreUsuario}" 
                                                    VerticalAlignment="Center"/>
 
                                         <Button Grid.Column="1"
-                                                
                                                 Command="{Binding DataContext.EliminarAmigoComando, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                                 CommandParameter="{Binding}"
-                                                
-                                                Background="Transparent" 
-                                                BorderThickness="0"
+                                                Background="Transparent" BorderThickness="0"
                                                 Cursor="Hand"
                                                 ToolTip="{x:Static language:Lang.eliminarAmigoTextoEliminar}">
-
                                             <Image Source="/Recursos/Rechazar.png" Width="18" 
                                                    Height="18"/>
                                         </Button>
@@ -270,6 +239,7 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+
                         <Grid Grid.Row="3" Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -277,9 +247,7 @@
 
                             <Button Grid.Column="0"
                                     Content="{x:Static language:Lang.globalTextoSolicitudes}"
-                                    Padding="5"
-                                    Background="White"
-                                    BorderBrush="Black"
+                                    Padding="5" Background="White" BorderBrush="Black"
                                     FontFamily="Comic Sans MS"
                                     Command="{Binding AbrirSolicitudesComando}"/>
                         </Grid>

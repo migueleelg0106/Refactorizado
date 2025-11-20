@@ -17,7 +17,7 @@
         <Border Background="White" BorderBrush="Gray" BorderThickness="2"
                 Padding="20" CornerRadius="3"
                 HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel Width="356" VerticalAlignment="Center" Cursor="">
+            <StackPanel Width="356" VerticalAlignment="Center">
 
                 <TextBlock Text="{Binding Descripcion}"
                            TextWrapping="Wrap" TextAlignment="Center"

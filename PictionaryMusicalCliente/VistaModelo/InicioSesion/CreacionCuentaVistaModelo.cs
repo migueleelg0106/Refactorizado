@@ -14,6 +14,10 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 {
+    /// <summary>
+    /// Gestiona el proceso de registro de una nueva cuenta, incluyendo validacion de datos
+    /// y seleccion de avatar.
+    /// </summary>
     public class CreacionCuentaVistaModelo : BaseVistaModelo
     {
         private readonly ICodigoVerificacionServicio _codigoVerificacionServicio;
@@ -32,16 +36,27 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private bool _mostrarErrorCorreo;
         private bool _estaProcesando;
 
+        /// <summary>
+        /// Inicializa el ViewModel e inyecta los servicios necesarios para el registro.
+        /// </summary>
+        /// <param name="codigoVerificacionServicio">Servicio para envio de codigos.</param>
+        /// <param name="cuentaServicio">Servicio para creacion de cuentas.</param>
+        /// <param name="seleccionarAvatarServicio">Servicio para manejo de avatares.</param>
+        /// <param name="verificarCodigoDialogoServicio">Servicio para UI de verificacion.</param>
         public CreacionCuentaVistaModelo(
             ICodigoVerificacionServicio codigoVerificacionServicio,
             ICuentaServicio cuentaServicio,
             ISeleccionarAvatarServicio seleccionarAvatarServicio,
             IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio)
         {
-            _codigoVerificacionServicio = codigoVerificacionServicio ?? throw new ArgumentNullException(nameof(codigoVerificacionServicio));
-            _cuentaServicio = cuentaServicio ?? throw new ArgumentNullException(nameof(cuentaServicio));
-            _seleccionarAvatarServicio = seleccionarAvatarServicio ?? throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
-            _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ?? throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));
+            _codigoVerificacionServicio = codigoVerificacionServicio ??
+                throw new ArgumentNullException(nameof(codigoVerificacionServicio));
+            _cuentaServicio = cuentaServicio ??
+                throw new ArgumentNullException(nameof(cuentaServicio));
+            _seleccionarAvatarServicio = seleccionarAvatarServicio ??
+                throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
+            _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ??
+                throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));
 
             CrearCuentaComando = new ComandoAsincrono(async _ =>
             {
@@ -64,15 +79,90 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             EstablecerAvatarPredeterminado();
         }
 
-        public string Usuario { get => _usuario; set => EstablecerPropiedad(ref _usuario, value); }
-        public string Nombre { get => _nombre; set => EstablecerPropiedad(ref _nombre, value); }
-        public string Apellido { get => _apellido; set => EstablecerPropiedad(ref _apellido, value); }
-        public string Correo { get => _correo; set => EstablecerPropiedad(ref _correo, value); }
-        public string Contrasena { get => _contrasena; set => EstablecerPropiedad(ref _contrasena, value); }
-        public ImageSource AvatarSeleccionadoImagen { get => _avatarSeleccionadoImagen; private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value); }
-        public int AvatarSeleccionadoId { get => _avatarSeleccionadoId; private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value); }
-        public bool MostrarErrorUsuario { get => _mostrarErrorUsuario; private set => EstablecerPropiedad(ref _mostrarErrorUsuario, value); }
-        public bool MostrarErrorCorreo { get => _mostrarErrorCorreo; private set => EstablecerPropiedad(ref _mostrarErrorCorreo, value); }
+        /// <summary>
+        /// Nombre de usuario unico para la cuenta.
+        /// </summary>
+        public string Usuario
+        {
+            get => _usuario;
+            set => EstablecerPropiedad(ref _usuario, value);
+        }
+
+        /// <summary>
+        /// Nombre real del usuario.
+        /// </summary>
+        public string Nombre
+        {
+            get => _nombre;
+            set => EstablecerPropiedad(ref _nombre, value);
+        }
+
+        /// <summary>
+        /// Apellido del usuario.
+        /// </summary>
+        public string Apellido
+        {
+            get => _apellido;
+            set => EstablecerPropiedad(ref _apellido, value);
+        }
+
+        /// <summary>
+        /// Correo electronico para contacto y validacion.
+        /// </summary>
+        public string Correo
+        {
+            get => _correo;
+            set => EstablecerPropiedad(ref _correo, value);
+        }
+
+        /// <summary>
+        /// Contrasena segura para la cuenta.
+        /// </summary>
+        public string Contrasena
+        {
+            get => _contrasena;
+            set => EstablecerPropiedad(ref _contrasena, value);
+        }
+
+        /// <summary>
+        /// Imagen del avatar seleccionado para mostrar en la vista.
+        /// </summary>
+        public ImageSource AvatarSeleccionadoImagen
+        {
+            get => _avatarSeleccionadoImagen;
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value);
+        }
+
+        /// <summary>
+        /// Identificador del avatar seleccionado.
+        /// </summary>
+        public int AvatarSeleccionadoId
+        {
+            get => _avatarSeleccionadoId;
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value);
+        }
+
+        /// <summary>
+        /// Indica si debe mostrarse un error visual en el campo de usuario.
+        /// </summary>
+        public bool MostrarErrorUsuario
+        {
+            get => _mostrarErrorUsuario;
+            private set => EstablecerPropiedad(ref _mostrarErrorUsuario, value);
+        }
+
+        /// <summary>
+        /// Indica si debe mostrarse un error visual en el campo de correo.
+        /// </summary>
+        public bool MostrarErrorCorreo
+        {
+            get => _mostrarErrorCorreo;
+            private set => EstablecerPropiedad(ref _mostrarErrorCorreo, value);
+        }
+
+        /// <summary>
+        /// Bloquea los comandos mientras se realiza una operacion de red.
+        /// </summary>
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -84,11 +174,35 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 }
             }
         }
+
+        /// <summary>
+        /// Comando que inicia el flujo de creacion de cuenta.
+        /// </summary>
         public IComandoAsincrono CrearCuentaComando { get; }
+
+        /// <summary>
+        /// Comando para cancelar el registro.
+        /// </summary>
         public ICommand CancelarComando { get; }
+
+        /// <summary>
+        /// Comando para abrir el dialogo de seleccion de avatar.
+        /// </summary>
         public IComandoAsincrono SeleccionarAvatarComando { get; }
+
+        /// <summary>
+        /// Accion para cerrar la ventana tras un registro exitoso.
+        /// </summary>
         public Action CerrarAccion { get; set; }
+
+        /// <summary>
+        /// Accion para indicar visualmente que campos fallaron la validacion.
+        /// </summary>
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
+
+        /// <summary>
+        /// Accion para mostrar mensajes informativos o de error al usuario.
+        /// </summary>
         public Action<string> MostrarMensaje { get; set; }
 
         private async Task CrearCuentaAsync()
@@ -97,14 +211,14 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             try
             {
                 var (esValido, solicitud) = ValidarEntradasYMostrarErrores();
-                if (!esValido) 
+                if (!esValido)
                 {
                     ManejadorSonido.ReproducirError();
                     return;
                 }
                 await EjecutarFlujoDeRegistroAsync(solicitud).ConfigureAwait(true);
             }
-            catch (ServicioExcepcion ex) 
+            catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoRegistrarCuentaMasTarde);
@@ -119,48 +233,56 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         {
             MostrarErrorUsuario = false;
             MostrarErrorCorreo = false;
-            MostrarCamposInvalidos?.Invoke(Array.Empty<string>()); 
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
 
             var (solicitud, camposInvalidos, primerMensajeError) = LimpiarYValidarEntradas();
 
-            if (camposInvalidos.Count == 0) 
+            if (camposInvalidos.Count == 0)
             {
                 return (true, solicitud);
             }
-            MostrarCamposInvalidos?.Invoke(camposInvalidos); 
-            string mensajeMostrar = camposInvalidos.Count > 1 ? Lang.errorTextoCamposInvalidosGenerico : primerMensajeError; 
+            MostrarCamposInvalidos?.Invoke(camposInvalidos);
+            string mensajeMostrar = camposInvalidos.Count > 1
+                ? Lang.errorTextoCamposInvalidosGenerico
+                : primerMensajeError;
             MostrarMensaje?.Invoke(mensajeMostrar ?? Lang.errorTextoCamposInvalidosGenerico);
             return (false, null);
         }
 
         private async Task EjecutarFlujoDeRegistroAsync(DTOs.NuevaCuentaDTO solicitud)
         {
-            var (codigoEnviado, resultadoSolicitud, errorDuplicado) = await SolicitarCodigoRegistroYValidarRespuesta(solicitud).ConfigureAwait(true);
-            if (!codigoEnviado) 
+            var (codigoEnviado, resultadoSolicitud, errorDuplicado) =
+                await SolicitarCodigoRegistroYValidarRespuesta(solicitud).ConfigureAwait(true);
+
+            if (!codigoEnviado)
             {
                 ManejadorSonido.ReproducirError();
-                if (errorDuplicado) 
+                if (errorDuplicado)
                 {
                     MostrarErroresCamposDuplicados();
                 }
                 return;
             }
-            
-            var (verificacionExitosa, _) = await MostrarDialogoVerificacionYValidarRespuesta(resultadoSolicitud).ConfigureAwait(true);
-            if (!verificacionExitosa) 
+
+            var (verificacionExitosa, _) = await MostrarDialogoVerificacionYValidarRespuesta(
+                resultadoSolicitud).ConfigureAwait(true);
+
+            if (!verificacionExitosa)
             {
                 ManejadorSonido.ReproducirError();
                 return;
             }
 
-            var (registroExitoso, _) = await RegistrarCuentaYValidarRespuesta(solicitud).ConfigureAwait(true);
-            if (registroExitoso) 
+            var (registroExitoso, _) = await RegistrarCuentaYValidarRespuesta(solicitud)
+                .ConfigureAwait(true);
+
+            if (registroExitoso)
             {
                 ManejadorSonido.ReproducirExito();
-                MostrarMensaje?.Invoke(Lang.crearCuentaTextoExitosoMensaje); 
-                CerrarAccion?.Invoke(); 
+                MostrarMensaje?.Invoke(Lang.crearCuentaTextoExitosoMensaje);
+                CerrarAccion?.Invoke();
             }
-            else 
+            else
             {
                 ManejadorSonido.ReproducirError();
                 MostrarErroresCamposDuplicados();
@@ -170,27 +292,33 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private void MostrarErroresCamposDuplicados()
         {
             var camposDuplicados = new List<string>();
-            if (MostrarErrorUsuario) camposDuplicados.Add(nameof(Usuario)); 
-            if (MostrarErrorCorreo) camposDuplicados.Add(nameof(Correo)); 
-            MostrarCamposInvalidos?.Invoke(camposDuplicados); 
+            if (MostrarErrorUsuario) camposDuplicados.Add(nameof(Usuario));
+            if (MostrarErrorCorreo) camposDuplicados.Add(nameof(Correo));
+            MostrarCamposInvalidos?.Invoke(camposDuplicados);
         }
 
-        private (DTOs.NuevaCuentaDTO Solicitud, List<string> CamposInvalidos, string PrimerMensajeError) LimpiarYValidarEntradas()
+        private (DTOs.NuevaCuentaDTO Solicitud, List<string> CamposInvalidos,
+            string PrimerMensajeError) LimpiarYValidarEntradas()
         {
-            Usuario = Usuario?.Trim(); 
-            Nombre = Nombre?.Trim(); 
-            Apellido = Apellido?.Trim(); 
-            Correo = Correo?.Trim(); 
-            Contrasena = Contrasena?.Trim(); 
+            Usuario = Usuario?.Trim();
+            Nombre = Nombre?.Trim();
+            Apellido = Apellido?.Trim();
+            Correo = Correo?.Trim();
+            Contrasena = Contrasena?.Trim();
 
             var camposInvalidos = new List<string>();
             string primerMensajeError = null;
 
-            ValidarCampo(ValidacionEntrada.ValidarUsuario(Usuario), nameof(Usuario), camposInvalidos, ref primerMensajeError);
-            ValidarCampo(ValidacionEntrada.ValidarNombre(Nombre), nameof(Nombre), camposInvalidos, ref primerMensajeError);
-            ValidarCampo(ValidacionEntrada.ValidarApellido(Apellido), nameof(Apellido), camposInvalidos, ref primerMensajeError);
-            ValidarCampo(ValidacionEntrada.ValidarCorreo(Correo), nameof(Correo), camposInvalidos, ref primerMensajeError);
-            ValidarCampo(ValidacionEntrada.ValidarContrasena(Contrasena), nameof(Contrasena), camposInvalidos, ref primerMensajeError);
+            ValidarCampo(ValidacionEntrada.ValidarUsuario(Usuario), nameof(Usuario),
+                camposInvalidos, ref primerMensajeError);
+            ValidarCampo(ValidacionEntrada.ValidarNombre(Nombre), nameof(Nombre),
+                camposInvalidos, ref primerMensajeError);
+            ValidarCampo(ValidacionEntrada.ValidarApellido(Apellido), nameof(Apellido),
+                camposInvalidos, ref primerMensajeError);
+            ValidarCampo(ValidacionEntrada.ValidarCorreo(Correo), nameof(Correo),
+                camposInvalidos, ref primerMensajeError);
+            ValidarCampo(ValidacionEntrada.ValidarContrasena(Contrasena), nameof(Contrasena),
+                camposInvalidos, ref primerMensajeError);
 
             if (AvatarSeleccionadoId <= 0)
             {
@@ -198,7 +326,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 primerMensajeError ??= Lang.errorTextoSeleccionAvatarValido;
             }
 
-            if (camposInvalidos.Count > 0) 
+            if (camposInvalidos.Count > 0)
             {
                 return (null, camposInvalidos, primerMensajeError);
             }
@@ -215,7 +343,11 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             return (solicitud, camposInvalidos, primerMensajeError);
         }
 
-        private static void ValidarCampo(DTOs.ResultadoOperacionDTO resultado, string nombreCampo, List<string> invalidos, ref string primerError)
+        private static void ValidarCampo(
+            DTOs.ResultadoOperacionDTO resultado,
+            string nombreCampo,
+            List<string> invalidos,
+            ref string primerError)
         {
             if (resultado?.OperacionExitosa != true)
             {
@@ -224,7 +356,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             }
         }
 
-        private async Task<(bool CodigoEnviado, DTOs.ResultadoSolicitudCodigoDTO Resultado, bool ErrorDuplicado)>
+        private async Task<(bool CodigoEnviado, DTOs.ResultadoSolicitudCodigoDTO Resultado,
+            bool ErrorDuplicado)>
             SolicitarCodigoRegistroYValidarRespuesta(DTOs.NuevaCuentaDTO solicitud)
         {
             DTOs.ResultadoSolicitudCodigoDTO resultado = await _codigoVerificacionServicio
@@ -246,7 +379,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!resultado.CodigoEnviado)
             {
-                MostrarMensaje?.Invoke(resultado.Mensaje ?? Lang.errorTextoRegistrarCuentaMasTarde);
+                MostrarMensaje?.Invoke(resultado.Mensaje ??
+                    Lang.errorTextoRegistrarCuentaMasTarde);
                 return (false, resultado, false);
             }
 
@@ -254,10 +388,11 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         }
 
         private async Task<(bool VerificacionExitosa, DTOs.ResultadoRegistroCuentaDTO Resultado)>
-            MostrarDialogoVerificacionYValidarRespuesta(DTOs.ResultadoSolicitudCodigoDTO resultadoSolicitud)
+            MostrarDialogoVerificacionYValidarRespuesta(
+            DTOs.ResultadoSolicitudCodigoDTO resultadoSolicitud)
         {
-            DTOs.ResultadoRegistroCuentaDTO resultadoVerificacion = await _verificarCodigoDialogoServicio
-                .MostrarDialogoAsync(
+            DTOs.ResultadoRegistroCuentaDTO resultadoVerificacion =
+                await _verificarCodigoDialogoServicio.MostrarDialogoAsync(
                     Lang.cambiarContrasenaTextoCodigoVerificacion,
                     resultadoSolicitud.TokenCodigo,
                     _codigoVerificacionServicio).ConfigureAwait(true);
@@ -296,13 +431,13 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 }
                 else
                 {
-                    MostrarMensaje?.Invoke(resultadoRegistro.Mensaje ?? Lang.errorTextoRegistrarCuentaMasTarde);
+                    MostrarMensaje?.Invoke(resultadoRegistro.Mensaje ??
+                        Lang.errorTextoRegistrarCuentaMasTarde);
                     return (false, resultadoRegistro);
                 }
             }
             return (true, resultadoRegistro);
         }
-
 
         private void Cancelar()
         {

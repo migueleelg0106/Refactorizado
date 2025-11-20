@@ -3,10 +3,13 @@
 namespace PictionaryMusicalCliente
 {
     /// <summary>
-    /// Lógica de interacción para ComoJugar.xaml
+    /// Ventana informativa que muestra las instrucciones del juego.
     /// </summary>
     public partial class ComoJugar : Window
     {
+        /// <summary>
+        /// Inicializa la ventana de instrucciones.
+        /// </summary>
         public ComoJugar()
         {
             InitializeComponent();
@@ -14,7 +17,7 @@ namespace PictionaryMusicalCliente
 
         private void BotonRegresar(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

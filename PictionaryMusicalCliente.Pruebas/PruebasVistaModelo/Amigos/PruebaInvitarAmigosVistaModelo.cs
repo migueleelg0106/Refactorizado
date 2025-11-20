@@ -20,7 +20,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
     {
         private Mock<IInvitacionesServicio> _mockInvitaciones;
         private Mock<IPerfilServicio> _mockPerfil;
-        private InvitarAmigosVistaModelo _viewModel;
+        private InvitarAmigosVistaModelo _vistaModelo;
         private List<DTOs.AmigoDTO> _listaAmigos;
         private const string CodigoSala = "SALA123";
 
@@ -40,7 +40,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
 
             AvisoAyudante.DefinirMostrarAviso((_) => { });
 
-            _viewModel = new InvitarAmigosVistaModelo(
+            _vistaModelo = new InvitarAmigosVistaModelo(
                 _listaAmigos,
                 _mockInvitaciones.Object,
                 _mockPerfil.Object,
@@ -54,7 +54,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         [TestMethod]
@@ -128,7 +128,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         public async Task InvitarAsync_ItemNulo_NoHaceNada()
         {
             var metodo = typeof(InvitarAmigosVistaModelo).GetMethod("InvitarAsync", BindingFlags.NonPublic | BindingFlags.Instance);
-            await (Task)metodo.Invoke(_viewModel, new object[] { null });
+            await (Task)metodo.Invoke(_vistaModelo, new object[] { null });
 
             _mockPerfil.Verify(p => p.ObtenerPerfilAsync(It.IsAny<int>()), Times.Never);
         }
@@ -296,7 +296,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [ExpectedException(typeof(ArgumentNullException))]
         public void Item_Constructor_AmigoNulo_LanzaExcepcion()
         {
-            new AmigoInvitacionItemVistaModelo(null, _viewModel, false);
+            new AmigoInvitacionItemVistaModelo(null, _vistaModelo, false);
         }
 
         [TestMethod]
@@ -309,7 +309,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestMethod]
         public void Item_TextoBoton_CambiaCorrectamente()
         {
-            var item = new AmigoInvitacionItemVistaModelo(new DTOs.AmigoDTO(), _viewModel, false);
+            var item = new AmigoInvitacionItemVistaModelo(new DTOs.AmigoDTO(), _vistaModelo, false);
             Assert.AreEqual(Lang.globalTextoInvitar, item.TextoBoton);
 
             var prop = item.GetType().GetProperty("InvitacionEnviada");
@@ -321,7 +321,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         [TestMethod]
         public void Item_EstaProcesando_NotificaComando()
         {
-            var item = new AmigoInvitacionItemVistaModelo(new DTOs.AmigoDTO(), _viewModel, false);
+            var item = new AmigoInvitacionItemVistaModelo(new DTOs.AmigoDTO(), _vistaModelo, false);
             Assert.IsTrue(item.InvitarComando.CanExecute(null));
 
             item.EstaProcesando = true;

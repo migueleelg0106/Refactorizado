@@ -4,8 +4,14 @@ using System.Windows.Media;
 
 namespace PictionaryMusicalCliente.Utilidades
 {
+    /// <summary>
+    /// Provee metodos auxiliares para manipular la apariencia de controles visuales.
+    /// </summary>
     public static class ControlVisual
     {
+        /// <summary>
+        /// Elimina los estilos de error (borde rojo) aplicados a un control.
+        /// </summary>
         public static void RestablecerEstadoCampo(Control control)
         {
             if (control == null)
@@ -17,6 +23,9 @@ namespace PictionaryMusicalCliente.Utilidades
             control.ClearValue(Control.BorderThicknessProperty);
         }
 
+        /// <summary>
+        /// Aplica un estilo visual para indicar que el campo tiene un error de validacion.
+        /// </summary>
         public static void MarcarCampoInvalido(Control control)
         {
             if (control == null)

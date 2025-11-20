@@ -12,9 +12,11 @@
                 Padding="20" CornerRadius="3"
                 HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel Width="300">
-                <TextBlock
+
+                <TextBlock Text="{x:Static language:Lang.ajustesPartidaTextoSalirPartida}" 
                            FontFamily="Comic Sans MS" FontSize="22" FontWeight="Bold"
-                           TextAlignment="Center" Width="282" Height="50"><Run Text="{x:Static language:Lang.ajustesPartidaTextoSalirPartida}"/></TextBlock>
+                           TextAlignment="Center" Width="282" Height="50"/>
+
                 <TextBlock Text="{x:Static language:Lang.salirPartidaTextoConfirmación}"
                            FontFamily="Comic Sans MS" FontSize="14" FontWeight="Bold"
                            TextAlignment="Center" Margin="0,0,0,10"/>
@@ -43,4 +45,3 @@
         </Border>
     </Grid>
 </Window>
-

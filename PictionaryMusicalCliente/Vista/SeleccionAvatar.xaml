@@ -12,7 +12,6 @@
         <Border Background="White" BorderBrush="Gray" BorderThickness="2"
                 Padding="20" CornerRadius="3">
             <StackPanel>
-                <!-- ===== Avatares en 4x4 ===== -->
                 <ListBox x:Name="cuadroListaAvatares"
                          BorderThickness="0"
                          SelectionMode="Single"
@@ -21,7 +20,6 @@
                          HorizontalContentAlignment="Stretch">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <!-- 4 columnas × 4 filas -->
                             <UniformGrid Columns="4" Rows="4"/>
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
@@ -29,16 +27,13 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Image Source="{Binding Imagen}"
-                                   Width="64"
-                                   Height="64"
-                                   Margin="5"
-                                   Cursor="Hand"
+                                   Width="64" Height="64"
+                                   Margin="5" Cursor="Hand"
                                    ToolTip="{Binding Nombre}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <!-- Botón Aceptar -->
                 <Button x:Name="botonAceptarSeleccionAvatar"
                         Content="{x:Static language:Lang.globalTextoAceptar}"
                         Margin="0,14,0,0" Height="40" Width="140"

@@ -38,10 +38,10 @@
                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
                     <StackPanel Grid.Column="1" HorizontalAlignment="Right" Margin="20,0,0,0">
-                        <Ellipse Width="60" Height="60"
-                                 Stroke="Black" StrokeThickness="1">
+                        <Ellipse Width="60" Height="60" Stroke="Black" StrokeThickness="1">
                             <Ellipse.Fill>
-                                <ImageBrush Stretch="UniformToFill" ImageSource="{Binding AvatarSeleccionadoImagen}"/>
+                                <ImageBrush Stretch="UniformToFill" 
+                                            ImageSource="{Binding AvatarSeleccionadoImagen}"/>
                             </Ellipse.Fill>
                         </Ellipse>
 
@@ -49,7 +49,8 @@
                                Foreground="Blue" Cursor="Hand"
                                FontFamily="Comic Sans MS" HorizontalAlignment="Center">
                             <Label.InputBindings>
-                                <MouseBinding Gesture="LeftClick" Command="{Binding SeleccionarAvatarComando}"/>
+                                <MouseBinding Gesture="LeftClick" 
+                                              Command="{Binding SeleccionarAvatarComando}"/>
                             </Label.InputBindings>
                         </Label>
                     </StackPanel>
@@ -63,17 +64,23 @@
 
                     <StackPanel Grid.Column="0" Margin="10,0">
                         <Label Content="{x:Static language:Lang.globalTextoUsuario}"
-                               ContentStringFormat="{}{0}:" FontWeight="Bold" FontFamily="Comic Sans MS"/>
+                               ContentStringFormat="{}{0}:" FontWeight="Bold" 
+                               FontFamily="Comic Sans MS"/>
+
                         <TextBox x:Name="campoTextoUsuario" Height="25" FontFamily="Comic Sans MS"
                                  MaxLength="50"
                                  Text="{Binding Usuario, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Content="{x:Static language:Lang.errorTextoUsuarioEnUso}" Foreground="Red"
+
+                        <Label Content="{x:Static language:Lang.errorTextoUsuarioEnUso}" 
+                               Foreground="Red"
                                Visibility="{Binding MostrarErrorUsuario, Converter={StaticResource BooleanoVisibilidadConverter}}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Margin="10,0">
                         <Label Content="{x:Static language:Lang.globalTextoNombre}"
-                               ContentStringFormat="{}{0}:" FontWeight="Bold" FontFamily="Comic Sans MS"/>
+                               ContentStringFormat="{}{0}:" FontWeight="Bold" 
+                               FontFamily="Comic Sans MS"/>
+
                         <TextBox x:Name="campoTextoNombre" Height="25" FontFamily="Comic Sans MS"
                                  MaxLength="50"
                                  Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged}"/>
@@ -88,7 +95,9 @@
 
                     <StackPanel Grid.Column="0" Margin="10,0">
                         <Label Content="{x:Static language:Lang.globalTextoApellido}"
-                               ContentStringFormat="{}{0}:" FontWeight="Bold" FontFamily="Comic Sans MS"/>
+                               ContentStringFormat="{}{0}:" FontWeight="Bold" 
+                               FontFamily="Comic Sans MS"/>
+
                         <TextBox x:Name="campoTextoApellido" Height="25" FontFamily="Comic Sans MS"
                                  MaxLength="50"
                                  Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged}"/>
@@ -96,20 +105,26 @@
 
                     <StackPanel Grid.Column="1" Margin="10,0">
                         <Label Content="{x:Static language:Lang.globalTextoCorreo}"
-                               ContentStringFormat="{}{0}:" FontWeight="Bold" FontFamily="Comic Sans MS"/>
+                               ContentStringFormat="{}{0}:" FontWeight="Bold" 
+                               FontFamily="Comic Sans MS"/>
+
                         <TextBox x:Name="campoTextoCorreo" Height="25" FontFamily="Comic Sans MS"
                                  MaxLength="50"
                                  Text="{Binding Correo, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Content="{x:Static language:Lang.errorTextoCorreoEnUso}" Foreground="Red"
+
+                        <Label Content="{x:Static language:Lang.errorTextoCorreoEnUso}" 
+                               Foreground="Red"
                                Visibility="{Binding MostrarErrorCorreo, Converter={StaticResource BooleanoVisibilidadConverter}}"/>
                     </StackPanel>
                 </Grid>
 
                 <StackPanel Grid.Row="3" Margin="10,5,10,0">
                     <Label Content="{x:Static language:Lang.globalTextoContrasena}"
-                           ContentStringFormat="{}{0}:" FontWeight="Bold" FontFamily="Comic Sans MS"/>
-                    <PasswordBox x:Name="bloqueContrasenaContrasena" Height="25" FontFamily="Comic Sans MS"
-                                 MaxLength="15"
+                           ContentStringFormat="{}{0}:" FontWeight="Bold" 
+                           FontFamily="Comic Sans MS"/>
+
+                    <PasswordBox x:Name="campoContrasenaContrasena" Height="25" 
+                                 FontFamily="Comic Sans MS" MaxLength="15"
                                  PasswordChanged="PasswordBoxChanged"/>
                 </StackPanel>
 

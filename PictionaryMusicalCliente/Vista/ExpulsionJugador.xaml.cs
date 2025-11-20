@@ -5,17 +5,25 @@ using PictionaryMusicalCliente.VistaModelo.Salas;
 namespace PictionaryMusicalCliente
 {
     /// <summary>
-    /// Lógica de interacción para ExpulsionJugador.xaml
+    /// Dialogo de confirmacion para expulsar a un jugador de la sala.
     /// </summary>
     public partial class ExpulsionJugador : Window
     {
         private readonly ExpulsionJugadorVistaModelo _vistaModelo;
 
+        /// <summary>
+        /// Inicializa el dialogo con un mensaje predeterminado.
+        /// </summary>
+        /// <param name="mensajeConfirmacion">El texto a mostrar en el dialogo.</param>
         public ExpulsionJugador(string mensajeConfirmacion)
             : this(new ExpulsionJugadorVistaModelo(mensajeConfirmacion))
         {
         }
 
+        /// <summary>
+        /// Inicializa el dialogo inyectando la logica de vista.
+        /// </summary>
+        /// <param name="vistaModelo">Modelo de vista de expulsion.</param>
         public ExpulsionJugador(ExpulsionJugadorVistaModelo vistaModelo)
         {
             _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));

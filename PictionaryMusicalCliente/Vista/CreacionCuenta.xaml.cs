@@ -9,10 +9,16 @@ using PictionaryMusicalCliente.VistaModelo.InicioSesion;
 
 namespace PictionaryMusicalCliente
 {
+    /// <summary>
+    /// Ventana de registro para nuevos usuarios.
+    /// </summary>
     public partial class CreacionCuenta : Window
     {
         private readonly CreacionCuentaVistaModelo _vistaModelo;
 
+        /// <summary>
+        /// Inicializa la ventana de registro con todas sus dependencias de servicio.
+        /// </summary>
         public CreacionCuenta()
         {
             InitializeComponent();
@@ -49,7 +55,7 @@ namespace PictionaryMusicalCliente
             ControlVisual.RestablecerEstadoCampo(campoTextoNombre);
             ControlVisual.RestablecerEstadoCampo(campoTextoApellido);
             ControlVisual.RestablecerEstadoCampo(campoTextoCorreo);
-            ControlVisual.RestablecerEstadoCampo(bloqueContrasenaContrasena);
+            ControlVisual.RestablecerEstadoCampo(campoContrasenaContrasena);
 
             if (camposInvalidos == null)
             {
@@ -78,7 +84,7 @@ namespace PictionaryMusicalCliente
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Contrasena)))
             {
-                ControlVisual.MarcarCampoInvalido(bloqueContrasenaContrasena);
+                ControlVisual.MarcarCampoInvalido(campoContrasenaContrasena);
             }
         }
     }

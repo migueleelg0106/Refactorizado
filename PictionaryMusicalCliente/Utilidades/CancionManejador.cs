@@ -4,19 +4,31 @@ using System.Windows.Media;
 
 namespace PictionaryMusicalCliente.Utilidades
 {
+    /// <summary>
+    /// Maneja la reproduccion de canciones especificas del juego.
+    /// </summary>
     public class CancionManejador : IDisposable
     {
         private readonly MediaPlayer _reproductor;
         private bool _desechado;
 
+        /// <summary>
+        /// Obtiene o establece el volumen de la reproduccion (0.0 a 1.0).
+        /// </summary>
         public double Volumen
         {
             get => _reproductor.Volume;
             set => _reproductor.Volume = Math.Max(0, Math.Min(1, value));
         }
 
+        /// <summary>
+        /// Indica si actualmente se esta reproduciendo una cancion.
+        /// </summary>
         public bool EstaReproduciendo { get; private set; }
 
+        /// <summary>
+        /// Inicializa una nueva instancia del manejador de canciones.
+        /// </summary>
         public CancionManejador()
         {
             _reproductor = new MediaPlayer();
@@ -27,14 +39,22 @@ namespace PictionaryMusicalCliente.Utilidades
         /// <summary>
         /// Reproduce una canción ubicada en la carpeta 'Recursos'.
         /// </summary>
-        /// <param name="nombreArchivo">Nombre del archivo con extensión (ej. "cancion.mp3")</param>
+        /// <param name="nombreArchivo">Nombre del archivo con extensión (ej. "cancion.mp3")
+        /// </param>
         public void Reproducir(string nombreArchivo)
         {
-            if (string.IsNullOrWhiteSpace(nombreArchivo)) return;
+            if (string.IsNullOrWhiteSpace(nombreArchivo))
+            {
+                return;
+            }
 
             try
             {
-                string rutaCompleta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Recursos", "Canciones", nombreArchivo);
+                string rutaCompleta = Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "Recursos",
+                    "Canciones",
+                    nombreArchivo);
 
                 if (File.Exists(rutaCompleta))
                 {
@@ -44,7 +64,8 @@ namespace PictionaryMusicalCliente.Utilidades
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Archivo de audio no encontrado: {rutaCompleta}");
+                    System.Diagnostics.Debug.WriteLine(
+                        $"Archivo de audio no encontrado: {rutaCompleta}");
                 }
             }
             catch (Exception ex)
@@ -62,12 +83,16 @@ namespace PictionaryMusicalCliente.Utilidades
             EstaReproduciendo = false;
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Libera los recursos del reproductor.
+        /// </summary>
         protected virtual void Dispose(bool disposing)
         {
             if (!_desechado)

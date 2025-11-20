@@ -22,7 +22,11 @@ namespace PictionaryMusicalCliente.Convertidores
         public bool ColapsarCuandoEsFalso { get; set; } = true;
 
         /// <inheritdoc />
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(
+            object value,
+            Type targetType,
+            object parameter,
+            CultureInfo culture)
         {
             bool tieneContenido = !string.IsNullOrWhiteSpace(value as string);
 
@@ -40,7 +44,11 @@ namespace PictionaryMusicalCliente.Convertidores
         }
 
         /// <inheritdoc />
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(
+            object value,
+            Type targetType,
+            object parameter,
+            CultureInfo culture)
         {
             return Binding.DoNothing;
         }

@@ -10,16 +10,21 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente
 {
+    /// <summary>
+    /// Ventana principal (Lobby) que gestiona la creacion de partidas, amigos y navegacion.
+    /// </summary>
     public partial class VentanaPrincipal : Window
     {
         private readonly MusicaManejador _servicioMusica;
-
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IAmigosServicio _amigosServicio;
         private readonly ISalasServicio _salasServicio;
-        private bool _abrioVentanaJuego;
         private readonly VentanaPrincipalVistaModelo _vistaModelo;
+        private bool _abrioVentanaJuego;
 
+        /// <summary>
+        /// Inicializa la ventana principal y sus servicios dependientes.
+        /// </summary>
         public VentanaPrincipal()
         {
             InitializeComponent();

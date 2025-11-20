@@ -9,16 +9,26 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
+    /// <summary>
+    /// Gestiona la autenticacion del usuario en el sistema.
+    /// </summary>
     public class InicioSesionServicio : IInicioSesionServicio
     {
         private const string Endpoint = "BasicHttpBinding_IInicioSesionManejador";
 
-        public async Task<DTOs.ResultadoInicioSesionDTO> IniciarSesionAsync(DTOs.CredencialesInicioSesionDTO solicitud)
+        /// <summary>
+        /// Valida las credenciales del usuario e inicia la sesion local si es correcto.
+        /// </summary>
+        public async Task<DTOs.ResultadoInicioSesionDTO> IniciarSesionAsync(
+            DTOs.CredencialesInicioSesionDTO solicitud)
         {
             if (solicitud == null)
+            {
                 throw new ArgumentNullException(nameof(solicitud));
+            }
 
-            var cliente = new PictionaryServidorServicioInicioSesion.InicioSesionManejadorClient(Endpoint);
+            var cliente = new PictionaryServidorServicioInicioSesion
+                .InicioSesionManejadorClient(Endpoint);
 
             try
             {
@@ -27,36 +37,58 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     .ConfigureAwait(false);
 
                 if (resultadoDto == null)
+                {
                     return null;
+                }
 
                 UsuarioMapeador.ActualizarSesion(resultadoDto.Usuario);
-                    resultadoDto.Mensaje = MensajeServidorAyudante.Localizar(resultadoDto.Mensaje, resultadoDto.Mensaje);
+
+                // Traduccion del mensaje recibido
+                resultadoDto.Mensaje = MensajeServidorAyudante.Localizar(
+                    resultadoDto.Mensaje,
+                    resultadoDto.Mensaje);
 
                 if (resultadoDto.Usuario != null)
+                {
                     UsuarioAutenticado.Instancia.CargarDesdeDTO(resultadoDto.Usuario);
+                }
 
                 return resultadoDto;
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoServidorInicioSesion);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                    ex,
+                    Lang.errorTextoServidorInicioSesion);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
             }
             catch (TimeoutException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.TiempoAgotado,
+                    Lang.errorTextoServidorTiempoAgotado,
+                    ex);
             }
             catch (CommunicationException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
             }
             catch (InvalidOperationException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.OperacionInvalida,
+                    Lang.errorTextoErrorProcesarSolicitud,
+                    ex);
             }
         }
     }

@@ -18,6 +18,9 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 {
+    /// <summary>
+    /// Controla la logica de la pantalla de inicio de sesion y recuperacion de cuenta.
+    /// </summary>
     public class InicioSesionVistaModelo : BaseVistaModelo
     {
         private readonly IInicioSesionServicio _inicioSesionServicio;
@@ -26,6 +29,9 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private readonly ILocalizacionServicio _localizacionServicio;
         private readonly Func<ISalasServicio> _salasServicioFactory;
 
+        /// <summary>
+        /// Nombre de la propiedad de contrasena para validaciones.
+        /// </summary>
         public const string CampoContrasena = "Contrasena";
 
         private string _identificador;
@@ -34,6 +40,9 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private ObservableCollection<IdiomaOpcion> _idiomasDisponibles;
         private IdiomaOpcion _idiomaSeleccionado;
 
+        /// <summary>
+        /// Inicializa el ViewModel con los servicios requeridos.
+        /// </summary>
         public InicioSesionVistaModelo(
             IInicioSesionServicio inicioSesionServicio,
             ICambioContrasenaServicio cambioContrasenaServicio,
@@ -41,11 +50,16 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             ILocalizacionServicio localizacionServicio,
             Func<ISalasServicio> salasServicioFactory)
         {
-            _inicioSesionServicio = inicioSesionServicio ?? throw new ArgumentNullException(nameof(inicioSesionServicio));
-            _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
-            _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
-            _localizacionServicio = localizacionServicio ?? throw new ArgumentNullException(nameof(localizacionServicio));
-            _salasServicioFactory = salasServicioFactory ?? throw new ArgumentNullException(nameof(salasServicioFactory));
+            _inicioSesionServicio = inicioSesionServicio ?? 
+                throw new ArgumentNullException(nameof(inicioSesionServicio));
+            _cambioContrasenaServicio = cambioContrasenaServicio ?? 
+                throw new ArgumentNullException(nameof(cambioContrasenaServicio));
+            _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ?? 
+                throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
+            _localizacionServicio = localizacionServicio ?? 
+                throw new ArgumentNullException(nameof(localizacionServicio));
+            _salasServicioFactory = salasServicioFactory ?? 
+                throw new ArgumentNullException(nameof(salasServicioFactory));
 
             IniciarSesionComando = new ComandoAsincrono(async _ =>
             {
@@ -74,8 +88,27 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             CargarIdiomas();
         }
 
-        public string Identificador { get => _identificador; set => EstablecerPropiedad(ref _identificador, value); }
-        public ObservableCollection<IdiomaOpcion> IdiomasDisponibles { get => _idiomasDisponibles; private set => EstablecerPropiedad(ref _idiomasDisponibles, value); }
+        /// <summary>
+        /// Correo electronico o nombre de usuario.
+        /// </summary>
+        public string Identificador 
+        { 
+            get => _identificador; 
+            set => EstablecerPropiedad(ref _identificador, value); 
+        }
+
+        /// <summary>
+        /// Lista de idiomas disponibles para internacionalización.
+        /// </summary>
+        public ObservableCollection<IdiomaOpcion> IdiomasDisponibles 
+        { 
+            get => _idiomasDisponibles; 
+            private set => EstablecerPropiedad(ref _idiomasDisponibles, value); 
+        }
+
+        /// <summary>
+        /// Idioma seleccionado de la lista de idiomas.
+        /// </summary>
         public IdiomaOpcion IdiomaSeleccionado
         {
             get => _idiomaSeleccionado;
@@ -87,6 +120,11 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 }
             }
         }
+        /// <summary>
+        /// Indica si existe una operación de red o lógica en curso.
+        /// Al cambiar su valor, notifica a los comandos para bloquear o desbloquear la 
+        /// interacción en la interfaz.
+        /// </summary>
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -100,18 +138,68 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 }
             }
         }
+
+        /// <summary>
+        /// Comando asíncrono encargado de validar las credenciales e iniciar la sesión del 
+        /// usuario.
+        /// </summary>
         public IComandoAsincrono IniciarSesionComando { get; }
+
+        /// <summary>
+        /// Comando asíncrono para iniciar el flujo de recuperación de contraseña en caso de 
+        /// olvido.
+        /// </summary>
         public IComandoAsincrono RecuperarCuentaComando { get; }
+
+        /// <summary>
+        /// Comando para navegar hacia la ventana de registro de una nueva cuenta.
+        /// </summary>
         public ICommand AbrirCrearCuentaComando { get; }
+
+        /// <summary>
+        /// Comando asíncrono para permitir el acceso limitado como invitado para unirse a una 
+        /// partida.
+        /// </summary>
         public IComandoAsincrono IniciarSesionInvitadoComando { get; }
+
+        /// <summary>
+        /// Delegado que invoca la apertura visual de la ventana de creación de cuenta.
+        /// </summary>
         public Action AbrirCrearCuenta { get; set; }
+
+        /// <summary>
+        /// Delegado que se ejecuta tras un inicio de sesión exitoso, transportando los datos del 
+        /// usuario autenticado.
+        /// </summary>
         public Action<DTOs.ResultadoInicioSesionDTO> InicioSesionCompletado { get; set; }
+
+        /// <summary>
+        /// Delegado para solicitar el cierre de la ventana actual desde la lógica de negocio.
+        /// </summary>
         public Action CerrarAccion { get; set; }
+
+        /// <summary>
+        /// Delegado para notificar a la vista qué campos específicos fallaron la validación para 
+        /// resaltar su borde.
+        /// </summary>
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
+
+        /// <summary>
+        /// Delegado para mostrar el diálogo de ingreso de código de sala para usuarios invitados.
+        /// </summary>
         public Action<IngresoPartidaInvitadoVistaModelo> MostrarIngresoInvitado { get; set; }
+
+        /// <summary>
+        /// Delegado para realizar la navegación a la ventana de juego una vez que el invitado se 
+        /// ha unido exitosamente.
+        /// </summary>
         public Action<DTOs.SalaDTO, ISalasServicio, string> AbrirVentanaJuegoInvitado { get; set; }
 
-
+        /// <summary>
+        /// Asigna manualmente la contraseña desde el control PasswordBox para evitar el enlace de
+        /// datos inseguro.
+        /// </summary>
+        /// <param name="contrasena">La contraseña en texto plano capturada del control.</param>
         public void EstablecerContrasena(string contrasena)
         {
             _contrasena = contrasena;
@@ -132,7 +220,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                     return Task.CompletedTask;
                 }
 
-                var vistaModelo = new IngresoPartidaInvitadoVistaModelo(_localizacionServicio, salasServicio);
+                var vistaModelo = new IngresoPartidaInvitadoVistaModelo(_localizacionServicio, 
+                    salasServicio);
 
                 vistaModelo.SalaUnida = (sala, nombreInvitado) =>
                 {
@@ -286,9 +375,11 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             try
             {
                 DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
-                    .RecuperarCuentaAsync(identificador, _cambioContrasenaServicio).ConfigureAwait(true);
+                    .RecuperarCuentaAsync(identificador, _cambioContrasenaServicio).
+                    ConfigureAwait(true);
 
-                if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
+                if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace
+                    (resultado.Mensaje))
                 {
                     ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(resultado.Mensaje);
@@ -297,7 +388,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
-                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorSolicitudCambioContrasena);
+                AvisoAyudante.Mostrar(ex.Message ?? 
+                    Lang.errorTextoServidorSolicitudCambioContrasena);
             }
             finally
             {
@@ -350,7 +442,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             }
 
             IdiomaSeleccionado = IdiomasDisponibles
-                .FirstOrDefault(i => string.Equals(i.Codigo, culturaActual, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault(i => string.Equals(i.Codigo, culturaActual, 
+                StringComparison.OrdinalIgnoreCase))
                 ?? IdiomasDisponibles.FirstOrDefault();
         }
     }

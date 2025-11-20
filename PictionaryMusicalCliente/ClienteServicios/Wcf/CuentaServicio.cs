@@ -8,16 +8,26 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
+    /// <summary>
+    /// Servicio encargado de la creacion de nuevas cuentas de usuario.
+    /// </summary>
     public class CuentaServicio : ICuentaServicio
     {
         private const string CuentaEndpoint = "BasicHttpBinding_ICuentaManejador";
 
-        public async Task<DTOs.ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(DTOs.NuevaCuentaDTO solicitud)
+        /// <summary>
+        /// Envia una solicitud de registro al servidor.
+        /// </summary>
+        public async Task<DTOs.ResultadoRegistroCuentaDTO> RegistrarCuentaAsync(
+            DTOs.NuevaCuentaDTO solicitud)
         {
             if (solicitud == null)
+            {
                 throw new ArgumentNullException(nameof(solicitud));
+            }
 
-            var cliente = new PictionaryServidorServicioCuenta.CuentaManejadorClient(CuentaEndpoint);
+            var cliente = new PictionaryServidorServicioCuenta.CuentaManejadorClient
+                (CuentaEndpoint);
 
             try
             {
@@ -27,24 +37,38 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoRegistrarCuentaMasTarde);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                    ex,
+                    Lang.errorTextoRegistrarCuentaMasTarde);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
             }
             catch (TimeoutException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.TiempoAgotado,
+                    Lang.errorTextoServidorTiempoAgotado,
+                    ex);
             }
             catch (CommunicationException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
             }
             catch (InvalidOperationException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.OperacionInvalida,
+                    Lang.errorTextoErrorProcesarSolicitud,
+                    ex);
             }
         }
     }

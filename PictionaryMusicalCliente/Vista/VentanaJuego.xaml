@@ -21,10 +21,15 @@
 
         <StackPanel Grid.Column="0" Margin="8" Background="Wheat">
 
-            <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2"  CornerRadius="3">
+            <Border Margin="6" Background="White" BorderBrush="Black" 
+                    BorderThickness="2" CornerRadius="3">
                 <StackPanel>
-                    <TextBlock Text="{x:Static language:Lang.partidaTextoJugadores}" FontWeight="Bold" FontFamily="Comic Sans MS" HorizontalAlignment="Center" Margin="4"/>
-                    <ItemsControl ItemsSource="{Binding Jugadores}" FontFamily="Comic Sans MS" Margin="4">
+                    <TextBlock Text="{x:Static language:Lang.partidaTextoJugadores}" 
+                               FontWeight="Bold" FontFamily="Comic Sans MS" 
+                               HorizontalAlignment="Center" Margin="4"/>
+
+                    <ItemsControl ItemsSource="{Binding Jugadores}" FontFamily="Comic Sans MS" 
+                                  Margin="4">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="2">
@@ -32,16 +37,16 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Nombre}" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="1"
-                                            Background="Transparent"
+
+                                    <TextBlock Grid.Column="0" Text="{Binding Nombre}" 
+                                               VerticalAlignment="Center"/>
+
+                                    <Button Grid.Column="1" Background="Transparent"
                                             BorderThickness="0"
                                             Command="{Binding ExpulsarComando}"
                                             Visibility="{Binding MostrarBotonExpulsar, Converter={StaticResource BooleanoVisibilidadColapsar}}"
-                                            Cursor="Hand"
-                                            ToolTip="Expulsar jugador">
-                                        <Image Source="/Recursos/Rechazar.png"
-                                               Width="18"
+                                            Cursor="Hand" ToolTip="Expulsar jugador">
+                                        <Image Source="/Recursos/Rechazar.png" Width="18" 
                                                Height="18"/>
                                     </Button>
                                 </Grid>
@@ -53,32 +58,46 @@
 
             <Button Margin="6"
                     Content="{x:Static language:Lang.invitarAmigosTextoInvitarAmigos}"
-                    FontFamily="Comic Sans MS"
-                    Background="LightGreen"
+                    FontFamily="Comic Sans MS" Background="LightGreen"
                     Command="{Binding InvitarAmigosComando}"
                     Visibility="{Binding PuedeInvitarAmigos, Converter={StaticResource BooleanoVisibilidadColapsar}}"/>
 
-            <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3"
-                    Visibility="{Binding PuedeInvitarPorCorreo, Converter={StaticResource BooleanoVisibilidadColapsar}}">
+            <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" 
+                    CornerRadius="3" Visibility="{Binding PuedeInvitarPorCorreo, Converter={StaticResource BooleanoVisibilidadColapsar}}">
                 <StackPanel Margin="8">
-                    <TextBlock Text="{x:Static language:Lang.globalTextoCorreo}" FontWeight="Bold" Margin="0,0,0,6" HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
-                    <TextBox x:Name="campoTextoCorreoInvitacion" Height="28" Margin="0,0,0,6" MaxLength="50" Text="{Binding CorreoInvitacion, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Content="{x:Static language:Lang.partidaAdminTextoInvitarCorreo}" Background="LightGreen" FontFamily="Comic Sans MS" Command="{Binding InvitarCorreoComando}"/>
+                    <TextBlock Text="{x:Static language:Lang.globalTextoCorreo}" FontWeight="Bold" 
+                               Margin="0,0,0,6" HorizontalAlignment="Center" 
+                               FontFamily="Comic Sans MS"/>
+
+                    <TextBox x:Name="campoTextoCorreoInvitacion" Height="28" Margin="0,0,0,6" 
+                             MaxLength="50" Text="{Binding CorreoInvitacion, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Button Content="{x:Static language:Lang.partidaAdminTextoInvitarCorreo}" 
+                            Background="LightGreen" FontFamily="Comic Sans MS" 
+                            Command="{Binding InvitarCorreoComando}"/>
                 </StackPanel>
             </Border>
 
-            <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="3">
+            <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" 
+                    CornerRadius="3">
                 <StackPanel Margin="8">
-                    <TextBlock Text="{x:Static language:Lang.partidaTextoCodigo}" FontWeight="Bold" Margin="0,0,0,6" HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
-                    <TextBlock Text="{Binding CodigoSala}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
+                    <TextBlock Text="{x:Static language:Lang.partidaTextoCodigo}" FontWeight="Bold" 
+                               Margin="0,0,0,6" HorizontalAlignment="Center" 
+                               FontFamily="Comic Sans MS"/>
+
+                    <TextBlock Text="{Binding CodigoSala}" FontSize="16" FontWeight="Bold" 
+                               HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
                 </StackPanel>
             </Border>
+
             <Button Content="Dibujante" Command="{Binding MostrarOverlayDibujanteComando}"/>
             <Button Content="Adivinador" Command="{Binding MostrarOverlayAdivinadorComando}"/>
 
             <StackPanel Margin="10,220,0,0">
-                <Button Name="botonAjustesPartida" Content="{x:Static language:Lang.globalTextoAjustes}" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
-                Height="35" Width="107" FontFamily="Comic Sans MS" Command="{Binding AbrirAjustesComando}"/>
+                <Button Name="botonAjustesPartida" Content="{x:Static language:Lang.globalTextoAjustes}" 
+                        FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+                        Height="35" Width="107" FontFamily="Comic Sans MS" 
+                        Command="{Binding AbrirAjustesComando}"/>
             </StackPanel>
 
         </StackPanel>
@@ -91,45 +110,28 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0" Background="Red" LastChildFill="False">
-
-                <!-- Texto: "Ronda" -->
                 <TextBlock Text="{x:Static language:Lang.partidaTextoRonda}" 
-               Foreground="Black" FontSize="18"
-               VerticalAlignment="Center" Margin="10,0,0,0"
-               FontFamily="Comic Sans MS"
-               DockPanel.Dock="Left"/>
+                           Foreground="Black" FontSize="18" VerticalAlignment="Center" 
+                           Margin="10,0,0,0" FontFamily="Comic Sans MS" DockPanel.Dock="Left"/>
 
-                <!-- Número de ronda -->
-                <TextBlock Text="3"
-               Foreground="Black" FontSize="18" FontWeight="Bold"
-               VerticalAlignment="Center" Margin="5,0,0,0"
-               FontFamily="Comic Sans MS"
-               DockPanel.Dock="Left"/>
+                <TextBlock Text="3" Foreground="Black" FontSize="18" FontWeight="Bold"
+                           VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Comic Sans MS"
+                           DockPanel.Dock="Left"/>
 
-                <!-- Contador circular -->
-                <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
+                <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" 
+                      VerticalAlignment="Center" Margin="0,0,20,0">
                     <Ellipse Width="50" Height="50" Fill="White" Stroke="Black" StrokeThickness="2"/>
-                    <TextBlock x:Name="txtContador"
-                   Text="{Binding TextoContador}"
-                   FontSize="20"
-                   FontWeight="Bold"
-                   Foreground="{Binding ColorContador}"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontFamily="Comic Sans MS"/>
+                    <TextBlock x:Name="txtContador" Text="{Binding TextoContador}" FontSize="20"
+                               FontWeight="Bold" Foreground="{Binding ColorContador}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontFamily="Comic Sans MS"/>
                 </Grid>
 
-                <!-- Texto centrado: nombre de lo que se dibuja -->
-                <TextBlock x:Name="campoTextoPalabraAdivinar"
-               Text="{Binding PalabraAdivinar}"
-               Foreground="Black"
-               FontSize="25"
-               FontWeight="Bold"
-               VerticalAlignment="Center"
-               HorizontalAlignment="Center"
-               FontFamily="Comic Sans MS"
-               DockPanel.Dock="Top"
-               Visibility="{Binding VisibilidadPalabraAdivinar}"/>
+                <TextBlock x:Name="campoTextoPalabraAdivinar" Text="{Binding PalabraAdivinar}"
+                           Foreground="Black" FontSize="25" FontWeight="Bold"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           FontFamily="Comic Sans MS" DockPanel.Dock="Top"
+                           Visibility="{Binding VisibilidadPalabraAdivinar}"/>
             </DockPanel>
 
             <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Background="White">
@@ -139,7 +141,8 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Grid x:Name="cuadriculaDibujo" Grid.Row="0" Visibility="{Binding VisibilidadCuadriculaDibujo}">
+                    <Grid x:Name="cuadriculaDibujo" Grid.Row="0" 
+                          Visibility="{Binding VisibilidadCuadriculaDibujo}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
@@ -147,44 +150,65 @@
 
                         <DockPanel Grid.Row="0" Margin="4">
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="0,0,8,0">
-                                <ToggleButton x:Name="toggleBotonLapiz" Content="✏️" Width="40" Height="32" Margin="0,0,4,0"
-                                              Cursor="Hand" IsChecked="{Binding EsHerramientaLapiz}" Command="{Binding SeleccionarLapizComando}"/>
-                                <ToggleButton x:Name="toggleBotonBorrador" Content="🧼" Width="40" Height="32" Margin="0,0,4,0"
-                                              Cursor="Hand" IsChecked="{Binding EsHerramientaBorrador}" Command="{Binding SeleccionarBorradorComando}"/>
-                                <Button x:Name="botonLimpiar" Content="🧹" Width="40" Height="32" Margin="0,0,4,0"
-                                        Command="{Binding LimpiarDibujoComando}"/>
+                                <ToggleButton x:Name="toggleBotonLapiz" Content="✏️" Width="40" Height="32" 
+                                              Margin="0,0,4,0" Cursor="Hand" 
+                                              IsChecked="{Binding EsHerramientaLapiz}" 
+                                              Command="{Binding SeleccionarLapizComando}"/>
+
+                                <ToggleButton x:Name="toggleBotonBorrador" Content="🧼" Width="40" Height="32" 
+                                              Margin="0,0,4,0" Cursor="Hand" 
+                                              IsChecked="{Binding EsHerramientaBorrador}" 
+                                              Command="{Binding SeleccionarBorradorComando}"/>
+
+                                <Button x:Name="botonLimpiar" Content="🧹" Width="40" Height="32" 
+                                        Margin="0,0,4,0" Command="{Binding LimpiarDibujoComando}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="0,0,8,0">
-                                <Button Tag="2" Command="{Binding CambiarGrosorComando}" CommandParameter="2" Width="28" Height="28" Margin="2">
+                                <Button Tag="2" Command="{Binding CambiarGrosorComando}" 
+                                        CommandParameter="2" Width="28" Height="28" Margin="2">
                                     <Ellipse Width="6" Height="6" Fill="Black"/>
                                 </Button>
-                                <Button Tag="6" Command="{Binding CambiarGrosorComando}" CommandParameter="6" Width="28" Height="28" Margin="2">
+                                <Button Tag="6" Command="{Binding CambiarGrosorComando}" 
+                                        CommandParameter="6" Width="28" Height="28" Margin="2">
                                     <Ellipse Width="12" Height="12" Fill="Black"/>
                                 </Button>
-                                <Button Tag="12" Command="{Binding CambiarGrosorComando}" CommandParameter="12" Width="28" Height="28" Margin="2">
+                                <Button Tag="12" Command="{Binding CambiarGrosorComando}" 
+                                        CommandParameter="12" Width="28" Height="28" Margin="2">
                                     <Ellipse Width="18" Height="18" Fill="Black"/>
                                 </Button>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                                <Button Tag="Black" Command="{Binding CambiarColorComando}" CommandParameter="Black" Width="28" Height="28" Margin="2">
-                                    <Ellipse Width="18" Height="18" Fill="Black" Stroke="#333" StrokeThickness="0.5"/>
+                                <Button Tag="Black" Command="{Binding CambiarColorComando}" 
+                                        CommandParameter="Black" Width="28" Height="28" Margin="2">
+                                    <Ellipse Width="18" Height="18" Fill="Black" Stroke="#333" 
+                                             StrokeThickness="0.5"/>
                                 </Button>
-                                <Button Tag="Red" Command="{Binding CambiarColorComando}" CommandParameter="Red" Width="28" Height="28" Margin="2">
-                                    <Ellipse Width="18" Height="18" Fill="Red" Stroke="#333" StrokeThickness="0.5"/>
+                                <Button Tag="Red" Command="{Binding CambiarColorComando}" 
+                                        CommandParameter="Red" Width="28" Height="28" Margin="2">
+                                    <Ellipse Width="18" Height="18" Fill="Red" Stroke="#333" 
+                                             StrokeThickness="0.5"/>
                                 </Button>
-                                <Button Tag="Blue" Command="{Binding CambiarColorComando}" CommandParameter="Blue" Width="28" Height="28" Margin="2">
-                                    <Ellipse Width="18" Height="18" Fill="Blue" Stroke="#333" StrokeThickness="0.5"/>
+                                <Button Tag="Blue" Command="{Binding CambiarColorComando}" 
+                                        CommandParameter="Blue" Width="28" Height="28" Margin="2">
+                                    <Ellipse Width="18" Height="18" Fill="Blue" Stroke="#333" 
+                                             StrokeThickness="0.5"/>
                                 </Button>
-                                <Button Tag="Green" Command="{Binding CambiarColorComando}" CommandParameter="Green" Width="28" Height="28" Margin="2">
-                                    <Ellipse Width="18" Height="18" Fill="Green" Stroke="#333" StrokeThickness="0.5"/>
+                                <Button Tag="Green" Command="{Binding CambiarColorComando}" 
+                                        CommandParameter="Green" Width="28" Height="28" Margin="2">
+                                    <Ellipse Width="18" Height="18" Fill="Green" Stroke="#333" 
+                                             StrokeThickness="0.5"/>
                                 </Button>
-                                <Button Tag="Orange" Command="{Binding CambiarColorComando}" CommandParameter="Orange" Width="28" Height="28" Margin="2">
-                                    <Ellipse Width="18" Height="18" Fill="Orange" Stroke="#333" StrokeThickness="0.5"/>
+                                <Button Tag="Orange" Command="{Binding CambiarColorComando}" 
+                                        CommandParameter="Orange" Width="28" Height="28" Margin="2">
+                                    <Ellipse Width="18" Height="18" Fill="Orange" Stroke="#333" 
+                                             StrokeThickness="0.5"/>
                                 </Button>
-                                <Button Tag="Purple" Command="{Binding CambiarColorComando}" CommandParameter="Purple" Width="28" Height="28" Margin="2">
-                                    <Ellipse Width="18" Height="18" Fill="Purple" Stroke="#333" StrokeThickness="0.5"/>
+                                <Button Tag="Purple" Command="{Binding CambiarColorComando}" 
+                                        CommandParameter="Purple" Width="28" Height="28" Margin="2">
+                                    <Ellipse Width="18" Height="18" Fill="Purple" Stroke="#333" 
+                                             StrokeThickness="0.5"/>
                                 </Button>
                             </StackPanel>
                         </DockPanel>
@@ -197,8 +221,7 @@
                             Content="{Binding TextoBotonIniciarPartida}"
                             IsEnabled="{Binding BotonIniciarPartidaHabilitado}"
                             Width="150" Height="42"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
                             Margin="0,8,0,10"
                             FontFamily="Comic Sans MS" FontWeight="Bold"
                             Background="White" BorderBrush="Black"
@@ -207,11 +230,8 @@
             </Border>
 
             <Grid x:Name="OverlayDibujante"
-                  Grid.Row="1"
-                  Visibility="{Binding VisibilidadOverlayDibujante}"
-                  Margin="20"
-                  Cursor="Hand"
-                  Background="Transparent"
+                  Grid.Row="1" Visibility="{Binding VisibilidadOverlayDibujante}"
+                  Margin="20" Cursor="Hand" Background="Transparent"
                   ToolTip="Clic para cerrar">
                 <Grid.InputBindings>
                     <MouseBinding MouseAction="LeftClick" Command="{Binding CerrarOverlayComando}"/>
@@ -221,21 +241,19 @@
 
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="{x:Static language:Lang.dibujanteTextoTitulo}" 
-                               FontFamily="Comic Sans MS" FontSize="36" FontWeight="Black" Foreground="Black"
-                               HorizontalAlignment="Center"/>
+                               FontFamily="Comic Sans MS" FontSize="36" FontWeight="Black" 
+                               Foreground="Black" HorizontalAlignment="Center"/>
 
                     <TextBlock Text="{x:Static language:Lang.dibujanteTextoContenido}" 
-                               FontFamily="Comic Sans MS" FontSize="10" FontStyle="Italic" Foreground="Black"
-                               HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0"/>
+                               FontFamily="Comic Sans MS" FontSize="10" FontStyle="Italic" 
+                               Foreground="Black" HorizontalAlignment="Center" 
+                               TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0"/>
                 </StackPanel>
             </Grid>
 
             <Grid x:Name="OverlayAdivinador"
-                  Grid.Row="1"
-                  Visibility="{Binding VisibilidadOverlayAdivinador}"
-                  Margin="20"
-                  Cursor="Hand"
-                  Background="Transparent"
+                  Grid.Row="1" Visibility="{Binding VisibilidadOverlayAdivinador}"
+                  Margin="20" Cursor="Hand" Background="Transparent"
                   ToolTip="Clic para cerrar">
                 <Grid.InputBindings>
                     <MouseBinding MouseAction="LeftClick" Command="{Binding CerrarOverlayComando}"/>
@@ -245,38 +263,28 @@
 
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="{x:Static language:Lang.adivinadorTextoTitulo}"
-                               FontFamily="Comic Sans MS" FontSize="36" FontWeight="Black" Foreground="Black"
-                               HorizontalAlignment="Center"/>
+                               FontFamily="Comic Sans MS" FontSize="36" FontWeight="Black" 
+                               Foreground="Black" HorizontalAlignment="Center"/>
 
                     <TextBlock Text="{x:Static language:Lang.adivinadorTextoContenido}"
-                               FontFamily="Comic Sans MS" FontSize="12" FontStyle="Italic" Foreground="Black"
-                               HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0"/>
+                               FontFamily="Comic Sans MS" FontSize="12" FontStyle="Italic" 
+                               Foreground="Black" HorizontalAlignment="Center" TextWrapping="Wrap" 
+                               TextAlignment="Center" Margin="0,10,0,0"/>
                 </StackPanel>
             </Grid>
-            
+
             <Grid Grid.Row="2" Background="Red">
-
-                <Grid x:Name="gridInfoCancion" 
-                      Background="Transparent"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
+                <Grid x:Name="gridInfoCancion" Background="Transparent"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"
                       Visibility="{Binding VisibilidadInfoCancion}">
-
                     <StackPanel VerticalAlignment="Center" Margin="10,0,10,0">
-                        <TextBlock x:Name="txtArtista"
-                                   Text="{Binding TextoArtista}"
-                                   Foreground="Black"
-                                   FontFamily="Comic Sans MS"
-                                   FontSize="16"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Center"
-                                   Margin="0,0,0,2"/>
-                        <TextBlock x:Name="txtGenero"
-                                   Text="{Binding TextoGenero}"
-                                   Foreground="Black"
-                                   FontFamily="Comic Sans MS"
-                                   FontSize="16"
-                                   FontWeight="Bold"
+                        <TextBlock x:Name="txtArtista" Text="{Binding TextoArtista}"
+                                   Foreground="Black" FontFamily="Comic Sans MS"
+                                   FontSize="16" FontWeight="Bold"
+                                   HorizontalAlignment="Center" Margin="0,0,0,2"/>
+                        <TextBlock x:Name="txtGenero" Text="{Binding TextoGenero}"
+                                   Foreground="Black" FontFamily="Comic Sans MS"
+                                   FontSize="16" FontWeight="Bold"
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
@@ -291,15 +299,17 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Background="LightYellow" BorderBrush="#FFD7D7A8" BorderThickness="1">
-                <TextBlock Text="{x:Static language:Lang.partidaTextoChat}" FontWeight="Bold" FontSize="16"
-                           VerticalAlignment="Center" Margin="8,0,0,0" FontFamily="Comic Sans MS"/>
+                <TextBlock Text="{x:Static language:Lang.partidaTextoChat}" FontWeight="Bold" 
+                           FontSize="16" VerticalAlignment="Center" Margin="8,0,0,0" 
+                           FontFamily="Comic Sans MS"/>
             </Border>
 
             <ScrollViewer Grid.Row="1" Background="White" BorderBrush="Black" BorderThickness="1">
                 <StackPanel x:Name="panelApilableChat" Margin="6"/>
             </ScrollViewer>
 
-            <TextBox Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1" MaxLength="200"/>
+            <TextBox Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1" 
+                     MaxLength="200"/>
         </Grid>
     </Grid>
 </Window>

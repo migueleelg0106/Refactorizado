@@ -7,7 +7,8 @@
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent">
     <Grid>
-        <Border Background="White" BorderBrush="Gray" BorderThickness="2" Padding="20" CornerRadius="3">
+        <Border Background="White" BorderBrush="Gray" BorderThickness="2" 
+                Padding="20" CornerRadius="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -15,20 +16,30 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{x:Static language:Lang.globalTextoClasificacion}" FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
 
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-                    <Button Content="{x:Static language:Lang.clasificacionTextoOrdenarRondas}" Margin="0,0,10,0" Padding="10,5"
-                            Background="White" BorderBrush="Black" FontFamily="Comic Sans MS" FontWeight="Bold"
-                            Command="{Binding OrdenarPorRondasComando}"/>
-                    <Button Content="{x:Static language:Lang.clasificacionTextoOrdenarPuntos}" Padding="10,5" Background="White"
+                <TextBlock Grid.Row="0" Text="{x:Static language:Lang.globalTextoClasificacion}" 
+                           FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold" 
+                           HorizontalAlignment="Center" Margin="0,0,0,15"/>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" 
+                            HorizontalAlignment="Center" Margin="0,0,0,10">
+
+                    <Button Content="{x:Static language:Lang.clasificacionTextoOrdenarRondas}" 
+                            Margin="0,0,10,0" Padding="10,5" Background="White" 
                             BorderBrush="Black" FontFamily="Comic Sans MS" FontWeight="Bold"
+                            Command="{Binding OrdenarPorRondasComando}"/>
+
+                    <Button Content="{x:Static language:Lang.clasificacionTextoOrdenarPuntos}" 
+                            Padding="10,5" Background="White" BorderBrush="Black" 
+                            FontFamily="Comic Sans MS" FontWeight="Bold"
                             Command="{Binding OrdenarPorPuntosComando}"/>
                 </StackPanel>
 
-                <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" FontFamily="Comic Sans MS" FontSize="14"
-                          HeadersVisibility="Column" CanUserAddRows="False" CanUserResizeRows="False" CanUserSortColumns="False"
-                          Margin="0,0,0,10" ItemsSource="{Binding Clasificacion}">
+                <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" 
+                          FontFamily="Comic Sans MS" FontSize="14" HeadersVisibility="Column" 
+                          CanUserAddRows="False" CanUserResizeRows="False" 
+                          CanUserSortColumns="False" Margin="0,0,0,10" 
+                          ItemsSource="{Binding Clasificacion}">
 
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
@@ -37,14 +48,21 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="{x:Static language:Lang.globalTextoUsuario}" Binding="{Binding Usuario}" Width="165"/>
-                        <DataGridTextColumn Header="{x:Static language:Lang.clasificacionTextoTotalRondas}" Binding="{Binding RondasGanadas}" Width="*"/>
-                        <DataGridTextColumn Header="{x:Static language:Lang.clasificacionTextoTotalPuntos}" Binding="{Binding Puntos}" Width="200"/>
+                        <DataGridTextColumn Header="{x:Static language:Lang.globalTextoUsuario}" 
+                                            Binding="{Binding Usuario}" Width="165"/>
+
+                        <DataGridTextColumn Header="{x:Static language:Lang.clasificacionTextoTotalRondas}" 
+                                            Binding="{Binding RondasGanadas}" Width="*"/>
+
+                        <DataGridTextColumn Header="{x:Static language:Lang.clasificacionTextoTotalPuntos}" 
+                                            Binding="{Binding Puntos}" Width="200"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Button Grid.Row="3" Content="{x:Static language:Lang.globalTextoRegresar}" Margin="0,20,0,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold"
-                        Background="White" BorderBrush="Black" Command="{Binding CerrarComando}"/>
+                <Button Grid.Row="3" Content="{x:Static language:Lang.globalTextoRegresar}" 
+                        Margin="0,20,0,0" Height="40" FontFamily="Comic Sans MS" 
+                        FontWeight="Bold" Background="White" BorderBrush="Black" 
+                        Command="{Binding CerrarComando}"/>
             </Grid>
         </Border>
     </Grid>

@@ -5,25 +5,40 @@ using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.Utilidades
 {
+    /// <summary>
+    /// Comportamiento adjunto para restringir la entrada de TextBoxes a solo numeros.
+    /// </summary>
     public static class EntradaNumerica
     {
-        public static readonly DependencyProperty SoloNumerosProperty = DependencyProperty.RegisterAttached(
-            "SoloNumeros",
-            typeof(bool),
-            typeof(EntradaNumerica),
-            new PropertyMetadata(false, OnSoloNumerosChanged));
+        /// <summary>
+        /// Identifica la propiedad adjunta SoloNumeros.
+        /// </summary>
+        public static readonly DependencyProperty SoloNumerosProperty =
+            DependencyProperty.RegisterAttached(
+                "SoloNumeros",
+                typeof(bool),
+                typeof(EntradaNumerica),
+                new PropertyMetadata(false, OnSoloNumerosChanged));
 
+        /// <summary>
+        /// Obtiene el valor de la propiedad SoloNumeros del objeto especificado.
+        /// </summary>
         public static bool GetSoloNumeros(DependencyObject objeto)
         {
             return objeto is not null && (bool)objeto.GetValue(SoloNumerosProperty);
         }
 
+        /// <summary>
+        /// Establece el valor de la propiedad SoloNumeros en el objeto especificado.
+        /// </summary>
         public static void SetSoloNumeros(DependencyObject objeto, bool valor)
         {
             objeto?.SetValue(SoloNumerosProperty, valor);
         }
 
-        private static void OnSoloNumerosChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnSoloNumerosChanged(
+            DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
         {
             if (d is not TextBox cuadroTexto)
             {
@@ -69,4 +84,3 @@ namespace PictionaryMusicalCliente.Utilidades
         }
     }
 }
-

@@ -12,16 +12,25 @@ using PictionaryMusicalCliente.VistaModelo.Perfil;
 
 namespace PictionaryMusicalCliente
 {
+    /// <summary>
+    /// Ventana de gestion del perfil de usuario.
+    /// </summary>
     public partial class Perfil : Window
     {
+        /// <summary>
+        /// Inicializa la ventana y carga los datos del perfil.
+        /// </summary>
         public Perfil()
         {
             InitializeComponent();
 
             IPerfilServicio perfilServicio = new PerfilServicio();
-            ISeleccionarAvatarServicio seleccionarAvatarServicio = new SeleccionAvatarDialogoServicio();
-            ICambioContrasenaServicio cambioContrasenaServicio = new CambioContrasenaServicio();
-            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio = new VerificacionCodigoDialogoServicio();
+            ISeleccionarAvatarServicio seleccionarAvatarServicio =
+                new SeleccionAvatarDialogoServicio();
+            ICambioContrasenaServicio cambioContrasenaServicio =
+                new CambioContrasenaServicio();
+            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio =
+                new VerificacionCodigoDialogoServicio();
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio =
                 new RecuperacionCuentaDialogoServicio(verificarCodigoDialogoServicio);
 
@@ -49,7 +58,9 @@ namespace PictionaryMusicalCliente
 
         private void PopupRedSocial_Opened(object sender, EventArgs e)
         {
-            if (sender is Popup popup && popup.Child is Border border && border.Child is TextBox textBox)
+            if (sender is Popup popup &&
+                popup.Child is Border border &&
+                border.Child is TextBox textBox)
             {
                 textBox.Focus();
                 textBox.CaretIndex = textBox.Text?.Length ?? 0;

@@ -759,7 +759,6 @@
   <data name="unirseSalaTextoVacio" xml:space="preserve">
     <value>Ingrese el código de una sala.</value>
   </data>
-<!-- Missing MensajesError constants -->
   <data name="ApellidoRegistroInvalido" xml:space="preserve">
     <value>El apellido es obligatorio y no debe exceder 50 caracteres.</value>
   </data>
@@ -997,7 +996,6 @@
   <data name="UsuariosEspecificadosNoExisten" xml:space="preserve">
     <value>Alguno de los usuarios especificados no existe.</value>
   </data>
-
   <data name="SolicitudAmistadMismoUsuario" xml:space="preserve">
     <value>No es posible enviarse una solicitud de amistad a sí mismo.</value>
   </data>
@@ -1015,5 +1013,8 @@
   </data>
   <data name="RelacionAmistadNoExiste" xml:space="preserve">
     <value>No existe una relación de amistad entre los usuarios.</value>
+  </data>
+  <data name="globalTextoAviso" xml:space="preserve">
+    <value>Aviso</value>
   </data>
 </root>

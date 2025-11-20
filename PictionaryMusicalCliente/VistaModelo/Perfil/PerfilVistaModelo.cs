@@ -1,17 +1,17 @@
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Modelo; 
-using PictionaryMusicalCliente.Modelo.Catalogos; 
+using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante; 
-using PictionaryMusicalCliente.Sesiones; 
-using PictionaryMusicalCliente.Utilidades; 
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using PictionaryMusicalCliente.Sesiones;
+using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq; 
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -20,6 +20,9 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Perfil
 {
+    /// <summary>
+    /// Gestiona la logica de negocio para la edicion y visualizacion del perfil de usuario.
+    /// </summary>
     public class PerfilVistaModelo : BaseVistaModelo
     {
         private const string RedSocialInstagram = "Instagram";
@@ -46,20 +49,28 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private bool _estaProcesando;
         private bool _estaCambiandoContrasena;
 
-
+        /// <summary>
+        /// Inicializa el ViewModel con los servicios requeridos.
+        /// </summary>
         public PerfilVistaModelo(
             IPerfilServicio perfilServicio,
             ISeleccionarAvatarServicio seleccionarAvatarServicio,
             ICambioContrasenaServicio cambioContrasenaServicio,
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio)
         {
-            _perfilServicio = perfilServicio ?? throw new ArgumentNullException(nameof(perfilServicio));
-            _seleccionarAvatarServicio = seleccionarAvatarServicio ?? throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
-            _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
-            _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ?? throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
+            _perfilServicio = perfilServicio ??
+                throw new ArgumentNullException(nameof(perfilServicio));
+            _seleccionarAvatarServicio = seleccionarAvatarServicio ??
+                throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
+            _cambioContrasenaServicio = cambioContrasenaServicio ??
+                throw new ArgumentNullException(nameof(cambioContrasenaServicio));
+            _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ??
+                throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
 
             RedesSociales = CrearRedesSociales();
-            _redesPorNombre = RedesSociales.ToDictionary(r => r.Nombre, StringComparer.OrdinalIgnoreCase);
+            _redesPorNombre = RedesSociales.ToDictionary(
+                r => r.Nombre,
+                StringComparer.OrdinalIgnoreCase);
 
             GuardarCambiosComando = new ComandoAsincrono(async _ =>
             {
@@ -86,14 +97,71 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             });
         }
 
-        public string Usuario { get => _usuario; private set => EstablecerPropiedad(ref _usuario, value); }
-        public string Correo { get => _correo; private set => EstablecerPropiedad(ref _correo, value); }
-        public string Nombre { get => _nombre; set => EstablecerPropiedad(ref _nombre, value); }
-        public string Apellido { get => _apellido; set => EstablecerPropiedad(ref _apellido, value); }
-        public string AvatarSeleccionadoNombre { get => _avatarSeleccionadoNombre; private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value); }
-        public int AvatarSeleccionadoId { get => _avatarSeleccionadoId; private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value); }
-        public ImageSource AvatarSeleccionadoImagen { get => _avatarSeleccionadoImagen; private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value); }
-        public ObservableCollection<RedSocialItemVistaModelo> RedesSociales { get; }
+        /// <summary>
+        /// Nombre de usuario (Solo lectura).
+        /// </summary>
+        public string Usuario { 
+            get => _usuario; 
+            private set => EstablecerPropiedad(ref _usuario, value); 
+        }
+        /// <summary>
+        /// Correo electronico (Solo lectura).
+        /// </summary>
+        public string Correo 
+        { 
+            get => _correo; 
+            private set => EstablecerPropiedad(ref _correo, value); 
+        }
+        /// <summary>
+        /// Nombre personal del usuario.
+        /// </summary>
+        public string Nombre 
+        { 
+            get => _nombre; 
+            set => EstablecerPropiedad(ref _nombre, value); 
+        }
+        /// <summary>
+        /// Apellido del usuario.
+        /// </summary>
+        public string Apellido 
+        { 
+            get => _apellido; 
+            set => EstablecerPropiedad(ref _apellido, value); 
+        }
+        /// <summary>
+        /// Nombre del avatar seleccionado actualmente.
+        /// </summary>
+        public string AvatarSeleccionadoNombre 
+        { 
+            get => _avatarSeleccionadoNombre; 
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value); 
+        }
+        /// <summary>
+        /// ID del avatar seleccionado.
+        /// </summary>
+        public int AvatarSeleccionadoId 
+        { 
+            get => _avatarSeleccionadoId; 
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value); 
+        }
+        /// <summary>
+        /// Imagen del avatar seleccionado.
+        /// </summary>
+        public ImageSource AvatarSeleccionadoImagen 
+        { 
+            get => _avatarSeleccionadoImagen; 
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value); 
+        }
+        /// <summary>
+        /// Coleccion de redes sociales editables.
+        /// </summary>
+        public ObservableCollection<RedSocialItemVistaModelo> RedesSociales 
+        { 
+            get; 
+        }
+        /// <summary>
+        /// Indica si hay una operacion de guardado o carga en curso.
+        /// </summary>
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -107,6 +175,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
             }
         }
+        /// <summary>
+        /// Indica si el dialogo de cambio de contrasena esta activo.
+        /// </summary>
         public bool EstaCambiandoContrasena
         {
             get => _estaCambiandoContrasena;
@@ -118,14 +189,36 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
             }
         }
+
+        /// <summary>
+        /// Comando para guardar los cambios realizados en el perfil.
+        /// </summary>
         public IComandoAsincrono GuardarCambiosComando { get; }
+        /// <summary>
+        /// Comando para abrir el selector de avatares.
+        /// </summary>
         public IComandoAsincrono SeleccionarAvatarComando { get; }
+        /// <summary>
+        /// Comando para iniciar el flujo de cambio de contrasena.
+        /// </summary>
         public IComandoAsincrono CambiarContrasenaComando { get; }
+        /// <summary>
+        /// Comando para cerrar la ventana.
+        /// </summary>
         public ICommand CerrarComando { get; }
+        /// <summary>
+        /// Accion para cerrar la ventana desde la vista.
+        /// </summary>
         public Action CerrarAccion { get; set; }
+        /// <summary>
+        /// Accion para notificar campos invalidos a la vista.
+        /// </summary>
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
 
 
+        /// <summary>
+        /// Carga los datos del perfil del usuario actual desde el servidor.
+        /// </summary>
         public async Task CargarPerfilAsync()
         {
             UsuarioAutenticado sesion = SesionUsuarioActual.Usuario;
@@ -170,7 +263,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             ObjetoAvatar avatar = await _seleccionarAvatarServicio
                 .SeleccionarAvatarAsync(AvatarSeleccionadoId).ConfigureAwait(true);
 
-            if (avatar == null) return; 
+            if (avatar == null)
+            {
+                return;
+            }
 
             EstablecerAvatar(avatar);
         }
@@ -187,15 +283,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             {
                 ManejadorSonido.ReproducirError();
                 var todosInvalidos = camposInvalidos ?? Enumerable.Empty<string>();
-                if (!sonRedesValidas) todosInvalidos = todosInvalidos.Concat(new[] 
-                { 
-                    "RedesSociales" 
-                });
+                if (!sonRedesValidas)
+                {
+                    todosInvalidos = todosInvalidos.Concat(new[] { "RedesSociales" });
+                }
 
                 MostrarCamposInvalidos?.Invoke(todosInvalidos.ToList());
 
                 string mensajeMostrar = Lang.errorTextoCamposInvalidosGenerico;
-                if (todosInvalidos.Count() == 1) 
+                if (todosInvalidos.Count() == 1)
                 {
                     mensajeMostrar = errorCampos ?? errorRedes ?? mensajeMostrar;
                 }
@@ -206,7 +302,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             var solicitud = new DTOs.ActualizacionPerfilDTO
             {
                 UsuarioId = _usuarioId,
-                Nombre = Nombre.Trim(), 
+                Nombre = Nombre.Trim(),
                 Apellido = Apellido.Trim(),
                 AvatarId = AvatarSeleccionadoId,
                 Instagram = ObtenerIdentificador(RedSocialInstagram),
@@ -231,14 +327,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 string mensajeResultado = MensajeServidorAyudante.Localizar(
                     resultado.Mensaje,
-                    resultado.OperacionExitosa ? Lang.avisoTextoPerfilActualizado : Lang.errorTextoActualizarPerfil);
+                    resultado.OperacionExitosa
+                        ? Lang.avisoTextoPerfilActualizado
+                        : Lang.errorTextoActualizarPerfil);
 
                 AvisoAyudante.Mostrar(mensajeResultado);
 
                 if (resultado.OperacionExitosa)
                 {
                     ManejadorSonido.ReproducirExito();
-                    ActualizarSesion(); 
+                    ActualizarSesion();
                 }
             }
             catch (ServicioExcepcion ex)
@@ -252,13 +350,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             }
         }
 
-        private (bool EsValido, string MensajeError, List<string> CamposInvalidos) ValidarCamposPrincipales()
+        private (bool EsValido, string MensajeError, List<string> CamposInvalidos)
+            ValidarCamposPrincipales()
         {
             var camposInvalidos = new List<string>();
             string primerError = null;
 
-            ValidarCampo(ValidacionEntrada.ValidarNombre(Nombre?.Trim()), nameof(Nombre), camposInvalidos, ref primerError);
-            ValidarCampo(ValidacionEntrada.ValidarApellido(Apellido?.Trim()), nameof(Apellido), camposInvalidos, ref primerError);
+            ValidarCampo(
+                ValidacionEntrada.ValidarNombre(Nombre?.Trim()),
+                nameof(Nombre),
+                camposInvalidos,
+                ref primerError);
+
+            ValidarCampo(
+                ValidacionEntrada.ValidarApellido(Apellido?.Trim()),
+                nameof(Apellido),
+                camposInvalidos,
+                ref primerError);
 
             if (AvatarSeleccionadoId <= 0)
             {
@@ -269,7 +377,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             return (camposInvalidos.Count == 0, primerError, camposInvalidos);
         }
 
-        private static void ValidarCampo(DTOs.ResultadoOperacionDTO resultado, string nombreCampo, List<string> invalidos, ref string primerError)
+        private static void ValidarCampo(
+            DTOs.ResultadoOperacionDTO resultado,
+            string nombreCampo,
+            List<string> invalidos,
+            ref string primerError)
         {
             if (resultado?.OperacionExitosa != true)
             {
@@ -288,7 +400,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 string valor = item.Identificador;
                 if (string.IsNullOrWhiteSpace(valor))
                 {
-                    item.TieneError = false; 
+                    item.TieneError = false;
                     continue;
                 }
 
@@ -305,7 +417,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
                 else
                 {
-                    item.TieneError = false; 
+                    item.TieneError = false;
                 }
             }
             return (!algunaInvalida, primerMensaje);
@@ -326,14 +438,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             try
             {
                 DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
-                    .RecuperarCuentaAsync(Correo, _cambioContrasenaServicio).ConfigureAwait(true);
+                    .RecuperarCuentaAsync(
+                        Correo,
+                        _cambioContrasenaServicio).ConfigureAwait(true);
 
-                if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace(resultado.Mensaje))
+                if (resultado?.OperacionExitosa == false &&
+                    !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
                     ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(resultado.Mensaje);
                 }
-                else if(resultado?.OperacionExitosa == true)
+                else if (resultado?.OperacionExitosa == true)
                 {
                     ManejadorSonido.ReproducirExito();
                 }
@@ -345,7 +460,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             }
             finally
             {
-                EstaCambiandoContrasena = false; 
+                EstaCambiandoContrasena = false;
                 EstaProcesando = false;
             }
         }
@@ -385,7 +500,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         }
         private void EstablecerAvatar(ObjetoAvatar avatar)
         {
-            if (avatar == null) return;
+            if (avatar == null)
+            {
+                return;
+            }
+
             AvatarSeleccionadoNombre = avatar.Nombre;
             AvatarSeleccionadoId = avatar.Id;
             AvatarSeleccionadoImagen = avatar.Imagen;
@@ -396,7 +515,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             if (_redesPorNombre.TryGetValue(redSocial, out RedSocialItemVistaModelo item))
             {
                 item.Identificador = valor;
-                item.TieneError = false; 
+                item.TieneError = false;
             }
         }
         private string ObtenerIdentificador(string redSocial)
@@ -437,7 +556,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private void ActualizarSesion()
         {
             UsuarioAutenticado sesion = SesionUsuarioActual.Usuario;
-            if (sesion == null || sesion.IdUsuario <= 0) return;
+            if (sesion == null || sesion.IdUsuario <= 0)
+            {
+                return;
+            }
 
             var dto = new DTOs.UsuarioDTO
             {
@@ -457,19 +579,44 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         }
         private static void ActualizarSesion(DTOs.UsuarioDTO perfil)
         {
-            if (perfil == null) return;
+            if (perfil == null)
+            {
+                return;
+            }
+
             SesionUsuarioActual.EstablecerUsuario(perfil);
         }
 
+        /// <summary>
+        /// Representa una red social editable en la vista.
+        /// </summary>
+        /// <param name="nombre">Nombre de la red social.</param>
+        /// <param name="icono">Icono representativo.</param>
         public class RedSocialItemVistaModelo(string nombre, ImageSource icono) : BaseVistaModelo
         {
             private string _identificador;
             private bool _tieneError;
 
-            public string Nombre { get; } = nombre ?? throw new ArgumentNullException(nameof(nombre));
-            public ImageSource RutaIcono { get; } = icono;
-            public string Identificador { get => _identificador; set => EstablecerPropiedad(ref _identificador, value); }
-            public bool TieneError { get => _tieneError; set => EstablecerPropiedad(ref _tieneError, value); }
+            /// <summary>Nombre de la red social.</summary>
+            public string Nombre {
+                get; 
+            } = nombre ??
+                throw new ArgumentNullException(nameof(nombre));
+            /// <summary>Icono de la red social.</summary>
+            public ImageSource RutaIcono {
+                get; 
+            } = icono;
+            /// <summary>ID en esa red.</summary>
+            public string Identificador {
+                get => _identificador; 
+                set => EstablecerPropiedad(ref _identificador, value); 
+            }
+            /// <summary>Indica si el valor ingresado es invalido.</summary>
+            public bool TieneError 
+            { 
+                get => _tieneError; 
+                set => EstablecerPropiedad(ref _tieneError, value); 
+            }
         }
     }
 }

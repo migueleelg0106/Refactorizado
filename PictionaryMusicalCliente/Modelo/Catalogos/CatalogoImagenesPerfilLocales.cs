@@ -5,6 +5,9 @@ using System.Windows.Media.Imaging;
 
 namespace PictionaryMusicalCliente.Modelo.Catalogos
 {
+    /// <summary>
+    /// Provee acceso centralizado a los recursos de imagen estaticos utilizados en el perfil.
+    /// </summary>
     public static class CatalogoImagenesPerfilLocales
     {
         private static readonly IReadOnlyDictionary<string, ImageSource> IconosRedesSociales =
@@ -16,6 +19,11 @@ namespace PictionaryMusicalCliente.Modelo.Catalogos
                 ["Discord"] = CrearImagen("discord.png")
             };
 
+        /// <summary>
+        /// Recupera el icono asociado a una red social especifica.
+        /// </summary>
+        /// <param name="nombre">Nombre clave de la red social.</param>
+        /// <returns>El recurso grafico correspondiente o null si no existe.</returns>
         public static ImageSource ObtenerIconoRedSocial(string nombre)
         {
             if (string.IsNullOrWhiteSpace(nombre))
@@ -29,7 +37,9 @@ namespace PictionaryMusicalCliente.Modelo.Catalogos
 
         private static ImageSource CrearImagen(string archivo)
         {
-            var uri = new Uri($"pack://application:,,,/Recursos/{archivo}", UriKind.Absolute);
+            var uri = new Uri(
+                $"pack://application:,,,/Recursos/{archivo}",
+                UriKind.Absolute);
             return new BitmapImage(uri);
         }
     }

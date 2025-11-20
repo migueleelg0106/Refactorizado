@@ -8,13 +8,20 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
+    /// <summary>
+    /// Administra las operaciones relacionadas con el perfil del usuario.
+    /// </summary>
     public class PerfilServicio : IPerfilServicio
     {
         private const string PerfilEndpoint = "BasicHttpBinding_IPerfilManejador";
 
+        /// <summary>
+        /// Obtiene la informacion del perfil de un usuario por su ID.
+        /// </summary>
         public async Task<DTOs.UsuarioDTO> ObtenerPerfilAsync(int usuarioId)
         {
-            var cliente = new PictionaryServidorServicioPerfil.PerfilManejadorClient(PerfilEndpoint);
+            var cliente = new PictionaryServidorServicioPerfil.PerfilManejadorClient
+                (PerfilEndpoint);
 
             try
             {
@@ -61,12 +68,19 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        public async Task<DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(DTOs.ActualizacionPerfilDTO solicitud)
+        /// <summary>
+        /// Actualiza la informacion personal del perfil del usuario.
+        /// </summary>
+        public async Task<DTOs.ResultadoOperacionDTO> ActualizarPerfilAsync(
+            DTOs.ActualizacionPerfilDTO solicitud)
         {
             if (solicitud == null)
+            {
                 throw new ArgumentNullException(nameof(solicitud));
+            }
 
-            var cliente = new PictionaryServidorServicioPerfil.PerfilManejadorClient(PerfilEndpoint);
+            var cliente = new PictionaryServidorServicioPerfil.PerfilManejadorClient
+                (PerfilEndpoint);
 
             try
             {
@@ -75,7 +89,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     .ConfigureAwait(false);
 
                 if (resultado == null)
+                {
                     return null;
+                }
 
                 return new DTOs.ResultadoOperacionDTO
                 {

@@ -5,23 +5,38 @@ using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 {
+    /// <summary>
+    /// Gestiona la logica de interaccion para la ventana de ajustes durante una partida.
+    /// </summary>
     public class AjustesPartidaVistaModelo : BaseVistaModelo
     {
         private readonly CancionManejador _cancionManejador;
 
+        /// <summary>
+        /// Accion para cerrar la ventana actual.
+        /// </summary>
         public Action OcultarVentana { get; set; }
+
+        /// <summary>
+        /// Accion para mostrar el dialogo de confirmacion de salida.
+        /// </summary>
         public Action MostrarDialogoSalirPartida { get; set; }
 
+        /// <summary>
+        /// Inicializa el ViewModel con el servicio de control de audio del juego.
+        /// </summary>
+        /// <param name="servicioCancion">Servicio que gestiona la reproduccion de pistas.</param>
         public AjustesPartidaVistaModelo(CancionManejador servicioCancion)
         {
-            _cancionManejador = servicioCancion ?? throw new ArgumentNullException(nameof(servicioCancion));
+            _cancionManejador = servicioCancion ??
+                throw new ArgumentNullException(nameof(servicioCancion));
 
             ConfirmarComando = new ComandoDelegado(_ => EjecutarConfirmar());
             SalirPartidaComando = new ComandoDelegado(_ => EjecutarSalirPartida());
         }
 
         /// <summary>
-        /// Propiedad enlazada al Slider. Lee/escribe directamente en el manejador.
+        /// Obtiene o establece el volumen de la musica de fondo.
         /// </summary>
         public double Volumen
         {
@@ -36,7 +51,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
             }
         }
 
+        /// <summary>
+        /// Comando para aplicar los cambios y cerrar la ventana.
+        /// </summary>
         public ICommand ConfirmarComando { get; }
+
+        /// <summary>
+        /// Comando para iniciar el flujo de abandono de la partida.
+        /// </summary>
         public ICommand SalirPartidaComando { get; }
 
         private void EjecutarConfirmar()

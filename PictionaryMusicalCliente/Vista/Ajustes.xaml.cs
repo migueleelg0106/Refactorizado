@@ -5,29 +5,35 @@ using PictionaryMusicalCliente.VistaModelo.Ajustes;
 namespace PictionaryMusicalCliente
 {
     /// <summary>
-    /// Lógica de interacción para Ajustes.xaml
+    /// Lógica de interacción para la ventana de configuración general de la aplicación.
     /// </summary>
     public partial class Ajustes : Window
     {
-        private readonly AjustesVistaModelo _viewModel;
+        private readonly AjustesVistaModelo _vistaModelo;
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la ventana de ajustes con las dependencias 
+        /// necesarias.
+        /// </summary>
+        /// <param name="servicioMusica">El servicio encargado del control de audio global.</param>
         public Ajustes(MusicaManejador servicioMusica)
         {
             InitializeComponent();
 
-            _viewModel = new AjustesVistaModelo(servicioMusica);
+            _vistaModelo = new AjustesVistaModelo(servicioMusica);
 
-            _viewModel.OcultarVentana = () => this.Close();
-            _viewModel.MostrarDialogoCerrarSesion = () =>
+            _vistaModelo.OcultarVentana = () => Close();
+
+            _vistaModelo.MostrarDialogoCerrarSesion = () =>
             {
-                TerminacionSesion cerrarSesion = new TerminacionSesion
+                var cerrarSesion = new TerminacionSesion
                 {
                     Owner = this
                 };
                 cerrarSesion.ShowDialog();
             };
 
-            this.DataContext = _viewModel;
+            DataContext = _vistaModelo;
         }
     }
 }

@@ -17,9 +17,12 @@ namespace PictionaryMusicalCliente.Utilidades
         /// <summary>
         /// Obtiene un nombre de invitado aleatorio acorde a la cultura proporcionada.
         /// </summary>
-        /// <param name="cultura">Cultura a utilizar para localizar el nombre. Si es <c>null</c> se utilizará la cultura actual.</param>
+        /// <param name="cultura">Cultura a utilizar. Si es null se usa la actual.</param>
+        /// <param name="nombresExcluidos">Lista de nombres que no deben repetirse.</param>
         /// <returns>Nombre de invitado localizado.</returns>
-        public static string Generar(CultureInfo cultura, IEnumerable<string> nombresExcluidos = null)
+        public static string Generar(
+            CultureInfo cultura,
+            IEnumerable<string> nombresExcluidos = null)
         {
             CultureInfo culturaEfectiva = cultura ?? CultureInfo.CurrentUICulture;
 
@@ -37,7 +40,8 @@ namespace PictionaryMusicalCliente.Utilidades
             }
 
             HashSet<string> nombresNoDisponibles = nombresExcluidos != null
-                ? new HashSet<string>(nombresExcluidos.Where(nombre => !string.IsNullOrWhiteSpace(nombre)),
+                ? new HashSet<string>(
+                    nombresExcluidos.Where(n => !string.IsNullOrWhiteSpace(n)),
                     StringComparer.OrdinalIgnoreCase)
                 : null;
 
@@ -63,11 +67,12 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (string.IsNullOrWhiteSpace(opciones) && cultura != CultureInfo.InvariantCulture)
             {
-                opciones = Lang.ResourceManager.GetString("invitadoNombres", CultureInfo.InvariantCulture);
+                opciones = Lang.ResourceManager.GetString(
+                    "invitadoNombres",
+                    CultureInfo.InvariantCulture);
             }
 
             return opciones;
         }
     }
 }
-

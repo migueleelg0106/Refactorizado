@@ -15,13 +15,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
     public class PruebaClasificacionVistaModelo
     {
         private Mock<IClasificacionServicio> _mockServicio;
-        private ClasificacionVistaModelo _viewModel;
+        private ClasificacionVistaModelo _vistaModelo;
 
         [TestInitialize]
         public void Inicializar()
         {
             _mockServicio = new Mock<IClasificacionServicio>();
-            _viewModel = new ClasificacionVistaModelo(_mockServicio.Object);
+            _vistaModelo = new ClasificacionVistaModelo(_mockServicio.Object);
 
             AvisoAyudante.DefinirMostrarAviso((msj) => { });
         }
@@ -29,7 +29,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         #region 1. Constructor y Validaciones
@@ -44,13 +44,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public void Prueba_Constructor_InicializacionCorrecta()
         {
-            Assert.IsNotNull(_viewModel.Clasificacion);
-            Assert.AreEqual(0, _viewModel.Clasificacion.Count);
-            Assert.IsFalse(_viewModel.HayResultados);
-            Assert.IsFalse(_viewModel.EstaCargando);
-            Assert.IsNotNull(_viewModel.OrdenarPorPuntosComando);
-            Assert.IsNotNull(_viewModel.OrdenarPorRondasComando);
-            Assert.IsNotNull(_viewModel.CerrarComando);
+            Assert.IsNotNull(_vistaModelo.Clasificacion);
+            Assert.AreEqual(0, _vistaModelo.Clasificacion.Count);
+            Assert.IsFalse(_vistaModelo.HayResultados);
+            Assert.IsFalse(_vistaModelo.EstaCargando);
+            Assert.IsNotNull(_vistaModelo.OrdenarPorPuntosComando);
+            Assert.IsNotNull(_vistaModelo.OrdenarPorRondasComando);
+            Assert.IsNotNull(_vistaModelo.CerrarComando);
         }
 
         #endregion
@@ -68,12 +68,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
 
             _mockServicio.Setup(s => s.ObtenerTopJugadoresAsync()).ReturnsAsync(datosMock);
 
-            await _viewModel.CargarClasificacionAsync();
+            await _vistaModelo.CargarClasificacionAsync();
 
-            Assert.AreEqual(2, _viewModel.Clasificacion.Count);
-            Assert.IsTrue(_viewModel.HayResultados);
-            Assert.IsFalse(_viewModel.EstaCargando);
-            Assert.AreEqual("Jugador1", _viewModel.Clasificacion[0].Usuario);
+            Assert.AreEqual(2, _vistaModelo.Clasificacion.Count);
+            Assert.IsTrue(_vistaModelo.HayResultados);
+            Assert.IsFalse(_vistaModelo.EstaCargando);
+            Assert.AreEqual("Jugador1", _vistaModelo.Clasificacion[0].Usuario);
         }
 
         [TestMethod]
@@ -81,10 +81,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         {
             _mockServicio.Setup(s => s.ObtenerTopJugadoresAsync()).ReturnsAsync(new List<DTOs.ClasificacionUsuarioDTO>());
 
-            await _viewModel.CargarClasificacionAsync();
+            await _vistaModelo.CargarClasificacionAsync();
 
-            Assert.AreEqual(0, _viewModel.Clasificacion.Count);
-            Assert.IsFalse(_viewModel.HayResultados);
+            Assert.AreEqual(0, _vistaModelo.Clasificacion.Count);
+            Assert.IsFalse(_vistaModelo.HayResultados);
         }
 
         [TestMethod]
@@ -96,10 +96,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.CargarClasificacionAsync();
+            await _vistaModelo.CargarClasificacionAsync();
 
             Assert.AreEqual("ErrorServidor", mensaje);
-            Assert.IsFalse(_viewModel.EstaCargando, "Debe limpiar estado de carga en finally");
+            Assert.IsFalse(_vistaModelo.EstaCargando, "Debe limpiar estado de carga en finally");
         }
 
         #endregion
@@ -116,13 +116,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 new DTOs.ClasificacionUsuarioDTO { Usuario = "Medio", Puntos = 50, RondasGanadas = 8 }
             };
             _mockServicio.Setup(s => s.ObtenerTopJugadoresAsync()).ReturnsAsync(datos);
-            await _viewModel.CargarClasificacionAsync();
+            await _vistaModelo.CargarClasificacionAsync();
 
-            _viewModel.OrdenarPorPuntosComando.Execute(null);
+            _vistaModelo.OrdenarPorPuntosComando.Execute(null);
 
-            Assert.AreEqual("Alto", _viewModel.Clasificacion[0].Usuario);  
-            Assert.AreEqual("Medio", _viewModel.Clasificacion[1].Usuario); 
-            Assert.AreEqual("Bajo", _viewModel.Clasificacion[2].Usuario);  
+            Assert.AreEqual("Alto", _vistaModelo.Clasificacion[0].Usuario);  
+            Assert.AreEqual("Medio", _vistaModelo.Clasificacion[1].Usuario); 
+            Assert.AreEqual("Bajo", _vistaModelo.Clasificacion[2].Usuario);  
         }
 
         [TestMethod]
@@ -134,12 +134,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 new DTOs.ClasificacionUsuarioDTO { Usuario = "Muchas", Puntos = 10, RondasGanadas = 20 }
             };
             _mockServicio.Setup(s => s.ObtenerTopJugadoresAsync()).ReturnsAsync(datos);
-            await _viewModel.CargarClasificacionAsync();
+            await _vistaModelo.CargarClasificacionAsync();
 
-            _viewModel.OrdenarPorRondasComando.Execute(null);
+            _vistaModelo.OrdenarPorRondasComando.Execute(null);
 
-            Assert.AreEqual("Muchas", _viewModel.Clasificacion[0].Usuario); 
-            Assert.AreEqual("Pocas", _viewModel.Clasificacion[1].Usuario);  
+            Assert.AreEqual("Muchas", _vistaModelo.Clasificacion[0].Usuario); 
+            Assert.AreEqual("Pocas", _vistaModelo.Clasificacion[1].Usuario);  
         }
 
         [TestMethod]
@@ -152,29 +152,29 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 new DTOs.ClasificacionUsuarioDTO { Usuario = "Z_MismasRondas", Puntos = 100, RondasGanadas = 5 }
             };
             _mockServicio.Setup(s => s.ObtenerTopJugadoresAsync()).ReturnsAsync(datos);
-            await _viewModel.CargarClasificacionAsync();
+            await _vistaModelo.CargarClasificacionAsync();
 
-            _viewModel.OrdenarPorPuntosComando.Execute(null);
+            _vistaModelo.OrdenarPorPuntosComando.Execute(null);
 
-            Assert.AreEqual("A_MasRondas", _viewModel.Clasificacion[0].Usuario);
-            Assert.AreEqual("Z_MismasRondas", _viewModel.Clasificacion[1].Usuario);
-            Assert.AreEqual("B_MenosRondas", _viewModel.Clasificacion[2].Usuario);
+            Assert.AreEqual("A_MasRondas", _vistaModelo.Clasificacion[0].Usuario);
+            Assert.AreEqual("Z_MismasRondas", _vistaModelo.Clasificacion[1].Usuario);
+            Assert.AreEqual("B_MenosRondas", _vistaModelo.Clasificacion[2].Usuario);
         }
 
         [TestMethod]
         public void Prueba_Ordenar_SinDatos_NoEjecuta()
         {
-            _viewModel.OrdenarPorPuntosComando.Execute(null);
+            _vistaModelo.OrdenarPorPuntosComando.Execute(null);
 
-            Assert.AreEqual(0, _viewModel.Clasificacion.Count);
+            Assert.AreEqual(0, _vistaModelo.Clasificacion.Count);
         }
 
         [TestMethod]
         public void Prueba_PuedeOrdenar_EstadoCargando_DevuelveFalso()
         {
-            typeof(ClasificacionVistaModelo).GetProperty("EstaCargando").SetValue(_viewModel, true);
+            typeof(ClasificacionVistaModelo).GetProperty("EstaCargando").SetValue(_vistaModelo, true);
 
-            Assert.IsFalse(_viewModel.OrdenarPorPuntosComando.CanExecute(null));
+            Assert.IsFalse(_vistaModelo.OrdenarPorPuntosComando.CanExecute(null));
         }
 
         #endregion
@@ -185,9 +185,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         public void Prueba_CerrarComando_InvocaAccion()
         {
             bool cerrado = false;
-            _viewModel.CerrarAccion = () => cerrado = true;
+            _vistaModelo.CerrarAccion = () => cerrado = true;
 
-            _viewModel.CerrarComando.Execute(null);
+            _vistaModelo.CerrarComando.Execute(null);
 
             Assert.IsTrue(cerrado);
         }

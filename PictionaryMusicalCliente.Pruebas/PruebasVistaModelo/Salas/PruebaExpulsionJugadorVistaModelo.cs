@@ -8,7 +8,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
     [TestClass]
     public class PruebaExpulsionJugadorVistaModelo
     {
-        private ExpulsionJugadorVistaModelo _viewModel;
+        private ExpulsionJugadorVistaModelo _vistaModelo;
 
         [TestInitialize]
         public void Inicializar()
@@ -20,52 +20,52 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         [TestMethod]
         public void Constructor_MensajeValido_AsignaMensaje()
         {
             string mensajeEsperado = "Mensaje de prueba";
-            _viewModel = new ExpulsionJugadorVistaModelo(mensajeEsperado);
+            _vistaModelo = new ExpulsionJugadorVistaModelo(mensajeEsperado);
 
-            Assert.AreEqual(mensajeEsperado, _viewModel.MensajeConfirmacion);
-            Assert.IsNotNull(_viewModel.ConfirmarComando);
-            Assert.IsNotNull(_viewModel.CancelarComando);
+            Assert.AreEqual(mensajeEsperado, _vistaModelo.MensajeConfirmacion);
+            Assert.IsNotNull(_vistaModelo.ConfirmarComando);
+            Assert.IsNotNull(_vistaModelo.CancelarComando);
         }
 
         [TestMethod]
         public void Constructor_MensajeNulo_AsignaMensajePorDefecto()
         {
-            _viewModel = new ExpulsionJugadorVistaModelo(null);
+            _vistaModelo = new ExpulsionJugadorVistaModelo(null);
 
-            Assert.AreEqual(Lang.expulsarTextoConfirmacion, _viewModel.MensajeConfirmacion);
+            Assert.AreEqual(Lang.expulsarTextoConfirmacion, _vistaModelo.MensajeConfirmacion);
         }
 
         [TestMethod]
         public void Constructor_MensajeVacio_AsignaMensajePorDefecto()
         {
-            _viewModel = new ExpulsionJugadorVistaModelo(string.Empty);
+            _vistaModelo = new ExpulsionJugadorVistaModelo(string.Empty);
 
-            Assert.AreEqual(Lang.expulsarTextoConfirmacion, _viewModel.MensajeConfirmacion);
+            Assert.AreEqual(Lang.expulsarTextoConfirmacion, _vistaModelo.MensajeConfirmacion);
         }
 
         [TestMethod]
         public void Constructor_MensajeEspaciosEnBlanco_AsignaMensajePorDefecto()
         {
-            _viewModel = new ExpulsionJugadorVistaModelo("   ");
+            _vistaModelo = new ExpulsionJugadorVistaModelo("   ");
 
-            Assert.AreEqual(Lang.expulsarTextoConfirmacion, _viewModel.MensajeConfirmacion);
+            Assert.AreEqual(Lang.expulsarTextoConfirmacion, _vistaModelo.MensajeConfirmacion);
         }
 
         [TestMethod]
         public void ConfirmarComando_Ejecutar_InvocaCerrarConTrue()
         {
-            _viewModel = new ExpulsionJugadorVistaModelo("Mensaje");
+            _vistaModelo = new ExpulsionJugadorVistaModelo("Mensaje");
             bool? resultado = null;
-            _viewModel.Cerrar = (valor) => resultado = valor;
+            _vistaModelo.Cerrar = (valor) => resultado = valor;
 
-            _viewModel.ConfirmarComando.Execute(null);
+            _vistaModelo.ConfirmarComando.Execute(null);
 
             Assert.IsTrue(resultado.HasValue);
             Assert.IsTrue(resultado.Value);
@@ -74,11 +74,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public void CancelarComando_Ejecutar_InvocaCerrarConFalse()
         {
-            _viewModel = new ExpulsionJugadorVistaModelo("Mensaje");
+            _vistaModelo = new ExpulsionJugadorVistaModelo("Mensaje");
             bool? resultado = null;
-            _viewModel.Cerrar = (valor) => resultado = valor;
+            _vistaModelo.Cerrar = (valor) => resultado = valor;
 
-            _viewModel.CancelarComando.Execute(null);
+            _vistaModelo.CancelarComando.Execute(null);
 
             Assert.IsTrue(resultado.HasValue);
             Assert.IsFalse(resultado.Value);
@@ -87,12 +87,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public void ConfirmarComando_SinAccionCerrar_NoLanzaExcepcion()
         {
-            _viewModel = new ExpulsionJugadorVistaModelo("Mensaje");
-            _viewModel.Cerrar = null;
+            _vistaModelo = new ExpulsionJugadorVistaModelo("Mensaje");
+            _vistaModelo.Cerrar = null;
 
             try
             {
-                _viewModel.ConfirmarComando.Execute(null);
+                _vistaModelo.ConfirmarComando.Execute(null);
             }
             catch
             {
@@ -103,12 +103,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
         [TestMethod]
         public void CancelarComando_SinAccionCerrar_NoLanzaExcepcion()
         {
-            _viewModel = new ExpulsionJugadorVistaModelo("Mensaje");
-            _viewModel.Cerrar = null;
+            _vistaModelo = new ExpulsionJugadorVistaModelo("Mensaje");
+            _vistaModelo.Cerrar = null;
 
             try
             {
-                _viewModel.CancelarComando.Execute(null);
+                _vistaModelo.CancelarComando.Execute(null);
             }
             catch
             {

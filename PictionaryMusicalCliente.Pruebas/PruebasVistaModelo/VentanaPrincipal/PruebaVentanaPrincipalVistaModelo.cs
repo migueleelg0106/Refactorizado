@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         private Mock<IListaAmigosServicio> _mockListaAmigos;
         private Mock<IAmigosServicio> _mockAmigosServicio;
         private Mock<ISalasServicio> _mockSalasServicio;
-        private VentanaPrincipalVistaModelo _viewModel;
+        private VentanaPrincipalVistaModelo _vistaModelo;
 
         private const string UsuarioTest = "UsuarioPrueba";
 
@@ -36,21 +36,21 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
             _mockLocalizacion.Setup(l => l.CulturaActual).Returns(new CultureInfo("es-MX"));
             _mockListaAmigos.Setup(l => l.ListaActual).Returns(new List<AmigoDTO>());
 
-            _viewModel = new VentanaPrincipalVistaModelo(
+            _vistaModelo = new VentanaPrincipalVistaModelo(
                 _mockLocalizacion.Object,
                 _mockListaAmigos.Object,
                 _mockAmigosServicio.Object,
                 _mockSalasServicio.Object
             );
 
-            _viewModel.MostrarMensaje = (_) => { };
-            _viewModel.ConfirmarEliminarAmigo = (_) => true;
+            _vistaModelo.MostrarMensaje = (_) => { };
+            _vistaModelo.ConfirmarEliminarAmigo = (_) => true;
         }
 
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         #region Constructor y Validaciones
@@ -102,20 +102,20 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         [TestMethod]
         public void Prueba_Constructor_InicializaListasYOpcionesCorrectamente()
         {
-            Assert.IsNotNull(_viewModel.Amigos);
-            Assert.IsNotNull(_viewModel.NumeroRondasOpciones);
-            Assert.IsNotNull(_viewModel.TiempoRondaOpciones);
-            Assert.IsNotNull(_viewModel.IdiomasDisponibles);
-            Assert.IsNotNull(_viewModel.DificultadesDisponibles);
+            Assert.IsNotNull(_vistaModelo.Amigos);
+            Assert.IsNotNull(_vistaModelo.NumeroRondasOpciones);
+            Assert.IsNotNull(_vistaModelo.TiempoRondaOpciones);
+            Assert.IsNotNull(_vistaModelo.IdiomasDisponibles);
+            Assert.IsNotNull(_vistaModelo.DificultadesDisponibles);
 
-            Assert.AreEqual(3, _viewModel.NumeroRondasOpciones.Count);
-            Assert.AreEqual(3, _viewModel.TiempoRondaOpciones.Count);
-            Assert.AreEqual(3, _viewModel.DificultadesDisponibles.Count);
+            Assert.AreEqual(3, _vistaModelo.NumeroRondasOpciones.Count);
+            Assert.AreEqual(3, _vistaModelo.TiempoRondaOpciones.Count);
+            Assert.AreEqual(3, _vistaModelo.DificultadesDisponibles.Count);
 
-            Assert.IsNotNull(_viewModel.NumeroRondasSeleccionada);
-            Assert.IsNotNull(_viewModel.TiempoRondaSeleccionada);
-            Assert.IsNotNull(_viewModel.DificultadSeleccionada);
-            Assert.IsNotNull(_viewModel.IdiomaSeleccionado);
+            Assert.IsNotNull(_vistaModelo.NumeroRondasSeleccionada);
+            Assert.IsNotNull(_vistaModelo.TiempoRondaSeleccionada);
+            Assert.IsNotNull(_vistaModelo.DificultadSeleccionada);
+            Assert.IsNotNull(_vistaModelo.IdiomaSeleccionado);
         }
 
         #endregion
@@ -126,42 +126,42 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         public void Prueba_CodigoSala_Setter_NotificaCambio()
         {
             bool notificado = false;
-            _viewModel.PropertyChanged += (s, e) =>
+            _vistaModelo.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName == nameof(_viewModel.CodigoSala))
+                if (e.PropertyName == nameof(_vistaModelo.CodigoSala))
                 {
                     notificado = true;
                 }
             };
 
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
 
             Assert.IsTrue(notificado);
-            Assert.AreEqual("123456", _viewModel.CodigoSala);
+            Assert.AreEqual("123456", _vistaModelo.CodigoSala);
         }
 
         [TestMethod]
         public void Prueba_AmigoSeleccionado_Setter_GuardaValor()
         {
             var amigo = new AmigoDTO { NombreUsuario = "Juan" };
-            _viewModel.AmigoSeleccionado = amigo;
-            Assert.AreEqual(amigo, _viewModel.AmigoSeleccionado);
+            _vistaModelo.AmigoSeleccionado = amigo;
+            Assert.AreEqual(amigo, _vistaModelo.AmigoSeleccionado);
         }
 
         [TestMethod]
         public void Prueba_OpcionesJuego_Setters_ActualizanEstadoComando()
         {
-            var nuevaOpcionRonda = _viewModel.NumeroRondasOpciones.Last();
-            _viewModel.NumeroRondasSeleccionada = nuevaOpcionRonda;
-            Assert.AreEqual(nuevaOpcionRonda, _viewModel.NumeroRondasSeleccionada);
+            var nuevaOpcionRonda = _vistaModelo.NumeroRondasOpciones.Last();
+            _vistaModelo.NumeroRondasSeleccionada = nuevaOpcionRonda;
+            Assert.AreEqual(nuevaOpcionRonda, _vistaModelo.NumeroRondasSeleccionada);
 
-            var nuevoTiempo = _viewModel.TiempoRondaOpciones.Last();
-            _viewModel.TiempoRondaSeleccionada = nuevoTiempo;
-            Assert.AreEqual(nuevoTiempo, _viewModel.TiempoRondaSeleccionada);
+            var nuevoTiempo = _vistaModelo.TiempoRondaOpciones.Last();
+            _vistaModelo.TiempoRondaSeleccionada = nuevoTiempo;
+            Assert.AreEqual(nuevoTiempo, _vistaModelo.TiempoRondaSeleccionada);
 
-            var nuevaDificultad = _viewModel.DificultadesDisponibles.Last();
-            _viewModel.DificultadSeleccionada = nuevaDificultad;
-            Assert.AreEqual(nuevaDificultad, _viewModel.DificultadSeleccionada);
+            var nuevaDificultad = _vistaModelo.DificultadesDisponibles.Last();
+            _vistaModelo.DificultadSeleccionada = nuevaDificultad;
+            Assert.AreEqual(nuevaDificultad, _vistaModelo.DificultadSeleccionada);
         }
 
         #endregion
@@ -177,17 +177,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
             bool clasificacionAbierto = false;
             bool buscarAmigoAbierto = false;
 
-            _viewModel.AbrirPerfil = () => perfilAbierto = true;
-            _viewModel.AbrirAjustes = () => ajustesAbierto = true;
-            _viewModel.AbrirComoJugar = () => comoJugarAbierto = true;
-            _viewModel.AbrirClasificacion = () => clasificacionAbierto = true;
-            _viewModel.AbrirBuscarAmigo = () => buscarAmigoAbierto = true;
+            _vistaModelo.AbrirPerfil = () => perfilAbierto = true;
+            _vistaModelo.AbrirAjustes = () => ajustesAbierto = true;
+            _vistaModelo.AbrirComoJugar = () => comoJugarAbierto = true;
+            _vistaModelo.AbrirClasificacion = () => clasificacionAbierto = true;
+            _vistaModelo.AbrirBuscarAmigo = () => buscarAmigoAbierto = true;
 
-            _viewModel.AbrirPerfilComando.Execute(null);
-            _viewModel.AbrirAjustesComando.Execute(null);
-            _viewModel.AbrirComoJugarComando.Execute(null);
-            _viewModel.AbrirClasificacionComando.Execute(null);
-            _viewModel.AbrirBuscarAmigoComando.Execute(null);
+            _vistaModelo.AbrirPerfilComando.Execute(null);
+            _vistaModelo.AbrirAjustesComando.Execute(null);
+            _vistaModelo.AbrirComoJugarComando.Execute(null);
+            _vistaModelo.AbrirClasificacionComando.Execute(null);
+            _vistaModelo.AbrirBuscarAmigoComando.Execute(null);
 
             Assert.IsTrue(perfilAbierto);
             Assert.IsTrue(ajustesAbierto);
@@ -202,10 +202,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
             bool solicitudesAbierto = false;
             string mensaje = null;
 
-            _viewModel.AbrirSolicitudes = () => solicitudesAbierto = true;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.AbrirSolicitudes = () => solicitudesAbierto = true;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            _viewModel.AbrirSolicitudesComando.Execute(null);
+            _vistaModelo.AbrirSolicitudesComando.Execute(null);
 
             Assert.IsFalse(solicitudesAbierto);
             Assert.AreEqual(Lang.amigosAvisoSinSolicitudesPendientes, mensaje);
@@ -226,26 +226,26 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
 
             _mockListaAmigos.Raise(m => m.ListaActualizada += null, null, nuevosAmigos);
 
-            Assert.AreEqual(2, _viewModel.Amigos.Count);
-            Assert.IsTrue(_viewModel.Amigos.Any(a => a.NombreUsuario == "Amigo1"));
+            Assert.AreEqual(2, _vistaModelo.Amigos.Count);
+            Assert.IsTrue(_vistaModelo.Amigos.Any(a => a.NombreUsuario == "Amigo1"));
         }
 
         [TestMethod]
         public void Prueba_ListaActualizada_AmigoSeleccionadoDesaparece_LimpiaSeleccion()
         {
             var amigo = new AmigoDTO { NombreUsuario = "AmigoBorrado" };
-            _viewModel.AmigoSeleccionado = amigo;
+            _vistaModelo.AmigoSeleccionado = amigo;
 
             _mockListaAmigos.Raise(m => m.ListaActualizada += null, null, new List<AmigoDTO>());
 
-            Assert.IsNull(_viewModel.AmigoSeleccionado);
+            Assert.IsNull(_vistaModelo.AmigoSeleccionado);
         }
 
         [TestMethod]
         public void Prueba_ListaActualizada_AmigoSeleccionadoPermanece_MantieneSeleccion()
         {
             var amigo = new AmigoDTO { NombreUsuario = "AmigoFiel" };
-            _viewModel.AmigoSeleccionado = amigo;
+            _vistaModelo.AmigoSeleccionado = amigo;
             var listaNueva = new List<AmigoDTO>
                 {
                     new AmigoDTO { NombreUsuario = "AmigoFiel" }
@@ -253,8 +253,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
 
             _mockListaAmigos.Raise(m => m.ListaActualizada += null, null, listaNueva);
 
-            Assert.IsNotNull(_viewModel.AmigoSeleccionado);
-            Assert.AreEqual("AmigoFiel", _viewModel.AmigoSeleccionado.NombreUsuario);
+            Assert.IsNotNull(_vistaModelo.AmigoSeleccionado);
+            Assert.AreEqual("AmigoFiel", _vistaModelo.AmigoSeleccionado.NombreUsuario);
         }
 
         #endregion
@@ -267,14 +267,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
             bool confirmarInvocado = false;
             string mensaje = null;
 
-            _viewModel.ConfirmarEliminarAmigo = (_) =>
+            _vistaModelo.ConfirmarEliminarAmigo = (_) =>
             {
                 confirmarInvocado = true;
                 return true;
             };
-            _viewModel.MostrarMensaje = m => mensaje = m;
+            _vistaModelo.MostrarMensaje = m => mensaje = m;
 
-            await _viewModel.EliminarAmigoComando.EjecutarAsync(null);
+            await _vistaModelo.EliminarAmigoComando.EjecutarAsync(null);
 
             Assert.IsFalse(confirmarInvocado);
             _mockAmigosServicio.Verify(
@@ -286,10 +286,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         [TestMethod]
         public async Task Prueba_EliminarAmigo_ConfirmacionCancelada_NoLlamaServicio()
         {
-            _viewModel.ConfirmarEliminarAmigo = (nombre) => false;
+            _vistaModelo.ConfirmarEliminarAmigo = (nombre) => false;
             var amigo = new AmigoDTO { NombreUsuario = "Amigo1" };
 
-            await _viewModel.EliminarAmigoComando.EjecutarAsync(amigo);
+            await _vistaModelo.EliminarAmigoComando.EjecutarAsync(amigo);
 
             _mockAmigosServicio.Verify(
                 s => s.EliminarAmigoAsync(It.IsAny<string>(), It.IsAny<string>()),
@@ -301,13 +301,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "");
+                ?.SetValue(_vistaModelo, "");
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
-            _viewModel.ConfirmarEliminarAmigo = (_) => true;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.ConfirmarEliminarAmigo = (_) => true;
 
-            await _viewModel.EliminarAmigoComando.EjecutarAsync(new AmigoDTO { NombreUsuario = "X" });
+            await _vistaModelo.EliminarAmigoComando.EjecutarAsync(new AmigoDTO { NombreUsuario = "X" });
 
             Assert.AreEqual(Lang.errorTextoErrorProcesarSolicitud, mensaje);
         }
@@ -317,14 +317,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
+                ?.SetValue(_vistaModelo, "Yo");
 
-            _viewModel.ConfirmarEliminarAmigo = (_) => true;
+            _vistaModelo.ConfirmarEliminarAmigo = (_) => true;
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
             var amigo = new AmigoDTO { NombreUsuario = "AmigoX" };
 
-            await _viewModel.EliminarAmigoComando.EjecutarAsync(amigo);
+            await _vistaModelo.EliminarAmigoComando.EjecutarAsync(amigo);
 
             _mockAmigosServicio.Verify(s => s.EliminarAmigoAsync("Yo", "AmigoX"), Times.Once);
             Assert.AreEqual(Lang.amigosTextoAmigoEliminado, mensaje);
@@ -335,11 +335,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
-            _viewModel.ConfirmarEliminarAmigo = (_) => true;
+                ?.SetValue(_vistaModelo, "Yo");
+            _vistaModelo.ConfirmarEliminarAmigo = (_) => true;
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
             _mockAmigosServicio
                 .Setup(s => s.EliminarAmigoAsync(It.IsAny<string>(), It.IsAny<string>()))
@@ -348,7 +348,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
                     "ErrorWCF",
                     null));
 
-            await _viewModel.EliminarAmigoComando.EjecutarAsync(
+            await _vistaModelo.EliminarAmigoComando.EjecutarAsync(
                 new AmigoDTO { NombreUsuario = "A" });
 
             Assert.AreEqual("ErrorWCF", mensaje);
@@ -361,11 +361,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         [TestMethod]
         public async Task Prueba_UnirseSala_CodigoVacio_MuestraError()
         {
-            _viewModel.CodigoSala = "   ";
+            _vistaModelo.CodigoSala = "   ";
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.globalTextoIngreseCodigoPartida, mensaje);
         }
@@ -375,13 +375,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "");
+                ?.SetValue(_vistaModelo, "");
 
-            _viewModel.CodigoSala = "123456";
+            _vistaModelo.CodigoSala = "123456";
             string mensaje = null;
-            _viewModel.MostrarMensaje = m => mensaje = m;
+            _vistaModelo.MostrarMensaje = m => mensaje = m;
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoErrorProcesarSolicitud, mensaje);
             _mockSalasServicio.Verify(
@@ -394,8 +394,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
-            _viewModel.CodigoSala = "123456";
+                ?.SetValue(_vistaModelo, "Yo");
+            _vistaModelo.CodigoSala = "123456";
 
             SalaDTO salaRetornada = new SalaDTO { Codigo = "123456" };
             _mockSalasServicio
@@ -403,9 +403,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
                 .ReturnsAsync(salaRetornada);
 
             SalaDTO salaRecibida = null;
-            _viewModel.UnirseSala = (s) => salaRecibida = s;
+            _vistaModelo.UnirseSala = (s) => salaRecibida = s;
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(salaRetornada, salaRecibida);
         }
@@ -415,10 +415,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
-            _viewModel.CodigoSala = "123456";
+                ?.SetValue(_vistaModelo, "Yo");
+            _vistaModelo.CodigoSala = "123456";
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
             var ex = new ServicioExcepcion(
                 TipoErrorServicio.OperacionInvalida,
@@ -429,7 +429,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
                 .Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(ex);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoSalaLlena, mensaje);
         }
@@ -439,10 +439,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
-            _viewModel.CodigoSala = "123456";
+                ?.SetValue(_vistaModelo, "Yo");
+            _vistaModelo.CodigoSala = "123456";
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
             var ex = new ServicioExcepcion(
                 TipoErrorServicio.FallaServicio,
@@ -453,7 +453,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
                 .Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(ex);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoNoEncuentraPartida, mensaje);
         }
@@ -463,10 +463,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
-            _viewModel.CodigoSala = "123456";
+                ?.SetValue(_vistaModelo, "Yo");
+            _vistaModelo.CodigoSala = "123456";
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
             var ex = new ServicioExcepcion(
                 TipoErrorServicio.OperacionInvalida,
@@ -477,7 +477,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
                 .Setup(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(ex);
 
-            await _viewModel.UnirseSalaComando.EjecutarAsync(null);
+            await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
             Assert.AreEqual("ErrorGenerico", mensaje);
         }
@@ -489,17 +489,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         [TestMethod]
         public async Task Prueba_IniciarJuego_OpcionesNulas_MuestraError()
         {
-            _viewModel.NumeroRondasSeleccionada = null;
-            _viewModel.TiempoRondaSeleccionada = null;
+            _vistaModelo.NumeroRondasSeleccionada = null;
+            _vistaModelo.TiempoRondaSeleccionada = null;
 
             string mensajeCapturado = null;
-            _viewModel.MostrarMensaje = (m) => mensajeCapturado = m;
+            _vistaModelo.MostrarMensaje = (m) => mensajeCapturado = m;
 
             MethodInfo metodo = typeof(VentanaPrincipalVistaModelo)
                 .GetMethod("IniciarJuegoInternoAsync",
                     BindingFlags.NonPublic | BindingFlags.Instance);
 
-            var tarea = (Task)metodo.Invoke(_viewModel, null);
+            var tarea = (Task)metodo.Invoke(_vistaModelo, null);
             await tarea;
 
             Assert.IsNotNull(
@@ -513,12 +513,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "");
+                ?.SetValue(_vistaModelo, "");
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            await _viewModel.IniciarJuegoComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarJuegoComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoErrorProcesarSolicitud, mensaje);
             _mockSalasServicio.Verify(
@@ -531,7 +531,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
+                ?.SetValue(_vistaModelo, "Yo");
 
             SalaDTO salaCreada = new SalaDTO { Codigo = "NUEVA" };
             _mockSalasServicio
@@ -539,9 +539,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
                 .ReturnsAsync(salaCreada);
 
             SalaDTO salaRecibida = null;
-            _viewModel.IniciarJuego = (s) => salaRecibida = s;
+            _vistaModelo.IniciarJuego = (s) => salaRecibida = s;
 
-            await _viewModel.IniciarJuegoComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarJuegoComando.EjecutarAsync(null);
 
             Assert.AreEqual(salaCreada, salaRecibida);
         }
@@ -551,9 +551,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
+                ?.SetValue(_vistaModelo, "Yo");
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
             _mockSalasServicio
                 .Setup(s => s.CrearSalaAsync(It.IsAny<string>(), It.IsAny<ConfiguracionPartidaDTO>()))
@@ -562,7 +562,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
                     "FalloCreacion",
                     null));
 
-            await _viewModel.IniciarJuegoComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarJuegoComando.EjecutarAsync(null);
 
             Assert.AreEqual("FalloCreacion", mensaje);
         }
@@ -580,18 +580,18 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
                 .GetMethod("LocalizacionServicioEnIdiomaActualizado",
                     BindingFlags.NonPublic | BindingFlags.Instance);
 
-            metodo.Invoke(_viewModel, new object[] { null, EventArgs.Empty });
+            metodo.Invoke(_vistaModelo, new object[] { null, EventArgs.Empty });
 
-            Assert.IsNotNull(_viewModel.IdiomaSeleccionado, "El idioma seleccionado es nulo");
-            Assert.AreEqual("en-US", _viewModel.IdiomaSeleccionado.Codigo);
+            Assert.IsNotNull(_vistaModelo.IdiomaSeleccionado, "El idioma seleccionado es nulo");
+            Assert.AreEqual("en-US", _vistaModelo.IdiomaSeleccionado.Codigo);
         }
 
         [TestMethod]
         public void Prueba_IdiomaSeleccionado_Cambio_ActualizaEstadoComando()
         {
-            var nuevoIdioma = _viewModel.IdiomasDisponibles.Last();
-            _viewModel.IdiomaSeleccionado = nuevoIdioma;
-            Assert.AreEqual(nuevoIdioma, _viewModel.IdiomaSeleccionado);
+            var nuevoIdioma = _vistaModelo.IdiomasDisponibles.Last();
+            _vistaModelo.IdiomaSeleccionado = nuevoIdioma;
+            Assert.AreEqual(nuevoIdioma, _vistaModelo.IdiomaSeleccionado);
         }
 
         #endregion
@@ -603,9 +603,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "");
+                ?.SetValue(_vistaModelo, "");
 
-            await _viewModel.InicializarAsync();
+            await _vistaModelo.InicializarAsync();
 
             _mockListaAmigos.Verify(
                 s => s.SuscribirAsync(It.IsAny<string>()),
@@ -620,9 +620,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
+                ?.SetValue(_vistaModelo, "Yo");
 
-            await _viewModel.InicializarAsync();
+            await _vistaModelo.InicializarAsync();
 
             _mockListaAmigos.Verify(s => s.SuscribirAsync("Yo"), Times.Once);
             _mockAmigosServicio.Verify(s => s.SuscribirAsync("Yo"), Times.Once);
@@ -633,10 +633,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
+                ?.SetValue(_vistaModelo, "Yo");
 
-            await _viewModel.InicializarAsync();
-            await _viewModel.InicializarAsync();
+            await _vistaModelo.InicializarAsync();
+            await _vistaModelo.InicializarAsync();
 
             _mockListaAmigos.Verify(s => s.SuscribirAsync("Yo"), Times.Once);
         }
@@ -646,9 +646,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
+                ?.SetValue(_vistaModelo, "Yo");
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
             _mockListaAmigos
                 .Setup(s => s.SuscribirAsync(It.IsAny<string>()))
@@ -657,7 +657,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
                     "ErrorSuscripcion",
                     null));
 
-            await _viewModel.InicializarAsync();
+            await _vistaModelo.InicializarAsync();
 
             Assert.AreEqual("ErrorSuscripcion", mensaje);
         }
@@ -667,9 +667,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "");
+                ?.SetValue(_vistaModelo, "");
 
-            await _viewModel.FinalizarAsync();
+            await _vistaModelo.FinalizarAsync();
 
             _mockListaAmigos.Verify(
                 s => s.CancelarSuscripcionAsync(It.IsAny<string>()),
@@ -684,9 +684,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         {
             typeof(VentanaPrincipalVistaModelo)
                 .GetField("_nombreUsuarioSesion", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.SetValue(_viewModel, "Yo");
+                ?.SetValue(_vistaModelo, "Yo");
 
-            await _viewModel.FinalizarAsync();
+            await _vistaModelo.FinalizarAsync();
 
             _mockListaAmigos.Verify(s => s.CancelarSuscripcionAsync("Yo"), Times.Once);
             _mockAmigosServicio.Verify(s => s.CancelarSuscripcionAsync("Yo"), Times.Once);

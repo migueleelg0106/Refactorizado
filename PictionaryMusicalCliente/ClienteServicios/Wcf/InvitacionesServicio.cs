@@ -4,32 +4,44 @@ using PictionaryMusicalCliente.Properties.Langs;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using PictionaryMusicalServidor.Servicios.Contratos;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
+    /// <summary>
+    /// Maneja el envio de invitaciones a partidas mediante correo electronico.
+    /// </summary>
     public class InvitacionesServicio : IInvitacionesServicio
     {
         private const string Endpoint = "BasicHttpBinding_IInvitacionesManejador";
 
-        public async Task<DTOs.ResultadoOperacionDTO> EnviarInvitacionAsync(string codigoSala, string correoDestino)
+        /// <summary>
+        /// Envia una invitacion por correo para unirse a una sala especifica.
+        /// </summary>
+        public async Task<DTOs.ResultadoOperacionDTO> EnviarInvitacionAsync(
+            string codigoSala,
+            string correoDestino)
         {
             if (string.IsNullOrWhiteSpace(codigoSala))
             {
-                throw new ArgumentException("El código de sala es obligatorio.", nameof(codigoSala));
+                throw new ArgumentException("El código de sala es obligatorio.", 
+                    nameof(codigoSala));
             }
 
             if (string.IsNullOrWhiteSpace(correoDestino))
             {
-                throw new ArgumentException("El correo de destino es obligatorio.", nameof(correoDestino));
+                throw new ArgumentException("El correo de destino es obligatorio.", 
+                    nameof(correoDestino));
             }
 
-            ChannelFactory<PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador> fabrica = null;
-            PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador canal = null;
+            ChannelFactory<IInvitacionesManejador> fabrica = null;
+            IInvitacionesManejador canal = null;
 
             try
             {
-                fabrica = new ChannelFactory<PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador>(Endpoint);
+                fabrica = new ChannelFactory<IInvitacionesManejador>(
+                    Endpoint);
                 canal = fabrica.CreateChannel();
 
                 var solicitud = new DTOs.InvitacionSalaDTO
@@ -38,28 +50,43 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     Correo = correoDestino.Trim()
                 };
 
-                return await Task.Run(() => canal.EnviarInvitacion(solicitud)).ConfigureAwait(false);
+                return await Task.Run(() => canal.EnviarInvitacion(solicitud)).
+                    ConfigureAwait(false);
             }
             catch (FaultException ex)
             {
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(ex, Lang.errorTextoEnviarCorreo);
+                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                    ex,
+                    Lang.errorTextoEnviarCorreo);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
             }
             catch (TimeoutException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.TiempoAgotado, Lang.errorTextoServidorTiempoAgotado, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.TiempoAgotado,
+                    Lang.errorTextoServidorTiempoAgotado,
+                    ex);
             }
             catch (CommunicationException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.Comunicacion, Lang.errorTextoServidorNoDisponible, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
             }
             catch (InvalidOperationException ex)
             {
-                throw new ServicioExcepcion(TipoErrorServicio.OperacionInvalida, Lang.errorTextoErrorProcesarSolicitud, ex);
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.OperacionInvalida,
+                    Lang.errorTextoErrorProcesarSolicitud,
+                    ex);
             }
             finally
             {
@@ -68,7 +95,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private static void CerrarCanal(PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador canal)
+        private static void CerrarCanal(
+            IInvitacionesManejador canal)
         {
             if (canal is ICommunicationObject comunicacion)
             {
@@ -90,7 +118,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private static void CerrarFabrica(ChannelFactory<PictionaryMusicalServidor.Servicios.Contratos.IInvitacionesManejador> fabrica)
+        private static void CerrarFabrica(
+            ChannelFactory<IInvitacionesManejador> fabrica)
         {
             if (fabrica == null)
             {

@@ -4,8 +4,14 @@ using System.ServiceModel;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
+    /// <summary>
+    /// Ayudante para extraer mensajes amigables de excepciones WCF.
+    /// </summary>
     public static class ErrorServicioAyudante
     {
+        /// <summary>
+        /// Obtiene un mensaje localizado a partir de una excepcion FaultException.
+        /// </summary>
         public static string ObtenerMensaje(
             FaultException excepcion,
             string mensajePredeterminado)

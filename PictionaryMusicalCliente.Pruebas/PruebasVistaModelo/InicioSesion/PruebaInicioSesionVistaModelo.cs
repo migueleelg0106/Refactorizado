@@ -26,7 +26,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         private Mock<IRecuperacionCuentaServicio> _mockRecuperacion;
         private Mock<ILocalizacionServicio> _mockLocalizacion;
         private Mock<ISalasServicio> _mockSalasServicio;
-        private InicioSesionVistaModelo _viewModel;
+        private InicioSesionVistaModelo _vistaModelo;
 
         [TestInitialize]
         public void Inicializar()
@@ -41,7 +41,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
 
             _mockLocalizacion.Setup(l => l.CulturaActual).Returns(new CultureInfo("es-MX"));
 
-            _viewModel = new InicioSesionVistaModelo(
+            _vistaModelo = new InicioSesionVistaModelo(
                 _mockInicioSesion.Object,
                 _mockCambioContrasena.Object,
                 _mockRecuperacion.Object,
@@ -50,15 +50,15 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
             );
 
             AvisoAyudante.DefinirMostrarAviso((msj) => { });
-            _viewModel.MostrarCamposInvalidos = (_) => { };
-            _viewModel.CerrarAccion = () => { };
+            _vistaModelo.MostrarCamposInvalidos = (_) => { };
+            _vistaModelo.CerrarAccion = () => { };
         }
 
         [TestCleanup]
         public void Limpiar()
         {
             try { SesionUsuarioActual.EstablecerUsuario(new DTOs.UsuarioDTO { UsuarioId = 0 }); } catch { }
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         #region 1. Constructor y Validaciones
@@ -101,9 +101,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public void Prueba_Constructor_InicializaIdiomas()
         {
-            Assert.IsNotNull(_viewModel.IdiomasDisponibles);
-            Assert.AreEqual(2, _viewModel.IdiomasDisponibles.Count);
-            Assert.AreEqual("es-MX", _viewModel.IdiomaSeleccionado.Codigo);
+            Assert.IsNotNull(_vistaModelo.IdiomasDisponibles);
+            Assert.AreEqual(2, _vistaModelo.IdiomasDisponibles.Count);
+            Assert.AreEqual("es-MX", _vistaModelo.IdiomaSeleccionado.Codigo);
         }
 
         #endregion
@@ -113,13 +113,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_IniciarSesion_CamposVacios_MuestraErrores()
         {
-            _viewModel.Identificador = "";
-            _viewModel.EstablecerContrasena("");
+            _vistaModelo.Identificador = "";
+            _vistaModelo.EstablecerContrasena("");
 
             List<string> invalidos = null;
-            _viewModel.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
+            _vistaModelo.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
 
-            await _viewModel.IniciarSesionComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarSesionComando.EjecutarAsync(null);
 
             Assert.IsNotNull(invalidos);
             Assert.IsTrue(invalidos.Contains("Identificador"));
@@ -130,8 +130,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_IniciarSesion_Exito_ActualizaSesionYNavega()
         {
-            _viewModel.Identificador = "User";
-            _viewModel.EstablecerContrasena("Pass");
+            _vistaModelo.Identificador = "User";
+            _vistaModelo.EstablecerContrasena("Pass");
 
             var resultadoExito = new DTOs.ResultadoInicioSesionDTO
             {
@@ -144,11 +144,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
                 .ReturnsAsync(resultadoExito);
 
             bool cerrado = false;
-            _viewModel.CerrarAccion = () => cerrado = true;
+            _vistaModelo.CerrarAccion = () => cerrado = true;
             DTOs.ResultadoInicioSesionDTO resultadoRecibido = null;
-            _viewModel.InicioSesionCompletado = (r) => resultadoRecibido = r;
+            _vistaModelo.InicioSesionCompletado = (r) => resultadoRecibido = r;
 
-            await _viewModel.IniciarSesionComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarSesionComando.EjecutarAsync(null);
 
             Assert.IsTrue(cerrado);
             Assert.IsNotNull(resultadoRecibido);
@@ -158,8 +158,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_IniciarSesion_CredencialesIncorrectas_MuestraError()
         {
-            _viewModel.Identificador = "User";
-            _viewModel.EstablecerContrasena("WrongPass");
+            _vistaModelo.Identificador = "User";
+            _vistaModelo.EstablecerContrasena("WrongPass");
 
             var resultadoFallo = new DTOs.ResultadoInicioSesionDTO
             {
@@ -172,7 +172,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.IniciarSesionComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarSesionComando.EjecutarAsync(null);
 
             Assert.AreEqual("CredencialesInvalidas", mensaje);
         }
@@ -180,14 +180,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_IniciarSesion_RespuestaNula_MuestraErrorServidor()
         {
-            _viewModel.Identificador = "User";
-            _viewModel.EstablecerContrasena("Pass");
+            _vistaModelo.Identificador = "User";
+            _vistaModelo.EstablecerContrasena("Pass");
             _mockInicioSesion.Setup(s => s.IniciarSesionAsync(It.IsAny<DTOs.CredencialesInicioSesionDTO>())).ReturnsAsync((DTOs.ResultadoInicioSesionDTO)null);
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.IniciarSesionComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarSesionComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoServidorInicioSesion, mensaje);
         }
@@ -195,18 +195,18 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_IniciarSesion_Excepcion_MuestraMensaje()
         {
-            _viewModel.Identificador = "User";
-            _viewModel.EstablecerContrasena("Pass");
+            _vistaModelo.Identificador = "User";
+            _vistaModelo.EstablecerContrasena("Pass");
             _mockInicioSesion.Setup(s => s.IniciarSesionAsync(It.IsAny<DTOs.CredencialesInicioSesionDTO>()))
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorRed", null));
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.IniciarSesionComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarSesionComando.EjecutarAsync(null);
 
             Assert.AreEqual("ErrorRed", mensaje);
-            Assert.IsFalse(_viewModel.EstaProcesando);
+            Assert.IsFalse(_vistaModelo.EstaProcesando);
         }
 
         #endregion
@@ -216,11 +216,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_RecuperarCuenta_IdentificadorVacio_MuestraError()
         {
-            _viewModel.Identificador = ""; 
+            _vistaModelo.Identificador = ""; 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.RecuperarCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.RecuperarCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoIdentificadorRecuperacionRequerido, mensaje);
             _mockRecuperacion.Verify(s => s.RecuperarCuentaAsync(It.IsAny<string>(), It.IsAny<ICambioContrasenaServicio>()), Times.Never);
@@ -229,11 +229,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_RecuperarCuenta_Exito_LlamaServicio()
         {
-            _viewModel.Identificador = "UserRecover";
+            _vistaModelo.Identificador = "UserRecover";
             _mockRecuperacion.Setup(s => s.RecuperarCuentaAsync("UserRecover", It.IsAny<ICambioContrasenaServicio>()))
                 .ReturnsAsync(new DTOs.ResultadoOperacionDTO { OperacionExitosa = true });
 
-            await _viewModel.RecuperarCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.RecuperarCuentaComando.EjecutarAsync(null);
 
             _mockRecuperacion.Verify(s => s.RecuperarCuentaAsync("UserRecover", It.IsAny<ICambioContrasenaServicio>()), Times.Once);
         }
@@ -241,14 +241,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_RecuperarCuenta_Fallo_MuestraMensaje()
         {
-            _viewModel.Identificador = "User";
+            _vistaModelo.Identificador = "User";
             _mockRecuperacion.Setup(s => s.RecuperarCuentaAsync(It.IsAny<string>(), It.IsAny<ICambioContrasenaServicio>()))
                 .ReturnsAsync(new DTOs.ResultadoOperacionDTO { OperacionExitosa = false, Mensaje = "NoEncontrado" });
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.RecuperarCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.RecuperarCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual("NoEncontrado", mensaje);
         }
@@ -256,14 +256,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_RecuperarCuenta_Excepcion_MuestraError()
         {
-            _viewModel.Identificador = "User";
+            _vistaModelo.Identificador = "User";
             _mockRecuperacion.Setup(s => s.RecuperarCuentaAsync(It.IsAny<string>(), It.IsAny<ICambioContrasenaServicio>()))
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorWCF", null));
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.RecuperarCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.RecuperarCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual("ErrorWCF", mensaje);
         }
@@ -292,9 +292,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         public async Task Prueba_Invitado_Exito_NavegaAJuego()
         {
             bool ventanaJuegoAbierta = false;
-            _viewModel.AbrirVentanaJuegoInvitado = (s, serv, n) => ventanaJuegoAbierta = true;
+            _vistaModelo.AbrirVentanaJuegoInvitado = (s, serv, n) => ventanaJuegoAbierta = true;
 
-            _viewModel.MostrarIngresoInvitado = (vm) =>
+            _vistaModelo.MostrarIngresoInvitado = (vm) =>
             {
                 typeof(IngresoPartidaInvitadoVistaModelo)
                     .GetProperty("SeUnioSala")
@@ -302,7 +302,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
                 vm.SalaUnida?.Invoke(new DTOs.SalaDTO(), "Invitado1");
             };
 
-            await _viewModel.IniciarSesionInvitadoComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarSesionInvitadoComando.EjecutarAsync(null);
 
             Assert.IsTrue(ventanaJuegoAbierta);
             _mockSalasServicio.Verify(s => s.Dispose(), Times.Never);
@@ -311,14 +311,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_Invitado_Cancelado_HaceDispose()
         {
-            _viewModel.MostrarIngresoInvitado = (vm) =>
+            _vistaModelo.MostrarIngresoInvitado = (vm) =>
             {
                 typeof(IngresoPartidaInvitadoVistaModelo)
                     .GetProperty("SeUnioSala")
                     ?.SetValue(vm, false);
             };
 
-            await _viewModel.IniciarSesionInvitadoComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarSesionInvitadoComando.EjecutarAsync(null);
 
             _mockSalasServicio.Verify(s => s.Dispose(), Times.Once);
         }
@@ -326,11 +326,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public async Task Prueba_Invitado_SinAccionMostrar_MuestraErrorYDispose()
         {
-            _viewModel.MostrarIngresoInvitado = null; 
+            _vistaModelo.MostrarIngresoInvitado = null; 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
-            await _viewModel.IniciarSesionInvitadoComando.EjecutarAsync(null);
+            await _vistaModelo.IniciarSesionInvitadoComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoNoEncuentraPartida, mensaje);
             _mockSalasServicio.Verify(s => s.Dispose(), Times.Once);
@@ -361,16 +361,16 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         {
             _mockLocalizacion.Setup(l => l.CulturaActual).Returns(new CultureInfo("en-US"));
             MethodInfo metodo = typeof(InicioSesionVistaModelo).GetMethod("LocalizacionServicioEnIdiomaActualizado", BindingFlags.NonPublic | BindingFlags.Instance);
-            metodo.Invoke(_viewModel, new object[] { null, EventArgs.Empty });
+            metodo.Invoke(_vistaModelo, new object[] { null, EventArgs.Empty });
 
-            Assert.AreEqual("en-US", _viewModel.IdiomaSeleccionado.Codigo);
+            Assert.AreEqual("en-US", _vistaModelo.IdiomaSeleccionado.Codigo);
         }
 
         [TestMethod]
         public void Prueba_IdiomaSeleccionado_Setter_CambiaIdiomaServicio()
         {
-            var nuevoIdioma = _viewModel.IdiomasDisponibles.Last();
-            _viewModel.IdiomaSeleccionado = nuevoIdioma;
+            var nuevoIdioma = _vistaModelo.IdiomasDisponibles.Last();
+            _vistaModelo.IdiomaSeleccionado = nuevoIdioma;
 
             _mockLocalizacion.Verify(l => l.EstablecerIdioma(nuevoIdioma.Codigo), Times.Once);
         }
@@ -379,9 +379,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         public void Prueba_AbrirCrearCuenta_InvocaAccion()
         {
             bool abierto = false;
-            _viewModel.AbrirCrearCuenta = () => abierto = true;
+            _vistaModelo.AbrirCrearCuenta = () => abierto = true;
 
-            _viewModel.AbrirCrearCuentaComando.Execute(null);
+            _vistaModelo.AbrirCrearCuentaComando.Execute(null);
 
             Assert.IsTrue(abierto);
         }
@@ -389,11 +389,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public void Prueba_EstaProcesando_Setter_NotificaComandos()
         {
-            typeof(InicioSesionVistaModelo).GetProperty("EstaProcesando").SetValue(_viewModel, true);
-            Assert.IsFalse(_viewModel.IniciarSesionComando.CanExecute(null));
+            typeof(InicioSesionVistaModelo).GetProperty("EstaProcesando").SetValue(_vistaModelo, true);
+            Assert.IsFalse(_vistaModelo.IniciarSesionComando.CanExecute(null));
 
-            typeof(InicioSesionVistaModelo).GetProperty("EstaProcesando").SetValue(_viewModel, false);
-            Assert.IsTrue(_viewModel.IniciarSesionComando.CanExecute(null));
+            typeof(InicioSesionVistaModelo).GetProperty("EstaProcesando").SetValue(_vistaModelo, false);
+            Assert.IsTrue(_vistaModelo.IniciarSesionComando.CanExecute(null));
         }
 
         #endregion

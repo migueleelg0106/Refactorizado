@@ -12,6 +12,9 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Perfil
 {
+    /// <summary>
+    /// Administra la logica para el cambio de contrasena mediante un token de recuperacion.
+    /// </summary>
     public class CambioContrasenaVistaModelo : BaseVistaModelo
     {
         private readonly string _tokenCodigo;
@@ -21,10 +24,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private string _confirmacionContrasena;
         private bool _estaProcesando;
 
-        public CambioContrasenaVistaModelo(string tokenCodigo, ICambioContrasenaServicio cambioContrasenaServicio)
+        /// <summary>
+        /// Inicializa el ViewModel con el token y el servicio necesario para realizar el cambio.
+        /// </summary>
+        /// <param name="tokenCodigo">El codigo de verificacion validado previamente.</param>
+        /// <param name="cambioContrasenaServicio">Servicio para ejecutar la actualizacion.</param>
+        public CambioContrasenaVistaModelo(
+            string tokenCodigo,
+            ICambioContrasenaServicio cambioContrasenaServicio)
         {
             _tokenCodigo = tokenCodigo ?? throw new ArgumentNullException(nameof(tokenCodigo));
-            _cambioContrasenaServicio = cambioContrasenaServicio ?? throw new ArgumentNullException(nameof(cambioContrasenaServicio));
+            _cambioContrasenaServicio = cambioContrasenaServicio ??
+                throw new ArgumentNullException(nameof(cambioContrasenaServicio));
 
             ConfirmarComando = new ComandoAsincrono(async _ =>
             {
@@ -39,18 +50,27 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             });
         }
 
+        /// <summary>
+        /// La nueva contrasena ingresada por el usuario.
+        /// </summary>
         public string NuevaContrasena
         {
             get => _nuevaContrasena;
             set => EstablecerPropiedad(ref _nuevaContrasena, value);
         }
 
+        /// <summary>
+        /// La confirmacion de la contrasena para asegurar que el usuario no cometio errores.
+        /// </summary>
         public string ConfirmacionContrasena
         {
             get => _confirmacionContrasena;
             set => EstablecerPropiedad(ref _confirmacionContrasena, value);
         }
 
+        /// <summary>
+        /// Indica si se esta realizando una operacion asincrona para bloquear la interfaz.
+        /// </summary>
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -63,22 +83,41 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             }
         }
 
+        /// <summary>
+        /// Comando para ejecutar la validacion y solicitud de cambio de contrasena.
+        /// </summary>
         public IComandoAsincrono ConfirmarComando { get; }
+
+        /// <summary>
+        /// Comando para cancelar la operacion y cerrar la vista.
+        /// </summary>
         public ICommand CancelarComando { get; }
+
+        /// <summary>
+        /// Accion invocada cuando el cambio se realiza exitosamente para notificar a la vista.
+        /// </summary>
         public Action<DTOs.ResultadoOperacionDTO> CambioContrasenaCompletado { get; set; }
+
+        /// <summary>
+        /// Accion invocada cuando el usuario decide cancelar la operacion.
+        /// </summary>
         public Action Cancelado { get; set; }
+
+        /// <summary>
+        /// Accion para notificar a la vista que campos especificos son invalidos.
+        /// </summary>
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
 
         private async Task ConfirmarAsync()
         {
-            MostrarCamposInvalidos?.Invoke(Array.Empty<string>()); 
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
 
             var camposInvalidos = ValidarEntradas();
             if (camposInvalidos != null && camposInvalidos.Count > 0)
             {
                 ManejadorSonido.ReproducirError();
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
-                return; 
+                return;
             }
 
             MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
@@ -86,7 +125,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
-                DTOs.ResultadoOperacionDTO resultadoCambio = await RealizarCambioContrasenaAsync().ConfigureAwait(true);
+                DTOs.ResultadoOperacionDTO resultadoCambio = await RealizarCambioContrasenaAsync()
+                    .ConfigureAwait(true);
 
                 if (resultadoCambio != null && resultadoCambio.OperacionExitosa)
                 {
@@ -118,7 +158,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 return camposInvalidos;
             }
 
-            DTOs.ResultadoOperacionDTO validacion = ValidacionEntrada.ValidarContrasena(NuevaContrasena);
+            DTOs.ResultadoOperacionDTO validacion = ValidacionEntrada.ValidarContrasena(
+                NuevaContrasena);
+
             if (validacion?.OperacionExitosa != true)
             {
                 AvisoAyudante.Mostrar(validacion?.Mensaje ?? Lang.errorTextoContrasenaFormato);
@@ -128,10 +170,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             if (!string.Equals(NuevaContrasena, ConfirmacionContrasena, StringComparison.Ordinal))
             {
                 AvisoAyudante.Mostrar(Lang.errorTextoContrasenasNoCoinciden);
-                return new List<string> { nameof(NuevaContrasena), nameof(ConfirmacionContrasena) };
+                return new List<string>
+                {
+                    nameof(NuevaContrasena),
+                    nameof(ConfirmacionContrasena)
+                };
             }
 
-            return camposInvalidos; 
+            return camposInvalidos;
         }
 
         private async Task<DTOs.ResultadoOperacionDTO> RealizarCambioContrasenaAsync()
@@ -145,10 +191,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 {
                     ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoActualizarContrasena);
-                    return null; 
+                    return null;
                 }
 
-                string mensaje = resultado.Mensaje ?? (resultado.OperacionExitosa ? Lang.avisoTextoContrasenaActualizada : Lang.errorTextoActualizarContrasena);
+                string mensaje = resultado.Mensaje ??
+                    (resultado.OperacionExitosa
+                        ? Lang.avisoTextoContrasenaActualizada
+                        : Lang.errorTextoActualizarContrasena);
+
                 if (resultado.OperacionExitosa)
                 {
                     ManejadorSonido.ReproducirExito();
@@ -158,15 +208,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                     ManejadorSonido.ReproducirError();
                 }
                 AvisoAyudante.Mostrar(mensaje);
-                resultado.Mensaje = mensaje; 
+                resultado.Mensaje = mensaje;
 
-                return resultado; 
+                return resultado;
             }
             catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoActualizarContrasena);
-                return null; 
+                return null;
             }
         }
 

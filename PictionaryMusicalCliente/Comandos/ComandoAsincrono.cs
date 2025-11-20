@@ -17,10 +17,13 @@ namespace PictionaryMusicalCliente.Comandos
         /// <summary>
         /// Inicializa una nueva instancia del comando asincrónico.
         /// </summary>
-        /// <param name="ejecutarAsincrono">Función que representa la ejecución del comando.</param>
-        /// <param name="puedeEjecutar">Función opcional para determinar si el comando puede ejecutarse.</param>
+        /// <param name="ejecutarAsincrono">Función que representa la ejecución del comando.
+        /// </param>
+        /// <param name="puedeEjecutar">Función opcional para validar ejecución.</param>
         public ComandoAsincrono(Func<Task> ejecutarAsincrono, Func<bool> puedeEjecutar = null)
-            : this(ejecutarAsincrono != null ? new Func<object, Task>(_ => ejecutarAsincrono()) : null,
+            : this(
+                  ejecutarAsincrono != null ? new Func<object, Task>(_ => ejecutarAsincrono()) 
+                    : null,
                   puedeEjecutar != null ? new Predicate<object>(_ => puedeEjecutar()) : null)
         {
         }
@@ -28,11 +31,15 @@ namespace PictionaryMusicalCliente.Comandos
         /// <summary>
         /// Inicializa una nueva instancia del comando asincrónico con acceso al parámetro.
         /// </summary>
-        /// <param name="ejecutarAsincrono">Función que representa la ejecución del comando.</param>
-        /// <param name="puedeEjecutar">Función opcional para determinar si el comando puede ejecutarse.</param>
-        public ComandoAsincrono(Func<object, Task> ejecutarAsincrono, Predicate<object> puedeEjecutar = null)
+        /// <param name="ejecutarAsincrono">Función que representa la ejecución del comando.
+        /// </param>
+        /// <param name="puedeEjecutar">Función opcional para validar ejecución.</param>
+        public ComandoAsincrono(
+            Func<object, Task> ejecutarAsincrono,
+            Predicate<object> puedeEjecutar = null)
         {
-            _ejecutarAsincrono = ejecutarAsincrono ?? throw new ArgumentNullException(nameof(ejecutarAsincrono));
+            _ejecutarAsincrono = ejecutarAsincrono ??
+                throw new ArgumentNullException(nameof(ejecutarAsincrono));
             _puedeEjecutar = puedeEjecutar;
         }
 
@@ -80,9 +87,11 @@ namespace PictionaryMusicalCliente.Comandos
         /// <inheritdoc />
         public void NotificarPuedeEjecutar()
         {
-            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
+            if (Application.Current?.Dispatcher != null &&
+                !Application.Current.Dispatcher.CheckAccess())
             {
-                Application.Current.Dispatcher.BeginInvoke(new Action(() => NotificarPuedeEjecutar()));
+                Application.Current.Dispatcher.BeginInvoke(
+                    new Action(() => NotificarPuedeEjecutar()));
                 return;
             }
 

@@ -23,7 +23,11 @@ namespace PictionaryMusicalCliente.Convertidores
         public bool ColapsarCuandoEsFalso { get; set; } = true;
 
         /// <inheritdoc />
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(
+            object value, 
+            Type targetType, 
+            object parameter, 
+            CultureInfo culture)
         {
             bool valorBooleano = false;
 
@@ -46,7 +50,11 @@ namespace PictionaryMusicalCliente.Convertidores
         }
 
         /// <inheritdoc />
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(
+            object value, 
+            Type targetType, 
+            object parameter, 
+            CultureInfo culture)
         {
             if (value is Visibility visibilidad)
             {

@@ -12,7 +12,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
     [TestClass]
     public class PruebaSeleccionAvatarVistaModelo
     {
-        private SeleccionAvatarVistaModelo _viewModel;
+        private SeleccionAvatarVistaModelo _vistaModelo;
         private List<ObjetoAvatar> _listaAvatares;
 
         [TestInitialize]
@@ -29,13 +29,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
                 new ObjetoAvatar(2, "Avatar2", null)
             };
 
-            _viewModel = new SeleccionAvatarVistaModelo(_listaAvatares);
+            _vistaModelo = new SeleccionAvatarVistaModelo(_listaAvatares);
         }
 
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         [TestMethod]
@@ -48,16 +48,16 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         [TestMethod]
         public void Constructor_ListaValida_InicializaColeccion()
         {
-            Assert.IsNotNull(_viewModel.Avatares);
-            Assert.AreEqual(2, _viewModel.Avatares.Count);
-            Assert.IsNotNull(_viewModel.ConfirmarSeleccionComando);
+            Assert.IsNotNull(_vistaModelo.Avatares);
+            Assert.AreEqual(2, _vistaModelo.Avatares.Count);
+            Assert.IsNotNull(_vistaModelo.ConfirmarSeleccionComando);
         }
 
         [TestMethod]
         public void Propiedad_AvatarSeleccionado_NotificaCambio()
         {
             bool notificado = false;
-            _viewModel.PropertyChanged += (s, e) =>
+            _vistaModelo.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(SeleccionAvatarVistaModelo.AvatarSeleccionado))
                 {
@@ -65,25 +65,25 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
                 }
             };
 
-            _viewModel.AvatarSeleccionado = _listaAvatares[0];
+            _vistaModelo.AvatarSeleccionado = _listaAvatares[0];
 
             Assert.IsTrue(notificado);
-            Assert.AreEqual(_listaAvatares[0], _viewModel.AvatarSeleccionado);
+            Assert.AreEqual(_listaAvatares[0], _vistaModelo.AvatarSeleccionado);
         }
 
         [TestMethod]
         public void ConfirmarSeleccion_SinAvatarSeleccionado_MuestraErrorYNoCierra()
         {
-            _viewModel.AvatarSeleccionado = null;
+            _vistaModelo.AvatarSeleccionado = null;
             string mensajeMostrado = null;
             bool cerroVentana = false;
             bool seleccionConfirmada = false;
 
             AvisoAyudante.DefinirMostrarAviso((m) => mensajeMostrado = m);
-            _viewModel.CerrarAccion = () => cerroVentana = true;
-            _viewModel.SeleccionConfirmada = (_) => seleccionConfirmada = true;
+            _vistaModelo.CerrarAccion = () => cerroVentana = true;
+            _vistaModelo.SeleccionConfirmada = (_) => seleccionConfirmada = true;
 
-            _viewModel.ConfirmarSeleccionComando.Execute(null);
+            _vistaModelo.ConfirmarSeleccionComando.Execute(null);
 
             Assert.AreEqual(Lang.errorTextoSeleccionAvatarValido, mensajeMostrado);
             Assert.IsFalse(cerroVentana);
@@ -94,15 +94,15 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Perfil
         public void ConfirmarSeleccion_ConAvatarSeleccionado_InvocaAcciones()
         {
             var avatar = _listaAvatares[1];
-            _viewModel.AvatarSeleccionado = avatar;
+            _vistaModelo.AvatarSeleccionado = avatar;
 
             bool cerroVentana = false;
             ObjetoAvatar avatarConfirmado = null;
 
-            _viewModel.CerrarAccion = () => cerroVentana = true;
-            _viewModel.SeleccionConfirmada = (a) => avatarConfirmado = a;
+            _vistaModelo.CerrarAccion = () => cerroVentana = true;
+            _vistaModelo.SeleccionConfirmada = (a) => avatarConfirmado = a;
 
-            _viewModel.ConfirmarSeleccionComando.Execute(null);
+            _vistaModelo.ConfirmarSeleccionComando.Execute(null);
 
             Assert.IsTrue(cerroVentana);
             Assert.AreEqual(avatar, avatarConfirmado);

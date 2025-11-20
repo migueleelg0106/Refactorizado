@@ -5,8 +5,14 @@ using PictionaryMusicalCliente.VistaModelo.VentanaPrincipal;
 
 namespace PictionaryMusicalCliente
 {
+    /// <summary>
+    /// Ventana que muestra la tabla de puntuaciones globales y estadisticas de jugadores.
+    /// </summary>
     public partial class Clasificacion : Window
     {
+        /// <summary>
+        /// Inicializa la ventana de clasificacion y su contexto de datos.
+        /// </summary>
         public Clasificacion()
         {
             InitializeComponent();

@@ -21,7 +21,7 @@
                            FontFamily="Comic Sans MS" FontSize="14" FontWeight="Bold"
                            HorizontalAlignment="Center"/>
 
-                <PasswordBox x:Name="bloqueContrasenaNueva"
+                <PasswordBox x:Name="campoContrasenaNueva"
                              Height="28" Margin="0,8,0,10" FontFamily="Comic Sans MS"
                              MaxLength="15"
                              PasswordChanged="ContrasenaNuevaPasswordChanged"/>
@@ -30,7 +30,7 @@
                            FontFamily="Comic Sans MS" FontStyle="Italic" Foreground="Blue"
                            HorizontalAlignment="Center"/>
 
-                <PasswordBox x:Name="bloqueContrasenaConfirmacion"
+                <PasswordBox x:Name="campoContrasenaConfirmacion"
                              Height="28" Margin="0,6,0,16" FontFamily="Comic Sans MS"
                              MaxLength="15"
                              PasswordChanged="ContrasenaConfirmacionPasswordChanged"/>

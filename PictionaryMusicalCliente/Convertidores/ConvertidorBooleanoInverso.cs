@@ -11,7 +11,11 @@ namespace PictionaryMusicalCliente.Convertidores
     public class ConvertidorBooleanoInverso : IValueConverter
     {
         /// <inheritdoc />
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(
+            object value, 
+            Type targetType, 
+            object parameter, 
+            CultureInfo culture)
         {
             if (value is bool boolValor)
             {
@@ -22,7 +26,11 @@ namespace PictionaryMusicalCliente.Convertidores
         }
 
         /// <inheritdoc />
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(
+            object value, 
+            Type targetType, 
+            object parameter, 
+            CultureInfo culture)
         {
             return Convert(value, targetType, parameter, culture);
         }

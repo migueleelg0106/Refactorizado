@@ -5,17 +5,24 @@ using PictionaryMusicalCliente.VistaModelo.Amigos;
 namespace PictionaryMusicalCliente
 {
     /// <summary>
-    /// Lógica de interacción para EliminarAmigo.xaml
+    /// Dialogo modal para confirmar la eliminacion de un contacto.
     /// </summary>
     public partial class EliminacionAmigo : Window
     {
         private readonly EliminacionAmigoVistaModelo _vistaModelo;
 
+        /// <summary>
+        /// Inicializa el dialogo para un amigo especifico.
+        /// </summary>
+        /// <param name="nombreAmigo">Nombre del usuario a eliminar.</param>
         public EliminacionAmigo(string nombreAmigo)
             : this(new EliminacionAmigoVistaModelo(nombreAmigo))
         {
         }
 
+        /// <summary>
+        /// Constructor principal que permite inyeccion de vista modelo.
+        /// </summary>
         public EliminacionAmigo(EliminacionAmigoVistaModelo vistaModelo)
         {
             _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));

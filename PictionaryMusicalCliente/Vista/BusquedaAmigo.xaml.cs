@@ -7,22 +7,32 @@ using PictionaryMusicalCliente.VistaModelo.Amigos;
 namespace PictionaryMusicalCliente
 {
     /// <summary>
-    /// Lógica de interacción para BuscarAmigo.xaml
+    /// Lógica de interacción para la ventana de búsqueda y solicitud de amistad.
     /// </summary>
     public partial class BusquedaAmigo : Window
     {
         private readonly BusquedaAmigoVistaModelo _vistaModelo;
 
+        /// <summary>
+        /// Constructor por defecto que inicializa el servicio de amigos real.
+        /// </summary>
         public BusquedaAmigo()
             : this(new BusquedaAmigoVistaModelo(new AmigosServicio()))
         {
         }
 
+        /// <summary>
+        /// Constructor que permite inyectar una implementación especifica del servicio 
+        /// (Unit Testing).
+        /// </summary>
         public BusquedaAmigo(IAmigosServicio amigosServicio)
             : this(new BusquedaAmigoVistaModelo(amigosServicio))
         {
         }
 
+        /// <summary>
+        /// Constructor principal que configura la vista modelo y sus eventos.
+        /// </summary>
         public BusquedaAmigo(BusquedaAmigoVistaModelo vistaModelo)
         {
             _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));

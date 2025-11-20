@@ -23,7 +23,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         private Mock<ICuentaServicio> _mockCuentaService;
         private Mock<ISeleccionarAvatarServicio> _mockAvatarService;
         private Mock<IVerificacionCodigoDialogoServicio> _mockDialogoService;
-        private CreacionCuentaVistaModelo _viewModel;
+        private CreacionCuentaVistaModelo _vistaModelo;
 
         [TestInitialize]
         public void Inicializar()
@@ -36,23 +36,23 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
             _mockAvatarService = new Mock<ISeleccionarAvatarServicio>();
             _mockDialogoService = new Mock<IVerificacionCodigoDialogoServicio>();
 
-            _viewModel = new CreacionCuentaVistaModelo(
+            _vistaModelo = new CreacionCuentaVistaModelo(
                 _mockCodigoService.Object,
                 _mockCuentaService.Object,
                 _mockAvatarService.Object,
                 _mockDialogoService.Object
             );
 
-            _viewModel.MostrarMensaje = (_) => { };
-            _viewModel.MostrarCamposInvalidos = (_) => { };
-            _viewModel.CerrarAccion = () => { };
+            _vistaModelo.MostrarMensaje = (_) => { };
+            _vistaModelo.MostrarCamposInvalidos = (_) => { };
+            _vistaModelo.CerrarAccion = () => { };
             AvisoAyudante.DefinirMostrarAviso((_) => { });
         }
 
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel = null;
+            _vistaModelo = null;
         }
 
         #region 1. Constructor y Validaciones de Dependencias
@@ -90,8 +90,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         {
             if (CatalogoAvataresLocales.ObtenerAvatares().Count > 0)
             {
-                Assert.IsTrue(_viewModel.AvatarSeleccionadoId > 0);
-                Assert.IsNotNull(_viewModel.AvatarSeleccionadoImagen);
+                Assert.IsTrue(_vistaModelo.AvatarSeleccionadoId > 0);
+                Assert.IsNotNull(_vistaModelo.AvatarSeleccionadoImagen);
             }
         }
 
@@ -105,20 +105,20 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
             var avatarMock = new ObjetoAvatar(99, "AvatarTest", null);
             _mockAvatarService.Setup(s => s.SeleccionarAvatarAsync(It.IsAny<int>())).ReturnsAsync(avatarMock);
 
-            await _viewModel.SeleccionarAvatarComando.EjecutarAsync(null);
+            await _vistaModelo.SeleccionarAvatarComando.EjecutarAsync(null);
 
-            Assert.AreEqual(99, _viewModel.AvatarSeleccionadoId);
+            Assert.AreEqual(99, _vistaModelo.AvatarSeleccionadoId);
         }
 
         [TestMethod]
         public async Task Prueba_SeleccionarAvatar_Cancelado_NoCambia()
         {
             _mockAvatarService.Setup(s => s.SeleccionarAvatarAsync(It.IsAny<int>())).ReturnsAsync((ObjetoAvatar)null);
-            int idOriginal = _viewModel.AvatarSeleccionadoId;
+            int idOriginal = _vistaModelo.AvatarSeleccionadoId;
 
-            await _viewModel.SeleccionarAvatarComando.EjecutarAsync(null);
+            await _vistaModelo.SeleccionarAvatarComando.EjecutarAsync(null);
 
-            Assert.AreEqual(idOriginal, _viewModel.AvatarSeleccionadoId);
+            Assert.AreEqual(idOriginal, _vistaModelo.AvatarSeleccionadoId);
         }
 
         #endregion
@@ -129,9 +129,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         public async Task Prueba_CrearCuenta_CamposVacios_MuestraErrores()
         {
             List<string> invalidos = null;
-            _viewModel.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
+            _vistaModelo.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.IsNotNull(invalidos);
             Assert.IsTrue(invalidos.Contains("Usuario"));
@@ -144,12 +144,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         public async Task Prueba_CrearCuenta_AvatarInvalido_MuestraError()
         {
             CargarDatosValidos();
-            typeof(CreacionCuentaVistaModelo).GetProperty("AvatarSeleccionadoId").SetValue(_viewModel, 0);
+            typeof(CreacionCuentaVistaModelo).GetProperty("AvatarSeleccionadoId").SetValue(_vistaModelo, 0);
 
             List<string> invalidos = null;
-            _viewModel.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
+            _vistaModelo.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.IsTrue(invalidos.Contains("Avatar"));
         }
@@ -158,14 +158,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         public async Task Prueba_CrearCuenta_UnSoloCampoInvalido_MuestraMensajeEspecifico()
         {
             CargarDatosValidos();
-            _viewModel.Usuario = ""; 
+            _vistaModelo.Usuario = ""; 
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
             List<string> invalidos = null;
-            _viewModel.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
+            _vistaModelo.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual(1, invalidos.Count);
             Assert.AreNotEqual(Lang.errorTextoCamposInvalidosGenerico, mensaje);
@@ -183,9 +183,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
                 .ReturnsAsync((DTOs.ResultadoSolicitudCodigoDTO)null);
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoRegistrarCuentaMasTarde, mensaje);
         }
@@ -203,11 +203,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
                 .ReturnsAsync(resultadoDuplicado);
 
             List<string> invalidos = null;
-            _viewModel.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
+            _vistaModelo.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
-            Assert.IsTrue(_viewModel.MostrarErrorUsuario);
+            Assert.IsTrue(_vistaModelo.MostrarErrorUsuario);
             Assert.IsTrue(invalidos.Contains("Usuario"));
             _mockDialogoService.Verify(s => s.MostrarDialogoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ICodigoVerificacionServicio>()), Times.Never);
         }
@@ -225,9 +225,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
                 .ReturnsAsync(resultadoFallo);
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual("Error SMTP", mensaje);
         }
@@ -240,12 +240,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "FalloRed", null));
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual("FalloRed", mensaje);
-            Assert.IsFalse(_viewModel.EstaProcesando);
+            Assert.IsFalse(_vistaModelo.EstaProcesando);
         }
 
         #endregion
@@ -263,7 +263,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
             _mockDialogoService.Setup(s => s.MostrarDialogoAsync(It.IsAny<string>(), "TOKEN", _mockCodigoService.Object))
                 .ReturnsAsync((DTOs.ResultadoRegistroCuentaDTO)null);
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             _mockCuentaService.Verify(s => s.RegistrarCuentaAsync(It.IsAny<DTOs.NuevaCuentaDTO>()), Times.Never);
         }
@@ -280,9 +280,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
                 .ReturnsAsync(resultadoVerificacion);
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual("CodigoIncorrecto", mensaje);
         }
@@ -299,9 +299,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
                 .ReturnsAsync((DTOs.ResultadoRegistroCuentaDTO)null);
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoRegistrarCuentaMasTarde, mensaje);
         }
@@ -318,9 +318,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
             _mockCuentaService.Setup(s => s.RegistrarCuentaAsync(It.IsAny<DTOs.NuevaCuentaDTO>())).ReturnsAsync(resultadoFallo);
 
             List<string> invalidos = null;
-            _viewModel.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
+            _vistaModelo.MostrarCamposInvalidos = (l) => invalidos = l.ToList();
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.IsTrue(invalidos.Contains("Usuario"));
         }
@@ -337,9 +337,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
             _mockCuentaService.Setup(s => s.RegistrarCuentaAsync(It.IsAny<DTOs.NuevaCuentaDTO>())).ReturnsAsync(resultadoFallo);
 
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.AreEqual("ErrorBD", mensaje);
         }
@@ -359,11 +359,11 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
                 .ReturnsAsync(new DTOs.ResultadoRegistroCuentaDTO { RegistroExitoso = true });
 
             bool cerrado = false;
-            _viewModel.CerrarAccion = () => cerrado = true;
+            _vistaModelo.CerrarAccion = () => cerrado = true;
             string mensaje = null;
-            _viewModel.MostrarMensaje = (m) => mensaje = m;
+            _vistaModelo.MostrarMensaje = (m) => mensaje = m;
 
-            await _viewModel.CrearCuentaComando.EjecutarAsync(null);
+            await _vistaModelo.CrearCuentaComando.EjecutarAsync(null);
 
             Assert.IsTrue(cerrado, "La ventana debió cerrarse tras el registro exitoso.");
             Assert.AreEqual(Lang.crearCuentaTextoExitosoMensaje, mensaje);
@@ -377,9 +377,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         public void Prueba_CancelarComando_CierraVentana()
         {
             bool cerrado = false;
-            _viewModel.CerrarAccion = () => cerrado = true;
+            _vistaModelo.CerrarAccion = () => cerrado = true;
 
-            _viewModel.CancelarComando.Execute(null);
+            _vistaModelo.CancelarComando.Execute(null);
 
             Assert.IsTrue(cerrado);
         }
@@ -387,23 +387,23 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
         [TestMethod]
         public void Prueba_EstaProcesando_Setter_NotificaComando()
         {
-            typeof(CreacionCuentaVistaModelo).GetProperty("EstaProcesando").SetValue(_viewModel, true);
+            typeof(CreacionCuentaVistaModelo).GetProperty("EstaProcesando").SetValue(_vistaModelo, true);
 
-            Assert.IsFalse(_viewModel.CrearCuentaComando.CanExecute(null));
+            Assert.IsFalse(_vistaModelo.CrearCuentaComando.CanExecute(null));
 
-            typeof(CreacionCuentaVistaModelo).GetProperty("EstaProcesando").SetValue(_viewModel, false);
-            Assert.IsTrue(_viewModel.CrearCuentaComando.CanExecute(null));
+            typeof(CreacionCuentaVistaModelo).GetProperty("EstaProcesando").SetValue(_vistaModelo, false);
+            Assert.IsTrue(_vistaModelo.CrearCuentaComando.CanExecute(null));
         }
 
         #endregion
 
         private void CargarDatosValidos()
         {
-            _viewModel.Usuario = "User123";
-            _viewModel.Nombre = "Name";
-            _viewModel.Apellido = "Last";
-            _viewModel.Correo = "a@a.com";
-            _viewModel.Contrasena = "Pass123!";
+            _vistaModelo.Usuario = "User123";
+            _vistaModelo.Nombre = "Name";
+            _vistaModelo.Apellido = "Last";
+            _vistaModelo.Correo = "a@a.com";
+            _vistaModelo.Contrasena = "Pass123!";
         }
 
         private void ConfigurarHastaRegistro()

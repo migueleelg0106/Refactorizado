@@ -4,13 +4,21 @@ using PictionaryMusicalCliente.Modelo;
 
 namespace PictionaryMusicalCliente.Sesiones
 {
+    /// <summary>
+    /// Gestiona el acceso global a la sesion del usuario autenticado.
+    /// </summary>
     public sealed class SesionUsuarioActual
     {
         private static readonly Lazy<SesionUsuarioActual> _instancia =
             new(() => new SesionUsuarioActual());
 
-        private SesionUsuarioActual() { }
+        private SesionUsuarioActual()
+        {
+        }
 
+        /// <summary>
+        /// Obtiene la instancia unica del administrador de sesion.
+        /// </summary>
         public static SesionUsuarioActual Instancia => _instancia.Value;
 
         /// <summary>
@@ -30,7 +38,9 @@ namespace PictionaryMusicalCliente.Sesiones
         public static void EstablecerUsuario(UsuarioDTO usuarioDto)
         {
             if (usuarioDto == null)
+            {
                 throw new ArgumentNullException(nameof(usuarioDto));
+            }
 
             Usuario.CargarDesdeDTO(usuarioDto);
         }

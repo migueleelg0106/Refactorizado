@@ -13,6 +13,9 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
+    /// <summary>
+    /// Controla la logica para invitar amigos conectados a una sala de juego.
+    /// </summary>
     public class InvitarAmigosVistaModelo : BaseVistaModelo
     {
         private readonly IInvitacionesServicio _invitacionesServicio;
@@ -21,6 +24,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         private readonly Action<int> _registrarAmigoInvitado;
         private readonly Action<string> _mostrarMensaje;
 
+        /// <summary>
+        /// Inicializa el ViewModel con la lista de amigos y servicios necesarios.
+        /// </summary>
         public InvitarAmigosVistaModelo(
             IEnumerable<DTOs.AmigoDTO> amigos,
             IInvitacionesServicio invitacionesServicio,
@@ -30,12 +36,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             Action<int> registrarAmigoInvitado,
             Action<string> mostrarMensaje)
         {
-            _invitacionesServicio = invitacionesServicio ?? throw new ArgumentNullException(nameof(invitacionesServicio));
-            _perfilServicio = perfilServicio ?? throw new ArgumentNullException(nameof(perfilServicio));
+            _invitacionesServicio = invitacionesServicio ??
+                throw new ArgumentNullException(nameof(invitacionesServicio));
+            _perfilServicio = perfilServicio ??
+                throw new ArgumentNullException(nameof(perfilServicio));
 
             if (string.IsNullOrWhiteSpace(codigoSala))
             {
-                throw new ArgumentException("El código de la sala es obligatorio.", nameof(codigoSala));
+                throw new ArgumentException("El código de la sala es obligatorio.", 
+                    nameof(codigoSala));
             }
 
             _codigoSala = codigoSala;
@@ -46,6 +55,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 CrearElementos(amigos, amigoInvitado));
         }
 
+        /// <summary>
+        /// Coleccion de amigos disponibles para invitar.
+        /// </summary>
         public ObservableCollection<AmigoInvitacionItemVistaModelo> Amigos { get; }
 
         internal async Task InvitarAsync(AmigoInvitacionItemVistaModelo amigo)
@@ -149,12 +161,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         }
     }
 
+    /// <summary>
+    /// Representa un item individual en la lista de amigos para invitar.
+    /// </summary>
     public class AmigoInvitacionItemVistaModelo : BaseVistaModelo
     {
         private readonly InvitarAmigosVistaModelo _padre;
         private bool _invitacionEnviada;
         private bool _estaProcesando;
 
+        /// <summary>
+        /// Crea una instancia del item de invitacion.
+        /// </summary>
         public AmigoInvitacionItemVistaModelo(
             DTOs.AmigoDTO amigo,
             InvitarAmigosVistaModelo padre,
@@ -177,10 +195,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }, () => !EstaProcesando);
         }
 
+        /// <summary>
+        /// Identificador unico del usuario amigo.
+        /// </summary>
         public int UsuarioId { get; }
 
+        /// <summary>
+        /// Nombre de usuario a mostrar.
+        /// </summary>
         public string NombreUsuario { get; }
 
+        /// <summary>
+        /// Indica si la invitacion ya ha sido enviada exitosamente.
+        /// </summary>
         public bool InvitacionEnviada
         {
             get => _invitacionEnviada;
@@ -194,6 +221,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
         }
 
+        /// <summary>
+        /// Indica si hay una operacion en curso para este item.
+        /// </summary>
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -206,10 +236,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
         }
 
+        /// <summary>
+        /// Texto dinamico del boton (Invitar / Invitado).
+        /// </summary>
         public string TextoBoton => InvitacionEnviada
             ? Lang.invitarAmigosTextoInvitado
             : Lang.globalTextoInvitar;
 
+        /// <summary>
+        /// Comando para ejecutar el envio de la invitacion.
+        /// </summary>
         public IComandoAsincrono InvitarComando { get; }
 
         internal void MarcarInvitacionEnviada()

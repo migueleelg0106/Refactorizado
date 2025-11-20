@@ -1,31 +1,39 @@
 ﻿using System.Windows;
-using PictionaryMusicalCliente.Utilidades; 
-using PictionaryMusicalCliente.VistaModelo.Ajustes; 
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Ajustes;
 
 namespace PictionaryMusicalCliente
 {
+    /// <summary>
+    /// Ventana para modificar configuraciones especificas durante una partida en curso.
+    /// </summary>
     public partial class AjustesPartida : Window
     {
-        private readonly AjustesPartidaVistaModelo _viewModel;
+        private readonly AjustesPartidaVistaModelo _vistaModelo;
 
+        /// <summary>
+        /// Inicializa la ventana de ajustes de partida.
+        /// </summary>
+        /// <param name="servicioCancion">Servicio para controlar el volumen de la música del 
+        /// juego.</param>
         public AjustesPartida(CancionManejador servicioCancion)
         {
             InitializeComponent();
 
-            _viewModel = new AjustesPartidaVistaModelo(servicioCancion);
+            _vistaModelo = new AjustesPartidaVistaModelo(servicioCancion);
 
-            _viewModel.OcultarVentana = () => this.Close();
+            _vistaModelo.OcultarVentana = () => Close();
 
-            _viewModel.MostrarDialogoSalirPartida = () =>
+            _vistaModelo.MostrarDialogoSalirPartida = () =>
             {
-                ConfirmacionSalirPartida confirmacionSalirPartida = new ConfirmacionSalirPartida
+                var confirmacionSalirPartida = new ConfirmacionSalirPartida
                 {
                     Owner = this
                 };
                 confirmacionSalirPartida.ShowDialog();
             };
 
-            this.DataContext = _viewModel;
+            DataContext = _vistaModelo;
         }
     }
 }

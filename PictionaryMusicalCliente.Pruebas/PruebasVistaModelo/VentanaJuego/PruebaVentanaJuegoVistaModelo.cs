@@ -29,7 +29,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         private Mock<IListaAmigosServicio> _mockListaAmigosServicio;
         private Mock<IPerfilServicio> _mockPerfilServicio;
 
-        private VentanaJuegoVistaModelo _viewModel;
+        private VentanaJuegoVistaModelo _vistaModelo;
         private DTOs.SalaDTO _sala;
         private List<string> _mensajesMostrados;
         private VentanaJuegoVistaModelo.DestinoNavegacion? _destinoNavegacion;
@@ -61,7 +61,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             _destinoNavegacion = null;
             _cerrarAplicacionGlobal = false;
 
-            _viewModel = new VentanaJuegoVistaModelo(
+            _vistaModelo = new VentanaJuegoVistaModelo(
                 _sala,
                 _mockSalasServicio.Object,
                 _mockInvitacionesServicio.Object,
@@ -70,15 +70,15 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 UsuarioHost,
                 false);
 
-            _viewModel.MostrarMensaje = m => _mensajesMostrados.Add(m);
-            _viewModel.ManejarNavegacion = d => _destinoNavegacion = d;
-            _viewModel.ChequearCierreAplicacionGlobal = () => _cerrarAplicacionGlobal;
+            _vistaModelo.MostrarMensaje = m => _mensajesMostrados.Add(m);
+            _vistaModelo.ManejarNavegacion = d => _destinoNavegacion = d;
+            _vistaModelo.ChequearCierreAplicacionGlobal = () => _cerrarAplicacionGlobal;
         }
 
         [TestCleanup]
         public void Limpiar()
         {
-            _viewModel = null;
+            _vistaModelo = null;
             _sala = null;
             _mensajesMostrados = null;
         }
@@ -91,7 +91,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 nombreCampo,
                 BindingFlags.Instance | BindingFlags.NonPublic);
 
-            campo.SetValue(_viewModel, valor);
+            campo.SetValue(_vistaModelo, valor);
         }
 
         private T ObtenerCampoPrivado<T>(string nombreCampo)
@@ -100,7 +100,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 nombreCampo,
                 BindingFlags.Instance | BindingFlags.NonPublic);
 
-            return (T)campo.GetValue(_viewModel);
+            return (T)campo.GetValue(_vistaModelo);
         }
 
         private void InvocarMetodoPrivado(string nombreMetodo, params object[] parametros)
@@ -109,7 +109,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 nombreMetodo,
                 BindingFlags.Instance | BindingFlags.NonPublic);
 
-            metodo.Invoke(_viewModel, parametros);
+            metodo.Invoke(_vistaModelo, parametros);
         }
 
         private async Task InvocarMetodoPrivadoAsync(string nombreMetodo, params object[] parametros)
@@ -118,7 +118,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 nombreMetodo,
                 BindingFlags.Instance | BindingFlags.NonPublic);
 
-            var resultado = metodo.Invoke(_viewModel, parametros);
+            var resultado = metodo.Invoke(_vistaModelo, parametros);
 
             if (resultado is Task tarea)
             {
@@ -203,41 +203,41 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public void Prueba_Constructor_InicializacionCorrecta()
         {
-            Assert.IsFalse(_viewModel.JuegoIniciado);
-            Assert.AreEqual(6, _viewModel.Grosor, 0.0001);
-            Assert.AreEqual(Colors.Black, _viewModel.Color);
-            Assert.AreEqual("30", _viewModel.TextoContador);
-            Assert.AreEqual(Brushes.Black, _viewModel.ColorContador);
-            Assert.IsTrue(_viewModel.EsHerramientaLapiz);
-            Assert.IsFalse(_viewModel.EsHerramientaBorrador);
+            Assert.IsFalse(_vistaModelo.JuegoIniciado);
+            Assert.AreEqual(6, _vistaModelo.Grosor, 0.0001);
+            Assert.AreEqual(Colors.Black, _vistaModelo.Color);
+            Assert.AreEqual("30", _vistaModelo.TextoContador);
+            Assert.AreEqual(Brushes.Black, _vistaModelo.ColorContador);
+            Assert.IsTrue(_vistaModelo.EsHerramientaLapiz);
+            Assert.IsFalse(_vistaModelo.EsHerramientaBorrador);
 
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadCuadriculaDibujo);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadOverlayDibujante);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadOverlayAdivinador);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadPalabraAdivinar);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadInfoCancion);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadCuadriculaDibujo);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayDibujante);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayAdivinador);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadPalabraAdivinar);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadInfoCancion);
 
-            Assert.AreEqual(Lang.partidaAdminTextoIniciarPartida, _viewModel.TextoBotonIniciarPartida);
-            Assert.IsTrue(_viewModel.BotonIniciarPartidaHabilitado);
+            Assert.AreEqual(Lang.partidaAdminTextoIniciarPartida, _vistaModelo.TextoBotonIniciarPartida);
+            Assert.IsTrue(_vistaModelo.BotonIniciarPartidaHabilitado);
 
-            Assert.AreEqual(CodigoSalaTest, _viewModel.CodigoSala);
-            Assert.IsNotNull(_viewModel.Jugadores);
-            Assert.AreEqual(1, _viewModel.Jugadores.Count);
-            Assert.AreEqual(UsuarioHost, _viewModel.Jugadores[0].Nombre);
+            Assert.AreEqual(CodigoSalaTest, _vistaModelo.CodigoSala);
+            Assert.IsNotNull(_vistaModelo.Jugadores);
+            Assert.AreEqual(1, _vistaModelo.Jugadores.Count);
+            Assert.AreEqual(UsuarioHost, _vistaModelo.Jugadores[0].Nombre);
 
-            Assert.IsNotNull(_viewModel.InvitarCorreoComando);
-            Assert.IsNotNull(_viewModel.InvitarAmigosComando);
-            Assert.IsNotNull(_viewModel.AbrirAjustesComando);
-            Assert.IsNotNull(_viewModel.IniciarPartidaComando);
-            Assert.IsNotNull(_viewModel.SeleccionarLapizComando);
-            Assert.IsNotNull(_viewModel.SeleccionarBorradorComando);
-            Assert.IsNotNull(_viewModel.CambiarGrosorComando);
-            Assert.IsNotNull(_viewModel.CambiarColorComando);
-            Assert.IsNotNull(_viewModel.LimpiarDibujoComando);
-            Assert.IsNotNull(_viewModel.MostrarOverlayDibujanteComando);
-            Assert.IsNotNull(_viewModel.MostrarOverlayAdivinadorComando);
-            Assert.IsNotNull(_viewModel.CerrarOverlayComando);
-            Assert.IsNotNull(_viewModel.CerrarVentanaComando);
+            Assert.IsNotNull(_vistaModelo.InvitarCorreoComando);
+            Assert.IsNotNull(_vistaModelo.InvitarAmigosComando);
+            Assert.IsNotNull(_vistaModelo.AbrirAjustesComando);
+            Assert.IsNotNull(_vistaModelo.IniciarPartidaComando);
+            Assert.IsNotNull(_vistaModelo.SeleccionarLapizComando);
+            Assert.IsNotNull(_vistaModelo.SeleccionarBorradorComando);
+            Assert.IsNotNull(_vistaModelo.CambiarGrosorComando);
+            Assert.IsNotNull(_vistaModelo.CambiarColorComando);
+            Assert.IsNotNull(_vistaModelo.LimpiarDibujoComando);
+            Assert.IsNotNull(_vistaModelo.MostrarOverlayDibujanteComando);
+            Assert.IsNotNull(_vistaModelo.MostrarOverlayAdivinadorComando);
+            Assert.IsNotNull(_vistaModelo.CerrarOverlayComando);
+            Assert.IsNotNull(_vistaModelo.CerrarVentanaComando);
         }
 
         #endregion
@@ -253,16 +253,16 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             bool notificacionRecibida = false;
             bool? ultimoValor = null;
 
-            _viewModel.NotificarCambioHerramienta = valor =>
+            _vistaModelo.NotificarCambioHerramienta = valor =>
             {
                 notificacionRecibida = true;
                 ultimoValor = valor;
             };
 
-            _viewModel.SeleccionarLapizComando.Execute(null);
+            _vistaModelo.SeleccionarLapizComando.Execute(null);
 
-            Assert.IsTrue(_viewModel.EsHerramientaLapiz);
-            Assert.IsFalse(_viewModel.EsHerramientaBorrador);
+            Assert.IsTrue(_vistaModelo.EsHerramientaLapiz);
+            Assert.IsFalse(_vistaModelo.EsHerramientaBorrador);
             Assert.IsTrue(notificacionRecibida);
             Assert.IsTrue(ultimoValor.HasValue && ultimoValor.Value);
         }
@@ -276,16 +276,16 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             bool notificacionRecibida = false;
             bool? ultimoValor = null;
 
-            _viewModel.NotificarCambioHerramienta = valor =>
+            _vistaModelo.NotificarCambioHerramienta = valor =>
             {
                 notificacionRecibida = true;
                 ultimoValor = valor;
             };
 
-            _viewModel.SeleccionarBorradorComando.Execute(null);
+            _vistaModelo.SeleccionarBorradorComando.Execute(null);
 
-            Assert.IsFalse(_viewModel.EsHerramientaLapiz);
-            Assert.IsTrue(_viewModel.EsHerramientaBorrador);
+            Assert.IsFalse(_vistaModelo.EsHerramientaLapiz);
+            Assert.IsTrue(_vistaModelo.EsHerramientaBorrador);
             Assert.IsTrue(notificacionRecibida);
             Assert.IsFalse(ultimoValor ?? true);
         }
@@ -296,15 +296,15 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             bool aplicarLapizInvocado = false;
             bool actualizarGomaInvocado = false;
 
-            _viewModel.AplicarEstiloLapiz = () => aplicarLapizInvocado = true;
-            _viewModel.ActualizarFormaGoma = () => actualizarGomaInvocado = true;
+            _vistaModelo.AplicarEstiloLapiz = () => aplicarLapizInvocado = true;
+            _vistaModelo.ActualizarFormaGoma = () => actualizarGomaInvocado = true;
 
-            _viewModel.EsHerramientaLapiz = true;
-            _viewModel.EsHerramientaBorrador = false;
+            _vistaModelo.EsHerramientaLapiz = true;
+            _vistaModelo.EsHerramientaBorrador = false;
 
-            _viewModel.CambiarGrosorComando.Execute("8.5");
+            _vistaModelo.CambiarGrosorComando.Execute("8.5");
 
-            Assert.AreEqual(8.5, _viewModel.Grosor, 0.0001);
+            Assert.AreEqual(8.5, _vistaModelo.Grosor, 0.0001);
             Assert.IsTrue(aplicarLapizInvocado);
             Assert.IsFalse(actualizarGomaInvocado);
         }
@@ -315,15 +315,15 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             bool aplicarLapizInvocado = false;
             bool actualizarGomaInvocado = false;
 
-            _viewModel.AplicarEstiloLapiz = () => aplicarLapizInvocado = true;
-            _viewModel.ActualizarFormaGoma = () => actualizarGomaInvocado = true;
+            _vistaModelo.AplicarEstiloLapiz = () => aplicarLapizInvocado = true;
+            _vistaModelo.ActualizarFormaGoma = () => actualizarGomaInvocado = true;
 
-            _viewModel.EsHerramientaLapiz = false;
-            _viewModel.EsHerramientaBorrador = true;
+            _vistaModelo.EsHerramientaLapiz = false;
+            _vistaModelo.EsHerramientaBorrador = true;
 
-            _viewModel.CambiarGrosorComando.Execute("3");
+            _vistaModelo.CambiarGrosorComando.Execute("3");
 
-            Assert.AreEqual(3, _viewModel.Grosor, 0.0001);
+            Assert.AreEqual(3, _vistaModelo.Grosor, 0.0001);
             Assert.IsFalse(aplicarLapizInvocado);
             Assert.IsTrue(actualizarGomaInvocado);
         }
@@ -332,12 +332,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         public void Prueba_CambiarColor_Comando_ActualizaColorYActivaLapiz()
         {
             bool aplicarLapizInvocado = false;
-            _viewModel.AplicarEstiloLapiz = () => aplicarLapizInvocado = true;
+            _vistaModelo.AplicarEstiloLapiz = () => aplicarLapizInvocado = true;
 
-            _viewModel.CambiarColorComando.Execute("Red");
+            _vistaModelo.CambiarColorComando.Execute("Red");
 
-            Assert.AreEqual(Colors.Red, _viewModel.Color);
-            Assert.IsTrue(_viewModel.EsHerramientaLapiz);
+            Assert.AreEqual(Colors.Red, _vistaModelo.Color);
+            Assert.IsTrue(_vistaModelo.EsHerramientaLapiz);
             Assert.IsTrue(aplicarLapizInvocado);
         }
 
@@ -345,9 +345,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         public void Prueba_LimpiarDibujo_Comando_LlamaAccion()
         {
             bool limpiarInvocado = false;
-            _viewModel.LimpiarTrazos = () => limpiarInvocado = true;
+            _vistaModelo.LimpiarTrazos = () => limpiarInvocado = true;
 
-            _viewModel.LimpiarDibujoComando.Execute(null);
+            _vistaModelo.LimpiarDibujoComando.Execute(null);
 
             Assert.IsTrue(limpiarInvocado);
         }
@@ -357,9 +357,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         {
             CancionManejador manejadorRecibido = null;
 
-            _viewModel.AbrirAjustesPartida = m => manejadorRecibido = m;
+            _vistaModelo.AbrirAjustesPartida = m => manejadorRecibido = m;
 
-            _viewModel.AbrirAjustesComando.Execute(null);
+            _vistaModelo.AbrirAjustesComando.Execute(null);
 
             Assert.IsNotNull(manejadorRecibido);
         }
@@ -370,19 +370,19 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             int llamadasLapiz = 0;
             int llamadasGoma = 0;
 
-            _viewModel.AplicarEstiloLapiz = () => llamadasLapiz++;
-            _viewModel.ActualizarFormaGoma = () => llamadasGoma++;
+            _vistaModelo.AplicarEstiloLapiz = () => llamadasLapiz++;
+            _vistaModelo.ActualizarFormaGoma = () => llamadasGoma++;
 
-            _viewModel.IniciarPartidaComando.Execute(null);
+            _vistaModelo.IniciarPartidaComando.Execute(null);
 
-            Assert.IsTrue(_viewModel.JuegoIniciado);
-            Assert.AreEqual(Visibility.Visible, _viewModel.VisibilidadCuadriculaDibujo);
-            Assert.AreEqual(Lang.partidaTextoPartidaEnCurso, _viewModel.TextoBotonIniciarPartida);
-            Assert.IsFalse(_viewModel.BotonIniciarPartidaHabilitado);
+            Assert.IsTrue(_vistaModelo.JuegoIniciado);
+            Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadCuadriculaDibujo);
+            Assert.AreEqual(Lang.partidaTextoPartidaEnCurso, _vistaModelo.TextoBotonIniciarPartida);
+            Assert.IsFalse(_vistaModelo.BotonIniciarPartidaHabilitado);
             Assert.AreEqual(1, llamadasLapiz);
             Assert.AreEqual(1, llamadasGoma);
 
-            _viewModel.IniciarPartidaComando.Execute(null);
+            _vistaModelo.IniciarPartidaComando.Execute(null);
 
             Assert.AreEqual(1, llamadasLapiz);
             Assert.AreEqual(1, llamadasGoma);
@@ -395,10 +395,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public async Task Prueba_InvitarCorreo_CorreoVacio_MuestraErrorYNoLlamaServicio()
         {
-            _viewModel.CorreoInvitacion = "   ";
+            _vistaModelo.CorreoInvitacion = "   ";
             _mensajesMostrados.Clear();
 
-            var comando = (IComandoAsincrono)_viewModel.InvitarCorreoComando;
+            var comando = (IComandoAsincrono)_vistaModelo.InvitarCorreoComando;
 
             await comando.EjecutarAsync(null);
 
@@ -413,10 +413,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public async Task Prueba_InvitarCorreo_CorreoInvalido_NoLlamaServicio()
         {
-            _viewModel.CorreoInvitacion = "correoInvalido";
+            _vistaModelo.CorreoInvitacion = "correoInvalido";
             _mensajesMostrados.Clear();
 
-            var comando = (IComandoAsincrono)_viewModel.InvitarCorreoComando;
+            var comando = (IComandoAsincrono)_vistaModelo.InvitarCorreoComando;
 
             await comando.EjecutarAsync(null);
 
@@ -432,7 +432,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         public async Task Prueba_InvitarCorreo_Exito_LimpiaCorreoYNotifica()
         {
             string correo = "correo@prueba.com";
-            _viewModel.CorreoInvitacion = correo;
+            _vistaModelo.CorreoInvitacion = correo;
             _mensajesMostrados.Clear();
 
             var resultado = new DTOs.ResultadoOperacionDTO
@@ -445,7 +445,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                     s => s.EnviarInvitacionAsync(CodigoSalaTest, correo))
                 .ReturnsAsync(resultado);
 
-            var comando = (IComandoAsincrono)_viewModel.InvitarCorreoComando;
+            var comando = (IComandoAsincrono)_vistaModelo.InvitarCorreoComando;
 
             await comando.EjecutarAsync(null);
 
@@ -453,7 +453,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 s => s.EnviarInvitacionAsync(CodigoSalaTest, correo),
                 Times.Once);
 
-            Assert.AreEqual(string.Empty, _viewModel.CorreoInvitacion);
+            Assert.AreEqual(string.Empty, _vistaModelo.CorreoInvitacion);
             Assert.AreEqual(1, _mensajesMostrados.Count);
             Assert.AreEqual(Lang.invitarCorreoTextoEnviado, _mensajesMostrados[0]);
         }
@@ -462,7 +462,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         public async Task Prueba_InvitarCorreo_ErrorServicio_MuestraMensajeLocalizado()
         {
             string correo = "correo@prueba.com";
-            _viewModel.CorreoInvitacion = correo;
+            _vistaModelo.CorreoInvitacion = correo;
             _mensajesMostrados.Clear();
 
             var resultado = new DTOs.ResultadoOperacionDTO
@@ -475,7 +475,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                     s => s.EnviarInvitacionAsync(CodigoSalaTest, correo))
                 .ReturnsAsync(resultado);
 
-            var comando = (IComandoAsincrono)_viewModel.InvitarCorreoComando;
+            var comando = (IComandoAsincrono)_vistaModelo.InvitarCorreoComando;
 
             await comando.EjecutarAsync(null);
 
@@ -491,14 +491,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         public async Task Prueba_InvitarCorreo_ExcepcionServicio_MuestraMensajeExcepcion()
         {
             string correo = "correo@prueba.com";
-            _viewModel.CorreoInvitacion = correo;
+            _vistaModelo.CorreoInvitacion = correo;
             _mensajesMostrados.Clear();
 
             _mockInvitacionesServicio.Setup(
                     s => s.EnviarInvitacionAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorWCF", null));
 
-            var comando = (IComandoAsincrono)_viewModel.InvitarCorreoComando;
+            var comando = (IComandoAsincrono)_vistaModelo.InvitarCorreoComando;
 
             await comando.EjecutarAsync(null);
 
@@ -509,14 +509,14 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         public async Task Prueba_InvitarCorreo_ArgumentException_MuestraMensajeExcepcion()
         {
             string correo = "correo@prueba.com";
-            _viewModel.CorreoInvitacion = correo;
+            _vistaModelo.CorreoInvitacion = correo;
             _mensajesMostrados.Clear();
 
             _mockInvitacionesServicio.Setup(
                     s => s.EnviarInvitacionAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ThrowsAsync(new ArgumentException("ErrorParametro"));
 
-            var comando = (IComandoAsincrono)_viewModel.InvitarCorreoComando;
+            var comando = (IComandoAsincrono)_vistaModelo.InvitarCorreoComando;
 
             await comando.EjecutarAsync(null);
 
@@ -533,7 +533,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             EstablecerCampoPrivado("_nombreUsuarioSesion", string.Empty);
             _mensajesMostrados.Clear();
 
-            await _viewModel.InvitarAmigosComando.EjecutarAsync(null);
+            await _vistaModelo.InvitarAmigosComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.errorTextoErrorProcesarSolicitud, _mensajesMostrados.Single());
             _mockListaAmigosServicio.Verify(
@@ -552,7 +552,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
 
             _mensajesMostrados.Clear();
 
-            await _viewModel.InvitarAmigosComando.EjecutarAsync(null);
+            await _vistaModelo.InvitarAmigosComando.EjecutarAsync(null);
 
             Assert.AreEqual(Lang.invitarAmigosTextoSinAmigos, _mensajesMostrados.Single());
         }
@@ -566,7 +566,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
 
             _mensajesMostrados.Clear();
 
-            await _viewModel.InvitarAmigosComando.EjecutarAsync(null);
+            await _vistaModelo.InvitarAmigosComando.EjecutarAsync(null);
 
             Assert.AreEqual("ErrorLista", _mensajesMostrados.Single());
         }
@@ -580,7 +580,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
 
             _mensajesMostrados.Clear();
 
-            await _viewModel.InvitarAmigosComando.EjecutarAsync(null);
+            await _vistaModelo.InvitarAmigosComando.EjecutarAsync(null);
 
             Assert.AreEqual("ErrorArgumento", _mensajesMostrados.Single());
         }
@@ -599,7 +599,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
 
             InvitarAmigosVistaModelo vistaModeloRecibida = null;
 
-            _viewModel.MostrarInvitarAmigos = vm =>
+            _vistaModelo.MostrarInvitarAmigos = vm =>
             {
                 vistaModeloRecibida = vm;
                 return Task.CompletedTask;
@@ -607,7 +607,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
 
             _mensajesMostrados.Clear();
 
-            await _viewModel.InvitarAmigosComando.EjecutarAsync(null);
+            await _vistaModelo.InvitarAmigosComando.EjecutarAsync(null);
 
             Assert.IsNotNull(vistaModeloRecibida);
         }
@@ -619,62 +619,62 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public void Prueba_MostrarOverlayDibujante_Comando_ActivaOverlayCorrecto()
         {
-            _viewModel.MostrarOverlayDibujanteComando.Execute(null);
+            _vistaModelo.MostrarOverlayDibujanteComando.Execute(null);
 
-            Assert.AreEqual(Visibility.Visible, _viewModel.VisibilidadOverlayDibujante);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadOverlayAdivinador);
+            Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadOverlayDibujante);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayAdivinador);
         }
 
         [TestMethod]
         public void Prueba_MostrarOverlayAdivinador_Comando_ActivaOverlayCorrecto()
         {
-            _viewModel.MostrarOverlayAdivinadorComando.Execute(null);
+            _vistaModelo.MostrarOverlayAdivinadorComando.Execute(null);
 
-            Assert.AreEqual(Visibility.Visible, _viewModel.VisibilidadOverlayAdivinador);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadOverlayDibujante);
+            Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadOverlayAdivinador);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayDibujante);
         }
 
         [TestMethod]
         public void Prueba_CerrarOverlay_Comando_OcultaAmbosOverlays()
         {
-            _viewModel.MostrarOverlayDibujanteComando.Execute(null);
+            _vistaModelo.MostrarOverlayDibujanteComando.Execute(null);
 
-            _viewModel.CerrarOverlayComando.Execute(null);
+            _vistaModelo.CerrarOverlayComando.Execute(null);
 
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadOverlayDibujante);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadOverlayAdivinador);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayDibujante);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayAdivinador);
         }
 
         [TestMethod]
         public void Prueba_OverlayTimer_Tick_IniciaTemporizadorYOcultaOverlays()
         {
-            _viewModel.MostrarOverlayDibujanteComando.Execute(null);
+            _vistaModelo.MostrarOverlayDibujanteComando.Execute(null);
 
             InvocarMetodoPrivado("OverlayTimer_Tick", this, EventArgs.Empty);
 
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadOverlayDibujante);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadOverlayAdivinador);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayDibujante);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayAdivinador);
 
-            Assert.AreEqual("30", _viewModel.TextoContador);
-            Assert.AreEqual(Brushes.Black, _viewModel.ColorContador);
-            Assert.AreEqual(Visibility.Visible, _viewModel.VisibilidadPalabraAdivinar);
-            Assert.AreEqual(Visibility.Visible, _viewModel.VisibilidadInfoCancion);
+            Assert.AreEqual("30", _vistaModelo.TextoContador);
+            Assert.AreEqual(Brushes.Black, _vistaModelo.ColorContador);
+            Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadPalabraAdivinar);
+            Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadInfoCancion);
 
-            Assert.AreEqual("Gasolina", _viewModel.PalabraAdivinar);
-            Assert.AreEqual("Artista: Daddy Yankee", _viewModel.TextoArtista);
-            Assert.AreEqual("Género: Reggaeton", _viewModel.TextoGenero);
+            Assert.AreEqual("Gasolina", _vistaModelo.PalabraAdivinar);
+            Assert.AreEqual("Artista: Daddy Yankee", _vistaModelo.TextoArtista);
+            Assert.AreEqual("Género: Reggaeton", _vistaModelo.TextoGenero);
         }
 
         [TestMethod]
         public void Prueba_TemporizadorTick_DecrementaContador()
         {
             EstablecerCampoPrivado("_contador", 5);
-            _viewModel.TextoContador = "5";
+            _vistaModelo.TextoContador = "5";
             _mensajesMostrados.Clear();
 
             InvocarMetodoPrivado("Temporizador_Tick", this, EventArgs.Empty);
 
-            Assert.AreEqual("4", _viewModel.TextoContador);
+            Assert.AreEqual("4", _vistaModelo.TextoContador);
             Assert.AreEqual(0, _mensajesMostrados.Count);
         }
 
@@ -682,16 +682,16 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         public void Prueba_TemporizadorTick_LlegaACero_MuestraMensajeYOcultaInformacion()
         {
             EstablecerCampoPrivado("_contador", 1);
-            _viewModel.TextoContador = "1";
-            _viewModel.VisibilidadPalabraAdivinar = Visibility.Visible;
-            _viewModel.VisibilidadInfoCancion = Visibility.Visible;
+            _vistaModelo.TextoContador = "1";
+            _vistaModelo.VisibilidadPalabraAdivinar = Visibility.Visible;
+            _vistaModelo.VisibilidadInfoCancion = Visibility.Visible;
             _mensajesMostrados.Clear();
 
             InvocarMetodoPrivado("Temporizador_Tick", this, EventArgs.Empty);
 
-            Assert.AreEqual("0", _viewModel.TextoContador);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadPalabraAdivinar);
-            Assert.AreEqual(Visibility.Collapsed, _viewModel.VisibilidadInfoCancion);
+            Assert.AreEqual("0", _vistaModelo.TextoContador);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadPalabraAdivinar);
+            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadInfoCancion);
             Assert.AreEqual("¡Tiempo terminado!", _mensajesMostrados.Single());
         }
 
@@ -702,33 +702,33 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public void Prueba_JugadorSeUnio_AgregaJugadorNuevo()
         {
-            int inicial = _viewModel.Jugadores.Count;
+            int inicial = _vistaModelo.Jugadores.Count;
 
             InvocarMetodoPrivado("SalasServicio_JugadorSeUnio", this, "JugadorNuevo");
 
-            Assert.AreEqual(inicial + 1, _viewModel.Jugadores.Count);
-            Assert.IsNotNull(_viewModel.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorNuevo"));
+            Assert.AreEqual(inicial + 1, _vistaModelo.Jugadores.Count);
+            Assert.IsNotNull(_vistaModelo.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorNuevo"));
         }
 
         [TestMethod]
         public void Prueba_JugadorSeUnio_NombreVacio_NoHaceNada()
         {
-            int inicial = _viewModel.Jugadores.Count;
+            int inicial = _vistaModelo.Jugadores.Count;
 
             InvocarMetodoPrivado("SalasServicio_JugadorSeUnio", this, "  ");
 
-            Assert.AreEqual(inicial, _viewModel.Jugadores.Count);
+            Assert.AreEqual(inicial, _vistaModelo.Jugadores.Count);
         }
 
         [TestMethod]
         public void Prueba_JugadorSeUnio_Repetido_NoDuplica()
         {
             InvocarMetodoPrivado("SalasServicio_JugadorSeUnio", this, "JugadorExtra");
-            int despuesPrimero = _viewModel.Jugadores.Count;
+            int despuesPrimero = _vistaModelo.Jugadores.Count;
 
             InvocarMetodoPrivado("SalasServicio_JugadorSeUnio", this, "JugadorExtra");
 
-            Assert.AreEqual(despuesPrimero, _viewModel.Jugadores.Count);
+            Assert.AreEqual(despuesPrimero, _vistaModelo.Jugadores.Count);
         }
 
         [TestMethod]
@@ -737,22 +737,22 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             var lista = new List<string> { "J1", "J2", "J3", "J4" };
             InvocarMetodoPrivado("ActualizarJugadores", lista);
 
-            int inicial = _viewModel.Jugadores.Count;
+            int inicial = _vistaModelo.Jugadores.Count;
 
             InvocarMetodoPrivado("SalasServicio_JugadorSeUnio", this, "J5");
 
-            Assert.AreEqual(inicial, _viewModel.Jugadores.Count);
+            Assert.AreEqual(inicial, _vistaModelo.Jugadores.Count);
         }
 
         [TestMethod]
         public void Prueba_JugadorSalio_EliminaJugadorExistente()
         {
             InvocarMetodoPrivado("SalasServicio_JugadorSeUnio", this, "JugadorSalida");
-            Assert.IsNotNull(_viewModel.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorSalida"));
+            Assert.IsNotNull(_vistaModelo.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorSalida"));
 
             InvocarMetodoPrivado("SalasServicio_JugadorSalio", this, "JugadorSalida");
 
-            Assert.IsNull(_viewModel.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorSalida"));
+            Assert.IsNull(_vistaModelo.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorSalida"));
         }
 
         [TestMethod]
@@ -768,7 +768,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                 _destinoNavegacion);
 
             Assert.AreEqual(Lang.expulsarJugadorTextoFuisteExpulsado, _mensajesMostrados.Single());
-            Assert.IsTrue(_viewModel.DebeEjecutarAccionAlCerrar());
+            Assert.IsTrue(_vistaModelo.DebeEjecutarAccionAlCerrar());
         }
 
         [TestMethod]
@@ -807,17 +807,17 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         public void Prueba_JugadorExpulsado_OtroUsuario_SeEliminaDeLista()
         {
             InvocarMetodoPrivado("SalasServicio_JugadorSeUnio", this, "JugadorExpulsado");
-            Assert.IsNotNull(_viewModel.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorExpulsado"));
+            Assert.IsNotNull(_vistaModelo.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorExpulsado"));
 
             InvocarMetodoPrivado("SalasServicio_JugadorExpulsado", this, "JugadorExpulsado");
 
-            Assert.IsNull(_viewModel.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorExpulsado"));
+            Assert.IsNull(_vistaModelo.Jugadores.FirstOrDefault(j => j.Nombre == "JugadorExpulsado"));
         }
 
         [TestMethod]
         public void Prueba_SalaActualizada_CodigoDistinto_NoModificaJugadores()
         {
-            var jugadoresOriginales = _viewModel.Jugadores.ToList();
+            var jugadoresOriginales = _vistaModelo.Jugadores.ToList();
 
             var salaNueva = new DTOs.SalaDTO
             {
@@ -829,7 +829,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
 
             CollectionAssert.AreEqual(
                 jugadoresOriginales.Select(j => j.Nombre).ToList(),
-                _viewModel.Jugadores.Select(j => j.Nombre).ToList());
+                _vistaModelo.Jugadores.Select(j => j.Nombre).ToList());
         }
 
         [TestMethod]
@@ -844,7 +844,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
 
             InvocarMetodoPrivado("SalasServicio_SalaActualizada", this, salaNueva);
 
-            var nombres = _viewModel.Jugadores.Select(j => j.Nombre).ToList();
+            var nombres = _vistaModelo.Jugadores.Select(j => j.Nombre).ToList();
 
             Assert.AreEqual(3, nombres.Count);
             CollectionAssert.Contains(nombres, UsuarioHost);
@@ -858,8 +858,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             var lista = new List<string> { UsuarioHost, "JugadorExpulsable" };
             InvocarMetodoPrivado("ActualizarJugadores", lista);
 
-            var jugadorHost = _viewModel.Jugadores.First(j => j.Nombre == UsuarioHost);
-            var jugadorOtro = _viewModel.Jugadores.First(j => j.Nombre == "JugadorExpulsable");
+            var jugadorHost = _vistaModelo.Jugadores.First(j => j.Nombre == UsuarioHost);
+            var jugadorOtro = _vistaModelo.Jugadores.First(j => j.Nombre == "JugadorExpulsable");
 
             Assert.IsFalse(jugadorHost.MostrarBotonExpulsar);
             Assert.IsTrue(jugadorOtro.MostrarBotonExpulsar);
@@ -876,9 +876,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             var lista = new List<string> { UsuarioHost, "Expulsado" };
             InvocarMetodoPrivado("ActualizarJugadores", lista);
 
-            var jugador = _viewModel.Jugadores.First(j => j.Nombre == "Expulsado");
+            var jugador = _vistaModelo.Jugadores.First(j => j.Nombre == "Expulsado");
 
-            _viewModel.MostrarConfirmacion = null;
+            _vistaModelo.MostrarConfirmacion = null;
 
             await ((IComandoAsincrono)jugador.ExpulsarComando).EjecutarAsync(null);
 
@@ -896,9 +896,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             var lista = new List<string> { UsuarioHost, "Expulsado" };
             InvocarMetodoPrivado("ActualizarJugadores", lista);
 
-            var jugador = _viewModel.Jugadores.First(j => j.Nombre == "Expulsado");
+            var jugador = _vistaModelo.Jugadores.First(j => j.Nombre == "Expulsado");
 
-            _viewModel.MostrarConfirmacion = _ => false;
+            _vistaModelo.MostrarConfirmacion = _ => false;
 
             await ((IComandoAsincrono)jugador.ExpulsarComando).EjecutarAsync(null);
 
@@ -916,10 +916,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             var lista = new List<string> { UsuarioHost, "Expulsado" };
             InvocarMetodoPrivado("ActualizarJugadores", lista);
 
-            var jugador = _viewModel.Jugadores.First(j => j.Nombre == "Expulsado");
+            var jugador = _vistaModelo.Jugadores.First(j => j.Nombre == "Expulsado");
 
             string mensajeConfirmacion = null;
-            _viewModel.MostrarConfirmacion = m =>
+            _vistaModelo.MostrarConfirmacion = m =>
             {
                 mensajeConfirmacion = m;
                 return true;
@@ -947,9 +947,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             var lista = new List<string> { UsuarioHost, "Expulsado" };
             InvocarMetodoPrivado("ActualizarJugadores", lista);
 
-            var jugador = _viewModel.Jugadores.First(j => j.Nombre == "Expulsado");
+            var jugador = _vistaModelo.Jugadores.First(j => j.Nombre == "Expulsado");
 
-            _viewModel.MostrarConfirmacion = _ => true;
+            _vistaModelo.MostrarConfirmacion = _ => true;
 
             _mockSalasServicio.Setup(
                     s => s.ExpulsarJugadorAsync(
@@ -971,9 +971,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             var lista = new List<string> { UsuarioHost, "Expulsado" };
             InvocarMetodoPrivado("ActualizarJugadores", lista);
 
-            var jugador = _viewModel.Jugadores.First(j => j.Nombre == "Expulsado");
+            var jugador = _vistaModelo.Jugadores.First(j => j.Nombre == "Expulsado");
 
-            _viewModel.MostrarConfirmacion = _ => true;
+            _vistaModelo.MostrarConfirmacion = _ => true;
 
             _mockSalasServicio.Setup(
                     s => s.ExpulsarJugadorAsync(
@@ -1000,7 +1000,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
                     s => s.AbandonarSalaAsync(CodigoSalaTest, UsuarioHost))
                 .Returns(Task.CompletedTask);
 
-            await _viewModel.FinalizarAsync();
+            await _vistaModelo.FinalizarAsync();
 
             _mockSalasServicio.Verify(
                 s => s.AbandonarSalaAsync(CodigoSalaTest, UsuarioHost),
@@ -1012,7 +1012,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         {
             EstablecerCampoPrivado("_nombreUsuarioSesion", string.Empty);
 
-            await _viewModel.FinalizarAsync();
+            await _vistaModelo.FinalizarAsync();
 
             _mockSalasServicio.Verify(
                 s => s.AbandonarSalaAsync(
@@ -1024,15 +1024,15 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public void Prueba_DebeEjecutarAccionAlCerrar_TruePorDefecto()
         {
-            Assert.IsTrue(_viewModel.DebeEjecutarAccionAlCerrar());
+            Assert.IsTrue(_vistaModelo.DebeEjecutarAccionAlCerrar());
         }
 
         [TestMethod]
         public void Prueba_NotificarCierreAplicacionCompleta_MarcaComoNoEjecutable()
         {
-            _viewModel.NotificarCierreAplicacionCompleta();
+            _vistaModelo.NotificarCierreAplicacionCompleta();
 
-            Assert.IsFalse(_viewModel.DebeEjecutarAccionAlCerrar());
+            Assert.IsFalse(_vistaModelo.DebeEjecutarAccionAlCerrar());
         }
 
         [TestMethod]
@@ -1040,9 +1040,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         {
             _cerrarAplicacionGlobal = true;
 
-            _viewModel.CerrarVentanaComando.Execute(null);
+            _vistaModelo.CerrarVentanaComando.Execute(null);
 
-            Assert.IsFalse(_viewModel.DebeEjecutarAccionAlCerrar());
+            Assert.IsFalse(_vistaModelo.DebeEjecutarAccionAlCerrar());
         }
 
         [TestMethod]
@@ -1050,9 +1050,9 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         {
             _cerrarAplicacionGlobal = false;
 
-            _viewModel.CerrarVentanaComando.Execute(null);
+            _vistaModelo.CerrarVentanaComando.Execute(null);
 
-            Assert.IsTrue(_viewModel.DebeEjecutarAccionAlCerrar());
+            Assert.IsTrue(_vistaModelo.DebeEjecutarAccionAlCerrar());
         }
 
         #endregion

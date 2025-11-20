@@ -13,11 +13,18 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{x:Static language:Lang.globalTextoComoJugar}" FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                <TextBlock Grid.Row="0" Text="{x:Static language:Lang.globalTextoComoJugar}" 
+                           FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold" 
+                           HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
-                <TextBlock Grid.Row="0" Text="{x:Static language:Lang.comoJugarTextoInstrucciones}" FontFamily="Comic Sans MS" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="10,66,0,30" Grid.RowSpan="2"/>
+                <TextBlock Grid.Row="0" Text="{x:Static language:Lang.comoJugarTextoInstrucciones}" 
+                           FontFamily="Comic Sans MS" FontSize="14" HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" TextAlignment="Center" Margin="10,66,0,30" 
+                           Grid.RowSpan="2"/>
 
-                <Button Grid.Row="2" Content="{x:Static language:Lang.globalTextoRegresar}" Margin="0,20,0,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold" Background="White" BorderBrush="Black" Click="BotonRegresar"/>
+                <Button Grid.Row="2" Content="{x:Static language:Lang.globalTextoRegresar}" 
+                        Margin="0,20,0,0" Height="40" FontFamily="Comic Sans MS" FontWeight="Bold" 
+                        Background="White" BorderBrush="Black" Click="BotonRegresar"/>
             </Grid>
         </Border>
     </Grid>
