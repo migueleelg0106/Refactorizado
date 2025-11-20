@@ -150,6 +150,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 _notificador.NotificarSolicitudActualizada(nombreReceptor, solicitud);
             }
+            catch (FaultException ex)
+            {
+                throw ex;
+            }
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadEnviarSolicitudReglaNegocio, ex);
