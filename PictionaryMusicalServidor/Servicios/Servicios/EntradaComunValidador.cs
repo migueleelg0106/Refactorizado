@@ -6,11 +6,6 @@ using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
-    /// <summary>
-    /// Clase utilitaria para validar y normalizar entradas comunes del sistema.
-    /// Proporciona validaciones de formato y longitud para texto, correo, contrasena, token y datos de cuenta.
-    /// Verifica que las contrasenas cumplan con requisitos de seguridad (mayuscula, numero, caracter especial).
-    /// </summary>
     internal static class EntradaComunValidador
     {
         internal const int LongitudMaximaTexto = 50;
@@ -32,44 +27,21 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             RegexOptions.Compiled | RegexOptions.CultureInvariant,
             TimeSpan.FromSeconds(1));
 
-        /// <summary>
-        /// Normaliza un texto eliminando espacios al inicio y final.
-        /// Retorna null si el valor es nulo o solo espacios en blanco.
-        /// </summary>
-        /// <param name="valor">Texto a normalizar.</param>
-        /// <returns>Texto normalizado o null.</returns>
         public static string NormalizarTexto(string valor)
         {
             return string.IsNullOrWhiteSpace(valor) ? null : valor.Trim();
         }
 
-        /// <summary>
-        /// Verifica si un texto tiene una longitud valida segun el limite maximo.
-        /// </summary>
-        /// <param name="valor">Texto a validar.</param>
-        /// <returns>True si el texto no es vacio y no excede la longitud maxima.</returns>
         public static bool EsLongitudValida(string valor)
         {
             return !string.IsNullOrWhiteSpace(valor) && valor.Length <= LongitudMaximaTexto;
         }
 
-        /// <summary>
-        /// Verifica si un correo electronico tiene formato valido.
-        /// Valida longitud y patron basico de correo electronico.
-        /// </summary>
-        /// <param name="valor">Correo electronico a validar.</param>
-        /// <returns>True si el correo tiene formato valido.</returns>
         public static bool EsCorreoValido(string valor)
         {
             return EsLongitudValida(valor) && CorreoRegex.IsMatch(valor);
         }
 
-        /// <summary>
-        /// Verifica si una contrasena cumple con los requisitos de seguridad.
-        /// Valida que contenga al menos una mayuscula, un numero, un caracter especial y longitud entre 8 y 15.
-        /// </summary>
-        /// <param name="valor">Contrasena a validar.</param>
-        /// <returns>True si la contrasena cumple todos los requisitos.</returns>
         public static bool EsContrasenaValida(string valor)
         {
             if (string.IsNullOrWhiteSpace(valor))
@@ -81,22 +53,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             return normalizado.Length <= LongitudMaximaContrasena && ContrasenaRegex.IsMatch(normalizado);
         }
 
-        /// <summary>
-        /// Verifica si un token tiene formato valido (32 caracteres hexadecimales).
-        /// </summary>
-        /// <param name="token">Token a validar.</param>
-        /// <returns>True si el token tiene formato valido.</returns>
         public static bool EsTokenValido(string token)
         {
             string normalizado = NormalizarTexto(token);
             return normalizado != null && TokenRegex.IsMatch(normalizado);
         }
 
-        /// <summary>
-        /// Verifica si un codigo de verificacion tiene formato valido (6 digitos).
-        /// </summary>
-        /// <param name="codigo">Codigo de verificacion a validar.</param>
-        /// <returns>True si el codigo tiene formato valido.</returns>
         public static bool EsCodigoVerificacionValido(string codigo)
         {
             string normalizado = NormalizarTexto(codigo);
@@ -108,12 +70,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             return normalizado.All(char.IsDigit);
         }
 
-        /// <summary>
-        /// Valida todos los campos de una nueva cuenta.
-        /// Verifica usuario, nombre, apellido, correo, contrasena y avatar cumplan con los requisitos.
-        /// </summary>
-        /// <param name="nuevaCuenta">Datos de la nueva cuenta a validar.</param>
-        /// <returns>Resultado de la validacion indicando exito o errores.</returns>
         public static ResultadoOperacionDTO ValidarNuevaCuenta(NuevaCuentaDTO nuevaCuenta)
         {
             if (nuevaCuenta == null)

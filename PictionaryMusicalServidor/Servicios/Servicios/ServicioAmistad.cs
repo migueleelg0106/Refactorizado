@@ -10,18 +10,8 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
-    /// <summary>
-    /// Servicio interno para la gestion de logica de negocio relacionada con amistades.
-    /// Proporciona metodos para crear, aceptar, eliminar y consultar relaciones de amistad entre usuarios.
-    /// </summary>
     internal static class ServicioAmistad
     {
-        /// <summary>
-        /// Obtiene las solicitudes de amistad pendientes para un usuario especifico.
-        /// Filtra solo las solicitudes donde el usuario es el receptor.
-        /// </summary>
-        /// <param name="usuarioId">Identificador del usuario receptor.</param>
-        /// <returns>Lista de solicitudes de amistad pendientes como DTOs.</returns>
         public static List<SolicitudAmistadDTO> ObtenerSolicitudesPendientesDTO(int usuarioId)
         {
             using (var contexto = ContextoFactory.CrearContexto())
@@ -61,13 +51,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        /// <summary>
-        /// Crea una nueva solicitud de amistad entre dos usuarios.
-        /// Valida que los usuarios sean diferentes y que no exista ya una relacion.
-        /// </summary>
-        /// <param name="usuarioEmisorId">Identificador del usuario que envia la solicitud.</param>
-        /// <param name="usuarioReceptorId">Identificador del usuario que recibe la solicitud.</param>
-        /// <exception cref="InvalidOperationException">Se lanza si los usuarios son el mismo o ya existe una relacion.</exception>
         public static void CrearSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
             if (usuarioEmisorId == usuarioReceptorId)
@@ -87,13 +70,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        /// <summary>
-        /// Acepta una solicitud de amistad pendiente entre dos usuarios.
-        /// Actualiza el estado de la relacion a aceptada en la base de datos.
-        /// </summary>
-        /// <param name="usuarioEmisorId">Identificador del usuario que envio la solicitud.</param>
-        /// <param name="usuarioReceptorId">Identificador del usuario que acepta la solicitud.</param>
-        /// <exception cref="InvalidOperationException">Se lanza si no existe la solicitud o ya fue aceptada.</exception>
         public static void AceptarSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
             using (var contexto = ContextoFactory.CrearContexto())

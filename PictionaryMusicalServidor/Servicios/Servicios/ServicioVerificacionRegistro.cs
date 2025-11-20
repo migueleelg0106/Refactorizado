@@ -7,11 +7,6 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
-    /// <summary>
-    /// Servicio interno para la logica de negocio de verificacion de registro de cuentas.
-    /// Maneja el almacenamiento temporal de solicitudes de registro, generacion y validacion de codigos de verificacion.
-    /// Verifica disponibilidad de usuario y correo antes de enviar codigos.
-    /// </summary>
     internal static class ServicioVerificacionRegistro
     {
         private const int MinutosExpiracionCodigo = 5;
@@ -22,13 +17,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly ConcurrentDictionary<string, byte> _verificacionesConfirmadas =
             new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>
-        /// Solicita un codigo de verificacion para registrar una nueva cuenta.
-        /// Valida datos, verifica disponibilidad, genera codigo con expiracion, lo envia por correo y almacena la solicitud.
-        /// </summary>
-        /// <param name="nuevaCuenta">Datos de la nueva cuenta a registrar.</param>
-        /// <returns>Resultado indicando si el codigo fue enviado y posibles conflictos de usuario o correo.</returns>
-        /// <exception cref="ArgumentNullException">Se lanza si nuevaCuenta es null.</exception>
         public static ResultadoSolicitudCodigoDTO SolicitarCodigo(NuevaCuentaDTO nuevaCuenta)
         {
             if (nuevaCuenta == null)
