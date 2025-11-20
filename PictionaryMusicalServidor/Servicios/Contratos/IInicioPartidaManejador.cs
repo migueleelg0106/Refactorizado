@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace PictionaryMusicalServidor.Servicios.Contratos
 {
+    /// <summary>
+    /// Contrato de servicio para el inicio de partidas.
+    /// </summary>
     [ServiceContract]
     public interface IInicioPartidaManejador
     {
