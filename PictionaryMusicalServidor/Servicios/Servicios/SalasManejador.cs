@@ -345,6 +345,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Obtiene una sala por su codigo identificador.
+        /// Busca la sala en el diccionario de salas activas y retorna su representacion DTO.
+        /// </summary>
+        /// <param name="codigoSala">Codigo identificador de la sala.</param>
+        /// <returns>Datos de la sala como DTO, o null si el codigo es invalido o la sala no existe.</returns>
         internal static SalaDTO ObtenerSalaPorCodigo(string codigoSala)
         {
             if (string.IsNullOrWhiteSpace(codigoSala))
