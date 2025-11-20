@@ -358,11 +358,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             ICommunicationObject cliente,
             bool esTemporal)
         {
+            bool esErrorComunicacion = !(ex is FaultException);
+
             if (esTemporal)
             {
                 cliente.Abort();
             }
-            else
+            else if (esErrorComunicacion)
             {
                 await ReiniciarClienteConSuscripcionAsync().ConfigureAwait(false);
             }
