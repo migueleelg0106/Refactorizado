@@ -93,6 +93,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             };
         }
 
+        /// <summary>
+        /// Reenvia un codigo de verificacion previamente solicitado para registro.
+        /// Valida el token, genera un nuevo codigo con nueva expiracion y lo envia por correo.
+        /// </summary>
+        /// <param name="solicitud">Datos con el token de la sesion de verificacion.</param>
+        /// <returns>Resultado indicando si el codigo fue reenviado exitosamente.</returns>
+        /// <exception cref="ArgumentNullException">Se lanza si solicitud es null.</exception>
         public static ResultadoSolicitudCodigoDTO ReenviarCodigo(ReenvioCodigoVerificacionDTO solicitud)
         {
             if (solicitud == null)
@@ -146,6 +153,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             };
         }
 
+        /// <summary>
+        /// Confirma el codigo de verificacion ingresado para registro de cuenta.
+        /// Valida el token, compara el codigo ingresado con el almacenado y marca la verificacion como confirmada.
+        /// </summary>
+        /// <param name="confirmacion">Datos con el token y codigo ingresado.</param>
+        /// <returns>Resultado indicando si el codigo fue confirmado correctamente.</returns>
+        /// <exception cref="ArgumentNullException">Se lanza si confirmacion es null.</exception>
         public static ResultadoRegistroCuentaDTO ConfirmarCodigo(ConfirmacionCodigoDTO confirmacion)
         {
             if (confirmacion == null)
@@ -205,6 +219,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             };
         }
 
+        /// <summary>
+        /// Verifica si una cuenta tiene una verificacion confirmada pendiente.
+        /// Comprueba si existe una confirmacion de verificacion para el usuario y correo especificados.
+        /// </summary>
+        /// <param name="nuevaCuenta">Datos de la cuenta a verificar.</param>
+        /// <returns>True si la verificacion esta confirmada, false en caso contrario o si nuevaCuenta es null.</returns>
         public static bool EstaVerificacionConfirmada(NuevaCuentaDTO nuevaCuenta)
         {
             if (nuevaCuenta == null)
@@ -216,6 +236,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             return _verificacionesConfirmadas.ContainsKey(clave);
         }
 
+        /// <summary>
+        /// Limpia la verificacion confirmada de una cuenta despues de completar el registro.
+        /// Elimina la confirmacion almacenada para el usuario y correo especificados.
+        /// </summary>
+        /// <param name="nuevaCuenta">Datos de la cuenta cuya verificacion se limpiara.</param>
         public static void LimpiarVerificacion(NuevaCuentaDTO nuevaCuenta)
         {
             if (nuevaCuenta == null)

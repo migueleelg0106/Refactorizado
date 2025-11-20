@@ -105,6 +105,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Reenvia un codigo de recuperacion previamente solicitado.
+        /// Valida el token, genera un nuevo codigo con nueva expiracion y lo envia por correo.
+        /// </summary>
+        /// <param name="solicitud">Datos con el token de la sesion de recuperacion.</param>
+        /// <returns>Resultado indicando si el codigo fue reenviado exitosamente.</returns>
+        /// <exception cref="ArgumentNullException">Se lanza si solicitud es null.</exception>
         public static ResultadoSolicitudCodigoDTO ReenviarCodigoRecuperacion(ReenvioCodigoDTO solicitud)
         {
             if (solicitud == null)
@@ -171,6 +178,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             };
         }
 
+        /// <summary>
+        /// Confirma el codigo de recuperacion ingresado por el usuario.
+        /// Valida el token, compara el codigo ingresado con el almacenado y marca la confirmacion como exitosa.
+        /// </summary>
+        /// <param name="confirmacion">Datos con el token y codigo ingresado.</param>
+        /// <returns>Resultado indicando si el codigo fue confirmado correctamente.</returns>
+        /// <exception cref="ArgumentNullException">Se lanza si confirmacion es null.</exception>
         public static ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmacionCodigoDTO confirmacion)
         {
             if (confirmacion == null)
@@ -229,6 +243,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             };
         }
 
+        /// <summary>
+        /// Actualiza la contrasena de un usuario despues de confirmar el codigo de recuperacion.
+        /// Valida el token y confirmacion, encripta la nueva contrasena con BCrypt y actualiza la base de datos.
+        /// </summary>
+        /// <param name="solicitud">Datos con el token y la nueva contrasena.</param>
+        /// <returns>Resultado indicando si la contrasena fue actualizada exitosamente.</returns>
+        /// <exception cref="ArgumentNullException">Se lanza si solicitud es null.</exception>
         public static ResultadoOperacionDTO ActualizarContrasena(ActualizacionContrasenaDTO solicitud)
         {
             if (solicitud == null)
