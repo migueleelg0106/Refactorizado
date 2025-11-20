@@ -4,8 +4,8 @@ using System.Data;
 using System.Linq;
 using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using PictionaryMusicalServidor.Datos.Modelo;
-using PictionaryMusicalServidor.Datos.Utilidades;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -15,7 +15,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public static List<SolicitudAmistadDTO> ObtenerSolicitudesPendientesDTO(int usuarioId)
         {
-            using (var contexto = CrearContexto())
+            using (var contexto = ContextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 var solicitudesPendientes = amigoRepositorio.ObtenerSolicitudesPendientes(usuarioId);
@@ -59,7 +59,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new InvalidOperationException("No es posible enviarse una solicitud de amistad a sí mismo.");
             }
 
-            using (var contexto = CrearContexto())
+            using (var contexto = ContextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 if (amigoRepositorio.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
@@ -73,7 +73,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public static void AceptarSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
-            using (var contexto = CrearContexto())
+            using (var contexto = ContextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 var relacion = amigoRepositorio.ObtenerRelacion(usuarioEmisorId, usuarioReceptorId);
@@ -104,7 +104,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new InvalidOperationException("No fue posible eliminar la relación de amistad.");
             }
 
-            using (var contexto = CrearContexto())
+            using (var contexto = ContextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 var relacion = amigoRepositorio.ObtenerRelacion(usuarioAId, usuarioBId);
@@ -119,17 +119,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private static BaseDatosPruebaEntities1 CrearContexto()
-        {
-            string conexion = Conexion.ObtenerConexion();
-            return string.IsNullOrWhiteSpace(conexion)
-                ? new BaseDatosPruebaEntities1()
-                : new BaseDatosPruebaEntities1(conexion);
-        }
+
 
         public static List<AmigoDTO> ObtenerAmigosDTO(int usuarioId)
         {
-            using (var contexto = CrearContexto())
+            using (var contexto = ContextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 IList<Usuario> amigos = amigoRepositorio.ObtenerAmigos(usuarioId);

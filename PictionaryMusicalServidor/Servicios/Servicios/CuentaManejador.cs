@@ -4,14 +4,14 @@ using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using PictionaryMusicalServidor.Datos.Modelo;
-using PictionaryMusicalServidor.Datos.Utilidades;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Linq;
 using System.Data;
 using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
-using PictionaryMusicalServidor.Servicios.Servicios.Constantes; 
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Utilidades; 
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -38,7 +38,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (var contexto = CrearContexto())
+                using (var contexto = ContextoFactory.CrearContexto())
                 {
                     ResultadoRegistroCuentaDTO validacion = ValidarPrecondicionesRegistro(contexto, nuevaCuenta);
                     if (!validacion.RegistroExitoso)
@@ -162,15 +162,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
 
             return new ResultadoRegistroCuentaDTO { RegistroExitoso = true }; 
-        }
-
-
-        private static BaseDatosPruebaEntities1 CrearContexto()
-        {
-            string conexion = Conexion.ObtenerConexion();
-            return string.IsNullOrWhiteSpace(conexion)
-                ? new BaseDatosPruebaEntities1()
-                : new BaseDatosPruebaEntities1(conexion);
         }
 
         public ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(NuevaCuentaDTO nuevaCuenta)

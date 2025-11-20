@@ -7,11 +7,11 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.ServiceModel;
 using PictionaryMusicalServidor.Datos.Modelo;
-using PictionaryMusicalServidor.Datos.Utilidades;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -28,7 +28,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (BaseDatosPruebaEntities1 contexto = CrearContexto())
+                using (BaseDatosPruebaEntities1 contexto = ContextoFactory.CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
                         .Include(u => u.Jugador.RedSocial)
@@ -92,7 +92,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (BaseDatosPruebaEntities1 contexto = CrearContexto())
+                using (BaseDatosPruebaEntities1 contexto = ContextoFactory.CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
                         .Include(u => u.Jugador.RedSocial)
@@ -166,15 +166,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
         }
-
-        private static BaseDatosPruebaEntities1 CrearContexto()
-        {
-            string conexion = Conexion.ObtenerConexion();
-            return string.IsNullOrWhiteSpace(conexion)
-                ? new BaseDatosPruebaEntities1()
-                : new BaseDatosPruebaEntities1(conexion);
-        }
-
 
         private static ResultadoOperacionDTO CrearResultadoFallo(string mensaje)
         {
