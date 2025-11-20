@@ -7,6 +7,7 @@ using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.ServiceModel;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
@@ -126,6 +127,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 ManejadorSonido.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudEnviada);
                 SolicitudEnviada?.Invoke();
+            }
+            catch (FaultException ex)
+            {
+                ManejadorSonido.ReproducirError();
+
+                string mensajeError = MensajeServidorAyudante.Localizar(
+                    ex.Reason.ToString(),
+                    Lang.errorTextoErrorProcesarSolicitud);
+
+                AvisoAyudante.Mostrar(mensajeError);
             }
             catch (ServicioExcepcion ex)
             {
