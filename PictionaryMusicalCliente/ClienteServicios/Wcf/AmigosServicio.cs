@@ -223,8 +223,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 await SuscribirAsync(usuario).ConfigureAwait(false);
             }
-            catch
+            catch (Exception)
             {
+                // Si la resuscripción falla, asegurarse de que el cliente esté limpio
+                // pero no propagar la excepción para no ocultar el error original
+                _cliente = null;
+                _usuarioSuscrito = null;
                 //Registrar en bitácora
             }
         }
@@ -259,14 +263,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
         private async Task ManejarExcepcionOperacionAsync(Exception ex, ICommunicationObject cliente, bool esTemporal)
         {
+            // Solo reiniciar el cliente para errores de comunicación, no para excepciones de lógica de negocio
+            bool esErrorComunicacion = ex is EndpointNotFoundException ||
+                                        ex is TimeoutException ||
+                                        ex is CommunicationException;
+            
             if (esTemporal)
             {
                 cliente.Abort();
             }
-            else
+            else if (esErrorComunicacion)
             {
+                // Solo reiniciar si es un problema de comunicación real
                 await ReiniciarClienteConSuscripcionAsync().ConfigureAwait(false);
             }
+            // Para FaultException (errores de negocio), no reiniciar el cliente
+            
             ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
         }
 
