@@ -124,7 +124,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadEnviarSolicitudReglaNegocio, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorAlmacenarSolicitud);
+                throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
@@ -181,7 +181,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadResponderSolicitudReglaNegocio, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorActualizarSolicitud);
+                throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
@@ -247,7 +247,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadEliminarReglaNegocio, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorEliminarAmistad);
+                throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
