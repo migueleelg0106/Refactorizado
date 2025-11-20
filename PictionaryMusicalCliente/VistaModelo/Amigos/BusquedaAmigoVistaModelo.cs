@@ -131,17 +131,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             catch (FaultException ex)
             {
                 ManejadorSonido.ReproducirError();
+                string mensajeServidor = ex.Message;
 
                 string mensajeError = MensajeServidorAyudante.Localizar(
-                    ex.Reason.ToString(),
+                    mensajeServidor,
                     Lang.errorTextoErrorProcesarSolicitud);
-
                 AvisoAyudante.Mostrar(mensajeError);
             }
             catch (ServicioExcepcion ex)
             {
                 ManejadorSonido.ReproducirError();
-                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+                string mensajeServidor = ex.Message;
+
+                string mensajeError = MensajeServidorAyudante.Localizar(
+                    mensajeServidor,
+                    Lang.errorTextoErrorProcesarSolicitud);
+                AvisoAyudante.Mostrar(mensajeError);
             }
             finally
             {
