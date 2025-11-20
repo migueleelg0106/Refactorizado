@@ -96,10 +96,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
 
                 if (string.IsNullOrWhiteSpace(codigoSala))
+                {
                     throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
+                }
 
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
+                {
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
+                }
 
                 var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
                 var resultado = sala.AgregarJugador(nombreUsuario.Trim(), callback, notificar: true);
@@ -175,15 +179,21 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
 
                 if (string.IsNullOrWhiteSpace(codigoSala))
+                {
                     throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
+                }
 
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
+                {
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
+                }
 
                 sala.RemoverJugador(nombreUsuario.Trim());
 
                 if (sala.DebeEliminarse)
+                {
                     _salas.TryRemove(codigoSala.Trim(), out _);
+                }
 
                 _notificador.NotificarListaSalasATodos();
             }
@@ -296,15 +306,21 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 ValidadorNombreUsuario.Validar(nombreJugadorAExpulsar, nameof(nombreJugadorAExpulsar));
 
                 if (string.IsNullOrWhiteSpace(codigoSala))
+                {
                     throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
+                }
 
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
+                {
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
+                }
 
                 sala.ExpulsarJugador(nombreHost.Trim(), nombreJugadorAExpulsar.Trim());
 
                 if (sala.DebeEliminarse)
+                {
                     _salas.TryRemove(codigoSala.Trim(), out _);
+                }
 
                 _notificador.NotificarListaSalasATodos();
             }
@@ -354,7 +370,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 string codigo = random.Next(0, 1_000_000).ToString("D6");
                 if (!_salas.ContainsKey(codigo))
+                {
                     return codigo;
+                }
             }
 
             throw new FaultException(MensajesError.Cliente.ErrorGenerarCodigo);
@@ -363,19 +381,29 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static void ValidarConfiguracion(ConfiguracionPartidaDTO configuracion)
         {
             if (configuracion == null)
+            {
                 throw new FaultException(MensajesError.Cliente.ConfiguracionObligatoria);
+            }
 
             if (configuracion.NumeroRondas <= 0)
+            {
                 throw new FaultException(MensajesError.Cliente.NumeroRondasInvalido);
+            }
 
             if (configuracion.TiempoPorRondaSegundos <= 0)
+            {
                 throw new FaultException(MensajesError.Cliente.TiempoRondaInvalido);
+            }
 
             if (string.IsNullOrWhiteSpace(configuracion.IdiomaCanciones))
+            {
                 throw new FaultException(MensajesError.Cliente.IdiomaObligatorio);
+            }
 
             if (string.IsNullOrWhiteSpace(configuracion.Dificultad))
+            {
                 throw new FaultException(MensajesError.Cliente.DificultadObligatoria);
+            }
         }
 
     }

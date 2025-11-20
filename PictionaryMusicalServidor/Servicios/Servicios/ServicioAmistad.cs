@@ -120,6 +120,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Elimina la relacion de amistad entre dos usuarios.
+        /// Valida que los usuarios no sean el mismo y que exista la relacion antes de eliminarla.
+        /// </summary>
+        /// <param name="usuarioAId">Identificador del primer usuario en la relacion.</param>
+        /// <param name="usuarioBId">Identificador del segundo usuario en la relacion.</param>
+        /// <returns>La relacion de amistad que fue eliminada.</returns>
+        /// <exception cref="InvalidOperationException">Se lanza si los usuarios son el mismo o la relacion no existe.</exception>
         public static Amigo EliminarAmistad(int usuarioAId, int usuarioBId)
         {
             if (usuarioAId == usuarioBId)
@@ -142,14 +150,23 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-
-
+        /// <summary>
+        /// Obtiene la lista de amigos de un usuario como objetos DTO.
+        /// Filtra amigos nulos y retorna una lista vacia si no hay amigos.
+        /// </summary>
+        /// <param name="usuarioId">Identificador del usuario cuyos amigos se desean obtener.</param>
+        /// <returns>Lista de amigos como DTOs, o lista vacia si no hay amigos.</returns>
         public static List<AmigoDTO> ObtenerAmigosDTO(int usuarioId)
         {
             using (var contexto = ContextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 IList<Usuario> amigos = amigoRepositorio.ObtenerAmigos(usuarioId);
+
+                if (amigos == null)
+                {
+                    return new List<AmigoDTO>();
+                }
 
                 var resultado = new List<AmigoDTO>(amigos.Count);
                 foreach (var amigo in amigos)
