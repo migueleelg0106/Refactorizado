@@ -15,10 +15,25 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de perfiles de usuario.
+    /// Maneja consulta y actualizacion de datos de perfil incluyendo informacion personal y redes sociales.
+    /// Verifica que el usuario exista y tenga jugador asociado antes de operar.
+    /// </summary>
     public class PerfilManejador : IPerfilManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(PerfilManejador));
 
+        /// <summary>
+        /// Obtiene el perfil completo de un usuario incluyendo datos de jugador y redes sociales.
+        /// Valida que el usuario exista y tenga un jugador asociado.
+        /// </summary>
+        /// <param name="idUsuario">Identificador unico del usuario.</param>
+        /// <returns>Datos completos del perfil del usuario.</returns>
+        /// <exception cref="ArgumentException">Se lanza si idUsuario es menor o igual a 0.</exception>
+        /// <exception cref="InvalidOperationException">Se lanza si el usuario no existe o no tiene jugador asociado.</exception>
+        /// <exception cref="EntityException">Se lanza si hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se lanza si hay errores de datos durante la consulta.</exception>
         public UsuarioDTO ObtenerPerfil(int idUsuario)
         {
             try
@@ -91,6 +106,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Actualiza el perfil de un usuario con nuevos datos personales y de redes sociales.
+        /// Valida los datos de entrada, verifica que el usuario exista y actualiza jugador y redes sociales.
+        /// </summary>
+        /// <param name="solicitud">Datos actualizados del perfil.</param>
+        /// <returns>Resultado de la actualizacion del perfil.</returns>
+        /// <exception cref="InvalidOperationException">Se lanza si el usuario no existe o no tiene jugador asociado.</exception>
+        /// <exception cref="DbEntityValidationException">Se lanza si hay errores de validacion en entidades.</exception>
+        /// <exception cref="DbUpdateException">Se lanza si hay errores al actualizar la base de datos.</exception>
+        /// <exception cref="EntityException">Se lanza si hay errores de conexion con la base de datos.</exception>
+        /// <exception cref="DataException">Se lanza si hay errores de datos durante la actualizacion.</exception>
         public ResultadoOperacionDTO ActualizarPerfil(ActualizacionPerfilDTO solicitud)
         {
             try
