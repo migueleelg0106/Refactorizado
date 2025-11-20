@@ -112,14 +112,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        /// <summary>
-        /// Busca un usuario por su identificador (nombre de usuario o correo electronico).
-        /// Realiza busqueda primero por nombre de usuario y luego por correo si no se encuentra.
-        /// Usa comparacion exacta (case-sensitive) para garantizar precision.
-        /// </summary>
-        /// <param name="contexto">Contexto de base de datos para consultas.</param>
-        /// <param name="identificador">Nombre de usuario o correo electronico a buscar.</param>
-        /// <returns>Usuario encontrado o null si no existe.</returns>
         private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities1 contexto, string identificador)
         {
             var usuariosPorNombre = contexto.Usuario
@@ -142,12 +134,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 .FirstOrDefault(u => string.Equals(u.Jugador?.Correo, identificador, StringComparison.Ordinal));
         }
 
-        /// <summary>
-        /// Mapea una entidad Usuario a un DTO de usuario.
-        /// Incluye datos del jugador asociado y maneja valores null de forma segura.
-        /// </summary>
-        /// <param name="usuario">Entidad de usuario a mapear.</param>
-        /// <returns>DTO con los datos del usuario.</returns>
         private static UsuarioDTO MapearUsuario(Usuario usuario)
         {
             Jugador jugador = usuario.Jugador;

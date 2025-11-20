@@ -145,14 +145,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        /// <summary>
-        /// Valida las precondiciones necesarias antes de registrar una cuenta.
-        /// Verifica que el codigo este confirmado, que el usuario y correo no esten registrados,
-        /// y que el avatar sea valido.
-        /// </summary>
-        /// <param name="contexto">Contexto de base de datos para consultas.</param>
-        /// <param name="nuevaCuenta">Datos de la cuenta a validar.</param>
-        /// <returns>Resultado indicando si las precondiciones se cumplen o los errores encontrados.</returns>
         private ResultadoRegistroCuentaDTO ValidarPrecondicionesRegistro(BaseDatosPruebaEntities1 contexto, NuevaCuentaDTO nuevaCuenta)
         {
             if (!ServicioVerificacionRegistro.EstaVerificacionConfirmada(nuevaCuenta))
