@@ -788,7 +788,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             PalabraAdivinar = "Gasolina";
             TextoArtista = "Artista: Daddy Yankee";
-            TextoGenero = "Genero: Reggaeton";
+            TextoGenero = "Género: Reggaeton";
 
             _temporizador.Start();
         }
@@ -806,7 +806,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
                 VisibilidadInfoCancion = Visibility.Collapsed;
 
-                MostrarMensaje?.Invoke("Tiempo terminado!");
+                MostrarMensaje?.Invoke("¡Tiempo terminado!");
             }
         }
 

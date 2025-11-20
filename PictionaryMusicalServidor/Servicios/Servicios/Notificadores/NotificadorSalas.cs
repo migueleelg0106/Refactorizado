@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos;
-using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 using PictionaryMusicalServidor.Servicios.Servicios.Modelos;
 
@@ -34,6 +33,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         {
             var sesionId = Guid.NewGuid();
             _suscripciones.AddOrUpdate(sesionId, callback, (_, __) => callback);
+            _logger.Info($"Nueva suscripción a lista de salas. Sesión ID: {sesionId}");
             return sesionId;
         }
 
@@ -43,7 +43,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// <param name="sesionId">ID de la suscripción a eliminar.</param>
         public void Desuscribir(Guid sesionId)
         {
-            _suscripciones.TryRemove(sesionId, out _);
+            if (_suscripciones.TryRemove(sesionId, out _))
+            {
+                _logger.Info($"Suscripción a lista de salas eliminada. Sesión ID: {sesionId}");
+            }
         }
 
         /// <summary>
@@ -60,6 +63,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             foreach (var key in keysToRemove)
             {
                 _suscripciones.TryRemove(key, out _);
+            }
+
+            if (keysToRemove.Count > 0)
+            {
+                _logger.Info($"Se eliminaron {keysToRemove.Count} suscripciones por limpieza de callback.");
             }
         }
 
@@ -107,12 +115,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 }
                 catch (System.ServiceModel.CommunicationException ex)
                 {
-                    _logger.Warn(MensajesError.Log.SalaNotificarListaComunicacion, ex);
+                    _logger.Warn($"{MensajesError.Log.SalaNotificarListaComunicacion} (Sesión: {kvp.Key})", ex);
                     _suscripciones.TryRemove(kvp.Key, out _);
                 }
                 catch (TimeoutException ex)
                 {
-                    _logger.Warn(MensajesError.Log.SalaNotificarListaTimeout, ex);
+                    _logger.Warn($"{MensajesError.Log.SalaNotificarListaTimeout} (Sesión: {kvp.Key})", ex);
                     _suscripciones.TryRemove(kvp.Key, out _);
                 }
                 catch (InvalidOperationException ex)

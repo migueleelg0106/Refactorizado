@@ -7,6 +7,7 @@ using PictionaryMusicalServidor.Datos.Modelo;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
+using log4net;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -16,6 +17,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// </summary>
     internal static class ServicioAmistad
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(ServicioAmistad));
+
         /// <summary>
         /// Obtiene las solicitudes de amistad pendientes para un usuario especifico.
         /// Filtra solo las solicitudes donde el usuario es el receptor.
@@ -42,8 +45,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         continue;
                     }
 
-                    string emisor = solicitud.Usuario?.Nombre_Usuario; 
-                    string receptor = solicitud.Usuario1?.Nombre_Usuario; 
+                    string emisor = solicitud.Usuario?.Nombre_Usuario;
+                    string receptor = solicitud.Usuario1?.Nombre_Usuario;
 
                     if (string.IsNullOrWhiteSpace(emisor) || string.IsNullOrWhiteSpace(receptor))
                     {
@@ -72,6 +75,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (usuarioEmisorId == usuarioReceptorId)
             {
+                _logger.Warn($"Intento de auto-solicitud de amistad por usuario ID: {usuarioEmisorId}");
                 throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadMismoUsuario);
             }
 
@@ -80,10 +84,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 if (amigoRepositorio.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
                 {
+                    _logger.Warn($"Intento de crear solicitud de amistad existente entre {usuarioEmisorId} y {usuarioReceptorId}");
                     throw new InvalidOperationException(MensajesError.Cliente.RelacionAmistadExistente);
                 }
 
                 amigoRepositorio.CrearSolicitud(usuarioEmisorId, usuarioReceptorId);
+                _logger.Info($"Solicitud de amistad creada. Emisor ID: {usuarioEmisorId}, Receptor ID: {usuarioReceptorId}");
             }
         }
 
@@ -103,20 +109,24 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (relacion == null)
                 {
+                    _logger.Warn($"Intento de aceptar solicitud inexistente entre {usuarioEmisorId} y {usuarioReceptorId}");
                     throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadNoExiste);
                 }
 
                 if (relacion.UsuarioReceptor != usuarioReceptorId)
                 {
+                    _logger.Warn($"Usuario ID: {usuarioReceptorId} intentó aceptar una solicitud que no le corresponde (Receptor real: {relacion.UsuarioReceptor})");
                     throw new InvalidOperationException(MensajesError.Cliente.ErrorAceptarSolicitud);
                 }
 
                 if (relacion.Estado)
                 {
+                    _logger.Warn($"Intento de aceptar una solicitud ya aceptada entre {usuarioEmisorId} y {usuarioReceptorId}");
                     throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadYaAceptada);
                 }
 
                 amigoRepositorio.ActualizarEstado(relacion, true);
+                _logger.Info($"Solicitud de amistad aceptada entre Emisor ID: {usuarioEmisorId} y Receptor ID: {usuarioReceptorId}");
             }
         }
 
@@ -142,10 +152,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (relacion == null)
                 {
+                    _logger.Warn($"Intento de eliminar relación inexistente entre {usuarioAId} y {usuarioBId}");
                     throw new InvalidOperationException(MensajesError.Cliente.RelacionAmistadNoExiste);
                 }
 
                 amigoRepositorio.EliminarRelacion(relacion);
+                _logger.Info($"Relación de amistad eliminada entre ID: {usuarioAId} e ID: {usuarioBId}");
                 return relacion;
             }
         }

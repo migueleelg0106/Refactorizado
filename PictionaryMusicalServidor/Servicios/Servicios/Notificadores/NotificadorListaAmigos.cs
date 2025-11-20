@@ -40,6 +40,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             try
             {
                 List<AmigoDTO> amigos = ObtenerAmigosPorNombre(nombreUsuario);
+
+                _logger.Info($"Enviando notificación de actualización de lista de amigos a '{nombreUsuario}'. Total amigos: {amigos.Count}");
                 NotificarLista(nombreUsuario, amigos);
             }
             catch (FaultException ex)

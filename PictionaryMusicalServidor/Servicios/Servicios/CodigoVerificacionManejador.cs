@@ -29,7 +29,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return ServicioVerificacionRegistro.SolicitarCodigo(nuevaCuenta);
+                var resultado = ServicioVerificacionRegistro.SolicitarCodigo(nuevaCuenta);
+
+                if (resultado.CodigoEnviado)
+                {
+                    _logger.Info($"Código de verificación para registro solicitado exitosamente para '{nuevaCuenta.Correo}'.");
+                }
+                else
+                {
+                    _logger.Warn($"Solicitud de código para registro fallida. Correo: '{nuevaCuenta.Correo}'. Motivo: {resultado.Mensaje}");
+                }
+
+                return resultado;
             }
             catch (ArgumentNullException ex)
             {
@@ -70,7 +81,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return ServicioVerificacionRegistro.ReenviarCodigo(solicitud);
+                var resultado = ServicioVerificacionRegistro.ReenviarCodigo(solicitud);
+
+                if (resultado.CodigoEnviado)
+                {
+                    _logger.Info($"Código de verificación para registro reenviado. Token sesión: {solicitud.TokenCodigo}");
+                }
+                else
+                {
+                    _logger.Warn($"Fallo al reenviar código de registro. Token sesión: {solicitud.TokenCodigo}. Motivo: {resultado.Mensaje}");
+                }
+
+                return resultado;
             }
             catch (ArgumentNullException ex)
             {
@@ -111,7 +133,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return ServicioVerificacionRegistro.ConfirmarCodigo(confirmacion);
+                var resultado = ServicioVerificacionRegistro.ConfirmarCodigo(confirmacion);
+
+                if (resultado.RegistroExitoso)
+                {
+                    _logger.Info($"Código de verificación de registro confirmado correctamente. Token sesión: {confirmacion.TokenCodigo}");
+                }
+                else
+                {
+                    _logger.Warn($"Intento fallido de confirmación de código de registro. Token sesión: {confirmacion.TokenCodigo}. Motivo: {resultado.Mensaje}");
+                }
+
+                return resultado;
             }
             catch (ArgumentNullException ex)
             {
@@ -170,7 +203,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
+                var resultado = ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
+
+                if (resultado.CodigoEnviado)
+                {
+                    _logger.Info($"Solicitud de recuperación de cuenta iniciada para '{solicitud.Identificador}'.");
+                }
+                else
+                {
+                    _logger.Warn($"Solicitud de recuperación fallida para '{solicitud.Identificador}'. Motivo: {resultado.Mensaje}");
+                }
+
+                return resultado;
             }
             catch (ArgumentNullException ex)
             {
@@ -211,7 +255,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
+                var resultado = ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
+
+                if (resultado.OperacionExitosa)
+                {
+                    _logger.Info($"Código de recuperación confirmado correctamente. Token sesión: {confirmacion.TokenCodigo}");
+                }
+                else
+                {
+                    _logger.Warn($"Intento fallido de confirmación de código de recuperación. Token sesión: {confirmacion.TokenCodigo}. Motivo: {resultado.Mensaje}");
+                }
+
+                return resultado;
             }
             catch (ArgumentNullException ex)
             {

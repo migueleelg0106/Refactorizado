@@ -168,6 +168,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     contexto.SaveChanges();
 
+                    _logger.Info($"Perfil actualizado para el usuario ID: {solicitud.UsuarioId}.");
+
                     return new ResultadoOperacionDTO
                     {
                         OperacionExitosa = true,

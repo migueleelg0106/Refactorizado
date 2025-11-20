@@ -84,6 +84,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     throw new InvalidOperationException(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
                 }
 
+                _logger.Info($"Invitación enviada a '{correo}' para la sala {codigoSala}.");
+
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = true,

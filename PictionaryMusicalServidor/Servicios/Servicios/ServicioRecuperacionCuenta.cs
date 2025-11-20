@@ -45,6 +45,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             string identificador = EntradaComunValidador.NormalizarTexto(solicitud.Identificador);
             if (!EntradaComunValidador.EsLongitudValida(identificador))
             {
+                _logger.Warn($"Solicitud de recuperación rechazada por identificador inválido: '{identificador}'.");
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CuentaEncontrada = false,
@@ -59,6 +60,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (usuario == null)
                 {
+                    _logger.Warn($"Intento de recuperación de cuenta no encontrada para identificador: '{identificador}'.");
                     return new ResultadoSolicitudRecuperacionDTO
                     {
                         CuentaEncontrada = false,
@@ -85,6 +87,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(pendiente.Correo, codigo, pendiente.NombreUsuario);
                 if (!enviado)
                 {
+                    _logger.Error($"Fallo al enviar correo de recuperación a '{pendiente.Correo}'.");
                     return new ResultadoSolicitudRecuperacionDTO
                     {
                         CuentaEncontrada = true,
@@ -94,6 +97,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
 
                 _solicitudesRecuperacion[token] = pendiente;
+                _logger.Info($"Código de recuperación enviado a '{pendiente.Correo}' para usuario '{pendiente.NombreUsuario}'.");
 
                 return new ResultadoSolicitudRecuperacionDTO
                 {
@@ -131,6 +135,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (!_solicitudesRecuperacion.TryGetValue(token, out SolicitudRecuperacionPendiente pendiente))
             {
+                _logger.Warn("Intento de reenvío de código de recuperación con token inválido o expirado.");
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -141,6 +146,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             if (pendiente.Expira < DateTime.UtcNow)
             {
                 _solicitudesRecuperacion.TryRemove(token, out _);
+                _logger.Warn($"Solicitud de recuperación expirada para usuario '{pendiente.NombreUsuario}'. Eliminando solicitud.");
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -164,12 +170,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 pendiente.Expira = expiracionAnterior;
                 pendiente.Confirmado = confirmadoAnterior;
 
+                _logger.Error($"Fallo al reenviar correo de recuperación a '{pendiente.Correo}'. Restaurando estado anterior.");
+
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
                     Mensaje = MensajesError.Cliente.ErrorReenviarCodigoRecuperacion
                 };
             }
+
+            _logger.Info($"Código de recuperación reenviado correctamente a '{pendiente.Correo}'.");
 
             return new ResultadoSolicitudCodigoDTO
             {
@@ -217,6 +227,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             if (pendiente.Expira < DateTime.UtcNow)
             {
                 _solicitudesRecuperacion.TryRemove(token, out _);
+                _logger.Warn($"Intento de confirmación con código expirado para usuario '{pendiente.NombreUsuario}'.");
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -226,6 +237,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (!string.Equals(pendiente.Codigo, codigoIngresado, StringComparison.OrdinalIgnoreCase))
             {
+                _logger.Warn($"Código de recuperación incorrecto ingresado para usuario '{pendiente.NombreUsuario}'.");
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -236,6 +248,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             pendiente.Confirmado = true;
             pendiente.Codigo = null;
             pendiente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
+
+            _logger.Info($"Código de recuperación confirmado exitosamente para usuario '{pendiente.NombreUsuario}'.");
 
             return new ResultadoOperacionDTO
             {
@@ -281,6 +295,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (!pendiente.Confirmado)
             {
+                _logger.Warn($"Intento de actualizar contraseña sin confirmar código para usuario '{pendiente.NombreUsuario}'.");
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -306,6 +321,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     if (usuario == null)
                     {
+                        _logger.Error($"Error crítico: Usuario ID {pendiente.UsuarioId} no encontrado durante actualización de contraseña.");
                         return new ResultadoOperacionDTO
                         {
                             OperacionExitosa = false,
@@ -318,6 +334,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
 
                 _solicitudesRecuperacion.TryRemove(token, out _);
+                _logger.Info($"Contraseña actualizada exitosamente para usuario '{pendiente.NombreUsuario}'.");
 
                 return new ResultadoOperacionDTO
                 {

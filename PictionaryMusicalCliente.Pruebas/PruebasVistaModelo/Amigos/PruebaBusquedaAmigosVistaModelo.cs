@@ -161,7 +161,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
 
             await _vistaModelo.EnviarSolicitudComando.EjecutarAsync(null);
 
-            Assert.AreEqual("ErrorWCF", mensaje);
+            Assert.AreEqual(Lang.errorTextoErrorProcesarSolicitud, mensaje);
             Assert.IsFalse(_vistaModelo.EstaProcesando); 
         }
 

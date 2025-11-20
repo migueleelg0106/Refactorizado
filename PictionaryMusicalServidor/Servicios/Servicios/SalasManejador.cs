@@ -48,10 +48,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (!_salas.TryAdd(codigo, sala))
                 {
+                    _logger.Warn($"Error de concurrencia al intentar agregar la sala {codigo}.");
                     throw new FaultException(MensajesError.Cliente.ErrorCrearSala);
                 }
 
                 _notificador.NotificarListaSalasATodos();
+
+                _logger.Info($"Sala '{codigo}' creada exitosamente por '{nombreCreador.Trim()}'. Configuración: {configuracion.NumeroRondas} rondas, {configuracion.TiempoPorRondaSegundos}s.");
                 return sala.ToDto();
             }
             catch (ArgumentException ex)
@@ -61,7 +64,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error(MensajesError.Log.SalaCrearOperacionInvalida, ex);
+                _logger.Warn(MensajesError.Log.SalaCrearOperacionInvalida, ex);
                 throw new FaultException(ex.Message);
             }
             catch (CommunicationException ex)
@@ -102,6 +105,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
                 {
+                    _logger.Warn($"Intento de unirse a sala inexistente: '{codigoSala}'. Usuario: '{nombreUsuario}'.");
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
                 }
 
@@ -109,6 +113,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var resultado = sala.AgregarJugador(nombreUsuario.Trim(), callback, notificar: true);
 
                 _notificador.NotificarListaSalasATodos();
+
+                _logger.Info($"Jugador '{nombreUsuario.Trim()}' se unió correctamente a la sala '{codigoSala.Trim()}'.");
                 return resultado;
             }
             catch (FaultException)
@@ -122,7 +128,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error(MensajesError.Log.SalaUnirseOperacionInvalida, ex);
+                _logger.Warn(MensajesError.Log.SalaUnirseOperacionInvalida, ex);
                 throw new FaultException(ex.Message);
             }
             catch (CommunicationException ex)
@@ -185,6 +191,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
                 {
+                    _logger.Warn($"Intento de abandonar sala inexistente: '{codigoSala}'.");
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
                 }
 
@@ -192,10 +199,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (sala.DebeEliminarse)
                 {
-                    _salas.TryRemove(codigoSala.Trim(), out _);
+                    if (_salas.TryRemove(codigoSala.Trim(), out _))
+                    {
+                        _logger.Info($"Sala '{codigoSala.Trim()}' eliminada automáticamente (vacía o host salió).");
+                    }
                 }
 
                 _notificador.NotificarListaSalasATodos();
+                _logger.Info($"Jugador '{nombreUsuario.Trim()}' abandonó la sala '{codigoSala.Trim()}'.");
             }
             catch (FaultException)
             {
@@ -208,7 +219,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error(MensajesError.Log.SalaAbandonarOperacionInvalida, ex);
+                _logger.Warn(MensajesError.Log.SalaAbandonarOperacionInvalida, ex);
                 throw new FaultException(ex.Message);
             }
             catch (Exception ex)
@@ -238,6 +249,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
 
                 _notificador.NotificarListaSalas(callback);
+                _logger.Info($"Nueva suscripción al lobby de salas. Sesión ID: {sesionId}");
             }
             catch (InvalidOperationException ex)
             {
@@ -271,6 +283,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
                 _notificador.DesuscribirPorCallback(callback);
+                _logger.Info("Cliente canceló suscripción al lobby de salas.");
             }
             catch (InvalidOperationException ex)
             {
@@ -323,6 +336,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
 
                 _notificador.NotificarListaSalasATodos();
+
+                _logger.Info($"Jugador '{nombreJugadorAExpulsar.Trim()}' expulsado de sala '{codigoSala.Trim()}' por '{nombreHost.Trim()}'.");
             }
             catch (FaultException)
             {
@@ -335,7 +350,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error(MensajesError.Log.SalaExpulsarOperacionInvalida, ex);
+                _logger.Warn(MensajesError.Log.SalaExpulsarOperacionInvalida, ex);
                 throw new FaultException(ex.Message);
             }
             catch (Exception ex)
@@ -381,6 +396,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
             }
 
+            _logger.Error("No se pudo generar un código de sala único después de múltiples intentos.");
             throw new FaultException(MensajesError.Cliente.ErrorGenerarCodigo);
         }
 

@@ -36,6 +36,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             }
 
             _suscripciones.AddOrUpdate(nombreUsuario, callback, (_, __) => callback);
+            _logger.Info($"Usuario '{nombreUsuario}' suscrito correctamente al callback {typeof(TCallback).Name}.");
         }
 
         /// <summary>
@@ -47,8 +48,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             var canal = OperationContext.Current?.Channel;
             if (canal != null)
             {
-                canal.Closed += (_, __) => Desuscribir(nombreUsuario);
-                canal.Faulted += (_, __) => Desuscribir(nombreUsuario);
+                canal.Closed += (_, __) => 
+                {
+                    _logger.Info($"Canal cerrado para usuario '{nombreUsuario}'. Desuscribiendo.");
+                    Desuscribir(nombreUsuario);
+                };
+                canal.Faulted += (_, __) => 
+                {
+                    _logger.Warn($"Canal fallado (Faulted) para usuario '{nombreUsuario}'. Desuscribiendo.");
+                    Desuscribir(nombreUsuario);
+                };
             }
         }
 
@@ -63,7 +72,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 return;
             }
 
-            _suscripciones.TryRemove(nombreUsuario, out _);
+            if (_suscripciones.TryRemove(nombreUsuario, out _))
+            {
+                _logger.Info($"Usuario '{nombreUsuario}' desuscrito del callback {typeof(TCallback).Name}.");
+            }
         }
 
         /// <summary>
@@ -92,7 +104,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 {
                     return callback;
                 }
-
+                
+                // Se lanza excepción, pero no se loguea aquí como Error porque puede ser manejado arriba.
+                // El FaultException será atrapado por el WCF stack.
                 throw new FaultException(MensajesError.Cliente.ErrorObtenerCallback);
             }
 
@@ -108,6 +122,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         {
             if (!TryGetCallback(nombreUsuario, out var callback))
             {
+                _logger.Warn($"Intento de notificación a '{nombreUsuario}' fallido: No se encontró callback activo.");
                 return;
             }
 
@@ -115,12 +130,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             {
                 accionNotificacion(callback);
             }
-            catch (CommunicationException)
+            catch (CommunicationException ex)
             {
+                _logger.Warn($"Error de comunicación al notificar a '{nombreUsuario}'. Desuscribiendo.", ex);
                 Desuscribir(nombreUsuario);
             }
-            catch (TimeoutException)
+            catch (TimeoutException ex)
             {
+                _logger.Warn($"Timeout al notificar a '{nombreUsuario}'. Desuscribiendo.", ex);
                 Desuscribir(nombreUsuario);
             }
             catch (InvalidOperationException ex)

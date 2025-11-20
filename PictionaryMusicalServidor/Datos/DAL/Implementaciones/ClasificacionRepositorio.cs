@@ -1,4 +1,5 @@
 using System;
+using log4net;
 using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Datos.Modelo;
 
@@ -6,6 +7,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 {
     public class ClasificacionRepositorio : IClasificacionRepositorio
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(ClasificacionRepositorio));
         private readonly BaseDatosPruebaEntities1 _contexto;
 
         public ClasificacionRepositorio(BaseDatosPruebaEntities1 contexto)
@@ -15,16 +17,27 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 
         public Clasificacion CrearClasificacionInicial()
         {
-            var clasificacion = new Clasificacion
+            try
             {
-                Puntos_Ganados = 0,
-                Rondas_Ganadas = 0
-            };
+                var clasificacion = new Clasificacion
+                {
+                    Puntos_Ganados = 0,
+                    Rondas_Ganadas = 0
+                };
 
-            _contexto.Clasificacion.Add(clasificacion);
-            _contexto.SaveChanges();
+                _contexto.Clasificacion.Add(clasificacion);
+                _contexto.SaveChanges();
 
-            return clasificacion;
+                // No es estrictamente necesario un Info aquí si se llama siempre al crear usuario, 
+                // pero ayuda a la trazabilidad si falla.
+
+                return clasificacion;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error al crear la clasificación inicial.", ex);
+                throw;
+            }
         }
     }
 }

@@ -367,7 +367,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
 
             await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
-            Assert.AreEqual(Lang.globalTextoIngreseCodigoPartida, mensaje);
+            Assert.AreEqual(Lang.unirseSalaTextoVacio, mensaje);
         }
 
         [TestMethod]

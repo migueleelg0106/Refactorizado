@@ -80,7 +80,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
 
             await _vistaModelo.UnirseSalaComando.EjecutarAsync(null);
 
-            Assert.AreEqual(Lang.globalTextoIngreseCodigoPartida, mensaje);
+            Assert.AreEqual(Lang.unirseSalaTextoVacio, mensaje);
             _mockSalasServicio.Verify(s => s.UnirseSalaAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 

@@ -37,6 +37,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 
             if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
             {
+                _logger.Error("Configuración de correo incompleta (Remitente o Host faltante).");
                 return false;
             }
 
@@ -79,6 +80,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                     }
                 }
 
+                _logger.Info($"Código de verificación enviado a '{correoDestino}'.");
                 return true;
             }
             catch (SmtpException ex)

@@ -250,7 +250,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.InicioSesion
 
             await _vistaModelo.RecuperarCuentaComando.EjecutarAsync(null);
 
-            Assert.AreEqual("NoEncontrado", mensaje);
+            Assert.AreEqual(Lang.errorTextoCuentaNoRegistrada, mensaje);
         }
 
         [TestMethod]

@@ -1,5 +1,6 @@
 ﻿using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
-using System.Threading.Tasks;
+using log4net;
+using System;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -9,6 +10,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// </summary>
     internal static class ServicioNotificacionCodigos
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(ServicioNotificacionCodigos));
         private static ICodigoVerificacionNotificador _notificador = new CorreoCodigoVerificacionNotificador();
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-  
+
                 var tarea = _notificador?.NotificarAsync(correoDestino, codigo, usuarioDestino);
                 if (tarea == null)
                 {
@@ -47,8 +49,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 return tarea.GetAwaiter().GetResult();
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.Error($"Error crítico al enviar notificación a {correoDestino}.", ex);
                 return false;
             }
         }

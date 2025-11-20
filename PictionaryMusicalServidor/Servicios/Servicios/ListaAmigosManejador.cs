@@ -44,6 +44,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _manejadorCallback.ConfigurarEventosCanal(nombreUsuario);
 
                 _notificador.NotificarLista(nombreUsuario, amigosActuales);
+
+                _logger.Info($"Usuario '{nombreUsuario}' se suscribió a notificaciones de lista de amigos.");
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -79,6 +81,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
                 _manejadorCallback.Desuscribir(nombreUsuario);
+
+                _logger.Info($"Usuario '{nombreUsuario}' canceló su suscripción a lista de amigos.");
             }
             catch (ArgumentException ex)
             {
@@ -104,7 +108,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             try
             {
                 ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
-
                 return ObtenerAmigosPorNombre(nombreUsuario);
             }
             catch (ArgumentOutOfRangeException ex)

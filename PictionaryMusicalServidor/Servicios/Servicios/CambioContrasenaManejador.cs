@@ -29,7 +29,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
+                var resultado = ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
+                if (resultado.CodigoEnviado)
+                {
+                    _logger.Info($"Solicitud de recuperación de cuenta iniciada para '{solicitud.Identificador}'.");
+                }
+                else
+                {
+                    _logger.Warn($"Solicitud de recuperación fallida para '{solicitud.Identificador}': {resultado.Mensaje}");
+                }
+                return resultado;
             }
             catch (ArgumentNullException ex)
             {
@@ -70,7 +79,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return ServicioRecuperacionCuenta.ReenviarCodigoRecuperacion(solicitud);
+                var resultado = ServicioRecuperacionCuenta.ReenviarCodigoRecuperacion(solicitud);
+                if (resultado.CodigoEnviado)
+                {
+                    _logger.Info($"Reenviar código de recuperación de cuenta iniciada para '{solicitud.TokenCodigo}'.");
+                }
+                else
+                {
+                    _logger.Warn($"Solicitud de reenvío de código de recuperación fallida para '{solicitud.TokenCodigo}': {resultado.Mensaje}");
+                }
+                return resultado;
             }
             catch (ArgumentNullException ex)
             {
@@ -111,7 +129,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
+                var resultado = ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
+                if (resultado.OperacionExitosa)
+                {
+                    _logger.Info($"Código de recuperación confirmado correctamente. Token sesión: '{confirmacion.TokenCodigo}'.");
+                }
+                else
+                {
+                    _logger.Warn($"Intento fallido de confirmación de código de recuperación. Token sesión: '{confirmacion.TokenCodigo}': {resultado.Mensaje}");
+                }
+                return resultado;
             }
             catch (ArgumentNullException ex)
             {
@@ -152,7 +179,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return ServicioRecuperacionCuenta.ActualizarContrasena(solicitud);
+                var resultado = ServicioRecuperacionCuenta.ActualizarContrasena(solicitud);
+                if (resultado.OperacionExitosa)
+                {
+                    _logger.Info("Contraseña actualizada correctamente mediante recuperación.");
+                }
+                return resultado;
             }
             catch (ArgumentNullException ex)
             {

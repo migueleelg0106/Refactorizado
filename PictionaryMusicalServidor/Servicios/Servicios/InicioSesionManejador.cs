@@ -2,7 +2,6 @@ using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Datos.Modelo;
 using System;
-using System.Data.Entity;
 using System.Linq;
 using log4net;
 using BCryptNet = BCrypt.Net.BCrypt;
@@ -45,6 +44,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (!EntradaComunValidador.EsLongitudValida(identificador) || string.IsNullOrWhiteSpace(contrasena))
             {
+                _logger.Warn($"Intento de inicio de sesión con datos inválidos. Identificador: {identificador}");
                 return new ResultadoInicioSesionDTO
                 {
                     CuentaEncontrada = true,
@@ -60,6 +60,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     if (usuario == null)
                     {
+                        _logger.Warn($"Intento de inicio de sesión fallido. Usuario no encontrado: {identificador}");
                         return new ResultadoInicioSesionDTO
                         {
                             CuentaEncontrada = false,
@@ -69,12 +70,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     if (!BCryptNet.Verify(contrasena, usuario.Contrasena))
                     {
+                        _logger.Warn($"Intento de inicio de sesión fallido. Contraseña incorrecta para: {usuario.Nombre_Usuario}");
                         return new ResultadoInicioSesionDTO
                         {
                             ContrasenaIncorrecta = true,
                             Mensaje = MensajesError.Cliente.CredencialesIncorrectas
                         };
                     }
+
+                    _logger.Info($"Inicio de sesión exitoso. Usuario: {usuario.Nombre_Usuario}, ID: {usuario.idUsuario}");
 
                     return new ResultadoInicioSesionDTO
                     {

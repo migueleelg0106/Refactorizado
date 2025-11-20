@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.IO;
 using System.ServiceModel;
 using log4net;
+using log4net.Config;
 
 namespace PictionaryMusicalServidor.HostServidor
 {
@@ -11,6 +12,7 @@ namespace PictionaryMusicalServidor.HostServidor
 
         static void Main()
         {
+            XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
             Directory.CreateDirectory("Logs");
 
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
@@ -18,16 +20,16 @@ namespace PictionaryMusicalServidor.HostServidor
                 _logger.Fatal("Excepcion no controlada.", (Exception)e.ExceptionObject);
             };
 
-            using (var hostCuenta = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.CuentaManejador)))
-            using (var hostCodigo = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.CodigoVerificacionManejador)))
-            using (var hostInicioSesion = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.InicioSesionManejador)))
-            using (var hostCambioContrasena = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.CambioContrasenaManejador)))
-            using (var hostClasificacion = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.ClasificacionManejador)))
-            using (var hostPerfil = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.PerfilManejador)))
-            using (var hostAmigos = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.AmigosManejador)))
-            using (var hostListaAmigos = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.ListaAmigosManejador)))
-            using (var hostSalas = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.SalasManejador)))
-            using (var hostInvitaciones = new ServiceHost(typeof(PictionaryMusicalServidor.Servicios.Servicios.InvitacionesManejador)))
+            using (var hostCuenta = new ServiceHost(typeof(Servicios.Servicios.CuentaManejador)))
+            using (var hostCodigo = new ServiceHost(typeof(Servicios.Servicios.CodigoVerificacionManejador)))
+            using (var hostInicioSesion = new ServiceHost(typeof(Servicios.Servicios.InicioSesionManejador)))
+            using (var hostCambioContrasena = new ServiceHost(typeof(Servicios.Servicios.CambioContrasenaManejador)))
+            using (var hostClasificacion = new ServiceHost(typeof(Servicios.Servicios.ClasificacionManejador)))
+            using (var hostPerfil = new ServiceHost(typeof(Servicios.Servicios.PerfilManejador)))
+            using (var hostAmigos = new ServiceHost(typeof(Servicios.Servicios.AmigosManejador)))
+            using (var hostListaAmigos = new ServiceHost(typeof(Servicios.Servicios.ListaAmigosManejador)))
+            using (var hostSalas = new ServiceHost(typeof(Servicios.Servicios.SalasManejador)))
+            using (var hostInvitaciones = new ServiceHost(typeof(Servicios.Servicios.InvitacionesManejador)))
             {
                 try
                 {
@@ -91,7 +93,7 @@ namespace PictionaryMusicalServidor.HostServidor
                         _logger.InfoFormat("Invitaciones -> {0} ({1})", endpoint.Address, endpoint.Binding.Name);
                     }
 
-                    _logger.Info("Todos los servicios est�n arriba y escuchando. Presiona ENTER para salir.");
+                    _logger.Info("Todos los servicios están arriba y escuchando. Presiona ENTER para salir.");
                     Console.ReadLine();
                 }
                 catch (AddressAccessDeniedException ex)
@@ -109,6 +111,10 @@ namespace PictionaryMusicalServidor.HostServidor
                 catch (CommunicationException ex)
                 {
                     _logger.Error("Error de comunicacion al iniciar el host.", ex);
+                }
+                catch (Exception ex) 
+                {
+                    _logger.Fatal("Error crítico inesperado al iniciar el servidor.", ex);
                 }
                 finally
                 {

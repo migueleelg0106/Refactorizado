@@ -91,6 +91,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                         ServicioVerificacionRegistro.LimpiarVerificacion(nuevaCuenta);
 
+                        _logger.Info($"Nueva cuenta registrada exitosamente. Usuario: {nuevaCuenta.Usuario}, Correo: {nuevaCuenta.Correo}");
+
                         return new ResultadoRegistroCuentaDTO
                         {
                             RegistroExitoso = true
@@ -149,6 +151,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (!ServicioVerificacionRegistro.EstaVerificacionConfirmada(nuevaCuenta))
             {
+                _logger.Warn($"Intento de registro sin verificación confirmada. Correo: {nuevaCuenta.Correo}");
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -161,6 +164,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (usuarioRegistrado || correoRegistrado)
             {
+                _logger.Warn($"Intento de registro duplicado. Usuario existe: {usuarioRegistrado}, Correo existe: {correoRegistrado}");
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,

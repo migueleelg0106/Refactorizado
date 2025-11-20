@@ -73,6 +73,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _manejadorCallback.ConfigurarEventosCanal(nombreNormalizado);
 
                 _notificador.NotificarSolicitudesPendientesAlSuscribir(nombreNormalizado, usuario.idUsuario);
+
+                _logger.Info($"Usuario '{nombreNormalizado}' suscrito a notificaciones de amistad.");
             }
             catch (EntityException ex)
             {
@@ -148,6 +150,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     SolicitudAceptada = false
                 };
 
+                _logger.Info($"Solicitud de amistad enviada de '{nombreEmisor}' a '{nombreReceptor}'.");
                 _notificador.NotificarSolicitudActualizada(nombreReceptor, solicitud);
             }
             catch (FaultException ex)
@@ -216,6 +219,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         SolicitudAceptada = true
                     };
 
+                    _logger.Info($"Solicitud de amistad aceptada entre '{nombreEmisorNormalizado}' y '{nombreReceptorNormalizado}'.");
                     _notificador.NotificarSolicitudActualizada(nombreEmisorNormalizado, solicitud);
                     _notificador.NotificarSolicitudActualizada(nombreReceptorNormalizado, solicitud);
                 }
@@ -298,6 +302,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _notificador.NotificarAmistadEliminada(nombreUsuarioANormalizado, solicitud);
                 _notificador.NotificarAmistadEliminada(nombreUsuarioBNormalizado, solicitud);
 
+                _logger.Info($"Amistad eliminada entre '{nombreUsuarioANormalizado}' y '{nombreUsuarioBNormalizado}'.");
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioANormalizado);
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioBNormalizado);
             }

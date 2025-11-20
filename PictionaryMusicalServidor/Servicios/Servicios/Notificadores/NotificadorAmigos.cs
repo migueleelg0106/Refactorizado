@@ -29,6 +29,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// <param name="solicitud">Detalles de la solicitud.</param>
         public void NotificarSolicitudActualizada(string nombreUsuario, SolicitudAmistadDTO solicitud)
         {
+            _logger.Info($"Notificando solicitud de amistad (Emisor: {solicitud.UsuarioEmisor}) a '{nombreUsuario}'. Estado aceptada: {solicitud.SolicitudAceptada}");
             _manejadorCallback.Notificar(nombreUsuario, callback =>
             {
                 callback.NotificarSolicitudActualizada(solicitud);
@@ -42,6 +43,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// <param name="solicitud">Detalles de la relación eliminada.</param>
         public void NotificarAmistadEliminada(string nombreUsuario, SolicitudAmistadDTO solicitud)
         {
+            _logger.Info($"Notificando eliminación de amistad a '{nombreUsuario}' con {solicitud.UsuarioEmisor}/{solicitud.UsuarioReceptor}.");
             _manejadorCallback.Notificar(nombreUsuario, callback =>
             {
                 callback.NotificarAmistadEliminada(solicitud);
@@ -63,6 +65,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 {
                     return;
                 }
+
+                _logger.Info($"Usuario '{nombreNormalizado}' tiene {solicitudesDTO.Count} solicitudes pendientes. Enviando notificaciones.");
 
                 foreach (var dto in solicitudesDTO)
                 {

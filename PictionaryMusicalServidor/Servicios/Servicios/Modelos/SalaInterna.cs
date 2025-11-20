@@ -65,6 +65,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
                 if (JugadorYaExiste(nombreUsuario))
                 {
                     _callbacks[nombreUsuario] = callback;
+                    _logger.Info($"Jugador '{nombreUsuario}' se reconectó a la sala {Codigo}.");
                     return ToDto();
                 }
 
@@ -72,6 +73,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
 
                 Jugadores.Add(nombreUsuario);
                 _callbacks[nombreUsuario] = callback;
+                _logger.Info($"Jugador '{nombreUsuario}' se unió a la sala {Codigo}. Total jugadores: {Jugadores.Count}.");
 
                 if (notificar)
                 {
@@ -96,11 +98,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
                     return;
                 }
 
+                _logger.Info($"Jugador '{nombreUsuario}' salió de la sala {Codigo}.");
+
                 var salaActualizada = ToDto();
                 NotificarSalidaYActualizacion(nombreUsuario, salaActualizada);
 
                 if (DebeMarcarseParaEliminar(nombreUsuario))
                 {
+                    _logger.Info($"Marcando sala {Codigo} para eliminación (Host salió o sala vacía).");
                     DebeEliminarse = true;
                 }
             }
@@ -121,6 +126,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
 
                 Jugadores.RemoveAll(j => string.Equals(j, nombreJugadorAExpulsar, StringComparison.OrdinalIgnoreCase));
                 _callbacks.Remove(nombreJugadorAExpulsar);
+
+                _logger.Info($"Jugador '{nombreJugadorAExpulsar}' fue expulsado de la sala {Codigo} por '{nombreHost}'.");
 
                 var salaActualizada = ToDto();
 

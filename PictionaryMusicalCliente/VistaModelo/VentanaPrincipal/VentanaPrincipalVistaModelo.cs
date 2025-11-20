@@ -609,9 +609,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
-                string mensaje = string.IsNullOrWhiteSpace(ex?.Message)
+                string mensaje = ex?.Tipo == TipoErrorServicio.FallaServicio
                     ? Lang.errorTextoNoEncuentraPartida
-                    : ex.Message;
+                    : string.IsNullOrWhiteSpace(ex?.Message)
+                        ? Lang.errorTextoNoEncuentraPartida
+                        : ex.Message;
 
                 ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(mensaje);

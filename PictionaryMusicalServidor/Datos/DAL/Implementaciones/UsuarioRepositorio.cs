@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using log4net;
 using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Datos.Modelo;
 
@@ -12,6 +13,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
     /// </summary>
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(UsuarioRepositorio));
         private readonly BaseDatosPruebaEntities1 _contexto;
 
         /// <summary>
@@ -37,12 +39,19 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
                 return false;
             }
 
-            string nombreNormalizado = nombreUsuario.Trim();
+            try
+            {
+                string nombreNormalizado = nombreUsuario.Trim();
+                var usuario = _contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
 
-            var usuario = _contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
-
-            return usuario != null
-                && string.Equals(usuario.Nombre_Usuario, nombreNormalizado, StringComparison.Ordinal);
+                return usuario != null
+                    && string.Equals(usuario.Nombre_Usuario, nombreNormalizado, StringComparison.Ordinal);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error al verificar existencia del usuario '{nombreUsuario}'.", ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -56,12 +65,24 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
         {
             if (usuario == null)
             {
-                throw new ArgumentNullException(nameof(usuario));
+                var ex = new ArgumentNullException(nameof(usuario));
+                _logger.Error("Intento de crear un usuario nulo.", ex);
+                throw ex;
             }
 
-            var entidad = _contexto.Usuario.Add(usuario);
-            _contexto.SaveChanges();
-            return entidad;
+            try
+            {
+                var entidad = _contexto.Usuario.Add(usuario);
+                _contexto.SaveChanges();
+
+                _logger.Info($"Usuario creado exitosamente. ID: {entidad.idUsuario}, Nombre: {entidad.Nombre_Usuario}.");
+                return entidad;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error al guardar el nuevo usuario '{usuario.Nombre_Usuario}' en la base de datos.", ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -75,19 +96,29 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
-                throw new ArgumentException("El nombre de usuario es obligatorio.", nameof(nombreUsuario));
+                var ex = new ArgumentException("El nombre de usuario es obligatorio.", nameof(nombreUsuario));
+                _logger.Error("Intento de búsqueda de usuario con nombre vacío o nulo.", ex);
+                throw ex;
             }
 
-            string nombreNormalizado = nombreUsuario.Trim();
-
-            var usuario = _contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
-
-            if (usuario != null && string.Equals(usuario.Nombre_Usuario, nombreNormalizado, StringComparison.Ordinal))
+            try
             {
-                return usuario;
-            }
+                string nombreNormalizado = nombreUsuario.Trim();
 
-            return null;
+                var usuario = _contexto.Usuario.FirstOrDefault(u => u.Nombre_Usuario == nombreNormalizado);
+
+                if (usuario != null && string.Equals(usuario.Nombre_Usuario, nombreNormalizado, StringComparison.Ordinal))
+                {
+                    return usuario;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error al obtener el usuario '{nombreUsuario}' de la base de datos.", ex);
+                throw;
+            }
         }
     }
 }

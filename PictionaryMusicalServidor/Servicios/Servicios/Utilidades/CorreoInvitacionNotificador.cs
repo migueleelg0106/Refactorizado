@@ -47,6 +47,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 
             if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
             {
+                _logger.Error("Configuración de correo incompleta (Remitente o Host faltante).");
                 return false;
             }
 
@@ -87,6 +88,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                     }
                 }
 
+                _logger.Info($"Invitación enviada correctamente a '{correoDestino}' para la sala {codigoSala}.");
                 return true;
             }
             catch (SmtpException ex)
