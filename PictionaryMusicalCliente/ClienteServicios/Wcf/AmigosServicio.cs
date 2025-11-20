@@ -259,11 +259,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
         private async Task ManejarExcepcionOperacionAsync(Exception ex, ICommunicationObject cliente, bool esTemporal)
         {
+            // FaultException indica violación de regla de negocio, no error de comunicación
+            // No se debe reiniciar la conexión en este caso
+            bool esErrorComunicacion = !(ex is FaultException);
+            
             if (esTemporal)
             {
                 cliente.Abort();
             }
-            else
+            else if (esErrorComunicacion)
             {
                 await ReiniciarClienteConSuscripcionAsync().ConfigureAwait(false);
             }
