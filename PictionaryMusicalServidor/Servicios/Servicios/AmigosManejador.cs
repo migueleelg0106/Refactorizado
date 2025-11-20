@@ -87,11 +87,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public void EnviarSolicitudAmistad(string nombreUsuarioEmisor, string nombreUsuarioReceptor)
         {
-            ValidadorNombreUsuario.Validar(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
-            ValidadorNombreUsuario.Validar(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
-
             try
             {
+                ValidadorNombreUsuario.Validar(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
+                ValidadorNombreUsuario.Validar(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
+
                 Usuario usuarioEmisor;
                 Usuario usuarioReceptor;
 
@@ -124,14 +124,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadEnviarSolicitudReglaNegocio, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorAlmacenarSolicitud);
+                throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadEnviarSolicitudDatosInvalidos, ex);
-                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
+                throw new FaultException(ex.Message);
             }
             catch (DataException ex)
+            {
+                _logger.Error(MensajesError.Log.AmistadEnviarSolicitudErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorAlmacenarSolicitud);
+            }
+            catch (Exception ex)
             {
                 _logger.Error(MensajesError.Log.AmistadEnviarSolicitudErrorDatos, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorAlmacenarSolicitud);
@@ -140,14 +145,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public void ResponderSolicitudAmistad(string nombreUsuarioEmisor, string nombreUsuarioReceptor)
         {
-            ValidadorNombreUsuario.Validar(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
-            ValidadorNombreUsuario.Validar(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
-
             string nombreEmisorNormalizado;
             string nombreReceptorNormalizado;
 
             try
             {
+                ValidadorNombreUsuario.Validar(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
+                ValidadorNombreUsuario.Validar(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
+
                 using (var contexto = ContextoFactory.CrearContexto())
                 {
                     var usuarioRepositorio = new UsuarioRepositorio(contexto);
@@ -181,14 +186,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadResponderSolicitudReglaNegocio, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorActualizarSolicitud);
+                throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadResponderSolicitudDatosInvalidos, ex);
-                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
+                throw new FaultException(ex.Message);
             }
             catch (DataException ex)
+            {
+                _logger.Error(MensajesError.Log.AmistadResponderSolicitudErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorActualizarSolicitud);
+            }
+            catch (Exception ex)
             {
                 _logger.Error(MensajesError.Log.AmistadResponderSolicitudErrorDatos, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorActualizarSolicitud);
@@ -197,14 +207,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public void EliminarAmigo(string nombreUsuarioA, string nombreUsuarioB)
         {
-            ValidadorNombreUsuario.Validar(nombreUsuarioA, nameof(nombreUsuarioA));
-            ValidadorNombreUsuario.Validar(nombreUsuarioB, nameof(nombreUsuarioB));
-
             string nombreUsuarioANormalizado;
             string nombreUsuarioBNormalizado;
 
             try
             {
+                ValidadorNombreUsuario.Validar(nombreUsuarioA, nameof(nombreUsuarioA));
+                ValidadorNombreUsuario.Validar(nombreUsuarioB, nameof(nombreUsuarioB));
+
                 Amigo relacionEliminada;
                 int idUsuarioA;
 
@@ -247,14 +257,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadEliminarReglaNegocio, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorEliminarAmistad);
+                throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadEliminarDatosInvalidos, ex);
-                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
+                throw new FaultException(ex.Message);
             }
             catch (DataException ex)
+            {
+                _logger.Error(MensajesError.Log.AmistadEliminarErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorEliminarAmistad);
+            }
+            catch (Exception ex)
             {
                 _logger.Error(MensajesError.Log.AmistadEliminarErrorDatos, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorEliminarAmistad);

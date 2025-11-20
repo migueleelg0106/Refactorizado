@@ -21,13 +21,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public UsuarioDTO ObtenerPerfil(int idUsuario)
         {
-            if (idUsuario <= 0)
-            {
-                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
-            }
-
             try
             {
+                if (idUsuario <= 0)
+                {
+                    throw new ArgumentException(MensajesError.Cliente.DatosInvalidos);
+                }
+
                 using (BaseDatosPruebaEntities1 contexto = ContextoFactory.CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
@@ -36,14 +36,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     if (usuario == null)
                     {
-                        throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
+                        throw new InvalidOperationException(MensajesError.Cliente.UsuarioNoEncontrado);
                     }
 
                     Jugador jugador = usuario.Jugador;
 
                     if (jugador == null)
                     {
-                        throw new FaultException(MensajesError.Cliente.JugadorNoAsociado);
+                        throw new InvalidOperationException(MensajesError.Cliente.JugadorNoAsociado);
                     }
 
                     RedSocial redSocial = jugador.RedSocial.FirstOrDefault();
@@ -64,6 +64,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     };
                 }
             }
+            catch (ArgumentException ex)
+            {
+                _logger.Warn(MensajesError.Log.PerfilObtenerOperacionInvalida, ex);
+                throw new FaultException(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Warn(MensajesError.Log.PerfilObtenerOperacionInvalida, ex);
+                throw new FaultException(ex.Message);
+            }
             catch (EntityException ex)
             {
                 _logger.Error(MensajesError.Log.PerfilObtenerErrorBD, ex);
@@ -74,7 +84,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _logger.Error(MensajesError.Log.PerfilObtenerErrorDatos, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorObtenerPerfil);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
                 _logger.Error(MensajesError.Log.PerfilObtenerOperacionInvalida, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorObtenerPerfil);
@@ -83,15 +93,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public ResultadoOperacionDTO ActualizarPerfil(ActualizacionPerfilDTO solicitud)
         {
-
-            ResultadoOperacionDTO validacion = EntradaComunValidador.ValidarActualizacionPerfil(solicitud);
-            if (!validacion.OperacionExitosa)
-            {
-                return validacion;
-            }
-
             try
             {
+                ResultadoOperacionDTO validacion = EntradaComunValidador.ValidarActualizacionPerfil(solicitud);
+                if (!validacion.OperacionExitosa)
+                {
+                    return validacion;
+                }
+
                 using (BaseDatosPruebaEntities1 contexto = ContextoFactory.CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
@@ -101,14 +110,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     if (usuario == null)
                     {
-                        return CrearResultadoFallo(MensajesError.Cliente.UsuarioNoEncontrado);
+                        throw new InvalidOperationException(MensajesError.Cliente.UsuarioNoEncontrado);
                     }
 
                     Jugador jugador = usuario.Jugador;
 
                     if (jugador == null)
                     {
-                        return CrearResultadoFallo(MensajesError.Cliente.JugadorNoAsociado);
+                        throw new InvalidOperationException(MensajesError.Cliente.JugadorNoAsociado);
                     }
 
                     jugador.Nombre = solicitud.Nombre;
@@ -140,6 +149,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     };
                 }
             }
+            catch (ArgumentException ex)
+            {
+                _logger.Warn(MensajesError.Log.PerfilActualizarOperacionInvalida, ex);
+                return CrearResultadoFallo(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Warn(MensajesError.Log.PerfilActualizarOperacionInvalida, ex);
+                return CrearResultadoFallo(ex.Message);
+            }
             catch (DbEntityValidationException ex)
             {
                 _logger.Error(MensajesError.Log.PerfilActualizarValidacionEntidad, ex);
@@ -160,7 +179,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _logger.Error(MensajesError.Log.PerfilActualizarErrorDatos, ex);
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
                 _logger.Error(MensajesError.Log.PerfilActualizarOperacionInvalida, ex);
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
