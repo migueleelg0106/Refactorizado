@@ -1,7 +1,6 @@
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Datos.Modelo;
-using PictionaryMusicalServidor.Datos.Utilidades;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -10,6 +9,7 @@ using BCryptNet = BCrypt.Net.BCrypt;
 using System.Data;
 using System.Data.Entity.Core;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -38,7 +38,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (var contexto = CrearContexto())
+                using (var contexto = ContextoFactory.CrearContexto())
                 {
                     Usuario usuario = BuscarUsuarioPorIdentificador(contexto, identificador);
 
@@ -94,14 +94,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     Mensaje = MensajesError.Cliente.ErrorInicioSesion
                 };
             }
-        }
-
-        private static BaseDatosPruebaEntities1 CrearContexto()
-        {
-            string conexion = Conexion.ObtenerConexion();
-            return string.IsNullOrWhiteSpace(conexion)
-                ? new BaseDatosPruebaEntities1()
-                : new BaseDatosPruebaEntities1(conexion);
         }
 
         private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities1 contexto, string identificador)

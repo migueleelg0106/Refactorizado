@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using PictionaryMusicalServidor.Datos.Modelo;
-using PictionaryMusicalServidor.Datos.Utilidades;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
@@ -37,7 +35,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 };
             }
 
-            using (var contexto = CrearContexto())
+            using (var contexto = ContextoFactory.CrearContexto())
             {
                 bool usuarioRegistrado = contexto.Usuario.Any(u => u.Nombre_Usuario == nuevaCuenta.Usuario);
                 bool correoRegistrado = contexto.Jugador.Any(j => j.Correo == nuevaCuenta.Correo);
@@ -216,14 +214,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             string clave = ObtenerClave(nuevaCuenta.Usuario, nuevaCuenta.Correo);
             _verificacionesConfirmadas.TryRemove(clave, out _);
-        }
-
-        private static BaseDatosPruebaEntities1 CrearContexto()
-        {
-            string conexion = Conexion.ObtenerConexion();
-            return string.IsNullOrWhiteSpace(conexion)
-                ? new BaseDatosPruebaEntities1()
-                : new BaseDatosPruebaEntities1(conexion);
         }
 
         private static NuevaCuentaDTO CopiarCuenta(NuevaCuentaDTO original)

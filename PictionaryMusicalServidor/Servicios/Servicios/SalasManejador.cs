@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -20,7 +20,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public SalaDTO CrearSala(string nombreCreador, ConfiguracionPartidaDTO configuracion)
         {
-            ValidarNombreUsuario(nombreCreador, nameof(nombreCreador));
+            ValidadorNombreUsuario.Validar(nombreCreador, nameof(nombreCreador));
             ValidarConfiguracion(configuracion);
 
             try
@@ -63,7 +63,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public SalaDTO UnirseSala(string codigoSala, string nombreUsuario)
         {
-            ValidarNombreUsuario(nombreUsuario, nameof(nombreUsuario));
+            ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
 
             if (string.IsNullOrWhiteSpace(codigoSala))
                 throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
@@ -120,7 +120,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public void AbandonarSala(string codigoSala, string nombreUsuario)
         {
-            ValidarNombreUsuario(nombreUsuario, nameof(nombreUsuario));
+            ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
 
             if (string.IsNullOrWhiteSpace(codigoSala))
                 throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
@@ -223,8 +223,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public void ExpulsarJugador(string codigoSala, string nombreHost, string nombreJugadorAExpulsar)
         {
-            ValidarNombreUsuario(nombreHost, nameof(nombreHost));
-            ValidarNombreUsuario(nombreJugadorAExpulsar, nameof(nombreJugadorAExpulsar));
+            ValidadorNombreUsuario.Validar(nombreHost, nameof(nombreHost));
+            ValidadorNombreUsuario.Validar(nombreJugadorAExpulsar, nameof(nombreJugadorAExpulsar));
 
             if (string.IsNullOrWhiteSpace(codigoSala))
                 throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
@@ -282,22 +282,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
 
             throw new FaultException(MensajesError.Cliente.ErrorGenerarCodigo);
-        }
-
-        private static void ValidarNombreUsuario(string nombreUsuario, string parametro)
-        {
-            string normalizado = nombreUsuario?.Trim();
-
-            if (string.IsNullOrWhiteSpace(normalizado))
-            {
-                string mensaje = string.Format(CultureInfo.CurrentCulture, MensajesError.Cliente.ParametroObligatorio, parametro);
-                throw new FaultException(mensaje);
-            }
-
-            if (normalizado.Length > EntradaComunValidador.LongitudMaximaTexto)
-            {
-                throw new FaultException(MensajesError.Cliente.UsuarioRegistroInvalido);
-            }
         }
 
         private static void ValidarConfiguracion(ConfiguracionPartidaDTO configuracion)
