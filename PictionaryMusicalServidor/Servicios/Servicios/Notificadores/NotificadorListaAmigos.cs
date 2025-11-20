@@ -45,17 +45,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             catch (FaultException ex)
             {
                 _logger.Warn(MensajesError.Log.ListaAmigosNotificarObtenerError, ex);
-                _manejadorCallback.Desuscribir(nombreUsuario);
             }
             catch (ArgumentOutOfRangeException ex)
             {
                 _logger.Warn(MensajesError.Log.ListaAmigosActualizarIdentificadorInvalido, ex);
-                _manejadorCallback.Desuscribir(nombreUsuario);
             }
             catch (ArgumentException ex)
             {
                 _logger.Warn(MensajesError.Log.ListaAmigosActualizarDatosInvalidos, ex);
-                _manejadorCallback.Desuscribir(nombreUsuario);
             }
             catch (DataException ex)
             {
