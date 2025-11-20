@@ -382,7 +382,11 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                     (resultado.Mensaje))
                 {
                     ManejadorSonido.ReproducirError();
-                    AvisoAyudante.Mostrar(resultado.Mensaje);
+                    string mensajeLocalizado = MensajeServidorAyudante.Localizar(
+                        resultado.Mensaje,
+                        Lang.errorTextoCuentaNoRegistrada);
+
+                    AvisoAyudante.Mostrar(mensajeLocalizado);
                 }
             }
             catch (ServicioExcepcion ex)
