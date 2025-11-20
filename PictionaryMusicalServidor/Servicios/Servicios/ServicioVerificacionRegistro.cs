@@ -22,7 +22,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (nuevaCuenta == null)
             {
-                throw new ArgumentNullException(nameof(nuevaCuenta));
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = MensajesError.Cliente.DatosInvalidos
+                };
             }
 
             ResultadoOperacionDTO validacionDatos = EntradaComunValidador.ValidarNuevaCuenta(nuevaCuenta);
@@ -86,7 +90,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (solicitud == null)
             {
-                throw new ArgumentNullException(nameof(solicitud));
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = MensajesError.Cliente.DatosInvalidos
+                };
             }
 
             string token = EntradaComunValidador.NormalizarTexto(solicitud.TokenCodigo);
@@ -139,7 +147,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (confirmacion == null)
             {
-                throw new ArgumentNullException(nameof(confirmacion));
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    Mensaje = MensajesError.Cliente.DatosInvalidos
+                };
             }
 
             string token = EntradaComunValidador.NormalizarTexto(confirmacion.TokenCodigo);

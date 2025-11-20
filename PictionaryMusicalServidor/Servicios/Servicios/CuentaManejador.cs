@@ -23,7 +23,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (nuevaCuenta == null)
             {
-                throw new ArgumentNullException(nameof(nuevaCuenta));
+                return new ResultadoRegistroCuentaDTO
+                {
+                    RegistroExitoso = false,
+                    Mensaje = MensajesError.Cliente.DatosInvalidos
+                };
             }
 
             ResultadoOperacionDTO validacionDatos = EntradaComunValidador.ValidarNuevaCuenta(nuevaCuenta);

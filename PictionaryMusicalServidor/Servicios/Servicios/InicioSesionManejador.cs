@@ -21,7 +21,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (credenciales == null)
             {
-                throw new ArgumentNullException(nameof(credenciales));
+                return new ResultadoInicioSesionDTO
+                {
+                    InicioSesionExitoso = false,
+                    Mensaje = MensajesError.Cliente.DatosInvalidos
+                };
             }
 
             string identificador = EntradaComunValidador.NormalizarTexto(credenciales.Identificador);

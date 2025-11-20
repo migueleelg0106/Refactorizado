@@ -124,7 +124,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadEnviarSolicitudReglaNegocio, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorAlmacenarSolicitud);
+                string mensaje = !string.IsNullOrWhiteSpace(ex.Message) ? ex.Message : MensajesError.Cliente.ErrorAlmacenarSolicitud;
+                throw new FaultException(mensaje);
             }
             catch (ArgumentException ex)
             {
@@ -181,7 +182,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadResponderSolicitudReglaNegocio, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorActualizarSolicitud);
+                string mensaje = !string.IsNullOrWhiteSpace(ex.Message) ? ex.Message : MensajesError.Cliente.ErrorActualizarSolicitud;
+                throw new FaultException(mensaje);
             }
             catch (ArgumentException ex)
             {
@@ -247,7 +249,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (InvalidOperationException ex)
             {
                 _logger.Warn(MensajesError.Log.AmistadEliminarReglaNegocio, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorEliminarAmistad);
+                string mensaje = !string.IsNullOrWhiteSpace(ex.Message) ? ex.Message : MensajesError.Cliente.ErrorEliminarAmistad;
+                throw new FaultException(mensaje);
             }
             catch (ArgumentException ex)
             {

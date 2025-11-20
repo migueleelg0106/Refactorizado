@@ -28,7 +28,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (solicitud == null)
             {
-                throw new ArgumentNullException(nameof(solicitud));
+                return new ResultadoSolicitudRecuperacionDTO
+                {
+                    CuentaEncontrada = false,
+                    CodigoEnviado = false,
+                    Mensaje = MensajesError.Cliente.DatosInvalidos
+                };
             }
 
             string identificador = EntradaComunValidador.NormalizarTexto(solicitud.Identificador);
@@ -98,7 +103,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (solicitud == null)
             {
-                throw new ArgumentNullException(nameof(solicitud));
+                return new ResultadoSolicitudCodigoDTO
+                {
+                    CodigoEnviado = false,
+                    Mensaje = MensajesError.Cliente.DatosInvalidos
+                };
             }
 
             string token = EntradaComunValidador.NormalizarTexto(solicitud.TokenCodigo);
@@ -164,7 +173,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (confirmacion == null)
             {
-                throw new ArgumentNullException(nameof(confirmacion));
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = MensajesError.Cliente.DatosInvalidos
+                };
             }
 
             string token = EntradaComunValidador.NormalizarTexto(confirmacion.TokenCodigo);
@@ -222,7 +235,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (solicitud == null)
             {
-                throw new ArgumentNullException(nameof(solicitud));
+                return new ResultadoOperacionDTO
+                {
+                    OperacionExitosa = false,
+                    Mensaje = MensajesError.Cliente.DatosInvalidos
+                };
             }
 
             string token = EntradaComunValidador.NormalizarTexto(solicitud.TokenCodigo);
