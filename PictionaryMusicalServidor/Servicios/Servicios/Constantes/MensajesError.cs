@@ -54,6 +54,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
             public const string ErrorSuscripcionAmigos = "No fue posible suscribirse a las actualizaciones de amigos.";
             public const string ErrorNotificarSolicitud = "No fue posible notificar la actualización de la solicitud de amistad.";
             public const string ErrorNotificarEliminacion = "No fue posible notificar la eliminación de la relación de amistad.";
+            public const string SolicitudAmistadMismoUsuario = "No es posible enviarse una solicitud de amistad a sí mismo.";
+            public const string RelacionAmistadExistente = "Ya existe una solicitud o relación de amistad entre los usuarios.";
+            public const string SolicitudAmistadNoExiste = "No existe una solicitud de amistad entre los usuarios.";
+            public const string ErrorAceptarSolicitud = "No fue posible aceptar la solicitud de amistad.";
+            public const string SolicitudAmistadYaAceptada = "La solicitud de amistad ya fue aceptada con anterioridad.";
+            public const string RelacionAmistadNoExiste = "No existe una relación de amistad entre los usuarios.";
 
             // Mensajes de recuperación de cuenta
             public const string ErrorRecuperarCuenta = "No fue posible procesar la recuperación de cuenta.";

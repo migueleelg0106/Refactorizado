@@ -5,6 +5,7 @@ using System.Linq;
 using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using PictionaryMusicalServidor.Datos.Modelo;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
@@ -56,7 +57,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (usuarioEmisorId == usuarioReceptorId)
             {
-                throw new InvalidOperationException("No es posible enviarse una solicitud de amistad a sí mismo.");
+                throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadMismoUsuario);
             }
 
             using (var contexto = ContextoFactory.CrearContexto())
@@ -64,7 +65,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 if (amigoRepositorio.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
                 {
-                    throw new InvalidOperationException("Ya existe una solicitud o relación de amistad entre los usuarios.");
+                    throw new InvalidOperationException(MensajesError.Cliente.RelacionAmistadExistente);
                 }
 
                 amigoRepositorio.CrearSolicitud(usuarioEmisorId, usuarioReceptorId);
@@ -80,17 +81,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (relacion == null)
                 {
-                    throw new InvalidOperationException("No existe una solicitud de amistad entre los usuarios.");
+                    throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadNoExiste);
                 }
 
                 if (relacion.UsuarioReceptor != usuarioReceptorId)
                 {
-                    throw new InvalidOperationException("No fue posible aceptar la solicitud de amistad.");
+                    throw new InvalidOperationException(MensajesError.Cliente.ErrorAceptarSolicitud);
                 }
 
                 if (relacion.Estado)
                 {
-                    throw new InvalidOperationException("La solicitud de amistad ya fue aceptada con anterioridad.");
+                    throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadYaAceptada);
                 }
 
                 amigoRepositorio.ActualizarEstado(relacion, true);
@@ -101,7 +102,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (usuarioAId == usuarioBId)
             {
-                throw new InvalidOperationException("No fue posible eliminar la relación de amistad.");
+                throw new InvalidOperationException(MensajesError.Cliente.ErrorEliminarAmistad);
             }
 
             using (var contexto = ContextoFactory.CrearContexto())
@@ -111,7 +112,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (relacion == null)
                 {
-                    throw new InvalidOperationException("No existe una relación de amistad entre los usuarios.");
+                    throw new InvalidOperationException(MensajesError.Cliente.RelacionAmistadNoExiste);
                 }
 
                 amigoRepositorio.EliminarRelacion(relacion);
