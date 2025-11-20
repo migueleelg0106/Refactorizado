@@ -122,6 +122,10 @@
     <Compile Include="Servicios\EntradaComunValidador.cs" />
     <Compile Include="Servicios\InicioSesionManejador.cs" />
     <Compile Include="Servicios\CambioContrasenaManejador.cs" />
+    <Compile Include="Servicios\Modelos\SalaInterna.cs" />
+    <Compile Include="Servicios\Notificadores\NotificadorAmigos.cs" />
+    <Compile Include="Servicios\Notificadores\NotificadorListaAmigos.cs" />
+    <Compile Include="Servicios\Notificadores\NotificadorSalas.cs" />
     <Compile Include="Servicios\PerfilManejador.cs" />
     <Compile Include="Servicios\SalasManejador.cs" />
     <Compile Include="Servicios\InvitacionesManejador.cs" />
@@ -129,11 +133,14 @@
     <Compile Include="Servicios\ServicioNotificacionCodigos.cs" />
     <Compile Include="Servicios\ServicioRecuperacionCuenta.cs" />
     <Compile Include="Servicios\ServicioVerificacionRegistro.cs" />
+    <Compile Include="Servicios\Utilidades\ContextoFactory.cs" />
     <Compile Include="Servicios\Utilidades\CorreoCodigoVerificacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\CorreoInvitacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\ICodigoVerificacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\CodigoVerificacionGenerador.cs" />
+    <Compile Include="Servicios\Utilidades\ManejadorCallback.cs" />
     <Compile Include="Servicios\Utilidades\TokenGenerador.cs" />
+    <Compile Include="Servicios\Utilidades\ValidadorNombreUsuario.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
