@@ -236,6 +236,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
                     = () => LangResources.Lang.amigosErrorAutoSolicitud,
                 ["Alguno de los usuarios especificados no existe."]
                     = () => LangResources.Lang.amigosErrorUsuarioNoExiste,
+                ["El usuario al que intenta enviar la solicitud no existe."]
+                    = () => LangResources.Lang.amigosErrorUsuarioNoExiste,
                 ["Ya existe una solicitud o relación de amistad entre los usuarios."]
                     = () => LangResources.Lang.amigosErrorRelacionExiste,
                 ["No fue posible completar la solicitud de amistad."]
