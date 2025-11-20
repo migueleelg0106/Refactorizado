@@ -22,63 +22,86 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public void Suscribir(string nombreUsuario)
         {
-            ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
-
             List<AmigoDTO> amigosActuales;
             try
             {
+                ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
+
                 amigosActuales = ObtenerAmigosPorNombre(nombreUsuario);
+
+                IListaAmigosManejadorCallback callback = ManejadorCallback<IListaAmigosManejadorCallback>.ObtenerCallbackActual();
+                _manejadorCallback.Suscribir(nombreUsuario, callback);
+                _manejadorCallback.ConfigurarEventosCanal(nombreUsuario);
+
+                _notificador.NotificarLista(nombreUsuario, amigosActuales);
             }
             catch (ArgumentOutOfRangeException ex)
             {
                 _logger.Warn(MensajesError.Log.ListaAmigosSuscribirIdentificadorInvalido, ex);
-                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
+                throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
                 _logger.Warn(MensajesError.Log.ListaAmigosSuscribirDatosInvalidos, ex);
-                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
+                throw new FaultException(ex.Message);
             }
             catch (DataException ex)
             {
                 _logger.Error(MensajesError.Log.ListaAmigosSuscribirErrorDatos, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
             }
-
-            IListaAmigosManejadorCallback callback = ManejadorCallback<IListaAmigosManejadorCallback>.ObtenerCallbackActual();
-            _manejadorCallback.Suscribir(nombreUsuario, callback);
-            _manejadorCallback.ConfigurarEventosCanal(nombreUsuario);
-
-            _notificador.NotificarLista(nombreUsuario, amigosActuales);
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.ListaAmigosSuscribirErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
+            }
         }
 
         public void CancelarSuscripcion(string nombreUsuario)
         {
-            ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
-            _manejadorCallback.Desuscribir(nombreUsuario);
+            try
+            {
+                ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
+                _manejadorCallback.Desuscribir(nombreUsuario);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.Warn(MensajesError.Log.ListaAmigosObtenerDatosInvalidos, ex);
+                throw new FaultException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.ListaAmigosObtenerInesperado, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
+            }
         }
 
         public List<AmigoDTO> ObtenerAmigos(string nombreUsuario)
         {
-            ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
-
             try
             {
+                ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
+
                 return ObtenerAmigosPorNombre(nombreUsuario);
             }
             catch (ArgumentOutOfRangeException ex)
             {
                 _logger.Warn(MensajesError.Log.ListaAmigosObtenerIdentificadorInvalido, ex);
-                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
+                throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
                 _logger.Warn(MensajesError.Log.ListaAmigosObtenerDatosInvalidos, ex);
-                throw new FaultException(MensajesError.Cliente.DatosInvalidos);
+                throw new FaultException(ex.Message);
             }
             catch (DataException ex)
             {
                 _logger.Error(MensajesError.Log.ListaAmigosObtenerErrorDatos, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.ListaAmigosObtenerInesperado, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
             }
         }

@@ -22,11 +22,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public SalaDTO CrearSala(string nombreCreador, ConfiguracionPartidaDTO configuracion)
         {
-            ValidadorNombreUsuario.Validar(nombreCreador, nameof(nombreCreador));
-            ValidarConfiguracion(configuracion);
-
             try
             {
+                ValidadorNombreUsuario.Validar(nombreCreador, nameof(nombreCreador));
+                ValidarConfiguracion(configuracion);
+
                 string codigo = GenerarCodigoSala();
                 var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
 
@@ -41,10 +41,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _notificador.NotificarListaSalasATodos();
                 return sala.ToDto();
             }
+            catch (ArgumentException ex)
+            {
+                _logger.Warn(MensajesError.Log.SalaCrearOperacionInvalida, ex);
+                throw new FaultException(ex.Message);
+            }
             catch (InvalidOperationException ex)
             {
                 _logger.Error(MensajesError.Log.SalaCrearOperacionInvalida, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorInesperadoCrearSala);
+                throw new FaultException(ex.Message);
             }
             catch (CommunicationException ex)
             {
@@ -65,13 +70,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public SalaDTO UnirseSala(string codigoSala, string nombreUsuario)
         {
-            ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
-
-            if (string.IsNullOrWhiteSpace(codigoSala))
-                throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
-
             try
             {
+                ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
+
+                if (string.IsNullOrWhiteSpace(codigoSala))
+                    throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
+
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
 
@@ -85,10 +90,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 throw;
             }
+            catch (ArgumentException ex)
+            {
+                _logger.Warn(MensajesError.Log.SalaUnirseOperacionInvalida, ex);
+                throw new FaultException(ex.Message);
+            }
             catch (InvalidOperationException ex)
             {
                 _logger.Error(MensajesError.Log.SalaUnirseOperacionInvalida, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
+                throw new FaultException(ex.Message);
             }
             catch (CommunicationException ex)
             {
@@ -98,6 +108,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             catch (TimeoutException ex)
             {
                 _logger.Error(MensajesError.Log.SalaUnirseTimeout, ex);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(MensajesError.Log.SalaUnirseErrorGeneral, ex);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperadoUnirse);
             }
         }
@@ -122,13 +137,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public void AbandonarSala(string codigoSala, string nombreUsuario)
         {
-            ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
-
-            if (string.IsNullOrWhiteSpace(codigoSala))
-                throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
-
             try
             {
+                ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
+
+                if (string.IsNullOrWhiteSpace(codigoSala))
+                    throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
+
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
 
@@ -139,10 +154,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 _notificador.NotificarListaSalasATodos();
             }
+            catch (FaultException)
+            {
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.Warn(MensajesError.Log.SalaAbandonarOperacionInvalida, ex);
+                throw new FaultException(ex.Message);
+            }
             catch (InvalidOperationException ex)
             {
                 _logger.Error(MensajesError.Log.SalaAbandonarOperacionInvalida, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorInesperadoAbandonar);
+                throw new FaultException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -216,14 +240,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public void ExpulsarJugador(string codigoSala, string nombreHost, string nombreJugadorAExpulsar)
         {
-            ValidadorNombreUsuario.Validar(nombreHost, nameof(nombreHost));
-            ValidadorNombreUsuario.Validar(nombreJugadorAExpulsar, nameof(nombreJugadorAExpulsar));
-
-            if (string.IsNullOrWhiteSpace(codigoSala))
-                throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
-
             try
             {
+                ValidadorNombreUsuario.Validar(nombreHost, nameof(nombreHost));
+                ValidadorNombreUsuario.Validar(nombreJugadorAExpulsar, nameof(nombreJugadorAExpulsar));
+
+                if (string.IsNullOrWhiteSpace(codigoSala))
+                    throw new FaultException(MensajesError.Cliente.CodigoSalaObligatorio);
+
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
 
@@ -234,10 +258,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 _notificador.NotificarListaSalasATodos();
             }
+            catch (FaultException)
+            {
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.Warn(MensajesError.Log.SalaExpulsarOperacionInvalida, ex);
+                throw new FaultException(ex.Message);
+            }
             catch (InvalidOperationException ex)
             {
                 _logger.Error(MensajesError.Log.SalaExpulsarOperacionInvalida, ex);
-                throw new FaultException(MensajesError.Cliente.ErrorInesperadoExpulsar);
+                throw new FaultException(ex.Message);
             }
             catch (Exception ex)
             {

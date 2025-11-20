@@ -25,32 +25,32 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         public ResultadoOperacionDTO EnviarInvitacion(InvitacionSalaDTO invitacion)
         {
-            if (invitacion == null)
-            {
-                return CrearFallo(MensajesError.Cliente.SolicitudInvitacionInvalida);
-            }
-
-            string codigoSala = invitacion.CodigoSala?.Trim();
-            string correo = invitacion.Correo?.Trim();
-
-            if (string.IsNullOrWhiteSpace(codigoSala) || string.IsNullOrWhiteSpace(correo))
-            {
-                return CrearFallo(MensajesError.Cliente.DatosInvitacionInvalidos);
-            }
-
-            if (!CorreoRegex.IsMatch(correo))
-            {
-                return CrearFallo(MensajesError.Cliente.CorreoInvalido);
-            }
-
-            var sala = SalasManejador.ObtenerSalaPorCodigo(codigoSala);
-            if (sala == null)
-            {
-                return CrearFallo(MensajesError.Cliente.SalaNoEncontrada);
-            }
-
             try
             {
+                if (invitacion == null)
+                {
+                    throw new ArgumentException(MensajesError.Cliente.SolicitudInvitacionInvalida);
+                }
+
+                string codigoSala = invitacion.CodigoSala?.Trim();
+                string correo = invitacion.Correo?.Trim();
+
+                if (string.IsNullOrWhiteSpace(codigoSala) || string.IsNullOrWhiteSpace(correo))
+                {
+                    throw new ArgumentException(MensajesError.Cliente.DatosInvitacionInvalidos);
+                }
+
+                if (!CorreoRegex.IsMatch(correo))
+                {
+                    throw new ArgumentException(MensajesError.Cliente.CorreoInvalido);
+                }
+
+                var sala = SalasManejador.ObtenerSalaPorCodigo(codigoSala);
+                if (sala == null)
+                {
+                    throw new InvalidOperationException(MensajesError.Cliente.SalaNoEncontrada);
+                }
+
                 if (sala.Jugadores != null && sala.Jugadores.Count > 0)
                 {
                     using (var contexto = CrearContexto())
@@ -62,7 +62,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         if (!string.IsNullOrWhiteSpace(usuario?.Nombre_Usuario)
                             && sala.Jugadores.Contains(usuario.Nombre_Usuario, StringComparer.OrdinalIgnoreCase))
                         {
-                            return CrearFallo(MensajesError.Cliente.CorreoJugadorEnSala);
+                            throw new InvalidOperationException(MensajesError.Cliente.CorreoJugadorEnSala);
                         }
                     }
                 }
@@ -71,7 +71,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (!enviado)
                 {
-                    return CrearFallo(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
+                    throw new InvalidOperationException(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
                 }
 
                 return new ResultadoOperacionDTO
@@ -79,6 +79,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     OperacionExitosa = true,
                     Mensaje = MensajesError.Cliente.InvitacionEnviadaExito
                 };
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.Warn(MensajesError.Log.InvitacionOperacionInvalida, ex);
+                return CrearFallo(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Warn(MensajesError.Log.InvitacionOperacionInvalida, ex);
+                return CrearFallo(ex.Message);
             }
             catch (EntityException ex)
             {
@@ -90,7 +100,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _logger.Error(MensajesError.Log.InvitacionErrorDatos, ex);
                 return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
                 _logger.Error(MensajesError.Log.InvitacionOperacionInvalida, ex);
                 return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
