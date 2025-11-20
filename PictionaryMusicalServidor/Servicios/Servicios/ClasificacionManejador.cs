@@ -13,11 +13,20 @@ using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de clasificaciones de jugadores.
+    /// Maneja la consulta de los mejores jugadores ordenados por puntuacion y rondas ganadas.
+    /// </summary>
     public class ClasificacionManejador : IClasificacionManejador
     {
         private const int LimiteTopJugadores = 10;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ClasificacionManejador));
 
+        /// <summary>
+        /// Obtiene la lista de los mejores jugadores ordenados por puntuacion.
+        /// Retorna los 10 primeros jugadores ordenados por puntos ganados, rondas ganadas y nombre de usuario.
+        /// </summary>
+        /// <returns>Lista de clasificaciones de los mejores jugadores, o lista vacia si hay errores.</returns>
         public IList<ClasificacionUsuarioDTO> ObtenerTopJugadores()
         {
             try

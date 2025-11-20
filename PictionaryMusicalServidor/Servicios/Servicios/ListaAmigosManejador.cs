@@ -13,6 +13,10 @@ using PictionaryMusicalServidor.Servicios.Servicios.Notificadores;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de listas de amigos.
+    /// Maneja suscripciones para notificaciones de cambios en listas de amigos con notificaciones en tiempo real via callbacks.
+    /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class ListaAmigosManejador : IListaAmigosManejador
     {
@@ -20,6 +24,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly ManejadorCallback<IListaAmigosManejadorCallback> _manejadorCallback = new(StringComparer.OrdinalIgnoreCase);
         private static readonly NotificadorListaAmigos _notificador = new(_manejadorCallback);
 
+        /// <summary>
+        /// Suscribe un usuario para recibir notificaciones sobre cambios en su lista de amigos.
+        /// Obtiene la lista actual de amigos, registra el callback y notifica inmediatamente.
+        /// </summary>
+        /// <param name="nombreUsuario">Nombre del usuario a suscribir.</param>
+        /// <exception cref="FaultException">Se lanza si el nombre de usuario es invalido, no existe, o hay errores de base de datos.</exception>
         public void Suscribir(string nombreUsuario)
         {
             List<AmigoDTO> amigosActuales;
@@ -57,6 +67,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Cancela la suscripcion de un usuario de notificaciones de lista de amigos.
+        /// Elimina el callback del usuario del manejador de callbacks.
+        /// </summary>
+        /// <param name="nombreUsuario">Nombre del usuario que cancela la suscripcion.</param>
+        /// <exception cref="FaultException">Se lanza si el nombre de usuario es invalido o hay errores.</exception>
         public void CancelarSuscripcion(string nombreUsuario)
         {
             try
@@ -76,6 +92,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Obtiene la lista de amigos de un usuario especifico.
+        /// Recupera todos los amigos del usuario desde la base de datos.
+        /// </summary>
+        /// <param name="nombreUsuario">Nombre del usuario cuya lista de amigos se desea obtener.</param>
+        /// <returns>Lista de amigos del usuario.</returns>
+        /// <exception cref="FaultException">Se lanza si el nombre de usuario es invalido, no existe, o hay errores de base de datos.</exception>
         public List<AmigoDTO> ObtenerAmigos(string nombreUsuario)
         {
             try
