@@ -13,6 +13,11 @@ using PictionaryMusicalServidor.Servicios.Servicios.Notificadores;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de amistades entre usuarios.
+    /// Maneja suscripciones para notificaciones, envio y respuesta de solicitudes de amistad,
+    /// y eliminacion de relaciones de amistad con notificaciones en tiempo real via callbacks.
+    /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class AmigosManejador : IAmigosManejador
     {
@@ -20,6 +25,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly ManejadorCallback<IAmigosManejadorCallback> _manejadorCallback = new(StringComparer.OrdinalIgnoreCase);
         private static readonly NotificadorAmigos _notificador = new(_manejadorCallback);
 
+        /// <summary>
+        /// Suscribe un usuario para recibir notificaciones de solicitudes de amistad.
+        /// Normaliza el nombre de usuario, registra el callback y notifica solicitudes pendientes.
+        /// </summary>
+        /// <param name="nombreUsuario">Nombre del usuario a suscribir.</param>
+        /// <exception cref="FaultException">Se lanza si el nombre de usuario es invalido, no existe, o hay errores de base de datos.</exception>
         public void Suscribir(string nombreUsuario)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
@@ -75,6 +86,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Cancela la suscripcion de un usuario de notificaciones de amistad.
+        /// Elimina el callback del usuario del manejador de callbacks.
+        /// </summary>
+        /// <param name="nombreUsuario">Nombre del usuario que cancela la suscripcion.</param>
+        /// <exception cref="FaultException">Se lanza si el nombre de usuario es invalido.</exception>
         public void CancelarSuscripcion(string nombreUsuario)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
@@ -85,6 +102,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             _manejadorCallback.Desuscribir(nombreUsuario);
         }
 
+        /// <summary>
+        /// Envia una solicitud de amistad de un usuario a otro.
+        /// Valida que ambos usuarios existan, crea la solicitud en la base de datos y notifica al receptor.
+        /// </summary>
+        /// <param name="nombreUsuarioEmisor">Nombre del usuario que envia la solicitud.</param>
+        /// <param name="nombreUsuarioReceptor">Nombre del usuario que recibe la solicitud.</param>
+        /// <exception cref="FaultException">Se lanza si los nombres son invalidos, los usuarios no existen, o hay errores de base de datos.</exception>
         public void EnviarSolicitudAmistad(string nombreUsuarioEmisor, string nombreUsuarioReceptor)
         {
             try
@@ -143,6 +167,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Responde una solicitud de amistad aceptandola.
+        /// Actualiza la solicitud en la base de datos, notifica a ambos usuarios y actualiza sus listas de amigos.
+        /// </summary>
+        /// <param name="nombreUsuarioEmisor">Nombre del usuario que envio la solicitud original.</param>
+        /// <param name="nombreUsuarioReceptor">Nombre del usuario que responde la solicitud.</param>
+        /// <exception cref="FaultException">Se lanza si los nombres son invalidos, los usuarios no existen, o hay errores de base de datos.</exception>
         public void ResponderSolicitudAmistad(string nombreUsuarioEmisor, string nombreUsuarioReceptor)
         {
             string nombreEmisorNormalizado;
@@ -205,6 +236,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Elimina la relacion de amistad entre dos usuarios.
+        /// Elimina la amistad de la base de datos, notifica a ambos usuarios y actualiza sus listas de amigos.
+        /// </summary>
+        /// <param name="nombreUsuarioA">Nombre del primer usuario.</param>
+        /// <param name="nombreUsuarioB">Nombre del segundo usuario.</param>
+        /// <exception cref="FaultException">Se lanza si los nombres son invalidos, los usuarios no existen, o hay errores de base de datos.</exception>
         public void EliminarAmigo(string nombreUsuarioA, string nombreUsuarioB)
         {
             string nombreUsuarioANormalizado;

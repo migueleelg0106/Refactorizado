@@ -14,6 +14,10 @@ using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de invitaciones a salas de juego.
+    /// Maneja el envio de invitaciones por correo electronico a usuarios para unirse a salas.
+    /// </summary>
     public class InvitacionesManejador : IInvitacionesManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(InvitacionesManejador));
@@ -23,6 +27,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
             RegexOptions.Compiled | RegexOptions.CultureInvariant,RegexTimeout);
 
+        /// <summary>
+        /// Envia una invitacion a una sala de juego a un usuario via correo electronico.
+        /// Valida el correo, verifica que la sala exista y que el usuario no este ya en la sala.
+        /// </summary>
+        /// <param name="invitacion">Datos de la invitacion con codigo de sala y correo destino.</param>
+        /// <returns>Resultado del envio indicando exito o fallo con mensaje descriptivo.</returns>
         public ResultadoOperacionDTO EnviarInvitacion(InvitacionSalaDTO invitacion)
         {
             try

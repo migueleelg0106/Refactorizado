@@ -15,7 +15,11 @@ using log4net;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
-
+    /// <summary>
+    /// Servicio interno para la logica de negocio de recuperacion y cambio de contrasena.
+    /// Maneja el almacenamiento temporal de solicitudes, generacion y validacion de codigos,
+    /// y actualizacion de contrasenas con encriptacion BCrypt.
+    /// </summary>
     internal static class ServicioRecuperacionCuenta
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ServicioRecuperacionCuenta));
@@ -24,6 +28,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly ConcurrentDictionary<string, SolicitudRecuperacionPendiente> _solicitudesRecuperacion =
             new ConcurrentDictionary<string, SolicitudRecuperacionPendiente>();
 
+        /// <summary>
+        /// Solicita un codigo de recuperacion para una cuenta de usuario.
+        /// Busca el usuario, genera un codigo con expiracion, lo envia por correo y almacena la solicitud.
+        /// </summary>
+        /// <param name="solicitud">Datos con el identificador del usuario.</param>
+        /// <returns>Resultado indicando si la cuenta fue encontrada y si el codigo fue enviado.</returns>
+        /// <exception cref="ArgumentNullException">Se lanza si la solicitud es null.</exception>
         public static ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(SolicitudRecuperarCuentaDTO solicitud)
         {
             if (solicitud == null)

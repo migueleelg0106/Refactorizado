@@ -13,6 +13,11 @@ using PictionaryMusicalServidor.Servicios.Servicios.Notificadores;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
+    /// <summary>
+    /// Implementacion del servicio de gestion de salas de juego.
+    /// Maneja creacion, union, abandono y expulsion de salas con notificaciones en tiempo real via callbacks.
+    /// Utiliza un diccionario concurrente para almacenar salas activas en memoria.
+    /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class SalasManejador : ISalasManejador
     {
@@ -20,6 +25,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly ConcurrentDictionary<string, SalaInterna> _salas = new(StringComparer.OrdinalIgnoreCase);
         private static readonly NotificadorSalas _notificador = new(() => _salas.Values);
 
+        /// <summary>
+        /// Crea una nueva sala de juego con la configuracion especificada.
+        /// Genera un codigo unico, registra el callback del creador y notifica a todos los suscriptores.
+        /// </summary>
+        /// <param name="nombreCreador">Nombre del usuario que crea la sala.</param>
+        /// <param name="configuracion">Configuracion de la partida para la sala.</param>
+        /// <returns>Datos de la sala creada.</returns>
+        /// <exception cref="FaultException">Se lanza si los datos son invalidos o hay errores al crear la sala.</exception>
         public SalaDTO CrearSala(string nombreCreador, ConfiguracionPartidaDTO configuracion)
         {
             try
@@ -68,6 +81,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Une un usuario a una sala de juego existente.
+        /// Valida que la sala exista, agrega el jugador, registra su callback y notifica a todos los participantes.
+        /// </summary>
+        /// <param name="codigoSala">Codigo identificador de la sala.</param>
+        /// <param name="nombreUsuario">Nombre del usuario que se une a la sala.</param>
+        /// <returns>Datos actualizados de la sala a la que se unio.</returns>
+        /// <exception cref="FaultException">Se lanza si los datos son invalidos, la sala no existe, o hay errores al unirse.</exception>
         public SalaDTO UnirseSala(string codigoSala, string nombreUsuario)
         {
             try
@@ -117,6 +138,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Obtiene la lista de todas las salas de juego disponibles.
+        /// Retorna todas las salas activas en el sistema.
+        /// </summary>
+        /// <returns>Lista de salas disponibles.</returns>
         public IList<SalaDTO> ObtenerSalas()
         {
             try
@@ -135,6 +161,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Permite a un usuario abandonar una sala de juego.
+        /// Remueve el jugador de la sala, elimina la sala si queda vacia y notifica a todos los suscriptores.
+        /// </summary>
+        /// <param name="codigoSala">Codigo identificador de la sala.</param>
+        /// <param name="nombreUsuario">Nombre del usuario que abandona la sala.</param>
+        /// <exception cref="FaultException">Se lanza si los datos son invalidos, la sala no existe, o hay errores al abandonar.</exception>
         public void AbandonarSala(string codigoSala, string nombreUsuario)
         {
             try
@@ -175,6 +208,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Suscribe al cliente para recibir notificaciones sobre cambios en la lista de salas.
+        /// Registra el callback del cliente y configura eventos de cierre de canal para limpieza automatica.
+        /// </summary>
+        /// <exception cref="FaultException">Se lanza si hay errores de comunicacion o al suscribir.</exception>
         public void SuscribirListaSalas()
         {
             try
@@ -213,6 +251,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Cancela la suscripcion del cliente de notificaciones de la lista de salas.
+        /// Elimina el callback del cliente del notificador.
+        /// </summary>
         public void CancelarSuscripcionListaSalas()
         {
             try
@@ -238,6 +280,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
+        /// <summary>
+        /// Expulsa un jugador de una sala de juego.
+        /// Valida que el usuario sea el anfitrion, remueve al jugador expulsado y notifica a todos los participantes.
+        /// </summary>
+        /// <param name="codigoSala">Codigo identificador de la sala.</param>
+        /// <param name="nombreHost">Nombre del usuario anfitrion que expulsa.</param>
+        /// <param name="nombreJugadorAExpulsar">Nombre del jugador a expulsar.</param>
+        /// <exception cref="FaultException">Se lanza si los datos son invalidos, la sala no existe, el usuario no es anfitrion, o hay errores al expulsar.</exception>
         public void ExpulsarJugador(string codigoSala, string nombreHost, string nombreJugadorAExpulsar)
         {
             try
