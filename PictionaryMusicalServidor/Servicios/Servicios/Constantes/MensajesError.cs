@@ -26,6 +26,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
             public const string UsuariosNoEncontrados = "No se encontraron todos los usuarios especificados.";
             public const string JugadorNoEncontrado = "No se encontró la información del jugador.";
             public const string UsuariosEspecificadosNoExisten = "Alguno de los usuarios especificados no existe.";
+            public const string UsuarioReceptorNoExiste = "El usuario al que intenta enviar la solicitud no existe.";
             public const string JugadorNoAsociado = "No existe un jugador asociado al usuario especificado.";
             public const string CuentaNoVerificada = "La cuenta no ha sido verificada. Por favor, verifique su correo.";
             public const string CuentaNoEncontrada = "No se encontró una cuenta con los datos proporcionados.";

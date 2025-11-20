@@ -125,9 +125,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
                     usuarioReceptor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioReceptor);
 
-                    if (usuarioEmisor == null || usuarioReceptor == null)
+                    if (usuarioEmisor == null)
                     {
-                        throw new FaultException(MensajesError.Cliente.UsuariosEspecificadosNoExisten);
+                        throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
+                    }
+
+                    if (usuarioReceptor == null)
+                    {
+                        throw new FaultException(MensajesError.Cliente.UsuarioReceptorNoExiste);
                     }
 
                     ServicioAmistad.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
