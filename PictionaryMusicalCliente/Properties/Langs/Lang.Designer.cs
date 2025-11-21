@@ -2588,7 +2588,34 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("solicitudInvitacionInvalida", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Borrador.
+        /// </summary>
+        public static string partidaTooltipBorrador {
+            get {
+                return ResourceManager.GetString("partidaTooltipBorrador", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Lápiz.
+        /// </summary>
+        public static string partidaTooltipLapiz {
+            get {
+                return ResourceManager.GetString("partidaTooltipLapiz", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a Limpiar todo.
+        /// </summary>
+        public static string partidaTooltipLimpiar {
+            get {
+                return ResourceManager.GetString("partidaTooltipLimpiar", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Busca una cadena traducida similar a No se encontró una cuenta con el usuario o correo proporcionado..
         /// </summary>

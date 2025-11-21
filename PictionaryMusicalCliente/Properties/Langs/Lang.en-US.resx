@@ -1023,4 +1023,13 @@
   <data name="solicitudInvitacionInvalida" xml:space="preserve">
     <value>The invitation request is not valid.</value>
   </data>
+  <data name="partidaTooltipBorrador" xml:space="preserve">
+    <value>Eraser</value>
+  </data>
+  <data name="partidaTooltipLapiz" xml:space="preserve">
+    <value>Pencil</value>
+  </data>
+  <data name="partidaTooltipLimpiar" xml:space="preserve">
+    <value>Clear all</value>
+  </data>
 </root>
