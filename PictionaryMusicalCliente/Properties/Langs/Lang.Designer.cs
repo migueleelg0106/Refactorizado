@@ -1699,7 +1699,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se encontró el usuario especificado..
+        ///   Busca una cadena traducida similar a No se encontró el usuario ingresado. Intente con uno distinto..
         /// </summary>
         public static string errorTextoUsuarioNoEncontrado {
             get {
@@ -2509,15 +2509,6 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a La solicitud de invitación no es válida..
-        /// </summary>
-        public static string s {
-            get {
-                return ResourceManager.GetString("s", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a El creador de la sala no puede ser expulsado..
         /// </summary>
         public static string salaCreadorNoExpulsable {
@@ -2581,56 +2572,65 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a La solicitud de invitación no es válida..
+        /// </summary>
+        public static string solicitudInvitacionInvalida {
+            get {
+                return ResourceManager.GetString("solicitudInvitacionInvalida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a No se encontró una cuenta con el usuario o correo proporcionado..
         /// </summary>
-        public static string SolicitudRecuperacionCuentaNoEncontrada {
+        public static string solicitudRecuperacionCuentaNoEncontrada {
             get {
-                return ResourceManager.GetString("SolicitudRecuperacionCuentaNoEncontrada", resourceCulture);
+                return ResourceManager.GetString("solicitudRecuperacionCuentaNoEncontrada", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Busca una cadena traducida similar a Debe proporcionar el usuario o correo registrado y no debe exceder 50 caracteres..
         /// </summary>
-        public static string SolicitudRecuperacionIdentificadorObligatorio {
+        public static string solicitudRecuperacionIdentificadorObligatorio {
             get {
-                return ResourceManager.GetString("SolicitudRecuperacionIdentificadorObligatorio", resourceCulture);
+                return ResourceManager.GetString("solicitudRecuperacionIdentificadorObligatorio", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Busca una cadena traducida similar a La solicitud de recuperación no es válida..
         /// </summary>
-        public static string SolicitudRecuperacionInvalida {
+        public static string solicitudRecuperacionInvalida {
             get {
-                return ResourceManager.GetString("SolicitudRecuperacionInvalida", resourceCulture);
+                return ResourceManager.GetString("solicitudRecuperacionInvalida", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Busca una cadena traducida similar a No se encontró una solicitud de recuperación activa..
         /// </summary>
-        public static string SolicitudRecuperacionNoEncontrada {
+        public static string solicitudRecuperacionNoEncontrada {
             get {
-                return ResourceManager.GetString("SolicitudRecuperacionNoEncontrada", resourceCulture);
+                return ResourceManager.GetString("solicitudRecuperacionNoEncontrada", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Busca una cadena traducida similar a No hay una solicitud de recuperación vigente..
         /// </summary>
-        public static string SolicitudRecuperacionNoVigente {
+        public static string solicitudRecuperacionNoVigente {
             get {
-                return ResourceManager.GetString("SolicitudRecuperacionNoVigente", resourceCulture);
+                return ResourceManager.GetString("solicitudRecuperacionNoVigente", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Busca una cadena traducida similar a No se encontró una solicitud de verificación activa..
         /// </summary>
-        public static string SolicitudVerificacionNoEncontrada {
+        public static string solicitudVerificacionNoEncontrada {
             get {
-                return ResourceManager.GetString("SolicitudVerificacionNoEncontrada", resourceCulture);
+                return ResourceManager.GetString("solicitudVerificacionNoEncontrada", resourceCulture);
             }
         }
         
@@ -2655,9 +2655,9 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         /// <summary>
         ///   Busca una cadena traducida similar a El tiempo por ronda debe ser mayor a cero..
         /// </summary>
-        public static string TiempoRondaInvalido {
+        public static string tiempoRondaInvalido {
             get {
-                return ResourceManager.GetString("TiempoRondaInvalido", resourceCulture);
+                return ResourceManager.GetString("tiempoRondaInvalido", resourceCulture);
             }
         }
         
@@ -2716,38 +2716,29 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se encontró el usuario ingresado. Intente con uno distinto..
-        /// </summary>
-        public static string UsuarioNoEncontrado {
-            get {
-                return ResourceManager.GetString("UsuarioNoEncontrado", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a El correo o usuario ya está registrado..
         /// </summary>
-        public static string UsuarioOCorreoRegistrado {
+        public static string usuarioOCorreoRegistrado {
             get {
-                return ResourceManager.GetString("UsuarioOCorreoRegistrado", resourceCulture);
+                return ResourceManager.GetString("usuarioOCorreoRegistrado", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Busca una cadena traducida similar a El nombre de usuario es obligatorio y no debe exceder 50 caracteres..
         /// </summary>
-        public static string UsuarioRegistroInvalido {
+        public static string usuarioRegistroInvalido {
             get {
-                return ResourceManager.GetString("UsuarioRegistroInvalido", resourceCulture);
+                return ResourceManager.GetString("usuarioRegistroInvalido", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Busca una cadena traducida similar a Alguno de los usuarios especificados no existe..
         /// </summary>
-        public static string UsuariosEspecificadosNoExisten {
+        public static string usuariosEspecificadosNoExisten {
             get {
-                return ResourceManager.GetString("UsuariosEspecificadosNoExisten", resourceCulture);
+                return ResourceManager.GetString("usuariosEspecificadosNoExisten", resourceCulture);
             }
         }
     }

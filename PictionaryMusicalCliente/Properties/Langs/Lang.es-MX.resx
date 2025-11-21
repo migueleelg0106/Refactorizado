@@ -615,7 +615,7 @@ aciertan o cuando se acaba el tiempo.
     <value>El apellido es obligatorio y no debe exceder 50 caracteres.</value>
   </data>
   <data name="errorTextoUsuarioNoEncontrado" xml:space="preserve">
-    <value>No se encontró el usuario especificado.</value>
+    <value>No se encontró el usuario ingresado. Intente con uno distinto.</value>
   </data>
   <data name="errorTextoJugadorNoExiste" xml:space="preserve">
     <value>No existe un jugador asociado al usuario especificado.</value>
@@ -950,40 +950,34 @@ aciertan o cuando se acaba el tiempo.
   <data name="salaNoEncontrada" xml:space="preserve">
     <value>No se encontró la sala especificada.</value>
   </data>
-  <data name="SolicitudInvitacionInvalida" xml:space="preserve">
-    <value>La solicitud de invitación no es válida.</value>
-  </data>
-  <data name="SolicitudRecuperacionCuentaNoEncontrada" xml:space="preserve">
+  <data name="solicitudRecuperacionCuentaNoEncontrada" xml:space="preserve">
     <value>No se encontró una cuenta con el usuario o correo proporcionado.</value>
   </data>
-  <data name="SolicitudRecuperacionIdentificadorObligatorio" xml:space="preserve">
+  <data name="solicitudRecuperacionIdentificadorObligatorio" xml:space="preserve">
     <value>Debe proporcionar el usuario o correo registrado y no debe exceder 50 caracteres.</value>
   </data>
-  <data name="SolicitudRecuperacionInvalida" xml:space="preserve">
+  <data name="solicitudRecuperacionInvalida" xml:space="preserve">
     <value>La solicitud de recuperación no es válida.</value>
   </data>
-  <data name="SolicitudRecuperacionNoEncontrada" xml:space="preserve">
+  <data name="solicitudRecuperacionNoEncontrada" xml:space="preserve">
     <value>No se encontró una solicitud de recuperación activa.</value>
   </data>
-  <data name="SolicitudRecuperacionNoVigente" xml:space="preserve">
+  <data name="solicitudRecuperacionNoVigente" xml:space="preserve">
     <value>No hay una solicitud de recuperación vigente.</value>
   </data>
-  <data name="SolicitudVerificacionNoEncontrada" xml:space="preserve">
+  <data name="solicitudVerificacionNoEncontrada" xml:space="preserve">
     <value>No se encontró una solicitud de verificación activa.</value>
   </data>
-  <data name="TiempoRondaInvalido" xml:space="preserve">
+  <data name="tiempoRondaInvalido" xml:space="preserve">
     <value>El tiempo por ronda debe ser mayor a cero.</value>
   </data>
-  <data name="UsuarioNoEncontrado" xml:space="preserve">
-    <value>No se encontró el usuario ingresado. Intente con uno distinto.</value>
-  </data>
-  <data name="UsuarioOCorreoRegistrado" xml:space="preserve">
+  <data name="usuarioOCorreoRegistrado" xml:space="preserve">
     <value>El correo o usuario ya está registrado.</value>
   </data>
-  <data name="UsuarioRegistroInvalido" xml:space="preserve">
+  <data name="usuarioRegistroInvalido" xml:space="preserve">
     <value>El nombre de usuario es obligatorio y no debe exceder 50 caracteres.</value>
   </data>
-  <data name="UsuariosEspecificadosNoExisten" xml:space="preserve">
+  <data name="usuariosEspecificadosNoExisten" xml:space="preserve">
     <value>Alguno de los usuarios especificados no existe.</value>
   </data>
   <data name="solicitudAmistadNoExiste" xml:space="preserve">
@@ -1024,5 +1018,8 @@ aciertan o cuando se acaba el tiempo.
   </data>
   <data name="errorReenviarCodigoRecuperacion" xml:space="preserve">
     <value>No fue posible reenviar el código de recuperación.</value>
+  </data>
+  <data name="solicitudInvitacionInvalida" xml:space="preserve">
+    <value>La solicitud de invitación no es válida.</value>
   </data>
 </root>

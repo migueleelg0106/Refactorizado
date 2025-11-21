@@ -613,7 +613,7 @@
     <value>Last name is required and must not exceed 50 characters.</value>
   </data>
   <data name="errorTextoUsuarioNoEncontrado" xml:space="preserve">
-    <value>The specified user was not found.</value>
+    <value>The user was not found. Try searching another one.</value>
   </data>
   <data name="errorTextoJugadorNoExiste" xml:space="preserve">
     <value>No player is associated with the specified user.</value>
@@ -948,40 +948,34 @@
   <data name="salaNoEncontrada" xml:space="preserve">
     <value>The specified room was not found.</value>
   </data>
-  <data name="SolicitudInvitacionInvalida" xml:space="preserve">
-    <value>The invitation request is not valid.</value>
-  </data>
-  <data name="SolicitudRecuperacionCuentaNoEncontrada" xml:space="preserve">
+  <data name="solicitudRecuperacionCuentaNoEncontrada" xml:space="preserve">
     <value>No account was found with the provided username or email.</value>
   </data>
-  <data name="SolicitudRecuperacionIdentificadorObligatorio" xml:space="preserve">
+  <data name="solicitudRecuperacionIdentificadorObligatorio" xml:space="preserve">
     <value>You must provide the registered username or email and it must not exceed 50 characters.</value>
   </data>
-  <data name="SolicitudRecuperacionInvalida" xml:space="preserve">
+  <data name="solicitudRecuperacionInvalida" xml:space="preserve">
     <value>The recovery request is not valid.</value>
   </data>
-  <data name="SolicitudRecuperacionNoEncontrada" xml:space="preserve">
+  <data name="solicitudRecuperacionNoEncontrada" xml:space="preserve">
     <value>No active recovery request was found.</value>
   </data>
-  <data name="SolicitudRecuperacionNoVigente" xml:space="preserve">
+  <data name="solicitudRecuperacionNoVigente" xml:space="preserve">
     <value>There is no current recovery request.</value>
   </data>
-  <data name="SolicitudVerificacionNoEncontrada" xml:space="preserve">
+  <data name="solicitudVerificacionNoEncontrada" xml:space="preserve">
     <value>No active verification request was found.</value>
   </data>
-  <data name="TiempoRondaInvalido" xml:space="preserve">
+  <data name="tiempoRondaInvalido" xml:space="preserve">
     <value>Time per round must be greater than zero.</value>
   </data>
-  <data name="UsuarioNoEncontrado" xml:space="preserve">
-    <value>The user was not found. Try searching another one.</value>
-  </data>
-  <data name="UsuarioOCorreoRegistrado" xml:space="preserve">
+  <data name="usuarioOCorreoRegistrado" xml:space="preserve">
     <value>Email or username is already registered.</value>
   </data>
-  <data name="UsuarioRegistroInvalido" xml:space="preserve">
+  <data name="usuarioRegistroInvalido" xml:space="preserve">
     <value>Username is required and must not exceed 50 characters.</value>
   </data>
-  <data name="UsuariosEspecificadosNoExisten" xml:space="preserve">
+  <data name="usuariosEspecificadosNoExisten" xml:space="preserve">
     <value>Some of the specified users do not exist.</value>
   </data>
   <data name="solicitudAmistadNoExiste" xml:space="preserve">
@@ -1022,5 +1016,8 @@
   </data>
   <data name="errorReenviarCodigoRecuperacion" xml:space="preserve">
     <value>Could not resend the recovery code.</value>
+  </data>
+  <data name="solicitudInvitacionInvalida" xml:space="preserve">
+    <value>The invitation request is not valid.</value>
   </data>
 </root>
