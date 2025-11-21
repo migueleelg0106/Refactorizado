@@ -15,7 +15,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         private static readonly ILog _logger =
             LogManager.GetLogger(typeof(CorreoCodigoVerificacionNotificador));
 
-        private const string AsuntoPredeterminadoEs = "Codigo de verificacion";
+        private const string AsuntoPredeterminadoEs = "Código de verificación";
         private const string AsuntoPredeterminadoEn = "Verification code";
 
         public async Task<bool> NotificarAsync(string correoDestino, string codigo, string usuarioDestino, string idioma)

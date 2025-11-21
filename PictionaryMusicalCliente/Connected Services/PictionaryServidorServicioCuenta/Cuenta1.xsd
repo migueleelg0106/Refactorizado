@@ -6,6 +6,7 @@
       <xs:element name="AvatarId" type="xs:int" />
       <xs:element name="Contrasena" nillable="true" type="xs:string" />
       <xs:element name="Correo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Idioma" nillable="true" type="xs:string" />
       <xs:element name="Nombre" nillable="true" type="xs:string" />
       <xs:element name="Usuario" nillable="true" type="xs:string" />
     </xs:sequence>

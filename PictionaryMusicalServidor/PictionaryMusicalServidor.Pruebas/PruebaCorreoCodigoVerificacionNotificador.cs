@@ -4,10 +4,10 @@ using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 namespace PictionaryMusicalServidor.Pruebas
 {
     [TestClass]
-    public class CorreoCodigoVerificacionNotificadorPruebas
+    public class PruebaCorreoCodigoVerificacionNotificador
     {
         [TestMethod]
-        public void ConstruirCuerpoMensaje_DeberiaUsarTraduccionIngles()
+        public void Prueba_ConstruirCuerpoMensaje_DeberiaUsarTraduccionIngles()
         {
             string cuerpo = CorreoCodigoVerificacionNotificador.ConstruirCuerpoMensaje("Alex", "123456", "en-US");
 
@@ -17,7 +17,7 @@ namespace PictionaryMusicalServidor.Pruebas
         }
 
         [TestMethod]
-        public void ConstruirCuerpoMensaje_DeberiaUsarEspanolPorDefecto()
+        public void Prueba_ConstruirCuerpoMensaje_DeberiaUsarEspanolPorDefecto()
         {
             string cuerpo = CorreoCodigoVerificacionNotificador.ConstruirCuerpoMensaje("Lucia", "654321", null);
 
@@ -28,10 +28,10 @@ namespace PictionaryMusicalServidor.Pruebas
     }
 
     [TestClass]
-    public class CorreoInvitacionNotificadorPruebas
+    public class PruebaCorreoInvitacionNotificador
     {
         [TestMethod]
-        public void ConstruirCuerpoMensajeInvitacion_DeberiaUsarTraduccionIngles()
+        public void Prueba_ConstruirCuerpoMensajeInvitacion_DeberiaUsarTraduccionIngles()
         {
             string cuerpo = CorreoInvitacionNotificador.ConstruirCuerpoMensaje("ABCD", "Mariana", "en-US");
 
@@ -41,7 +41,7 @@ namespace PictionaryMusicalServidor.Pruebas
         }
 
         [TestMethod]
-        public void ConstruirCuerpoMensajeInvitacion_DeberiaUsarEspanolPorDefecto()
+        public void Prueba_ConstruirCuerpoMensajeInvitacion_DeberiaUsarEspanolPorDefecto()
         {
             string cuerpo = CorreoInvitacionNotificador.ConstruirCuerpoMensaje("WXYZ", "Carlos", "es-MX");
 

@@ -155,7 +155,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             string mensajeInstruccion = esIngles
                 ? "Enter the code in the app to join the game."
                 : "Ingresa el código en la aplicación para unirte a la partida.";
-            string mensajeDespedida = esIngles ? "We hope to see you there." : "Te esperamos.";
+            string mensajeDespedida = esIngles ? "We hope to see you there!" : "¡Te esperamos!";
 
             var cuerpoHtml = new StringBuilder();
 
