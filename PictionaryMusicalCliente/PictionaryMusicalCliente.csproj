@@ -639,6 +639,7 @@
     <Content Include="Recursos\Adivinador.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Recursos\Borrador.png" />
     <Content Include="Recursos\Canciones\Black_Or_White_Michael_Jackson.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -683,9 +684,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Recursos\PictionaryIcono.ico" />
+    <Resource Include="Recursos\Lapiz.png" />
+    <Resource Include="Recursos\Limpiar_Todo.png" />
     <Content Include="Recursos\piano_boton.MP3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Recursos\Reloj_Alarma.png" />
     <Content Include="Recursos\ventana_principal_musica.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
