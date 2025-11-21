@@ -55,8 +55,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     Idioma = ObtenerCodigoIdiomaActual()
                 };
 
-                var resultado = await Task.Run(() => canal.EnviarInvitacion(solicitud)).
-                    ConfigureAwait(false);
+                var resultado = await canal.EnviarInvitacionAsync(solicitud).ConfigureAwait(false);
 
                 _logger.Info($"Invitación enviada a '{correoDestino}' para sala '{codigoSala}'.");
                 return resultado;

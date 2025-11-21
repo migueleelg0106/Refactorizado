@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.Core;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using log4net;
 using PictionaryMusicalServidor.Datos.Modelo;
 using PictionaryMusicalServidor.Datos.Utilidades;
@@ -33,7 +34,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// </summary>
         /// <param name="invitacion">Datos de la invitacion con codigo de sala y correo destino.</param>
         /// <returns>Resultado del envio indicando exito o fallo con mensaje descriptivo.</returns>
-        public ResultadoOperacionDTO EnviarInvitacion(InvitacionSalaDTO invitacion)
+        public async Task<ResultadoOperacionDTO> EnviarInvitacionAsync(InvitacionSalaDTO invitacion)
         {
             try
             {
@@ -44,6 +45,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 string codigoSala = invitacion.CodigoSala?.Trim();
                 string correo = invitacion.Correo?.Trim();
+                string idioma = invitacion.Idioma;
 
                 if (string.IsNullOrWhiteSpace(codigoSala) || string.IsNullOrWhiteSpace(correo))
                 {
@@ -77,15 +79,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     }
                 }
 
-                bool enviado = CorreoInvitacionNotificador.EnviarInvitacion(
+                bool enviado = await CorreoInvitacionNotificador.EnviarInvitacionAsync(
                     correo,
                     sala.Codigo,
                     sala.Creador,
-                    invitacion.Idioma);
+                    idioma).ConfigureAwait(false);
 
                 if (!enviado)
                 {
-                    throw new InvalidOperationException(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
+                    return CrearFallo(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
                 }
 
                 _logger.Info($"Invitación enviada a '{correo}' para la sala {codigoSala}.");

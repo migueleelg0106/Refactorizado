@@ -1,4 +1,5 @@
 using System.ServiceModel;
+using System.Threading.Tasks;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalServidor.Servicios.Contratos
@@ -11,11 +12,11 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
     public interface IInvitacionesManejador
     {
         /// <summary>
-        /// Envia una invitacion a una sala de juego a un usuario.
+        /// Envia una invitacion a una sala de juego a un usuario de forma asíncrona.
         /// </summary>
         /// <param name="invitacion">Datos de la invitacion a enviar.</param>
         /// <returns>Resultado del envio de la invitacion.</returns>
         [OperationContract]
-        ResultadoOperacionDTO EnviarInvitacion(InvitacionSalaDTO invitacion);
+        Task<ResultadoOperacionDTO> EnviarInvitacionAsync(InvitacionSalaDTO invitacion);
     }
 }

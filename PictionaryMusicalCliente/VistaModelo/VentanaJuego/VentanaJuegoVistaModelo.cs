@@ -598,19 +598,22 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 {
                     Log.Warn($"Fallo al enviar invitación: {resultado?.Mensaje}");
                     SonidoManejador.ReproducirError();
-                    string mensaje = MensajeServidorAyudante.Localizar(
-                        resultado?.Mensaje,
-                        Lang.errorTextoEnviarCorreo);
-                    MostrarMensaje?.Invoke(mensaje);
-                }
-            }
-            catch (Exception ex) when (ex is ServicioExcepcion || ex is ArgumentException)
-            {
-                Log.Error("Error de servicio/argumento al enviar invitación por correo.", ex);
-                SonidoManejador.ReproducirError();
-                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
-            }
-        }
+					MostrarMensaje?.Invoke(resultado?.Mensaje ?? Lang.errorTextoEnviarCorreo);
+				}
+			}
+			catch (ServicioExcepcion ex)
+			{
+				Log.Error("Excepción de servicio al enviar invitación.", ex);
+				SonidoManejador.ReproducirError();
+				MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error inesperado al invitar.", ex);
+				SonidoManejador.ReproducirError();
+				MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+			}
+		}
 
         private async Task EjecutarInvitarAmigosAsync()
         {
