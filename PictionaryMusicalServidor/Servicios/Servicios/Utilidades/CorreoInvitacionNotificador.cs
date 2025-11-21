@@ -75,7 +75,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 return false;
             }
 
-            string cuerpoHtml = GenerarCuerpoCorreo(codigoSala, creador, idiomaNormalizado);
+            string cuerpoHtml = ConstruirCuerpoMensaje(codigoSala, creador, idiomaNormalizado);
 
             try
             {
@@ -125,21 +125,26 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             }
         }
 
-        private static string GenerarCuerpoCorreo(string codigoSala, string creador, string idioma)
+        internal static string ConstruirCuerpoMensaje(string codigoSala, string creador, string idioma)
         {
-            bool esIngles = idioma == "en";
+            string idiomaNormalizado = NormalizarIdioma(idioma);
+            bool esIngles = idiomaNormalizado == "en";
 
             string saludo = esIngles
                 ? "Hello!"
                 : "¡Hola!";
 
+            string mensajeBienvenida = esIngles
+                ? "You have been invited to a Musical Pictionary game."
+                : "Has sido invitado a una partida de Pictionary Musical.";
+
             string mensajeInvitacion = esIngles
-                ? $"<strong>{creador}</strong> has invited you to play Pictionary Musical."
-                : $"<strong>{creador}</strong> te ha invitado a jugar Pictionary Musical.";
+                ? $"{creador} has invited you to their room."
+                : $"{creador} te ha invitado a su sala.";
 
             string mensajeInstruccion = esIngles
-                ? "Enter the following code in the game to join the room:"
-                : "Ingresa el siguiente código en el juego para unirte a la sala:";
+                ? "Use the following code to join:"
+                : "Utiliza el siguiente código para unirte:";
 
             string mensajeDespedida = esIngles
                 ? "See you in the game!"
@@ -149,6 +154,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 
             cuerpoHtml.Append("<html><body style='font-family: Arial, sans-serif;'>");
             cuerpoHtml.Append($"<h2>{saludo}</h2>");
+            cuerpoHtml.Append($"<p>{mensajeBienvenida}</p>");
             cuerpoHtml.Append($"<p>{mensajeInvitacion}</p>");
             cuerpoHtml.Append($"<p>{mensajeInstruccion}</p>");
             cuerpoHtml.Append($"<h1 style='color:#4CAF50; letter-spacing: 2px;'>{codigoSala}</h1>");
