@@ -227,7 +227,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                     return;
                 }
 
-                Log.InfoFormat("Iniciando flujo de registro para usuario: {0}"
+                Log.InfoFormat("Iniciando flujo de registro para usuario: {0}",
                     solicitud.Usuario);
                 await EjecutarFlujoDeRegistroAsync(solicitud).ConfigureAwait(true);
             }
