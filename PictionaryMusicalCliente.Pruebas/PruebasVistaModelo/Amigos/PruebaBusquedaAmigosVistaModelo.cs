@@ -153,15 +153,16 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Amigos
         {
             _vistaModelo.NombreUsuarioBusqueda = "AmigoError";
 
+            const string mensajeEsperado = "The entered user was not found, please enter another one.";
             _mockAmigosServicio.Setup(s => s.EnviarSolicitudAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, "ErrorWCF", null));
+                .ThrowsAsync(new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensajeEsperado, null));
 
             string mensaje = null;
             AvisoAyudante.DefinirMostrarAviso(m => mensaje = m);
 
             await _vistaModelo.EnviarSolicitudComando.EjecutarAsync(null);
 
-            Assert.AreEqual(Lang.errorTextoErrorProcesarSolicitud, mensaje);
+            Assert.AreEqual(mensajeEsperado, mensaje, "El mensaje mostrado debe ser el mensaje específico de la excepción");
             Assert.IsFalse(_vistaModelo.EstaProcesando); 
         }
 

@@ -116,7 +116,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             if (string.IsNullOrWhiteSpace(_usuarioActual))
             {
-                Log.Warn("Intento de enviar solicitud sin usuario actual en sesión.");
+                Log.Warn("Intento de enviar solicitud sin usuario actual en sesiï¿½n.");
                 AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
@@ -140,10 +140,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 Log.ErrorFormat("Error WCF (Fault) al enviar solicitud a {0}.",
                     nombreAmigo, ex);
                 SonidoManejador.ReproducirError();
-                string mensajeServidor = ex.Message;
-
                 string mensajeError = MensajeServidorAyudante.Localizar(
-                    mensajeServidor,
+                    ex.Message,
                     Lang.errorTextoErrorProcesarSolicitud);
                 AvisoAyudante.Mostrar(mensajeError);
             }
@@ -152,12 +150,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 Log.ErrorFormat("Error de servicio al enviar solicitud a {0}.",
                     nombreAmigo, ex);
                 SonidoManejador.ReproducirError();
-                string mensajeServidor = ex.Message;
-
-                string mensajeError = MensajeServidorAyudante.Localizar(
-                    mensajeServidor,
-                    Lang.errorTextoErrorProcesarSolicitud);
-                AvisoAyudante.Mostrar(mensajeError);
+                AvisoAyudante.Mostrar(ex.Message);
             }
             finally
             {
