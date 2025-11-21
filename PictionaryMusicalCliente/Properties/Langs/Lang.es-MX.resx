@@ -1025,4 +1025,13 @@ aciertan o cuando se acaba el tiempo.
   <data name="solicitudInvitacionInvalida" xml:space="preserve">
     <value>La solicitud de invitación no es válida.</value>
   </data>
+  <data name="partidaTooltipBorrador" xml:space="preserve">
+    <value>Borrador</value>
+  </data>
+  <data name="partidaTooltipLapiz" xml:space="preserve">
+    <value>Lápiz</value>
+  </data>
+  <data name="partidaTooltipLimpiar" xml:space="preserve">
+    <value>Limpiar todo</value>
+  </data>
 </root>
