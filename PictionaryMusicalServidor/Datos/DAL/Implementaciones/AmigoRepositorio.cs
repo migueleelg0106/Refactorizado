@@ -30,7 +30,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             }
             catch (Exception ex)
             {
-                _logger.Error("Error al verificar existencia de relación de amistad en la base de datos.", ex);
+                _logger.Error("Error al verificar existencia de relaciï¿½n de amistad en la base de datos.", ex);
                 throw;
             }
         }
@@ -46,7 +46,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 
             _contexto.Amigo.Add(solicitud);
             _contexto.SaveChanges();
-            _logger.Info($"Solicitud de amistad creada exitosamente entre Emisor ID: {usuarioEmisorId} y Receptor ID: {usuarioReceptorId}.");
+            _logger.InfoFormat("Solicitud de amistad creada exitosamente entre Emisor ID: {0} y Receptor ID: {1}.", usuarioEmisorId, usuarioReceptorId);
             return solicitud;
         }
 
@@ -60,7 +60,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             }
             catch (Exception ex)
             {
-                _logger.Error("Error al obtener la relación de amistad de la base de datos.", ex);
+                _logger.Error("Error al obtener la relaciï¿½n de amistad de la base de datos.", ex);
                 throw;
             }
         }
@@ -70,7 +70,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             if (usuarioId <= 0)
             {
                 var ex = new ArgumentOutOfRangeException(nameof(usuarioId), "El identificador del usuario debe ser positivo.");
-                _logger.Error("Intento de obtener solicitudes con ID inválido.", ex);
+                _logger.Error("Intento de obtener solicitudes con ID invï¿½lido.", ex);
                 throw ex;
             }
 
@@ -84,7 +84,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error al obtener solicitudes pendientes para el usuario ID: {usuarioId}.", ex);
+                _logger.Error(string.Format("Error al obtener solicitudes pendientes para el usuario ID: {0}.", usuarioId), ex);
                 throw;
             }
         }
@@ -94,7 +94,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             if (relacion == null)
             {
                 var ex = new ArgumentNullException(nameof(relacion));
-                _logger.Error("Se intentó actualizar una relación nula.", ex);
+                _logger.Error("Se intentï¿½ actualizar una relaciï¿½n nula.", ex);
                 throw ex;
             }
 
@@ -103,11 +103,11 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
                 relacion.Estado = estado;
                 _contexto.SaveChanges();
 
-                _logger.Info($"Estado de amistad actualizado a {(estado ? "Aceptado" : "Pendiente")} entre Emisor: {relacion.UsuarioEmisor} y Receptor: {relacion.UsuarioReceptor}.");
+                _logger.InfoFormat("Estado de amistad actualizado a {0} entre Emisor: {1} y Receptor: {2}.", (estado ? "Aceptado" : "Pendiente"), relacion.UsuarioEmisor, relacion.UsuarioReceptor);
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error al actualizar el estado de la relación entre {relacion.UsuarioEmisor} y {relacion.UsuarioReceptor}.", ex);
+                _logger.Error(string.Format("Error al actualizar el estado de la relaciï¿½n entre {0} y {1}.", relacion.UsuarioEmisor, relacion.UsuarioReceptor), ex);
                 throw;
             }
         }
@@ -117,7 +117,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             if (relacion == null)
             {
                 var ex = new ArgumentNullException(nameof(relacion));
-                _logger.Error("Se intentó eliminar una relación nula.", ex);
+                _logger.Error("Se intentï¿½ eliminar una relaciï¿½n nula.", ex);
                 throw ex;
             }
 
@@ -129,11 +129,11 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
                 _contexto.Amigo.Remove(relacion);
                 _contexto.SaveChanges();
 
-                _logger.Info($"Relación de amistad eliminada correctamente entre {emisorId} y {receptorId}.");
+                _logger.InfoFormat("Relaciï¿½n de amistad eliminada correctamente entre {0} y {1}.", emisorId, receptorId);
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error al eliminar la relación de amistad entre {emisorId} y {receptorId}.", ex);
+                _logger.Error(string.Format("Error al eliminar la relaciï¿½n de amistad entre {0} y {1}.", emisorId, receptorId), ex);
                 throw;
             }
         }
@@ -143,7 +143,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             if (usuarioId <= 0)
             {
                 var ex = new ArgumentOutOfRangeException(nameof(usuarioId), "El identificador del usuario debe ser positivo.");
-                _logger.Error("ID de usuario inválido al obtener lista de amigos.", ex);
+                _logger.Error("ID de usuario invï¿½lido al obtener lista de amigos.", ex);
                 throw ex;
             }
 
@@ -166,7 +166,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error de base de datos al obtener amigos para el usuario ID: {usuarioId}.", ex);
+                _logger.Error(string.Format("Error de base de datos al obtener amigos para el usuario ID: {0}.", usuarioId), ex);
                 throw;
             }
         }

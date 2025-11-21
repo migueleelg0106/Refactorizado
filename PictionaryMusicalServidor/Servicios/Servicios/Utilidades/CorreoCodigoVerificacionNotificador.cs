@@ -85,7 +85,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                     }
                 }
 
-                _logger.Info($"Código de verificación enviado a '{correoDestino}'.");
+                _logger.InfoFormat("Código de verificación enviado a '{0}'.", correoDestino);
                 return true;
             }
             catch (SmtpException ex)

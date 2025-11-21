@@ -65,7 +65,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
                 if (JugadorYaExiste(nombreUsuario))
                 {
                     _callbacks[nombreUsuario] = callback;
-                    _logger.Info($"Jugador '{nombreUsuario}' se reconectó a la sala {Codigo}.");
+                    _logger.InfoFormat("Jugador '{0}' se reconectó a la sala {1}.", nombreUsuario, Codigo);
                     return ToDto();
                 }
 
@@ -73,7 +73,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
 
                 Jugadores.Add(nombreUsuario);
                 _callbacks[nombreUsuario] = callback;
-                _logger.Info($"Jugador '{nombreUsuario}' se unió a la sala {Codigo}. Total jugadores: {Jugadores.Count}.");
+                _logger.InfoFormat("Jugador '{0}' se unió a la sala {1}. Total jugadores: {2}.", nombreUsuario, Codigo, Jugadores.Count);
 
                 if (notificar)
                 {
@@ -98,14 +98,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
                     return;
                 }
 
-                _logger.Info($"Jugador '{nombreUsuario}' salió de la sala {Codigo}.");
+                _logger.InfoFormat("Jugador '{0}' salió de la sala {1}.", nombreUsuario, Codigo);
 
                 var salaActualizada = ToDto();
                 NotificarSalidaYActualizacion(nombreUsuario, salaActualizada);
 
                 if (DebeMarcarseParaEliminar(nombreUsuario))
                 {
-                    _logger.Info($"Marcando sala {Codigo} para eliminación (Host salió o sala vacía).");
+                    _logger.InfoFormat("Marcando sala {0} para eliminación (Host salió o sala vacía).", Codigo);
                     DebeEliminarse = true;
                 }
             }
@@ -127,7 +127,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
                 Jugadores.RemoveAll(j => string.Equals(j, nombreJugadorAExpulsar, StringComparison.OrdinalIgnoreCase));
                 _callbacks.Remove(nombreJugadorAExpulsar);
 
-                _logger.Info($"Jugador '{nombreJugadorAExpulsar}' fue expulsado de la sala {Codigo} por '{nombreHost}'.");
+                _logger.InfoFormat("Jugador '{0}' fue expulsado de la sala {1} por '{2}'.", nombreJugadorAExpulsar, Codigo, nombreHost);
 
                 var salaActualizada = ToDto();
 
