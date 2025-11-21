@@ -231,11 +231,7 @@
 
             <Grid x:Name="OverlayDibujante"
                   Grid.Row="1" Visibility="{Binding VisibilidadOverlayDibujante}"
-                  Margin="20" Cursor="Hand" Background="Transparent"
-                  ToolTip="Clic para cerrar">
-                <Grid.InputBindings>
-                    <MouseBinding MouseAction="LeftClick" Command="{Binding CerrarOverlayComando}"/>
-                </Grid.InputBindings>
+                  Margin="20" Background="Transparent">
 
                 <Image Source="/Recursos/Dibujante.png" Stretch="Uniform"/>
 
@@ -253,11 +249,7 @@
 
             <Grid x:Name="OverlayAdivinador"
                   Grid.Row="1" Visibility="{Binding VisibilidadOverlayAdivinador}"
-                  Margin="20" Cursor="Hand" Background="Transparent"
-                  ToolTip="Clic para cerrar">
-                <Grid.InputBindings>
-                    <MouseBinding MouseAction="LeftClick" Command="{Binding CerrarOverlayComando}"/>
-                </Grid.InputBindings>
+                  Margin="20" Background="Transparent">
 
                 <Image Source="/Recursos/Adivinador.png" Stretch="Uniform"/>
 
@@ -275,19 +267,15 @@
 
             <Grid x:Name="OverlayTiempoTerminado"
                   Grid.Row="1" Visibility="{Binding VisibilidadOverlayAlarma}"
-                  Margin="20" Cursor="Hand" Background="Transparent"
-                  ToolTip="Clic para cerrar">
-                <Grid.InputBindings>
-                    <MouseBinding MouseAction="LeftClick" Command="{Binding OcultarOverlayAlarmaComando}"/>
-                </Grid.InputBindings>
+                  Margin="20" Background="Transparent">
 
                 <Image Source="/Recursos/Reloj_Alarma.png" Stretch="Uniform"/>
 
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="{x:Static language:Lang.partidaTextoTiempoTerminado}"
                                FontFamily="Comic Sans MS" FontSize="36" FontWeight="Black"
-                               Foreground="Black" HorizontalAlignment="Center"
-                               TextAlignment="Center"/>
+                               Foreground="Black" Margin="0,75,0,0"
+                               TextAlignment="Center" TextWrapping="Wrap" Width="254"/>
                 </StackPanel>
             </Grid>
 

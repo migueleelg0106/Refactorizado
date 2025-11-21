@@ -236,7 +236,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             Assert.IsNotNull(_vistaModelo.LimpiarDibujoComando);
             Assert.IsNotNull(_vistaModelo.MostrarOverlayDibujanteComando);
             Assert.IsNotNull(_vistaModelo.MostrarOverlayAdivinadorComando);
-            Assert.IsNotNull(_vistaModelo.CerrarOverlayComando);
             Assert.IsNotNull(_vistaModelo.CerrarVentanaComando);
         }
 
@@ -632,17 +631,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
 
             Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadOverlayAdivinador);
             Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayDibujante);
-        }
-
-        [TestMethod]
-        public void Prueba_CerrarOverlay_Comando_OcultaAmbosOverlays()
-        {
-            _vistaModelo.MostrarOverlayDibujanteComando.Execute(null);
-
-            _vistaModelo.CerrarOverlayComando.Execute(null);
-
-            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayDibujante);
-            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayAdivinador);
         }
 
         [TestMethod]

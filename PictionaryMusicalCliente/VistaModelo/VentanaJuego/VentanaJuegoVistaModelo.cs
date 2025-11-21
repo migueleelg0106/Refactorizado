@@ -481,11 +481,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         public ICommand MostrarOverlayAdivinadorComando { get; private set; }
 
         /// <summary>
-        /// Comando para cerrar los overlays informativos.
-        /// </summary>
-        public ICommand CerrarOverlayComando { get; private set; }
-
-        /// <summary>
         /// Comando para ocultar el overlay de tiempo terminado.
         /// </summary>
         public ICommand OcultarOverlayAlarmaComando { get; private set; }
@@ -577,7 +572,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 _ => EjecutarMostrarOverlayDibujante());
             MostrarOverlayAdivinadorComando = new ComandoDelegado(
                 _ => EjecutarMostrarOverlayAdivinador());
-            CerrarOverlayComando = new ComandoDelegado(_ => EjecutarCerrarOverlay());
             OcultarOverlayAlarmaComando = new ComandoDelegado(_ => OcultarOverlayAlarma());
             CerrarVentanaComando = new ComandoDelegado(_ => EjecutarCerrarVentana());
         }
@@ -807,13 +801,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             _temporizadorAlarma.Stop();
             VisibilidadOverlayAlarma = Visibility.Collapsed;
-        }
-
-        private void EjecutarCerrarOverlay()
-        {
-            _overlayTimer.Stop();
-            VisibilidadOverlayDibujante = Visibility.Collapsed;
-            VisibilidadOverlayAdivinador = Visibility.Collapsed;
         }
 
         private void EjecutarCerrarVentana()
