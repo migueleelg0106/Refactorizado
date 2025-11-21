@@ -53,19 +53,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             VerificarCodigoComando = new ComandoAsincrono(async _ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await VerificarCodigoAsync();
             });
 
             ReenviarCodigoComando = new ComandoAsincrono(async _ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await ReenviarCodigoAsync();
             }, _ => PuedeReenviar);
 
             CancelarComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 Cancelar();
             });
 
@@ -174,7 +174,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             if (string.IsNullOrWhiteSpace(CodigoVerificacion))
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MarcarCodigoInvalido?.Invoke(true);
                 AvisoAyudante.Mostrar(Lang.errorTextoCodigoVerificacionRequerido);
                 return;
@@ -193,7 +193,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (resultado == null)
                 {
                     Log.Error("El servicio de verificación retornó null.");
-                    ManejadorSonido.ReproducirError();
+                    SonidoManejador.ReproducirError();
                     MarcarCodigoInvalido?.Invoke(true);
                     AvisoAyudante.Mostrar(Lang.errorTextoVerificarCodigo);
                     return;
@@ -202,7 +202,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (!resultado.RegistroExitoso)
                 {
                     Log.Warn($"Verificación fallida: {resultado.Mensaje}");
-                    ManejadorSonido.ReproducirError();
+                    SonidoManejador.ReproducirError();
                     string mensajeOriginal = resultado.Mensaje;
                     string mensajeLocalizado = MensajeServidorAyudante.Localizar(
                         mensajeOriginal,
@@ -231,7 +231,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
 
                 Log.Info("Código verificado correctamente.");
-                ManejadorSonido.ReproducirExito();
+                SonidoManejador.ReproducirExito();
                 MarcarCodigoInvalido?.Invoke(false);
                 DetenerTemporizadores();
                 VerificacionCompletada?.Invoke(resultado);
@@ -239,7 +239,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Error de servicio durante la verificación del código.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MarcarCodigoInvalido?.Invoke(true);
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoVerificarCodigo);
             }
@@ -265,7 +265,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (resultado?.CodigoEnviado == true)
                 {
                     Log.Info("Código reenviado exitosamente.");
-                    ManejadorSonido.ReproducirExito();
+                    SonidoManejador.ReproducirExito();
                     if (!string.IsNullOrWhiteSpace(resultado.TokenCodigo))
                     {
                         _tokenCodigo = resultado.TokenCodigo;
@@ -276,7 +276,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 else
                 {
                     Log.Warn($"Fallo al reenviar código: {resultado?.Mensaje}");
-                    ManejadorSonido.ReproducirError();
+                    SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(
                         resultado?.Mensaje ?? Lang.errorTextoSolicitarNuevoCodigo);
                 }
@@ -284,7 +284,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Excepción de servicio al reenviar código.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoSolicitarNuevoCodigo);
             }
         }

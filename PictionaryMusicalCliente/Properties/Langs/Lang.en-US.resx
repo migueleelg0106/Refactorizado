@@ -364,8 +364,8 @@
   <data name="ajustesPartidaTextoVolumenCanciones" xml:space="preserve">
     <value>Song volume</value>
   </data>
-  <data name="globalTextoEfectosSonido" xml:space="preserve">
-    <value>Sound effects volume</value>
+  <data name="globalTextoSilenciarEfectosSonido" xml:space="preserve">
+    <value>Disable sound effects</value>
   </data>
   <data name="ajustesPrincipalTextoCerrarSesion" xml:space="preserve">
     <value>LOG OUT</value>

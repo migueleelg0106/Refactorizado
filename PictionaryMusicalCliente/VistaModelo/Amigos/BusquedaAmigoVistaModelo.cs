@@ -37,13 +37,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             EnviarSolicitudComando = new ComandoAsincrono(async _ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await EnviarSolicitudAsync();
             }, _ => PuedeEnviarSolicitud());
 
             CancelarComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 Cancelado?.Invoke();
             });
         }
@@ -130,14 +130,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     _usuarioActual,
                     nombreAmigo).ConfigureAwait(true);
 
-                ManejadorSonido.ReproducirExito();
+                SonidoManejador.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudEnviada);
                 SolicitudEnviada?.Invoke();
             }
             catch (FaultException ex)
             {
                 Log.Error($"Error WCF (Fault) al enviar solicitud a {nombreAmigo}.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 string mensajeServidor = ex.Message;
 
                 string mensajeError = MensajeServidorAyudante.Localizar(
@@ -148,7 +148,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             catch (ServicioExcepcion ex)
             {
                 Log.Error($"Error de servicio al enviar solicitud a {nombreAmigo}.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 string mensajeServidor = ex.Message;
 
                 string mensajeError = MensajeServidorAyudante.Localizar(

@@ -52,6 +52,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         }
 
         /// <summary>
+        /// Indica si los efectos de sonido están silenciados en la aplicación.
+        /// </summary>
+        public bool SonidosSilenciados
+        {
+            get => SonidoManejador.Silenciado;
+            set
+            {
+                if (SonidoManejador.Silenciado != value)
+                {
+                    SonidoManejador.Silenciado = value;
+                    NotificarCambio(nameof(SonidosSilenciados));
+                }
+            }
+        }
+
+        /// <summary>
         /// Comando para guardar los cambios y cerrar.
         /// </summary>
         public ICommand ConfirmarComando { get; }

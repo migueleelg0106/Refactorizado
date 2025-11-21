@@ -32,13 +32,14 @@
                             Margin="10,0,0,0" Minimum="0.0" Maximum="1.0" 
                             Value="{Binding Volumen, Mode=TwoWay}"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" 
-                               Text="{x:Static language:Lang.globalTextoEfectosSonido}" 
-                               FontFamily="Comic Sans MS" FontSize="14" 
+                    <TextBlock Grid.Row="1" Grid.Column="0"
+                               Text="{x:Static language:Lang.globalTextoSilenciarEfectosSonido}" 
+                               FontFamily="Comic Sans MS" FontSize="14"
                                VerticalAlignment="Center" Margin="0,15,0,0"/>
 
                     <CheckBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" 
-                              Margin="94,19,84,0" IsChecked="True"/>
+                              Margin="84,17,76,0"
+                              IsChecked="{Binding SonidosSilenciados, Mode=TwoWay}" RenderTransformOrigin="-0.084,0.568"/>
                 </Grid>
 
                 <Button Content="{x:Static language:Lang.globalTextoConfirmar}" 

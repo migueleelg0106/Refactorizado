@@ -41,19 +41,19 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             OrdenarPorRondasComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 OrdenarPorRondas();
             }, _ => PuedeOrdenar());
 
             OrdenarPorPuntosComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 OrdenarPorPuntos();
             }, _ => PuedeOrdenar());
 
             CerrarComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 CerrarAccion?.Invoke();
             });
         }

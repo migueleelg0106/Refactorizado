@@ -34,5 +34,41 @@ namespace PictionaryMusicalCliente.Properties {
                 this["idiomaCodigo"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public double volumenMusica {
+            get {
+                return ((double)(this["volumenMusica"]));
+            }
+            set {
+                this["volumenMusica"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public double volumenCancion {
+            get {
+                return ((double)(this["volumenCancion"]));
+            }
+            set {
+                this["volumenCancion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool efectosSilenciados {
+            get {
+                return ((bool)(this["efectosSilenciados"]));
+            }
+            set {
+                this["efectosSilenciados"] = value;
+            }
+        }
     }
 }

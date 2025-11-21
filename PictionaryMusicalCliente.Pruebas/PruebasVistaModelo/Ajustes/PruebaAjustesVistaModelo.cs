@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.Properties;
 using PictionaryMusicalCliente.VistaModelo.Ajustes;
 using System;
 
@@ -14,6 +15,10 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Ajustes
         [TestInitialize]
         public void Inicializar()
         {
+            Settings.Default.volumenMusica = 0.5;
+            Settings.Default.efectosSilenciados = false;
+            Settings.Default.Save();
+
             _musicaManejadorReal = new MusicaManejador();
             _musicaManejadorReal.Volumen = 0.5;
             _vistaModelo = new AjustesVistaModelo(_musicaManejadorReal);
@@ -23,6 +28,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Ajustes
         public void Limpiar()
         {
             _vistaModelo = null;
+            SonidoManejador.Silenciado = false;
         }
 
         #region Pruebas de Constructor
@@ -93,6 +99,45 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Ajustes
             _vistaModelo.Volumen = 0.5;
 
             Assert.IsFalse(notificacionRecibida, "No debe notificar si el valor es idéntico.");
+        }
+
+        #endregion
+
+        #region Pruebas de Propiedad SonidosSilenciados
+
+        [TestMethod]
+        public void Prueba_SonidosSilenciados_Obtener_LeeDePreferencia()
+        {
+            SonidoManejador.Silenciado = true;
+
+            bool estadoActual = _vistaModelo.SonidosSilenciados;
+
+            Assert.IsTrue(estadoActual);
+        }
+
+        [TestMethod]
+        public void Prueba_SonidosSilenciados_Establecer_ActualizaPreferencia()
+        {
+            _vistaModelo.SonidosSilenciados = true;
+
+            Assert.IsTrue(SonidoManejador.Silenciado);
+        }
+
+        [TestMethod]
+        public void Prueba_SonidosSilenciados_CambioValor_DisparaNotificacion()
+        {
+            bool notificacionRecibida = false;
+            _vistaModelo.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(AjustesVistaModelo.SonidosSilenciados))
+                {
+                    notificacionRecibida = true;
+                }
+            };
+
+            _vistaModelo.SonidosSilenciados = true;
+
+            Assert.IsTrue(notificacionRecibida);
         }
 
         #endregion

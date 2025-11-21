@@ -1,5 +1,6 @@
 ﻿using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.ClienteServicios;
 using System;
 using System.Windows.Input;
 
@@ -47,6 +48,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
                 {
                     _cancionManejador.Volumen = value;
                     NotificarCambio(nameof(Volumen));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Indica si los efectos de sonido deben silenciarse durante la partida.
+        /// </summary>
+        public bool SonidosSilenciados
+        {
+            get => SonidoManejador.Silenciado;
+            set
+            {
+                if (SonidoManejador.Silenciado != value)
+                {
+                    SonidoManejador.Silenciado = value;
+                    NotificarCambio(nameof(SonidosSilenciados));
                 }
             }
         }

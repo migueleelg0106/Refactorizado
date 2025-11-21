@@ -6,20 +6,46 @@ using log4net;
 namespace PictionaryMusicalCliente.ClienteServicios
 {
     /// <summary>
-    /// Provee metodos estaticos para reproducir efectos de sonido (SFX) cortos.
+    /// Provee métodos para reproducir efectos de sonido (SFX) cortos, respetando
+    /// la preferencia de silencio del usuario.
     /// </summary>
-    public static class ManejadorSonido
+    public static class SonidoManejador
     {
         private static readonly ILog Log = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private const double VolumenPredeterminado = 1.0;
+
         /// <summary>
-        /// Reproduce un archivo de sonido ubicado en la carpeta "Recursos" de la aplicación.
+        /// Indica si los efectos de sonido están silenciados por preferencia del usuario.
+        /// </summary>
+        public static bool Silenciado
+        {
+            get => Properties.Settings.Default.efectosSilenciados;
+            set
+            {
+                if (Properties.Settings.Default.efectosSilenciados != value)
+                {
+                    Properties.Settings.Default.efectosSilenciados = value;
+                    Properties.Settings.Default.Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reproduce un archivo de sonido ubicado en la carpeta "Recursos" de la aplicación
+        /// si la preferencia de usuario lo permite.
         /// </summary>
         /// <param name="nombreArchivo">Nombre del archivo con extensión.</param>
-        /// <param name="volumen">Volumen de 0.0 a 1.0 (por defecto 0.5)</param>
-        public static void ReproducirSonido(string nombreArchivo, double volumen = 0.5)
+        /// <param name="volumen">Volumen de 0.0 a 1.0 (por defecto 1.0)</param>
+        public static void ReproducirSonido(string nombreArchivo, 
+            double volumen = VolumenPredeterminado)
         {
+            if (Silenciado)
+            {
+                return;
+            }
+
             try
             {
                 string rutaSonido = Path.Combine(
@@ -35,7 +61,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
                 var player = new MediaPlayer();
                 player.Open(new Uri(rutaSonido, UriKind.Absolute));
-                player.Volume = volumen;
+                player.Volume = Math.Max(0, Math.Min(VolumenPredeterminado, volumen));
 
                 player.MediaEnded += (s, e) =>
                 {
@@ -71,15 +97,15 @@ namespace PictionaryMusicalCliente.ClienteServicios
         }
 
         /// <summary>
-        /// Reproduce el sonido estandar de clic de boton.
+        /// Reproduce el sonido estándar de clic de boton.
         /// </summary>
         public static void ReproducirClick()
         {
-            ReproducirSonido("piano_boton.mp3", 1.0);
+            ReproducirSonido("piano_boton.mp3");
         }
 
         /// <summary>
-        /// Reproduce el sonido estandar de error.
+        /// Reproduce el sonido estándar de error.
         /// </summary>
         public static void ReproducirError()
         {
@@ -87,7 +113,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         }
 
         /// <summary>
-        /// Reproduce el sonido estandar de exito o confirmacion.
+        /// Reproduce el sonido estándar de éxito o confirmacion.
         /// </summary>
         public static void ReproducirExito()
         {

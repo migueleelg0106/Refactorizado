@@ -567,7 +567,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             if (string.IsNullOrWhiteSpace(correo))
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(Lang.errorTextoCorreoInvalido);
                 return;
             }
@@ -575,7 +575,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             var resultadoValidacion = ValidacionEntrada.ValidarCorreo(correo);
             if (!resultadoValidacion.OperacionExitosa)
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(
                     resultadoValidacion.Mensaje ?? Lang.errorTextoCorreoInvalido);
                 return;
@@ -590,14 +590,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
                 if (resultado != null && resultado.OperacionExitosa)
                 {
-                    ManejadorSonido.ReproducirExito();
+                    SonidoManejador.ReproducirExito();
                     MostrarMensaje?.Invoke(Lang.invitarCorreoTextoEnviado);
                     CorreoInvitacion = string.Empty;
                 }
                 else
                 {
                     Log.Warn($"Fallo al enviar invitación: {resultado?.Mensaje}");
-                    ManejadorSonido.ReproducirError();
+                    SonidoManejador.ReproducirError();
                     string mensaje = MensajeServidorAyudante.Localizar(
                         resultado?.Mensaje,
                         Lang.errorTextoEnviarCorreo);
@@ -607,14 +607,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             catch (Exception ex) when (ex is ServicioExcepcion || ex is ArgumentException)
             {
                 Log.Error("Error de servicio/argumento al enviar invitación por correo.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
             }
         }
 
         private async Task EjecutarInvitarAmigosAsync()
         {
-            ManejadorSonido.ReproducirClick();
+            SonidoManejador.ReproducirClick();
 
             if (_listaAmigosServicio == null ||
                 _invitacionesServicio == null ||
@@ -643,14 +643,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             catch (Exception ex) when (ex is ServicioExcepcion || ex is ArgumentException)
             {
                 Log.Error("Error al obtener lista de amigos para invitar.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
 
             if (amigos == null || amigos.Count == 0)
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(Lang.invitarAmigosTextoSinAmigos);
                 return;
             }
@@ -1007,13 +1007,13 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                     _nombreUsuarioSesion,
                     nombreJugador).ConfigureAwait(true);
 
-                ManejadorSonido.ReproducirExito();
+                SonidoManejador.ReproducirExito();
                 MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoExito);
             }
             catch (Exception ex) when (ex is ServicioExcepcion || ex is ArgumentException)
             {
                 Log.Error($"Error al expulsar jugador {nombreJugador}.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoExpulsarJugador);
             }
         }

@@ -364,8 +364,8 @@
   <data name="ajustesPartidaTextoVolumenCanciones" xml:space="preserve">
     <value>Volumen de las canciones</value>
   </data>
-  <data name="globalTextoEfectosSonido" xml:space="preserve">
-    <value>Efectos de sonido</value>
+  <data name="globalTextoSilenciarEfectosSonido" xml:space="preserve">
+    <value>Silenciar efectos de sonido</value>
   </data>
   <data name="ajustesPrincipalTextoCerrarSesion" xml:space="preserve">
     <value>CERRAR SESIÓN</value>

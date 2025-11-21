@@ -78,25 +78,25 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             GuardarCambiosComando = new ComandoAsincrono(async _ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await GuardarCambiosAsync();
             }, _ => !EstaProcesando);
 
             SeleccionarAvatarComando = new ComandoAsincrono(async _ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await SeleccionarAvatarAsync();
             }, _ => !EstaProcesando);
 
             CambiarContrasenaComando = new ComandoAsincrono(async _ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await CambiarContrasenaAsync();
             }, _ => !EstaProcesando && !EstaCambiandoContrasena);
 
             CerrarComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 CerrarAccion?.Invoke();
             });
         }
@@ -231,7 +231,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             if (sesion == null || sesion.IdUsuario <= 0)
             {
                 Log.Warn("Intento de cargar perfil sin sesión válida.");
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
                 CerrarAccion?.Invoke();
                 return;
@@ -247,7 +247,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (perfil == null)
                 {
                     Log.Error($"Perfil obtenido es nulo para ID: {sesion.IdUsuario}");
-                    ManejadorSonido.ReproducirError();
+                    SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorObtenerPerfil);
                     return;
                 }
@@ -257,7 +257,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Error de servicio al obtener perfil.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorObtenerPerfil);
             }
             finally
@@ -289,7 +289,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             if (!sonCamposValidos || !sonRedesValidas)
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 var todosInvalidos = camposInvalidos ?? Enumerable.Empty<string>();
                 if (!sonRedesValidas)
                 {
@@ -330,7 +330,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (resultado == null)
                 {
                     Log.Error("El servicio de actualización de perfil devolvió null.");
-                    ManejadorSonido.ReproducirError();
+                    SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorActualizarPerfil);
                     return;
                 }
@@ -345,7 +345,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (resultado.OperacionExitosa)
                 {
-                    ManejadorSonido.ReproducirExito();
+                    SonidoManejador.ReproducirExito();
                     ActualizarSesion();
                 }
                 else
@@ -356,7 +356,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Excepción de servicio al actualizar perfil.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorActualizarPerfil);
             }
             finally
@@ -442,7 +442,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         {
             if (string.IsNullOrWhiteSpace(Correo))
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoIniciarCambioContrasena);
                 return;
             }
@@ -462,19 +462,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                     !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
                     Log.Warn($"Error en cambio de contraseña: {resultado.Mensaje}");
-                    ManejadorSonido.ReproducirError();
+                    SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(resultado.Mensaje);
                 }
                 else if (resultado?.OperacionExitosa == true)
                 {
                     Log.Info("Cambio de contraseña finalizado correctamente.");
-                    ManejadorSonido.ReproducirExito();
+                    SonidoManejador.ReproducirExito();
                 }
             }
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Excepción al cambiar contraseña.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoIniciarCambioContrasena);
             }
             finally

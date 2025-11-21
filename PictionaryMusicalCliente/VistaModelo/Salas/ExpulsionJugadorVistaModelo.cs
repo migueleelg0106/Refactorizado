@@ -27,14 +27,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             ConfirmarComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 Log.Info("Usuario confirmó la expulsión del jugador.");
                 Cerrar?.Invoke(true);
             });
 
             CancelarComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 Log.Info("Usuario canceló la expulsión del jugador.");
                 Cerrar?.Invoke(false);
             });

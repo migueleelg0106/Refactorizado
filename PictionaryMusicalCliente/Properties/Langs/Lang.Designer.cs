@@ -1924,15 +1924,6 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Efectos de sonido.
-        /// </summary>
-        public static string globalTextoEfectosSonido {
-            get {
-                return ResourceManager.GetString("globalTextoEfectosSonido", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a ELIMINAR.
         /// </summary>
         public static string globalTextoEliminar {
@@ -2010,6 +2001,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string globalTextoSeleccionarAvatar {
             get {
                 return ResourceManager.GetString("globalTextoSeleccionarAvatar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Silenciar efectos de sonido.
+        /// </summary>
+        public static string globalTextoSilenciarEfectosSonido {
+            get {
+                return ResourceManager.GetString("globalTextoSilenciarEfectosSonido", resourceCulture);
             }
         }
         

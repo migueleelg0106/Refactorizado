@@ -35,7 +35,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             Avatares = new ObservableCollection<ObjetoAvatar>(avatares);
             ConfirmarSeleccionComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 ConfirmarSeleccion();
             });
         }
@@ -74,7 +74,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             if (AvatarSeleccionado == null)
             {
                 Log.Warn("Intento de confirmar selección sin avatar elegido.");
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoSeleccionAvatarValido);
                 return;
             }

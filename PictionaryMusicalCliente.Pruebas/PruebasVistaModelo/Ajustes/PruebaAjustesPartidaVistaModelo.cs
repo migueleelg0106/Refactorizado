@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PictionaryMusicalCliente.Utilidades; 
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.Properties;
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.VistaModelo.Ajustes;
 using System;
 
@@ -8,14 +10,18 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Ajustes
     [TestClass]
     public class PruebaAjustesPartidaVistaModelo
     {
-        private CancionManejador _cancionManejadorReal; 
+        private CancionManejador _cancionManejadorReal;
         private AjustesPartidaVistaModelo _vistaModelo;
 
         [TestInitialize]
         public void Inicializar()
         {
+            Settings.Default.volumenCancion = 0.5;
+            Settings.Default.efectosSilenciados = false;
+            Settings.Default.Save();
+
             _cancionManejadorReal = new CancionManejador();
-            _cancionManejadorReal.Volumen = 0.5; 
+            _cancionManejadorReal.Volumen = 0.5;
             _vistaModelo = new AjustesPartidaVistaModelo(_cancionManejadorReal);
         }
 
@@ -24,6 +30,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Ajustes
         {
             _vistaModelo = null;
             _cancionManejadorReal = null;
+            SonidoManejador.Silenciado = false;
         }
 
         #region Pruebas de Constructor
@@ -95,6 +102,45 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Ajustes
             _vistaModelo.Volumen = 0.5;
 
             Assert.IsFalse(notificacionRecibida, "No debe notificar si el valor es idéntico.");
+        }
+
+        #endregion
+
+        #region Pruebas de Propiedad SonidosSilenciados
+
+        [TestMethod]
+        public void Prueba_SonidosSilenciados_Obtener_LeeDePreferencia()
+        {
+            SonidoManejador.Silenciado = true;
+
+            bool estadoActual = _vistaModelo.SonidosSilenciados;
+
+            Assert.IsTrue(estadoActual);
+        }
+
+        [TestMethod]
+        public void Prueba_SonidosSilenciados_Establecer_ActualizaPreferencia()
+        {
+            _vistaModelo.SonidosSilenciados = true;
+
+            Assert.IsTrue(SonidoManejador.Silenciado);
+        }
+
+        [TestMethod]
+        public void Prueba_SonidosSilenciados_CambioValor_DisparaNotificacion()
+        {
+            bool notificacionRecibida = false;
+            _vistaModelo.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(AjustesPartidaVistaModelo.SonidosSilenciados))
+                {
+                    notificacionRecibida = true;
+                }
+            };
+
+            _vistaModelo.SonidosSilenciados = true;
+
+            Assert.IsTrue(notificacionRecibida);
         }
 
         #endregion

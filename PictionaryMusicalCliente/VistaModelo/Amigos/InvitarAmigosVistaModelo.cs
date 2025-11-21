@@ -72,14 +72,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             if (amigo.InvitacionEnviada)
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 _mostrarMensaje?.Invoke(Lang.invitarAmigosTextoYaInvitado);
                 return;
             }
 
             if (amigo.UsuarioId <= 0)
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 _mostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
@@ -96,7 +96,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 if (perfil == null || string.IsNullOrWhiteSpace(perfil.Correo))
                 {
                     Log.Warn($"Perfil o correo no disponible para amigo ID: {amigo.UsuarioId}");
-                    ManejadorSonido.ReproducirError();
+                    SonidoManejador.ReproducirError();
                     _mostrarMensaje?.Invoke(Lang.invitarAmigosTextoCorreoNoDisponible);
                     return;
                 }
@@ -108,7 +108,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
                 if (resultado != null && resultado.OperacionExitosa)
                 {
-                    ManejadorSonido.ReproducirExito();
+                    SonidoManejador.ReproducirExito();
                     amigo.MarcarInvitacionEnviada();
                     _registrarAmigoInvitado?.Invoke(amigo.UsuarioId);
                     _mostrarMensaje?.Invoke(Lang.invitarCorreoTextoEnviado);
@@ -116,7 +116,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 else
                 {
                     Log.Warn($"Fallo al enviar invitación: {resultado?.Mensaje}");
-                    ManejadorSonido.ReproducirError();
+                    SonidoManejador.ReproducirError();
                     string mensaje = MensajeServidorAyudante.Localizar(
                         resultado?.Mensaje,
                         Lang.errorTextoEnviarCorreo);
@@ -126,13 +126,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Error de servicio al enviar invitación.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 _mostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
             }
             catch (ArgumentException ex)
             {
                 Log.Error("Error de argumento inválido al invitar.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 _mostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
             }
             finally
@@ -197,7 +197,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             InvitarComando = new ComandoAsincrono(async () =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await _padre.InvitarAsync(this).ConfigureAwait(true);
             }, () => !EstaProcesando);
         }

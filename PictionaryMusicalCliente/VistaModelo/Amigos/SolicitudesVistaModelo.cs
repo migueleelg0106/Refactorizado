@@ -42,19 +42,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             AceptarSolicitudComando = new ComandoAsincrono(async param =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await ResponderSolicitudAsync(param as SolicitudAmistadEntrada);
             }, param => PuedeAceptar(param as SolicitudAmistadEntrada));
 
             RechazarSolicitudComando = new ComandoAsincrono(async param =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await RechazarSolicitudAsync(param as SolicitudAmistadEntrada);
             }, param => PuedeRechazar(param as SolicitudAmistadEntrada));
 
             CerrarComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 Cerrar?.Invoke();
             });
 
@@ -200,13 +200,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     entrada.Solicitud.UsuarioEmisor,
                     entrada.Solicitud.UsuarioReceptor).ConfigureAwait(true);
 
-                ManejadorSonido.ReproducirExito();
+                SonidoManejador.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudAceptada);
             }
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Error al aceptar solicitud de amistad.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
@@ -232,13 +232,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     entrada.Solicitud.UsuarioEmisor,
                     entrada.Solicitud.UsuarioReceptor).ConfigureAwait(true);
 
-                ManejadorSonido.ReproducirExito();
+                SonidoManejador.ReproducirExito();
                 AvisoAyudante.Mostrar(Lang.amigosTextoSolicitudCancelada);
             }
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Error al rechazar/cancelar solicitud de amistad.", ex);
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
