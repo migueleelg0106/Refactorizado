@@ -607,6 +607,12 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 				SonidoManejador.ReproducirError();
 				MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
 			}
+			catch (ArgumentException ex)
+			{
+				Log.Error("Error de argumento al enviar invitación.", ex);
+				SonidoManejador.ReproducirError();
+				MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+			}
 			catch (Exception ex)
 			{
 				Log.Error("Error inesperado al invitar.", ex);
