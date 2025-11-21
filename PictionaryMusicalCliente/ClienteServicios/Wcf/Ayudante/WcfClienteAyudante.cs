@@ -37,27 +37,23 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
                 Cerrar(cliente);
                 return resultado;
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException)
             {
-                _logger.Error("Error de comunicación en operación WCF helper.", ex);
                 Abortar(cliente);
                 throw;
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException)
             {
-                _logger.Error("Timeout en operación WCF helper.", ex);
                 Abortar(cliente);
                 throw;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
-                _logger.Error("Operación inválida en operación WCF helper.", ex);
                 Abortar(cliente);
                 throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.Error("Excepción inesperada en operación WCF helper.", ex);
                 Abortar(cliente);
                 throw;
             }

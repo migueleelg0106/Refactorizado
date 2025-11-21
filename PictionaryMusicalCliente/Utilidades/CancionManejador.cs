@@ -149,7 +149,7 @@ namespace PictionaryMusicalCliente.Utilidades
             }
         }
 
-        private double ObtenerVolumenGuardado()
+        private static double ObtenerVolumenGuardado()
         {
             double volumenGuardado = Properties.Settings.Default.volumenCancion;
             if (double.IsNaN(volumenGuardado) || double.IsInfinity(volumenGuardado))

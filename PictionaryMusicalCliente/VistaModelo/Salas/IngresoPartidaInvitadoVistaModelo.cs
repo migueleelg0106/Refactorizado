@@ -245,11 +245,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Excepción de servicio al intentar unirse como invitado.", ex);
-                string mensaje = ex?.Tipo == TipoErrorServicio.FallaServicio
-                    ? Lang.errorTextoNoEncuentraPartida
-                    : string.IsNullOrWhiteSpace(ex?.Message)
-                        ? Lang.errorTextoNoEncuentraPartida
-                        : ex.Message;
+                string mensaje;
+                if (ex?.Tipo == TipoErrorServicio.FallaServicio || string.IsNullOrWhiteSpace
+                    (ex?.Message))
+                {
+                    mensaje = Lang.errorTextoNoEncuentraPartida;
+                }
+                else
+                {
+                    mensaje = ex.Message;
+                }
 
                 SonidoManejador.ReproducirError();
                 return ResultadoUnionInvitado.Error(mensaje);

@@ -625,11 +625,17 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             catch (ServicioExcepcion ex)
             {
                 Log.Error("Error al unirse a sala.", ex);
-                string mensaje = ex?.Tipo == TipoErrorServicio.FallaServicio
-                    ? Lang.errorTextoNoEncuentraPartida
-                    : string.IsNullOrWhiteSpace(ex?.Message)
-                        ? Lang.errorTextoNoEncuentraPartida
-                        : ex.Message;
+
+                string mensaje;
+                if (ex?.Tipo == TipoErrorServicio.FallaServicio || string.IsNullOrWhiteSpace
+                    (ex?.Message))
+                {
+                    mensaje = Lang.errorTextoNoEncuentraPartida;
+                }
+                else
+                {
+                    mensaje = ex.Message;
+                }
 
                 SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(mensaje);
