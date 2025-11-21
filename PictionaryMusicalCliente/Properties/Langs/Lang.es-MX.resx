@@ -770,163 +770,142 @@ aciertan o cuando se acaba el tiempo.
   <data name="unirseSalaTextoVacio" xml:space="preserve">
     <value>Ingrese el código de una sala.</value>
   </data>
-  <data name="ApellidoRegistroInvalido" xml:space="preserve">
+  <data name="apellidoRegistroInvalido" xml:space="preserve">
     <value>El apellido es obligatorio y no debe exceder 50 caracteres.</value>
   </data>
-  <data name="AvatarInvalido" xml:space="preserve">
+  <data name="avatarInvalido" xml:space="preserve">
     <value>El avatar seleccionado no es válido.</value>
   </data>
-  <data name="CodigoRecuperacionExpirado" xml:space="preserve">
+  <data name="codigoRecuperacionExpirado" xml:space="preserve">
     <value>El código de verificación ha expirado. Solicite uno nuevo.</value>
   </data>
-  <data name="CodigoRecuperacionIncorrecto" xml:space="preserve">
+  <data name="codigoRecuperacionIncorrecto" xml:space="preserve">
     <value>El código ingresado no es correcto.</value>
   </data>
-  <data name="CodigoSalaObligatorio" xml:space="preserve">
+  <data name="codigoSalaObligatorio" xml:space="preserve">
     <value>El código de sala es obligatorio.</value>
   </data>
-  <data name="CodigoVerificacionExpirado" xml:space="preserve">
+  <data name="codigoVerificacionExpirado" xml:space="preserve">
     <value>El código de verificación ha expirado. Inicie el proceso nuevamente.</value>
   </data>
-  <data name="CodigoVerificacionIncorrecto" xml:space="preserve">
+  <data name="codigoVerificacionIncorrecto" xml:space="preserve">
     <value>El código ingresado no es correcto.</value>
   </data>
-  <data name="ConfiguracionObligatoria" xml:space="preserve">
+  <data name="configuracionObligatoria" xml:space="preserve">
     <value>La configuración de la partida es obligatoria.</value>
   </data>
-  <data name="ContrasenaRegistroInvalida" xml:space="preserve">
+  <data name="contrasenaRegistroInvalida" xml:space="preserve">
     <value>La contraseña debe tener entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un carácter especial.</value>
   </data>
-  <data name="CorreoInvalido" xml:space="preserve">
+  <data name="correoInvalido" xml:space="preserve">
     <value>El correo electrónico no es válido.</value>
   </data>
-  <data name="CorreoJugadorEnSala" xml:space="preserve">
+  <data name="correoJugadorEnSala" xml:space="preserve">
     <value>El jugador con el correo ingresado ya está en la sala.</value>
   </data>
-  <data name="CorreoRegistroInvalido" xml:space="preserve">
+  <data name="correoRegistroInvalido" xml:space="preserve">
     <value>El correo electrónico es obligatorio, debe tener un formato válido y no debe exceder 50 caracteres.</value>
   </data>
-  <data name="CredencialesIncorrectas" xml:space="preserve">
+  <data name="credencialesIncorrectas" xml:space="preserve">
     <value>Usuario o contraseña incorrectos.</value>
   </data>
-  <data name="CredencialesInvalidas" xml:space="preserve">
+  <data name="credencialesInvalidas" xml:space="preserve">
     <value>Las credenciales proporcionadas no son válidas.</value>
   </data>
-  <data name="CuentaNoVerificada" xml:space="preserve">
+  <data name="cuentaNoVerificada" xml:space="preserve">
     <value>La cuenta no ha sido verificada. Por favor, verifique su correo.</value>
   </data>
-  <data name="DatosActualizacionContrasena" xml:space="preserve">
+  <data name="datosActualizacionContrasena" xml:space="preserve">
     <value>Los datos de actualización no son válidos.</value>
   </data>
-  <data name="DatosConfirmacionInvalidos" xml:space="preserve">
+  <data name="datosConfirmacionInvalidos" xml:space="preserve">
     <value>Los datos de confirmación no son válidos.</value>
   </data>
-  <data name="DatosInvalidos" xml:space="preserve">
+  <data name="datosInvalidos" xml:space="preserve">
     <value>Los datos proporcionados no son válidos. Por favor, verifique la información.</value>
   </data>
-  <data name="DatosInvitacionInvalidos" xml:space="preserve">
+  <data name="datosInvitacionInvalidos" xml:space="preserve">
     <value>Los datos de la invitación no son válidos.</value>
   </data>
-  <data name="DatosRecuperacionInvalidos" xml:space="preserve">
+  <data name="datosRecuperacionInvalidos" xml:space="preserve">
     <value>Los datos de recuperación no son válidos.</value>
   </data>
-  <data name="DatosReenvioCodigo" xml:space="preserve">
-    <value>Los datos para reenviar el código no son válidos.</value>
-  </data>
-  <data name="DatosSolicitudVerificacionInvalidos" xml:space="preserve">
-    <value>Los datos proporcionados no son válidos para solicitar el código.</value>
-  </data>
-  <data name="DificultadObligatoria" xml:space="preserve">
+  <data name="dificultadObligatoria" xml:space="preserve">
     <value>La dificultad es obligatoria.</value>
   </data>
-  <data name="ErrorActualizarContrasena" xml:space="preserve">
+  <data name="errorActualizarContrasena" xml:space="preserve">
     <value>No fue posible actualizar la contraseña.</value>
   </data>
-  <data name="ErrorActualizarPerfil" xml:space="preserve">
+  <data name="errorActualizarPerfil" xml:space="preserve">
     <value>No fue posible actualizar el perfil. Por favor, intente nuevamente.</value>
   </data>
-  <data name="ErrorActualizarSolicitud" xml:space="preserve">
+  <data name="errorActualizarSolicitud" xml:space="preserve">
     <value>No fue posible actualizar la solicitud de amistad.</value>
   </data>
-  <data name="ErrorAlmacenarSolicitud" xml:space="preserve">
+  <data name="errorAlmacenarSolicitud" xml:space="preserve">
     <value>No fue posible enviar la solicitud de amistad.</value>
   </data>
-  <data name="ErrorConfirmarCodigo" xml:space="preserve">
+  <data name="errorConfirmarCodigo" xml:space="preserve">
     <value>No fue posible confirmar el código de verificación.</value>
   </data>
-  <data name="ErrorConfirmarCodigoRecuperacion" xml:space="preserve">
+  <data name="errorConfirmarCodigoRecuperacion" xml:space="preserve">
     <value>No fue posible confirmar el código de recuperación.</value>
   </data>
-  <data name="ErrorContextoOperacion" xml:space="preserve">
+  <data name="errorContextoOperacion" xml:space="preserve">
     <value>No fue posible establecer el contexto de la operación.</value>
   </data>
-  <data name="ErrorCrearSala" xml:space="preserve">
-    <value>No fue posible crear la sala.</value>
-  </data>
-  <data name="ErrorEliminarAmistad" xml:space="preserve">
-    <value>No fue posible eliminar la relación de amistad.</value>
-  </data>
-  <data name="ErrorEnviarInvitacionCorreo" xml:space="preserve">
-    <value>No fue posible enviar la invitación por correo electrónico.</value>
-  </data>
-  <data name="ErrorGenerarCodigo" xml:space="preserve">
+  <data name="errorGenerarCodigo" xml:space="preserve">
     <value>No fue posible generar un código para la sala.</value>
   </data>
-  <data name="ErrorInesperadoAbandonar" xml:space="preserve">
+  <data name="errorInesperadoAbandonar" xml:space="preserve">
     <value>Ocurrió un error al abandonar la sala.</value>
   </data>
-  <data name="ErrorInesperadoCrearSala" xml:space="preserve">
+  <data name="errorInesperadoCrearSala" xml:space="preserve">
     <value>Ocurrió un error al crear la sala.</value>
   </data>
-  <data name="ErrorInesperadoExpulsar" xml:space="preserve">
+  <data name="errorInesperadoExpulsar" xml:space="preserve">
     <value>Ocurrió un error al expulsar al jugador.</value>
   </data>
-  <data name="ErrorInesperadoInvitacion" xml:space="preserve">
+  <data name="errorInesperadoInvitacion" xml:space="preserve">
     <value>Ocurrió un error al enviar la invitación.</value>
   </data>
-  <data name="ErrorInesperadoSuscripcion" xml:space="preserve">
+  <data name="errorInesperadoSuscripcion" xml:space="preserve">
     <value>Ocurrió un error al suscribirse a las salas.</value>
   </data>
-  <data name="ErrorInesperadoUnirse" xml:space="preserve">
+  <data name="errorInesperadoUnirse" xml:space="preserve">
     <value>Ocurrió un error al unirse a la sala.</value>
   </data>
-  <data name="ErrorInicioSesion" xml:space="preserve">
+  <data name="errorInicioSesion" xml:space="preserve">
     <value>No fue posible iniciar sesión. Por favor, intente nuevamente.</value>
   </data>
-  <data name="ErrorObtenerCallback" xml:space="preserve">
+  <data name="errorObtenerCallback" xml:space="preserve">
     <value>No fue posible establecer la conexión con el servidor.</value>
   </data>
-  <data name="ErrorObtenerPerfil" xml:space="preserve">
+  <data name="errorObtenerPerfil" xml:space="preserve">
     <value>No fue posible obtener la información del perfil.</value>
   </data>
-  <data name="ErrorProcesarInvitacion" xml:space="preserve">
+  <data name="errorProcesarInvitacion" xml:space="preserve">
     <value>Ocurrió un problema al procesar la invitación.</value>
   </data>
-  <data name="ErrorRecuperarCuenta" xml:space="preserve">
-    <value>No fue posible procesar la recuperación de cuenta.</value>
-  </data>
-  <data name="ErrorRecuperarListaAmigos" xml:space="preserve">
+  <data name="errorRecuperarListaAmigos" xml:space="preserve">
     <value>No fue posible recuperar la lista de amigos.</value>
   </data>
-  <data name="ErrorRecuperarSolicitudes" xml:space="preserve">
+  <data name="errorRecuperarSolicitudes" xml:space="preserve">
     <value>No fue posible recuperar las solicitudes de amistad.</value>
   </data>
-  <data name="ErrorReenviarCodigo" xml:space="preserve">
+  <data name="errorReenviarCodigo" xml:space="preserve">
     <value>No fue posible reenviar el código de verificación.</value>
   </data>
-  <data name="ErrorReenviarCodigoRecuperacion" xml:space="preserve">
-    <value>No fue posible reenviar el código de recuperación.</value>
-  </data>
-  <data name="ErrorReenviarCodigoVerificacion" xml:space="preserve">
+  <data name="errorReenviarCodigoVerificacion" xml:space="preserve">
     <value>No fue posible reenviar el código de verificación.</value>
   </data>
-  <data name="ErrorRegistrarCuenta" xml:space="preserve">
+  <data name="errorRegistrarCuenta" xml:space="preserve">
     <value>No fue posible completar el registro. Por favor, intente nuevamente.</value>
   </data>
-  <data name="ErrorSolicitudVerificacion" xml:space="preserve">
+  <data name="errorSolicitudVerificacion" xml:space="preserve">
     <value>No fue posible procesar la solicitud de verificación.</value>
   </data>
-  <data name="ErrorSuscripcionAmigos" xml:space="preserve">
+  <data name="errorSuscripcionAmigos" xml:space="preserve">
     <value>No fue posible suscribirse a las actualizaciones de amigos.</value>
   </data>
   <data name="IdiomaObligatorio" xml:space="preserve">
@@ -935,40 +914,40 @@ aciertan o cuando se acaba el tiempo.
   <data name="InvitacionEnviadaExito" xml:space="preserve">
     <value>Invitación enviada correctamente.</value>
   </data>
-  <data name="JugadorNoAsociado" xml:space="preserve">
+  <data name="jugadorNoAsociado" xml:space="preserve">
     <value>No existe un jugador asociado al usuario especificado.</value>
   </data>
-  <data name="NombreRegistroInvalido" xml:space="preserve">
+  <data name="nombreRegistroInvalido" xml:space="preserve">
     <value>El nombre es obligatorio y no debe exceder 50 caracteres.</value>
   </data>
-  <data name="NombreUsuarioObligatorioCancelar" xml:space="preserve">
+  <data name="nombreUsuarioObligatorioCancelar" xml:space="preserve">
     <value>El nombre de usuario es obligatorio para cancelar la suscripción.</value>
   </data>
-  <data name="NombreUsuarioObligatorioSuscripcion" xml:space="preserve">
+  <data name="nombreUsuarioObligatorioSuscripcion" xml:space="preserve">
     <value>El nombre de usuario es obligatorio para suscribirse a las notificaciones.</value>
   </data>
-  <data name="NumeroRondasInvalido" xml:space="preserve">
+  <data name="numeroRondasInvalido" xml:space="preserve">
     <value>El número de rondas debe ser mayor a cero.</value>
   </data>
-  <data name="ParametroObligatorio" xml:space="preserve">
+  <data name="parametroObligatorio" xml:space="preserve">
     <value>El parámetro {0} es obligatorio.</value>
   </data>
-  <data name="PerfilActualizadoExito" xml:space="preserve">
+  <data name="perfilActualizadoExito" xml:space="preserve">
     <value>Perfil actualizado correctamente.</value>
   </data>
-  <data name="SalaCreadorNoExpulsable" xml:space="preserve">
+  <data name="salaCreadorNoExpulsable" xml:space="preserve">
     <value>El creador de la sala no puede ser expulsado.</value>
   </data>
-  <data name="SalaExpulsionRestringida" xml:space="preserve">
+  <data name="salaExpulsionRestringida" xml:space="preserve">
     <value>Solo el creador de la sala puede expulsar jugadores.</value>
   </data>
-  <data name="SalaJugadorNoExiste" xml:space="preserve">
+  <data name="salaJugadorNoExiste" xml:space="preserve">
     <value>El jugador especificado no está en la sala.</value>
   </data>
-  <data name="SalaLlena" xml:space="preserve">
+  <data name="salaLlena" xml:space="preserve">
     <value>La sala está llena.</value>
   </data>
-  <data name="SalaNoEncontrada" xml:space="preserve">
+  <data name="salaNoEncontrada" xml:space="preserve">
     <value>No se encontró la sala especificada.</value>
   </data>
   <data name="SolicitudInvitacionInvalida" xml:space="preserve">
@@ -1007,25 +986,43 @@ aciertan o cuando se acaba el tiempo.
   <data name="UsuariosEspecificadosNoExisten" xml:space="preserve">
     <value>Alguno de los usuarios especificados no existe.</value>
   </data>
-  <data name="SolicitudAmistadMismoUsuario" xml:space="preserve">
-    <value>No es posible enviarse una solicitud de amistad a sí mismo.</value>
-  </data>
-  <data name="RelacionAmistadExistente" xml:space="preserve">
-    <value>Ya existe una solicitud o relación de amistad entre los usuarios.</value>
-  </data>
-  <data name="SolicitudAmistadNoExiste" xml:space="preserve">
+  <data name="solicitudAmistadNoExiste" xml:space="preserve">
     <value>No existe una solicitud de amistad entre los usuarios.</value>
   </data>
-  <data name="ErrorAceptarSolicitud" xml:space="preserve">
+  <data name="errorAceptarSolicitud" xml:space="preserve">
     <value>No fue posible aceptar la solicitud de amistad.</value>
   </data>
-  <data name="SolicitudAmistadYaAceptada" xml:space="preserve">
+  <data name="olicitudAmistadYaAceptada" xml:space="preserve">
     <value>La solicitud de amistad ya fue aceptada con anterioridad.</value>
   </data>
-  <data name="RelacionAmistadNoExiste" xml:space="preserve">
+  <data name="relacionAmistadNoExiste" xml:space="preserve">
     <value>No existe una relación de amistad entre los usuarios.</value>
   </data>
   <data name="globalTextoAviso" xml:space="preserve">
     <value>Aviso</value>
+  </data>
+  <data name="datosReenvioCodigo" xml:space="preserve">
+    <value>Los datos para reenviar el código no son válidos.</value>
+  </data>
+  <data name="datosSolicitudVerificacionInvalidos" xml:space="preserve">
+    <value>Los datos proporcionados no son válidos para solicitar el código.</value>
+  </data>
+  <data name="relacionAmistadExistente" xml:space="preserve">
+    <value>Ya existe una solicitud o relación de amistad entre los usuarios.</value>
+  </data>
+  <data name="errorCrearSala" xml:space="preserve">
+    <value>No fue posible crear la sala.</value>
+  </data>
+  <data name="errorEliminarAmistad" xml:space="preserve">
+    <value>No fue posible eliminar la relación de amistad.</value>
+  </data>
+  <data name="errorEnviarInvitacionCorreo" xml:space="preserve">
+    <value>No fue posible enviar la invitación por correo electrónico.</value>
+  </data>
+  <data name="errorRecuperarCuenta" xml:space="preserve">
+    <value>No fue posible procesar la recuperación de cuenta.</value>
+  </data>
+  <data name="errorReenviarCodigoRecuperacion" xml:space="preserve">
+    <value>No fue posible reenviar el código de recuperación.</value>
   </data>
 </root>
