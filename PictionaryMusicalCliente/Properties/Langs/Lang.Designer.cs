@@ -2327,7 +2327,16 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("partidaTextoPartidaEnCurso", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡Tiempo terminado!.
+        /// </summary>
+        public static string partidaTextoTiempoTerminado {
+            get {
+                return ResourceManager.GetString("partidaTextoTiempoTerminado", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Busca una cadena traducida similar a Ronda:.
         /// </summary>

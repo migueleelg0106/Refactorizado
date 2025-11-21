@@ -714,6 +714,9 @@
   <data name="adivinadorTextoContenido" xml:space="preserve">
     <value>¡Intenta adivinar la canción en el tiempo restante!</value>
   </data>
+  <data name="partidaTextoTiempoTerminado" xml:space="preserve">
+    <value>¡Tiempo terminado!</value>
+  </data>
   <data name="invitarCorreoTextoEnviado" xml:space="preserve">
     <value>¡Invitación enviada con éxito!</value>
   </data>

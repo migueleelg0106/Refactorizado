@@ -723,6 +723,9 @@
   <data name="adivinadorTextoContenido" xml:space="preserve">
     <value>Try to guess the song before time runs out!</value>
   </data>
+  <data name="partidaTextoTiempoTerminado" xml:space="preserve">
+    <value>Time's up!</value>
+  </data>
   <data name="invitarCorreoTextoEnviado" xml:space="preserve">
     <value>Invitation sent successfully!</value>
   </data>
