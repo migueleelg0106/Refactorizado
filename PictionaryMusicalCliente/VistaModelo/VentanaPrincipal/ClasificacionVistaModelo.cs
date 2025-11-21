@@ -1,4 +1,4 @@
-using PictionaryMusicalCliente.ClienteServicios;
+ï»¿using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
@@ -123,7 +123,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
-                Log.Info("Solicitando tabla de clasificación al servidor.");
+                Log.Info("Solicitando tabla de clasificaciÃ³n al servidor.");
                 IReadOnlyList<DTOs.ClasificacionUsuarioDTO> clasificacion =
                     await _clasificacionServicio.ObtenerTopJugadoresAsync().ConfigureAwait(true);
 
@@ -133,7 +133,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error al obtener clasificación.", ex);
+                Log.Error("Error al obtener clasificaciÃ³n.", ex);
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally

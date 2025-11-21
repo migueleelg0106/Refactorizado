@@ -1,4 +1,4 @@
-using PictionaryMusicalCliente.Comandos;
+ï»¿using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
@@ -583,7 +583,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             try
             {
-                Log.Info($"Enviando invitación por correo a: {correo}");
+                Log.Info($"Enviando invitaciÃ³n por correo a: {correo}");
                 var resultado = await _invitacionesServicio
                     .EnviarInvitacionAsync(_codigoSala, correo)
                     .ConfigureAwait(true);
@@ -596,20 +596,20 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 }
                 else
                 {
-                    Log.Warn($"Fallo al enviar invitación: {resultado?.Mensaje}");
+                    Log.Warn($"Fallo al enviar invitaciÃ³n: {resultado?.Mensaje}");
                     SonidoManejador.ReproducirError();
 					MostrarMensaje?.Invoke(resultado?.Mensaje ?? Lang.errorTextoEnviarCorreo);
 				}
 			}
 			catch (ServicioExcepcion ex)
 			{
-				Log.Error("Excepción de servicio al enviar invitación.", ex);
+				Log.Error("ExcepciÃ³n de servicio al enviar invitaciÃ³n.", ex);
 				SonidoManejador.ReproducirError();
 				MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
 			}
 			catch (ArgumentException ex)
 			{
-				Log.Error("Error de argumento al enviar invitación.", ex);
+				Log.Error("Error de argumento al enviar invitaciÃ³n.", ex);
 				SonidoManejador.ReproducirError();
 				MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
 			}
@@ -629,14 +629,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 _invitacionesServicio == null ||
                 _perfilServicio == null)
             {
-                Log.Warn("Servicios de invitación no inicializados.");
+                Log.Warn("Servicios de invitaciÃ³n no inicializados.");
                 MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
             {
-                Log.Warn("Intento de invitar amigos sin usuario de sesión.");
+                Log.Warn("Intento de invitar amigos sin usuario de sesiÃ³n.");
                 MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
@@ -806,7 +806,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             PalabraAdivinar = "Gasolina";
             TextoArtista = "Artista: Daddy Yankee";
-            TextoGenero = "Género: Reggaeton";
+            TextoGenero = "GÃ©nero: Reggaeton";
 
             _temporizador.Start();
         }
@@ -824,7 +824,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
                 VisibilidadInfoCancion = Visibility.Collapsed;
 
-                MostrarMensaje?.Invoke("¡Tiempo terminado!");
+                MostrarMensaje?.Invoke("Â¡Tiempo terminado!");
             }
         }
 
@@ -871,7 +871,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
                 if (jugadorExistente != null)
                 {
-                    Log.Info($"Jugador salió de la sala: {nombreJugador}");
+                    Log.Info($"Jugador saliÃ³ de la sala: {nombreJugador}");
                     Jugadores.Remove(jugadorExistente);
                 }
             });
@@ -1010,7 +1010,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             try
             {
-                Log.Info($"Solicitando expulsión de: {nombreJugador}");
+                Log.Info($"Solicitando expulsiÃ³n de: {nombreJugador}");
                 await _salasServicio.ExpulsarJugadorAsync(
                     _codigoSala,
                     _nombreUsuarioSesion,
@@ -1067,7 +1067,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 }
                 catch (ServicioExcepcion ex)
                 {
-                    Log.Warn($"Error al abandonar sala en finalización: {ex.Message}");
+                    Log.Warn($"Error al abandonar sala en finalizaciÃ³n: {ex.Message}");
                 }
             }
 

@@ -167,6 +167,7 @@ C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\P
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\Connected Services\PictionaryServidorServicioSalas\Salas2.xsd
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\Connected Services\PictionaryServidorServicioSalas\Salas3.xsd
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\Connected Services\PictionaryServidorServicioSalas\SalasManejador.wsdl
+C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\packages.config
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.AmigoDTO.datasource
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.ClasificacionUsuarioDTO.datasource
 C:\Users\uriel\source\repos\PictionaryNuevo\PruebasRefactorizado\Refactorizado\PictionaryMusicalCliente\Properties\DataSources\PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoInicioSesionDTO.datasource

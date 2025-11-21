@@ -1,4 +1,4 @@
-using PictionaryMusicalCliente.ClienteServicios;
+ï»¿using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
@@ -230,7 +230,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             if (sesion == null || sesion.IdUsuario <= 0)
             {
-                Log.Warn("Intento de cargar perfil sin sesión válida.");
+                Log.Warn("Intento de cargar perfil sin sesiÃ³n vÃ¡lida.");
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
                 CerrarAccion?.Invoke();
@@ -329,7 +329,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (resultado == null)
                 {
-                    Log.Error("El servicio de actualización de perfil devolvió null.");
+                    Log.Error("El servicio de actualizaciÃ³n de perfil devolviÃ³ null.");
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorActualizarPerfil);
                     return;
@@ -355,7 +355,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Excepción de servicio al actualizar perfil.", ex);
+                Log.Error("ExcepciÃ³n de servicio al actualizar perfil.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorActualizarPerfil);
             }
@@ -452,7 +452,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
-                Log.Info($"Iniciando solicitud de cambio de contraseña para: {Correo}");
+                Log.Info($"Iniciando solicitud de cambio de contraseÃ±a para: {Correo}");
                 DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
                     .RecuperarCuentaAsync(
                         Correo,
@@ -461,19 +461,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (resultado?.OperacionExitosa == false &&
                     !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
-                    Log.Warn($"Error en cambio de contraseña: {resultado.Mensaje}");
+                    Log.Warn($"Error en cambio de contraseÃ±a: {resultado.Mensaje}");
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(resultado.Mensaje);
                 }
                 else if (resultado?.OperacionExitosa == true)
                 {
-                    Log.Info("Cambio de contraseña finalizado correctamente.");
+                    Log.Info("Cambio de contraseÃ±a finalizado correctamente.");
                     SonidoManejador.ReproducirExito();
                 }
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Excepción al cambiar contraseña.", ex);
+                Log.Error("ExcepciÃ³n al cambiar contraseÃ±a.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoIniciarCambioContrasena);
             }
