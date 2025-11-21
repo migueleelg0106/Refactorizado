@@ -2,8 +2,10 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Properties.Langs;
 using System;
+using System.Globalization;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -49,7 +51,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 var solicitud = new DTOs.InvitacionSalaDTO
                 {
                     CodigoSala = codigoSala.Trim(),
-                    Correo = correoDestino.Trim()
+                    Correo = correoDestino.Trim(),
+                    Idioma = ObtenerCodigoIdiomaActual()
                 };
 
                 var resultado = await Task.Run(() => canal.EnviarInvitacion(solicitud)).
@@ -173,6 +176,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 _logger.Error("Error inesperado al cerrar fábrica.", ex);
                 fabrica.Abort();
             }
+        }
+
+        private static string ObtenerCodigoIdiomaActual()
+        {
+            return LocalizacionServicio.Instancia.CulturaActual?.Name
+                ?? CultureInfo.CurrentUICulture?.Name;
         }
     }
 }
