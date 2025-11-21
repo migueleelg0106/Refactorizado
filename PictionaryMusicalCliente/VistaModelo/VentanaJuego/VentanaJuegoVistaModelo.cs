@@ -35,6 +35,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             StringComparer.OrdinalIgnoreCase;
         private readonly CancionManejador _manejadorCancion;
         private readonly DispatcherTimer _overlayTimer;
+        private readonly DispatcherTimer _temporizadorAlarma;
         private readonly DispatcherTimer _temporizador;
         private readonly ISalasServicio _salasServicio;
         private readonly IInvitacionesServicio _invitacionesServicio;
@@ -56,6 +57,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private Visibility _visibilidadCuadriculaDibujo;
         private Visibility _visibilidadOverlayDibujante;
         private Visibility _visibilidadOverlayAdivinador;
+        private Visibility _visibilidadOverlayAlarma;
         private Visibility _visibilidadPalabraAdivinar;
         private Visibility _visibilidadInfoCancion;
         private string _palabraAdivinar;
@@ -128,6 +130,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _visibilidadCuadriculaDibujo = Visibility.Collapsed;
             _visibilidadOverlayDibujante = Visibility.Collapsed;
             _visibilidadOverlayAdivinador = Visibility.Collapsed;
+            _visibilidadOverlayAlarma = Visibility.Collapsed;
             _visibilidadPalabraAdivinar = Visibility.Collapsed;
             _visibilidadInfoCancion = Visibility.Collapsed;
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
@@ -146,6 +149,10 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _overlayTimer = new DispatcherTimer();
             _overlayTimer.Interval = TimeSpan.FromSeconds(5);
             _overlayTimer.Tick += OverlayTimer_Tick;
+
+            _temporizadorAlarma = new DispatcherTimer();
+            _temporizadorAlarma.Interval = TimeSpan.FromSeconds(5);
+            _temporizadorAlarma.Tick += TemporizadorAlarma_Tick;
 
             _temporizador = new DispatcherTimer();
             _temporizador.Interval = TimeSpan.FromSeconds(1);
@@ -281,6 +288,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             get => _visibilidadOverlayAdivinador;
             set => EstablecerPropiedad(ref _visibilidadOverlayAdivinador, value);
+        }
+
+        /// <summary>
+        /// Visibilidad del overlay de tiempo terminado.
+        /// </summary>
+        public Visibility VisibilidadOverlayAlarma
+        {
+            get => _visibilidadOverlayAlarma;
+            set => EstablecerPropiedad(ref _visibilidadOverlayAlarma, value);
         }
 
         /// <summary>
@@ -470,6 +486,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         public ICommand CerrarOverlayComando { get; private set; }
 
         /// <summary>
+        /// Comando para ocultar el overlay de tiempo terminado.
+        /// </summary>
+        public ICommand OcultarOverlayAlarmaComando { get; private set; }
+
+        /// <summary>
         /// Comando para cerrar la ventana de juego.
         /// </summary>
         public ICommand CerrarVentanaComando { get; private set; }
@@ -557,6 +578,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             MostrarOverlayAdivinadorComando = new ComandoDelegado(
                 _ => EjecutarMostrarOverlayAdivinador());
             CerrarOverlayComando = new ComandoDelegado(_ => EjecutarCerrarOverlay());
+            OcultarOverlayAlarmaComando = new ComandoDelegado(_ => OcultarOverlayAlarma());
             CerrarVentanaComando = new ComandoDelegado(_ => EjecutarCerrarVentana());
         }
 
@@ -771,6 +793,22 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _overlayTimer.Start();
         }
 
+        private void MostrarOverlayAlarma()
+        {
+            VisibilidadOverlayAlarma = Visibility.Visible;
+
+            SonidoManejador.ReproducirSonido("alarma.mp3");
+
+            _temporizadorAlarma.Stop();
+            _temporizadorAlarma.Start();
+        }
+
+        private void OcultarOverlayAlarma()
+        {
+            _temporizadorAlarma.Stop();
+            VisibilidadOverlayAlarma = Visibility.Collapsed;
+        }
+
         private void EjecutarCerrarOverlay()
         {
             _overlayTimer.Stop();
@@ -798,6 +836,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
         private void IniciarTemporizador()
         {
+            OcultarOverlayAlarma();
+
             _contador = 30;
             TextoContador = _contador.ToString();
             ColorContador = Brushes.Black;
@@ -825,8 +865,13 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
                 VisibilidadInfoCancion = Visibility.Collapsed;
 
-                MostrarMensaje?.Invoke("¡Tiempo terminado!");
+                MostrarOverlayAlarma();
             }
+        }
+
+        private void TemporizadorAlarma_Tick(object sender, EventArgs e)
+        {
+            OcultarOverlayAlarma();
         }
 
         private void SalasServicio_JugadorSeUnio(object sender, string nombreJugador)
