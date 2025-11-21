@@ -39,7 +39,7 @@
                                VerticalAlignment="Center" Margin="0,15,0,0"/>
 
                     <CheckBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" 
-                              Margin="86,19,77,0" 
+                              Margin="95,17,64,0"
                               IsChecked="{Binding SonidosSilenciados, Mode=TwoWay}" Height="15"/>
                 </Grid>
 
