@@ -24,7 +24,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
     /// </summary>
     public class VentanaPrincipalVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private string _nombreUsuario;
@@ -361,7 +361,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
-                Log.InfoFormat("Inicializando suscripciones para usuario: {0}",
+				_logger.InfoFormat("Inicializando suscripciones para usuario: {0}",
                     _nombreUsuarioSesion);
                 await _listaAmigosServicio.SuscribirAsync(_nombreUsuarioSesion).
                     ConfigureAwait(false);
@@ -374,7 +374,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error al inicializar suscripciones.", ex);
+                _logger.Error("Error al inicializar suscripciones.", ex);
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
         }
@@ -393,7 +393,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
-                Log.Info("Cancelando suscripciones al finalizar ventana principal.");
+                _logger.Info("Cancelando suscripciones al finalizar ventana principal.");
                 await _listaAmigosServicio.CancelarSuscripcionAsync(
                     _nombreUsuarioSesion).ConfigureAwait(false);
                 await _amigosServicio.CancelarSuscripcionAsync(
@@ -401,7 +401,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
-                Log.WarnFormat("Error al cancelar suscripciones (ignorado): {0}",
+                _logger.WarnFormat("Error al cancelar suscripciones (ignorado): {0}",
                     ex.Message);
             }
             finally
@@ -557,7 +557,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
             {
-                Log.Warn("Intento de eliminar amigo sin sesión activa.");
+                _logger.Warn("Intento de eliminar amigo sin sesión activa.");
                 SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
                 return;
@@ -565,7 +565,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
-                Log.InfoFormat("Eliminando amigo: {0}",
+                _logger.InfoFormat("Eliminando amigo: {0}",
                     amigo.NombreUsuario);
                 SonidoManejador.ReproducirExito();
                 await _amigosServicio.EliminarAmigoAsync(
@@ -575,7 +575,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error al eliminar amigo.", ex);
+                _logger.Error("Error al eliminar amigo.", ex);
                 SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
@@ -613,7 +613,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
-                Log.InfoFormat("Intentando unirse a sala: {0}",
+                _logger.InfoFormat("Intentando unirse a sala: {0}",
                     codigo);
                 var sala = await _salasServicio.UnirseSalaAsync(
                     codigo,
@@ -624,7 +624,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error al unirse a sala.", ex);
+                _logger.Error("Error al unirse a sala.", ex);
 
                 string mensaje;
                 if (ex?.Tipo == TipoErrorServicio.FallaServicio || string.IsNullOrWhiteSpace
@@ -668,7 +668,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
-                Log.Info("Creando nueva sala de juego.");
+                _logger.Info("Creando nueva sala de juego.");
                 var sala = await _salasServicio.CrearSalaAsync(
                     _nombreUsuarioSesion,
                     configuracion).ConfigureAwait(true);
@@ -678,7 +678,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error al crear sala de juego.", ex);
+                _logger.Error("Error al crear sala de juego.", ex);
                 SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }

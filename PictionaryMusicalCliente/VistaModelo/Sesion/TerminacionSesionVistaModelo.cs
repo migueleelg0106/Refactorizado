@@ -11,7 +11,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Sesion
     /// </summary>
     public class TerminacionSesionVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Sesion
 
         private void EjecutarAceptar()
         {
-            Log.Info("Usuario confirmó el cierre de sesión.");
+            _logger.Info("Usuario confirmó el cierre de sesión.");
             SesionUsuarioActual.CerrarSesion();
             EjecutarCierreSesionYNavegacion?.Invoke();
 
@@ -54,7 +54,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Sesion
 
         private void EjecutarCancelar()
         {
-            Log.Info("Usuario canceló el cierre de sesión.");
+            _logger.Info("Usuario canceló el cierre de sesión.");
             OcultarDialogo?.Invoke();
         }
     }

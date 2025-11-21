@@ -17,7 +17,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
     /// </summary>
     public class VerificacionCodigoVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int SegundosEsperaReenvio = 30;
@@ -184,7 +184,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
-                Log.Info("Enviando código de verificación al servidor.");
+				_logger.Info("Enviando código de verificación al servidor.");
                 DTOs.ResultadoRegistroCuentaDTO resultado = await _codigoVerificacionServicio
                     .ConfirmarCodigoRegistroAsync(
                         _tokenCodigo,
@@ -192,7 +192,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (resultado == null)
                 {
-                    Log.Error("El servicio de verificación retornó null.");
+                    _logger.Error("El servicio de verificación retornó null.");
                     SonidoManejador.ReproducirError();
                     MarcarCodigoInvalido?.Invoke(true);
                     AvisoAyudante.Mostrar(Lang.errorTextoVerificarCodigo);
@@ -201,7 +201,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (!resultado.RegistroExitoso)
                 {
-                    Log.WarnFormat("Verificación fallida: {0}",
+                    _logger.WarnFormat("Verificación fallida: {0}",
                         resultado.Mensaje);
                     SonidoManejador.ReproducirError();
                     string mensajeOriginal = resultado.Mensaje;
@@ -221,7 +221,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                             Lang.avisoTextoCodigoExpirado,
                             StringComparison.Ordinal))
                     {
-                        Log.Info("Código expirado detectado durante verificación.");
+                        _logger.Info("Código expirado detectado durante verificación.");
                         DetenerTemporizadores();
                         VerificacionCompletada?.Invoke(resultado);
                         return;
@@ -231,7 +231,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                     return;
                 }
 
-                Log.Info("Código verificado correctamente.");
+                _logger.Info("Código verificado correctamente.");
                 SonidoManejador.ReproducirExito();
                 MarcarCodigoInvalido?.Invoke(false);
                 DetenerTemporizadores();
@@ -239,7 +239,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error de servicio durante la verificación del código.", ex);
+                _logger.Error("Error de servicio durante la verificación del código.", ex);
                 SonidoManejador.ReproducirError();
                 MarcarCodigoInvalido?.Invoke(true);
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoVerificarCodigo);
@@ -259,13 +259,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
-                Log.Info("Solicitando reenvío de código de verificación.");
+                _logger.Info("Solicitando reenvío de código de verificación.");
                 DTOs.ResultadoSolicitudCodigoDTO resultado = await _codigoVerificacionServicio
                     .ReenviarCodigoRegistroAsync(_tokenCodigo).ConfigureAwait(true);
 
                 if (resultado?.CodigoEnviado == true)
                 {
-                    Log.Info("Código reenviado exitosamente.");
+                    _logger.Info("Código reenviado exitosamente.");
                     SonidoManejador.ReproducirExito();
                     if (!string.IsNullOrWhiteSpace(resultado.TokenCodigo))
                     {
@@ -276,7 +276,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
                 else
                 {
-                    Log.WarnFormat("Fallo al reenviar código: {0}",
+                    _logger.WarnFormat("Fallo al reenviar código: {0}",
                         resultado?.Mensaje);
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(
@@ -285,7 +285,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Excepción de servicio al reenviar código.", ex);
+                _logger.Error("Excepción de servicio al reenviar código.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoSolicitarNuevoCodigo);
             }
@@ -293,7 +293,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
         private void Cancelar()
         {
-            Log.Info("Operación de verificación cancelada por el usuario.");
+            _logger.Info("Operación de verificación cancelada por el usuario.");
             DetenerTemporizadores();
             Cancelado?.Invoke();
         }
@@ -328,7 +328,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
         private void TemporizadorExpiracionTick(object sender, EventArgs e)
         {
-            Log.Info("El tiempo de validez del código ha expirado.");
+            _logger.Info("El tiempo de validez del código ha expirado.");
             _temporizadorExpiracion.Stop();
             AvisoAyudante.Mostrar(Lang.avisoTextoCodigoExpirado);
             DetenerTemporizadores();

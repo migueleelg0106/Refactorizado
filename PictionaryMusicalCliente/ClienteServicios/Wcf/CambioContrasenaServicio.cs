@@ -14,7 +14,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class CambioContrasenaServicio : ICambioContrasenaServicio
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(CambioContrasenaServicio));
+        private static readonly ILog _logger = 
+            LogManager.GetLogger(typeof(CambioContrasenaServicio));
         private const string Endpoint = "BasicHttpBinding_ICambioContrasenaManejador";
 
         /// <summary>

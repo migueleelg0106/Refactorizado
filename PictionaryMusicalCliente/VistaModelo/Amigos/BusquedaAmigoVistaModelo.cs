@@ -17,7 +17,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     /// </summary>
     public class BusquedaAmigoVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IAmigosServicio _amigosServicio;
@@ -116,7 +116,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             if (string.IsNullOrWhiteSpace(_usuarioActual))
             {
-                Log.Warn("Intento de enviar solicitud sin usuario actual en sesión.");
+                _logger.Warn("Intento de enviar solicitud sin usuario actual en sesión.");
                 AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
@@ -125,7 +125,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                Log.InfoFormat("Enviando solicitud de amistad de {0} a {1}",
+                _logger.InfoFormat("Enviando solicitud de amistad de {0} a {1}",
                     _usuarioActual, nombreAmigo);
                 await _amigosServicio.EnviarSolicitudAsync(
                     _usuarioActual,
@@ -137,7 +137,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (FaultException ex)
             {
-                Log.ErrorFormat("Error WCF (Fault) al enviar solicitud a {0}.",
+                _logger.ErrorFormat("Error WCF (Fault) al enviar solicitud a {0}.",
                     nombreAmigo, ex);
                 SonidoManejador.ReproducirError();
 
@@ -148,7 +148,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (ServicioExcepcion ex)
             {
-                Log.ErrorFormat("Error de servicio al enviar solicitud a {0}.",
+                _logger.ErrorFormat("Error de servicio al enviar solicitud a {0}.",
                     nombreAmigo, ex);
                 SonidoManejador.ReproducirError(); 
                 AvisoAyudante.Mostrar(ex.Message);

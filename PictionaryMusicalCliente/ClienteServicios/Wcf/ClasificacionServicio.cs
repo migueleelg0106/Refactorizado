@@ -15,7 +15,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class ClasificacionServicio : IClasificacionServicio
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(ClasificacionServicio));
+        private static readonly ILog _logger = 
+            LogManager.GetLogger(typeof(ClasificacionServicio));
         private const string ClasificacionEndpoint = "BasicHttpBinding_IClasificacionManejador";
 
         /// <summary>

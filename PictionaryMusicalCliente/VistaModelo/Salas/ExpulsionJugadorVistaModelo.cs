@@ -12,7 +12,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
     /// </summary>
     public class ExpulsionJugadorVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
@@ -28,14 +28,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             ConfirmarComando = new ComandoDelegado(_ =>
             {
                 SonidoManejador.ReproducirClick();
-                Log.Info("Usuario confirmó la expulsión del jugador.");
+                _logger.Info("Usuario confirmó la expulsión del jugador.");
                 Cerrar?.Invoke(true);
             });
 
             CancelarComando = new ComandoDelegado(_ =>
             {
                 SonidoManejador.ReproducirClick();
-                Log.Info("Usuario canceló la expulsión del jugador.");
+                _logger.Info("Usuario canceló la expulsión del jugador.");
                 Cerrar?.Invoke(false);
             });
         }

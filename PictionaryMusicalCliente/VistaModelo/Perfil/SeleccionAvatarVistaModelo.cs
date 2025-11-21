@@ -16,7 +16,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
     /// </summary>
     public class SeleccionAvatarVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private ObjetoAvatar _avatarSeleccionado;
@@ -73,13 +73,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         {
             if (AvatarSeleccionado == null)
             {
-                Log.Warn("Intento de confirmar selección sin avatar elegido.");
+				_logger.Warn("Intento de confirmar selección sin avatar elegido.");
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoSeleccionAvatarValido);
                 return;
             }
 
-            Log.InfoFormat("Avatar seleccionado: ID {0}",
+            _logger.InfoFormat("Avatar seleccionado: ID {0}",
                 AvatarSeleccionado.Id);
             SeleccionConfirmada?.Invoke(AvatarSeleccionado);
             CerrarAccion?.Invoke();

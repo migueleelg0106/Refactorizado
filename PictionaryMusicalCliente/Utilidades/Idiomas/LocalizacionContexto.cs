@@ -14,7 +14,7 @@ namespace PictionaryMusicalCliente.Utilidades.Idiomas
     /// </summary>
     public class LocalizacionContexto : INotifyPropertyChanged
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace PictionaryMusicalCliente.Utilidades.Idiomas
 
         private void LocalizacionServicioEnIdiomaActualizado(object sender, EventArgs e)
         {
-            Log.InfoFormat("Actualizando UI a nueva cultura: {0}",
+            _logger.InfoFormat("Actualizando UI a nueva cultura: {0}",
                 Lang.Culture?.Name);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
         }

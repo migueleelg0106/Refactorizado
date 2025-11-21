@@ -24,7 +24,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
     /// </summary>
     public class InicioSesionVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IInicioSesionServicio _inicioSesionServicio;
@@ -219,7 +219,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
                 if (salasServicio == null)
                 {
-                    Log.Error("La fábrica de servicios devolvió un servicio de salas nulo.");
+					_logger.Error("La fábrica de servicios devolvió un servicio de salas nulo.");
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
                     return Task.CompletedTask;
@@ -230,7 +230,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
                 vistaModelo.SalaUnida = (sala, nombreInvitado) =>
                 {
-                    Log.InfoFormat("Invitado {0} se unió a sala {1}",
+                    _logger.InfoFormat("Invitado {0} se unió a sala {1}",
                         nombreInvitado, sala.Codigo);
                     AbrirVentanaJuegoInvitado?.Invoke(sala, salasServicio, nombreInvitado);
                 };
@@ -254,7 +254,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             {
                 // Capturamos Exception general aqui solo para limpiar el recurso y loguear
                 // dado que factory.Invoke() podria lanzar excepciones no tipadas.
-                Log.Error("Error crítico al iniciar flujo de invitado.", ex);
+                _logger.Error("Error crítico al iniciar flujo de invitado.", ex);
                 salasServicio?.Dispose();
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
@@ -269,7 +269,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             if (!esValido)
             {
                 SonidoManejador.ReproducirError();
-                Log.Warn("Intento de inicio de sesión con campos vacíos.");
+                _logger.Warn("Intento de inicio de sesión con campos vacíos.");
                 return;
             }
 
@@ -283,7 +283,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                     Contrasena = _contrasena
                 };
 
-                Log.InfoFormat("Intentando iniciar sesión para: {0}",
+                _logger.InfoFormat("Intentando iniciar sesión para: {0}",
                     identificadorTrimmed);
                 DTOs.ResultadoInicioSesionDTO resultado = await _inicioSesionServicio
                     .IniciarSesionAsync(solicitud).ConfigureAwait(true);
@@ -292,7 +292,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Excepción de servicio durante inicio de sesión.", ex);
+                _logger.Error("Excepción de servicio durante inicio de sesión.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorInicioSesion);
             }
@@ -336,7 +336,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         {
             if (resultado == null)
             {
-                Log.Error("El servicio de inicio de sesión retornó null.");
+                _logger.Error("El servicio de inicio de sesión retornó null.");
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoServidorInicioSesion);
                 return;
@@ -344,7 +344,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!resultado.InicioSesionExitoso)
             {
-                Log.WarnFormat("Inicio de sesión fallido. Mensaje servidor: {0}",
+                _logger.WarnFormat("Inicio de sesión fallido. Mensaje servidor: {0}",
                     resultado.Mensaje);
                 SonidoManejador.ReproducirError();
                 MostrarErrorInicioSesion(resultado);
@@ -353,7 +353,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (resultado.Usuario != null)
             {
-                Log.InfoFormat("Sesión establecida exitosamente para ID: {0}", 
+                _logger.InfoFormat("Sesión establecida exitosamente para ID: {0}", 
                     resultado.Usuario.UsuarioId);
                 SesionUsuarioActual.EstablecerUsuario(resultado.Usuario);
             }
@@ -393,7 +393,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             try
             {
-                Log.InfoFormat("Solicitando recuperación de cuenta para: {0}", 
+                _logger.InfoFormat("Solicitando recuperación de cuenta para: {0}", 
                     identificador);
                 DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
                     .RecuperarCuentaAsync(identificador, _cambioContrasenaServicio).
@@ -402,7 +402,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace
                     (resultado.Mensaje))
                 {
-                    Log.WarnFormat("Recuperación fallida o cancelada: {0}",
+                    _logger.WarnFormat("Recuperación fallida o cancelada: {0}",
                         resultado.Mensaje);
                     SonidoManejador.ReproducirError();
                     string mensajeLocalizado = MensajeServidorAyudante.Localizar(
@@ -414,7 +414,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error al intentar recuperar cuenta.", ex);
+                _logger.Error("Error al intentar recuperar cuenta.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ??
                     Lang.errorTextoServidorSolicitudCambioContrasena);

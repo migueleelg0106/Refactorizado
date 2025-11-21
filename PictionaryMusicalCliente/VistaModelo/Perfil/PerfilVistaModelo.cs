@@ -26,7 +26,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
     /// </summary>
     public class PerfilVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string RedSocialInstagram = "Instagram";
@@ -230,7 +230,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             if (sesion == null || sesion.IdUsuario <= 0)
             {
-                Log.Warn("Intento de cargar perfil sin sesión válida.");
+				_logger.Warn("Intento de cargar perfil sin sesión válida.");
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
                 CerrarAccion?.Invoke();
@@ -246,7 +246,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (perfil == null)
                 {
-                    Log.ErrorFormat("Perfil obtenido es nulo para ID: {0}",
+                    _logger.ErrorFormat("Perfil obtenido es nulo para ID: {0}",
                         sesion.IdUsuario);
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorObtenerPerfil);
@@ -257,7 +257,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error de servicio al obtener perfil.", ex);
+                _logger.Error("Error de servicio al obtener perfil.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorObtenerPerfil);
             }
@@ -324,14 +324,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
-                Log.InfoFormat("Guardando cambios de perfil para usuario ID: {0}",
+                _logger.InfoFormat("Guardando cambios de perfil para usuario ID: {0}",
                     _usuarioId);
                 DTOs.ResultadoOperacionDTO resultado = await _perfilServicio
                     .ActualizarPerfilAsync(solicitud).ConfigureAwait(true);
 
                 if (resultado == null)
                 {
-                    Log.Error("El servicio de actualización de perfil devolvió null.");
+                    _logger.Error("El servicio de actualización de perfil devolvió null.");
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorActualizarPerfil);
                     return;
@@ -352,13 +352,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
                 else
                 {
-                    Log.WarnFormat("Error al guardar perfil: {0}",
+                    _logger.WarnFormat("Error al guardar perfil: {0}",
                         resultado.Mensaje);
                 }
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Excepción de servicio al actualizar perfil.", ex);
+                _logger.Error("Excepción de servicio al actualizar perfil.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorActualizarPerfil);
             }
@@ -455,7 +455,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
-                Log.InfoFormat("Iniciando solicitud de cambio de contraseña para: {0}",
+                _logger.InfoFormat("Iniciando solicitud de cambio de contraseña para: {0}",
                     Correo);
                 DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
                     .RecuperarCuentaAsync(
@@ -465,20 +465,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (resultado?.OperacionExitosa == false &&
                     !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
-                    Log.WarnFormat("Error en cambio de contraseña: {0}",
+                    _logger.WarnFormat("Error en cambio de contraseña: {0}",
                         resultado.Mensaje);
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(resultado.Mensaje);
                 }
                 else if (resultado?.OperacionExitosa == true)
                 {
-                    Log.Info("Cambio de contraseña finalizado correctamente.");
+                    _logger.Info("Cambio de contraseña finalizado correctamente.");
                     SonidoManejador.ReproducirExito();
                 }
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Excepción al cambiar contraseña.", ex);
+                _logger.Error("Excepción al cambiar contraseña.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoIniciarCambioContrasena);
             }

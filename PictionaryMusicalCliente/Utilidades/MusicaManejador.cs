@@ -9,7 +9,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
     /// </summary>
     public class MusicaManejador : IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const double VolumenPredeterminado = 0.5;
@@ -93,7 +93,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         {
             if (string.IsNullOrWhiteSpace(nombreArchivo))
             {
-                Log.Warn("Se intentó reproducir música con nombre de archivo vacío.");
+                _logger.Warn("Se intentó reproducir música con nombre de archivo vacío.");
                 return;
             }
 
@@ -110,17 +110,17 @@ namespace PictionaryMusicalCliente.ClienteServicios
             }
             catch (UriFormatException ex)
             {
-                Log.ErrorFormat("Formato URI inválido para música: {0}", 
+                _logger.ErrorFormat("Formato URI inválido para música: {0}", 
                     nombreArchivo, ex);
             }
             catch (InvalidOperationException ex)
             {
-                Log.ErrorFormat("Error de operación al abrir música: {0}", 
+                _logger.ErrorFormat("Error de operación al abrir música: {0}", 
                     nombreArchivo, ex);
             }
             catch (System.IO.IOException ex)
             {
-                Log.ErrorFormat("Error de E/S al cargar música: {0}",
+                _logger.ErrorFormat("Error de E/S al cargar música: {0}",
                     nombreArchivo, ex);
             }
         }
@@ -205,13 +205,13 @@ namespace PictionaryMusicalCliente.ClienteServicios
         {
             _reproductor.Play();
             EstaReproduciendo = true;
-            Log.Info("Reproducción de música iniciada exitosamente.");
+            _logger.Info("Reproducción de música iniciada exitosamente.");
         }
 
         private void EnMedioFallido(object sender, ExceptionEventArgs e)
         {
             EstaReproduciendo = false;
-            Log.ErrorFormat("Fallo crítico en reproducción de medio: {0}",
+            _logger.ErrorFormat("Fallo crítico en reproducción de medio: {0}",
                 e.ErrorException.Message, e.ErrorException);
         }
 

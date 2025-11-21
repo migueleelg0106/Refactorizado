@@ -10,7 +10,7 @@ namespace PictionaryMusicalCliente.Sesiones
     /// </summary>
     public sealed class SesionUsuarioActual
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static readonly Lazy<SesionUsuarioActual> _instancia =
@@ -47,7 +47,7 @@ namespace PictionaryMusicalCliente.Sesiones
             }
 
             Usuario.CargarDesdeDTO(usuarioDto);
-            Log.InfoFormat("Sesión establecida para usuario ID: {0}, Username: {1}", 
+            _logger.InfoFormat("Sesión establecida para usuario ID: {0}, Username: {1}", 
                 usuarioDto.UsuarioId, usuarioDto.NombreUsuario);
         }
 
@@ -58,7 +58,7 @@ namespace PictionaryMusicalCliente.Sesiones
         {
             if (EstaAutenticado)
             {
-                Log.InfoFormat("Cerrando sesión de usuario: {0}", 
+                _logger.InfoFormat("Cerrando sesión de usuario: {0}", 
                     Usuario.NombreUsuario);
             }
             Usuario.Limpiar();

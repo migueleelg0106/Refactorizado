@@ -2,7 +2,6 @@
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Sesiones;
 using PictionaryMusicalCliente.Modelo;
 using System;
@@ -28,7 +27,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
     /// </summary>
     public class VentanaJuegoVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int MaximoJugadoresSala = 4;
@@ -583,7 +582,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             try
             {
-                Log.InfoFormat("Enviando invitación por correo a: {0}",
+				_logger.InfoFormat("Enviando invitación por correo a: {0}",
 					correo);
                 var resultado = await _invitacionesServicio
                     .EnviarInvitacionAsync(_codigoSala, correo)
@@ -597,7 +596,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 }
                 else
                 {
-                    Log.WarnFormat("Fallo al enviar invitación: {0}",
+                    _logger.WarnFormat("Fallo al enviar invitación: {0}",
 						resultado?.Mensaje);
                     SonidoManejador.ReproducirError();
 					MostrarMensaje?.Invoke(resultado?.Mensaje ?? Lang.errorTextoEnviarCorreo);
@@ -605,19 +604,19 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 			}
 			catch (ServicioExcepcion ex)
 			{
-				Log.Error("Excepción de servicio al enviar invitación.", ex);
+				_logger.Error("Excepción de servicio al enviar invitación.", ex);
 				SonidoManejador.ReproducirError();
 				MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
 			}
 			catch (ArgumentException ex)
 			{
-				Log.Error("Error de argumento al enviar invitación.", ex);
+				_logger.Error("Error de argumento al enviar invitación.", ex);
 				SonidoManejador.ReproducirError();
 				MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
 			}
 			catch (Exception ex)
 			{
-				Log.Error("Error inesperado al invitar.", ex);
+				_logger.Error("Error inesperado al invitar.", ex);
 				SonidoManejador.ReproducirError();
 				MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
 			}
@@ -631,14 +630,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 _invitacionesServicio == null ||
                 _perfilServicio == null)
             {
-                Log.Warn("Servicios de invitación no inicializados.");
+                _logger.Warn("Servicios de invitación no inicializados.");
                 MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
             {
-                Log.Warn("Intento de invitar amigos sin usuario de sesión.");
+                _logger.Warn("Intento de invitar amigos sin usuario de sesión.");
                 MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
@@ -653,7 +652,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             }
             catch (Exception ex) when (ex is ServicioExcepcion || ex is ArgumentException)
             {
-                Log.Error("Error al obtener lista de amigos para invitar.", ex);
+                _logger.Error("Error al obtener lista de amigos para invitar.", ex);
                 SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
                 return;
@@ -699,7 +698,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 return;
             }
 
-            Log.Info("Iniciando partida...");
+            _logger.Info("Iniciando partida...");
             JuegoIniciado = true;
             VisibilidadCuadriculaDibujo = Visibility.Visible;
             EsHerramientaLapiz = true;
@@ -852,7 +851,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                     return;
                 }
 
-                Log.InfoFormat("Jugador unido a la sala: {0}",
+                _logger.InfoFormat("Jugador unido a la sala: {0}",
 					nombreJugador);
                 AgregarJugador(nombreJugador);
             });
@@ -874,7 +873,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
                 if (jugadorExistente != null)
                 {
-                    Log.InfoFormat("Jugador salió de la sala: {0}",
+                    _logger.InfoFormat("Jugador salió de la sala: {0}",
 						nombreJugador);
                     Jugadores.Remove(jugadorExistente);
                 }
@@ -890,7 +889,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                     _nombreUsuarioSesion,
                     StringComparison.OrdinalIgnoreCase))
                 {
-                    Log.Info("Este usuario ha sido expulsado de la sala.");
+                    _logger.Info("Este usuario ha sido expulsado de la sala.");
                     DestinoNavegacion destino = _esInvitado
                         ? DestinoNavegacion.InicioSesion
                         : DestinoNavegacion.VentanaPrincipal;
@@ -906,7 +905,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 }
                 else
                 {
-                    Log.InfoFormat("Jugador expulsado de la sala: {0}",
+                    _logger.InfoFormat("Jugador expulsado de la sala: {0}",
 						nombreJugador);
                     var jugador = Jugadores.FirstOrDefault(j => string.Equals(
                         j.Nombre,
@@ -1015,7 +1014,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             try
             {
-                Log.InfoFormat("Solicitando expulsión de: {0}",
+                _logger.InfoFormat("Solicitando expulsión de: {0}",
 					nombreJugador);
                 await _salasServicio.ExpulsarJugadorAsync(
                     _codigoSala,
@@ -1027,7 +1026,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             }
             catch (Exception ex) when (ex is ServicioExcepcion || ex is ArgumentException)
             {
-                Log.ErrorFormat("Error al expulsar jugador {0}.",
+                _logger.ErrorFormat("Error al expulsar jugador {0}.",
 					nombreJugador, ex);
                 SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoExpulsarJugador);
@@ -1067,7 +1066,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             {
                 try
                 {
-                    Log.InfoFormat("Abandonando sala {0} al finalizar vista.",
+                    _logger.InfoFormat("Abandonando sala {0} al finalizar vista.",
 						_sala.Codigo);
                     await _salasServicio.AbandonarSalaAsync(
                         _sala.Codigo,
@@ -1075,7 +1074,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 }
                 catch (ServicioExcepcion ex)
                 {
-                    Log.WarnFormat("Error al abandonar sala en finalización: {0}",
+                    _logger.WarnFormat("Error al abandonar sala en finalización: {0}",
 						ex.Message);
                 }
             }

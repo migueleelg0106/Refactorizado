@@ -23,8 +23,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaPrincipal
         private Mock<ISalasServicio> _mockSalasServicio;
         private VentanaPrincipalVistaModelo _vistaModelo;
 
-        private const string UsuarioTest = "UsuarioPrueba";
-
         [TestInitialize]
         public void Inicializar()
         {

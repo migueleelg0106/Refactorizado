@@ -12,7 +12,7 @@ namespace PictionaryMusicalCliente.Utilidades
     /// </summary>
     public static class NombreInvitadoGenerador
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static readonly object _sync = new();
@@ -34,7 +34,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (string.IsNullOrWhiteSpace(opciones))
             {
-                Log.ErrorFormat("No se encontraron nombres de invitados para cultura: {0}",
+                _logger.ErrorFormat("No se encontraron nombres de invitados para cultura: {0}",
                     culturaEfectiva);
                 return null;
             }
@@ -47,7 +47,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (nombres.Length == 0)
             {
-                Log.Warn("La lista de nombres parseada está vacía.");
+                _logger.Warn("La lista de nombres parseada está vacía.");
                 return null;
             }
 
@@ -63,7 +63,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (nombresDisponibles.Length == 0)
             {
-                Log.Info("Todos los nombres disponibles ya han sido utilizados.");
+                _logger.Info("Todos los nombres disponibles ya han sido utilizados.");
                 return null;
             }
 
@@ -80,7 +80,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (string.IsNullOrWhiteSpace(opciones) && cultura != CultureInfo.InvariantCulture)
             {
-                Log.WarnFormat("Falta recurso 'invitadoNombres' en {0}, usando Invariant.",
+                _logger.WarnFormat("Falta recurso 'invitadoNombres' en {0}, usando Invariant.",
                     cultura);
                 opciones = Lang.ResourceManager.GetString(
                     "invitadoNombres",

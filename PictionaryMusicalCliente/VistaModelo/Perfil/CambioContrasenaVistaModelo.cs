@@ -18,7 +18,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
     /// </summary>
     public class CambioContrasenaVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly string _tokenCodigo;
@@ -119,7 +119,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             var camposInvalidos = ValidarEntradas();
             if (camposInvalidos != null && camposInvalidos.Count > 0)
             {
-                Log.Warn("Validación de contraseña fallida en cliente.");
+				_logger.Warn("Validación de contraseña fallida en cliente.");
                 SonidoManejador.ReproducirError();
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
                 return;
@@ -135,7 +135,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (resultadoCambio != null && resultadoCambio.OperacionExitosa)
                 {
-                    Log.Info("Contraseña actualizada exitosamente.");
+                    _logger.Info("Contraseña actualizada exitosamente.");
                     CambioContrasenaCompletado?.Invoke(resultadoCambio);
                 }
             }
@@ -195,7 +195,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (resultado == null)
                 {
-                    Log.Error("Servicio de cambio de contraseña devolvió null.");
+                    _logger.Error("Servicio de cambio de contraseña devolvió null.");
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoActualizarContrasena);
                     return null;
@@ -212,7 +212,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
                 else
                 {
-                    Log.WarnFormat("Fallo al actualizar contraseña en servidor: {0}",
+                    _logger.WarnFormat("Fallo al actualizar contraseña en servidor: {0}",
                         resultado.Mensaje);
                     SonidoManejador.ReproducirError();
                 }
@@ -223,7 +223,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Excepción de servicio al actualizar contraseña.", ex);
+                _logger.Error("Excepción de servicio al actualizar contraseña.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoActualizarContrasena);
                 return null;

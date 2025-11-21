@@ -12,7 +12,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     /// </summary>
     public class EliminacionAmigoVistaModelo : BaseVistaModelo
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             AceptarComando = new ComandoDelegado(_ =>
             {
                 SonidoManejador.ReproducirClick();
-                Log.InfoFormat("Usuario confirmó la eliminación del amigo: {0}",
+                _logger.InfoFormat("Usuario confirmó la eliminación del amigo: {0}",
                     nombreAmigo);
                 Cerrar?.Invoke(true);
             });
@@ -36,7 +36,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             CancelarComando = new ComandoDelegado(_ =>
             {
                 SonidoManejador.ReproducirClick();
-                Log.InfoFormat("Usuario canceló la eliminación del amigo: {0}",
+                _logger.InfoFormat("Usuario canceló la eliminación del amigo: {0}",
                     nombreAmigo);
                 Cerrar?.Invoke(false);
             });

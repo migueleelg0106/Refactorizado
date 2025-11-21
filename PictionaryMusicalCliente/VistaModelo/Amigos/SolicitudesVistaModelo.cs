@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     /// </summary>
     public sealed class SolicitudesVistaModelo : BaseVistaModelo, IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IAmigosServicio _amigosServicio;
@@ -187,7 +187,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         {
             if (entrada == null)
             {
-                Log.Warn("Intento de responder solicitud con entrada nula.");
+				_logger.Warn("Intento de responder solicitud con entrada nula.");
                 return;
             }
 
@@ -195,7 +195,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                Log.InfoFormat("Aceptando solicitud de amistad de: {0}",
+                _logger.InfoFormat("Aceptando solicitud de amistad de: {0}",
                     entrada.Solicitud.UsuarioEmisor);
                 await _amigosServicio.ResponderSolicitudAsync(
                     entrada.Solicitud.UsuarioEmisor,
@@ -206,7 +206,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error al aceptar solicitud de amistad.", ex);
+                _logger.Error("Error al aceptar solicitud de amistad.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
@@ -220,7 +220,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         {
             if (entrada == null)
             {
-                Log.Warn("Intento de rechazar solicitud con entrada nula.");
+                _logger.Warn("Intento de rechazar solicitud con entrada nula.");
                 return;
             }
 
@@ -228,7 +228,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                Log.InfoFormat("Rechazando/Cancelando solicitud con: {0}",
+                _logger.InfoFormat("Rechazando/Cancelando solicitud con: {0}",
                     entrada.NombreUsuario);
                 await _amigosServicio.EliminarAmigoAsync(
                     entrada.Solicitud.UsuarioEmisor,
@@ -239,7 +239,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error al rechazar/cancelar solicitud de amistad.", ex);
+                _logger.Error("Error al rechazar/cancelar solicitud de amistad.", ex);
                 SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }

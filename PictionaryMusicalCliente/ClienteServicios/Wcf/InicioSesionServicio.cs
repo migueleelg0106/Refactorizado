@@ -58,8 +58,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 else
                 {
-                    _logger.Warn("Inicio de sesión fallido: Credenciales incorrectas o cuenta no" +
-                        " encontrada.");
+                    _logger.Warn(
+                        "Log in fallido: Credenciales incorrectas o cuenta no encontrada.");
                 }
 
                 return resultadoDto;
@@ -98,8 +98,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al iniciar sesión (Estado del cliente " +
-                    "incorrecto).", ex);
+                _logger.Error(
+                    "Operación inválida al iniciar sesión (Estado del cliente incorrecto).", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,

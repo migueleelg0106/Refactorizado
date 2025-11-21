@@ -10,7 +10,7 @@ namespace PictionaryMusicalCliente.Utilidades
     /// </summary>
     public class CancionManejador : IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const double VolumenPredeterminado = 0.5;
@@ -59,7 +59,7 @@ namespace PictionaryMusicalCliente.Utilidades
         {
             if (string.IsNullOrWhiteSpace(nombreArchivo))
             {
-                Log.Warn("Se intentó reproducir una canción con nombre de archivo vacío.");
+                _logger.Warn("Se intentó reproducir una canción con nombre de archivo vacío.");
                 return;
             }
 
@@ -76,27 +76,27 @@ namespace PictionaryMusicalCliente.Utilidades
                     _reproductor.Open(new Uri(rutaCompleta, UriKind.Absolute));
                     _reproductor.Play();
                     EstaReproduciendo = true;
-                    Log.InfoFormat("Reproduciendo canción: {0}", nombreArchivo);
+                    _logger.InfoFormat("Reproduciendo canción: {0}", nombreArchivo);
                 }
                 else
                 {
-                    Log.ErrorFormat("Archivo de audio no encontrado en ruta: {0}",
+                    _logger.ErrorFormat("Archivo de audio no encontrado en ruta: {0}",
                         rutaCompleta);
                 }
             }
             catch (UriFormatException uriEx)
             {
-                Log.ErrorFormat("Formato de URI inválido para canción: {0}",
+                _logger.ErrorFormat("Formato de URI inválido para canción: {0}",
                     nombreArchivo, uriEx);
             }
             catch (InvalidOperationException opEx)
             {
-                Log.ErrorFormat("Error de operación en reproductor para: {0}", 
+                _logger.ErrorFormat("Error de operación en reproductor para: {0}", 
                     nombreArchivo, opEx);
             }
             catch (ArgumentException argEx)
             {
-                Log.ErrorFormat("Argumento inválido en ruta de canción: {0}",
+                _logger.ErrorFormat("Argumento inválido en ruta de canción: {0}",
                     nombreArchivo, argEx);
             }
         }
@@ -113,7 +113,7 @@ namespace PictionaryMusicalCliente.Utilidades
             }
             catch (InvalidOperationException ex)
             {
-                Log.Error("Error al intentar detener la reproducción.", ex);
+                _logger.Error("Error al intentar detener la reproducción.", ex);
             }
         }
 
@@ -142,7 +142,7 @@ namespace PictionaryMusicalCliente.Utilidades
                     {
                         // Se usa Exception aqui para evitar fugas en el Dispose, 
                         // pero se loguea como advertencia.
-                        Log.Warn("Excepción durante Dispose de CancionManejador.", ex);
+                        _logger.Warn("Excepción durante Dispose de CancionManejador.", ex);
                     }
                 }
                 _desechado = true;
