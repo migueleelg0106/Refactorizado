@@ -10,7 +10,7 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
     /// <summary>
-    /// Provee servicios para el flujo de recuperacion y cambio de contraseña.
+    /// Provee servicios para el flujo de recuperacion y cambio de contraseï¿½a.
     /// </summary>
     public class CambioContrasenaServicio : ICambioContrasenaServicio
     {
@@ -39,7 +39,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado != null && resultado.CodigoEnviado)
             {
-                _logger.Info($"Código de recuperación solicitado para: {identificador}");
+                _logger.Info("Cï¿½digo de recuperaciï¿½n solicitado para: {0}", identificador);
             }
 
             return resultado == null ? null : new DTOs.ResultadoSolicitudRecuperacionDTO
@@ -73,7 +73,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado != null && resultado.CodigoEnviado)
             {
-                _logger.Info("Reenvío de código de recuperación solicitado.");
+                _logger.Info("Reenvï¿½o de cï¿½digo de recuperaciï¿½n solicitado.");
             }
 
             return resultado == null ? null : new DTOs.ResultadoSolicitudCodigoDTO
@@ -114,7 +114,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado != null && resultado.OperacionExitosa)
             {
-                _logger.Info("Código de recuperación confirmado.");
+                _logger.Info("Cï¿½digo de recuperaciï¿½n confirmado.");
             }
 
             return resultado == null ? null : new DTOs.ResultadoOperacionDTO
@@ -125,7 +125,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         }
 
         /// <summary>
-        /// Establece la nueva contraseña despues de haber verificado el codigo.
+        /// Establece la nueva contraseï¿½a despues de haber verificado el codigo.
         /// </summary>
         public async Task<DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(
             string tokenCodigo,
@@ -161,7 +161,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado != null && resultado.OperacionExitosa)
             {
-                _logger.Info("Contraseña actualizada mediante recuperación.");
+                _logger.Info("Contraseï¿½a actualizada mediante recuperaciï¿½n.");
             }
 
             return resultado == null ? null : new DTOs.ResultadoOperacionDTO
@@ -181,8 +181,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
-                _logger.Warn($"Error de servidor en flujo de cambio de contraseña: " +
-                    $"{mensajeFallaPredeterminado}", ex);
+                _logger.Warn("Error de servidor en flujo de cambio de contraseï¿½a: " +
+                    "{0}", mensajeFallaPredeterminado, ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     mensajeFallaPredeterminado);
@@ -190,7 +190,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
-                _logger.Error("Endpoint no encontrado en flujo de cambio de contraseña.", ex);
+                _logger.Error("Endpoint no encontrado en flujo de cambio de contraseï¿½a.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -198,7 +198,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
-                _logger.Error("Timeout en flujo de cambio de contraseña.", ex);
+                _logger.Error("Timeout en flujo de cambio de contraseï¿½a.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -206,7 +206,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación en flujo de cambio de contraseña.", ex);
+                _logger.Error("Error de comunicaciï¿½n en flujo de cambio de contraseï¿½a.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -214,7 +214,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida en flujo de cambio de contraseña.", ex);
+                _logger.Error("Operaciï¿½n invï¿½lida en flujo de cambio de contraseï¿½a.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoPrepararSolicitudCambioContrasena,

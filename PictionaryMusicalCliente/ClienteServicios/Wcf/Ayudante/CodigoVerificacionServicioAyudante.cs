@@ -35,7 +35,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             }
 
             solicitud.Idioma ??= ObtenerCodigoIdiomaActual();
-            _logger.Info($"Iniciando solicitud de código de registro para '{solicitud.Correo}'.");
+            _logger.Info("Iniciando solicitud de código de registro para '{0}'.", solicitud.Correo);
 
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
@@ -51,7 +51,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         public static Task<DTOs.ResultadoSolicitudRecuperacionDTO>
             SolicitarCodigoRecuperacionAsync(string identificador)
         {
-            _logger.Info($"Iniciando solicitud de código de recuperación para '{identificador}'.");
+            _logger.Info("Iniciando solicitud de código de recuperación para '{0}'.", identificador);
 
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);

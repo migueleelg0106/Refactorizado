@@ -31,12 +31,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     .UsarAsincronoAsync(cliente, c => c.ObtenerPerfilAsync(usuarioId))
                     .ConfigureAwait(false);
 
-                _logger.Info($"Perfil obtenido exitosamente para Usuario ID: {usuarioId}");
+                _logger.Info("Perfil obtenido exitosamente para Usuario ID: {0}", usuarioId);
                 return perfilDto;
             }
             catch (FaultException ex)
             {
-                _logger.Warn($"Fallo al obtener perfil para ID {usuarioId}.", ex);
+                _logger.Warn("Fallo al obtener perfil para ID {0}.", usuarioId, ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorObtenerPerfil);
@@ -60,7 +60,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación al obtener perfil.", ex);
+                _logger.Error("Error de comunicaciï¿½n al obtener perfil.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.avisoTextoComunicacionServidorSesion,
@@ -68,7 +68,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al obtener perfil.", ex);
+                _logger.Error("Operaciï¿½n invï¿½lida al obtener perfil.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoPerfilActualizarInformacion,
@@ -98,13 +98,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 if (resultado != null && resultado.OperacionExitosa)
                 {
-                    _logger.Info($"Perfil actualizado correctamente para Usuario ID: " +
-                        $"{solicitud.UsuarioId}");
+                    _logger.Info("Perfil actualizado correctamente para Usuario ID: " +
+                        "{0}", solicitud.UsuarioId);
                 }
                 else
                 {
-                    _logger.Warn($"No se pudo actualizar el perfil. Mensaje: " +
-                        $"{resultado?.Mensaje}");
+                    _logger.Warn("No se pudo actualizar el perfil. Mensaje: " +
+                        "{0}", resultado?.Mensaje);
                 }
 
                 return new DTOs.ResultadoOperacionDTO
@@ -139,7 +139,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación al actualizar perfil.", ex);
+                _logger.Error("Error de comunicaciï¿½n al actualizar perfil.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -147,7 +147,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al actualizar perfil.", ex);
+                _logger.Error("Operaciï¿½n invï¿½lida al actualizar perfil.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,

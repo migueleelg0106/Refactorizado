@@ -39,19 +39,19 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 if (resultado != null && resultado.RegistroExitoso)
                 {
-                    _logger.Info($"Registro de cuenta exitoso para: {solicitud.Correo}");
+                    _logger.Info("Registro de cuenta exitoso para: {0}", solicitud.Correo);
                 }
                 else
                 {
-                    _logger.Warn($"Registro de cuenta fallido para: {solicitud.Correo}. " +
-                        $"Razón: {resultado?.Mensaje}");
+                    _logger.Warn("Registro de cuenta fallido para: {0}. " +
+                        "Razï¿½n: {1}", solicitud.Correo, resultado?.Mensaje);
                 }
 
                 return resultado;
             }
             catch (FaultException ex)
             {
-                _logger.Warn("Servidor rechazó el registro (Validación/Negocio).", ex);
+                _logger.Warn("Servidor rechazï¿½ el registro (Validaciï¿½n/Negocio).", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoRegistrarCuentaMasTarde);
@@ -75,7 +75,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación al registrar cuenta.", ex);
+                _logger.Error("Error de comunicaciï¿½n al registrar cuenta.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -83,7 +83,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida al registrar cuenta.", ex);
+                _logger.Error("Operaciï¿½n invï¿½lida al registrar cuenta.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,

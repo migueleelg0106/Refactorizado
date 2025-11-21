@@ -31,7 +31,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
         /// </summary>
         public Task<ObjetoAvatar> SeleccionarAvatarAsync(int idAvatar)
         {
-            _logger.Info("Iniciando proceso de selección de avatar.");
+            _logger.Info("Iniciando proceso de selecciï¿½n de avatar.");
             var avatares = CatalogoAvataresLocales.ObtenerAvatares();
 
             if (avatares == null || avatares.Count == 0)
@@ -58,7 +58,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
                     vistaModelo.SeleccionConfirmada = avatar =>
                     {
-                        _logger.Info($"Avatar seleccionado: ID {avatar?.Id}");
+                        _logger.Info("Avatar seleccionado: ID {0}", avatar?.Id);
                         finalizacion.TrySetResult(avatar);
                     };
 
@@ -78,15 +78,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 }
                 catch (XamlParseException ex)
                 {
-                    _logger.Error("Error XAML al cargar la interfaz de selección de avatar.", ex);
+                    _logger.Error("Error XAML al cargar la interfaz de selecciï¿½n de avatar.", ex);
                     finalizacion.TrySetException(
                         new InvalidOperationException(
-                            "Error al cargar la interfaz de selección de avatar.",
+                            "Error al cargar la interfaz de selecciï¿½n de avatar.",
                             ex));
                 }
                 catch (InvalidOperationException ex)
                 {
-                    _logger.Error("Operación inválida al mostrar diálogo de avatar.", ex);
+                    _logger.Error("Operaciï¿½n invï¿½lida al mostrar diï¿½logo de avatar.", ex);
                     finalizacion.TrySetException(ex);
                 }
             });

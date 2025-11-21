@@ -19,12 +19,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         {
             if (dto == null)
             {
-                _logger.Info("Cerrando sesión local de usuario (DTO nulo).");
+                _logger.Info("Cerrando sesiï¿½n local de usuario (DTO nulo).");
                 SesionUsuarioActual.CerrarSesion();
                 return;
             }
 
-            _logger.Info($"Actualizando sesión local para usuario: {dto.NombreUsuario}");
+            _logger.Info("Actualizando sesiï¿½n local para usuario: {0}", dto.NombreUsuario);
             SesionUsuarioActual.EstablecerUsuario(dto);
         }
     }

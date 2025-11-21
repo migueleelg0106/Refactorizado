@@ -40,7 +40,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 throw new ArgumentNullException(nameof(cambioContrasenaServicio));
             }
 
-            _logger.Info($"Iniciando flujo de recuperación de cuenta para: {identificador}");
+            _logger.Info("Iniciando flujo de recuperaciï¿½n de cuenta para: {0}", identificador);
 
             var (solicitudExitosa, solicitudDTO, errorSolicitud) =
                 await SolicitarCodigoAsync(
@@ -49,8 +49,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             if (!solicitudExitosa)
             {
-                _logger.Warn($"Flujo detenido: No se pudo solicitar el código. Mensaje: " +
-                    $"{errorSolicitud?.Mensaje}");
+                _logger.Warn("Flujo detenido: No se pudo solicitar el cï¿½digo. Mensaje: " +
+                    "{0}", errorSolicitud?.Mensaje);
                 return errorSolicitud;
             }
 
@@ -63,7 +63,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             if (!verificacionExitosa)
             {
-                _logger.Warn($"Flujo detenido: Verificación de código fallida o cancelada.");
+                _logger.Warn("Flujo detenido: Verificaciï¿½n de cï¿½digo fallida o cancelada.");
                 return errorVerificacion;
             }
 
@@ -156,7 +156,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             vistaModelo.CambioContrasenaCompletado = resultado =>
             {
-                _logger.Info("Cambio de contraseña completado exitosamente.");
+                _logger.Info("Cambio de contraseï¿½a completado exitosamente.");
                 finalizacion.TrySetResult(
                     resultado ?? new DTOs.ResultadoOperacionDTO
                     {
@@ -168,7 +168,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             vistaModelo.Cancelado = () =>
             {
-                _logger.Info("Diálogo de cambio de contraseña cancelado.");
+                _logger.Info("Diï¿½logo de cambio de contraseï¿½a cancelado.");
                 finalizacion.TrySetResult(null);
                 ventana.Close();
             };

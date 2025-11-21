@@ -39,17 +39,17 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado == null)
             {
-                _logger.Warn("El servicio de confirmación de código retornó null.");
+                _logger.Warn("El servicio de confirmaciï¿½n de cï¿½digo retornï¿½ null.");
                 return null;
             }
 
             if (resultado.RegistroExitoso)
             {
-                _logger.Info($"Código de registro confirmado exitosamente. Token: {tokenCodigo}");
+                _logger.Info("Cï¿½digo de registro confirmado exitosamente. Token: {0}", tokenCodigo);
             }
             else
             {
-                _logger.Warn($"Confirmación de código fallida. Razón: {resultado.Mensaje}");
+                _logger.Warn("Confirmaciï¿½n de cï¿½digo fallida. Razï¿½n: {0}", resultado.Mensaje);
             }
 
             return resultado;
@@ -74,13 +74,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado == null)
             {
-                _logger.Warn("El servicio de reenvío de código retornó null.");
+                _logger.Warn("El servicio de reenvï¿½o de cï¿½digo retornï¿½ null.");
                 return null;
             }
 
             if (resultado.CodigoEnviado)
             {
-                _logger.Info($"Código de registro reenviado exitosamente. Token: {tokenCodigo}");
+                _logger.Info("Cï¿½digo de registro reenviado exitosamente. Token: {0}", tokenCodigo);
             }
 
             return resultado;
@@ -96,8 +96,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
-                _logger.Warn($"Error de lógica del servidor en verificación de código: " +
-                    $"{mensajeErrorPredeterminado}", ex);
+                _logger.Warn("Error de lï¿½gica del servidor en verificaciï¿½n de cï¿½digo: " +
+                    "{0}", mensajeErrorPredeterminado, ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     mensajeErrorPredeterminado);
@@ -105,7 +105,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
-                _logger.Error("Endpoint de verificación de código no encontrado.", ex);
+                _logger.Error("Endpoint de verificaciï¿½n de cï¿½digo no encontrado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -113,7 +113,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
-                _logger.Error("Timeout en servicio de verificación de código.", ex);
+                _logger.Error("Timeout en servicio de verificaciï¿½n de cï¿½digo.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -121,7 +121,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación en servicio de verificación.", ex);
+                _logger.Error("Error de comunicaciï¿½n en servicio de verificaciï¿½n.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -129,7 +129,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida en servicio de verificación.", ex);
+                _logger.Error("Operaciï¿½n invï¿½lida en servicio de verificaciï¿½n.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
