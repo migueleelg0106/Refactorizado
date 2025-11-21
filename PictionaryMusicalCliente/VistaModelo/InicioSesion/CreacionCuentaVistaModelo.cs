@@ -1,5 +1,6 @@
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
@@ -7,6 +8,7 @@ using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -28,6 +30,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private readonly ICuentaServicio _cuentaServicio;
         private readonly ISeleccionarAvatarServicio _seleccionarAvatarServicio;
         private readonly IVerificacionCodigoDialogoServicio _verificarCodigoDialogoServicio;
+        private readonly ILocalizacionServicio _localizacionServicio;
 
         private string _usuario;
         private string _nombre;
@@ -51,7 +54,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             ICodigoVerificacionServicio codigoVerificacionServicio,
             ICuentaServicio cuentaServicio,
             ISeleccionarAvatarServicio seleccionarAvatarServicio,
-            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio)
+            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio,
+            ILocalizacionServicio localizacionServicio = null)
         {
             _codigoVerificacionServicio = codigoVerificacionServicio ??
                 throw new ArgumentNullException(nameof(codigoVerificacionServicio));
@@ -61,6 +65,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
             _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ??
                 throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));
+            _localizacionServicio = localizacionServicio ?? LocalizacionServicio.Instancia;
 
             CrearCuentaComando = new ComandoAsincrono(async _ =>
             {
@@ -218,7 +223,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 if (!esValido)
                 {
                     SonidoManejador.ReproducirError();
-                    Log.Warn("Intento de creación de cuenta fallido por validación de campos.");
+                    Log.Warn("Intento de creaciÃ³n de cuenta fallido por validaciÃ³n de campos.");
                     return;
                 }
 
@@ -227,7 +232,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error("Error de servicio durante la creación de cuenta.", ex);
+                Log.Error("Error de servicio durante la creaciÃ³n de cuenta.", ex);
                 SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoRegistrarCuentaMasTarde);
             }
@@ -278,7 +283,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!verificacionExitosa)
             {
-                Log.Info("Verificación de código fallida o cancelada por el usuario.");
+                Log.Info("VerificaciÃ³n de cÃ³digo fallida o cancelada por el usuario.");
                 SonidoManejador.ReproducirError();
                 return;
             }
@@ -350,7 +355,9 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 Apellido = Apellido,
                 Correo = Correo,
                 Contrasena = Contrasena,
-                AvatarId = AvatarSeleccionadoId
+                AvatarId = AvatarSeleccionadoId,
+                Idioma = _localizacionServicio.CulturaActual?.Name
+                    ?? CultureInfo.CurrentUICulture?.Name
             };
             return (solicitud, camposInvalidos, primerMensajeError);
         }
@@ -377,7 +384,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (resultado == null)
             {
-                Log.Error("El servicio de código de verificación retornó null.");
+                Log.Error("El servicio de cÃ³digo de verificaciÃ³n retornÃ³ null.");
                 MostrarMensaje?.Invoke(Lang.errorTextoRegistrarCuentaMasTarde);
                 return (false, null, false);
             }
@@ -392,7 +399,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!resultado.CodigoEnviado)
             {
-                Log.Warn($"No se pudo enviar el código. Mensaje: {resultado.Mensaje}");
+                Log.Warn($"No se pudo enviar el cÃ³digo. Mensaje: {resultado.Mensaje}");
                 MostrarMensaje?.Invoke(resultado.Mensaje ??
                     Lang.errorTextoRegistrarCuentaMasTarde);
                 return (false, resultado, false);
@@ -430,7 +437,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (resultadoRegistro == null)
             {
-                Log.Error("El servicio de registro de cuenta retornó null.");
+                Log.Error("El servicio de registro de cuenta retornÃ³ null.");
                 MostrarMensaje?.Invoke(Lang.errorTextoRegistrarCuentaMasTarde);
                 return (false, null);
             }

@@ -1,6 +1,8 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using log4net;
+using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
@@ -32,7 +34,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            _logger.Info($"Iniciando solicitud de c骴igo de registro para '{solicitud.Correo}'.");
+            solicitud.Idioma ??= ObtenerCodigoIdiomaActual();
+            _logger.Info($"Iniciando solicitud de c贸digo de registro para '{solicitud.Correo}'.");
 
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
@@ -48,14 +51,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         public static Task<DTOs.ResultadoSolicitudRecuperacionDTO>
             SolicitarCodigoRecuperacionAsync(string identificador)
         {
-            _logger.Info($"Iniciando solicitud de c骴igo de recuperaci髇 para '{identificador}'.");
+            _logger.Info($"Iniciando solicitud de c贸digo de recuperaci贸n para '{identificador}'.");
 
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
 
             var solicitud = new DTOs.SolicitudRecuperarCuentaDTO
             {
-                Identificador = identificador?.Trim()
+                Identificador = identificador?.Trim(),
+                Idioma = ObtenerCodigoIdiomaActual()
             };
 
             return WcfClienteAyudante.UsarAsincronoAsync(
@@ -70,7 +74,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             string tokenCodigo,
             string codigoIngresado)
         {
-            _logger.Info("Enviando confirmaci髇 de c骴igo para registro.");
+            _logger.Info("Enviando confirmaci贸n de c贸digo para registro.");
 
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
@@ -93,7 +97,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             string tokenCodigo,
             string codigoIngresado)
         {
-            _logger.Info("Enviando confirmaci髇 de c骴igo para recuperaci髇.");
+            _logger.Info("Enviando confirmaci贸n de c贸digo para recuperaci贸n.");
 
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
@@ -115,7 +119,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         public static Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(
             string tokenCodigo)
         {
-            _logger.Info("Solicitando reenv韔 de c骴igo de registro.");
+            _logger.Info("Solicitando reenv铆o de c贸digo de registro.");
 
             var cliente = new PictionaryServidorServicioCuenta.
                 CuentaManejadorClient(CuentaEndpoint);
@@ -135,7 +139,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         public static Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(
             string tokenCodigo)
         {
-            _logger.Info("Solicitando reenv韔 de c骴igo de recuperaci髇.");
+            _logger.Info("Solicitando reenv铆o de c贸digo de recuperaci贸n.");
 
             var cliente = new PictionaryServidorServicioCambioContrasena
                 .CambioContrasenaManejadorClient(CambioContrasenaEndpoint);
@@ -148,6 +152,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             return WcfClienteAyudante.UsarAsincronoAsync(
                 cliente,
                 c => c.ReenviarCodigoRecuperacionAsync(solicitud));
+        }
+
+        private static string ObtenerCodigoIdiomaActual()
+        {
+            return LocalizacionServicio.Instancia.CulturaActual?.Name
+                ?? CultureInfo.CurrentUICulture?.Name;
         }
     }
 }
