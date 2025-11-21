@@ -48,13 +48,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (!_salas.TryAdd(codigo, sala))
                 {
-                    _logger.Warn($"Error de concurrencia al intentar agregar la sala {codigo}.");
+                    _logger.WarnFormat("Error de concurrencia al intentar agregar la sala {0}.", codigo);
                     throw new FaultException(MensajesError.Cliente.ErrorCrearSala);
                 }
 
                 _notificador.NotificarListaSalasATodos();
 
-                _logger.Info($"Sala '{codigo}' creada exitosamente por '{nombreCreador.Trim()}'. Configuración: {configuracion.NumeroRondas} rondas, {configuracion.TiempoPorRondaSegundos}s.");
+                _logger.InfoFormat("Sala '{0}' creada exitosamente por '{1}'. Configuración: {2} rondas, {3}s.", codigo, nombreCreador.Trim(), configuracion.NumeroRondas, configuracion.TiempoPorRondaSegundos);
                 return sala.ToDto();
             }
             catch (ArgumentException ex)
@@ -105,7 +105,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
                 {
-                    _logger.Warn($"Intento de unirse a sala inexistente: '{codigoSala}'. Usuario: '{nombreUsuario}'.");
+                    _logger.WarnFormat("Intento de unirse a sala inexistente: '{0}'. Usuario: '{1}'.", codigoSala, nombreUsuario);
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
                 }
 
@@ -114,7 +114,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 _notificador.NotificarListaSalasATodos();
 
-                _logger.Info($"Jugador '{nombreUsuario.Trim()}' se unió correctamente a la sala '{codigoSala.Trim()}'.");
+                _logger.InfoFormat("Jugador '{0}' se unió correctamente a la sala '{1}'.", nombreUsuario.Trim(), codigoSala.Trim());
                 return resultado;
             }
             catch (FaultException)
@@ -191,7 +191,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (!_salas.TryGetValue(codigoSala.Trim(), out var sala))
                 {
-                    _logger.Warn($"Intento de abandonar sala inexistente: '{codigoSala}'.");
+                    _logger.WarnFormat("Intento de abandonar sala inexistente: '{0}'.", codigoSala);
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
                 }
 
@@ -201,12 +201,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 {
                     if (_salas.TryRemove(codigoSala.Trim(), out _))
                     {
-                        _logger.Info($"Sala '{codigoSala.Trim()}' eliminada automáticamente (vacía o host salió).");
+                        _logger.InfoFormat("Sala '{0}' eliminada automáticamente (vacía o host salió).", codigoSala.Trim());
                     }
                 }
 
                 _notificador.NotificarListaSalasATodos();
-                _logger.Info($"Jugador '{nombreUsuario.Trim()}' abandonó la sala '{codigoSala.Trim()}'.");
+                _logger.InfoFormat("Jugador '{0}' abandonó la sala '{1}'.", nombreUsuario.Trim(), codigoSala.Trim());
             }
             catch (FaultException)
             {
@@ -249,7 +249,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
 
                 _notificador.NotificarListaSalas(callback);
-                _logger.Info($"Nueva suscripción al lobby de salas. Sesión ID: {sesionId}");
+                _logger.InfoFormat("Nueva suscripción al lobby de salas. Sesión ID: {0}", sesionId);
             }
             catch (InvalidOperationException ex)
             {
@@ -337,7 +337,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 _notificador.NotificarListaSalasATodos();
 
-                _logger.Info($"Jugador '{nombreJugadorAExpulsar.Trim()}' expulsado de sala '{codigoSala.Trim()}' por '{nombreHost.Trim()}'.");
+                _logger.InfoFormat("Jugador '{0}' expulsado de sala '{1}' por '{2}'.", nombreJugadorAExpulsar.Trim(), codigoSala.Trim(), nombreHost.Trim());
             }
             catch (FaultException)
             {

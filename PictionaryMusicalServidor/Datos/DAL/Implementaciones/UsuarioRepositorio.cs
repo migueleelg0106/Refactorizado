@@ -49,7 +49,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error al verificar existencia del usuario '{nombreUsuario}'.", ex);
+                _logger.Error(string.Format("Error al verificar existencia del usuario '{0}'.", nombreUsuario), ex);
                 throw;
             }
         }
@@ -75,12 +75,12 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
                 var entidad = _contexto.Usuario.Add(usuario);
                 _contexto.SaveChanges();
 
-                _logger.Info($"Usuario creado exitosamente. ID: {entidad.idUsuario}, Nombre: {entidad.Nombre_Usuario}.");
+                _logger.InfoFormat("Usuario creado exitosamente. ID: {0}, Nombre: {1}.", entidad.idUsuario, entidad.Nombre_Usuario);
                 return entidad;
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error al guardar el nuevo usuario '{usuario.Nombre_Usuario}' en la base de datos.", ex);
+                _logger.Error(string.Format("Error al guardar el nuevo usuario '{0}' en la base de datos.", usuario.Nombre_Usuario), ex);
                 throw;
             }
         }
@@ -97,7 +97,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             if (string.IsNullOrWhiteSpace(nombreUsuario))
             {
                 var ex = new ArgumentException("El nombre de usuario es obligatorio.", nameof(nombreUsuario));
-                _logger.Error("Intento de búsqueda de usuario con nombre vacío o nulo.", ex);
+                _logger.Error("Intento de bï¿½squeda de usuario con nombre vacï¿½o o nulo.", ex);
                 throw ex;
             }
 
@@ -116,7 +116,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error al obtener el usuario '{nombreUsuario}' de la base de datos.", ex);
+                _logger.Error(string.Format("Error al obtener el usuario '{0}' de la base de datos.", nombreUsuario), ex);
                 throw;
             }
         }
