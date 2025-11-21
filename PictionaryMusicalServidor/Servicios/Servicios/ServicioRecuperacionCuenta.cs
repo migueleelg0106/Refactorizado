@@ -81,10 +81,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     NombreUsuario = usuario.Nombre_Usuario,
                     Codigo = codigo,
                     Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo),
-                    Confirmado = false
+                    Confirmado = false,
+                    Idioma = solicitud.Idioma
                 };
 
-                bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(pendiente.Correo, codigo, pendiente.NombreUsuario);
+                bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(
+                    pendiente.Correo,
+                    codigo,
+                    pendiente.NombreUsuario,
+                    pendiente.Idioma);
                 if (!enviado)
                 {
                     _logger.Error($"Fallo al enviar correo de recuperación a '{pendiente.Correo}'.");
@@ -163,7 +168,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             pendiente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
             pendiente.Confirmado = false;
 
-            bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(pendiente.Correo, nuevoCodigo, pendiente.NombreUsuario);
+            bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(
+                pendiente.Correo,
+                nuevoCodigo,
+                pendiente.NombreUsuario,
+                pendiente.Idioma);
             if (!enviado)
             {
                 pendiente.Codigo = codigoAnterior;
@@ -431,6 +440,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             public string Codigo { get; set; }
             public DateTime Expira { get; set; }
             public bool Confirmado { get; set; }
+            public string Idioma { get; set; }
         }
     }
 }

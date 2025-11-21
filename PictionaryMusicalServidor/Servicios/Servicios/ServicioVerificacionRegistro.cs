@@ -70,7 +70,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             string codigo = CodigoVerificacionGenerador.GenerarCodigo();
             NuevaCuentaDTO datosCuenta = CopiarCuenta(nuevaCuenta);
 
-            bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(datosCuenta.Correo, codigo, datosCuenta.Usuario);
+            bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(
+                datosCuenta.Correo,
+                codigo,
+                datosCuenta.Usuario,
+                datosCuenta.Idioma);
             if (!enviado)
             {
                 _logger.Error($"Error al enviar código de verificación a '{datosCuenta.Correo}'.");
@@ -139,7 +143,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             existente.Codigo = nuevoCodigo;
             existente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
 
-            bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(existente.DatosCuenta.Correo, nuevoCodigo, existente.DatosCuenta.Usuario);
+            bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(
+                existente.DatosCuenta.Correo,
+                nuevoCodigo,
+                existente.DatosCuenta.Usuario,
+                existente.DatosCuenta.Idioma);
             if (!enviado)
             {
                 existente.Codigo = codigoAnterior;
@@ -274,7 +282,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 Nombre = original.Nombre,
                 Apellido = original.Apellido,
                 Contrasena = original.Contrasena,
-                AvatarId = original.AvatarId
+                AvatarId = original.AvatarId,
+                Idioma = original.Idioma
             };
         }
 
