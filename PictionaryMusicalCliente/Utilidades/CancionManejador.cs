@@ -10,6 +10,8 @@ namespace PictionaryMusicalCliente.Utilidades
     /// </summary>
     public class CancionManejador : IDisposable
     {
+        private const double VolumenPredeterminado = 0.5;
+
         private static readonly ILog Log = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -22,7 +24,17 @@ namespace PictionaryMusicalCliente.Utilidades
         public double Volumen
         {
             get => _reproductor.Volume;
-            set => _reproductor.Volume = Math.Max(0, Math.Min(1, value));
+            set
+            {
+                double clamped = Math.Max(0, Math.Min(1, value));
+                if (Math.Abs(_reproductor.Volume - clamped) < 0.0001)
+                {
+                    return;
+                }
+
+                _reproductor.Volume = clamped;
+                GuardarPreferencia(clamped);
+            }
         }
 
         /// <summary>
@@ -37,7 +49,7 @@ namespace PictionaryMusicalCliente.Utilidades
         {
             _reproductor = new MediaPlayer();
             _reproductor.MediaEnded += (s, e) => EstaReproduciendo = false;
-            _reproductor.Volume = 1.0;
+            _reproductor.Volume = ObtenerVolumenGuardado();
         }
 
         /// <summary>
@@ -132,6 +144,23 @@ namespace PictionaryMusicalCliente.Utilidades
                 }
                 _desechado = true;
             }
+        }
+
+        private static double ObtenerVolumenGuardado()
+        {
+            double volumenGuardado = Properties.Settings.Default.volumenCancion;
+            if (double.IsNaN(volumenGuardado) || double.IsInfinity(volumenGuardado))
+            {
+                return VolumenPredeterminado;
+            }
+
+            return Math.Max(0, Math.Min(1, volumenGuardado));
+        }
+
+        private static void GuardarPreferencia(double volumen)
+        {
+            Properties.Settings.Default.volumenCancion = volumen;
+            Properties.Settings.Default.Save();
         }
     }
 }

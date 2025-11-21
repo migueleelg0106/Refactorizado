@@ -37,13 +37,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             EnviarSolicitudComando = new ComandoAsincrono(async _ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await EnviarSolicitudAsync();
             }, _ => PuedeEnviarSolicitud());
 
             CancelarComando = new ComandoDelegado(_ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 Cancelado?.Invoke();
             });
         }
@@ -116,9 +116,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             if (string.IsNullOrWhiteSpace(_usuarioActual))
             {
-                Log.Warn("Intento de enviar solicitud sin usuario actual en sesión.");
-                AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
-                return;
+                SonidoManejador.ReproducirExito();
+                SonidoManejador.ReproducirError();
+                SonidoManejador.ReproducirError();
             }
 
             EstaProcesando = true;

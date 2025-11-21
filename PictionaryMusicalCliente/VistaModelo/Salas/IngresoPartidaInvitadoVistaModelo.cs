@@ -46,13 +46,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             UnirseSalaComando = new ComandoAsincrono(async _ =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 await UnirseSalaComoInvitadoAsync().ConfigureAwait(true);
             }, _ => !EstaProcesando);
 
             CancelarComando = new ComandoDelegado(() =>
             {
-                ManejadorSonido.ReproducirClick();
+                SonidoManejador.ReproducirClick();
                 CerrarVentana?.Invoke();
             }, () => !EstaProcesando);
         }
@@ -118,7 +118,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             string codigo = CodigoSala?.Trim();
             if (string.IsNullOrWhiteSpace(codigo))
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.unirseSalaTextoVacio);
                 return;
             }
@@ -156,7 +156,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     {
                         case EstadoUnionInvitado.Exito:
                             Log.Info($"Invitado unido exitosamente: {nombreInvitado}");
-                            ManejadorSonido.ReproducirExito();
+                            SonidoManejador.ReproducirExito();
                             SeUnioSala = true;
                             SalaUnida?.Invoke(resultado.Sala, nombreInvitado);
                             CerrarVentana?.Invoke();
@@ -176,19 +176,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                         case EstadoUnionInvitado.SalaLlena:
                             Log.Warn("Intento de unirse a sala llena.");
-                            ManejadorSonido.ReproducirError();
+                            SonidoManejador.ReproducirError();
                             AvisoAyudante.Mostrar(Lang.errorTextoSalaLlena);
                             return;
 
                         case EstadoUnionInvitado.SalaNoEncontrada:
                             Log.Warn($"Sala no encontrada: {codigo}");
-                            ManejadorSonido.ReproducirError();
+                            SonidoManejador.ReproducirError();
                             AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
                             return;
 
                         case EstadoUnionInvitado.Error:
                             Log.Error($"Error al unirse: {resultado.Mensaje}");
-                            ManejadorSonido.ReproducirError();
+                            SonidoManejador.ReproducirError();
                             AvisoAyudante.Mostrar(
                                 resultado.Mensaje ?? Lang.errorTextoNoEncuentraPartida);
                             return;
@@ -196,7 +196,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 }
 
                 Log.Error("Se agotaron los intentos de generar nombre único.");
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoNombresInvitadoAgotados);
             }
             finally
@@ -247,7 +247,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                         ? Lang.errorTextoNoEncuentraPartida
                         : ex.Message;
 
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 return ResultadoUnionInvitado.Error(mensaje);
             }
         }

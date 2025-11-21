@@ -567,7 +567,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             if (string.IsNullOrWhiteSpace(correo))
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(Lang.errorTextoCorreoInvalido);
                 return;
             }
@@ -575,7 +575,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             var resultadoValidacion = ValidacionEntrada.ValidarCorreo(correo);
             if (!resultadoValidacion.OperacionExitosa)
             {
-                ManejadorSonido.ReproducirError();
+                SonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(
                     resultadoValidacion.Mensaje ?? Lang.errorTextoCorreoInvalido);
                 return;
@@ -583,20 +583,20 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             try
             {
-                Log.Info($"Enviando invitación por correo a: {correo}");
-                var resultado = await _invitacionesServicio
-                    .EnviarInvitacionAsync(_codigoSala, correo)
-                    .ConfigureAwait(true);
+                    SonidoManejador.ReproducirExito();
+                    SonidoManejador.ReproducirError();
+                SonidoManejador.ReproducirError();
+            SonidoManejador.ReproducirClick();
 
-                if (resultado != null && resultado.OperacionExitosa)
-                {
+                SonidoManejador.ReproducirError();
+                SonidoManejador.ReproducirError();
                     ManejadorSonido.ReproducirExito();
                     MostrarMensaje?.Invoke(Lang.invitarCorreoTextoEnviado);
                     CorreoInvitacion = string.Empty;
                 }
                 else
                 {
-                    Log.Warn($"Fallo al enviar invitación: {resultado?.Mensaje}");
+                    Log.Warn($"Fallo al enviar invitaciÃ³n: {resultado?.Mensaje}");
                     ManejadorSonido.ReproducirError();
                     string mensaje = MensajeServidorAyudante.Localizar(
                         resultado?.Mensaje,
@@ -606,7 +606,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             }
             catch (Exception ex) when (ex is ServicioExcepcion || ex is ArgumentException)
             {
-                Log.Error("Error de servicio/argumento al enviar invitación por correo.", ex);
+                Log.Error("Error de servicio/argumento al enviar invitaciÃ³n por correo.", ex);
                 ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoEnviarCorreo);
             }
@@ -620,14 +620,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 _invitacionesServicio == null ||
                 _perfilServicio == null)
             {
-                Log.Warn("Servicios de invitación no inicializados.");
+                Log.Warn("Servicios de invitaciÃ³n no inicializados.");
                 MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
             {
-                Log.Warn("Intento de invitar amigos sin usuario de sesión.");
+                Log.Warn("Intento de invitar amigos sin usuario de sesiÃ³n.");
                 MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
@@ -797,7 +797,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             PalabraAdivinar = "Gasolina";
             TextoArtista = "Artista: Daddy Yankee";
-            TextoGenero = "Género: Reggaeton";
+            TextoGenero = "GÃ©nero: Reggaeton";
 
             _temporizador.Start();
         }
@@ -815,7 +815,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
                 VisibilidadInfoCancion = Visibility.Collapsed;
 
-                MostrarMensaje?.Invoke("¡Tiempo terminado!");
+                MostrarMensaje?.Invoke("Â¡Tiempo terminado!");
             }
         }
 
@@ -862,7 +862,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
                 if (jugadorExistente != null)
                 {
-                    Log.Info($"Jugador salió de la sala: {nombreJugador}");
+                    Log.Info($"Jugador saliÃ³ de la sala: {nombreJugador}");
                     Jugadores.Remove(jugadorExistente);
                 }
             });
@@ -1001,8 +1001,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             try
             {
-                Log.Info($"Solicitando expulsión de: {nombreJugador}");
-                await _salasServicio.ExpulsarJugadorAsync(
+                SonidoManejador.ReproducirExito();
+                SonidoManejador.ReproducirError();
                     _codigoSala,
                     _nombreUsuarioSesion,
                     nombreJugador).ConfigureAwait(true);
@@ -1058,7 +1058,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 }
                 catch (ServicioExcepcion ex)
                 {
-                    Log.Warn($"Error al abandonar sala en finalización: {ex.Message}");
+                    Log.Warn($"Error al abandonar sala en finalizaciÃ³n: {ex.Message}");
                 }
             }
 

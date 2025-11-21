@@ -9,6 +9,8 @@ namespace PictionaryMusicalCliente.ClienteServicios
     /// </summary>
     public class MusicaManejador : IDisposable
     {
+        private const double VolumenPredeterminado = 0.5;
+
         private static readonly ILog Log = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -35,6 +37,11 @@ namespace PictionaryMusicalCliente.ClienteServicios
             set
             {
                 double clamped = Math.Max(0, Math.Min(1, value));
+                if (Math.Abs(_reproductor.Volume - clamped) < 0.0001)
+                {
+                    return;
+                }
+
                 _reproductor.Volume = clamped;
 
                 EstaSilenciado = clamped < 0.0001;
@@ -42,6 +49,8 @@ namespace PictionaryMusicalCliente.ClienteServicios
                 {
                     _volumenGuardado = clamped;
                 }
+
+                GuardarPreferencia(clamped);
             }
         }
 
@@ -54,8 +63,11 @@ namespace PictionaryMusicalCliente.ClienteServicios
             _reproductor.MediaEnded += EnMedioTerminado;
             _reproductor.MediaOpened += EnMedioAbierto;
             _reproductor.MediaFailed += EnMedioFallido;
-            this.Volumen = 0.4;
-            EstaSilenciado = false;
+
+            double volumenPreferido = ObtenerVolumenGuardado();
+            _volumenGuardado = volumenPreferido;
+            this.Volumen = volumenPreferido;
+            EstaSilenciado = _volumenGuardado < 0.0001;
         }
 
         /// <summary>
@@ -200,6 +212,23 @@ namespace PictionaryMusicalCliente.ClienteServicios
             EstaReproduciendo = false;
             Log.Error($"Fallo crítico en reproducción de medio: {e.ErrorException.Message}",
                 e.ErrorException);
+        }
+
+        private static double ObtenerVolumenGuardado()
+        {
+            double volumenGuardado = Properties.Settings.Default.volumenMusica;
+            if (double.IsNaN(volumenGuardado) || double.IsInfinity(volumenGuardado))
+            {
+                return VolumenPredeterminado;
+            }
+
+            return Math.Max(0, Math.Min(1, volumenGuardado));
+        }
+
+        private static void GuardarPreferencia(double volumen)
+        {
+            Properties.Settings.Default.volumenMusica = volumen;
+            Properties.Settings.Default.Save();
         }
     }
 }
