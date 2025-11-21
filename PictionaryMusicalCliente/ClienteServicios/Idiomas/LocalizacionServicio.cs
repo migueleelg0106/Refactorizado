@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Threading;
+using log4net;
 using PictionaryMusicalCliente.Properties;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
@@ -12,6 +13,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Idiomas
     /// </summary>
     public sealed class LocalizacionServicio : ILocalizacionServicio
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(LocalizacionServicio));
         private static readonly Lazy<LocalizacionServicio> _instancia =
             new(() => new LocalizacionServicio());
 
@@ -61,6 +63,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Idiomas
             {
                 return;
             }
+
+            _logger.Info($"Cambiando idioma de aplicación a: {cultura.Name}");
 
             CulturaActual = cultura;
             Lang.Culture = cultura;

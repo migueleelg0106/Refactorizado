@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using log4net;
 
 namespace PictionaryMusicalCliente.VistaModelo.Perfil
 {
@@ -15,6 +16,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
     /// </summary>
     public class SeleccionAvatarVistaModelo : BaseVistaModelo
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private ObjetoAvatar _avatarSeleccionado;
 
         /// <summary>
@@ -69,11 +73,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         {
             if (AvatarSeleccionado == null)
             {
+                Log.Warn("Intento de confirmar selección sin avatar elegido.");
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoSeleccionAvatarValido);
                 return;
             }
 
+            Log.Info($"Avatar seleccionado: ID {AvatarSeleccionado.Id}");
             SeleccionConfirmada?.Invoke(AvatarSeleccionado);
             CerrarAccion?.Invoke();
         }

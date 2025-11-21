@@ -7,6 +7,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -17,6 +18,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     public sealed class ListaAmigosServicio : IListaAmigosServicio,
         PictionaryServidorServicioListaAmigos.IListaAmigosManejadorCallback
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(ListaAmigosServicio));
         private const string Endpoint = "NetTcpBinding_IListaAmigosManejador";
 
         private readonly SemaphoreSlim _semaforo = new(1, 1);
@@ -80,9 +82,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
                     _cliente = cliente;
                     _usuarioSuscrito = nombreUsuario;
+                    _logger.Info($"Usuario '{nombreUsuario}' suscrito a la lista de amigos.");
                 }
                 catch (FaultException ex)
                 {
+                    _logger.Warn("Error de lógica del servidor al suscribir a lista de amigos.",
+                        ex);
                     cliente.Abort();
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                         ex,
@@ -91,6 +96,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (EndpointNotFoundException ex)
                 {
+                    _logger.Error("Endpoint de lista de amigos no encontrado.", ex);
                     cliente.Abort();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -99,6 +105,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (TimeoutException ex)
                 {
+                    _logger.Error("Timeout al suscribir a lista de amigos.", ex);
                     cliente.Abort();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.TiempoAgotado,
@@ -107,6 +114,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (CommunicationException ex)
                 {
+                    _logger.Error("Error de comunicación al suscribir a lista de amigos.", ex);
                     cliente.Abort();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -115,6 +123,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (InvalidOperationException ex)
                 {
+                    _logger.Error("Operación inválida al suscribir a lista de amigos.", ex);
                     cliente.Abort();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.OperacionInvalida,
@@ -156,6 +165,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
 
                 await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
+                _logger.Info($"Suscripción a lista de amigos cancelada para: {nombreUsuario}");
             }
             finally
             {
@@ -201,6 +211,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (Exception ex)
             {
+                _logger.Error($"Error al obtener lista de amigos para {nombreUsuario}", ex);
                 throw ManejarExcepcionWcf(ex, cliente, esClienteTemporal);
             }
             finally
@@ -223,7 +234,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 FaultException fe => new ServicioExcepcion(
                     TipoErrorServicio.FallaServicio,
-                    ErrorServicioAyudante.ObtenerMensaje(fe, 
+                    ErrorServicioAyudante.ObtenerMensaje(fe,
                     Lang.errorTextoErrorProcesarSolicitud),
                     fe),
 
@@ -259,6 +270,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 _amigos.AddRange(lista);
             }
 
+            _logger.Info("Callback recibido: Lista de amigos actualizada.");
             ListaActualizada?.Invoke(this, lista);
         }
 
@@ -305,6 +317,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
+                _logger.Warn("Fallo al cancelar suscripción interna de lista de amigos.", ex);
                 cliente.Abort();
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
@@ -313,6 +326,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("Endpoint no encontrado al cancelar suscripción.", ex);
                 cliente.Abort();
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
@@ -321,6 +335,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Timeout al cancelar suscripción.", ex);
                 cliente.Abort();
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
@@ -329,6 +344,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación al cancelar suscripción.", ex);
                 cliente.Abort();
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
@@ -337,6 +353,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida al cancelar suscripción.", ex);
                 cliente.Abort();
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
@@ -364,12 +381,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     cliente.Close();
                 }
             }
-            catch (CommunicationException)
+            catch (CommunicationException ex)
             {
+                _logger.Warn("Excepción de comunicación al cerrar cliente lista de amigos.", ex);
                 cliente.Abort();
             }
-            catch (TimeoutException)
+            catch (TimeoutException ex)
             {
+                _logger.Warn("Timeout al cerrar cliente lista de amigos.", ex);
                 cliente.Abort();
             }
         }

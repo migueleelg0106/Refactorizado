@@ -7,6 +7,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -17,6 +18,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     public sealed class SalasServicio : ISalasServicio,
         PictionaryServidorServicioSalas.ISalasManejadorCallback
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(SalasServicio));
         private const string Endpoint = "NetTcpBinding_ISalasManejador";
 
         private readonly SemaphoreSlim _semaforo = new(1, 1);
@@ -94,12 +96,17 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 try
                 {
-                    return await cliente.CrearSalaAsync(
+                    var sala = await cliente.CrearSalaAsync(
                         nombreCreador,
                         configuracion).ConfigureAwait(false);
+
+                    _logger.Info($"Sala creada exitosamente por '{nombreCreador}'. " +
+                        $"Código: {sala.Codigo}");
+                    return sala;
                 }
                 catch (FaultException ex)
                 {
+                    _logger.Warn("El servidor rechazó la creación de la sala.", ex);
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                         ex,
                         Lang.errorTextoErrorProcesarSolicitud);
@@ -107,6 +114,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (EndpointNotFoundException ex)
                 {
+                    _logger.Error("No se encontró el endpoint para crear sala.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -115,6 +123,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (TimeoutException ex)
                 {
+                    _logger.Error("Timeout al intentar crear sala.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.TiempoAgotado,
@@ -123,6 +132,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (CommunicationException ex)
                 {
+                    _logger.Error("Error de comunicación al crear sala.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -163,12 +173,16 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 try
                 {
-                    return await cliente.UnirseSalaAsync(
+                    var sala = await cliente.UnirseSalaAsync(
                         codigoSala,
                         nombreUsuario).ConfigureAwait(false);
+
+                    _logger.Info($"Usuario '{nombreUsuario}' se unió a la sala '{codigoSala}'.");
+                    return sala;
                 }
                 catch (FaultException ex)
                 {
+                    _logger.Warn($"Fallo al unirse a sala '{codigoSala}'. Razón: {ex.Message}");
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                         ex,
                         Lang.errorTextoErrorProcesarSolicitud);
@@ -176,6 +190,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (EndpointNotFoundException ex)
                 {
+                    _logger.Error("No se encontró el endpoint para unirse a la sala.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -184,6 +199,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (TimeoutException ex)
                 {
+                    _logger.Error("Timeout al unirse a la sala.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.TiempoAgotado,
@@ -192,6 +208,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (CommunicationException ex)
                 {
+                    _logger.Error("Error de comunicación al unirse a la sala.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -234,9 +251,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     await _cliente.AbandonarSalaAsync(
                         codigoSala,
                         nombreUsuario).ConfigureAwait(false);
+
+                    _logger.Info($"Usuario '{nombreUsuario}' abandonó la sala '{codigoSala}'.");
                 }
                 catch (FaultException ex)
                 {
+                    _logger.Warn("Error de lógica al abandonar sala.", ex);
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                         ex,
                         Lang.errorTextoErrorProcesarSolicitud);
@@ -244,6 +264,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (EndpointNotFoundException ex)
                 {
+                    _logger.Error("Endpoint no encontrado al abandonar sala.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -252,6 +273,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (TimeoutException ex)
                 {
+                    _logger.Error("Timeout al abandonar sala.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.TiempoAgotado,
@@ -260,6 +282,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (CommunicationException ex)
                 {
+                    _logger.Error("Error de comunicación al abandonar sala.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -314,9 +337,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                         codigoSala,
                         nombreHost,
                         nombreJugadorAExpulsar).ConfigureAwait(false);
+
+                    _logger.Info($"El host '{nombreHost}' expulsó a '{nombreJugadorAExpulsar}'" +
+                        $" de la sala '{codigoSala}'.");
                 }
                 catch (FaultException ex)
                 {
+                    _logger.Warn("Error al intentar expulsar jugador (Permisos o jugador no " +
+                        "existe).", ex);
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                         ex,
                         Lang.errorTextoErrorProcesarSolicitud);
@@ -324,6 +352,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (EndpointNotFoundException ex)
                 {
+                    _logger.Error("Endpoint no encontrado al expulsar jugador.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -332,6 +361,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (TimeoutException ex)
                 {
+                    _logger.Error("Timeout al expulsar jugador.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.TiempoAgotado,
@@ -340,6 +370,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (CommunicationException ex)
                 {
+                    _logger.Error("Error de comunicación al expulsar jugador.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -358,6 +389,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarJugadorSeUnio(string codigoSala, string nombreJugador)
         {
+            _logger.Info($"Callback recibido: '{nombreJugador}' se unió a la sala " +
+                $"'{codigoSala}'.");
             JugadorSeUnio?.Invoke(this, nombreJugador);
         }
 
@@ -366,6 +399,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarJugadorSalio(string codigoSala, string nombreJugador)
         {
+            _logger.Info($"Callback recibido: '{nombreJugador}' salió de la sala '{codigoSala}'.");
             JugadorSalio?.Invoke(this, nombreJugador);
         }
 
@@ -374,6 +408,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarJugadorExpulsado(string codigoSala, string nombreJugador)
         {
+            _logger.Info($"Callback recibido: '{nombreJugador}' fue expulsado de la sala " +
+                $"'{codigoSala}'.");
             JugadorExpulsado?.Invoke(this, nombreJugador);
         }
 
@@ -421,9 +457,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 {
                     await cliente.SuscribirListaSalasAsync().ConfigureAwait(false);
                     _suscrito = true;
+                    _logger.Info("Suscripción al lobby de salas exitosa.");
                 }
                 catch (FaultException ex)
                 {
+                    _logger.Warn("Error del servidor al suscribir a lista de salas.", ex);
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                         ex,
                         Lang.errorTextoErrorProcesarSolicitud);
@@ -431,6 +469,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (EndpointNotFoundException ex)
                 {
+                    _logger.Error("Endpoint no encontrado al suscribir a lista de salas.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -439,6 +478,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (TimeoutException ex)
                 {
+                    _logger.Error("Timeout al suscribir a lista de salas.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.TiempoAgotado,
@@ -447,6 +487,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (CommunicationException ex)
                 {
+                    _logger.Error("Error de comunicación al suscribir a lista de salas.", ex);
                     CerrarCliente();
                     throw new ServicioExcepcion(
                         TipoErrorServicio.Comunicacion,
@@ -478,10 +519,16 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 {
                     await _cliente.CancelarSuscripcionListaSalasAsync().ConfigureAwait(false);
                     _suscrito = false;
+                    _logger.Info("Suscripción al lobby de salas cancelada.");
                 }
-                catch
+                catch (CommunicationException ex)
                 {
-                    // Ignorar errores cuando se está cancelando una suscripción
+                    _logger.Warn("Advertencia: Error de comunicación al cancelar suscripción " +
+                        "de salas (posible cierre forzado).", ex);
+                }
+                catch (TimeoutException ex)
+                {
+                    _logger.Warn("Advertencia: Timeout al cancelar suscripción de salas.", ex);
                 }
             }
             finally
@@ -508,9 +555,17 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                             Task.Run(async () =>
                                 await _cliente.CancelarSuscripcionListaSalasAsync()).Wait(2000);
                         }
-                        catch
+                        catch (CommunicationException ex)
                         {
-                            // Ignorar errores de red al cerrar
+                            _logger.Warn("Error de red al cerrar servicio de salas.", ex);
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            _logger.Warn("Timeout al cerrar servicio de salas.", ex);
+                        }
+                        catch (AggregateException ex)
+                        {
+                            _logger.Warn("Error agregado al cerrar servicio de salas.", ex);
                         }
                     }
                     CerrarCliente();

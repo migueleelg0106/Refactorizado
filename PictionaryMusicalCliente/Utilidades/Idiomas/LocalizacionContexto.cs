@@ -4,6 +4,7 @@ using System.Windows;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Idiomas;
+using log4net;
 
 namespace PictionaryMusicalCliente.Utilidades.Idiomas
 {
@@ -13,6 +14,9 @@ namespace PictionaryMusicalCliente.Utilidades.Idiomas
     /// </summary>
     public class LocalizacionContexto : INotifyPropertyChanged
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Inicializa una nueva instancia usando el servicio de localizacion predeterminado.
         /// </summary>
@@ -56,12 +60,18 @@ namespace PictionaryMusicalCliente.Utilidades.Idiomas
                     return string.Empty;
                 }
 
-                return Lang.ResourceManager.GetString(clave, Lang.Culture) ?? string.Empty;
+                string valor = Lang.ResourceManager.GetString(clave, Lang.Culture);
+                if (valor == null)
+                {
+                    return string.Empty;
+                }
+                return valor;
             }
         }
 
         private void LocalizacionServicioEnIdiomaActualizado(object sender, EventArgs e)
         {
+            Log.Info($"Actualizando UI a nueva cultura: {Lang.Culture?.Name}");
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
         }
     }

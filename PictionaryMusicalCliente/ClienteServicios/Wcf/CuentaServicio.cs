@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -13,6 +14,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class CuentaServicio : ICuentaServicio
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(CuentaServicio));
         private const string CuentaEndpoint = "BasicHttpBinding_ICuentaManejador";
 
         /// <summary>
@@ -31,12 +33,25 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             try
             {
-                return await WcfClienteAyudante
+                var resultado = await WcfClienteAyudante
                     .UsarAsincronoAsync(cliente, c => c.RegistrarCuentaAsync(solicitud))
                     .ConfigureAwait(false);
+
+                if (resultado != null && resultado.RegistroExitoso)
+                {
+                    _logger.Info($"Registro de cuenta exitoso para: {solicitud.Correo}");
+                }
+                else
+                {
+                    _logger.Warn($"Registro de cuenta fallido para: {solicitud.Correo}. " +
+                        $"Razón: {resultado?.Mensaje}");
+                }
+
+                return resultado;
             }
             catch (FaultException ex)
             {
+                _logger.Warn("Servidor rechazó el registro (Validación/Negocio).", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoRegistrarCuentaMasTarde);
@@ -44,6 +59,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("Endpoint de cuenta no encontrado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -51,6 +67,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Timeout al registrar cuenta.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -58,6 +75,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación al registrar cuenta.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -65,6 +83,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida al registrar cuenta.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,

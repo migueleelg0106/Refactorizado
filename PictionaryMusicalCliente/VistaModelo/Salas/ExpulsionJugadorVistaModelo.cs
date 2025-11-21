@@ -3,6 +3,7 @@ using System.Windows.Input;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
+using log4net;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
@@ -11,6 +12,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
     /// </summary>
     public class ExpulsionJugadorVistaModelo : BaseVistaModelo
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Inicializa el ViewModel con el mensaje de confirmacion.
         /// </summary>
@@ -24,12 +28,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             ConfirmarComando = new ComandoDelegado(_ =>
             {
                 ManejadorSonido.ReproducirClick();
+                Log.Info("Usuario confirmó la expulsión del jugador.");
                 Cerrar?.Invoke(true);
             });
 
             CancelarComando = new ComandoDelegado(_ =>
             {
                 ManejadorSonido.ReproducirClick();
+                Log.Info("Usuario canceló la expulsión del jugador.");
                 Cerrar?.Invoke(false);
             });
         }

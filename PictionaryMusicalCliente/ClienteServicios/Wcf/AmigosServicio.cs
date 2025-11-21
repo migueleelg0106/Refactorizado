@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -16,6 +17,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     public class AmigosServicio : IAmigosServicio,
         PictionaryServidorServicioAmigos.IAmigosManejadorCallback
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(AmigosServicio));
         private const string NombreEndpoint = "NetTcpBinding_IAmigosManejador";
 
         private readonly SemaphoreSlim _semaforo = new(1, 1);
@@ -24,8 +26,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
         private PictionaryServidorServicioAmigos.AmigosManejadorClient _cliente;
         private string _usuarioSuscrito;
-
-        // Variable para el patron Dispose (Control de recursos liberados)
         private bool _recursosLiberados;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public event EventHandler<IReadOnlyCollection<DTOs.SolicitudAmistadDTO>>
             SolicitudesActualizadas;
-
+        
         /// <summary>
         /// Obtiene una copia segura de las solicitudes actuales.
         /// </summary>
@@ -85,9 +85,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
                     _cliente = cliente;
                     NotificarSolicitudesActualizadas();
+                    _logger.Info($"Suscripción a servicio de amigos exitosa para: " +
+                        $"{nombreUsuario}");
                 }
                 catch (Exception ex) when (EsExcepcionDeServicio(ex))
                 {
+                    _logger.Error($"Fallo al suscribir a servicio de amigos para: {nombreUsuario}"
+                        , ex);
                     _usuarioSuscrito = null;
                     cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
@@ -122,6 +126,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
 
                 await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
+                _logger.Info($"Suscripción a servicio de amigos cancelada para: {nombreUsuario}");
             }
             finally
             {
@@ -165,6 +170,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 return;
             }
 
+            _logger.Info($"Callback recibido: Solicitud actualizada entre " +
+                $"{solicitud.UsuarioEmisor} y {solicitud.UsuarioReceptor}.");
+
             string usuarioActual = _usuarioSuscrito;
 
             if (string.IsNullOrWhiteSpace(usuarioActual))
@@ -189,6 +197,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 return;
             }
+
+            _logger.Info($"Callback recibido: Amistad eliminada entre {solicitud.UsuarioEmisor}" +
+                $" y {solicitud.UsuarioReceptor}.");
 
             string usuarioActual = _usuarioSuscrito;
             if (string.IsNullOrWhiteSpace(usuarioActual))
@@ -230,9 +241,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     {
                         CerrarCliente(_cliente);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // Ignorar errores al cerrar durante el Dispose
+                        _logger.Warn("Error al cerrar cliente de amigos durante Dispose.", ex);
                     }
 
                     _cliente = null;
@@ -283,6 +294,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 catch (Exception ex) when (EsExcepcionDeServicio(ex))
                 {
+                    _logger.Error("Error al ejecutar operación en servicio de amigos.", ex);
                     await ManejarExcepcionOperacionAsync(
                         ex,
                         cliente,
@@ -309,9 +321,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 await SuscribirAsync(usuario).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex)
             {
-                // Registrar en bitácora si es necesario
+                _logger.Error("Fallo al intentar reconectar suscripción de amigos.", ex);
             }
         }
 
@@ -366,6 +378,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             else if (esErrorComunicacion)
             {
+                _logger.Warn("Detectado error de comunicación en canal permanente. " +
+                    "Intentando reconexión.");
                 await ReiniciarClienteConSuscripcionAsync().ConfigureAwait(false);
             }
             ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
@@ -405,7 +419,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(usuario) && 
+                if (!string.IsNullOrWhiteSpace(usuario) &&
                     cliente.State == CommunicationState.Opened)
                 {
                     await cliente.CancelarSuscripcionAsync(usuario).ConfigureAwait(false);
@@ -414,6 +428,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (Exception ex) when (EsExcepcionDeServicio(ex))
             {
+                _logger.Warn("Excepción al cancelar suscripción interna de amigos.", ex);
                 cliente.Abort();
             }
             finally
@@ -442,12 +457,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     cliente.Abort();
                 }
             }
-            catch (CommunicationException)
+            catch (CommunicationException ex)
             {
+                _logger.Warn("Excepción de comunicación al cerrar cliente de amigos.", ex);
                 cliente.Abort();
             }
-            catch (TimeoutException)
+            catch (TimeoutException ex)
             {
+                _logger.Warn("Timeout al cerrar cliente de amigos.", ex);
                 cliente.Abort();
             }
         }

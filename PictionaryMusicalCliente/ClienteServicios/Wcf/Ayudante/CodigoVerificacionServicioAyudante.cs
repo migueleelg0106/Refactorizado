@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
@@ -10,11 +11,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
     /// </summary>
     public static class CodigoVerificacionServicioAyudante
     {
-        private const string CodigoVerificacionEndpoint = 
+        private static readonly ILog _logger = 
+            LogManager.GetLogger(typeof(CodigoVerificacionServicioAyudante));
+
+        private const string CodigoVerificacionEndpoint =
             "BasicHttpBinding_ICodigoVerificacionManejador";
-        private const string CuentaEndpoint = 
+        private const string CuentaEndpoint =
             "BasicHttpBinding_ICuentaManejador";
-        private const string CambioContrasenaEndpoint = 
+        private const string CambioContrasenaEndpoint =
             "BasicHttpBinding_ICambioContrasenaManejador";
 
         /// <summary>
@@ -28,6 +32,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
+            _logger.Info($"Iniciando solicitud de código de registro para '{solicitud.Correo}'.");
+
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
 
@@ -39,9 +45,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         /// <summary>
         /// Consume el servicio para solicitar un codigo de recuperacion de cuenta.
         /// </summary>
-        public static Task<DTOs.ResultadoSolicitudRecuperacionDTO> 
+        public static Task<DTOs.ResultadoSolicitudRecuperacionDTO>
             SolicitarCodigoRecuperacionAsync(string identificador)
         {
+            _logger.Info($"Iniciando solicitud de código de recuperación para '{identificador}'.");
+
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
 
@@ -62,6 +70,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             string tokenCodigo,
             string codigoIngresado)
         {
+            _logger.Info("Enviando confirmación de código para registro.");
+
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
 
@@ -83,6 +93,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
             string tokenCodigo,
             string codigoIngresado)
         {
+            _logger.Info("Enviando confirmación de código para recuperación.");
+
             var cliente = new PictionaryServidorServicioCodigoVerificacion
                 .CodigoVerificacionManejadorClient(CodigoVerificacionEndpoint);
 
@@ -103,6 +115,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         public static Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRegistroAsync(
             string tokenCodigo)
         {
+            _logger.Info("Solicitando reenvío de código de registro.");
+
             var cliente = new PictionaryServidorServicioCuenta.
                 CuentaManejadorClient(CuentaEndpoint);
             var solicitud = new DTOs.ReenvioCodigoVerificacionDTO
@@ -121,6 +135,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         public static Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(
             string tokenCodigo)
         {
+            _logger.Info("Solicitando reenvío de código de recuperación.");
+
             var cliente = new PictionaryServidorServicioCambioContrasena
                 .CambioContrasenaManejadorClient(CambioContrasenaEndpoint);
 

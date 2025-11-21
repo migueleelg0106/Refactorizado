@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -14,6 +15,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class ClasificacionServicio : IClasificacionServicio
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(ClasificacionServicio));
         private const string ClasificacionEndpoint = "BasicHttpBinding_IClasificacionManejador";
 
         /// <summary>
@@ -34,6 +36,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
+                _logger.Warn("Fallo al obtener clasificación desde servidor.", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoErrorProcesarSolicitud);
@@ -41,6 +44,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("Endpoint de clasificación no encontrado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -48,6 +52,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Timeout al obtener clasificación.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -55,6 +60,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación al obtener clasificación.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -62,6 +68,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida al obtener clasificación.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,

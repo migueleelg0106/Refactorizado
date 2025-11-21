@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
@@ -17,6 +18,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
     /// </summary>
     public class ClasificacionVistaModelo : BaseVistaModelo
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IClasificacionServicio _clasificacionServicio;
         private IReadOnlyList<DTOs.ClasificacionUsuarioDTO> _clasificacionOriginal;
         private ObservableCollection<DTOs.ClasificacionUsuarioDTO> _clasificacion;
@@ -119,6 +123,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
+                Log.Info("Solicitando tabla de clasificación al servidor.");
                 IReadOnlyList<DTOs.ClasificacionUsuarioDTO> clasificacion =
                     await _clasificacionServicio.ObtenerTopJugadoresAsync().ConfigureAwait(true);
 
@@ -128,6 +133,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
+                Log.Error("Error al obtener clasificación.", ex);
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally

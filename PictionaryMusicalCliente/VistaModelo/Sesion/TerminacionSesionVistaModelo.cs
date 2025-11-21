@@ -2,6 +2,7 @@
 using PictionaryMusicalCliente.Sesiones;
 using System;
 using System.Windows.Input;
+using log4net;
 
 namespace PictionaryMusicalCliente.VistaModelo.Sesion
 {
@@ -10,6 +11,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Sesion
     /// </summary>
     public class TerminacionSesionVistaModelo : BaseVistaModelo
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Accion delegada para cerrar el cuadro de dialogo.
         /// </summary>
@@ -41,6 +45,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Sesion
 
         private void EjecutarAceptar()
         {
+            Log.Info("Usuario confirmó el cierre de sesión.");
             SesionUsuarioActual.CerrarSesion();
             EjecutarCierreSesionYNavegacion?.Invoke();
 
@@ -49,6 +54,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Sesion
 
         private void EjecutarCancelar()
         {
+            Log.Info("Usuario canceló el cierre de sesión.");
             OcultarDialogo?.Invoke();
         }
     }

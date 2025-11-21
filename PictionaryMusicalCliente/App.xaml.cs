@@ -12,6 +12,8 @@ namespace PictionaryMusicalCliente
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            log4net.Config.XmlConfigurator.Configure();
+
             var localizacionServicio = LocalizacionServicio.Instancia;
             string codigoIdioma = Settings.Default.idiomaCodigo;
 

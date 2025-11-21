@@ -4,6 +4,7 @@ using PictionaryMusicalCliente.Properties.Langs;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -13,6 +14,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class CambioContrasenaServicio : ICambioContrasenaServicio
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(CambioContrasenaServicio));
         private const string Endpoint = "BasicHttpBinding_ICambioContrasenaManejador";
 
         /// <summary>
@@ -28,19 +30,19 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     nameof(identificador));
             }
 
-            DTOs.ResultadoSolicitudRecuperacionDTO resultado = 
+            DTOs.ResultadoSolicitudRecuperacionDTO resultado =
                 await EjecutarConManejoDeErroresAsync(
                 () => CodigoVerificacionServicioAyudante.SolicitarCodigoRecuperacionAsync
                 (identificador),
                 Lang.errorTextoServidorSolicitudCambioContrasena
             ).ConfigureAwait(false);
 
-            if (resultado == null)
+            if (resultado != null && resultado.CodigoEnviado)
             {
-                return null;
+                _logger.Info($"Código de recuperación solicitado para: {identificador}");
             }
 
-            return new DTOs.ResultadoSolicitudRecuperacionDTO
+            return resultado == null ? null : new DTOs.ResultadoSolicitudRecuperacionDTO
             {
                 CuentaEncontrada = resultado.CuentaEncontrada,
                 CodigoEnviado = resultado.CodigoEnviado,
@@ -69,12 +71,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 Lang.errorTextoServidorReenviarCodigo
             ).ConfigureAwait(false);
 
-            if (resultado == null)
+            if (resultado != null && resultado.CodigoEnviado)
             {
-                return null;
+                _logger.Info("Reenvío de código de recuperación solicitado.");
             }
 
-            return new DTOs.ResultadoSolicitudCodigoDTO
+            return resultado == null ? null : new DTOs.ResultadoSolicitudCodigoDTO
             {
                 CodigoEnviado = resultado.CodigoEnviado,
                 Mensaje = resultado.Mensaje,
@@ -110,12 +112,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 Lang.errorTextoServidorValidarCodigo
             ).ConfigureAwait(false);
 
-            if (resultado == null)
+            if (resultado != null && resultado.OperacionExitosa)
             {
-                return null;
+                _logger.Info("Código de recuperación confirmado.");
             }
 
-            return new DTOs.ResultadoOperacionDTO
+            return resultado == null ? null : new DTOs.ResultadoOperacionDTO
             {
                 OperacionExitosa = resultado.OperacionExitosa,
                 Mensaje = resultado.Mensaje
@@ -157,12 +159,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 Lang.errorTextoServidorActualizarContrasena
             ).ConfigureAwait(false);
 
-            if (resultado == null)
+            if (resultado != null && resultado.OperacionExitosa)
             {
-                return null;
+                _logger.Info("Contraseña actualizada mediante recuperación.");
             }
 
-            return new DTOs.ResultadoOperacionDTO
+            return resultado == null ? null : new DTOs.ResultadoOperacionDTO
             {
                 OperacionExitosa = resultado.OperacionExitosa,
                 Mensaje = resultado.Mensaje
@@ -179,6 +181,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
+                _logger.Warn($"Error de servidor en flujo de cambio de contraseña: " +
+                    $"{mensajeFallaPredeterminado}", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     mensajeFallaPredeterminado);
@@ -186,6 +190,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("Endpoint no encontrado en flujo de cambio de contraseña.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -193,6 +198,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Timeout en flujo de cambio de contraseña.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -200,6 +206,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación en flujo de cambio de contraseña.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -207,6 +214,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida en flujo de cambio de contraseña.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoPrepararSolicitudCambioContrasena,

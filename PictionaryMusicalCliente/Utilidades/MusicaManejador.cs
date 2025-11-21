@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Media;
+using log4net;
 
 namespace PictionaryMusicalCliente.ClienteServicios
 {
@@ -9,6 +9,9 @@ namespace PictionaryMusicalCliente.ClienteServicios
     /// </summary>
     public class MusicaManejador : IDisposable
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly MediaPlayer _reproductor;
         private bool _desechado;
         private double _volumenGuardado;
@@ -80,7 +83,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         {
             if (string.IsNullOrWhiteSpace(nombreArchivo))
             {
-                Debug.WriteLine("El nombre del archivo no puede ser vacio.");
+                Log.Warn("Se intentó reproducir música con nombre de archivo vacío.");
                 return;
             }
 
@@ -97,15 +100,15 @@ namespace PictionaryMusicalCliente.ClienteServicios
             }
             catch (UriFormatException ex)
             {
-                Debug.WriteLine($"Error en el formato de la URI: {ex.Message}");
+                Log.Error($"Formato URI inválido para música: {nombreArchivo}", ex);
             }
             catch (InvalidOperationException ex)
             {
-                Debug.WriteLine($"Error al intentar abrir: {ex.Message}");
+                Log.Error($"Error de operación al abrir música: {nombreArchivo}", ex);
             }
             catch (System.IO.IOException ex)
             {
-                Debug.WriteLine($"Error de E/S: {ex.Message}");
+                Log.Error($"Error de E/S al cargar música: {nombreArchivo}", ex);
             }
         }
 
@@ -189,12 +192,14 @@ namespace PictionaryMusicalCliente.ClienteServicios
         {
             _reproductor.Play();
             EstaReproduciendo = true;
+            Log.Info("Reproducción de música iniciada exitosamente.");
         }
 
         private void EnMedioFallido(object sender, ExceptionEventArgs e)
         {
             EstaReproduciendo = false;
-            Debug.WriteLine($"Error al cargar la música: {e.ErrorException.Message}");
+            Log.Error($"Fallo crítico en reproducción de medio: {e.ErrorException.Message}",
+                e.ErrorException);
         }
     }
 }

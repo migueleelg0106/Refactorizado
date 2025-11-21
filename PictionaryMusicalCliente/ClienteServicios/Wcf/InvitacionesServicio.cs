@@ -5,6 +5,7 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using PictionaryMusicalServidor.Servicios.Contratos;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -14,6 +15,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class InvitacionesServicio : IInvitacionesServicio
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(InvitacionesServicio));
         private const string Endpoint = "BasicHttpBinding_IInvitacionesManejador";
 
         /// <summary>
@@ -25,13 +27,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         {
             if (string.IsNullOrWhiteSpace(codigoSala))
             {
-                throw new ArgumentException("El código de sala es obligatorio.", 
+                throw new ArgumentException("El código de sala es obligatorio.",
                     nameof(codigoSala));
             }
 
             if (string.IsNullOrWhiteSpace(correoDestino))
             {
-                throw new ArgumentException("El correo de destino es obligatorio.", 
+                throw new ArgumentException("El correo de destino es obligatorio.",
                     nameof(correoDestino));
             }
 
@@ -50,11 +52,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     Correo = correoDestino.Trim()
                 };
 
-                return await Task.Run(() => canal.EnviarInvitacion(solicitud)).
+                var resultado = await Task.Run(() => canal.EnviarInvitacion(solicitud)).
                     ConfigureAwait(false);
+
+                _logger.Info($"Invitación enviada a '{correoDestino}' para sala '{codigoSala}'.");
+                return resultado;
             }
             catch (FaultException ex)
             {
+                _logger.Warn("El servidor rechazó la invitación (Validación/Lógica).", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoEnviarCorreo);
@@ -62,6 +68,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("Endpoint de invitaciones no encontrado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -69,6 +76,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Timeout al enviar invitación.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -76,6 +84,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación al enviar invitación.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -83,6 +92,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida en servicio de invitaciones.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
@@ -111,8 +121,19 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                         comunicacion.Abort();
                     }
                 }
-                catch
+                catch (CommunicationException ex)
                 {
+                    _logger.Warn("Error al cerrar canal de invitaciones.", ex);
+                    comunicacion.Abort();
+                }
+                catch (TimeoutException ex)
+                {
+                    _logger.Warn("Timeout al cerrar canal de invitaciones.", ex);
+                    comunicacion.Abort();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error("Error inesperado al cerrar canal de invitaciones.", ex);
                     comunicacion.Abort();
                 }
             }
@@ -137,8 +158,19 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     fabrica.Abort();
                 }
             }
-            catch
+            catch (CommunicationException ex)
             {
+                _logger.Warn("Error al cerrar fábrica de canales.", ex);
+                fabrica.Abort();
+            }
+            catch (TimeoutException ex)
+            {
+                _logger.Warn("Timeout al cerrar fábrica de canales.", ex);
+                fabrica.Abort();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error inesperado al cerrar fábrica.", ex);
                 fabrica.Abort();
             }
         }

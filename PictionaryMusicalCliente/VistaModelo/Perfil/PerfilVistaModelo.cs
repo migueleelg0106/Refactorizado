@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 
@@ -25,6 +26,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
     /// </summary>
     public class PerfilVistaModelo : BaseVistaModelo
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private const string RedSocialInstagram = "Instagram";
         private const string RedSocialFacebook = "Facebook";
         private const string RedSocialX = "X";
@@ -100,64 +104,65 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         /// <summary>
         /// Nombre de usuario (Solo lectura).
         /// </summary>
-        public string Usuario { 
-            get => _usuario; 
-            private set => EstablecerPropiedad(ref _usuario, value); 
+        public string Usuario 
+        { 
+            get => _usuario;
+            private set => EstablecerPropiedad(ref _usuario, value);
         }
         /// <summary>
         /// Correo electronico (Solo lectura).
         /// </summary>
-        public string Correo 
-        { 
-            get => _correo; 
-            private set => EstablecerPropiedad(ref _correo, value); 
+        public string Correo
+        {
+            get => _correo;
+            private set => EstablecerPropiedad(ref _correo, value);
         }
         /// <summary>
         /// Nombre personal del usuario.
         /// </summary>
-        public string Nombre 
-        { 
-            get => _nombre; 
-            set => EstablecerPropiedad(ref _nombre, value); 
+        public string Nombre
+        {
+            get => _nombre;
+            set => EstablecerPropiedad(ref _nombre, value);
         }
         /// <summary>
         /// Apellido del usuario.
         /// </summary>
-        public string Apellido 
-        { 
-            get => _apellido; 
-            set => EstablecerPropiedad(ref _apellido, value); 
+        public string Apellido
+        {
+            get => _apellido;
+            set => EstablecerPropiedad(ref _apellido, value);
         }
         /// <summary>
         /// Nombre del avatar seleccionado actualmente.
         /// </summary>
-        public string AvatarSeleccionadoNombre 
-        { 
-            get => _avatarSeleccionadoNombre; 
-            private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value); 
+        public string AvatarSeleccionadoNombre
+        {
+            get => _avatarSeleccionadoNombre;
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value);
         }
         /// <summary>
         /// ID del avatar seleccionado.
         /// </summary>
-        public int AvatarSeleccionadoId 
-        { 
-            get => _avatarSeleccionadoId; 
-            private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value); 
+        public int AvatarSeleccionadoId
+        {
+            get => _avatarSeleccionadoId;
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value);
         }
         /// <summary>
         /// Imagen del avatar seleccionado.
         /// </summary>
-        public ImageSource AvatarSeleccionadoImagen 
-        { 
-            get => _avatarSeleccionadoImagen; 
-            private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value); 
+        public ImageSource AvatarSeleccionadoImagen
+        {
+            get => _avatarSeleccionadoImagen;
+            private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value);
         }
         /// <summary>
         /// Coleccion de redes sociales editables.
         /// </summary>
-        public ObservableCollection<RedSocialItemVistaModelo> RedesSociales 
-        { 
-            get; 
+        public ObservableCollection<RedSocialItemVistaModelo> RedesSociales
+        {
+            get;
         }
         /// <summary>
         /// Indica si hay una operacion de guardado o carga en curso.
@@ -225,6 +230,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             if (sesion == null || sesion.IdUsuario <= 0)
             {
+                Log.Warn("Intento de cargar perfil sin sesión válida.");
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
                 CerrarAccion?.Invoke();
@@ -240,6 +246,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (perfil == null)
                 {
+                    Log.Error($"Perfil obtenido es nulo para ID: {sesion.IdUsuario}");
                     ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorObtenerPerfil);
                     return;
@@ -249,6 +256,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             }
             catch (ServicioExcepcion ex)
             {
+                Log.Error("Error de servicio al obtener perfil.", ex);
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorObtenerPerfil);
             }
@@ -315,11 +323,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
+                Log.Info($"Guardando cambios de perfil para usuario ID: {_usuarioId}");
                 DTOs.ResultadoOperacionDTO resultado = await _perfilServicio
                     .ActualizarPerfilAsync(solicitud).ConfigureAwait(true);
 
                 if (resultado == null)
                 {
+                    Log.Error("El servicio de actualización de perfil devolvió null.");
                     ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorActualizarPerfil);
                     return;
@@ -338,9 +348,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                     ManejadorSonido.ReproducirExito();
                     ActualizarSesion();
                 }
+                else
+                {
+                    Log.Warn($"Error al guardar perfil: {resultado.Mensaje}");
+                }
             }
             catch (ServicioExcepcion ex)
             {
+                Log.Error("Excepción de servicio al actualizar perfil.", ex);
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorActualizarPerfil);
             }
@@ -437,6 +452,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
+                Log.Info($"Iniciando solicitud de cambio de contraseña para: {Correo}");
                 DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
                     .RecuperarCuentaAsync(
                         Correo,
@@ -445,16 +461,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (resultado?.OperacionExitosa == false &&
                     !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
+                    Log.Warn($"Error en cambio de contraseña: {resultado.Mensaje}");
                     ManejadorSonido.ReproducirError();
                     AvisoAyudante.Mostrar(resultado.Mensaje);
                 }
                 else if (resultado?.OperacionExitosa == true)
                 {
+                    Log.Info("Cambio de contraseña finalizado correctamente.");
                     ManejadorSonido.ReproducirExito();
                 }
             }
             catch (ServicioExcepcion ex)
             {
+                Log.Error("Excepción al cambiar contraseña.", ex);
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoIniciarCambioContrasena);
             }
@@ -597,25 +616,36 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             private string _identificador;
             private bool _tieneError;
 
-            /// <summary>Nombre de la red social.</summary>
+            /// <summary>
+            /// Nombre de la red social.
+            /// </summary>
             public string Nombre {
-                get; 
+                get;
             } = nombre ??
                 throw new ArgumentNullException(nameof(nombre));
-            /// <summary>Icono de la red social.</summary>
+
+            /// <summary>
+            /// Icono de la red social.
+            /// </summary>
             public ImageSource RutaIcono {
-                get; 
+                get;
             } = icono;
-            /// <summary>ID en esa red.</summary>
+
+            /// <summary>
+            /// ID en esa red.
+            /// </summary>
             public string Identificador {
-                get => _identificador; 
-                set => EstablecerPropiedad(ref _identificador, value); 
+                get => _identificador;
+                set => EstablecerPropiedad(ref _identificador, value);
             }
-            /// <summary>Indica si el valor ingresado es invalido.</summary>
-            public bool TieneError 
-            { 
-                get => _tieneError; 
-                set => EstablecerPropiedad(ref _tieneError, value); 
+
+            /// <summary>
+            /// Indica si el valor ingresado es invalido.
+            /// </summary>
+            public bool TieneError
+            {
+                get => _tieneError;
+                set => EstablecerPropiedad(ref _tieneError, value);
             }
         }
     }

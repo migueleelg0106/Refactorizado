@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using PictionaryMusicalCliente.Properties.Langs;
+using log4net;
 
 namespace PictionaryMusicalCliente.Utilidades
 {
@@ -11,6 +12,9 @@ namespace PictionaryMusicalCliente.Utilidades
     /// </summary>
     public static class NombreInvitadoGenerador
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static readonly object _sync = new();
         private static readonly Random _random = new();
 
@@ -28,6 +32,13 @@ namespace PictionaryMusicalCliente.Utilidades
 
             string opciones = ObtenerOpciones(culturaEfectiva);
 
+            if (string.IsNullOrWhiteSpace(opciones))
+            {
+                Log.Error($"No se encontraron nombres de invitados para cultura: " +
+                    $"{culturaEfectiva}");
+                return null;
+            }
+
             var nombres = opciones
                 .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(nombre => nombre.Trim())
@@ -36,6 +47,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (nombres.Length == 0)
             {
+                Log.Warn("La lista de nombres parseada está vacía.");
                 return null;
             }
 
@@ -51,6 +63,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (nombresDisponibles.Length == 0)
             {
+                Log.Info("Todos los nombres disponibles ya han sido utilizados.");
                 return null;
             }
 
@@ -67,6 +80,7 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (string.IsNullOrWhiteSpace(opciones) && cultura != CultureInfo.InvariantCulture)
             {
+                Log.Warn($"Falta recurso 'invitadoNombres' en {cultura}, usando Invariant.");
                 opciones = Lang.ResourceManager.GetString(
                     "invitadoNombres",
                     CultureInfo.InvariantCulture);

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
@@ -20,6 +21,9 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
     /// </summary>
     public class CreacionCuentaVistaModelo : BaseVistaModelo
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly ICodigoVerificacionServicio _codigoVerificacionServicio;
         private readonly ICuentaServicio _cuentaServicio;
         private readonly ISeleccionarAvatarServicio _seleccionarAvatarServicio;
@@ -214,12 +218,16 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 if (!esValido)
                 {
                     ManejadorSonido.ReproducirError();
+                    Log.Warn("Intento de creación de cuenta fallido por validación de campos.");
                     return;
                 }
+
+                Log.Info($"Iniciando flujo de registro para usuario: {solicitud.Usuario}");
                 await EjecutarFlujoDeRegistroAsync(solicitud).ConfigureAwait(true);
             }
             catch (ServicioExcepcion ex)
             {
+                Log.Error("Error de servicio durante la creación de cuenta.", ex);
                 ManejadorSonido.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoRegistrarCuentaMasTarde);
             }
@@ -259,6 +267,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 ManejadorSonido.ReproducirError();
                 if (errorDuplicado)
                 {
+                    Log.Info("Intento de registro con usuario o correo ya existente.");
                     MostrarErroresCamposDuplicados();
                 }
                 return;
@@ -269,6 +278,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!verificacionExitosa)
             {
+                Log.Info("Verificación de código fallida o cancelada por el usuario.");
                 ManejadorSonido.ReproducirError();
                 return;
             }
@@ -278,12 +288,14 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (registroExitoso)
             {
+                Log.Info($"Cuenta creada exitosamente para usuario: {solicitud.Usuario}");
                 ManejadorSonido.ReproducirExito();
                 MostrarMensaje?.Invoke(Lang.crearCuentaTextoExitosoMensaje);
                 CerrarAccion?.Invoke();
             }
             else
             {
+                Log.Warn("Fallo en el paso final de registro de cuenta.");
                 ManejadorSonido.ReproducirError();
                 MostrarErroresCamposDuplicados();
             }
@@ -365,6 +377,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (resultado == null)
             {
+                Log.Error("El servicio de código de verificación retornó null.");
                 MostrarMensaje?.Invoke(Lang.errorTextoRegistrarCuentaMasTarde);
                 return (false, null, false);
             }
@@ -379,6 +392,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!resultado.CodigoEnviado)
             {
+                Log.Warn($"No se pudo enviar el código. Mensaje: {resultado.Mensaje}");
                 MostrarMensaje?.Invoke(resultado.Mensaje ??
                     Lang.errorTextoRegistrarCuentaMasTarde);
                 return (false, resultado, false);
@@ -416,6 +430,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (resultadoRegistro == null)
             {
+                Log.Error("El servicio de registro de cuenta retornó null.");
                 MostrarMensaje?.Invoke(Lang.errorTextoRegistrarCuentaMasTarde);
                 return (false, null);
             }
@@ -431,6 +446,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 }
                 else
                 {
+                    Log.Warn($"Error al registrar cuenta: {resultadoRegistro.Mensaje}");
                     MostrarMensaje?.Invoke(resultadoRegistro.Mensaje ??
                         Lang.errorTextoRegistrarCuentaMasTarde);
                     return (false, resultadoRegistro);

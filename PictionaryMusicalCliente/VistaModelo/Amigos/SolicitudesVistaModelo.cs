@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
@@ -20,6 +21,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     /// </summary>
     public sealed class SolicitudesVistaModelo : BaseVistaModelo, IDisposable
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IAmigosServicio _amigosServicio;
         private readonly string _usuarioActual;
         private bool _estaProcesando;
@@ -183,6 +187,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         {
             if (entrada == null)
             {
+                Log.Warn("Intento de responder solicitud con entrada nula.");
                 return;
             }
 
@@ -190,6 +195,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
+                Log.Info($"Aceptando solicitud de amistad de: {entrada.Solicitud.UsuarioEmisor}");
                 await _amigosServicio.ResponderSolicitudAsync(
                     entrada.Solicitud.UsuarioEmisor,
                     entrada.Solicitud.UsuarioReceptor).ConfigureAwait(true);
@@ -199,6 +205,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (ServicioExcepcion ex)
             {
+                Log.Error("Error al aceptar solicitud de amistad.", ex);
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
@@ -212,6 +219,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         {
             if (entrada == null)
             {
+                Log.Warn("Intento de rechazar solicitud con entrada nula.");
                 return;
             }
 
@@ -219,6 +227,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
+                Log.Info($"Rechazando/Cancelando solicitud con: {entrada.NombreUsuario}");
                 await _amigosServicio.EliminarAmigoAsync(
                     entrada.Solicitud.UsuarioEmisor,
                     entrada.Solicitud.UsuarioReceptor).ConfigureAwait(true);
@@ -228,6 +237,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (ServicioExcepcion ex)
             {
+                Log.Error("Error al rechazar/cancelar solicitud de amistad.", ex);
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }

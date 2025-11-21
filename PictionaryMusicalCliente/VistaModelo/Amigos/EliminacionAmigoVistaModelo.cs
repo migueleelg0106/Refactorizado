@@ -3,6 +3,7 @@ using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using System;
 using System.Windows.Input;
+using log4net;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
@@ -11,6 +12,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     /// </summary>
     public class EliminacionAmigoVistaModelo : BaseVistaModelo
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Inicializa el ViewModel construyendo el mensaje de confirmacion.
         /// </summary>
@@ -24,12 +28,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             AceptarComando = new ComandoDelegado(_ =>
             {
                 ManejadorSonido.ReproducirClick();
+                Log.Info($"Usuario confirmó la eliminación del amigo: {nombreAmigo}");
                 Cerrar?.Invoke(true);
             });
 
             CancelarComando = new ComandoDelegado(_ =>
             {
                 ManejadorSonido.ReproducirClick();
+                Log.Info($"Usuario canceló la eliminación del amigo: {nombreAmigo}");
                 Cerrar?.Invoke(false);
             });
         }

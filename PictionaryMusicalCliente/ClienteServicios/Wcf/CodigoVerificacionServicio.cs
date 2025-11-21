@@ -4,6 +4,7 @@ using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -13,6 +14,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class CodigoVerificacionServicio : ICodigoVerificacionServicio
     {
+        private static readonly ILog _logger = 
+            LogManager.GetLogger(typeof(CodigoVerificacionServicio));
         private const string CodigoVerificacionEndpoint =
             "BasicHttpBinding_ICodigoVerificacionManejador";
         private const string CuentaEndpoint = "BasicHttpBinding_ICuentaManejador";
@@ -33,13 +36,21 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             try
             {
-                return await WcfClienteAyudante
+                var resultado = await WcfClienteAyudante
                     .UsarAsincronoAsync(cliente, c => c.SolicitarCodigoVerificacionAsync
                         (solicitud))
                     .ConfigureAwait(false);
+
+                if (resultado != null && resultado.CodigoEnviado)
+                {
+                    _logger.Info($"Código de verificación solicitado para: {solicitud.Correo}");
+                }
+
+                return resultado;
             }
             catch (FaultException ex)
             {
+                _logger.Warn("Error al solicitar código (Servidor).", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorCodigoVerificacion);
@@ -47,6 +58,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("Endpoint de verificación no encontrado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -54,6 +66,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Timeout al solicitar código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -61,6 +74,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación al solicitar código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -68,6 +82,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida al solicitar código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
@@ -96,14 +111,18 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     TokenCodigo = tokenCodigo.Trim()
                 };
 
-                return await WcfClienteAyudante
+                var resultado = await WcfClienteAyudante
                     .UsarAsincronoAsync(
                         cliente,
                         c => c.ReenviarCodigoVerificacionAsync(reenvioCodigoVerificacionDto))
                     .ConfigureAwait(false);
+
+                _logger.Info("Reenvío de código solicitado.");
+                return resultado;
             }
             catch (FaultException ex)
             {
+                _logger.Warn("Error al reenviar código (Servidor).", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorCodigoVerificacion);
@@ -111,6 +130,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("Endpoint de reenvío no encontrado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -118,6 +138,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Timeout al reenviar código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -125,6 +146,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación al reenviar código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -132,6 +154,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida al reenviar código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
@@ -167,14 +190,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     CodigoIngresado = codigoIngresado
                 };
 
-                return await WcfClienteAyudante
+                var resultado = await WcfClienteAyudante
                     .UsarAsincronoAsync(
                         cliente,
                         c => c.ConfirmarCodigoVerificacionAsync(confirmacionCodigoDto))
                     .ConfigureAwait(false);
+
+                if (resultado != null && resultado.RegistroExitoso)
+                {
+                    _logger.Info("Código de registro confirmado exitosamente.");
+                }
+
+                return resultado;
             }
             catch (FaultException ex)
             {
+                _logger.Warn("Error al confirmar código (Servidor).", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorCodigoVerificacion);
@@ -182,6 +213,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("Endpoint de confirmación no encontrado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -189,6 +221,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Timeout al confirmar código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -196,6 +229,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación al confirmar código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -203,6 +237,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida al confirmar código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,

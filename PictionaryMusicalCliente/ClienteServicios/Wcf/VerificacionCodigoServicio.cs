@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -13,6 +14,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class VerificacionCodigoServicio : IVerificacionCodigoServicio
     {
+        private static readonly ILog _logger = 
+            LogManager.GetLogger(typeof(VerificacionCodigoServicio));
+
         /// <summary>
         /// Valida el codigo ingresado por el usuario contra el token del servidor.
         /// </summary>
@@ -35,7 +39,17 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado == null)
             {
+                _logger.Warn("El servicio de confirmación de código retornó null.");
                 return null;
+            }
+
+            if (resultado.RegistroExitoso)
+            {
+                _logger.Info($"Código de registro confirmado exitosamente. Token: {tokenCodigo}");
+            }
+            else
+            {
+                _logger.Warn($"Confirmación de código fallida. Razón: {resultado.Mensaje}");
             }
 
             return resultado;
@@ -60,7 +74,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado == null)
             {
+                _logger.Warn("El servicio de reenvío de código retornó null.");
                 return null;
+            }
+
+            if (resultado.CodigoEnviado)
+            {
+                _logger.Info($"Código de registro reenviado exitosamente. Token: {tokenCodigo}");
             }
 
             return resultado;
@@ -76,6 +96,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
+                _logger.Warn($"Error de lógica del servidor en verificación de código: " +
+                    $"{mensajeErrorPredeterminado}", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     mensajeErrorPredeterminado);
@@ -83,6 +105,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("Endpoint de verificación de código no encontrado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -90,6 +113,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Timeout en servicio de verificación de código.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -97,6 +121,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación en servicio de verificación.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -104,6 +129,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida en servicio de verificación.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,

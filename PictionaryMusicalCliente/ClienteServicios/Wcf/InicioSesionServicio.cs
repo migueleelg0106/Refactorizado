@@ -5,6 +5,7 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Modelo;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -14,6 +15,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class InicioSesionServicio : IInicioSesionServicio
     {
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(InicioSesionServicio));
         private const string Endpoint = "BasicHttpBinding_IInicioSesionManejador";
 
         /// <summary>
@@ -38,12 +40,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 if (resultadoDto == null)
                 {
+                    _logger.Warn("El servicio de inicio de sesión retornó null.");
                     return null;
                 }
 
                 UsuarioMapeador.ActualizarSesion(resultadoDto.Usuario);
 
-                // Traduccion del mensaje recibido
                 resultadoDto.Mensaje = MensajeServidorAyudante.Localizar(
                     resultadoDto.Mensaje,
                     resultadoDto.Mensaje);
@@ -51,12 +53,20 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 if (resultadoDto.Usuario != null)
                 {
                     UsuarioAutenticado.Instancia.CargarDesdeDTO(resultadoDto.Usuario);
+                    _logger.Info($"Usuario '{resultadoDto.Usuario.NombreUsuario}' inició sesión" +
+                        $" exitosamente.");
+                }
+                else
+                {
+                    _logger.Warn("Inicio de sesión fallido: Credenciales incorrectas o cuenta no" +
+                        " encontrada.");
                 }
 
                 return resultadoDto;
             }
             catch (FaultException ex)
             {
+                _logger.Warn("Error de lógica en el servidor durante inicio de sesión.", ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorInicioSesion);
@@ -64,6 +74,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (EndpointNotFoundException ex)
             {
+                _logger.Error("No se pudo conectar con el endpoint de inicio de sesión.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -71,6 +82,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
+                _logger.Error("Tiempo de espera agotado durante inicio de sesión.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -78,6 +90,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
+                _logger.Error("Error de comunicación WCF durante inicio de sesión.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -85,6 +98,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Error("Operación inválida al iniciar sesión (Estado del cliente " +
+                    "incorrecto).", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,

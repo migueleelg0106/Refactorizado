@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using log4net;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Properties.Langs;
@@ -13,6 +14,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
     /// </summary>
     public class RecuperacionCuentaDialogoServicio : IRecuperacionCuentaServicio
     {
+        private static readonly ILog _logger = 
+            LogManager.GetLogger(typeof(RecuperacionCuentaDialogoServicio));
         private readonly IVerificacionCodigoDialogoServicio _verificarCodigoDialogoServicio;
 
         /// <summary>
@@ -37,6 +40,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 throw new ArgumentNullException(nameof(cambioContrasenaServicio));
             }
 
+            _logger.Info($"Iniciando flujo de recuperación de cuenta para: {identificador}");
+
             var (solicitudExitosa, solicitudDTO, errorSolicitud) =
                 await SolicitarCodigoAsync(
                     identificador,
@@ -44,6 +49,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             if (!solicitudExitosa)
             {
+                _logger.Warn($"Flujo detenido: No se pudo solicitar el código. Mensaje: " +
+                    $"{errorSolicitud?.Mensaje}");
                 return errorSolicitud;
             }
 
@@ -56,6 +63,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             if (!verificacionExitosa)
             {
+                _logger.Warn($"Flujo detenido: Verificación de código fallida o cancelada.");
                 return errorVerificacion;
             }
 
@@ -113,7 +121,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             ICambioContrasenaServicio servicio)
         {
             var adaptador = new ServicioCodigoRecuperacionAdaptador(servicio);
-            DTOs.ResultadoRegistroCuentaDTO resultadoVerificacion = 
+            DTOs.ResultadoRegistroCuentaDTO resultadoVerificacion =
                 await _verificarCodigoDialogoServicio.MostrarDialogoAsync(
                     Lang.cambiarContrasenaTextoCodigoVerificacion,
                     solicitud.TokenCodigo,
@@ -148,6 +156,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             vistaModelo.CambioContrasenaCompletado = resultado =>
             {
+                _logger.Info("Cambio de contraseña completado exitosamente.");
                 finalizacion.TrySetResult(
                     resultado ?? new DTOs.ResultadoOperacionDTO
                     {
@@ -159,6 +168,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             vistaModelo.Cancelado = () =>
             {
+                _logger.Info("Diálogo de cambio de contraseña cancelado.");
                 finalizacion.TrySetResult(null);
                 ventana.Close();
             };

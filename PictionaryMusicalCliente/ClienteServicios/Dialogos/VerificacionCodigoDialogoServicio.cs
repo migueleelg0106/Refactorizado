@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using log4net;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Perfil;
 using ICodigoVerificacionCli = PictionaryMusicalCliente.ClienteServicios.
@@ -13,6 +14,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
     /// </summary>
     public class VerificacionCodigoDialogoServicio : IVerificacionCodigoDialogoServicio
     {
+        private static readonly ILog _logger = 
+            LogManager.GetLogger(typeof(VerificacionCodigoDialogoServicio));
+
         /// <summary>
         /// Muestra el dialogo de verificacion y retorna el resultado.
         /// </summary>
@@ -23,8 +27,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
         {
             if (codigoVerificacionServicio == null)
             {
-                throw new ArgumentNullException(nameof(codigoVerificacionServicio));
+                var ex = new ArgumentNullException(nameof(codigoVerificacionServicio));
+                _logger.Error("Intento de abrir diálogo de verificación con servicio nulo.", ex);
+                throw ex;
             }
+
+            _logger.Info("Abriendo diálogo de verificación de código.");
 
             var ventana = new VerificacionCodigo();
             var vistaModelo = new VerificacionCodigoVistaModelo(
@@ -36,12 +44,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             vistaModelo.VerificacionCompletada = resultado =>
             {
+                _logger.Info("Verificación de código completada exitosamente en el diálogo.");
                 finalizacion.TrySetResult(resultado);
                 ventana.Close();
             };
 
             vistaModelo.Cancelado = () =>
             {
+                _logger.Info("Verificación de código cancelada por el usuario.");
                 finalizacion.TrySetResult(null);
                 ventana.Close();
             };

@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.ServiceModel;
+using log4net;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
@@ -16,6 +17,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     /// </summary>
     public class BusquedaAmigoVistaModelo : BaseVistaModelo
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IAmigosServicio _amigosServicio;
         private readonly string _usuarioActual;
         private string _nombreUsuarioBusqueda;
@@ -112,6 +116,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             if (string.IsNullOrWhiteSpace(_usuarioActual))
             {
+                Log.Warn("Intento de enviar solicitud sin usuario actual en sesión.");
                 AvisoAyudante.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
@@ -120,6 +125,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
+                Log.Info($"Enviando solicitud de amistad de {_usuarioActual} a {nombreAmigo}");
                 await _amigosServicio.EnviarSolicitudAsync(
                     _usuarioActual,
                     nombreAmigo).ConfigureAwait(true);
@@ -130,6 +136,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (FaultException ex)
             {
+                Log.Error($"Error WCF (Fault) al enviar solicitud a {nombreAmigo}.", ex);
                 ManejadorSonido.ReproducirError();
                 string mensajeServidor = ex.Message;
 
@@ -140,6 +147,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (ServicioExcepcion ex)
             {
+                Log.Error($"Error de servicio al enviar solicitud a {nombreAmigo}.", ex);
                 ManejadorSonido.ReproducirError();
                 string mensajeServidor = ex.Message;
 

@@ -1,6 +1,7 @@
 using System;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.Modelo;
+using log4net;
 
 namespace PictionaryMusicalCliente.Sesiones
 {
@@ -9,6 +10,9 @@ namespace PictionaryMusicalCliente.Sesiones
     /// </summary>
     public sealed class SesionUsuarioActual
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static readonly Lazy<SesionUsuarioActual> _instancia =
             new(() => new SesionUsuarioActual());
 
@@ -43,6 +47,8 @@ namespace PictionaryMusicalCliente.Sesiones
             }
 
             Usuario.CargarDesdeDTO(usuarioDto);
+            Log.Info($"Sesión establecida para usuario ID: {usuarioDto.UsuarioId}, " +
+                     $"Username: {usuarioDto.NombreUsuario}");
         }
 
         /// <summary>
@@ -50,6 +56,10 @@ namespace PictionaryMusicalCliente.Sesiones
         /// </summary>
         public static void CerrarSesion()
         {
+            if (EstaAutenticado)
+            {
+                Log.Info($"Cerrando sesión de usuario: {Usuario.NombreUsuario}");
+            }
             Usuario.Limpiar();
         }
     }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
@@ -18,6 +19,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
     /// </summary>
     public class IngresoPartidaInvitadoVistaModelo : BaseVistaModelo
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private const int MaximoJugadoresSala = 4;
 
         private readonly ISalasServicio _salasServicio;
@@ -140,6 +144,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                     if (string.IsNullOrWhiteSpace(nombreInvitado))
                     {
+                        Log.Warn("Generador de nombres retornó vacío/nulo.");
                         break;
                     }
 
@@ -150,6 +155,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     switch (resultado.Estado)
                     {
                         case EstadoUnionInvitado.Exito:
+                            Log.Info($"Invitado unido exitosamente: {nombreInvitado}");
                             ManejadorSonido.ReproducirExito();
                             SeUnioSala = true;
                             SalaUnida?.Invoke(resultado.Sala, nombreInvitado);
@@ -157,6 +163,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                             return;
 
                         case EstadoUnionInvitado.NombreDuplicado:
+                            Log.Info($"Nombre duplicado '{nombreInvitado}', reintentando...");
                             nombresReservados.Add(nombreInvitado);
                             if (resultado.JugadoresActuales != null)
                             {
@@ -168,16 +175,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                             continue;
 
                         case EstadoUnionInvitado.SalaLlena:
+                            Log.Warn("Intento de unirse a sala llena.");
                             ManejadorSonido.ReproducirError();
                             AvisoAyudante.Mostrar(Lang.errorTextoSalaLlena);
                             return;
 
                         case EstadoUnionInvitado.SalaNoEncontrada:
+                            Log.Warn($"Sala no encontrada: {codigo}");
                             ManejadorSonido.ReproducirError();
                             AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
                             return;
 
                         case EstadoUnionInvitado.Error:
+                            Log.Error($"Error al unirse: {resultado.Mensaje}");
                             ManejadorSonido.ReproducirError();
                             AvisoAyudante.Mostrar(
                                 resultado.Mensaje ?? Lang.errorTextoNoEncuentraPartida);
@@ -185,6 +195,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     }
                 }
 
+                Log.Error("Se agotaron los intentos de generar nombre único.");
                 ManejadorSonido.ReproducirError();
                 AvisoAyudante.Mostrar(Lang.errorTextoNombresInvitadoAgotados);
             }
@@ -229,6 +240,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
             catch (ServicioExcepcion ex)
             {
+                Log.Error("Excepción de servicio al intentar unirse como invitado.", ex);
                 string mensaje = ex?.Tipo == TipoErrorServicio.FallaServicio
                     ? Lang.errorTextoNoEncuentraPartida
                     : string.IsNullOrWhiteSpace(ex?.Message)
@@ -276,9 +288,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     codigoSala,
                     nombreInvitado).ConfigureAwait(true);
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignorar cualquier error al abandonar la sala en este flujo.
+                // Se captura Exception general porque es un cleanup "best effort"
+                Log.Warn("Error en cleanup al abandonar sala (ignorado intencionalmente).", ex);
             }
         }
 

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Media;
+using log4net;
 
 namespace PictionaryMusicalCliente.ClienteServicios
 {
@@ -10,10 +10,13 @@ namespace PictionaryMusicalCliente.ClienteServicios
     /// </summary>
     public static class ManejadorSonido
     {
+        private static readonly ILog Log = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Reproduce un archivo de sonido ubicado en la carpeta "Recursos" de la aplicación.
         /// </summary>
-        /// <param name="nombreArchivo">Nombre del archivo con extensión (ej. "click.mp3")</param>
+        /// <param name="nombreArchivo">Nombre del archivo con extensión.</param>
         /// <param name="volumen">Volumen de 0.0 a 1.0 (por defecto 0.5)</param>
         public static void ReproducirSonido(string nombreArchivo, double volumen = 0.5)
         {
@@ -26,7 +29,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
                 if (!File.Exists(rutaSonido))
                 {
-                    Debug.WriteLine($"Sonido no encontrado en: {rutaSonido}");
+                    Log.Warn($"Sonido SFX no encontrado: {rutaSonido}");
                     return;
                 }
 
@@ -41,9 +44,9 @@ namespace PictionaryMusicalCliente.ClienteServicios
                         player.Stop();
                         player.Close();
                     }
-                    catch (Exception ex)
+                    catch (InvalidOperationException ex)
                     {
-                        Debug.WriteLine($"Error limpiando reproductor SFX: {ex.Message}");
+                        Log.Warn($"Error limpiando reproductor SFX: {ex.Message}");
                     }
                 };
 
@@ -51,19 +54,19 @@ namespace PictionaryMusicalCliente.ClienteServicios
             }
             catch (ArgumentException argEx)
             {
-                Debug.WriteLine($"Error en los argumentos de la ruta: {argEx.Message}");
+                Log.Error($"Argumentos de ruta inválidos para sonido: {nombreArchivo}", argEx);
             }
             catch (UriFormatException uriEx)
             {
-                Debug.WriteLine($"Formato de URI inválido para el sonido: {uriEx.Message}");
+                Log.Error($"Formato URI inválido para sonido: {nombreArchivo}", uriEx);
             }
             catch (FileNotFoundException fnfEx)
             {
-                Debug.WriteLine($"Archivo perdido antes de reproducir: {fnfEx.FileName}");
+                Log.Error($"Archivo perdido antes de reproducir: {fnfEx.FileName}", fnfEx);
             }
             catch (InvalidOperationException ioEx)
             {
-                Debug.WriteLine($"Error de operación en MediaPlayer: {ioEx.Message}");
+                Log.Error($"Error de operación en MediaPlayer SFX: {ioEx.Message}", ioEx);
             }
         }
 
