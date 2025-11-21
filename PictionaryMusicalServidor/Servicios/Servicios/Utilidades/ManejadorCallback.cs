@@ -36,7 +36,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             }
 
             _suscripciones.AddOrUpdate(nombreUsuario, callback, (_, __) => callback);
-            _logger.Info($"Usuario '{nombreUsuario}' suscrito correctamente al callback {typeof(TCallback).Name}.");
+            _logger.InfoFormat("Usuario '{0}' suscrito correctamente al callback {1}.", nombreUsuario, typeof(TCallback).Name);
         }
 
         /// <summary>
@@ -50,12 +50,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             {
                 canal.Closed += (_, __) => 
                 {
-                    _logger.Info($"Canal cerrado para usuario '{nombreUsuario}'. Desuscribiendo.");
+                    _logger.InfoFormat("Canal cerrado para usuario '{0}'. Desuscribiendo.", nombreUsuario);
                     Desuscribir(nombreUsuario);
                 };
                 canal.Faulted += (_, __) => 
                 {
-                    _logger.Warn($"Canal fallado (Faulted) para usuario '{nombreUsuario}'. Desuscribiendo.");
+                    _logger.WarnFormat("Canal fallado (Faulted) para usuario '{0}'. Desuscribiendo.", nombreUsuario);
                     Desuscribir(nombreUsuario);
                 };
             }
@@ -74,7 +74,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 
             if (_suscripciones.TryRemove(nombreUsuario, out _))
             {
-                _logger.Info($"Usuario '{nombreUsuario}' desuscrito del callback {typeof(TCallback).Name}.");
+                _logger.InfoFormat("Usuario '{0}' desuscrito del callback {1}.", nombreUsuario, typeof(TCallback).Name);
             }
         }
 
@@ -122,7 +122,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         {
             if (!TryGetCallback(nombreUsuario, out var callback))
             {
-                _logger.Warn($"Intento de notificación a '{nombreUsuario}' fallido: No se encontró callback activo.");
+                _logger.WarnFormat("Intento de notificación a '{0}' fallido: No se encontró callback activo.", nombreUsuario);
                 return;
             }
 
@@ -132,12 +132,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             }
             catch (CommunicationException ex)
             {
-                _logger.Warn($"Error de comunicación al notificar a '{nombreUsuario}'. Desuscribiendo.", ex);
+                _logger.Warn(string.Format("Error de comunicación al notificar a '{0}'. Desuscribiendo.", nombreUsuario), ex);
                 Desuscribir(nombreUsuario);
             }
             catch (TimeoutException ex)
             {
-                _logger.Warn($"Timeout al notificar a '{nombreUsuario}'. Desuscribiendo.", ex);
+                _logger.Warn(string.Format("Timeout al notificar a '{0}'. Desuscribiendo.", nombreUsuario), ex);
                 Desuscribir(nombreUsuario);
             }
             catch (InvalidOperationException ex)

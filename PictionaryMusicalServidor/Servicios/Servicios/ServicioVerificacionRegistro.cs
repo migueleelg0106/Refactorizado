@@ -55,7 +55,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (usuarioRegistrado || correoRegistrado)
                 {
-                    _logger.Warn($"Intento de registro duplicado. Usuario existe: {usuarioRegistrado}, Correo existe: {correoRegistrado}");
+                    _logger.WarnFormat("Intento de registro duplicado. Usuario existe: {0}, Correo existe: {1}", usuarioRegistrado, correoRegistrado);
                     return new ResultadoSolicitudCodigoDTO
                     {
                         CodigoEnviado = false,
@@ -77,7 +77,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 datosCuenta.Idioma);
             if (!enviado)
             {
-                _logger.Error($"Error al enviar código de verificación a '{datosCuenta.Correo}'.");
+                _logger.ErrorFormat("Error al enviar código de verificación a '{0}'.", datosCuenta.Correo);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -93,7 +93,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             };
 
             _solicitudes[token] = solicitud;
-            _logger.Info($"Código de verificación de registro generado para '{datosCuenta.Correo}'.");
+            _logger.InfoFormat("Código de verificación de registro generado para '{0}'.", datosCuenta.Correo);
 
             return new ResultadoSolicitudCodigoDTO
             {
@@ -152,7 +152,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 existente.Codigo = codigoAnterior;
                 existente.Expira = expiracionAnterior;
-                _logger.Error($"Error al reenviar código de verificación a '{existente.DatosCuenta.Correo}'.");
+                _logger.ErrorFormat("Error al reenviar código de verificación a '{0}'.", existente.DatosCuenta.Correo);
 
                 return new ResultadoSolicitudCodigoDTO
                 {
@@ -161,7 +161,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 };
             }
 
-            _logger.Info($"Código de verificación de registro reenviado a '{existente.DatosCuenta.Correo}'.");
+            _logger.InfoFormat("Código de verificación de registro reenviado a '{0}'.", existente.DatosCuenta.Correo);
 
             return new ResultadoSolicitudCodigoDTO
             {
@@ -209,7 +209,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             if (pendiente.Expira < DateTime.UtcNow)
             {
                 _solicitudes.TryRemove(token, out _);
-                _logger.Warn($"Código de verificación expirado para usuario '{pendiente.DatosCuenta.Usuario}'.");
+                _logger.WarnFormat("Código de verificación expirado para usuario '{0}'.", pendiente.DatosCuenta.Usuario);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -219,7 +219,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (!string.Equals(pendiente.Codigo, codigoIngresado, StringComparison.OrdinalIgnoreCase))
             {
-                _logger.Warn($"Código de verificación incorrecto ingresado para usuario '{pendiente.DatosCuenta.Usuario}'.");
+                _logger.WarnFormat("Código de verificación incorrecto ingresado para usuario '{0}'.", pendiente.DatosCuenta.Usuario);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -232,7 +232,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             string clave = ObtenerClave(pendiente.DatosCuenta.Usuario, pendiente.DatosCuenta.Correo);
             _verificacionesConfirmadas[clave] = 0;
 
-            _logger.Info($"Verificación confirmada exitosamente para usuario '{pendiente.DatosCuenta.Usuario}'.");
+            _logger.InfoFormat("Verificación confirmada exitosamente para usuario '{0}'.", pendiente.DatosCuenta.Usuario);
 
             return new ResultadoRegistroCuentaDTO
             {

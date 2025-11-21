@@ -74,7 +74,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 _notificador.NotificarSolicitudesPendientesAlSuscribir(nombreNormalizado, usuario.idUsuario);
 
-                _logger.Info($"Usuario '{nombreNormalizado}' suscrito a notificaciones de amistad.");
+                _logger.InfoFormat("Usuario '{0}' suscrito a notificaciones de amistad.", nombreNormalizado);
             }
             catch (EntityException ex)
             {
@@ -150,7 +150,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     SolicitudAceptada = false
                 };
 
-                _logger.Info($"Solicitud de amistad enviada de '{nombreEmisor}' a '{nombreReceptor}'.");
+                _logger.InfoFormat("Solicitud de amistad enviada de '{0}' a '{1}'.", nombreEmisor, nombreReceptor);
                 _notificador.NotificarSolicitudActualizada(nombreReceptor, solicitud);
             }
             catch (FaultException ex)
@@ -219,7 +219,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         SolicitudAceptada = true
                     };
 
-                    _logger.Info($"Solicitud de amistad aceptada entre '{nombreEmisorNormalizado}' y '{nombreReceptorNormalizado}'.");
+                    _logger.InfoFormat("Solicitud de amistad aceptada entre '{0}' y '{1}'.", nombreEmisorNormalizado, nombreReceptorNormalizado);
                     _notificador.NotificarSolicitudActualizada(nombreEmisorNormalizado, solicitud);
                     _notificador.NotificarSolicitudActualizada(nombreReceptorNormalizado, solicitud);
                 }
@@ -302,7 +302,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _notificador.NotificarAmistadEliminada(nombreUsuarioANormalizado, solicitud);
                 _notificador.NotificarAmistadEliminada(nombreUsuarioBNormalizado, solicitud);
 
-                _logger.Info($"Amistad eliminada entre '{nombreUsuarioANormalizado}' y '{nombreUsuarioBNormalizado}'.");
+                _logger.InfoFormat("Amistad eliminada entre '{0}' y '{1}'.", nombreUsuarioANormalizado, nombreUsuarioBNormalizado);
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioANormalizado);
                 ListaAmigosManejador.NotificarCambioAmistad(nombreUsuarioBNormalizado);
             }

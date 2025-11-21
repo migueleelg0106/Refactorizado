@@ -91,7 +91,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     return CrearFallo(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
                 }
 
-                _logger.Info($"Invitación enviada a '{correo}' para la sala {codigoSala}.");
+                _logger.InfoFormat("Invitación enviada a '{0}' para la sala {1}.", correo, codigoSala);
 
                 return new ResultadoOperacionDTO
                 {

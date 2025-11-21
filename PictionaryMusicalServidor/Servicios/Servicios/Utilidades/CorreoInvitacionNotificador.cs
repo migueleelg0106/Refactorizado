@@ -100,7 +100,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                     }
                 }
 
-                _logger.Info($"Invitación enviada correctamente a '{correoDestino}'.");
+                _logger.InfoFormat("Invitación enviada correctamente a '{0}'.", correoDestino);
                 return true;
             }
             catch (SmtpException ex)
@@ -120,7 +120,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error inesperado al enviar invitación a {correoDestino}", ex);
+                _logger.Error(string.Format("Error inesperado al enviar invitación a {0}", correoDestino), ex);
                 return false;
             }
         }
