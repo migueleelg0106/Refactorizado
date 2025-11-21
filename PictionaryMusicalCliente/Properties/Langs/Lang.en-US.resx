@@ -994,7 +994,7 @@
     <value>Time per round must be greater than zero.</value>
   </data>
   <data name="UsuarioNoEncontrado" xml:space="preserve">
-    <value>The specified user was not found.</value>
+    <value>The user was not found. Try searching another one.</value>
   </data>
   <data name="UsuarioOCorreoRegistrado" xml:space="preserve">
     <value>Email or username is already registered.</value>

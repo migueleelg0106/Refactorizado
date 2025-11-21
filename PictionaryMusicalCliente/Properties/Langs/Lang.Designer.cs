@@ -2725,7 +2725,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se encontró el usuario especificado..
+        ///   Busca una cadena traducida similar a No se encontró el usuario ingresado. Intente con uno distinto..
         /// </summary>
         public static string UsuarioNoEncontrado {
             get {

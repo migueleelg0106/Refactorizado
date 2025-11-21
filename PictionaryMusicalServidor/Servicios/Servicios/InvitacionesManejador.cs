@@ -12,6 +12,7 @@ using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
+using System.ServiceModel;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -97,6 +98,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     OperacionExitosa = true,
                     Mensaje = MensajesError.Cliente.InvitacionEnviadaExito
                 };
+            }
+            catch (FaultException ex)
+            {
+                throw ex;
             }
             catch (ArgumentException ex)
             {

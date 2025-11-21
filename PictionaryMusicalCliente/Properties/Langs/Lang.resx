@@ -985,7 +985,7 @@
     <value>El tiempo por ronda debe ser mayor a cero.</value>
   </data>
   <data name="UsuarioNoEncontrado" xml:space="preserve">
-    <value>No se encontró el usuario especificado.</value>
+    <value>No se encontró el usuario ingresado. Intente con uno distinto.</value>
   </data>
   <data name="UsuarioOCorreoRegistrado" xml:space="preserve">
     <value>El correo o usuario ya está registrado.</value>
