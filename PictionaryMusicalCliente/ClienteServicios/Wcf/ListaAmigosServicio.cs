@@ -82,7 +82,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
                     _cliente = cliente;
                     _usuarioSuscrito = nombreUsuario;
-                    _logger.InfoFormat("Usuario '{}' suscrito a la lista de amigos.", 
+                    _logger.InfoFormat("Usuario '{0}' suscrito a la lista de amigos.", 
                         nombreUsuario);
                 }
                 catch (FaultException ex)
