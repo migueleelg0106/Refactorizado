@@ -14,5 +14,11 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
         /// </summary>
         [DataMember(IsRequired = true)]
         public string Identificador { get; set; }
+
+        /// <summary>
+        /// Codigo de idioma solicitado para los mensajes de recuperacion (opcional).
+        /// </summary>
+        [DataMember]
+        public string Idioma { get; set; }
     }
 }

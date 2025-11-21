@@ -31,7 +31,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <param name="codigo">Codigo de verificacion a enviar.</param>
         /// <param name="usuarioDestino">Nombre del usuario destinatario.</param>
         /// <returns>True si el codigo fue enviado exitosamente, false en caso contrario.</returns>
-        public static bool EnviarNotificacion(string correoDestino, string codigo, string usuarioDestino)
+        public static bool EnviarNotificacion(string correoDestino, string codigo, string usuarioDestino, string idioma)
         {
             if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigo))
             {
@@ -41,7 +41,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             try
             {
 
-                var tarea = _notificador?.NotificarAsync(correoDestino, codigo, usuarioDestino);
+                var tarea = _notificador?.NotificarAsync(correoDestino, codigo, usuarioDestino, idioma);
                 if (tarea == null)
                 {
                     return false;

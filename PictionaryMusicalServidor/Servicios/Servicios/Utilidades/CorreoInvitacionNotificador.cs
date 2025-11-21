@@ -16,7 +16,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         private static readonly ILog _logger =
             LogManager.GetLogger(typeof(CorreoInvitacionNotificador));
 
-        private const string AsuntoPredeterminado = "Invitacion a partida";
+        private const string AsuntoPredeterminadoEs = "Invitacion a partida";
+        private const string AsuntoPredeterminadoEn = "Game invitation";
 
         /// <summary>
         /// Envia una invitacion a una partida al correo indicado.
@@ -27,7 +28,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         /// <returns>
         /// True si el correo se envio correctamente; false en caso contrario.
         /// </returns>
-        public static bool EnviarInvitacion(string correoDestino, string codigoSala, string creador)
+        public static bool EnviarInvitacion(string correoDestino, string codigoSala, string creador, string idioma)
         {
             if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigoSala))
             {
@@ -39,7 +40,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             string host = ObtenerConfiguracion("CorreoHost", "Correo.Smtp.Host");
             string usuarioSmtp = ObtenerConfiguracion("CorreoUsuario", "Correo.Smtp.Usuario");
             string puertoConfigurado = ObtenerConfiguracion("CorreoPuerto", "Correo.Smtp.Puerto");
-            string asunto = ObtenerConfiguracion("CorreoAsuntoInvitacion", "Correo.Invitacion.Asunto") ?? AsuntoPredeterminado;
+            string idiomaNormalizado = NormalizarIdioma(idioma);
+            string asuntoConfigurado = ObtenerConfiguracion("CorreoAsuntoInvitacion", "Correo.Invitacion.Asunto");
+            string asunto = string.IsNullOrWhiteSpace(asuntoConfigurado)
+                ? ObtenerAsuntoPredeterminado(idiomaNormalizado)
+                : asuntoConfigurado;
 
             bool.TryParse(
                 ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"),
@@ -47,7 +52,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 
             if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
             {
-                _logger.Error("Configuraci髇 de correo incompleta (Remitente o Host faltante).");
+                _logger.Error("Configuraci贸n de correo incompleta (Remitente o Host faltante).");
                 return false;
             }
 
@@ -67,7 +72,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 return false;
             }
 
-            string cuerpoHtml = ConstruirCuerpoMensaje(codigoSala, creador);
+            string cuerpoHtml = ConstruirCuerpoMensaje(codigoSala, creador, idiomaNormalizado);
 
             try
             {
@@ -88,7 +93,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                     }
                 }
 
-                _logger.Info($"Invitaci髇 enviada correctamente a '{correoDestino}' para la sala {codigoSala}.");
+                _logger.Info($"Invitaci贸n enviada correctamente a '{correoDestino}' para la sala {codigoSala}.");
                 return true;
             }
             catch (SmtpException ex)
@@ -133,25 +138,57 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             return null;
         }
 
-        private static string ConstruirCuerpoMensaje(string codigoSala, string creador)
+        internal static string ConstruirCuerpoMensaje(string codigoSala, string creador, string idioma)
         {
+            string idiomaNormalizado = NormalizarIdioma(idioma);
+            bool esIngles = idiomaNormalizado == "en";
+
+            string encabezado = esIngles
+                ? "You have been invited to a Musical Pictionary game."
+                : "Has sido invitado a una partida de Pictionary Musical.";
+            string mensajeCreador = esIngles
+                ? "has invited you to their room."
+                : "te ha invitado a su sala.";
+            string mensajeCodigo = esIngles
+                ? "Use the following code to join:"
+                : "Utiliza el siguiente c贸digo para unirte:";
+            string mensajeInstruccion = esIngles
+                ? "Enter the code in the app to join the game."
+                : "Ingresa el c贸digo en la aplicaci贸n para unirte a la partida.";
+            string mensajeDespedida = esIngles ? "We hope to see you there." : "Te esperamos.";
+
             var cuerpoHtml = new StringBuilder();
 
             cuerpoHtml.Append("<html><body>");
-            cuerpoHtml.Append("<h2>Has sido invitado a una partida de Pictionary Musical.</h2>");
+            cuerpoHtml.Append($"<h2>{encabezado}</h2>");
 
             if (!string.IsNullOrWhiteSpace(creador))
             {
-                cuerpoHtml.Append($"<p>{creador} te ha invitado a su sala.</p>");
+                cuerpoHtml.Append($"<p>{creador} {mensajeCreador}</p>");
             }
 
-            cuerpoHtml.Append("<p>Utiliza el siguiente codigo para unirte:</p>");
+            cuerpoHtml.Append($"<p>{mensajeCodigo}</p>");
             cuerpoHtml.Append($"<h1 style='color:#4CAF50;'>{codigoSala}</h1>");
-            cuerpoHtml.Append("<p>Ingresa el codigo en la aplicacion para unirte a la partida.</p>");
-            cuerpoHtml.Append("<p>Te esperamos.</p>");
+            cuerpoHtml.Append($"<p>{mensajeInstruccion}</p>");
+            cuerpoHtml.Append($"<p>{mensajeDespedida}</p>");
             cuerpoHtml.Append("</body></html>");
 
             return cuerpoHtml.ToString();
+        }
+
+        private static string NormalizarIdioma(string idioma)
+        {
+            if (string.IsNullOrWhiteSpace(idioma))
+            {
+                return "es";
+            }
+
+            return idioma.StartsWith("en", StringComparison.OrdinalIgnoreCase) ? "en" : "es";
+        }
+
+        private static string ObtenerAsuntoPredeterminado(string idiomaNormalizado)
+        {
+            return idiomaNormalizado == "en" ? AsuntoPredeterminadoEn : AsuntoPredeterminadoEs;
         }
     }
 }

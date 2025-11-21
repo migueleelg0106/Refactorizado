@@ -15,9 +15,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         private static readonly ILog _logger =
             LogManager.GetLogger(typeof(CorreoCodigoVerificacionNotificador));
 
-        private const string AsuntoPredeterminado = "Codigo de verificacion";
+        private const string AsuntoPredeterminadoEs = "Codigo de verificacion";
+        private const string AsuntoPredeterminadoEn = "Verification code";
 
-        public async Task<bool> NotificarAsync(string correoDestino, string codigo, string usuarioDestino)
+        public async Task<bool> NotificarAsync(string correoDestino, string codigo, string usuarioDestino, string idioma)
         {
             if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigo))
             {
@@ -29,7 +30,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             string host = ObtenerConfiguracion("CorreoHost", "Correo.Smtp.Host");
             string usuarioSmtp = ObtenerConfiguracion("CorreoUsuario", "Correo.Smtp.Usuario");
             string puertoConfigurado = ObtenerConfiguracion("CorreoPuerto", "Correo.Smtp.Puerto");
-            string asunto = ObtenerConfiguracion("CorreoAsunto", "Correo.Codigo.Asunto") ?? AsuntoPredeterminado;
+            string idiomaNormalizado = NormalizarIdioma(idioma);
+            string asuntoConfigurado = ObtenerConfiguracion("CorreoAsunto", "Correo.Codigo.Asunto");
+            string asunto = string.IsNullOrWhiteSpace(asuntoConfigurado)
+                ? ObtenerAsuntoPredeterminado(idiomaNormalizado)
+                : asuntoConfigurado;
 
             bool.TryParse(
                 ObtenerConfiguracion("CorreoSsl", "Correo.Smtp.HabilitarSsl"),
@@ -37,7 +42,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
 
             if (string.IsNullOrWhiteSpace(remitente) || string.IsNullOrWhiteSpace(host))
             {
-                _logger.Error("Configuraci髇 de correo incompleta (Remitente o Host faltante).");
+                _logger.Error("Configuraci贸n de correo incompleta (Remitente o Host faltante).");
                 return false;
             }
 
@@ -57,7 +62,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 return false;
             }
 
-            string cuerpoHtml = ConstruirCuerpoMensaje(usuarioDestino, codigo);
+            string cuerpoHtml = ConstruirCuerpoMensaje(usuarioDestino, codigo, idiomaNormalizado);
 
             try
             {
@@ -80,7 +85,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                     }
                 }
 
-                _logger.Info($"C骴igo de verificaci髇 enviado a '{correoDestino}'.");
+                _logger.Info($"C贸digo de verificaci贸n enviado a '{correoDestino}'.");
                 return true;
             }
             catch (SmtpException ex)
@@ -125,27 +130,53 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             return null;
         }
 
-        private static string ConstruirCuerpoMensaje(string usuarioDestino, string codigo)
+        internal static string ConstruirCuerpoMensaje(string usuarioDestino, string codigo, string idioma)
         {
+            string idiomaNormalizado = NormalizarIdioma(idioma);
+            bool esIngles = idiomaNormalizado == "en";
+
+            string saludo = esIngles ? "Hello" : "Hola";
+            string mensajeCodigo = esIngles
+                ? "Your verification code is:"
+                : "Tu c贸digo de verificaci贸n es:";
+            string mensajeIgnorar = esIngles
+                ? "If you did not request this code you can ignore this message."
+                : "Si no solicitaste este c贸digo puedes ignorar este mensaje.";
+
             var cuerpoHtml = new StringBuilder();
 
             cuerpoHtml.Append("<html><body>");
 
             if (!string.IsNullOrWhiteSpace(usuarioDestino))
             {
-                cuerpoHtml.Append($"<h2>Hola {usuarioDestino},</h2>");
+                cuerpoHtml.Append($"<h2>{saludo} {usuarioDestino},</h2>");
             }
             else
             {
-                cuerpoHtml.Append("<h2>Hola,</h2>");
+                cuerpoHtml.Append($"<h2>{saludo},</h2>");
             }
 
-            cuerpoHtml.Append("<p>Tu codigo de verificacion es:</p>");
+            cuerpoHtml.Append($"<p>{mensajeCodigo}</p>");
             cuerpoHtml.Append($"<h1>{codigo}</h1>");
-            cuerpoHtml.Append("<p>Si no solicitaste este codigo puedes ignorar este mensaje.</p>");
+            cuerpoHtml.Append($"<p>{mensajeIgnorar}</p>");
             cuerpoHtml.Append("</body></html>");
 
             return cuerpoHtml.ToString();
+        }
+
+        private static string NormalizarIdioma(string idioma)
+        {
+            if (string.IsNullOrWhiteSpace(idioma))
+            {
+                return "es";
+            }
+
+            return idioma.StartsWith("en", StringComparison.OrdinalIgnoreCase) ? "en" : "es";
+        }
+
+        private static string ObtenerAsuntoPredeterminado(string idiomaNormalizado)
+        {
+            return idiomaNormalizado == "en" ? AsuntoPredeterminadoEn : AsuntoPredeterminadoEs;
         }
     }
 }

@@ -77,14 +77,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     }
                 }
 
-                bool enviado = CorreoInvitacionNotificador.EnviarInvitacion(correo, sala.Codigo, sala.Creador);
+                bool enviado = CorreoInvitacionNotificador.EnviarInvitacion(
+                    correo,
+                    sala.Codigo,
+                    sala.Creador,
+                    invitacion.Idioma);
 
                 if (!enviado)
                 {
                     throw new InvalidOperationException(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
                 }
 
-                _logger.Info($"Invitación enviada a '{correo}' para la sala {codigoSala}.");
+                _logger.Info($"InvitaciÃ³n enviada a '{correo}' para la sala {codigoSala}.");
 
                 return new ResultadoOperacionDTO
                 {
