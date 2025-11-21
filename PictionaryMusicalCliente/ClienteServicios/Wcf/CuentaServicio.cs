@@ -39,12 +39,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 if (resultado != null && resultado.RegistroExitoso)
                 {
-                    _logger.Info($"Registro de cuenta exitoso para: {solicitud.Correo}");
+                    _logger.InfoFormat("Registro de cuenta exitoso para: {}", 
+                        solicitud.Correo);
                 }
                 else
                 {
-                    _logger.Warn($"Registro de cuenta fallido para: {solicitud.Correo}. " +
-                        $"Razón: {resultado?.Mensaje}");
+                    _logger.WarnFormat("Registro de cuenta fallido para: {0}. Razón: {1}",
+                        solicitud.Correo, resultado?.Mensaje);
                 }
 
                 return resultado;

@@ -24,7 +24,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
                 return;
             }
 
-            _logger.Info($"Actualizando sesión local para usuario: {dto.NombreUsuario}");
+            _logger.InfoFormat("Actualizando sesión local para usuario: {0}", 
+                dto.NombreUsuario);
             SesionUsuarioActual.EstablecerUsuario(dto);
         }
     }

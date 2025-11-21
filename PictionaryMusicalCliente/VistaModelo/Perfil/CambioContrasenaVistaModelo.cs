@@ -212,7 +212,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
                 else
                 {
-                    Log.Warn($"Fallo al actualizar contraseña en servidor: {resultado.Mensaje}");
+                    Log.WarnFormat("Fallo al actualizar contraseña en servidor: {0}",
+                        resultado.Mensaje);
                     SonidoManejador.ReproducirError();
                 }
                 AvisoAyudante.Mostrar(mensaje);

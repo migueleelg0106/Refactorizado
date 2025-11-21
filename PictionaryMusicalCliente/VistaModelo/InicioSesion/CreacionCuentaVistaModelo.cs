@@ -227,7 +227,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                     return;
                 }
 
-                Log.Info($"Iniciando flujo de registro para usuario: {solicitud.Usuario}");
+                Log.InfoFormat("Iniciando flujo de registro para usuario: {0}"
+                    solicitud.Usuario);
                 await EjecutarFlujoDeRegistroAsync(solicitud).ConfigureAwait(true);
             }
             catch (ServicioExcepcion ex)
@@ -293,7 +294,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (registroExitoso)
             {
-                Log.Info($"Cuenta creada exitosamente para usuario: {solicitud.Usuario}");
+                Log.InfoFormat("Cuenta creada exitosamente para usuario: {0}",
+                    solicitud.Usuario);
                 SonidoManejador.ReproducirExito();
                 MostrarMensaje?.Invoke(Lang.crearCuentaTextoExitosoMensaje);
                 CerrarAccion?.Invoke();
@@ -399,7 +401,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!resultado.CodigoEnviado)
             {
-                Log.Warn($"No se pudo enviar el código. Mensaje: {resultado.Mensaje}");
+                Log.WarnFormat("No se pudo enviar el código. Mensaje: {0}",
+                    resultado.Mensaje);
                 MostrarMensaje?.Invoke(resultado.Mensaje ??
                     Lang.errorTextoRegistrarCuentaMasTarde);
                 return (false, resultado, false);
@@ -453,7 +456,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 }
                 else
                 {
-                    Log.Warn($"Error al registrar cuenta: {resultadoRegistro.Mensaje}");
+                    Log.WarnFormat("Error al registrar cuenta: {0}",
+                        resultadoRegistro.Mensaje);
                     MostrarMensaje?.Invoke(resultadoRegistro.Mensaje ??
                         Lang.errorTextoRegistrarCuentaMasTarde);
                     return (false, resultadoRegistro);

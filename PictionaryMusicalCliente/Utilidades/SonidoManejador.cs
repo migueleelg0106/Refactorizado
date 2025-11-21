@@ -55,7 +55,8 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
                 if (!File.Exists(rutaSonido))
                 {
-                    Log.Warn($"Sonido SFX no encontrado: {rutaSonido}");
+                    Log.WarnFormat("Sonido SFX no encontrado: {0}",
+                        rutaSonido);
                     return;
                 }
 
@@ -72,7 +73,8 @@ namespace PictionaryMusicalCliente.ClienteServicios
                     }
                     catch (InvalidOperationException ex)
                     {
-                        Log.Warn($"Error limpiando reproductor SFX: {ex.Message}");
+                        Log.WarnFormat("Error limpiando reproductor SFX: {0}",
+                            ex.Message);
                     }
                 };
 
@@ -80,19 +82,23 @@ namespace PictionaryMusicalCliente.ClienteServicios
             }
             catch (ArgumentException argEx)
             {
-                Log.Error($"Argumentos de ruta inválidos para sonido: {nombreArchivo}", argEx);
+                Log.ErrorFormat("Argumentos de ruta inválidos para sonido: {0}",
+                    nombreArchivo, argEx);
             }
             catch (UriFormatException uriEx)
             {
-                Log.Error($"Formato URI inválido para sonido: {nombreArchivo}", uriEx);
+                Log.ErrorFormat("Formato URI inválido para sonido: {0}",
+                    nombreArchivo, uriEx);
             }
             catch (FileNotFoundException fnfEx)
             {
-                Log.Error($"Archivo perdido antes de reproducir: {fnfEx.FileName}", fnfEx);
+                Log.ErrorFormat("Archivo perdido antes de reproducir: {0}",
+                    fnfEx.FileName, fnfEx);
             }
             catch (InvalidOperationException ioEx)
             {
-                Log.Error($"Error de operación en MediaPlayer SFX: {ioEx.Message}", ioEx);
+                Log.ErrorFormat("Error de operación en MediaPlayer SFX: {0}",
+                    ioEx.Message, ioEx);
             }
         }
 

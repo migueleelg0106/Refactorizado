@@ -64,7 +64,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Idiomas
                 return;
             }
 
-            _logger.Info($"Cambiando idioma de aplicación a: {cultura.Name}");
+            _logger.InfoFormat("Cambiando idioma de aplicación a: {0}", cultura.Name);
 
             CulturaActual = cultura;
             Lang.Culture = cultura;

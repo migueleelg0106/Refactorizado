@@ -201,7 +201,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (!resultado.RegistroExitoso)
                 {
-                    Log.Warn($"Verificación fallida: {resultado.Mensaje}");
+                    Log.WarnFormat("Verificación fallida: {0}",
+                        resultado.Mensaje);
                     SonidoManejador.ReproducirError();
                     string mensajeOriginal = resultado.Mensaje;
                     string mensajeLocalizado = MensajeServidorAyudante.Localizar(
@@ -275,7 +276,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
                 else
                 {
-                    Log.Warn($"Fallo al reenviar código: {resultado?.Mensaje}");
+                    Log.WarnFormat("Fallo al reenviar código: {0}",
+                        resultado?.Mensaje);
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(
                         resultado?.Mensaje ?? Lang.errorTextoSolicitarNuevoCodigo);

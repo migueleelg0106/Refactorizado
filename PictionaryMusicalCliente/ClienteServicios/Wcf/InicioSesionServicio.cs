@@ -53,8 +53,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 if (resultadoDto.Usuario != null)
                 {
                     UsuarioAutenticado.Instancia.CargarDesdeDTO(resultadoDto.Usuario);
-                    _logger.Info($"Usuario '{resultadoDto.Usuario.NombreUsuario}' inició sesión" +
-                        $" exitosamente.");
+                    _logger.InfoFormat("Usuario '{0}' inició sesión exitosamente.", 
+                        resultadoDto.Usuario.NombreUsuario);
                 }
                 else
                 {

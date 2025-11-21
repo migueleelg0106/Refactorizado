@@ -76,24 +76,28 @@ namespace PictionaryMusicalCliente.Utilidades
                     _reproductor.Open(new Uri(rutaCompleta, UriKind.Absolute));
                     _reproductor.Play();
                     EstaReproduciendo = true;
-                    Log.Info($"Reproduciendo canción: {nombreArchivo}");
+                    Log.InfoFormat("Reproduciendo canción: {0}", nombreArchivo);
                 }
                 else
                 {
-                    Log.Error($"Archivo de audio no encontrado en ruta: {rutaCompleta}");
+                    Log.ErrorFormat("Archivo de audio no encontrado en ruta: {0}",
+                        rutaCompleta);
                 }
             }
             catch (UriFormatException uriEx)
             {
-                Log.Error($"Formato de URI inválido para canción: {nombreArchivo}", uriEx);
+                Log.ErrorFormat("Formato de URI inválido para canción: {0}",
+                    nombreArchivo, uriEx);
             }
             catch (InvalidOperationException opEx)
             {
-                Log.Error($"Error de operación en reproductor para: {nombreArchivo}", opEx);
+                Log.ErrorFormat("Error de operación en reproductor para: {0}", 
+                    nombreArchivo, opEx);
             }
             catch (ArgumentException argEx)
             {
-                Log.Error($"Argumento inválido en ruta de canción: {nombreArchivo}", argEx);
+                Log.ErrorFormat("Argumento inválido en ruta de canción: {0}",
+                    nombreArchivo, argEx);
             }
         }
 

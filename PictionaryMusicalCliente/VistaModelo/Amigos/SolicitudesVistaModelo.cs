@@ -195,7 +195,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                Log.Info($"Aceptando solicitud de amistad de: {entrada.Solicitud.UsuarioEmisor}");
+                Log.InfoFormat("Aceptando solicitud de amistad de: {0}",
+                    entrada.Solicitud.UsuarioEmisor);
                 await _amigosServicio.ResponderSolicitudAsync(
                     entrada.Solicitud.UsuarioEmisor,
                     entrada.Solicitud.UsuarioReceptor).ConfigureAwait(true);
@@ -227,7 +228,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                Log.Info($"Rechazando/Cancelando solicitud con: {entrada.NombreUsuario}");
+                Log.InfoFormat("Rechazando/Cancelando solicitud con: {0}",
+                    entrada.NombreUsuario);
                 await _amigosServicio.EliminarAmigoAsync(
                     entrada.Solicitud.UsuarioEmisor,
                     entrada.Solicitud.UsuarioReceptor).ConfigureAwait(true);

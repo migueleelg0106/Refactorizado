@@ -246,7 +246,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (perfil == null)
                 {
-                    Log.Error($"Perfil obtenido es nulo para ID: {sesion.IdUsuario}");
+                    Log.ErrorFormat("Perfil obtenido es nulo para ID: {0}",
+                        sesion.IdUsuario);
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(Lang.errorTextoServidorObtenerPerfil);
                     return;
@@ -323,7 +324,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
-                Log.Info($"Guardando cambios de perfil para usuario ID: {_usuarioId}");
+                Log.InfoFormat("Guardando cambios de perfil para usuario ID: {0}",
+                    _usuarioId);
                 DTOs.ResultadoOperacionDTO resultado = await _perfilServicio
                     .ActualizarPerfilAsync(solicitud).ConfigureAwait(true);
 
@@ -350,7 +352,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 }
                 else
                 {
-                    Log.Warn($"Error al guardar perfil: {resultado.Mensaje}");
+                    Log.WarnFormat("Error al guardar perfil: {0}",
+                        resultado.Mensaje);
                 }
             }
             catch (ServicioExcepcion ex)
@@ -452,7 +455,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             try
             {
-                Log.Info($"Iniciando solicitud de cambio de contraseña para: {Correo}");
+                Log.InfoFormat("Iniciando solicitud de cambio de contraseña para: {0}",
+                    Correo);
                 DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
                     .RecuperarCuentaAsync(
                         Correo,
@@ -461,7 +465,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (resultado?.OperacionExitosa == false &&
                     !string.IsNullOrWhiteSpace(resultado.Mensaje))
                 {
-                    Log.Warn($"Error en cambio de contraseña: {resultado.Mensaje}");
+                    Log.WarnFormat("Error en cambio de contraseña: {0}",
+                        resultado.Mensaje);
                     SonidoManejador.ReproducirError();
                     AvisoAyudante.Mostrar(resultado.Mensaje);
                 }

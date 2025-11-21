@@ -125,7 +125,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                Log.Info($"Enviando solicitud de amistad de {_usuarioActual} a {nombreAmigo}");
+                Log.InfoFormat("Enviando solicitud de amistad de {0} a {1}",
+                    _usuarioActual, nombreAmigo);
                 await _amigosServicio.EnviarSolicitudAsync(
                     _usuarioActual,
                     nombreAmigo).ConfigureAwait(true);
@@ -136,7 +137,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (FaultException ex)
             {
-                Log.Error($"Error WCF (Fault) al enviar solicitud a {nombreAmigo}.", ex);
+                Log.ErrorFormat("Error WCF (Fault) al enviar solicitud a {0}.",
+                    nombreAmigo, ex);
                 SonidoManejador.ReproducirError();
                 string mensajeServidor = ex.Message;
 
@@ -147,7 +149,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Error($"Error de servicio al enviar solicitud a {nombreAmigo}.", ex);
+                Log.ErrorFormat("Error de servicio al enviar solicitud a {0}.",
+                    nombreAmigo, ex);
                 SonidoManejador.ReproducirError();
                 string mensajeServidor = ex.Message;
 

@@ -31,12 +31,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     .UsarAsincronoAsync(cliente, c => c.ObtenerPerfilAsync(usuarioId))
                     .ConfigureAwait(false);
 
-                _logger.Info($"Perfil obtenido exitosamente para Usuario ID: {usuarioId}");
+                _logger.InfoFormat("Perfil obtenido exitosamente para Usuario ID: {0}",
+                    usuarioId);
                 return perfilDto;
             }
             catch (FaultException ex)
             {
-                _logger.Warn($"Fallo al obtener perfil para ID {usuarioId}.", ex);
+                _logger.WarnFormat("Fallo al obtener perfil para ID {0}.",
+                    usuarioId, ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorObtenerPerfil);
@@ -98,13 +100,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 if (resultado != null && resultado.OperacionExitosa)
                 {
-                    _logger.Info($"Perfil actualizado correctamente para Usuario ID: " +
-                        $"{solicitud.UsuarioId}");
+                    _logger.InfoFormat("Perfil actualizado correctamente para Usuario ID: {0}",
+                        solicitud.UsuarioId);
                 }
                 else
                 {
-                    _logger.Warn($"No se pudo actualizar el perfil. Mensaje: " +
-                        $"{resultado?.Mensaje}");
+                    _logger.WarnFormat("No se pudo actualizar el perfil. Mensaje: {0}",
+                        resultado?.Mensaje);
                 }
 
                 return new DTOs.ResultadoOperacionDTO

@@ -71,7 +71,8 @@ namespace PictionaryMusicalCliente.Utilidades.Idiomas
 
         private void LocalizacionServicioEnIdiomaActualizado(object sender, EventArgs e)
         {
-            Log.Info($"Actualizando UI a nueva cultura: {Lang.Culture?.Name}");
+            Log.InfoFormat("Actualizando UI a nueva cultura: {0}",
+                Lang.Culture?.Name);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
         }
     }

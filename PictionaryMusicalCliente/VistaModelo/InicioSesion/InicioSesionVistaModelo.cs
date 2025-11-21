@@ -230,7 +230,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
                 vistaModelo.SalaUnida = (sala, nombreInvitado) =>
                 {
-                    Log.Info($"Invitado {nombreInvitado} se unió a sala {sala.Codigo}");
+                    Log.InfoFormat("Invitado {0} se unió a sala {1}",
+                        nombreInvitado, sala.Codigo);
                     AbrirVentanaJuegoInvitado?.Invoke(sala, salasServicio, nombreInvitado);
                 };
 
@@ -282,7 +283,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                     Contrasena = _contrasena
                 };
 
-                Log.Info($"Intentando iniciar sesión para: {identificadorTrimmed}");
+                Log.InfoFormat("Intentando iniciar sesión para: {0}",
+                    identificadorTrimmed);
                 DTOs.ResultadoInicioSesionDTO resultado = await _inicioSesionServicio
                     .IniciarSesionAsync(solicitud).ConfigureAwait(true);
 
@@ -342,7 +344,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!resultado.InicioSesionExitoso)
             {
-                Log.Warn($"Inicio de sesión fallido. Mensaje servidor: {resultado.Mensaje}");
+                Log.WarnFormat("Inicio de sesión fallido. Mensaje servidor: {0}",
+                    resultado.Mensaje);
                 SonidoManejador.ReproducirError();
                 MostrarErrorInicioSesion(resultado);
                 return;
@@ -350,8 +353,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (resultado.Usuario != null)
             {
-                Log.Info($"Sesión establecida exitosamente para ID: " +
-                    $"{resultado.Usuario.UsuarioId}");
+                Log.InfoFormat("Sesión establecida exitosamente para ID: {0}", 
+                    resultado.Usuario.UsuarioId);
                 SesionUsuarioActual.EstablecerUsuario(resultado.Usuario);
             }
 
@@ -390,7 +393,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             try
             {
-                Log.Info($"Solicitando recuperación de cuenta para: {identificador}");
+                Log.InfoFormat("Solicitando recuperación de cuenta para: {0}", 
+                    identificador);
                 DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
                     .RecuperarCuentaAsync(identificador, _cambioContrasenaServicio).
                     ConfigureAwait(true);
@@ -398,7 +402,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace
                     (resultado.Mensaje))
                 {
-                    Log.Warn($"Recuperación fallida o cancelada: {resultado.Mensaje}");
+                    Log.WarnFormat("Recuperación fallida o cancelada: {0}",
+                        resultado.Mensaje);
                     SonidoManejador.ReproducirError();
                     string mensajeLocalizado = MensajeServidorAyudante.Localizar(
                         resultado.Mensaje,

@@ -110,15 +110,18 @@ namespace PictionaryMusicalCliente.ClienteServicios
             }
             catch (UriFormatException ex)
             {
-                Log.Error($"Formato URI inválido para música: {nombreArchivo}", ex);
+                Log.ErrorFormat("Formato URI inválido para música: {0}", 
+                    nombreArchivo, ex);
             }
             catch (InvalidOperationException ex)
             {
-                Log.Error($"Error de operación al abrir música: {nombreArchivo}", ex);
+                Log.ErrorFormat("Error de operación al abrir música: {0}", 
+                    nombreArchivo, ex);
             }
             catch (System.IO.IOException ex)
             {
-                Log.Error($"Error de E/S al cargar música: {nombreArchivo}", ex);
+                Log.ErrorFormat("Error de E/S al cargar música: {0}",
+                    nombreArchivo, ex);
             }
         }
 
@@ -208,8 +211,8 @@ namespace PictionaryMusicalCliente.ClienteServicios
         private void EnMedioFallido(object sender, ExceptionEventArgs e)
         {
             EstaReproduciendo = false;
-            Log.Error($"Fallo crítico en reproducción de medio: {e.ErrorException.Message}",
-                e.ErrorException);
+            Log.ErrorFormat("Fallo crítico en reproducción de medio: {0}",
+                e.ErrorException.Message, e.ErrorException);
         }
 
         private static double ObtenerVolumenGuardado()

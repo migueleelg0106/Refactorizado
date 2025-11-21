@@ -39,7 +39,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado != null && resultado.CodigoEnviado)
             {
-                _logger.Info($"Código de recuperación solicitado para: {identificador}");
+                _logger.InfoFormat("Código de recuperación solicitado para: {0}", 
+                    identificador);
             }
 
             return resultado == null ? null : new DTOs.ResultadoSolicitudRecuperacionDTO
@@ -181,8 +182,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
-                _logger.Warn($"Error de servidor en flujo de cambio de contraseña: " +
-                    $"{mensajeFallaPredeterminado}", ex);
+                _logger.WarnFormat("Error de servidor en flujo de cambio de contraseña: {0}",
+                    mensajeFallaPredeterminado, ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     mensajeFallaPredeterminado);

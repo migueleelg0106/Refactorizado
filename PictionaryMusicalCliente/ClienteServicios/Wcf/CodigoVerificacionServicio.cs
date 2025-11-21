@@ -43,7 +43,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 if (resultado != null && resultado.CodigoEnviado)
                 {
-                    _logger.Info($"Código de verificación solicitado para: {solicitud.Correo}");
+                    _logger.InfoFormat("Código de verificación solicitado para: {0}", 
+                        solicitud.Correo);
                 }
 
                 return resultado;

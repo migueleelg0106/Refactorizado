@@ -45,11 +45,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado.RegistroExitoso)
             {
-                _logger.Info($"Código de registro confirmado exitosamente. Token: {tokenCodigo}");
+                _logger.InfoFormat("Código de registro confirmado exitosamente. Token: {0}",
+                    tokenCodigo);
             }
             else
             {
-                _logger.Warn($"Confirmación de código fallida. Razón: {resultado.Mensaje}");
+                _logger.WarnFormat("Confirmación de código fallida. Razón: {0}",
+                    resultado.Mensaje);
             }
 
             return resultado;
@@ -80,7 +82,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
             if (resultado.CodigoEnviado)
             {
-                _logger.Info($"Código de registro reenviado exitosamente. Token: {tokenCodigo}");
+                _logger.InfoFormat("Código de registro reenviado exitosamente. Token: {0}",
+                    tokenCodigo);
             }
 
             return resultado;
@@ -96,8 +99,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
-                _logger.Warn($"Error de lógica del servidor en verificación de código: " +
-                    $"{mensajeErrorPredeterminado}", ex);
+                _logger.WarnFormat("Error de lógica del servidor en verificación de código: {0}",
+                    mensajeErrorPredeterminado, ex);
                 string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                     ex,
                     mensajeErrorPredeterminado);

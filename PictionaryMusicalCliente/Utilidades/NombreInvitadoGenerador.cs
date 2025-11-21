@@ -34,8 +34,8 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (string.IsNullOrWhiteSpace(opciones))
             {
-                Log.Error($"No se encontraron nombres de invitados para cultura: " +
-                    $"{culturaEfectiva}");
+                Log.ErrorFormat("No se encontraron nombres de invitados para cultura: {0}",
+                    culturaEfectiva);
                 return null;
             }
 
@@ -80,7 +80,8 @@ namespace PictionaryMusicalCliente.Utilidades
 
             if (string.IsNullOrWhiteSpace(opciones) && cultura != CultureInfo.InvariantCulture)
             {
-                Log.Warn($"Falta recurso 'invitadoNombres' en {cultura}, usando Invariant.");
+                Log.WarnFormat("Falta recurso 'invitadoNombres' en {0}, usando Invariant.",
+                    cultura);
                 opciones = Lang.ResourceManager.GetString(
                     "invitadoNombres",
                     CultureInfo.InvariantCulture);

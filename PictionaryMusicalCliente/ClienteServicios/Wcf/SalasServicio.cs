@@ -100,8 +100,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                         nombreCreador,
                         configuracion).ConfigureAwait(false);
 
-                    _logger.Info($"Sala creada exitosamente por '{nombreCreador}'. " +
-                        $"Código: {sala.Codigo}");
+                    _logger.InfoFormat("Sala creada exitosamente por '{0}'. Código: {1}", 
+                        nombreCreador, sala.Codigo);
                     return sala;
                 }
                 catch (FaultException ex)
@@ -177,12 +177,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                         codigoSala,
                         nombreUsuario).ConfigureAwait(false);
 
-                    _logger.Info($"Usuario '{nombreUsuario}' se unió a la sala '{codigoSala}'.");
+                    _logger.InfoFormat("Usuario '{0}' se unió a la sala '{1}'.",
+                        nombreUsuario, codigoSala);
                     return sala;
                 }
                 catch (FaultException ex)
                 {
-                    _logger.Warn($"Fallo al unirse a sala '{codigoSala}'. Razón: {ex.Message}");
+                    _logger.WarnFormat("Fallo al unirse a sala '{0}'. Razón: {1}",
+                        codigoSala, ex.Message);
                     string mensaje = ErrorServicioAyudante.ObtenerMensaje(
                         ex,
                         Lang.errorTextoErrorProcesarSolicitud);
@@ -252,7 +254,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                         codigoSala,
                         nombreUsuario).ConfigureAwait(false);
 
-                    _logger.Info($"Usuario '{nombreUsuario}' abandonó la sala '{codigoSala}'.");
+                    _logger.InfoFormat("Usuario '{0}' abandonó la sala '{1}'.", 
+                        nombreUsuario, codigoSala);
                 }
                 catch (FaultException ex)
                 {
@@ -338,8 +341,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                         nombreHost,
                         nombreJugadorAExpulsar).ConfigureAwait(false);
 
-                    _logger.Info($"El host '{nombreHost}' expulsó a '{nombreJugadorAExpulsar}'" +
-                        $" de la sala '{codigoSala}'.");
+                    _logger.InfoFormat("El host '{0}' expulsó a '{1}' de la sala '{2}'.",
+                        nombreHost, nombreJugadorAExpulsar, codigoSala);
                 }
                 catch (FaultException ex)
                 {
@@ -389,8 +392,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarJugadorSeUnio(string codigoSala, string nombreJugador)
         {
-            _logger.Info($"Callback recibido: '{nombreJugador}' se unió a la sala " +
-                $"'{codigoSala}'.");
+            _logger.InfoFormat("Callback recibido: '{0}' se unió a la sala '{1}'.", 
+                nombreJugador, codigoSala);
             JugadorSeUnio?.Invoke(this, nombreJugador);
         }
 
@@ -399,7 +402,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarJugadorSalio(string codigoSala, string nombreJugador)
         {
-            _logger.Info($"Callback recibido: '{nombreJugador}' salió de la sala '{codigoSala}'.");
+            _logger.InfoFormat("Callback recibido: '{0}' salió de la sala '{1}'.",
+                nombreJugador, codigoSala);
             JugadorSalio?.Invoke(this, nombreJugador);
         }
 
@@ -408,8 +412,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarJugadorExpulsado(string codigoSala, string nombreJugador)
         {
-            _logger.Info($"Callback recibido: '{nombreJugador}' fue expulsado de la sala " +
-                $"'{codigoSala}'.");
+            _logger.InfoFormat("Callback recibido: '{0}' fue expulsado de la sala '{1}'.",
+                nombreJugador, codigoSala);
             JugadorExpulsado?.Invoke(this, nombreJugador);
         }
 

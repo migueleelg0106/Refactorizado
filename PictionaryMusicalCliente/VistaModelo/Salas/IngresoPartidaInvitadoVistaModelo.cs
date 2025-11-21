@@ -155,7 +155,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     switch (resultado.Estado)
                     {
                         case EstadoUnionInvitado.Exito:
-                            Log.Info($"Invitado unido exitosamente: {nombreInvitado}");
+                            Log.InfoFormat("Invitado unido exitosamente: {0}",
+                                nombreInvitado);
                             SonidoManejador.ReproducirExito();
                             SeUnioSala = true;
                             SalaUnida?.Invoke(resultado.Sala, nombreInvitado);
@@ -163,7 +164,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                             return;
 
                         case EstadoUnionInvitado.NombreDuplicado:
-                            Log.Info($"Nombre duplicado '{nombreInvitado}', reintentando...");
+                            Log.InfoFormat("Nombre duplicado '{0}', reintentando...",
+                                nombreInvitado);
                             nombresReservados.Add(nombreInvitado);
                             if (resultado.JugadoresActuales != null)
                             {
@@ -181,13 +183,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                             return;
 
                         case EstadoUnionInvitado.SalaNoEncontrada:
-                            Log.Warn($"Sala no encontrada: {codigo}");
+                            Log.WarnFormat("Sala no encontrada: {0}",
+                                codigo);
                             SonidoManejador.ReproducirError();
                             AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
                             return;
 
                         case EstadoUnionInvitado.Error:
-                            Log.Error($"Error al unirse: {resultado.Mensaje}");
+                            Log.ErrorFormat("Error al unirse: {0}",
+                                resultado.Mensaje);
                             SonidoManejador.ReproducirError();
                             AvisoAyudante.Mostrar(
                                 resultado.Mensaje ?? Lang.errorTextoNoEncuentraPartida);

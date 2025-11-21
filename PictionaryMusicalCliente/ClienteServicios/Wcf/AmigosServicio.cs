@@ -85,13 +85,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
                     _cliente = cliente;
                     NotificarSolicitudesActualizadas();
-                    _logger.Info($"Suscripción a servicio de amigos exitosa para: " +
-                        $"{nombreUsuario}");
+                    _logger.InfoFormat("Suscripción a servicio de amigos exitosa para: {0}", 
+                        nombreUsuario);
                 }
                 catch (Exception ex) when (EsExcepcionDeServicio(ex))
                 {
-                    _logger.Error($"Fallo al suscribir a servicio de amigos para: {nombreUsuario}"
-                        , ex);
+                    _logger.ErrorFormat("Fallo al suscribir a servicio de amigos para: {0}",
+                        nombreUsuario, ex);
                     _usuarioSuscrito = null;
                     cliente.Abort();
                     ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
@@ -126,7 +126,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
 
                 await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
-                _logger.Info($"Suscripción a servicio de amigos cancelada para: {nombreUsuario}");
+                _logger.InfoFormat("Suscripción a servicio de amigos cancelada para: {0}", 
+                    nombreUsuario);
             }
             finally
             {
@@ -170,8 +171,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 return;
             }
 
-            _logger.Info($"Callback recibido: Solicitud actualizada entre " +
-                $"{solicitud.UsuarioEmisor} y {solicitud.UsuarioReceptor}.");
+            _logger.InfoFormat("Callback recibido: Solicitud actualizada entre {0} y {1}.",
+                solicitud.UsuarioEmisor,
+                solicitud.UsuarioReceptor);
 
             string usuarioActual = _usuarioSuscrito;
 
@@ -198,8 +200,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 return;
             }
 
-            _logger.Info($"Callback recibido: Amistad eliminada entre {solicitud.UsuarioEmisor}" +
-                $" y {solicitud.UsuarioReceptor}.");
+            _logger.InfoFormat("Callback recibido: Amistad eliminada entre {0} y {1}.", 
+                solicitud.UsuarioEmisor, solicitud.UsuarioReceptor);
 
             string usuarioActual = _usuarioSuscrito;
             if (string.IsNullOrWhiteSpace(usuarioActual))

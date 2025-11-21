@@ -88,20 +88,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             try
             {
-                Log.Info($"Obteniendo perfil para invitar amigo ID: {amigo.UsuarioId}");
+                Log.InfoFormat("Obteniendo perfil para invitar amigo ID: {0}",
+                    amigo.UsuarioId);
                 DTOs.UsuarioDTO perfil = await _perfilServicio
                     .ObtenerPerfilAsync(amigo.UsuarioId)
                     .ConfigureAwait(true);
 
                 if (perfil == null || string.IsNullOrWhiteSpace(perfil.Correo))
                 {
-                    Log.Warn($"Perfil o correo no disponible para amigo ID: {amigo.UsuarioId}");
+                    Log.WarnFormat("Perfil o correo no disponible para amigo ID: {0}",
+                        amigo.UsuarioId);
                     SonidoManejador.ReproducirError();
                     _mostrarMensaje?.Invoke(Lang.invitarAmigosTextoCorreoNoDisponible);
                     return;
                 }
 
-                Log.Info($"Enviando invitación por correo a: {perfil.Correo}");
+                Log.InfoFormat("Enviando invitación por correo a: {0}",
+                    perfil.Correo);
                 DTOs.ResultadoOperacionDTO resultado = await _invitacionesServicio
                     .EnviarInvitacionAsync(_codigoSala, perfil.Correo)
                     .ConfigureAwait(true);
@@ -115,7 +118,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 }
                 else
                 {
-                    Log.Warn($"Fallo al enviar invitación: {resultado?.Mensaje}");
+                    Log.WarnFormat("Fallo al enviar invitación: {0}",
+                        resultado?.Mensaje);
                     SonidoManejador.ReproducirError();
                     string mensaje = MensajeServidorAyudante.Localizar(
                         resultado?.Mensaje,

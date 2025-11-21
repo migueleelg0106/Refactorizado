@@ -58,7 +58,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
                     vistaModelo.SeleccionConfirmada = avatar =>
                     {
-                        _logger.Info($"Avatar seleccionado: ID {avatar?.Id}");
+                        _logger.InfoFormat("Avatar seleccionado: ID {0}", avatar?.Id);
                         finalizacion.TrySetResult(avatar);
                     };
 

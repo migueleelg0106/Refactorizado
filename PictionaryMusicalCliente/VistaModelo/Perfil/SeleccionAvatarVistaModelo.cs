@@ -79,7 +79,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 return;
             }
 
-            Log.Info($"Avatar seleccionado: ID {AvatarSeleccionado.Id}");
+            Log.InfoFormat("Avatar seleccionado: ID {0}",
+                AvatarSeleccionado.Id);
             SeleccionConfirmada?.Invoke(AvatarSeleccionado);
             CerrarAccion?.Invoke();
         }

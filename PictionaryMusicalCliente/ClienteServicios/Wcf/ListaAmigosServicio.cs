@@ -82,7 +82,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
                     _cliente = cliente;
                     _usuarioSuscrito = nombreUsuario;
-                    _logger.Info($"Usuario '{nombreUsuario}' suscrito a la lista de amigos.");
+                    _logger.InfoFormat("Usuario '{}' suscrito a la lista de amigos.", 
+                        nombreUsuario);
                 }
                 catch (FaultException ex)
                 {
@@ -165,7 +166,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
 
                 await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
-                _logger.Info($"Suscripción a lista de amigos cancelada para: {nombreUsuario}");
+                _logger.InfoFormat("Suscripción a lista de amigos cancelada para: {0}", 
+                    nombreUsuario);
             }
             finally
             {
@@ -211,7 +213,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error al obtener lista de amigos para {nombreUsuario}", ex);
+                _logger.ErrorFormat("Error al obtener lista de amigos para {0}",
+                    nombreUsuario, ex);
                 throw ManejarExcepcionWcf(ex, cliente, esClienteTemporal);
             }
             finally

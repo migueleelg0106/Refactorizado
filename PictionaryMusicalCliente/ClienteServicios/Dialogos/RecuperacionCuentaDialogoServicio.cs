@@ -40,7 +40,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 throw new ArgumentNullException(nameof(cambioContrasenaServicio));
             }
 
-            _logger.Info($"Iniciando flujo de recuperación de cuenta para: {identificador}");
+            _logger.InfoFormat("Iniciando flujo de recuperación de cuenta para: {0}", 
+                identificador);
 
             var (solicitudExitosa, solicitudDTO, errorSolicitud) =
                 await SolicitarCodigoAsync(
@@ -49,8 +50,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             if (!solicitudExitosa)
             {
-                _logger.Warn($"Flujo detenido: No se pudo solicitar el código. Mensaje: " +
-                    $"{errorSolicitud?.Mensaje}");
+                _logger.WarnFormat("Flujo detenido: No se pudo solicitar el código. Mensaje: {0}",
+                    errorSolicitud?.Mensaje);
                 return errorSolicitud;
             }
 
@@ -63,7 +64,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             if (!verificacionExitosa)
             {
-                _logger.Warn($"Flujo detenido: Verificación de código fallida o cancelada.");
+                _logger.Warn("Flujo detenido: Verificación de código fallida o cancelada.");
                 return errorVerificacion;
             }
 

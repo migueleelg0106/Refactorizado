@@ -47,8 +47,8 @@ namespace PictionaryMusicalCliente.Sesiones
             }
 
             Usuario.CargarDesdeDTO(usuarioDto);
-            Log.Info($"Sesión establecida para usuario ID: {usuarioDto.UsuarioId}, " +
-                     $"Username: {usuarioDto.NombreUsuario}");
+            Log.InfoFormat("Sesión establecida para usuario ID: {0}, Username: {1}", 
+                usuarioDto.UsuarioId, usuarioDto.NombreUsuario);
         }
 
         /// <summary>
@@ -58,7 +58,8 @@ namespace PictionaryMusicalCliente.Sesiones
         {
             if (EstaAutenticado)
             {
-                Log.Info($"Cerrando sesión de usuario: {Usuario.NombreUsuario}");
+                Log.InfoFormat("Cerrando sesión de usuario: {0}", 
+                    Usuario.NombreUsuario);
             }
             Usuario.Limpiar();
         }

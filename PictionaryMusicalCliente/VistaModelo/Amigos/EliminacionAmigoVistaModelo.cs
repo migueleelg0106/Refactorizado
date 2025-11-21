@@ -28,14 +28,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             AceptarComando = new ComandoDelegado(_ =>
             {
                 SonidoManejador.ReproducirClick();
-                Log.Info($"Usuario confirmó la eliminación del amigo: {nombreAmigo}");
+                Log.InfoFormat("Usuario confirmó la eliminación del amigo: {0}",
+                    nombreAmigo);
                 Cerrar?.Invoke(true);
             });
 
             CancelarComando = new ComandoDelegado(_ =>
             {
                 SonidoManejador.ReproducirClick();
-                Log.Info($"Usuario canceló la eliminación del amigo: {nombreAmigo}");
+                Log.InfoFormat("Usuario canceló la eliminación del amigo: {0}",
+                    nombreAmigo);
                 Cerrar?.Invoke(false);
             });
         }

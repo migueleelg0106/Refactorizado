@@ -361,7 +361,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
-                Log.Info($"Inicializando suscripciones para usuario: {_nombreUsuarioSesion}");
+                Log.InfoFormat("Inicializando suscripciones para usuario: {0}",
+                    _nombreUsuarioSesion);
                 await _listaAmigosServicio.SuscribirAsync(_nombreUsuarioSesion).
                     ConfigureAwait(false);
                 await _amigosServicio.SuscribirAsync(_nombreUsuarioSesion).ConfigureAwait(false);
@@ -400,7 +401,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             }
             catch (ServicioExcepcion ex)
             {
-                Log.Warn($"Error al cancelar suscripciones (ignorado): {ex.Message}");
+                Log.WarnFormat("Error al cancelar suscripciones (ignorado): {0}",
+                    ex.Message);
             }
             finally
             {
@@ -563,7 +565,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
-                Log.Info($"Eliminando amigo: {amigo.NombreUsuario}");
+                Log.InfoFormat("Eliminando amigo: {0}",
+                    amigo.NombreUsuario);
                 SonidoManejador.ReproducirExito();
                 await _amigosServicio.EliminarAmigoAsync(
                     _nombreUsuarioSesion,
@@ -610,7 +613,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             try
             {
-                Log.Info($"Intentando unirse a sala: {codigo}");
+                Log.InfoFormat("Intentando unirse a sala: {0}",
+                    codigo);
                 var sala = await _salasServicio.UnirseSalaAsync(
                     codigo,
                     _nombreUsuarioSesion).ConfigureAwait(true);
