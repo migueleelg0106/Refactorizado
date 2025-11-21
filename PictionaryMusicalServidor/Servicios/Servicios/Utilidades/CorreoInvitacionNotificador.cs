@@ -105,17 +105,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             }
             catch (SmtpException ex)
             {
-                _logger.Error(MensajesError.Log.CorreoSmtp, ex);
+                _logger.Error("Error SMTP al enviar correo electrónico. Fallo en la conexión o autenticación con el servidor de correo.", ex);
                 return false;
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error(MensajesError.Log.CorreoOperacionInvalida, ex);
+                _logger.Error("Operación inválida al enviar correo. Configuración de SMTP incorrecta o estado del cliente inválido.", ex);
                 return false;
             }
             catch (ArgumentException ex)
             {
-                _logger.Error(MensajesError.Log.CorreoArgumentoInvalido, ex);
+                _logger.Error("Argumentos inválidos para enviar correo. Dirección de email, asunto o cuerpo del mensaje incorrectos.", ex);
                 return false;
             }
             catch (Exception ex)

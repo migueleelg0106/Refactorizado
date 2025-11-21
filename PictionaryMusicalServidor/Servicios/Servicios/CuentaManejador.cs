@@ -102,7 +102,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DbEntityValidationException ex)
             {
-                _logger.Error(MensajesError.Log.RegistroCuentaValidacionEntidad, ex);
+                _logger.Error("Validación de entidad fallida durante el registro de cuenta. Los datos de la entidad no cumplen con las reglas de validación.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -111,7 +111,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DbUpdateException ex)
             {
-                _logger.Error(MensajesError.Log.RegistroCuentaActualizacionBD, ex);
+                _logger.Error("Error de actualización de base de datos durante el registro de cuenta. Posible conflicto de concurrencia o restricción violada.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -120,7 +120,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error(MensajesError.Log.RegistroCuentaErrorBD, ex);
+                _logger.Error("Error de base de datos durante el registro de cuenta. Fallo en la conexión o ejecución de consulta SQL.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -129,7 +129,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.RegistroCuentaErrorDatos, ex);
+                _logger.Error("Error de datos durante el registro de cuenta. Los datos no se pudieron procesar correctamente.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -138,7 +138,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error(MensajesError.Log.RegistroCuentaOperacionInvalida, ex);
+                _logger.Error("Operación inválida durante el registro de cuenta. El estado del contexto no permite la operación.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,

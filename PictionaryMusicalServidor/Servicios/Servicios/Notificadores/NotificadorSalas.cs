@@ -84,19 +84,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             }
             catch (System.ServiceModel.CommunicationException ex)
             {
-                _logger.Warn(MensajesError.Log.SalaNotificarListaComunicacion, ex);
+                _logger.Warn("Error de comunicación al notificar la lista de salas a los suscriptores.", ex);
             }
             catch (TimeoutException ex)
             {
-                _logger.Warn(MensajesError.Log.SalaNotificarListaTimeout, ex);
+                _logger.Warn("Timeout al notificar la lista de salas a los suscriptores.", ex);
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                _logger.Warn("Operación inválida en comunicación WCF. El canal no está en el estado correcto para la operación.", ex);
             }
             catch (Exception ex)
             {
-                _logger.Error(MensajesError.Log.SalaNotificarListaErrorGeneral, ex);
+                _logger.Error("Error inesperado al notificar la lista de salas a los suscriptores.", ex);
             }
         }
 
@@ -115,21 +115,21 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 }
                 catch (System.ServiceModel.CommunicationException ex)
                 {
-                    _logger.Warn(string.Format("{0} (Sesión: {1})", MensajesError.Log.SalaNotificarListaComunicacion, kvp.Key), ex);
+                    _logger.Warn(string.Format("{0} (Sesión: {1})", "Error de comunicación al notificar la lista de salas a los suscriptores.", kvp.Key), ex);
                     _suscripciones.TryRemove(kvp.Key, out _);
                 }
                 catch (TimeoutException ex)
                 {
-                    _logger.Warn(string.Format("{0} (Sesión: {1})", MensajesError.Log.SalaNotificarListaTimeout, kvp.Key), ex);
+                    _logger.Warn(string.Format("{0} (Sesión: {1})", "Timeout al notificar la lista de salas a los suscriptores.", kvp.Key), ex);
                     _suscripciones.TryRemove(kvp.Key, out _);
                 }
                 catch (InvalidOperationException ex)
                 {
-                    _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                    _logger.Warn("Operación inválida en comunicación WCF. El canal no está en el estado correcto para la operación.", ex);
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(MensajesError.Log.SalaNotificarListaErrorGeneral, ex);
+                    _logger.Error("Error inesperado al notificar la lista de salas a los suscriptores.", ex);
                 }
             }
         }

@@ -352,7 +352,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DbEntityValidationException ex)
             {
-                _logger.Error(MensajesError.Log.RecuperacionActualizarValidacionEntidad, ex);
+                _logger.Error("Validación de entidad fallida al actualizar contraseña. La nueva contraseña no cumple con las restricciones.", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -361,7 +361,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DbUpdateException ex)
             {
-                _logger.Error(MensajesError.Log.RecuperacionActualizarActualizacionBD, ex);
+                _logger.Error("Error de actualización de base de datos al actualizar contraseña. Conflicto al guardar la nueva contraseña.", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -370,7 +370,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error(MensajesError.Log.RecuperacionActualizarErrorBD, ex);
+                _logger.Error("Error de base de datos al actualizar contraseña. Fallo en la ejecución de la actualización.", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -379,7 +379,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.RecuperacionActualizarErrorDatos, ex);
+                _logger.Error("Error de datos al actualizar contraseña. No se pudo procesar la actualización.", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,

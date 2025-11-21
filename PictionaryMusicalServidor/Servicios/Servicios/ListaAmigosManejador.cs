@@ -45,26 +45,26 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 _notificador.NotificarLista(nombreUsuario, amigosActuales);
 
-                _logger.Info($"Usuario '{nombreUsuario}' se suscribió a notificaciones de lista de amigos.");
+                _logger.Info($"Usuario '{nombreUsuario}' se suscribiï¿½ a notificaciones de lista de amigos.");
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                _logger.Warn(MensajesError.Log.ListaAmigosSuscribirIdentificadorInvalido, ex);
+                _logger.Warn("Identificador invÃ¡lido al suscribirse a la lista de amigos.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn(MensajesError.Log.ListaAmigosSuscribirDatosInvalidos, ex);
+                _logger.Warn("Datos invÃ¡lidos al suscribirse a la lista de amigos.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.ListaAmigosSuscribirErrorDatos, ex);
+                _logger.Error("Error de datos al suscribirse a lista de amigos. No se pudo recuperar la lista de amigos del usuario.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
             }
             catch (Exception ex)
             {
-                _logger.Error(MensajesError.Log.ListaAmigosSuscribirErrorDatos, ex);
+                _logger.Error("Error de datos al suscribirse a lista de amigos. No se pudo recuperar la lista de amigos del usuario.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
             }
         }
@@ -82,16 +82,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 ValidadorNombreUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
                 _manejadorCallback.Desuscribir(nombreUsuario);
 
-                _logger.Info($"Usuario '{nombreUsuario}' canceló su suscripción a lista de amigos.");
+                _logger.Info($"Usuario '{nombreUsuario}' cancelï¿½ su suscripciï¿½n a lista de amigos.");
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn(MensajesError.Log.ListaAmigosObtenerDatosInvalidos, ex);
+                _logger.Warn("Datos invÃ¡lidos al obtener la lista de amigos.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (Exception ex)
             {
-                _logger.Error(MensajesError.Log.ListaAmigosObtenerInesperado, ex);
+                _logger.Error("Error inesperado al obtener la lista de amigos del usuario.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
             }
         }
@@ -112,22 +112,22 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                _logger.Warn(MensajesError.Log.ListaAmigosObtenerIdentificadorInvalido, ex);
+                _logger.Warn("Identificador invÃ¡lido al obtener la lista de amigos.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn(MensajesError.Log.ListaAmigosObtenerDatosInvalidos, ex);
+                _logger.Warn("Datos invÃ¡lidos al obtener la lista de amigos.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.ListaAmigosObtenerErrorDatos, ex);
+                _logger.Error("Error de datos al obtener lista de amigos. Fallo en la consulta de amigos del usuario.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
             }
             catch (Exception ex)
             {
-                _logger.Error(MensajesError.Log.ListaAmigosObtenerInesperado, ex);
+                _logger.Error("Error inesperado al obtener la lista de amigos del usuario.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
             }
         }
