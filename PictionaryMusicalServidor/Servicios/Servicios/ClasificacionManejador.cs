@@ -53,17 +53,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error(MensajesError.Log.ClasificacionErrorBD, ex);
+                _logger.Error("Error de base de datos al obtener la clasificación. Fallo en la consulta de jugadores.", ex);
                 return new List<ClasificacionUsuarioDTO>();
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.ClasificacionErrorDatos, ex);
+                _logger.Error("Error de datos al obtener la clasificación. Los datos de clasificación no se pudieron procesar.", ex);
                 return new List<ClasificacionUsuarioDTO>();
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error(MensajesError.Log.ClasificacionOperacionInvalida, ex);
+                _logger.Error("Operación inválida al obtener la clasificación. Secuencia de operaciones incorrecta.", ex);
                 return new List<ClasificacionUsuarioDTO>();
             }
         }

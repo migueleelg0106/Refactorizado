@@ -41,28 +41,28 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             {
                 List<AmigoDTO> amigos = ObtenerAmigosPorNombre(nombreUsuario);
 
-                _logger.Info($"Enviando notificación de actualización de lista de amigos a '{nombreUsuario}'. Total amigos: {amigos.Count}");
+                _logger.Info($"Enviando notificaciï¿½n de actualizaciï¿½n de lista de amigos a '{nombreUsuario}'. Total amigos: {amigos.Count}");
                 NotificarLista(nombreUsuario, amigos);
             }
             catch (FaultException ex)
             {
-                _logger.Warn(MensajesError.Log.ListaAmigosNotificarObtenerError, ex);
+                _logger.Warn("No se pudo obtener la lista de amigos del usuario para notificar.", ex);
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                _logger.Warn(MensajesError.Log.ListaAmigosActualizarIdentificadorInvalido, ex);
+                _logger.Warn("Identificador invÃ¡lido al actualizar la lista de amigos del usuario.", ex);
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn(MensajesError.Log.ListaAmigosActualizarDatosInvalidos, ex);
+                _logger.Warn("Datos invÃ¡lidos al actualizar la lista de amigos del usuario.", ex);
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.ListaAmigosObtenerErrorDatos, ex);
+                _logger.Error("Error de datos al obtener lista de amigos. Fallo en la consulta de amigos del usuario.", ex);
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn(MensajesError.Log.ListaAmigosObtenerInesperado, ex);
+                _logger.Warn("Error inesperado al obtener la lista de amigos del usuario.", ex);
             }
         }
 

@@ -142,7 +142,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                _logger.Warn("Operación inválida en comunicación WCF. El canal no está en el estado correcto para la operación.", ex);
             }
         }
     }

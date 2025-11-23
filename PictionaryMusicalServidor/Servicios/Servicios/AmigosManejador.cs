@@ -78,12 +78,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error(MensajesError.Log.AmistadSuscribirErrorBD, ex);
+                _logger.Error("Error de base de datos al suscribir a notificaciones de amistad. Fallo en la consulta de usuario o solicitudes.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorRecuperarSolicitudes);
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.AmistadSuscribirErrorDatos, ex);
+                _logger.Error("Error de datos al suscribir a notificaciones de amistad. No se pudieron recuperar las solicitudes pendientes.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorRecuperarSolicitudes);
             }
         }
@@ -159,22 +159,22 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn(MensajesError.Log.AmistadEnviarSolicitudReglaNegocio, ex);
+                _logger.Warn("Regla de negocio violada al enviar solicitud de amistad.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn(MensajesError.Log.AmistadEnviarSolicitudDatosInvalidos, ex);
+                _logger.Warn("Datos inválidos al enviar solicitud de amistad.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.AmistadEnviarSolicitudErrorDatos, ex);
+                _logger.Error("Error de datos al enviar solicitud de amistad. No se pudo almacenar la solicitud en la base de datos.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorAlmacenarSolicitud);
             }
             catch (Exception ex)
             {
-                _logger.Error(MensajesError.Log.AmistadEnviarSolicitudErrorDatos, ex);
+                _logger.Error("Error de datos al enviar solicitud de amistad. No se pudo almacenar la solicitud en la base de datos.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorAlmacenarSolicitud);
             }
         }
@@ -229,22 +229,22 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn(MensajesError.Log.AmistadResponderSolicitudReglaNegocio, ex);
+                _logger.Warn("Regla de negocio violada al aceptar solicitud de amistad.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn(MensajesError.Log.AmistadResponderSolicitudDatosInvalidos, ex);
+                _logger.Warn("Datos inválidos al aceptar solicitud de amistad.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.AmistadResponderSolicitudErrorDatos, ex);
+                _logger.Error("Error de datos al responder solicitud de amistad. No se pudo actualizar el estado de la solicitud.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorActualizarSolicitud);
             }
             catch (Exception ex)
             {
-                _logger.Error(MensajesError.Log.AmistadResponderSolicitudErrorDatos, ex);
+                _logger.Error("Error de datos al responder solicitud de amistad. No se pudo actualizar el estado de la solicitud.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorActualizarSolicitud);
             }
         }
@@ -308,22 +308,22 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn(MensajesError.Log.AmistadEliminarReglaNegocio, ex);
+                _logger.Warn("Regla de negocio violada al eliminar amistad.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn(MensajesError.Log.AmistadEliminarDatosInvalidos, ex);
+                _logger.Warn("Datos inválidos al eliminar la relación de amistad.", ex);
                 throw new FaultException(ex.Message);
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.AmistadEliminarErrorDatos, ex);
+                _logger.Error("Error de datos al eliminar amistad. No se pudo eliminar la relación en la base de datos.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorEliminarAmistad);
             }
             catch (Exception ex)
             {
-                _logger.Error(MensajesError.Log.AmistadEliminarErrorDatos, ex);
+                _logger.Error("Error de datos al eliminar amistad. No se pudo eliminar la relación en la base de datos.", ex);
                 throw new FaultException(MensajesError.Cliente.ErrorEliminarAmistad);
             }
         }

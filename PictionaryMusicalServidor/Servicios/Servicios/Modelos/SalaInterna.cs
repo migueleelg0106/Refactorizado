@@ -239,7 +239,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn(MensajesError.Log.ComunicacionOperacionInvalida, ex);
+                _logger.Warn("Operación inválida en comunicación WCF. El canal no está en el estado correcto para la operación.", ex);
             }
             catch (Exception ex)
             {
@@ -251,14 +251,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
         {
             EjecutarNotificacion(
                 () => callback.NotificarJugadorSeUnio(Codigo, nombreJugador),
-                MensajesError.Log.SalaNotificarJugadorUnionError);
+                "Error al notificar la unión del jugador a la sala a través del callback.");
         }
 
         private void NotificarJugadorSalio(ISalasCallback callback, string nombreJugador)
         {
             EjecutarNotificacion(
                 () => callback.NotificarJugadorSalio(Codigo, nombreJugador),
-                MensajesError.Log.SalaNotificarJugadorSalidaError);
+                "Error al notificar la salida del jugador de la sala a través del callback.");
         }
 
         private void NotificarJugadorExpulsado(ISalasCallback callback, string nombreJugador)
@@ -270,14 +270,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
 
             EjecutarNotificacion(
                 () => callback.NotificarJugadorExpulsado(Codigo, nombreJugador),
-                MensajesError.Log.SalaNotificarJugadorExpulsionError);
+                "Error al notificar la expulsión del jugador de la sala a través del callback.");
         }
 
         private static void NotificarSalaActualizada(ISalasCallback callback, SalaDTO salaActualizada)
         {
             EjecutarNotificacion(
                 () => callback.NotificarSalaActualizada(salaActualizada),
-                MensajesError.Log.SalaNotificarJugadorActualizacionError);
+                "Error al notificar la actualización de la sala a través del callback.");
         }
     }
 }

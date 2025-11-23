@@ -44,7 +44,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (!EntradaComunValidador.EsLongitudValida(identificador) || string.IsNullOrWhiteSpace(contrasena))
             {
-                _logger.Warn($"Intento de inicio de sesión con datos inválidos. Identificador: {identificador}");
+                _logger.Warn($"Intento de inicio de sesiï¿½n con datos invï¿½lidos. Identificador: {identificador}");
                 return new ResultadoInicioSesionDTO
                 {
                     CuentaEncontrada = true,
@@ -60,7 +60,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     if (usuario == null)
                     {
-                        _logger.Warn($"Intento de inicio de sesión fallido. Usuario no encontrado: {identificador}");
+                        _logger.Warn($"Intento de inicio de sesiï¿½n fallido. Usuario no encontrado: {identificador}");
                         return new ResultadoInicioSesionDTO
                         {
                             CuentaEncontrada = false,
@@ -70,7 +70,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     if (!BCryptNet.Verify(contrasena, usuario.Contrasena))
                     {
-                        _logger.Warn($"Intento de inicio de sesión fallido. Contraseña incorrecta para: {usuario.Nombre_Usuario}");
+                        _logger.Warn($"Intento de inicio de sesiï¿½n fallido. Contraseï¿½a incorrecta para: {usuario.Nombre_Usuario}");
                         return new ResultadoInicioSesionDTO
                         {
                             ContrasenaIncorrecta = true,
@@ -78,7 +78,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         };
                     }
 
-                    _logger.Info($"Inicio de sesión exitoso. Usuario: {usuario.Nombre_Usuario}, ID: {usuario.idUsuario}");
+                    _logger.Info($"Inicio de sesiï¿½n exitoso. Usuario: {usuario.Nombre_Usuario}, ID: {usuario.idUsuario}");
 
                     return new ResultadoInicioSesionDTO
                     {
@@ -89,7 +89,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error(MensajesError.Log.InicioSesionErrorBD, ex);
+                _logger.Error("Error de base de datos durante el inicio de sesiÃ³n. Fallo en la consulta de usuario.", ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,
@@ -98,7 +98,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.InicioSesionErrorDatos, ex);
+                _logger.Error("Error de datos durante el inicio de sesiÃ³n. Los datos del usuario no se pudieron recuperar.", ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,
@@ -107,7 +107,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error(MensajesError.Log.InicioSesionOperacionInvalida, ex);
+                _logger.Error("OperaciÃ³n invÃ¡lida durante el inicio de sesiÃ³n. Estado inconsistente del contexto.", ex);
                 return new ResultadoInicioSesionDTO
                 {
                     InicioSesionExitoso = false,

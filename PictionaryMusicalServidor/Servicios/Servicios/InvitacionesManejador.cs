@@ -105,27 +105,27 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn(MensajesError.Log.InvitacionOperacionInvalida, ex);
+                _logger.Warn("Operación inválida al enviar invitación. Estado inconsistente o validación fallida.", ex);
                 return CrearFallo(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn(MensajesError.Log.InvitacionOperacionInvalida, ex);
+                _logger.Warn("Operación inválida al enviar invitación. Estado inconsistente o validación fallida.", ex);
                 return CrearFallo(ex.Message);
             }
             catch (EntityException ex)
             {
-                _logger.Error(MensajesError.Log.InvitacionErrorBD, ex);
+                _logger.Error("Error de base de datos al enviar invitación. Fallo en la consulta de verificación de usuario.", ex);
                 return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
             catch (DataException ex)
             {
-                _logger.Error(MensajesError.Log.InvitacionErrorDatos, ex);
+                _logger.Error("Error de datos al enviar invitación. No se pudo procesar la información del destinatario.", ex);
                 return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
             catch (Exception ex)
             {
-                _logger.Error(MensajesError.Log.InvitacionOperacionInvalida, ex);
+                _logger.Error("Operación inválida al enviar invitación. Estado inconsistente o validación fallida.", ex);
                 return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
             }
         }
