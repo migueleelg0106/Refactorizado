@@ -180,12 +180,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         }
 
         /// <summary>
-        /// Obtiene un valor de configuracion probando multiples claves en orden.
+        /// Obtiene un valor de configuración probando múltiples claves en orden.
         /// </summary>
-        /// <param name="claves">Claves de configuracion a probar en orden de prioridad.</param>
+        /// <param name="claves">Claves de configuración a probar en orden de prioridad.</param>
         /// <returns>
-        /// El primer valor de configuracion no vacio encontrado, 
-        /// o cadena vacia si ninguna clave tiene un valor configurado.
+        /// El primer valor de configuración no vacío encontrado, 
+        /// o cadena vacía si ninguna clave tiene un valor configurado.
         /// </returns>
         private static string ObtenerConfiguracion(params string[] claves)
         {

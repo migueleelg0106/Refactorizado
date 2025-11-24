@@ -38,7 +38,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <param name="valor">Texto a normalizar.</param>
         /// <returns>
         /// Texto normalizado sin espacios al inicio y final,
-        /// o cadena vacia si el valor es nulo o solo espacios en blanco.
+        /// o cadena vacía si el valor es nulo o solo espacios en blanco.
         /// </returns>
         public static string NormalizarTexto(string valor)
         {
