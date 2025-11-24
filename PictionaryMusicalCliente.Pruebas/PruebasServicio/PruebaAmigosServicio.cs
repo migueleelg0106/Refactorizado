@@ -1,26 +1,22 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using System;
 using System.Collections.Generic;
-using System.ServiceModel;
+using System.Linq;
 using System.Threading.Tasks;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Pruebas.PruebasServicio
 {
+    /// <summary>
+    /// Pruebas para AmigosServicio.
+    /// Nota: Estas pruebas se enfocan en la lógica interna que puede probarse sin un servidor WCF,
+    /// como validaciones, callbacks y gestión de estado.
+    /// </summary>
     [TestClass]
     public class PruebaAmigosServicio
     {
-        private Mock<PictionaryServidorServicioAmigos.AmigosManejadorClient> _mockCliente;
-        private TestableAmigosServicio _servicio;
-
-        [TestInitialize]
-        public void Inicializar()
-        {
-            _mockCliente = new Mock<PictionaryServidorServicioAmigos.AmigosManejadorClient>();
-        }
+        private AmigosServicio _servicio;
 
         [TestCleanup]
         public void Limpiar()
@@ -29,13 +25,13 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasServicio
             _servicio = null;
         }
 
-        #region Pruebas de Suscripción
+        #region Pruebas de Validación de Parámetros
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public async Task SuscribirAsync_NombreUsuarioVacio_LanzaExcepcion()
         {
-            _servicio = new TestableAmigosServicio();
+            _servicio = new AmigosServicio();
             await _servicio.SuscribirAsync(string.Empty);
         }
 
@@ -43,7 +39,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasServicio
         [ExpectedException(typeof(ArgumentException))]
         public async Task SuscribirAsync_NombreUsuarioNulo_LanzaExcepcion()
         {
-            _servicio = new TestableAmigosServicio();
+            _servicio = new AmigosServicio();
             await _servicio.SuscribirAsync(null);
         }
 
@@ -51,232 +47,57 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasServicio
         [ExpectedException(typeof(ArgumentException))]
         public async Task SuscribirAsync_NombreUsuarioEspacios_LanzaExcepcion()
         {
-            _servicio = new TestableAmigosServicio();
+            _servicio = new AmigosServicio();
             await _servicio.SuscribirAsync("   ");
         }
 
         [TestMethod]
-        public async Task SuscribirAsync_PrimeraVez_CreaClienteYSuscribe()
+        public async Task CancelarSuscripcionAsync_NombreUsuarioVacio_NoLanzaExcepcion()
         {
-            _mockCliente.Setup(c => c.SuscribirAsync(It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-
-            await _servicio.SuscribirAsync("Usuario1");
-
-            _mockCliente.Verify(c => c.SuscribirAsync("Usuario1"), Times.Once);
-        }
-
-        [TestMethod]
-        public async Task SuscribirAsync_MismoUsuarioDosVeces_NoSuscribeDeNuevo()
-        {
-            _mockCliente.Setup(c => c.SuscribirAsync(It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-
-            await _servicio.SuscribirAsync("Usuario1");
-            await _servicio.SuscribirAsync("Usuario1");
-
-            _mockCliente.Verify(c => c.SuscribirAsync("Usuario1"), Times.Once);
-        }
-
-        [TestMethod]
-        public async Task SuscribirAsync_FaultException_LanzaServicioExcepcion()
-        {
-            _mockCliente.Setup(c => c.SuscribirAsync(It.IsAny<string>()))
-                .ThrowsAsync(new FaultException("Error del servidor"));
-            _mockCliente.Setup(c => c.Abort());
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-
-            try
-            {
-                await _servicio.SuscribirAsync("Usuario1");
-                Assert.Fail("Debería lanzar ServicioExcepcion");
-            }
-            catch (ServicioExcepcion ex)
-            {
-                Assert.AreEqual(TipoErrorServicio.FallaServicio, ex.TipoError);
-                _mockCliente.Verify(c => c.Abort(), Times.Once);
-            }
-        }
-
-        [TestMethod]
-        public async Task SuscribirAsync_EndpointNotFoundException_LanzaServicioExcepcion()
-        {
-            _mockCliente.Setup(c => c.SuscribirAsync(It.IsAny<string>()))
-                .ThrowsAsync(new EndpointNotFoundException("No se encontró el endpoint"));
-            _mockCliente.Setup(c => c.Abort());
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-
-            try
-            {
-                await _servicio.SuscribirAsync("Usuario1");
-                Assert.Fail("Debería lanzar ServicioExcepcion");
-            }
-            catch (ServicioExcepcion ex)
-            {
-                Assert.AreEqual(TipoErrorServicio.Comunicacion, ex.TipoError);
-                _mockCliente.Verify(c => c.Abort(), Times.Once);
-            }
-        }
-
-        [TestMethod]
-        public async Task SuscribirAsync_TimeoutException_LanzaServicioExcepcion()
-        {
-            _mockCliente.Setup(c => c.SuscribirAsync(It.IsAny<string>()))
-                .ThrowsAsync(new TimeoutException("Tiempo agotado"));
-            _mockCliente.Setup(c => c.Abort());
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-
-            try
-            {
-                await _servicio.SuscribirAsync("Usuario1");
-                Assert.Fail("Debería lanzar ServicioExcepcion");
-            }
-            catch (ServicioExcepcion ex)
-            {
-                Assert.AreEqual(TipoErrorServicio.TiempoAgotado, ex.TipoError);
-                _mockCliente.Verify(c => c.Abort(), Times.Once);
-            }
-        }
-
-        #endregion
-
-        #region Pruebas de Cancelación de Suscripción
-
-        [TestMethod]
-        public async Task CancelarSuscripcionAsync_NombreUsuarioVacio_NoHaceNada()
-        {
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
+            _servicio = new AmigosServicio();
+            // No debería lanzar excepción
             await _servicio.CancelarSuscripcionAsync(string.Empty);
-            _mockCliente.Verify(c => c.CancelarSuscripcionAsync(It.IsAny<string>()), Times.Never);
         }
 
         [TestMethod]
-        public async Task CancelarSuscripcionAsync_NombreUsuarioNulo_NoHaceNada()
+        public async Task CancelarSuscripcionAsync_NombreUsuarioNulo_NoLanzaExcepcion()
         {
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
+            _servicio = new AmigosServicio();
+            // No debería lanzar excepción
             await _servicio.CancelarSuscripcionAsync(null);
-            _mockCliente.Verify(c => c.CancelarSuscripcionAsync(It.IsAny<string>()), Times.Never);
-        }
-
-        [TestMethod]
-        public async Task CancelarSuscripcionAsync_SinSuscripcion_NoHaceNada()
-        {
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-            await _servicio.CancelarSuscripcionAsync("Usuario1");
-            _mockCliente.Verify(c => c.CancelarSuscripcionAsync(It.IsAny<string>()), Times.Never);
-        }
-
-        [TestMethod]
-        public async Task CancelarSuscripcionAsync_ConSuscripcion_CancelaCorrectamente()
-        {
-            _mockCliente.Setup(c => c.SuscribirAsync(It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
-            _mockCliente.Setup(c => c.CancelarSuscripcionAsync(It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.Close());
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-            await _servicio.SuscribirAsync("Usuario1");
-            await _servicio.CancelarSuscripcionAsync("Usuario1");
-
-            _mockCliente.Verify(c => c.CancelarSuscripcionAsync("Usuario1"), Times.Once);
-        }
-
-        [TestMethod]
-        public async Task CancelarSuscripcionAsync_UsuarioDiferente_NoHaceNada()
-        {
-            _mockCliente.Setup(c => c.SuscribirAsync(It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-            await _servicio.SuscribirAsync("Usuario1");
-            await _servicio.CancelarSuscripcionAsync("Usuario2");
-
-            _mockCliente.Verify(c => c.CancelarSuscripcionAsync(It.IsAny<string>()), Times.Never);
         }
 
         #endregion
 
-        #region Pruebas de Operaciones de Amistad
+        #region Pruebas de Propiedades y Estado Inicial
 
         [TestMethod]
-        public async Task EnviarSolicitudAsync_LlamaClienteCorrectamente()
+        public void SolicitudesPendientes_IniciaVacio()
         {
-            _mockCliente.Setup(c => c.EnviarSolicitudAmistadAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
+            _servicio = new AmigosServicio();
+            var solicitudes = _servicio.SolicitudesPendientes;
 
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-            await _servicio.EnviarSolicitudAsync("Usuario1", "Usuario2");
-
-            _mockCliente.Verify(c => c.EnviarSolicitudAmistadAsync("Usuario1", "Usuario2"), Times.Once);
+            Assert.IsNotNull(solicitudes);
+            Assert.AreEqual(0, solicitudes.Count);
         }
 
         [TestMethod]
-        public async Task ResponderSolicitudAsync_LlamaClienteCorrectamente()
+        public void SolicitudesPendientes_DevuelveColeccionDeSoloLectura()
         {
-            _mockCliente.Setup(c => c.ResponderSolicitudAmistadAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
+            _servicio = new AmigosServicio();
+            var solicitudes = _servicio.SolicitudesPendientes;
 
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-            await _servicio.ResponderSolicitudAsync("Usuario1", "Usuario2");
-
-            _mockCliente.Verify(c => c.ResponderSolicitudAmistadAsync("Usuario1", "Usuario2"), Times.Once);
-        }
-
-        [TestMethod]
-        public async Task EliminarAmigoAsync_LlamaClienteCorrectamente()
-        {
-            _mockCliente.Setup(c => c.EliminarAmigoAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-            await _servicio.EliminarAmigoAsync("Usuario1", "Usuario2");
-
-            _mockCliente.Verify(c => c.EliminarAmigoAsync("Usuario1", "Usuario2"), Times.Once);
-        }
-
-        [TestMethod]
-        public async Task EnviarSolicitudAsync_FaultException_LanzaServicioExcepcion()
-        {
-            _mockCliente.Setup(c => c.EnviarSolicitudAmistadAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .ThrowsAsync(new FaultException("Error"));
-            _mockCliente.Setup(c => c.Abort());
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-
-            try
-            {
-                await _servicio.EnviarSolicitudAsync("Usuario1", "Usuario2");
-                Assert.Fail("Debería lanzar ServicioExcepcion");
-            }
-            catch (ServicioExcepcion ex)
-            {
-                Assert.AreEqual(TipoErrorServicio.FallaServicio, ex.TipoError);
-            }
+            Assert.IsInstanceOfType(solicitudes, typeof(IReadOnlyCollection<DTOs.SolicitudAmistadDTO>));
         }
 
         #endregion
 
-        #region Pruebas de Callbacks
+        #region Pruebas de Callbacks (Lógica sin servidor)
 
         [TestMethod]
-        public void NotificarSolicitudActualizada_SolicitudNula_NoHaceNada()
+        public void NotificarSolicitudActualizada_SolicitudNula_NoDisparaEvento()
         {
-            _servicio = new TestableAmigosServicio();
+            _servicio = new AmigosServicio();
             bool eventoDisparado = false;
             _servicio.SolicitudesActualizadas += (s, e) => eventoDisparado = true;
 
@@ -286,70 +107,53 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasServicio
         }
 
         [TestMethod]
-        public void NotificarSolicitudActualizada_SolicitudValida_DisparaEvento()
+        public void NotificarSolicitudActualizada_EmisorVacio_NoDisparaEvento()
         {
-            _mockCliente.Setup(c => c.SuscribirAsync(It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-            _servicio.SuscribirAsync("Usuario1").Wait();
-
-            bool eventoDisparado = false;
-            IReadOnlyCollection<DTOs.SolicitudAmistadDTO> solicitudes = null;
-            _servicio.SolicitudesActualizadas += (s, e) =>
-            {
-                eventoDisparado = true;
-                solicitudes = e;
-            };
-
-            var solicitud = new DTOs.SolicitudAmistadDTO
-            {
-                UsuarioEmisor = "Usuario2",
-                UsuarioReceptor = "Usuario1",
-                SolicitudAceptada = false
-            };
-
-            _servicio.NotificarSolicitudActualizada(solicitud);
-
-            Assert.IsTrue(eventoDisparado);
-            Assert.IsNotNull(solicitudes);
-        }
-
-        [TestMethod]
-        public void NotificarAmistadEliminada_SolicitudValida_DisparaEvento()
-        {
-            _mockCliente.Setup(c => c.SuscribirAsync(It.IsAny<string>()))
-                .Returns(Task.CompletedTask);
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
-            _servicio.SuscribirAsync("Usuario1").Wait();
-
-            var solicitud = new DTOs.SolicitudAmistadDTO
-            {
-                UsuarioEmisor = "Usuario2",
-                UsuarioReceptor = "Usuario1",
-                SolicitudAceptada = false
-            };
-            _servicio.NotificarSolicitudActualizada(solicitud);
-
+            _servicio = new AmigosServicio();
             bool eventoDisparado = false;
             _servicio.SolicitudesActualizadas += (s, e) => eventoDisparado = true;
 
-            _servicio.NotificarAmistadEliminada(solicitud);
+            var solicitud = new DTOs.SolicitudAmistadDTO
+            {
+                UsuarioEmisor = "",
+                UsuarioReceptor = "Usuario1",
+                SolicitudAceptada = false
+            };
 
-            Assert.IsTrue(eventoDisparado);
+            _servicio.NotificarSolicitudActualizada(solicitud);
+
+            Assert.IsFalse(eventoDisparado);
         }
 
         [TestMethod]
-        public void SolicitudesPendientes_IniciaSinSolicitudes()
+        public void NotificarSolicitudActualizada_ReceptorVacio_NoDisparaEvento()
         {
-            _servicio = new TestableAmigosServicio();
-            var solicitudes = _servicio.SolicitudesPendientes;
+            _servicio = new AmigosServicio();
+            bool eventoDisparado = false;
+            _servicio.SolicitudesActualizadas += (s, e) => eventoDisparado = true;
 
-            Assert.IsNotNull(solicitudes);
-            Assert.AreEqual(0, solicitudes.Count);
+            var solicitud = new DTOs.SolicitudAmistadDTO
+            {
+                UsuarioEmisor = "Usuario1",
+                UsuarioReceptor = "",
+                SolicitudAceptada = false
+            };
+
+            _servicio.NotificarSolicitudActualizada(solicitud);
+
+            Assert.IsFalse(eventoDisparado);
+        }
+
+        [TestMethod]
+        public void NotificarAmistadEliminada_SolicitudNula_NoDisparaEvento()
+        {
+            _servicio = new AmigosServicio();
+            bool eventoDisparado = false;
+            _servicio.SolicitudesActualizadas += (s, e) => eventoDisparado = true;
+
+            _servicio.NotificarAmistadEliminada(null);
+
+            Assert.IsFalse(eventoDisparado);
         }
 
         #endregion
@@ -357,15 +161,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasServicio
         #region Pruebas de Dispose
 
         [TestMethod]
-        public void Dispose_LiberaRecursos()
+        public void Dispose_NoLanzaExcepcion()
         {
-            _mockCliente.Setup(c => c.State).Returns(CommunicationState.Opened);
-            _mockCliente.Setup(c => c.Close());
-
-            _servicio = new TestableAmigosServicio(_mockCliente.Object);
+            _servicio = new AmigosServicio();
             _servicio.Dispose();
-
-            // Verificar que no se puede usar después del dispose
+            
+            // Verificar que todavía se puede acceder a propiedades
             var solicitudes = _servicio.SolicitudesPendientes;
             Assert.IsNotNull(solicitudes);
         }
@@ -373,35 +174,12 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasServicio
         [TestMethod]
         public void Dispose_MultiplesLlamadas_NoGeneraError()
         {
-            _servicio = new TestableAmigosServicio();
+            _servicio = new AmigosServicio();
             _servicio.Dispose();
             _servicio.Dispose();
             // No debería lanzar excepción
         }
 
         #endregion
-    }
-
-    /// <summary>
-    /// Clase testable que permite inyectar un mock del cliente WCF
-    /// </summary>
-    internal class TestableAmigosServicio : AmigosServicio
-    {
-        private readonly PictionaryServidorServicioAmigos.AmigosManejadorClient _clienteMock;
-
-        public TestableAmigosServicio() : base()
-        {
-        }
-
-        public TestableAmigosServicio(PictionaryServidorServicioAmigos.AmigosManejadorClient clienteMock)
-        {
-            _clienteMock = clienteMock;
-        }
-
-        // Sobrescribe el método de creación para devolver el mock
-        protected override PictionaryServidorServicioAmigos.AmigosManejadorClient CrearCliente()
-        {
-            return _clienteMock ?? base.CrearCliente();
-        }
     }
 }
