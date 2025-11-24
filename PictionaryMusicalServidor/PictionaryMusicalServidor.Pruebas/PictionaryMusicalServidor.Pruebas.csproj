@@ -50,6 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PruebaCorreoCodigoVerificacionNotificador.cs" />
+    <Compile Include="PruebasUtilidades\PruebaTokenGenerador.cs" />
+    <Compile Include="PruebasUtilidades\PruebaCodigoVerificacionGenerador.cs" />
+    <Compile Include="PruebasUtilidades\PruebaValidadorNombreUsuario.cs" />
+    <Compile Include="PruebasUtilidades\PruebaEntradaComunValidador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
