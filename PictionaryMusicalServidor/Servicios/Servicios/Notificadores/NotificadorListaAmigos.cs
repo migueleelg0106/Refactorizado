@@ -20,10 +20,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(NotificadorListaAmigos));
         private readonly ManejadorCallback<IListaAmigosManejadorCallback> _manejadorCallback;
+        private readonly IAmistadServicio _amistadServicio;
+        private readonly IContextoFactory _contextoFactory;
 
         public NotificadorListaAmigos(ManejadorCallback<IListaAmigosManejadorCallback> manejadorCallback)
+            : this(manejadorCallback, new ContextoFactory())
+        {
+        }
+
+        public NotificadorListaAmigos(ManejadorCallback<IListaAmigosManejadorCallback> manejadorCallback, IContextoFactory contextoFactory)
         {
             _manejadorCallback = manejadorCallback;
+            _contextoFactory = contextoFactory;
+            _amistadServicio = new AmistadServicio(contextoFactory);
         }
 
         /// <summary>
@@ -79,9 +88,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             });
         }
 
-        private static List<AmigoDTO> ObtenerAmigosPorNombre(string nombreUsuario)
+        private List<AmigoDTO> ObtenerAmigosPorNombre(string nombreUsuario)
         {
-            using var contexto = ContextoFactory.CrearContexto();
+            using var contexto = _contextoFactory.CrearContexto();
             var usuarioRepositorio = new UsuarioRepositorio(contexto);
 
             Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
@@ -91,7 +100,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
             }
 
-            return AmistadServicio.ObtenerAmigosDTO(usuario.idUsuario);
+            return _amistadServicio.ObtenerAmigosDTO(usuario.idUsuario);
         }
     }
 }

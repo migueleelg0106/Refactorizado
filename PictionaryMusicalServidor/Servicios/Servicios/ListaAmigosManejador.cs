@@ -22,7 +22,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ListaAmigosManejador));
         private static readonly ManejadorCallback<IListaAmigosManejadorCallback> _manejadorCallback = new(StringComparer.OrdinalIgnoreCase);
-        private static readonly NotificadorListaAmigos _notificador = new(_manejadorCallback);
+        private static readonly IContextoFactory _contextoFactoryInstancia = new ContextoFactory();
+        private static readonly IAmistadServicio _amistadServicioInstancia = new AmistadServicio(_contextoFactoryInstancia);
+        private static readonly NotificadorListaAmigos _notificador = new(_manejadorCallback, _contextoFactoryInstancia);
 
         /// <summary>
         /// Suscribe un usuario para recibir notificaciones sobre cambios en su lista de amigos.
@@ -139,7 +141,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private static List<AmigoDTO> ObtenerAmigosPorNombre(string nombreUsuario)
         {
-            using var contexto = ContextoFactory.CrearContexto();
+            using var contexto = _contextoFactoryInstancia.CrearContexto();
             var usuarioRepositorio = new UsuarioRepositorio(contexto);
 
             Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
@@ -149,7 +151,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
             }
 
-            return AmistadServicio.ObtenerAmigosDTO(usuario.idUsuario);
+            return _amistadServicioInstancia.ObtenerAmigosDTO(usuario.idUsuario);
         }
     }
 }
