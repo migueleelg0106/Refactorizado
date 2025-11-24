@@ -44,7 +44,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (!EntradaComunValidador.EsLongitudValida(identificador) || string.IsNullOrWhiteSpace(contrasena))
             {
-                _logger.Warn($"Intento de inicio de sesi�n con datos inv�lidos. Identificador: {identificador}");
+                _logger.Warn("Intento de inicio de sesi�n con datos inv�lidos. Identificador: " + identificador);
                 return new ResultadoInicioSesionDTO
                 {
                     CuentaEncontrada = true,
@@ -60,7 +60,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     if (usuario == null)
                     {
-                        _logger.Warn($"Intento de inicio de sesi�n fallido. Usuario no encontrado: {identificador}");
+                        _logger.Warn("Intento de inicio de sesi�n fallido. Usuario no encontrado: " + identificador);
                         return new ResultadoInicioSesionDTO
                         {
                             CuentaEncontrada = false,
@@ -70,7 +70,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     if (!BCryptNet.Verify(contrasena, usuario.Contrasena))
                     {
-                        _logger.Warn($"Intento de inicio de sesi�n fallido. Contrase�a incorrecta para: {usuario.Nombre_Usuario}");
+                        _logger.Warn("Intento de inicio de sesi�n fallido. Contrase�a incorrecta para: " + usuario.Nombre_Usuario);
                         return new ResultadoInicioSesionDTO
                         {
                             ContrasenaIncorrecta = true,
@@ -78,7 +78,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         };
                     }
 
-                    _logger.Info($"Inicio de sesi�n exitoso. Usuario: {usuario.Nombre_Usuario}, ID: {usuario.idUsuario}");
+                    _logger.Info("Inicio de sesi�n exitoso. Usuario: " + usuario.Nombre_Usuario + ", ID: " + usuario.idUsuario);
 
                     return new ResultadoInicioSesionDTO
                     {

@@ -307,7 +307,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 valorNormalizado = null;
                 return CrearResultadoOperacion(
                     false,
-                    $"El identificador de {nombre} no debe exceder {LongitudMaximaTexto} caracteres.");
+                    "El identificador de " + nombre + " no debe exceder " + LongitudMaximaTexto + " caracteres.");
             }
 
             return null;

@@ -32,11 +32,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var resultado = ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
                 if (resultado.CodigoEnviado)
                 {
-                    _logger.Info($"Solicitud de recuperaci�n de cuenta iniciada para '{solicitud.Identificador}'.");
+                    _logger.Info("Solicitud de recuperaci�n de cuenta iniciada para '" + solicitud.Identificador + "'.");
                 }
                 else
                 {
-                    _logger.Warn($"Solicitud de recuperaci�n fallida para '{solicitud.Identificador}': {resultado.Mensaje}");
+                    _logger.Warn("Solicitud de recuperaci�n fallida para '" + solicitud.Identificador + "': " + resultado.Mensaje);
                 }
                 return resultado;
             }
@@ -82,11 +82,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var resultado = ServicioRecuperacionCuenta.ReenviarCodigoRecuperacion(solicitud);
                 if (resultado.CodigoEnviado)
                 {
-                    _logger.Info($"Reenviar c�digo de recuperaci�n de cuenta iniciada para '{solicitud.TokenCodigo}'.");
+                    _logger.Info("Reenviar c�digo de recuperaci�n de cuenta iniciada para '" + solicitud.TokenCodigo + "'.");
                 }
                 else
                 {
-                    _logger.Warn($"Solicitud de reenv�o de c�digo de recuperaci�n fallida para '{solicitud.TokenCodigo}': {resultado.Mensaje}");
+                    _logger.Warn("Solicitud de reenv�o de c�digo de recuperaci�n fallida para '" + solicitud.TokenCodigo + "': " + resultado.Mensaje);
                 }
                 return resultado;
             }
@@ -132,11 +132,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var resultado = ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
                 if (resultado.OperacionExitosa)
                 {
-                    _logger.Info($"C�digo de recuperaci�n confirmado correctamente. Token sesi�n: '{confirmacion.TokenCodigo}'.");
+                    _logger.Info("C�digo de recuperaci�n confirmado correctamente. Token sesi�n: '" + confirmacion.TokenCodigo + "'.");
                 }
                 else
                 {
-                    _logger.Warn($"Intento fallido de confirmaci�n de c�digo de recuperaci�n. Token sesi�n: '{confirmacion.TokenCodigo}': {resultado.Mensaje}");
+                    _logger.Warn("Intento fallido de confirmaci�n de c�digo de recuperaci�n. Token sesi�n: '" + confirmacion.TokenCodigo + "': " + resultado.Mensaje);
                 }
                 return resultado;
             }
