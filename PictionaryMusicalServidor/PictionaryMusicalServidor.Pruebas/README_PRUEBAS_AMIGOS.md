@@ -40,7 +40,7 @@ Este documento describe las pruebas creadas para los servicios de gestión de am
    - Retorna lista vacía correctamente
 
 ### PruebaAmigosManejador.cs
-**9 métodos de prueba** enfocados en validación de entradas y manejo de errores.
+**22 métodos de prueba** enfocados en validación de entradas y manejo de errores.
 
 #### Categorías de Pruebas:
 
@@ -55,7 +55,26 @@ Este documento describe las pruebas creadas para los servicios de gestión de am
    - Lanza FaultException para nombre solo con espacios
    - No lanza excepción para usuario no suscrito
 
-3. **Documentación (2 métodos)**
+3. **EnviarSolicitudAmistad (5 pruebas)**
+   - Lanza FaultException para nombre emisor nulo
+   - Lanza FaultException para nombre emisor vacío
+   - Lanza FaultException para nombre receptor nulo
+   - Lanza FaultException para nombre receptor vacío
+   - Lanza FaultException cuando ambos nombres son vacíos
+
+4. **ResponderSolicitudAmistad (4 pruebas)**
+   - Lanza FaultException para nombre emisor nulo
+   - Lanza FaultException para nombre emisor vacío
+   - Lanza FaultException para nombre receptor nulo
+   - Lanza FaultException para nombre receptor vacío
+
+5. **EliminarAmigo (4 pruebas)**
+   - Lanza FaultException para nombre usuario A nulo
+   - Lanza FaultException para nombre usuario A vacío
+   - Lanza FaultException para nombre usuario B nulo
+   - Lanza FaultException para nombre usuario B vacío
+
+6. **Documentación (2 métodos)**
    - Recomendaciones para pruebas de integración
    - Notas sobre delegación de reglas de negocio
 
@@ -73,12 +92,14 @@ Este documento describe las pruebas creadas para los servicios de gestión de am
 ### AmigosManejador
 - **Patrón**: Pruebas de validación de entrada
 - **Estrategia**: Probar comportamiento observable sin base de datos/contexto WCF
-- **Alcance**: Validación de parámetros y manejo de errores
+- **Alcance**: Validación de parámetros para todos los métodos públicos
+- **Cobertura**: 22 pruebas validando entrada de 5 métodos diferentes
 - **Razón**:
   - AmigosManejador es un servicio WCF con estado singleton
   - Usa callbacks estáticos y conexiones de base de datos
   - Lógica de negocio delegada a AmistadServicio (probada separadamente)
-  - Pruebas completas requieren pruebas de integración con BD + host WCF
+  - Las validaciones de entrada se pueden probar individualmente sin BD
+  - Escenarios completos requieren pruebas de integración con BD + host WCF
 
 ## Modificaciones Realizadas para Soportar Pruebas
 
@@ -196,10 +217,11 @@ Considerar herramientas como:
 ## Conclusión
 
 Las pruebas creadas proporcionan:
-- ✅ **Cobertura completa** de la lógica de negocio en AmistadServicio
-- ✅ **Validación robusta** de entradas en AmigosManejador
+- ✅ **Cobertura completa** de la lógica de negocio en AmistadServicio (20 pruebas)
+- ✅ **Validación exhaustiva** de entradas en AmigosManejador (22 pruebas)
+- ✅ **Pruebas individuales** para cada método público sin necesidad de BD
 - ✅ **Compatibilidad retroactiva** - sin cambios disruptivos
 - ✅ **Patrón reutilizable** para probar otros servicios
 - ✅ **Documentación clara** para futuras extensiones
 
-La lógica crítica de negocio está completamente probada, con una estrategia pragmática para el servicio WCF que equilibra exhaustividad con practicidad.
+**Total: 42 métodos de prueba** que validan tanto la lógica de negocio como las validaciones de entrada, con una estrategia pragmática que equilibra exhaustividad con practicidad.
