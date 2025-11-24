@@ -151,7 +151,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             if (!ServicioVerificacionRegistro.EstaVerificacionConfirmada(nuevaCuenta))
             {
-                _logger.WarnFormat("Intento de registro sin verificaci�n confirmada. Correo: {0}", nuevaCuenta.Correo);
+                _logger.WarnFormat("Intento de registro sin verificación confirmada. Correo: {0}", nuevaCuenta.Correo);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
