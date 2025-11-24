@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 using System;
+using System.ServiceModel; // Agregado para excepciones de comunicación y timeout
 
 namespace PictionaryMusicalServidor.Pruebas
 {
@@ -108,6 +109,9 @@ namespace PictionaryMusicalServidor.Pruebas
             var manejador = new ManejadorCallback<ICallbackPrueba>();
 
             manejador.Desuscribir("usuarioInexistente");
+
+            bool existe = manejador.TryGetCallback("usuarioInexistente", out _);
+            Assert.IsFalse(existe);
         }
 
         [TestMethod]
@@ -116,6 +120,9 @@ namespace PictionaryMusicalServidor.Pruebas
             var manejador = new ManejadorCallback<ICallbackPrueba>();
 
             manejador.Desuscribir(null);
+
+            bool existe = manejador.TryGetCallback(null, out _);
+            Assert.IsFalse(existe);
         }
 
         [TestMethod]
@@ -161,6 +168,9 @@ namespace PictionaryMusicalServidor.Pruebas
             var manejador = new ManejadorCallback<ICallbackPrueba>();
 
             manejador.Notificar("usuarioInexistente", cb => cb.Notificar("Mensaje"));
+
+            bool existe = manejador.TryGetCallback("usuarioInexistente", out _);
+            Assert.IsFalse(existe);
         }
 
         [TestMethod]
@@ -171,13 +181,50 @@ namespace PictionaryMusicalServidor.Pruebas
 
             manejador.Suscribir("Usuario1", callback);
 
-            // Con comparador Ordinal (case-sensitive), "usuario1" no debería encontrarse
             bool existe = manejador.TryGetCallback("usuario1", out _);
-            Assert.IsFalse(existe);
+            Assert.IsFalse(existe); // case-sensitive
 
-            // Pero "Usuario1" sí debería encontrarse
             existe = manejador.TryGetCallback("Usuario1", out _);
             Assert.IsTrue(existe);
+        }
+
+        [TestMethod]
+        public void Prueba_Notificar_CommunicationException_DesuscribeUsuario()
+        {
+            var manejador = new ManejadorCallback<ICallbackPrueba>();
+            var callback = new CallbackPrueba();
+            manejador.Suscribir("usuario1", callback);
+
+            manejador.Notificar("usuario1", _ => throw new CommunicationException("Falla de comunicación simulada"));
+
+            bool existe = manejador.TryGetCallback("usuario1", out _);
+            Assert.IsFalse(existe, "Debe desuscribir al usuario cuando ocurre CommunicationException.");
+        }
+
+        [TestMethod]
+        public void Prueba_Notificar_TimeoutException_DesuscribeUsuario()
+        {
+            var manejador = new ManejadorCallback<ICallbackPrueba>();
+            var callback = new CallbackPrueba();
+            manejador.Suscribir("usuario1", callback);
+
+            manejador.Notificar("usuario1", _ => throw new TimeoutException("Timeout simulada"));
+
+            bool existe = manejador.TryGetCallback("usuario1", out _);
+            Assert.IsFalse(existe, "Debe desuscribir al usuario cuando ocurre TimeoutException.");
+        }
+
+        [TestMethod]
+        public void Prueba_Notificar_InvalidOperationException_NoDesuscribeUsuario()
+        {
+            var manejador = new ManejadorCallback<ICallbackPrueba>();
+            var callback = new CallbackPrueba();
+            manejador.Suscribir("usuario1", callback);
+
+            manejador.Notificar("usuario1", _ => throw new InvalidOperationException("Operación inválida simulada"));
+
+            bool existe = manejador.TryGetCallback("usuario1", out _);
+            Assert.IsTrue(existe, "No debe desuscribir al usuario cuando ocurre InvalidOperationException.");
         }
     }
 }
