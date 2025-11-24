@@ -15,14 +15,13 @@ namespace PictionaryMusicalServidor.Pruebas
 {
     /// <summary>
     /// Clase de pruebas unitarias para InicioSesionManejador.
-    /// Verifica el comportamiento del servicio de autenticacion de usuarios,
+    /// Verifica el comportamiento del servicio de autenticación de usuarios,
     /// incluyendo validaciones, manejo de excepciones y casos de error.
     /// </summary>
     [TestClass]
     public class PruebaInicioSesionManejador
     {
         private InicioSesionManejador _manejador;
-        private const string ContrasenaHasheadaValida = "$2a$11$8Z0QKvOh/0xYx0K7Y9rZ2.YfV3jUvB3gH5L8nqZJXxZq2Z0QKvOh/";
         private const string ContrasenaTextoPlano = "Password123!";
 
         [TestInitialize]
@@ -329,7 +328,7 @@ namespace PictionaryMusicalServidor.Pruebas
         [TestMethod]
         public void Prueba_IniciarSesion_InicioConCorreo_RetornaExito()
         {
-            // Test de inicio de sesion usando correo electronico
+            // Test de inicio de sesión usando correo electrónico
             var credenciales = new CredencialesInicioSesionDTO
             {
                 Identificador = "usuario@test.com",
@@ -376,37 +375,44 @@ namespace PictionaryMusicalServidor.Pruebas
 
         /*
         // Nota: Estos tests requieren mocking del ContextoFactory y del contexto de base de datos
-        // debido a que Entity Framework no es facilmente mockeable sin interfaces.
+        // debido a que Entity Framework no es fácilmente mockeable sin interfaces.
+        // 
+        // RECOMENDACIÓN: Para implementar estas pruebas, refactorizar la arquitectura usando:
+        // 1. Patrón Repositorio: Crear IUsuarioRepositorio para abstraer acceso a datos
+        // 2. Inyección de Dependencias: Permitir inyectar IContextoFactory en lugar de usar clase estática
+        // 3. Wrapper del Contexto: Crear interfaz IBaseDatosContexto para mockear Entity Framework
+        //
+        // Ejemplo de refactorización recomendada:
+        // public InicioSesionManejador(IUsuarioRepositorio repositorio) { ... }
+        //
+        // Con esta arquitectura, los siguientes tests serían implementables:
 
         [TestMethod]
         public void Prueba_IniciarSesion_EntityException_RetornaMensajeError()
         {
-            // Simula un error de conexion a la base de datos
-            // Requiere mockear ContextoFactory para lanzar EntityException
-            
-            // Este test requiere arquitectura modificada para permitir inyeccion de dependencias
-            // o uso de un patron de repositorio para facilitar el testing
+            // Simula un error de conexión a la base de datos
+            // var mockRepo = new Mock<IUsuarioRepositorio>();
+            // mockRepo.Setup(r => r.BuscarPorIdentificador(It.IsAny<string>()))
+            //         .Throws(new EntityException("Error de conexión"));
+            // 
+            // var manejador = new InicioSesionManejador(mockRepo.Object);
+            // var resultado = manejador.IniciarSesion(credenciales);
+            // 
+            // Assert.AreEqual(MensajesError.Cliente.ErrorInicioSesion, resultado.Mensaje);
         }
 
         [TestMethod]
         public void Prueba_IniciarSesion_DataException_RetornaMensajeError()
         {
             // Simula un error de datos durante la consulta
-            // Requiere mockear ContextoFactory para lanzar DataException
+            // Similar al anterior pero lanzando DataException
         }
 
         [TestMethod]
         public void Prueba_IniciarSesion_InvalidOperationException_RetornaMensajeError()
         {
             // Simula un estado inconsistente del contexto
-            // Requiere mockear ContextoFactory para lanzar InvalidOperationException
-        }
-
-        [TestMethod]
-        public void Prueba_IniciarSesion_ExcepcionGenerica_PropagaExcepcion()
-        {
-            // Verifica que excepciones no manejadas se propaguen correctamente
-            // Requiere mockear ContextoFactory para lanzar Exception generica
+            // Similar al anterior pero lanzando InvalidOperationException
         }
         */
 
