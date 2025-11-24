@@ -8,9 +8,9 @@ namespace PictionaryMusicalServidor.Pruebas
 {
     /// <summary>
     /// Pruebas para AmigosManejador.
-    /// Nota: AmigosManejador es un servicio WCF con estado singleton que usa dependencias estaticas
-    /// y acceso directo a base de datos. Estas pruebas validan la logica de validacion de entrada.
-    /// Para pruebas de integracion completas, se requiere configurar una base de datos de prueba.
+    /// Nota: AmigosManejador es un servicio WCF con estado singleton que usa dependencias estáticas
+    /// y acceso directo a base de datos. Estas pruebas validan la lógica de validación de entrada.
+    /// Para pruebas de integración completas, se requiere configurar una base de datos de prueba.
     /// </summary>
     [TestClass]
     public class PruebaAmigosManejador
@@ -46,13 +46,13 @@ namespace PictionaryMusicalServidor.Pruebas
             {
                 // Act
                 _manejador.Suscribir(null);
-                Assert.Fail("Deberia lanzar FaultException");
+                Assert.Fail("Debería lanzar FaultException");
             }
             catch (FaultException ex)
             {
                 // Assert - Verifica que hay un mensaje de error
                 Assert.IsNotNull(ex.Message);
-                Assert.IsTrue(ex.Message.Length > 0, "El mensaje de error no debe estar vacio");
+                Assert.IsTrue(ex.Message.Length > 0, "El mensaje de error no debe estar vacío");
             }
         }
 
@@ -117,13 +117,13 @@ namespace PictionaryMusicalServidor.Pruebas
             {
                 // Act
                 _manejador.CancelarSuscripcion(null);
-                Assert.Fail("Deberia lanzar FaultException");
+                Assert.Fail("Debería lanzar FaultException");
             }
             catch (FaultException ex)
             {
                 // Assert - Verifica que hay un mensaje de error
                 Assert.IsNotNull(ex.Message);
-                Assert.IsTrue(ex.Message.Length > 0, "El mensaje de error no debe estar vacio");
+                Assert.IsTrue(ex.Message.Length > 0, "El mensaje de error no debe estar vacío");
             }
         }
 

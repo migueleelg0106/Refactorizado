@@ -5,8 +5,8 @@ using System.Collections.Generic;
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
     /// <summary>
-    /// Wrapper que implementa IAmistadServicio y delega las llamadas a la clase estatica AmistadServicio.
-    /// Permite la inyeccion de dependencias mientras se mantiene la compatibilidad con el codigo existente.
+    /// Wrapper que implementa IAmistadServicio y delega las llamadas a la clase estática AmistadServicio.
+    /// Permite la inyección de dependencias mientras se mantiene la compatibilidad con el código existente.
     /// </summary>
     internal class AmistadServicioWrapper : IAmistadServicio
     {

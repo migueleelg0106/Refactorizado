@@ -11,9 +11,9 @@ namespace PictionaryMusicalServidor.Pruebas
 {
     /// <summary>
     /// Pruebas para AmistadServicio.
-    /// Nota: AmistadServicio es una clase estatica que usa ContextoFactory.CrearContexto()
-    /// directamente. Estas pruebas validan la logica de negocio que no depende de base de datos.
-    /// Para pruebas de integracion completas, se requiere configurar una base de datos de prueba.
+    /// Nota: AmistadServicio es una clase estática que usa ContextoFactory.CrearContexto()
+    /// directamente. Estas pruebas validan la lógica de negocio que no depende de base de datos.
+    /// Para pruebas de integración completas, se requiere configurar una base de datos de prueba.
     /// </summary>
     [TestClass]
     public class PruebaAmistadServicio
@@ -41,13 +41,13 @@ namespace PictionaryMusicalServidor.Pruebas
             {
                 // Act
                 AmistadServicio.CrearSolicitud(usuarioId, usuarioId);
-                Assert.Fail("Deberia lanzar InvalidOperationException");
+                Assert.Fail("Debería lanzar InvalidOperationException");
             }
             catch (InvalidOperationException ex)
             {
                 // Assert - Verifica que el mensaje de error es apropiado
                 Assert.IsNotNull(ex.Message);
-                Assert.IsTrue(ex.Message.Length > 0, "El mensaje de error no debe estar vacio");
+                Assert.IsTrue(ex.Message.Length > 0, "El mensaje de error no debe estar vacío");
             }
         }
 
@@ -92,13 +92,13 @@ namespace PictionaryMusicalServidor.Pruebas
             {
                 // Act
                 AmistadServicio.EliminarAmistad(usuarioId, usuarioId);
-                Assert.Fail("Deberia lanzar InvalidOperationException");
+                Assert.Fail("Debería lanzar InvalidOperationException");
             }
             catch (InvalidOperationException ex)
             {
                 // Assert - Verifica que el mensaje de error es apropiado
                 Assert.IsNotNull(ex.Message);
-                Assert.IsTrue(ex.Message.Length > 0, "El mensaje de error no debe estar vacio");
+                Assert.IsTrue(ex.Message.Length > 0, "El mensaje de error no debe estar vacío");
             }
         }
 
@@ -149,9 +149,9 @@ namespace PictionaryMusicalServidor.Pruebas
 
             try
             {
-                // Act - Debe lanzar excepcion igual que la clase estatica
+                // Act - Debe lanzar excepcion igual que la clase estática
                 wrapper.CrearSolicitud(usuarioId, usuarioId);
-                Assert.Fail("Deberia lanzar InvalidOperationException");
+                Assert.Fail("Debería lanzar InvalidOperationException");
             }
             catch (InvalidOperationException)
             {
@@ -168,9 +168,9 @@ namespace PictionaryMusicalServidor.Pruebas
 
             try
             {
-                // Act - Debe lanzar excepcion igual que la clase estatica
+                // Act - Debe lanzar excepcion igual que la clase estática
                 wrapper.EliminarAmistad(usuarioId, usuarioId);
-                Assert.Fail("Deberia lanzar InvalidOperationException");
+                Assert.Fail("Debería lanzar InvalidOperationException");
             }
             catch (InvalidOperationException)
             {

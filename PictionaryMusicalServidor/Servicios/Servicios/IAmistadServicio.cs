@@ -5,13 +5,13 @@ using System.Collections.Generic;
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
     /// <summary>
-    /// Interfaz para el servicio de gestion de logica de negocio relacionada con amistades.
-    /// Permite la inyeccion de dependencias y facilita las pruebas unitarias.
+    /// Interfaz para el servicio de gestión de lógica de negocio relacionada con amistades.
+    /// Permite la inyección de dependencias y facilita las pruebas unitarias.
     /// </summary>
     public interface IAmistadServicio
     {
         /// <summary>
-        /// Obtiene las solicitudes de amistad pendientes para un usuario especifico.
+        /// Obtiene las solicitudes de amistad pendientes para un usuario específico.
         /// </summary>
         /// <param name="usuarioId">Identificador del usuario receptor.</param>
         /// <returns>Lista de solicitudes de amistad pendientes como DTOs.</returns>
@@ -20,23 +20,23 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <summary>
         /// Crea una nueva solicitud de amistad entre dos usuarios.
         /// </summary>
-        /// <param name="usuarioEmisorId">Identificador del usuario que envia la solicitud.</param>
+        /// <param name="usuarioEmisorId">Identificador del usuario que envía la solicitud.</param>
         /// <param name="usuarioReceptorId">Identificador del usuario que recibe la solicitud.</param>
         void CrearSolicitud(int usuarioEmisorId, int usuarioReceptorId);
 
         /// <summary>
         /// Acepta una solicitud de amistad pendiente entre dos usuarios.
         /// </summary>
-        /// <param name="usuarioEmisorId">Identificador del usuario que envio la solicitud.</param>
+        /// <param name="usuarioEmisorId">Identificador del usuario que envió la solicitud.</param>
         /// <param name="usuarioReceptorId">Identificador del usuario que acepta la solicitud.</param>
         void AceptarSolicitud(int usuarioEmisorId, int usuarioReceptorId);
 
         /// <summary>
-        /// Elimina la relacion de amistad entre dos usuarios.
+        /// Elimina la relación de amistad entre dos usuarios.
         /// </summary>
-        /// <param name="usuarioAId">Identificador del primer usuario en la relacion.</param>
-        /// <param name="usuarioBId">Identificador del segundo usuario en la relacion.</param>
-        /// <returns>La relacion de amistad que fue eliminada.</returns>
+        /// <param name="usuarioAId">Identificador del primer usuario en la relación.</param>
+        /// <param name="usuarioBId">Identificador del segundo usuario en la relación.</param>
+        /// <returns>La relación de amistad que fue eliminada.</returns>
         Amigo EliminarAmistad(int usuarioAId, int usuarioBId);
 
         /// <summary>
