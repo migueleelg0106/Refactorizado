@@ -138,27 +138,238 @@ namespace PictionaryMusicalServidor.Pruebas
 
         #endregion
 
+        #region Pruebas de Validación de Entrada - EnviarSolicitudAmistad
+
+        [TestMethod]
+        public void Prueba_EnviarSolicitudAmistad_NombreEmisorNulo_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.EnviarSolicitudAmistad(null, "UsuarioReceptor");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_EnviarSolicitudAmistad_NombreEmisorVacio_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.EnviarSolicitudAmistad("", "UsuarioReceptor");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_EnviarSolicitudAmistad_NombreReceptorNulo_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.EnviarSolicitudAmistad("UsuarioEmisor", null);
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_EnviarSolicitudAmistad_NombreReceptorVacio_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.EnviarSolicitudAmistad("UsuarioEmisor", "");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_EnviarSolicitudAmistad_AmbosNombresVacios_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.EnviarSolicitudAmistad("", "");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        #endregion
+
+        #region Pruebas de Validación de Entrada - ResponderSolicitudAmistad
+
+        [TestMethod]
+        public void Prueba_ResponderSolicitudAmistad_NombreEmisorNulo_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.ResponderSolicitudAmistad(null, "UsuarioReceptor");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_ResponderSolicitudAmistad_NombreEmisorVacio_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.ResponderSolicitudAmistad("", "UsuarioReceptor");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_ResponderSolicitudAmistad_NombreReceptorNulo_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.ResponderSolicitudAmistad("UsuarioEmisor", null);
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_ResponderSolicitudAmistad_NombreReceptorVacio_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.ResponderSolicitudAmistad("UsuarioEmisor", "");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        #endregion
+
+        #region Pruebas de Validación de Entrada - EliminarAmigo
+
+        [TestMethod]
+        public void Prueba_EliminarAmigo_NombreUsuarioANulo_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.EliminarAmigo(null, "UsuarioB");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_EliminarAmigo_NombreUsuarioAVacio_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.EliminarAmigo("", "UsuarioB");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_EliminarAmigo_NombreUsuarioBNulo_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.EliminarAmigo("UsuarioA", null);
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        [TestMethod]
+        public void Prueba_EliminarAmigo_NombreUsuarioBVacio_LanzaFaultException()
+        {
+            // Arrange
+            var manejador = new AmigosManejador();
+
+            // Act & Assert
+            var exception = Assert.ThrowsException<FaultException>(() =>
+            {
+                manejador.EliminarAmigo("UsuarioA", "");
+            });
+
+            Assert.IsNotNull(exception);
+        }
+
+        #endregion
+
         #region Notas para Pruebas de Integración
 
         /// <summary>
         /// NOTAS PARA PRUEBAS DE INTEGRACIÓN FUTURAS:
         /// 
-        /// Las siguientes funcionalidades de AmigosManejador requieren pruebas de integración
+        /// VALIDACIÓN DE ENTRADA: Ya se están probando las validaciones de entrada
+        /// para todos los métodos (Suscribir, CancelarSuscripcion, EnviarSolicitudAmistad,
+        /// ResponderSolicitudAmistad, EliminarAmigo) sin necesidad de base de datos.
+        /// 
+        /// Las siguientes funcionalidades requieren pruebas de integración
         /// con una base de datos de prueba y un contexto WCF configurado:
         /// 
-        /// 1. EnviarSolicitudAmistad:
+        /// 1. EnviarSolicitudAmistad (escenarios completos):
         ///    - Validar que usuarios existen en BD
         ///    - Crear solicitud en BD
         ///    - Notificar al receptor vía callback
         ///    - Normalizar nombres de usuario
         /// 
-        /// 2. ResponderSolicitudAmistad:
+        /// 2. ResponderSolicitudAmistad (escenarios completos):
         ///    - Validar existencia de solicitud en BD
         ///    - Actualizar estado de solicitud
         ///    - Notificar a ambos usuarios
         ///    - Actualizar listas de amigos
         /// 
-        /// 3. EliminarAmigo:
+        /// 3. EliminarAmigo (escenarios completos):
         ///    - Validar existencia de relación en BD
         ///    - Eliminar relación de BD
         ///    - Notificar a ambos usuarios
