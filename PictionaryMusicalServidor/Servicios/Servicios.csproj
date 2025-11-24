@@ -80,10 +80,12 @@
     <Compile Include="Contratos\DTOs\SalaDTO.cs" />
     <Compile Include="Contratos\IAmigosManejador.cs" />
     <Compile Include="Contratos\IAmigosManejadorCallback.cs" />
+    <Compile Include="Contratos\IAmistadServicio.cs" />
     <Compile Include="Contratos\ICambioContrasenaManejador.cs" />
     <Compile Include="Contratos\IChatManejador.cs" />
     <Compile Include="Contratos\IClasificacionManejador.cs" />
     <Compile Include="Contratos\ICodigoVerificacionManejador.cs" />
+    <Compile Include="Contratos\IContextoFactory.cs" />
     <Compile Include="Contratos\ICuentaManejador.cs" />
     <Compile Include="Contratos\ICursoPartidaManejador.cs" />
     <Compile Include="Contratos\IInicioPartidaManejador.cs" />
