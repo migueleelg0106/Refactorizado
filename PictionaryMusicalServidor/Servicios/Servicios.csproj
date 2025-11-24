@@ -116,6 +116,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\AmigosManejador.cs" />
     <Compile Include="Servicios\AmistadServicio.cs" />
+    <Compile Include="Servicios\AmistadServicioWrapper.cs" />
+    <Compile Include="Servicios\IAmistadServicio.cs" />
     <Compile Include="Servicios\ListaAmigosManejador.cs" />
     <Compile Include="Servicios\ClasificacionManejador.cs" />
     <Compile Include="Servicios\CodigoVerificacionManejador.cs" />
