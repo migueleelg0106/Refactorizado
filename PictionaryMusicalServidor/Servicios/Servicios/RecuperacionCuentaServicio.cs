@@ -20,9 +20,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// Maneja el almacenamiento temporal de solicitudes, generacion y validacion de codigos,
     /// y actualizacion de contrasenas con encriptacion BCrypt.
     /// </summary>
-    internal static class ServicioRecuperacionCuenta
+    internal static class RecuperacionCuentaServicio
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(ServicioRecuperacionCuenta));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(RecuperacionCuentaServicio));
         private const int MinutosExpiracionCodigo = 5;
 
         private static readonly ConcurrentDictionary<string, SolicitudRecuperacionPendiente> _solicitudesRecuperacion =
@@ -85,7 +85,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     Idioma = solicitud.Idioma
                 };
 
-                bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(
+                bool enviado = NotificacionCodigosServicio.EnviarNotificacion(
                     pendiente.Correo,
                     codigo,
                     pendiente.NombreUsuario,
@@ -168,7 +168,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             pendiente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
             pendiente.Confirmado = false;
 
-            bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(
+            bool enviado = NotificacionCodigosServicio.EnviarNotificacion(
                 pendiente.Correo,
                 nuevoCodigo,
                 pendiente.NombreUsuario,

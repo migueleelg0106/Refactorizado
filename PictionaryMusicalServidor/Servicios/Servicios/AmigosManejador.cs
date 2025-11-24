@@ -137,7 +137,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
                     }
 
-                    ServicioAmistad.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
+                    AmistadServicio.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
                 }
 
                 string nombreEmisor = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
@@ -207,7 +207,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         throw new FaultException(MensajesError.Cliente.UsuariosEspecificadosNoExisten);
                     }
 
-                    ServicioAmistad.AceptarSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
+                    AmistadServicio.AceptarSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
 
                     nombreEmisorNormalizado = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
                     nombreReceptorNormalizado = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioReceptor.Nombre_Usuario, nombreUsuarioReceptor);
@@ -282,7 +282,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     idUsuarioA = usuarioA.idUsuario;
 
-                    relacionEliminada = ServicioAmistad.EliminarAmistad(usuarioA.idUsuario, usuarioB.idUsuario);
+                    relacionEliminada = AmistadServicio.EliminarAmistad(usuarioA.idUsuario, usuarioB.idUsuario);
 
                     nombreUsuarioANormalizado = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioA.Nombre_Usuario, nombreUsuarioA);
                     nombreUsuarioBNormalizado = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioB.Nombre_Usuario, nombreUsuarioB);

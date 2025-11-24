@@ -13,7 +13,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// <summary>
     /// Implementacion del servicio de recuperacion y cambio de contrasena de usuarios.
     /// Maneja el proceso completo de recuperacion incluyendo solicitud, reenvio, confirmacion de codigos y actualizacion de contrasena.
-    /// Delega la logica de negocio al ServicioRecuperacionCuenta.
+    /// Delega la logica de negocio al RecuperacionCuentaServicio.
     /// </summary>
     public class CambioContrasenaManejador : ICambioContrasenaManejador
     {
@@ -29,7 +29,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
+                var resultado = RecuperacionCuentaServicio.SolicitarCodigoRecuperacion(solicitud);
                 if (resultado.CodigoEnviado)
                 {
                     _logger.InfoFormat("Solicitud de recuperación de cuenta iniciada para '{0}'.", solicitud.Identificador);
@@ -79,7 +79,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = ServicioRecuperacionCuenta.ReenviarCodigoRecuperacion(solicitud);
+                var resultado = RecuperacionCuentaServicio.ReenviarCodigoRecuperacion(solicitud);
                 if (resultado.CodigoEnviado)
                 {
                     _logger.InfoFormat("Reenviar código de recuperación de cuenta iniciada para '{0}'.", solicitud.TokenCodigo);
@@ -129,7 +129,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
+                var resultado = RecuperacionCuentaServicio.ConfirmarCodigoRecuperacion(confirmacion);
                 if (resultado.OperacionExitosa)
                 {
                     _logger.InfoFormat("Código de recuperación confirmado correctamente. Token sesión: '{0}'.", confirmacion.TokenCodigo);
@@ -179,7 +179,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = ServicioRecuperacionCuenta.ActualizarContrasena(solicitud);
+                var resultado = RecuperacionCuentaServicio.ActualizarContrasena(solicitud);
                 if (resultado.OperacionExitosa)
                 {
                     _logger.Info("Contraseña actualizada correctamente mediante recuperación.");

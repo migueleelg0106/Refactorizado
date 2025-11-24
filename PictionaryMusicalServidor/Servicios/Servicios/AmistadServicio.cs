@@ -15,9 +15,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// Servicio interno para la gestion de logica de negocio relacionada con amistades.
     /// Proporciona metodos para crear, aceptar, eliminar y consultar relaciones de amistad entre usuarios.
     /// </summary>
-    internal static class ServicioAmistad
+    internal static class AmistadServicio
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(ServicioAmistad));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(AmistadServicio));
 
         /// <summary>
         /// Obtiene las solicitudes de amistad pendientes para un usuario especifico.

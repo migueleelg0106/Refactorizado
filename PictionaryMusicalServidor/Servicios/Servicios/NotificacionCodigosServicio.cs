@@ -8,9 +8,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// Servicio interno para el envio de notificaciones de codigos de verificacion.
     /// Gestiona el envio de codigos por correo electronico a usuarios.
     /// </summary>
-    internal static class ServicioNotificacionCodigos
+    internal static class NotificacionCodigosServicio
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(ServicioNotificacionCodigos));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(NotificacionCodigosServicio));
         private static ICodigoVerificacionNotificador _notificador = new CorreoCodigoVerificacionNotificador();
 
         /// <summary>

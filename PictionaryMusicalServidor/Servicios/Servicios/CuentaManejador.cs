@@ -89,7 +89,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                         transaccion.Commit();
 
-                        ServicioVerificacionRegistro.LimpiarVerificacion(nuevaCuenta);
+                        VerificacionRegistroServicio.LimpiarVerificacion(nuevaCuenta);
 
                         _logger.InfoFormat("Nueva cuenta registrada exitosamente. Usuario: {0}, Correo: {1}", nuevaCuenta.Usuario, nuevaCuenta.Correo);
 
@@ -149,7 +149,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private ResultadoRegistroCuentaDTO ValidarPrecondicionesRegistro(BaseDatosPruebaEntities1 contexto, NuevaCuentaDTO nuevaCuenta)
         {
-            if (!ServicioVerificacionRegistro.EstaVerificacionConfirmada(nuevaCuenta))
+            if (!VerificacionRegistroServicio.EstaVerificacionConfirmada(nuevaCuenta))
             {
                 _logger.WarnFormat("Intento de registro sin verificación confirmada. Correo: {0}", nuevaCuenta.Correo);
                 return new ResultadoRegistroCuentaDTO
@@ -188,35 +188,35 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         /// <summary>
         /// Solicita un codigo de verificacion para registrar una nueva cuenta.
-        /// Delega en ServicioVerificacionRegistro para generar y enviar el codigo.
+        /// Delega en VerificacionRegistroServicio para generar y enviar el codigo.
         /// </summary>
         /// <param name="nuevaCuenta">Datos de la nueva cuenta a verificar.</param>
         /// <returns>Resultado de la solicitud del codigo de verificacion.</returns>
         public ResultadoSolicitudCodigoDTO SolicitarCodigoVerificacion(NuevaCuentaDTO nuevaCuenta)
         {
-            return ServicioVerificacionRegistro.SolicitarCodigo(nuevaCuenta);
+            return VerificacionRegistroServicio.SolicitarCodigo(nuevaCuenta);
         }
 
         /// <summary>
         /// Reenvia el codigo de verificacion previamente solicitado.
-        /// Delega en ServicioVerificacionRegistro para reenviar el codigo.
+        /// Delega en VerificacionRegistroServicio para reenviar el codigo.
         /// </summary>
         /// <param name="solicitud">Datos para el reenvio del codigo.</param>
         /// <returns>Resultado del reenvio del codigo de verificacion.</returns>
         public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenvioCodigoVerificacionDTO solicitud)
         {
-            return ServicioVerificacionRegistro.ReenviarCodigo(solicitud);
+            return VerificacionRegistroServicio.ReenviarCodigo(solicitud);
         }
 
         /// <summary>
         /// Confirma el codigo de verificacion ingresado por el usuario.
-        /// Delega en ServicioVerificacionRegistro para validar el codigo.
+        /// Delega en VerificacionRegistroServicio para validar el codigo.
         /// </summary>
         /// <param name="confirmacion">Datos de confirmacion del codigo.</param>
         /// <returns>Resultado de la confirmacion del codigo.</returns>
         public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmacionCodigoDTO confirmacion)
         {
-            return ServicioVerificacionRegistro.ConfirmarCodigo(confirmacion);
+            return VerificacionRegistroServicio.ConfirmarCodigo(confirmacion);
         }
     }
 }

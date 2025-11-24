@@ -91,7 +91,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
             }
 
-            return ServicioAmistad.ObtenerAmigosDTO(usuario.idUsuario);
+            return AmistadServicio.ObtenerAmigosDTO(usuario.idUsuario);
         }
     }
 }

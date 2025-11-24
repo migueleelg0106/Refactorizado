@@ -13,9 +13,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// Maneja el almacenamiento temporal de solicitudes de registro, generacion y validacion de codigos de verificacion.
     /// Verifica disponibilidad de usuario y correo antes de enviar codigos.
     /// </summary>
-    internal static class ServicioVerificacionRegistro
+    internal static class VerificacionRegistroServicio
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(ServicioVerificacionRegistro));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(VerificacionRegistroServicio));
         private const int MinutosExpiracionCodigo = 5;
 
         private static readonly ConcurrentDictionary<string, SolicitudCodigoPendiente> _solicitudes =
@@ -70,7 +70,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             string codigo = CodigoVerificacionGenerador.GenerarCodigo();
             NuevaCuentaDTO datosCuenta = CopiarCuenta(nuevaCuenta);
 
-            bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(
+            bool enviado = NotificacionCodigosServicio.EnviarNotificacion(
                 datosCuenta.Correo,
                 codigo,
                 datosCuenta.Usuario,
@@ -143,7 +143,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             existente.Codigo = nuevoCodigo;
             existente.Expira = DateTime.UtcNow.AddMinutes(MinutosExpiracionCodigo);
 
-            bool enviado = ServicioNotificacionCodigos.EnviarNotificacion(
+            bool enviado = NotificacionCodigosServicio.EnviarNotificacion(
                 existente.DatosCuenta.Correo,
                 nuevoCodigo,
                 existente.DatosCuenta.Usuario,
