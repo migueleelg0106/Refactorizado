@@ -109,7 +109,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         {
             if (claves == null)
             {
-                return null;
+                return string.Empty;
             }
 
             foreach (string clave in claves)
@@ -127,7 +127,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 }
             }
 
-            return null;
+            return string.Empty;
         }
 
         internal static string ConstruirCuerpoMensaje(string usuarioDestino, string codigo, string idioma)

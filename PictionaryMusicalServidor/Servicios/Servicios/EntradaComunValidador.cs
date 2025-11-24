@@ -126,7 +126,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 EsLongitudValida,
                 MensajesError.Cliente.UsuarioRegistroInvalido,
                 out string usuarioNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -138,7 +138,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 EsLongitudValida,
                 MensajesError.Cliente.NombreRegistroInvalido,
                 out string nombreNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -150,7 +150,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 EsLongitudValida,
                 MensajesError.Cliente.ApellidoRegistroInvalido,
                 out string apellidoNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -162,7 +162,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 EsCorreoValido,
                 MensajesError.Cliente.CorreoRegistroInvalido,
                 out string correoNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -174,7 +174,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 EsContrasenaValida,
                 MensajesError.Cliente.ContrasenaRegistroInvalida,
                 out string contrasenaNormalizada);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -196,7 +196,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 EsLongitudValida,
                 MensajesError.Cliente.NombreRegistroInvalido,
                 out string nombreNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -208,7 +208,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 EsLongitudValida,
                 MensajesError.Cliente.ApellidoRegistroInvalido,
                 out string apellidoNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -221,7 +221,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
 
             resultado = ValidarRedesSociales(solicitud);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -242,7 +242,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 return CrearResultadoOperacion(false, mensajeError);
             }
 
-            return null;
+            return CrearResultadoOperacion(true);
         }
 
         private static ResultadoOperacionDTO ValidarRedesSociales(ActualizacionPerfilDTO solicitud)
@@ -251,7 +251,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 "Instagram",
                 solicitud.Instagram,
                 out string instagramNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -262,7 +262,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 "Facebook",
                 solicitud.Facebook,
                 out string facebookNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -273,7 +273,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 "X",
                 solicitud.X,
                 out string xNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
@@ -284,14 +284,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 "Discord",
                 solicitud.Discord,
                 out string discordNormalizado);
-            if (resultado != null)
+            if (!resultado.OperacionExitosa)
             {
                 return resultado;
             }
 
             solicitud.Discord = discordNormalizado;
 
-            return null;
+            return CrearResultadoOperacion(true);
         }
 
         private static ResultadoOperacionDTO ValidarRedSocial(string nombre, string valor, out string valorNormalizado)
@@ -299,7 +299,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             valorNormalizado = NormalizarTexto(valor);
             if (valorNormalizado == null)
             {
-                return null;
+                return CrearResultadoOperacion(true);
             }
 
             if (valorNormalizado.Length > LongitudMaximaTexto)
@@ -310,7 +310,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     $"El identificador de {nombre} no debe exceder {LongitudMaximaTexto} caracteres.");
             }
 
-            return null;
+            return CrearResultadoOperacion(true);
         }
 
         private static ResultadoOperacionDTO CrearResultadoOperacion(bool exitoso, string mensaje = null)
