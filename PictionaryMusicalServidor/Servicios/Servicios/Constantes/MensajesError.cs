@@ -12,16 +12,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
         /// </summary>
         public static class Cliente
         {
-            // Mensajes generales
             public const string ErrorInesperado = "Ocurrió un error inesperado. Por favor, intente nuevamente.";
             public const string OperacionExitosa = "La operación se completó correctamente.";
 
-            // Mensajes de validación
             public const string DatosInvalidos = "Los datos proporcionados no son válidos. Por favor, verifique la información.";
             public const string CredencialesInvalidas = "Las credenciales proporcionadas no son válidas.";
             public const string CredencialesIncorrectas = "Usuario o contraseña incorrectos.";
 
-            // Mensajes de usuario y cuenta
             public const string UsuarioNoEncontrado = "No se encontró el usuario especificado.";
             public const string UsuariosNoEncontrados = "No se encontraron todos los usuarios especificados.";
             public const string JugadorNoEncontrado = "No se encontró la información del jugador.";
@@ -31,7 +28,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
             public const string CuentaNoEncontrada = "No se encontró una cuenta con los datos proporcionados.";
             public const string AvatarInvalido = "El avatar seleccionado no es válido.";
 
-            // Mensajes de registro y autenticación
             public const string ErrorRegistrarCuenta = "No fue posible completar el registro. Por favor, intente nuevamente.";
             public const string ErrorInicioSesion = "No fue posible iniciar sesión. Por favor, intente nuevamente.";
             public const string UsuarioRegistroInvalido = "El nombre de usuario es obligatorio y no debe exceder 50 caracteres.";
@@ -40,12 +36,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
             public const string CorreoRegistroInvalido = "El correo electrónico es obligatorio, debe tener un formato válido y no debe exceder 50 caracteres.";
             public const string ContrasenaRegistroInvalida = "La contraseña debe tener entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un carácter especial.";
 
-            // Mensajes de perfil
             public const string ErrorObtenerPerfil = "No fue posible obtener la información del perfil.";
             public const string ErrorActualizarPerfil = "No fue posible actualizar el perfil. Por favor, intente nuevamente.";
             public const string PerfilActualizadoExito = "Perfil actualizado correctamente.";
 
-            // Mensajes de amistad
             public const string ErrorRecuperarSolicitudes = "No fue posible recuperar las solicitudes de amistad.";
             public const string ErrorAlmacenarSolicitud = "No fue posible enviar la solicitud de amistad.";
             public const string ErrorActualizarSolicitud = "No fue posible actualizar la solicitud de amistad.";
@@ -61,7 +55,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
             public const string SolicitudAmistadYaAceptada = "La solicitud de amistad ya fue aceptada con anterioridad.";
             public const string RelacionAmistadNoExiste = "No existe una relación de amistad entre los usuarios.";
 
-            // Mensajes de recuperación de cuenta
             public const string ErrorRecuperarCuenta = "No fue posible procesar la recuperación de cuenta.";
             public const string ErrorReenviarCodigo = "No fue posible reenviar el código de verificación.";
             public const string ErrorConfirmarCodigo = "No fue posible confirmar el código de verificación.";
@@ -81,7 +74,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
             public const string SolicitudRecuperacionNoVigente = "No hay una solicitud de recuperación vigente.";
             public const string SolicitudRecuperacionInvalida = "La solicitud de recuperación no es válida.";
 
-            // Mensajes de verificación de registro
             public const string ErrorSolicitudVerificacion = "No fue posible procesar la solicitud de verificación.";
             public const string ErrorReenviarCodigoVerificacion = "No fue posible reenviar el código de verificación.";
             public const string SolicitudVerificacionNoEncontrada = "No se encontró una solicitud de verificación activa.";
@@ -89,7 +81,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
             public const string CodigoVerificacionIncorrecto = "El código ingresado no es correcto.";
             public const string UsuarioOCorreoRegistrado = "El correo o usuario ya está registrado.";
 
-            // Mensajes de salas
             public const string ErrorCrearSala = "No fue posible crear la sala.";
             public const string ErrorInesperadoCrearSala = "Ocurrió un error al crear la sala.";
             public const string ErrorInesperadoUnirse = "Ocurrió un error al unirse a la sala.";
@@ -103,7 +94,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
             public const string SalaCreadorNoExpulsable = "El creador de la sala no puede ser expulsado.";
             public const string SalaJugadorNoExiste = "El jugador especificado no está en la sala.";
 
-            // Mensajes de invitaciones
             public const string InvitacionInvalida = "La invitación no es válida.";
             public const string DatosInvitacionInvalidos = "Los datos de la invitación no son válidos.";
             public const string CorreoInvalido = "El correo electrónico no es válido.";
@@ -116,20 +106,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Constantes
             public const string CorreoJugadorEnSala = "El jugador con el correo ingresado ya está en la sala.";
             public const string ErrorEnviarInvitacionCorreo = "No fue posible enviar la invitación por correo electrónico.";
 
-            // Mensajes de callbacks y comunicación
             public const string ErrorObtenerCallback = "No fue posible establecer la conexión con el servidor.";
             public const string ErrorObtenerCallbackAmigos = "No fue posible establecer la conexión para amigos.";
             public const string ErrorContextoOperacion = "No fue posible establecer el contexto de la operación.";
             public const string ErrorContextoOperacionAmigos = "No fue posible establecer el contexto para amigos.";
 
-            // Mensajes de parámetros
             public const string ParametroObligatorio = "El parámetro {0} es obligatorio.";
             public const string NombreUsuarioObligatorio = "El nombre de usuario es obligatorio.";
             public const string NombreUsuarioObligatorioCancelar = "El nombre de usuario es obligatorio para cancelar la suscripción.";
             public const string NombreUsuarioObligatorioSuscripcion = "El nombre de usuario es obligatorio para suscribirse a las notificaciones.";
             public const string CodigoSalaObligatorio = "El código de sala es obligatorio.";
 
-            // Mensajes de configuración de partida
             public const string ConfiguracionObligatoria = "La configuración de la partida es obligatoria.";
             public const string NumeroRondasInvalido = "El número de rondas debe ser mayor a cero.";
             public const string TiempoRondaInvalido = "El tiempo por ronda debe ser mayor a cero.";
