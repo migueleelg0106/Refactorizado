@@ -507,7 +507,7 @@ namespace PictionaryMusicalServidor.Pruebas
         {
             var credenciales = new CredencialesInicioSesionDTO
             {
-                Identificador = "usuário123",
+                Identificador = "usuario123",
                 Contrasena = "Password123!"
             };
 

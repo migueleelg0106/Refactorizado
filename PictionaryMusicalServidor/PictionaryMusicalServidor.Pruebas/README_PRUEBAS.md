@@ -10,12 +10,12 @@ Este proyecto contiene las pruebas unitarias para la capa de servicios del servi
 
 Todas las pruebas siguen el formato en español:
 ```
-Prueba_NombreMetodo_Condicion_ResultadoEsperado
+Prueba_NombreMetodo_Condición_ResultadoEsperado
 ```
 
 **Ejemplos:**
 - `Prueba_IniciarSesion_CredencialesNulas_LanzaExcepcion`
-- `Prueba_IniciarSesion_IdentificadorVacio_RetornaCredencialesInvalidas`
+- `Prueba_IniciarSesion_IdentificadorVacio_RetornaCredencialesInválidas`
 - `Prueba_IniciarSesion_UsuarioNoExiste_RetornaCuentaNoEncontrada`
 
 ### Organización con Regiones
