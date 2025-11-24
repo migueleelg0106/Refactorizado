@@ -32,7 +32,25 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <summary>
         /// Constructor por defecto para compatibilidad con WCF.
         /// </summary>
-        public AmigosManejador() : this(new ContextoFactory(), new AmistadServicio(new ContextoFactory()))
+        public AmigosManejador() : this(CrearDependenciasPorDefecto())
+        {
+        }
+
+        /// <summary>
+        /// Crea las dependencias por defecto, reutilizando la misma instancia de ContextoFactory.
+        /// </summary>
+        private static (IContextoFactory, IAmistadServicio) CrearDependenciasPorDefecto()
+        {
+            var contextoFactory = new ContextoFactory();
+            var amistadServicio = new AmistadServicio(contextoFactory);
+            return (contextoFactory, amistadServicio);
+        }
+
+        /// <summary>
+        /// Constructor interno que recibe una tupla con las dependencias.
+        /// </summary>
+        private AmigosManejador((IContextoFactory contextoFactory, IAmistadServicio amistadServicio) dependencias)
+            : this(dependencias.contextoFactory, dependencias.amistadServicio)
         {
         }
 
