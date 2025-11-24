@@ -177,13 +177,14 @@ namespace PictionaryMusicalServidor.Pruebas.PruebasManejadores
         [TestMethod]
         public void Prueba_RegistrarCuenta_ContrasenaMuyLarga_DeberiaRetornarError()
         {
+            // Máximo es 15 caracteres, esta tiene 20
             var cuenta = new NuevaCuentaDTO
             {
                 Usuario = "usuario",
                 Nombre = "Nombre",
                 Apellido = "Apellido",
                 Correo = "test@example.com",
-                Contrasena = "Pass123!MuyLargaExcedeElLimite"
+                Contrasena = "Password123!TooLongX"
             };
 
             var resultado = _manejador.RegistrarCuenta(cuenta);

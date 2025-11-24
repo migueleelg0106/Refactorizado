@@ -194,7 +194,8 @@ namespace PictionaryMusicalServidor.Pruebas.PruebasUtilidades
         [TestMethod]
         public void Prueba_EsContrasenaValida_MuyLarga_DeberiaRetornarFalse()
         {
-            bool resultado = EntradaComunValidador.EsContrasenaValida("Password123!Extra");
+            // Máximo es 15 caracteres, esta tiene 16
+            bool resultado = EntradaComunValidador.EsContrasenaValida("Password123!Extr");
 
             Assert.IsFalse(resultado);
         }

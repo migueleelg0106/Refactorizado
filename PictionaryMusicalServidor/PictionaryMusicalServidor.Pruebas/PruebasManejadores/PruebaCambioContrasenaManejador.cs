@@ -233,10 +233,11 @@ namespace PictionaryMusicalServidor.Pruebas.PruebasManejadores
         [TestMethod]
         public void Prueba_ActualizarContrasena_ContrasenaMuyLarga_DeberiaRetornarError()
         {
+            // Máximo es 15 caracteres, esta tiene 20
             var actualizacion = new ActualizacionContrasenaDTO
             {
                 TokenCodigo = "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
-                NuevaContrasena = "Pass123!MuyLargaExcedeElLimite"
+                NuevaContrasena = "Password123!TooLongX"
             };
 
             var resultado = _manejador.ActualizarContrasena(actualizacion);
