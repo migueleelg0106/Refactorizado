@@ -16,6 +16,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     internal static class VerificacionRegistroServicio
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(VerificacionRegistroServicio));
+        private static readonly IContextoFactory _contextoFactory = new ContextoFactory();
         private const int MinutosExpiracionCodigo = 5;
 
         private static readonly ConcurrentDictionary<string, SolicitudCodigoPendiente> _solicitudes =
@@ -48,7 +49,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 };
             }
 
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = _contextoFactory.CrearContexto())
             {
                 bool usuarioRegistrado = contexto.Usuario.Any(u => u.Nombre_Usuario == nuevaCuenta.Usuario);
                 bool correoRegistrado = contexto.Jugador.Any(j => j.Correo == nuevaCuenta.Correo);

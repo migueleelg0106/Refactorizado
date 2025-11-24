@@ -20,6 +20,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     public class InicioSesionManejador : IInicioSesionManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(InicioSesionManejador));
+        private readonly IContextoFactory _contextoFactory;
+
+        public InicioSesionManejador() : this(new ContextoFactory())
+        {
+        }
+
+        public InicioSesionManejador(IContextoFactory contextoFactory)
+        {
+            _contextoFactory = contextoFactory ?? throw new ArgumentNullException(nameof(contextoFactory));
+        }
 
         /// <summary>
         /// Inicia sesion de un usuario validando sus credenciales.
@@ -54,7 +64,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory.CrearContexto())
                 {
                     Usuario usuario = BuscarUsuarioPorIdentificador(contexto, identificador);
 
