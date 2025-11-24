@@ -70,12 +70,18 @@
     <Compile Include="PruebaManejadorCallback.cs" />
     <Compile Include="PruebaSalaInterna.cs" />
     <Compile Include="PruebaNotificadorSalas.cs" />
+    <Compile Include="PruebaAmistadServicio.cs" />
+    <Compile Include="PruebaAmigosManejador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Datos\Datos.csproj">
+      <Project>{985EE861-0E91-4F61-9090-ABF706083EEB}</Project>
+      <Name>Datos</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Servicios\Servicios.csproj">
       <Project>{8A49B294-44FD-44E0-8747-B38167D2420B}</Project>
       <Name>Servicios</Name>
