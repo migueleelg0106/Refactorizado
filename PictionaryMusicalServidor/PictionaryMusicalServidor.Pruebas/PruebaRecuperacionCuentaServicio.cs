@@ -132,7 +132,7 @@ namespace PictionaryMusicalServidor.Pruebas
         }
 
         [TestMethod]
-        public void Prueba_SolicitarCodigoRecuperacion_FlujoCOMpleto_DeberiaGenerarCodigoYToken()
+        public void Prueba_SolicitarCodigoRecuperacion_FlujoCompleto_DeberiaGenerarCodigoYToken()
         {
             // Arrange
             // TODO: Mock del contexto y servicio de correo
