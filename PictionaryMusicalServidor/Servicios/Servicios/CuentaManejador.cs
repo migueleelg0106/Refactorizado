@@ -23,6 +23,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     public class CuentaManejador : ICuentaManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CuentaManejador));
+        private readonly IContextoFactory _contextoFactory;
+
+        public CuentaManejador() : this(new ContextoFactory())
+        {
+        }
+
+        public CuentaManejador(IContextoFactory contextoFactory)
+        {
+            _contextoFactory = contextoFactory ?? throw new ArgumentNullException(nameof(contextoFactory));
+        }
 
         /// <summary>
         /// Registra una nueva cuenta de usuario en el sistema.
@@ -56,7 +66,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory.CrearContexto())
                 {
                     ResultadoRegistroCuentaDTO validacion = ValidarPrecondicionesRegistro(contexto, nuevaCuenta);
                     if (!validacion.RegistroExitoso)

@@ -23,6 +23,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     public class PerfilManejador : IPerfilManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(PerfilManejador));
+        private readonly IContextoFactory _contextoFactory;
+
+        public PerfilManejador() : this(new ContextoFactory())
+        {
+        }
+
+        public PerfilManejador(IContextoFactory contextoFactory)
+        {
+            _contextoFactory = contextoFactory ?? throw new ArgumentNullException(nameof(contextoFactory));
+        }
 
         /// <summary>
         /// Obtiene el perfil completo de un usuario incluyendo datos de jugador y redes sociales.
@@ -43,7 +53,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     throw new ArgumentException(MensajesError.Cliente.DatosInvalidos);
                 }
 
-                using (BaseDatosPruebaEntities1 contexto = ContextoFactory.CrearContexto())
+                using (BaseDatosPruebaEntities1 contexto = _contextoFactory.CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
                         .Include(u => u.Jugador.RedSocial)
@@ -127,7 +137,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     return validacion;
                 }
 
-                using (BaseDatosPruebaEntities1 contexto = ContextoFactory.CrearContexto())
+                using (BaseDatosPruebaEntities1 contexto = _contextoFactory.CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
                         .Include(u => u.Jugador.RedSocial)

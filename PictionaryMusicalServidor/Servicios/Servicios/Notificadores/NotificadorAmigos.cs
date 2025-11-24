@@ -16,10 +16,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(NotificadorAmigos));
         private readonly ManejadorCallback<IAmigosManejadorCallback> _manejadorCallback;
+        private readonly IAmistadServicio _amistadServicio;
 
         public NotificadorAmigos(ManejadorCallback<IAmigosManejadorCallback> manejadorCallback)
+            : this(manejadorCallback, new AmistadServicio(new ContextoFactory()))
+        {
+        }
+
+        public NotificadorAmigos(ManejadorCallback<IAmigosManejadorCallback> manejadorCallback, IAmistadServicio amistadServicio)
         {
             _manejadorCallback = manejadorCallback;
+            _amistadServicio = amistadServicio;
         }
 
         /// <summary>
@@ -59,7 +66,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         {
             try
             {
-                List<SolicitudAmistadDTO> solicitudesDTO = AmistadServicio.ObtenerSolicitudesPendientesDTO(usuarioId);
+                List<SolicitudAmistadDTO> solicitudesDTO = _amistadServicio.ObtenerSolicitudesPendientesDTO(usuarioId);
 
                 if (solicitudesDTO == null || solicitudesDTO.Count == 0)
                 {
