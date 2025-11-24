@@ -59,7 +59,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         {
             try
             {
-                List<SolicitudAmistadDTO> solicitudesDTO = ServicioAmistad.ObtenerSolicitudesPendientesDTO(usuarioId);
+                List<SolicitudAmistadDTO> solicitudesDTO = AmistadServicio.ObtenerSolicitudesPendientesDTO(usuarioId);
 
                 if (solicitudesDTO == null || solicitudesDTO.Count == 0)
                 {

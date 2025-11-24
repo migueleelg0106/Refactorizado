@@ -13,7 +13,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// <summary>
     /// Implementacion del servicio de gestion de codigos de verificacion.
     /// Maneja solicitud, reenvio y confirmacion de codigos para registro y recuperacion de cuentas.
-    /// Delega la logica de negocio a ServicioVerificacionRegistro y ServicioRecuperacionCuenta.
+    /// Delega la logica de negocio a VerificacionRegistroServicio y RecuperacionCuentaServicio.
     /// </summary>
     public class CodigoVerificacionManejador : ICodigoVerificacionManejador
     {
@@ -29,7 +29,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = ServicioVerificacionRegistro.SolicitarCodigo(nuevaCuenta);
+                var resultado = VerificacionRegistroServicio.SolicitarCodigo(nuevaCuenta);
 
                 if (resultado.CodigoEnviado)
                 {
@@ -81,7 +81,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = ServicioVerificacionRegistro.ReenviarCodigo(solicitud);
+                var resultado = VerificacionRegistroServicio.ReenviarCodigo(solicitud);
 
                 if (resultado.CodigoEnviado)
                 {
@@ -133,7 +133,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = ServicioVerificacionRegistro.ConfirmarCodigo(confirmacion);
+                var resultado = VerificacionRegistroServicio.ConfirmarCodigo(confirmacion);
 
                 if (resultado.RegistroExitoso)
                 {
@@ -203,7 +203,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
+                var resultado = RecuperacionCuentaServicio.SolicitarCodigoRecuperacion(solicitud);
 
                 if (resultado.CodigoEnviado)
                 {
@@ -255,7 +255,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
+                var resultado = RecuperacionCuentaServicio.ConfirmarCodigoRecuperacion(confirmacion);
 
                 if (resultado.OperacionExitosa)
                 {
