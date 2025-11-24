@@ -59,6 +59,9 @@
     <Compile Include="PruebasManejadores\PruebaCambioContrasenaManejador.cs" />
     <Compile Include="PruebasManejadores\PruebaPerfilManejador.cs" />
     <Compile Include="PruebasManejadores\PruebaCuentaManejador.cs" />
+    <Compile Include="PruebasManejadores\PruebaAmigosManejador.cs" />
+    <Compile Include="PruebasManejadores\PruebaClasificacionManejador.cs" />
+    <Compile Include="PruebasManejadores\PruebaListaAmigosManejador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
