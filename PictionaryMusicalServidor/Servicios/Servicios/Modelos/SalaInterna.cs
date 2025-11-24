@@ -122,7 +122,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
             {
                 ValidarExpulsion(nombreHost, nombreJugadorAExpulsar);
 
-                var callbackExpulsado = ObtenerCallback(nombreJugadorAExpulsar);
+                TryObtenerCallback(nombreJugadorAExpulsar, out var callbackExpulsado);
 
                 Jugadores.RemoveAll(j => string.Equals(j, nombreJugadorAExpulsar, StringComparison.OrdinalIgnoreCase));
                 _callbacks.Remove(nombreJugadorAExpulsar);
@@ -131,7 +131,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
 
                 var salaActualizada = ToDto();
 
-                NotificarJugadorExpulsado(callbackExpulsado, nombreJugadorAExpulsar);
+                if (callbackExpulsado != null)
+                {
+                    NotificarJugadorExpulsado(callbackExpulsado, nombreJugadorAExpulsar);
+                }
+
                 NotificarSalidaYActualizacion(nombreJugadorAExpulsar, salaActualizada);
             }
         }
@@ -171,14 +175,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
                 || Jugadores.Count == 0;
         }
 
-        private ISalasCallback ObtenerCallback(string nombreJugador)
+        private bool TryObtenerCallback(string nombreJugador, out ISalasCallback callback)
         {
-            if (_callbacks.TryGetValue(nombreJugador, out var callback))
-            {
-                return callback;
-            }
-
-            return null;
+            return _callbacks.TryGetValue(nombreJugador, out callback);
         }
 
         private void ValidarExpulsion(string nombreHost, string nombreJugadorAExpulsar)
@@ -263,11 +262,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
 
         private void NotificarJugadorExpulsado(ISalasCallback callback, string nombreJugador)
         {
-            if (callback == null)
-            {
-                return;
-            }
-
             EjecutarNotificacion(
                 () => callback.NotificarJugadorExpulsado(Codigo, nombreJugador),
                 "Error al notificar la expulsión del jugador de la sala a través del callback.");

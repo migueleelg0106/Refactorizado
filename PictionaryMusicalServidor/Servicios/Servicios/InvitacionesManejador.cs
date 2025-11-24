@@ -46,7 +46,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 string idioma = invitacion.Idioma;
 
                 var sala = SalasManejador.ObtenerSalaPorCodigo(codigoSala);
-                ValidarSala(sala);
 
                 if (sala.Jugadores != null && sala.Jugadores.Count > 0 && await UsuarioYaEnSalaAsync(correo, sala))
                 {
@@ -121,14 +120,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             if (!CorreoRegex.IsMatch(correo))
             {
                 throw new ArgumentException(MensajesError.Cliente.CorreoInvalido);
-            }
-        }
-
-        private static void ValidarSala(dynamic sala)
-        {
-            if (sala == null)
-            {
-                throw new InvalidOperationException(MensajesError.Cliente.SalaNoEncontrada);
             }
         }
 
