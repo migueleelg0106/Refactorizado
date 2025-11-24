@@ -14,15 +14,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
     /// <summary>
     /// Gestiona el dialogo modal para que el usuario seleccione su avatar.
     /// </summary>
-    public class SeleccionAvatarDialogoServicio : ISeleccionarAvatarServicio
+    public class SeleccionarAvatarDialogoServicio : ISeleccionarAvatarServicio
     {
         private static readonly ILog _logger = 
-            LogManager.GetLogger(typeof(SeleccionAvatarDialogoServicio));
+            LogManager.GetLogger(typeof(SeleccionarAvatarDialogoServicio));
 
         /// <summary>
         /// Constructor por defecto.
         /// </summary>
-        public SeleccionAvatarDialogoServicio()
+        public SeleccionarAvatarDialogoServicio()
         {
         }
 
@@ -31,7 +31,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
         /// </summary>
         public Task<ObjetoAvatar> SeleccionarAvatarAsync(int idAvatar)
         {
-            _logger.Info("Iniciando proceso de selecci髇 de avatar.");
+            _logger.Info("Iniciando proceso de selecci贸n de avatar.");
             var avatares = CatalogoAvataresLocales.ObtenerAvatares();
 
             if (avatares == null || avatares.Count == 0)
@@ -78,15 +78,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 }
                 catch (XamlParseException ex)
                 {
-                    _logger.Error("Error XAML al cargar la interfaz de selecci髇 de avatar.", ex);
+                    _logger.Error("Error XAML al cargar la interfaz de selecci贸n de avatar.", ex);
                     finalizacion.TrySetException(
                         new InvalidOperationException(
-                            "Error al cargar la interfaz de selecci髇 de avatar.",
+                            "Error al cargar la interfaz de selecci贸n de avatar.",
                             ex));
                 }
                 catch (InvalidOperationException ex)
                 {
-                    _logger.Error("Operaci髇 inv醠ida al mostrar di醠ogo de avatar.", ex);
+                    _logger.Error("Operaci贸n inv谩lida al mostrar di谩logo de avatar.", ex);
                     finalizacion.TrySetException(ex);
                 }
             });

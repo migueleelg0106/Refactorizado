@@ -129,7 +129,7 @@
     <Compile Include="Utilidades\MusicaManejador.cs" />
     <Compile Include="Utilidades\EntradaNumerica.cs" />
     <Compile Include="Utilidades\NombreInvitadoGenerador.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\ServicioCodigoRecuperacionAdaptador.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\CodigoRecuperacionServicioAdaptador.cs" />
     <Compile Include="Comandos\Comando.cs" />
     <Compile Include="Comandos\ComandoAsincrono.cs" />
     <Compile Include="Comandos\ComandoDelegado.cs" />
@@ -158,7 +158,7 @@
     <Compile Include="ClienteServicios\Abstracciones\IPerfilServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\IVerificacionCodigoServicio.cs" />
     <Compile Include="ClienteServicios\Dialogos\RecuperacionCuentaDialogoServicio.cs" />
-    <Compile Include="ClienteServicios\Dialogos\SeleccionAvatarDialogoServicio.cs" />
+    <Compile Include="ClienteServicios\Dialogos\SeleccionarAvatarDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Dialogos\VerificacionCodigoDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Idiomas\LocalizacionServicio.cs" />
     <Compile Include="ClienteServicios\ServicioExcepcion.cs" />

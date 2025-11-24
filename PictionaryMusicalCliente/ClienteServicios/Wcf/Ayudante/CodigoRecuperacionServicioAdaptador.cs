@@ -9,10 +9,10 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
     /// <summary>
     /// Adapta la interfaz de verificacion para ser usada en el contexto de recuperacion de cuenta.
     /// </summary>
-    public class ServicioCodigoRecuperacionAdaptador : ICodigoVerificacionServicio
+    public class CodigoRecuperacionServicioAdaptador : ICodigoVerificacionServicio
     {
         private static readonly ILog _logger = LogManager.
-            GetLogger(typeof(ServicioCodigoRecuperacionAdaptador));
+            GetLogger(typeof(CodigoRecuperacionServicioAdaptador));
         private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         /// </summary>
         /// <param name="cambioContrasenaServicio">Servicio real que procesara las peticiones.
         /// </param>
-        public ServicioCodigoRecuperacionAdaptador(
+        public CodigoRecuperacionServicioAdaptador(
             ICambioContrasenaServicio cambioContrasenaServicio)
         {
             _cambioContrasenaServicio = cambioContrasenaServicio ??

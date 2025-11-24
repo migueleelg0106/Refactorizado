@@ -26,7 +26,7 @@ namespace PictionaryMusicalCliente
 
             IPerfilServicio perfilServicio = new PerfilServicio();
             ISeleccionarAvatarServicio seleccionarAvatarServicio =
-                new SeleccionAvatarDialogoServicio();
+                new SeleccionarAvatarDialogoServicio();
             ICambioContrasenaServicio cambioContrasenaServicio =
                 new CambioContrasenaServicio();
             IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio =

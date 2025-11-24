@@ -40,7 +40,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 throw new ArgumentNullException(nameof(cambioContrasenaServicio));
             }
 
-            _logger.InfoFormat("Iniciando flujo de recuperaci髇 de cuenta para: {0}", 
+            _logger.InfoFormat("Iniciando flujo de recuperaci贸n de cuenta para: {0}", 
                 identificador);
 
             var (solicitudExitosa, solicitudDTO, errorSolicitud) =
@@ -50,7 +50,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             if (!solicitudExitosa)
             {
-                _logger.WarnFormat("Flujo detenido: No se pudo solicitar el c骴igo. Mensaje: {0}",
+                _logger.WarnFormat("Flujo detenido: No se pudo solicitar el c贸digo. Mensaje: {0}",
                     errorSolicitud?.Mensaje);
                 return errorSolicitud;
             }
@@ -64,7 +64,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             if (!verificacionExitosa)
             {
-                _logger.Warn("Flujo detenido: Verificaci髇 de c骴igo fallida o cancelada.");
+                _logger.Warn("Flujo detenido: Verificaci贸n de c贸digo fallida o cancelada.");
                 return errorVerificacion;
             }
 
@@ -121,7 +121,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             DTOs.ResultadoSolicitudRecuperacionDTO solicitud,
             ICambioContrasenaServicio servicio)
         {
-            var adaptador = new ServicioCodigoRecuperacionAdaptador(servicio);
+            var adaptador = new CodigoRecuperacionServicioAdaptador(servicio);
             DTOs.ResultadoRegistroCuentaDTO resultadoVerificacion =
                 await _verificarCodigoDialogoServicio.MostrarDialogoAsync(
                     Lang.cambiarContrasenaTextoCodigoVerificacion,
@@ -157,7 +157,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             vistaModelo.CambioContrasenaCompletado = resultado =>
             {
-                _logger.Info("Cambio de contrase馻 completado exitosamente.");
+                _logger.Info("Cambio de contrase帽a completado exitosamente.");
                 finalizacion.TrySetResult(
                     resultado ?? new DTOs.ResultadoOperacionDTO
                     {
@@ -169,7 +169,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             vistaModelo.Cancelado = () =>
             {
-                _logger.Info("Di醠ogo de cambio de contrase馻 cancelado.");
+                _logger.Info("Di谩logo de cambio de contrase帽a cancelado.");
                 finalizacion.TrySetResult(null);
                 ventana.Close();
             };
