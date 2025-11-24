@@ -17,6 +17,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
     {
         private const int MaximoJugadores = 4;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(SalaInterna));
+        private static readonly ISalasCallback CallbackNulo = new SalasCallbackNulo();
         private readonly object _sync = new();
         private readonly Dictionary<string, ISalasCallback> _callbacks = new(StringComparer.OrdinalIgnoreCase);
 
@@ -178,7 +179,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
                 return callback;
             }
 
-            return null;
+            return CallbackNulo;
         }
 
         private void ValidarExpulsion(string nombreHost, string nombreJugadorAExpulsar)
@@ -263,11 +264,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
 
         private void NotificarJugadorExpulsado(ISalasCallback callback, string nombreJugador)
         {
-            if (callback == null)
-            {
-                return;
-            }
-
             EjecutarNotificacion(
                 () => callback.NotificarJugadorExpulsado(Codigo, nombreJugador),
                 "Error al notificar la expulsión del jugador de la sala a través del callback.");
@@ -278,6 +274,29 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
             EjecutarNotificacion(
                 () => callback.NotificarSalaActualizada(salaActualizada),
                 "Error al notificar la actualización de la sala a través del callback.");
+        }
+
+        private sealed class SalasCallbackNulo : ISalasCallback
+        {
+            public void NotificarJugadorSeUnio(string codigoSala, string nombreJugador)
+            {
+            }
+
+            public void NotificarJugadorSalio(string codigoSala, string nombreJugador)
+            {
+            }
+
+            public void NotificarListaSalasActualizada(SalaDTO[] salas)
+            {
+            }
+
+            public void NotificarSalaActualizada(SalaDTO sala)
+            {
+            }
+
+            public void NotificarJugadorExpulsado(string codigoSala, string nombreJugador)
+            {
+            }
         }
     }
 }
