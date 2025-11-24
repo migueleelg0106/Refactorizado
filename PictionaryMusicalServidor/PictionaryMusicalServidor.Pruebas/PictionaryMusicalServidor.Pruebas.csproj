@@ -50,6 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PruebaCorreoCodigoVerificacionNotificador.cs" />
+    <Compile Include="PruebaInicioSesionManejador.cs" />
+    <Compile Include="PruebaVerificacionRegistroServicio.cs" />
+    <Compile Include="PruebaCuentaManejador.cs" />
+    <Compile Include="PruebaRecuperacionCuentaServicio.cs" />
+    <Compile Include="PruebaSalasYAmigosManejador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
