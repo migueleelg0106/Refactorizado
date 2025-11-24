@@ -140,15 +140,18 @@ namespace PictionaryMusicalServidor.Pruebas
         [ExpectedException(typeof(FaultException))]
         public void Prueba_AgregarJugador_DeberiaLanzarExcepcionSiSalaLlena()
         {
+            // MaximoJugadores en SalaInterna es 4
+            const int MaximoJugadores = 4;
             var sala = new SalaInterna("ABCD", "Usuario1", CrearConfiguracionPrueba());
             var callback = new SalasCallbackMock();
 
-            sala.AgregarJugador("Usuario1", callback, false);
-            sala.AgregarJugador("Usuario2", callback, false);
-            sala.AgregarJugador("Usuario3", callback, false);
-            sala.AgregarJugador("Usuario4", callback, false);
-            // Intento agregar quinto jugador debería fallar
-            sala.AgregarJugador("Usuario5", callback, false);
+            for (int i = 1; i <= MaximoJugadores; i++)
+            {
+                sala.AgregarJugador($"Usuario{i}", callback, false);
+            }
+            
+            // Intento agregar jugador adicional debería fallar
+            sala.AgregarJugador($"Usuario{MaximoJugadores + 1}", callback, false);
         }
 
         [TestMethod]

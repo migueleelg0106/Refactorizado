@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PictionaryMusicalServidor.Servicios.Servicios;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 using System.ServiceModel;
 
@@ -44,7 +45,7 @@ namespace PictionaryMusicalServidor.Pruebas
         [ExpectedException(typeof(FaultException))]
         public void Prueba_Validar_DeberiaLanzarExcepcionConNombreMuyLargo()
         {
-            string nombreLargo = new string('a', 201);
+            string nombreLargo = new string('a', EntradaComunValidador.LongitudMaximaTexto + 1);
             ValidadorNombreUsuario.Validar(nombreLargo, "nombreUsuario");
         }
 

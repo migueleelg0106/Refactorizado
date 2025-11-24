@@ -66,9 +66,10 @@ namespace PictionaryMusicalServidor.Pruebas
         [TestMethod]
         public void Prueba_GenerarCodigo_DeberiaGenerarCodigosDiferentes()
         {
+            const int TamanoMuestra = 100;
             var codigos = new HashSet<string>();
             
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < TamanoMuestra; i++)
             {
                 string codigo = CodigoVerificacionGenerador.GenerarCodigo();
                 codigos.Add(codigo);
