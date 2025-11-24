@@ -32,11 +32,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var resultado = ServicioRecuperacionCuenta.SolicitarCodigoRecuperacion(solicitud);
                 if (resultado.CodigoEnviado)
                 {
-                    _logger.Info($"Solicitud de recuperaci�n de cuenta iniciada para '{solicitud.Identificador}'.");
+                    _logger.InfoFormat("Solicitud de recuperación de cuenta iniciada para '{0}'.", solicitud.Identificador);
                 }
                 else
                 {
-                    _logger.Warn($"Solicitud de recuperaci�n fallida para '{solicitud.Identificador}': {resultado.Mensaje}");
+                    _logger.WarnFormat("Solicitud de recuperación fallida para '{0}': {1}", solicitud.Identificador, resultado.Mensaje);
                 }
                 return resultado;
             }
@@ -82,11 +82,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var resultado = ServicioRecuperacionCuenta.ReenviarCodigoRecuperacion(solicitud);
                 if (resultado.CodigoEnviado)
                 {
-                    _logger.Info($"Reenviar c�digo de recuperaci�n de cuenta iniciada para '{solicitud.TokenCodigo}'.");
+                    _logger.InfoFormat("Reenviar código de recuperación de cuenta iniciada para '{0}'.", solicitud.TokenCodigo);
                 }
                 else
                 {
-                    _logger.Warn($"Solicitud de reenv�o de c�digo de recuperaci�n fallida para '{solicitud.TokenCodigo}': {resultado.Mensaje}");
+                    _logger.WarnFormat("Solicitud de reenvío de código de recuperación fallida para '{0}': {1}", solicitud.TokenCodigo, resultado.Mensaje);
                 }
                 return resultado;
             }
@@ -132,11 +132,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var resultado = ServicioRecuperacionCuenta.ConfirmarCodigoRecuperacion(confirmacion);
                 if (resultado.OperacionExitosa)
                 {
-                    _logger.Info($"C�digo de recuperaci�n confirmado correctamente. Token sesi�n: '{confirmacion.TokenCodigo}'.");
+                    _logger.InfoFormat("Código de recuperación confirmado correctamente. Token sesión: '{0}'.", confirmacion.TokenCodigo);
                 }
                 else
                 {
-                    _logger.Warn($"Intento fallido de confirmaci�n de c�digo de recuperaci�n. Token sesi�n: '{confirmacion.TokenCodigo}': {resultado.Mensaje}");
+                    _logger.WarnFormat("Intento fallido de confirmación de código de recuperación. Token sesión: '{0}': {1}", confirmacion.TokenCodigo, resultado.Mensaje);
                 }
                 return resultado;
             }
@@ -182,7 +182,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var resultado = ServicioRecuperacionCuenta.ActualizarContrasena(solicitud);
                 if (resultado.OperacionExitosa)
                 {
-                    _logger.Info("Contrase�a actualizada correctamente mediante recuperaci�n.");
+                    _logger.Info("Contraseña actualizada correctamente mediante recuperación.");
                 }
                 return resultado;
             }

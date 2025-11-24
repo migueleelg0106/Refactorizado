@@ -33,11 +33,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (resultado.CodigoEnviado)
                 {
-                    _logger.Info($"C�digo de verificaci�n para registro solicitado exitosamente para '{nuevaCuenta.Correo}'.");
+                    _logger.InfoFormat("Código de verificación para registro solicitado exitosamente para '{0}'.", nuevaCuenta.Correo);
                 }
                 else
                 {
-                    _logger.Warn($"Solicitud de c�digo para registro fallida. Correo: '{nuevaCuenta.Correo}'. Motivo: {resultado.Mensaje}");
+                    _logger.WarnFormat("Solicitud de código para registro fallida. Correo: '{0}'. Motivo: {1}", nuevaCuenta.Correo, resultado.Mensaje);
                 }
 
                 return resultado;
@@ -85,11 +85,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (resultado.CodigoEnviado)
                 {
-                    _logger.Info($"C�digo de verificaci�n para registro reenviado. Token sesi�n: {solicitud.TokenCodigo}");
+                    _logger.InfoFormat("Código de verificación para registro reenviado. Token sesión: {0}", solicitud.TokenCodigo);
                 }
                 else
                 {
-                    _logger.Warn($"Fallo al reenviar c�digo de registro. Token sesi�n: {solicitud.TokenCodigo}. Motivo: {resultado.Mensaje}");
+                    _logger.WarnFormat("Fallo al reenviar código de registro. Token sesión: {0}. Motivo: {1}", solicitud.TokenCodigo, resultado.Mensaje);
                 }
 
                 return resultado;
@@ -137,11 +137,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (resultado.RegistroExitoso)
                 {
-                    _logger.Info($"C�digo de verificaci�n de registro confirmado correctamente. Token sesi�n: {confirmacion.TokenCodigo}");
+                    _logger.InfoFormat("Código de verificación de registro confirmado correctamente. Token sesión: {0}", confirmacion.TokenCodigo);
                 }
                 else
                 {
-                    _logger.Warn($"Intento fallido de confirmaci�n de c�digo de registro. Token sesi�n: {confirmacion.TokenCodigo}. Motivo: {resultado.Mensaje}");
+                    _logger.WarnFormat("Intento fallido de confirmación de código de registro. Token sesión: {0}. Motivo: {1}", confirmacion.TokenCodigo, resultado.Mensaje);
                 }
 
                 return resultado;
@@ -207,11 +207,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (resultado.CodigoEnviado)
                 {
-                    _logger.Info($"Solicitud de recuperaci�n de cuenta iniciada para '{solicitud.Identificador}'.");
+                    _logger.InfoFormat("Solicitud de recuperación de cuenta iniciada para '{0}'.", solicitud.Identificador);
                 }
                 else
                 {
-                    _logger.Warn($"Solicitud de recuperaci�n fallida para '{solicitud.Identificador}'. Motivo: {resultado.Mensaje}");
+                    _logger.WarnFormat("Solicitud de recuperación fallida para '{0}'. Motivo: {1}", solicitud.Identificador, resultado.Mensaje);
                 }
 
                 return resultado;
@@ -259,11 +259,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (resultado.OperacionExitosa)
                 {
-                    _logger.Info($"C�digo de recuperaci�n confirmado correctamente. Token sesi�n: {confirmacion.TokenCodigo}");
+                    _logger.InfoFormat("Código de recuperación confirmado correctamente. Token sesión: {0}", confirmacion.TokenCodigo);
                 }
                 else
                 {
-                    _logger.Warn($"Intento fallido de confirmaci�n de c�digo de recuperaci�n. Token sesi�n: {confirmacion.TokenCodigo}. Motivo: {resultado.Mensaje}");
+                    _logger.WarnFormat("Intento fallido de confirmación de código de recuperación. Token sesión: {0}. Motivo: {1}", confirmacion.TokenCodigo, resultado.Mensaje);
                 }
 
                 return resultado;
