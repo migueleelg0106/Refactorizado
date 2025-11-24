@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
+using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Datos.Modelo;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
@@ -30,38 +31,46 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             using (var contexto = ContextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
-                var solicitudesPendientes = amigoRepositorio.ObtenerSolicitudesPendientes(usuarioId);
-
-                if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
-                {
-                    return new List<SolicitudAmistadDTO>();
-                }
-
-                var resultadoDTOs = new List<SolicitudAmistadDTO>();
-                foreach (var solicitud in solicitudesPendientes)
-                {
-                    if (solicitud.UsuarioReceptor != usuarioId)
-                    {
-                        continue;
-                    }
-
-                    string emisor = solicitud.Usuario?.Nombre_Usuario;
-                    string receptor = solicitud.Usuario1?.Nombre_Usuario;
-
-                    if (string.IsNullOrWhiteSpace(emisor) || string.IsNullOrWhiteSpace(receptor))
-                    {
-                        continue;
-                    }
-
-                    resultadoDTOs.Add(new SolicitudAmistadDTO
-                    {
-                        UsuarioEmisor = emisor,
-                        UsuarioReceptor = receptor,
-                        SolicitudAceptada = solicitud.Estado
-                    });
-                }
-                return resultadoDTOs;
+                return ObtenerSolicitudesPendientesDTOInterno(usuarioId, amigoRepositorio);
             }
+        }
+
+        /// <summary>
+        /// Sobrecarga interna para pruebas: Obtiene las solicitudes de amistad pendientes usando un repositorio inyectado.
+        /// </summary>
+        internal static List<SolicitudAmistadDTO> ObtenerSolicitudesPendientesDTOInterno(int usuarioId, IAmigoRepositorio amigoRepositorio)
+        {
+            var solicitudesPendientes = amigoRepositorio.ObtenerSolicitudesPendientes(usuarioId);
+
+            if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
+            {
+                return new List<SolicitudAmistadDTO>();
+            }
+
+            var resultadoDTOs = new List<SolicitudAmistadDTO>();
+            foreach (var solicitud in solicitudesPendientes)
+            {
+                if (solicitud.UsuarioReceptor != usuarioId)
+                {
+                    continue;
+                }
+
+                string emisor = solicitud.Usuario?.Nombre_Usuario;
+                string receptor = solicitud.Usuario1?.Nombre_Usuario;
+
+                if (string.IsNullOrWhiteSpace(emisor) || string.IsNullOrWhiteSpace(receptor))
+                {
+                    continue;
+                }
+
+                resultadoDTOs.Add(new SolicitudAmistadDTO
+                {
+                    UsuarioEmisor = emisor,
+                    UsuarioReceptor = receptor,
+                    SolicitudAceptada = solicitud.Estado
+                });
+            }
+            return resultadoDTOs;
         }
 
         /// <summary>
@@ -73,24 +82,32 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <exception cref="InvalidOperationException">Se lanza si los usuarios son el mismo o ya existe una relacion.</exception>
         public static void CrearSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
+            using (var contexto = ContextoFactory.CrearContexto())
+            {
+                var amigoRepositorio = new AmigoRepositorio(contexto);
+                CrearSolicitudInterno(usuarioEmisorId, usuarioReceptorId, amigoRepositorio);
+            }
+        }
+
+        /// <summary>
+        /// Sobrecarga interna para pruebas: Crea una solicitud de amistad usando un repositorio inyectado.
+        /// </summary>
+        internal static void CrearSolicitudInterno(int usuarioEmisorId, int usuarioReceptorId, IAmigoRepositorio amigoRepositorio)
+        {
             if (usuarioEmisorId == usuarioReceptorId)
             {
                 _logger.WarnFormat("Intento de auto-solicitud de amistad por usuario ID: {0}", usuarioEmisorId);
                 throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadMismoUsuario);
             }
 
-            using (var contexto = ContextoFactory.CrearContexto())
+            if (amigoRepositorio.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
             {
-                var amigoRepositorio = new AmigoRepositorio(contexto);
-                if (amigoRepositorio.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
-                {
-                    _logger.WarnFormat("Intento de crear solicitud de amistad existente entre {0} y {1}", usuarioEmisorId, usuarioReceptorId);
-                    throw new InvalidOperationException(MensajesError.Cliente.RelacionAmistadExistente);
-                }
-
-                amigoRepositorio.CrearSolicitud(usuarioEmisorId, usuarioReceptorId);
-                _logger.InfoFormat("Solicitud de amistad creada. Emisor ID: {0}, Receptor ID: {1}", usuarioEmisorId, usuarioReceptorId);
+                _logger.WarnFormat("Intento de crear solicitud de amistad existente entre {0} y {1}", usuarioEmisorId, usuarioReceptorId);
+                throw new InvalidOperationException(MensajesError.Cliente.RelacionAmistadExistente);
             }
+
+            amigoRepositorio.CrearSolicitud(usuarioEmisorId, usuarioReceptorId);
+            _logger.InfoFormat("Solicitud de amistad creada. Emisor ID: {0}, Receptor ID: {1}", usuarioEmisorId, usuarioReceptorId);
         }
 
         /// <summary>
@@ -105,29 +122,37 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             using (var contexto = ContextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
-                var relacion = amigoRepositorio.ObtenerRelacion(usuarioEmisorId, usuarioReceptorId);
-
-                if (relacion == null)
-                {
-                    _logger.WarnFormat("Intento de aceptar solicitud inexistente entre {0} y {1}", usuarioEmisorId, usuarioReceptorId);
-                    throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadNoExiste);
-                }
-
-                if (relacion.UsuarioReceptor != usuarioReceptorId)
-                {
-                    _logger.WarnFormat("Usuario ID: {0} intentó aceptar una solicitud que no le corresponde (Receptor real: {1})", usuarioReceptorId, relacion.UsuarioReceptor);
-                    throw new InvalidOperationException(MensajesError.Cliente.ErrorAceptarSolicitud);
-                }
-
-                if (relacion.Estado)
-                {
-                    _logger.WarnFormat("Intento de aceptar una solicitud ya aceptada entre {0} y {1}", usuarioEmisorId, usuarioReceptorId);
-                    throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadYaAceptada);
-                }
-
-                amigoRepositorio.ActualizarEstado(relacion, true);
-                _logger.InfoFormat("Solicitud de amistad aceptada entre Emisor ID: {0} y Receptor ID: {1}", usuarioEmisorId, usuarioReceptorId);
+                AceptarSolicitudInterno(usuarioEmisorId, usuarioReceptorId, amigoRepositorio);
             }
+        }
+
+        /// <summary>
+        /// Sobrecarga interna para pruebas: Acepta una solicitud de amistad usando un repositorio inyectado.
+        /// </summary>
+        internal static void AceptarSolicitudInterno(int usuarioEmisorId, int usuarioReceptorId, IAmigoRepositorio amigoRepositorio)
+        {
+            var relacion = amigoRepositorio.ObtenerRelacion(usuarioEmisorId, usuarioReceptorId);
+
+            if (relacion == null)
+            {
+                _logger.WarnFormat("Intento de aceptar solicitud inexistente entre {0} y {1}", usuarioEmisorId, usuarioReceptorId);
+                throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadNoExiste);
+            }
+
+            if (relacion.UsuarioReceptor != usuarioReceptorId)
+            {
+                _logger.WarnFormat("Usuario ID: {0} intentó aceptar una solicitud que no le corresponde (Receptor real: {1})", usuarioReceptorId, relacion.UsuarioReceptor);
+                throw new InvalidOperationException(MensajesError.Cliente.ErrorAceptarSolicitud);
+            }
+
+            if (relacion.Estado)
+            {
+                _logger.WarnFormat("Intento de aceptar una solicitud ya aceptada entre {0} y {1}", usuarioEmisorId, usuarioReceptorId);
+                throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadYaAceptada);
+            }
+
+            amigoRepositorio.ActualizarEstado(relacion, true);
+            _logger.InfoFormat("Solicitud de amistad aceptada entre Emisor ID: {0} y Receptor ID: {1}", usuarioEmisorId, usuarioReceptorId);
         }
 
         /// <summary>
@@ -140,26 +165,34 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <exception cref="InvalidOperationException">Se lanza si los usuarios son el mismo o la relacion no existe.</exception>
         public static Amigo EliminarAmistad(int usuarioAId, int usuarioBId)
         {
+            using (var contexto = ContextoFactory.CrearContexto())
+            {
+                var amigoRepositorio = new AmigoRepositorio(contexto);
+                return EliminarAmistadInterno(usuarioAId, usuarioBId, amigoRepositorio);
+            }
+        }
+
+        /// <summary>
+        /// Sobrecarga interna para pruebas: Elimina una amistad usando un repositorio inyectado.
+        /// </summary>
+        internal static Amigo EliminarAmistadInterno(int usuarioAId, int usuarioBId, IAmigoRepositorio amigoRepositorio)
+        {
             if (usuarioAId == usuarioBId)
             {
                 throw new InvalidOperationException(MensajesError.Cliente.ErrorEliminarAmistad);
             }
 
-            using (var contexto = ContextoFactory.CrearContexto())
+            var relacion = amigoRepositorio.ObtenerRelacion(usuarioAId, usuarioBId);
+
+            if (relacion == null)
             {
-                var amigoRepositorio = new AmigoRepositorio(contexto);
-                var relacion = amigoRepositorio.ObtenerRelacion(usuarioAId, usuarioBId);
-
-                if (relacion == null)
-                {
-                    _logger.WarnFormat("Intento de eliminar relación inexistente entre {0} y {1}", usuarioAId, usuarioBId);
-                    throw new InvalidOperationException(MensajesError.Cliente.RelacionAmistadNoExiste);
-                }
-
-                amigoRepositorio.EliminarRelacion(relacion);
-                _logger.InfoFormat("Relación de amistad eliminada entre ID: {0} e ID: {1}", usuarioAId, usuarioBId);
-                return relacion;
+                _logger.WarnFormat("Intento de eliminar relación inexistente entre {0} y {1}", usuarioAId, usuarioBId);
+                throw new InvalidOperationException(MensajesError.Cliente.RelacionAmistadNoExiste);
             }
+
+            amigoRepositorio.EliminarRelacion(relacion);
+            _logger.InfoFormat("Relación de amistad eliminada entre ID: {0} e ID: {1}", usuarioAId, usuarioBId);
+            return relacion;
         }
 
         /// <summary>
@@ -173,30 +206,38 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             using (var contexto = ContextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
-                IList<Usuario> amigos = amigoRepositorio.ObtenerAmigos(usuarioId);
-
-                if (amigos == null)
-                {
-                    return new List<AmigoDTO>();
-                }
-
-                var resultado = new List<AmigoDTO>(amigos.Count);
-                foreach (var amigo in amigos)
-                {
-                    if (amigo == null)
-                    {
-                        continue;
-                    }
-
-                    resultado.Add(new AmigoDTO
-                    {
-                        UsuarioId = amigo.idUsuario,
-                        NombreUsuario = amigo.Nombre_Usuario
-                    });
-                }
-
-                return resultado;
+                return ObtenerAmigosDTOInterno(usuarioId, amigoRepositorio);
             }
+        }
+
+        /// <summary>
+        /// Sobrecarga interna para pruebas: Obtiene la lista de amigos usando un repositorio inyectado.
+        /// </summary>
+        internal static List<AmigoDTO> ObtenerAmigosDTOInterno(int usuarioId, IAmigoRepositorio amigoRepositorio)
+        {
+            IList<Usuario> amigos = amigoRepositorio.ObtenerAmigos(usuarioId);
+
+            if (amigos == null)
+            {
+                return new List<AmigoDTO>();
+            }
+
+            var resultado = new List<AmigoDTO>(amigos.Count);
+            foreach (var amigo in amigos)
+            {
+                if (amigo == null)
+                {
+                    continue;
+                }
+
+                resultado.Add(new AmigoDTO
+                {
+                    UsuarioId = amigo.idUsuario,
+                    NombreUsuario = amigo.Nombre_Usuario
+                });
+            }
+
+            return resultado;
         }
 
     }
