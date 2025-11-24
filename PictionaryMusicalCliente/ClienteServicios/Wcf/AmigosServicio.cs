@@ -397,7 +397,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                    ex is OperationCanceledException;
         }
 
-        private PictionaryServidorServicioAmigos.AmigosManejadorClient CrearCliente()
+        protected virtual PictionaryServidorServicioAmigos.AmigosManejadorClient CrearCliente()
         {
             var contexto = new InstanceContext(this);
             return new PictionaryServidorServicioAmigos.AmigosManejadorClient(
