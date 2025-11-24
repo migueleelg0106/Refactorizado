@@ -197,12 +197,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 sala.RemoverJugador(nombreUsuario.Trim());
 
-                if (sala.DebeEliminarse)
+                if (sala.DebeEliminarse && _salas.TryRemove(codigoSala.Trim(), out _))
                 {
-                    if (_salas.TryRemove(codigoSala.Trim(), out _))
-                    {
-                        _logger.InfoFormat("Sala '{0}' eliminada automáticamente (vacía o host salió).", codigoSala.Trim());
-                    }
+                    _logger.InfoFormat("Sala '{0}' eliminada automáticamente (vacía o host salió).", codigoSala.Trim());
                 }
 
                 _notificador.NotificarListaSalasATodos();

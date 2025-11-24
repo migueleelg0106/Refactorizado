@@ -39,45 +39,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                if (invitacion == null)
-                {
-                    throw new ArgumentException(MensajesError.Cliente.SolicitudInvitacionInvalida);
-                }
+                ValidarSolicitud(invitacion);
 
-                string codigoSala = invitacion.CodigoSala?.Trim();
-                string correo = invitacion.Correo?.Trim();
+                string codigoSala = invitacion.CodigoSala.Trim();
+                string correo = invitacion.Correo.Trim();
                 string idioma = invitacion.Idioma;
 
-                if (string.IsNullOrWhiteSpace(codigoSala) || string.IsNullOrWhiteSpace(correo))
-                {
-                    throw new ArgumentException(MensajesError.Cliente.DatosInvitacionInvalidos);
-                }
-
-                if (!CorreoRegex.IsMatch(correo))
-                {
-                    throw new ArgumentException(MensajesError.Cliente.CorreoInvalido);
-                }
-
                 var sala = SalasManejador.ObtenerSalaPorCodigo(codigoSala);
-                if (sala == null)
-                {
-                    throw new InvalidOperationException(MensajesError.Cliente.SalaNoEncontrada);
-                }
+                ValidarSala(sala);
 
-                if (sala.Jugadores != null && sala.Jugadores.Count > 0)
+                if (sala.Jugadores != null && sala.Jugadores.Count > 0 && await UsuarioYaEnSalaAsync(correo, sala))
                 {
-                    using (var contexto = CrearContexto())
-                    {
-                        var usuario = contexto.Usuario
-                            .Include(u => u.Jugador)
-                            .FirstOrDefault(u => u.Jugador.Correo == correo);
-
-                        if (!string.IsNullOrWhiteSpace(usuario?.Nombre_Usuario)
-                            && sala.Jugadores.Contains(usuario.Nombre_Usuario, StringComparer.OrdinalIgnoreCase))
-                        {
-                            throw new InvalidOperationException(MensajesError.Cliente.CorreoJugadorEnSala);
-                        }
-                    }
+                    throw new InvalidOperationException(MensajesError.Cliente.CorreoJugadorEnSala);
                 }
 
                 bool enviado = await CorreoInvitacionNotificador.EnviarInvitacionAsync(
@@ -99,9 +72,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     Mensaje = MensajesError.Cliente.InvitacionEnviadaExito
                 };
             }
-            catch (FaultException ex)
+            catch (FaultException)
             {
-                throw ex;
+                throw;
             }
             catch (ArgumentException ex)
             {
@@ -127,6 +100,48 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 _logger.Error("Operación inválida al enviar invitación. Estado inconsistente o validación fallida.", ex);
                 return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
+            }
+        }
+
+        private static void ValidarSolicitud(InvitacionSalaDTO invitacion)
+        {
+            if (invitacion == null)
+            {
+                throw new ArgumentException(MensajesError.Cliente.SolicitudInvitacionInvalida);
+            }
+
+            string codigoSala = invitacion.CodigoSala?.Trim();
+            string correo = invitacion.Correo?.Trim();
+
+            if (string.IsNullOrWhiteSpace(codigoSala) || string.IsNullOrWhiteSpace(correo))
+            {
+                throw new ArgumentException(MensajesError.Cliente.DatosInvitacionInvalidos);
+            }
+
+            if (!CorreoRegex.IsMatch(correo))
+            {
+                throw new ArgumentException(MensajesError.Cliente.CorreoInvalido);
+            }
+        }
+
+        private static void ValidarSala(dynamic sala)
+        {
+            if (sala == null)
+            {
+                throw new InvalidOperationException(MensajesError.Cliente.SalaNoEncontrada);
+            }
+        }
+
+        private static async Task<bool> UsuarioYaEnSalaAsync(string correo, dynamic sala)
+        {
+            using (var contexto = CrearContexto())
+            {
+                var usuario = await contexto.Usuario
+                    .Include(u => u.Jugador)
+                    .FirstOrDefaultAsync(u => u.Jugador.Correo == correo);
+
+                return !string.IsNullOrWhiteSpace(usuario?.Nombre_Usuario)
+                    && sala.Jugadores.Contains(usuario.Nombre_Usuario, StringComparer.OrdinalIgnoreCase);
             }
         }
 

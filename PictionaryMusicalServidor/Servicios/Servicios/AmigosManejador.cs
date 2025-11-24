@@ -153,9 +153,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _logger.InfoFormat("Solicitud de amistad enviada de '{0}' a '{1}'.", nombreEmisor, nombreReceptor);
                 _notificador.NotificarSolicitudActualizada(nombreReceptor, solicitud);
             }
-            catch (FaultException ex)
+            catch (FaultException)
             {
-                throw ex;
+                throw;
             }
             catch (InvalidOperationException ex)
             {
