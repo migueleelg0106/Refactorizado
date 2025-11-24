@@ -1,10 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using PictionaryMusicalServidor.Datos.DAL.Interfaces;
-using PictionaryMusicalServidor.Datos.Modelo;
 using PictionaryMusicalServidor.Servicios.Servicios;
-using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
-using PictionaryMusicalServidor.Servicios.Contratos;
 using System;
 using System.ServiceModel;
 
@@ -13,29 +8,22 @@ namespace PictionaryMusicalServidor.Pruebas
     /// <summary>
     /// Pruebas para AmigosManejador
     /// 
-    /// NOTA: AmigosManejador es un servicio WCF con estado singleton y callbacks,
-    /// lo que hace que las pruebas unitarias tradicionales sean desafiantes.
-    /// Estas pruebas documentan el comportamiento esperado y validarían la funcionalidad
-    /// si el servicio fuera refactorizado para aceptar dependencias inyectadas.
+    /// NOTA: AmigosManejador es un servicio WCF con estado singleton y callbacks.
+    /// Estas pruebas se centran en validar las entradas y el comportamiento observable
+    /// sin necesidad de una base de datos o contexto WCF completo.
     /// 
-    /// Para pruebas completas de AmigosManejador, se recomiendan:
-    /// 1. Refactorizar AmigosManejador para aceptar dependencias (repositorios, notificadores)
-    /// 2. Implementar pruebas de integración que utilicen una base de datos de prueba
-    /// 3. Utilizar mocks para el contexto de callback de WCF
+    /// Las pruebas validan:
+    /// 1. Validación de parámetros de entrada
+    /// 2. Manejo de errores y excepciones esperadas
+    /// 3. Comportamiento con valores nulos o vacíos
+    /// 
+    /// Para pruebas más completas de la lógica de negocio que interactúa con la base de datos,
+    /// ver PruebaAmistadServicio, que prueba la capa de servicio donde se implementa
+    /// la lógica principal.
     /// </summary>
     [TestClass]
     public class PruebaAmigosManejador
     {
-        private Mock<IUsuarioRepositorio> _mockUsuarioRepositorio;
-        private Mock<IAmigoRepositorio> _mockAmigoRepositorio;
-
-        [TestInitialize]
-        public void Inicializar()
-        {
-            _mockUsuarioRepositorio = new Mock<IUsuarioRepositorio>();
-            _mockAmigoRepositorio = new Mock<IAmigoRepositorio>();
-        }
-
         #region Pruebas de Validación de Entrada - Suscribir
 
         [TestMethod]
@@ -84,18 +72,6 @@ namespace PictionaryMusicalServidor.Pruebas
 
             Assert.IsTrue(exception.Message.Contains("obligatorio") || exception.Message.Contains("required"),
                 "El mensaje de error debe indicar que el nombre de usuario es obligatorio");
-        }
-
-        [TestMethod]
-        public void Prueba_Suscribir_UsuarioNoExiste_LanzaFaultException()
-        {
-            // Arrange
-            var manejador = new AmigosManejador();
-
-            // Act & Assert
-            // Esta prueba requiere una base de datos mock o integración
-            // Documenta que debe lanzar FaultException cuando el usuario no existe
-            Assert.IsTrue(true, "Test placeholder - requiere configuración de base de datos de prueba o DI");
         }
 
         #endregion
@@ -156,228 +132,99 @@ namespace PictionaryMusicalServidor.Pruebas
             // Arrange
             var manejador = new AmigosManejador();
 
-            // Act & Assert
-            // No debe lanzar excepción si el usuario no está suscrito
+            // Act & Assert - No debe lanzar excepción
             manejador.CancelarSuscripcion("UsuarioNoSuscrito");
         }
 
         #endregion
 
-        #region Documentación de Comportamiento - EnviarSolicitudAmistad
-
-        [TestMethod]
-        public void Documentacion_EnviarSolicitudAmistad_UsuarioEmisorNulo_LanzaFaultException()
-        {
-            // Esta prueba documenta que EnviarSolicitudAmistad debe validar entradas
-            // y lanzar FaultException cuando el emisor es nulo o vacío
-            Assert.IsTrue(true, "Comportamiento esperado: validar nombre de usuario emisor");
-        }
-
-        [TestMethod]
-        public void Documentacion_EnviarSolicitudAmistad_UsuarioReceptorNulo_LanzaFaultException()
-        {
-            // Esta prueba documenta que EnviarSolicitudAmistad debe validar entradas
-            // y lanzar FaultException cuando el receptor es nulo o vacío
-            Assert.IsTrue(true, "Comportamiento esperado: validar nombre de usuario receptor");
-        }
-
-        [TestMethod]
-        public void Documentacion_EnviarSolicitudAmistad_UsuarioEmisorNoExiste_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar FaultException cuando el emisor no existe
-            Assert.IsTrue(true, "Comportamiento esperado: verificar existencia de usuario emisor");
-        }
-
-        [TestMethod]
-        public void Documentacion_EnviarSolicitudAmistad_UsuarioReceptorNoExiste_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar FaultException cuando el receptor no existe
-            Assert.IsTrue(true, "Comportamiento esperado: verificar existencia de usuario receptor");
-        }
-
-        [TestMethod]
-        public void Documentacion_EnviarSolicitudAmistad_MismoUsuario_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar InvalidOperationException
-            // cuando se intenta enviar solicitud a uno mismo
-            Assert.IsTrue(true, "Comportamiento esperado: evitar auto-solicitud");
-        }
-
-        [TestMethod]
-        public void Documentacion_EnviarSolicitudAmistad_RelacionExistente_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar InvalidOperationException
-            // cuando ya existe una relación entre los usuarios
-            Assert.IsTrue(true, "Comportamiento esperado: evitar solicitudes duplicadas");
-        }
-
-        [TestMethod]
-        public void Documentacion_EnviarSolicitudAmistad_Exitosa_CreaSolicitudYNotifica()
-        {
-            // Esta prueba documenta que una solicitud exitosa debe:
-            // 1. Crear la solicitud en la base de datos
-            // 2. Notificar al receptor a través del callback si está suscrito
-            // 3. Normalizar los nombres de usuario
-            Assert.IsTrue(true, "Comportamiento esperado: crear solicitud y notificar");
-        }
-
-        #endregion
-
-        #region Documentación de Comportamiento - ResponderSolicitudAmistad
-
-        [TestMethod]
-        public void Documentacion_ResponderSolicitudAmistad_Exitosa_AceptaYNotificaAmbos()
-        {
-            // Esta prueba documenta que una respuesta exitosa debe:
-            // 1. Actualizar el estado de la solicitud en la base de datos
-            // 2. Notificar a ambos usuarios (emisor y receptor) a través de callbacks
-            // 3. Actualizar las listas de amigos de ambos usuarios
-            Assert.IsTrue(true, "Comportamiento esperado: aceptar solicitud y notificar a ambos");
-        }
-
-        [TestMethod]
-        public void Documentacion_ResponderSolicitudAmistad_UsuariosNoExisten_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar FaultException cuando alguno
-            // de los usuarios no existe
-            Assert.IsTrue(true, "Comportamiento esperado: verificar existencia de usuarios");
-        }
-
-        [TestMethod]
-        public void Documentacion_ResponderSolicitudAmistad_SolicitudNoExiste_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar InvalidOperationException
-            // cuando no existe la solicitud
-            Assert.IsTrue(true, "Comportamiento esperado: verificar existencia de solicitud");
-        }
-
-        [TestMethod]
-        public void Documentacion_ResponderSolicitudAmistad_ReceptorIncorrecto_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar InvalidOperationException
-            // cuando el que responde no es el receptor de la solicitud
-            Assert.IsTrue(true, "Comportamiento esperado: validar que responde el receptor correcto");
-        }
-
-        #endregion
-
-        #region Documentación de Comportamiento - EliminarAmigo
-
-        [TestMethod]
-        public void Documentacion_EliminarAmigo_Exitosa_EliminaYNotificaAmbos()
-        {
-            // Esta prueba documenta que una eliminación exitosa debe:
-            // 1. Eliminar la relación de amistad de la base de datos
-            // 2. Notificar a ambos usuarios a través de callbacks
-            // 3. Actualizar las listas de amigos de ambos usuarios
-            Assert.IsTrue(true, "Comportamiento esperado: eliminar amistad y notificar a ambos");
-        }
-
-        [TestMethod]
-        public void Documentacion_EliminarAmigo_UsuariosNoExisten_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar FaultException cuando alguno
-            // de los usuarios no existe
-            Assert.IsTrue(true, "Comportamiento esperado: verificar existencia de usuarios");
-        }
-
-        [TestMethod]
-        public void Documentacion_EliminarAmigo_RelacionNoExiste_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar InvalidOperationException
-            // cuando no existe la relación de amistad
-            Assert.IsTrue(true, "Comportamiento esperado: verificar existencia de relación");
-        }
-
-        [TestMethod]
-        public void Documentacion_EliminarAmigo_MismoUsuario_LanzaFaultException()
-        {
-            // Esta prueba documenta que debe lanzar InvalidOperationException
-            // cuando se intenta eliminar una amistad con uno mismo
-            Assert.IsTrue(true, "Comportamiento esperado: evitar auto-eliminación");
-        }
-
-        #endregion
-
-        #region Pruebas de Integración Recomendadas
-
-        [TestMethod]
-        public void IntegracionRecomendada_FlujoCompleto_SuscribirEnviarAceptarEliminar()
-        {
-            // Esta prueba documenta el flujo completo recomendado para pruebas de integración:
-            // 1. Usuario1 y Usuario2 se suscriben a notificaciones
-            // 2. Usuario1 envía solicitud a Usuario2
-            // 3. Usuario2 recibe notificación
-            // 4. Usuario2 acepta solicitud
-            // 5. Ambos reciben notificación de amistad aceptada
-            // 6. Las listas de amigos se actualizan
-            // 7. Usuario1 elimina a Usuario2
-            // 8. Ambos reciben notificación de amistad eliminada
-            // 9. Las listas de amigos se actualizan
-            Assert.IsTrue(true, "Flujo de integración completo documentado");
-        }
-
-        [TestMethod]
-        public void IntegracionRecomendada_Concurrencia_MultiplesOperacionesSimultaneas()
-        {
-            // Esta prueba documenta que se debe validar el comportamiento con:
-            // - Múltiples usuarios suscritos simultáneamente
-            // - Solicitudes enviadas concurrentemente
-            // - Operaciones sobre la misma relación concurrentemente
-            Assert.IsTrue(true, "Pruebas de concurrencia recomendadas");
-        }
-
-        [TestMethod]
-        public void IntegracionRecomendada_Callbacks_ManejoCanalCerrado()
-        {
-            // Esta prueba documenta que se debe validar:
-            // - Comportamiento cuando el canal de callback se cierra
-            // - Limpieza automática de suscripciones con canales inválidos
-            // - Reintento de notificaciones o manejo de errores
-            Assert.IsTrue(true, "Manejo de canales cerrados documentado");
-        }
-
-        #endregion
-
-        #region Notas de Refactorización
+        #region Notas para Pruebas de Integración
 
         /// <summary>
-        /// NOTAS PARA REFACTORIZACIÓN FUTURA:
+        /// NOTAS PARA PRUEBAS DE INTEGRACIÓN FUTURAS:
         /// 
-        /// Para hacer AmigosManejador completamente testable con mocks, se recomienda:
+        /// Las siguientes funcionalidades de AmigosManejador requieren pruebas de integración
+        /// con una base de datos de prueba y un contexto WCF configurado:
         /// 
-        /// 1. Extraer interfaz IContextoFactory para mockear la creación de contextos
-        /// 2. Inyectar dependencias de repositorios a través del constructor o propiedades
-        /// 3. Extraer IManejadorCallback como dependencia inyectable
-        /// 4. Extraer INotificadorAmigos como dependencia inyectable
-        /// 5. Considerar separar la lógica de negocio del manejo de callbacks WCF
+        /// 1. EnviarSolicitudAmistad:
+        ///    - Validar que usuarios existen en BD
+        ///    - Crear solicitud en BD
+        ///    - Notificar al receptor vía callback
+        ///    - Normalizar nombres de usuario
         /// 
-        /// Ejemplo de constructor con DI:
-        /// public AmigosManejador(
-        ///     IContextoFactory contextoFactory,
-        ///     IManejadorCallback<IAmigosManejadorCallback> manejadorCallback,
-        ///     INotificadorAmigos notificador)
-        /// {
-        ///     _contextoFactory = contextoFactory;
-        ///     _manejadorCallback = manejadorCallback;
-        ///     _notificador = notificador;
-        /// }
+        /// 2. ResponderSolicitudAmistad:
+        ///    - Validar existencia de solicitud en BD
+        ///    - Actualizar estado de solicitud
+        ///    - Notificar a ambos usuarios
+        ///    - Actualizar listas de amigos
         /// 
-        /// Esto permitiría crear pruebas unitarias completas con mocks:
-        /// - Mock del contexto de base de datos
-        /// - Mock de los repositorios
-        /// - Mock del manejador de callbacks
-        /// - Mock del notificador
+        /// 3. EliminarAmigo:
+        ///    - Validar existencia de relación en BD
+        ///    - Eliminar relación de BD
+        ///    - Notificar a ambos usuarios
+        ///    - Actualizar listas de amigos
         /// 
-        /// Sin estas modificaciones, las pruebas efectivas requieren:
-        /// - Base de datos de prueba configurada
-        /// - Contexto WCF simulado para callbacks
-        /// - Pruebas de integración más que unitarias
+        /// 4. Suscribir (casos complejos):
+        ///    - Validar usuario existe en BD
+        ///    - Registrar callback
+        ///    - Notificar solicitudes pendientes
+        ///    - Manejar reconexiones
+        /// 
+        /// RECOMENDACIÓN: Crear un proyecto de pruebas de integración separado que:
+        /// - Configure una base de datos de prueba (SQLite, SQL Server LocalDB, o contenedor Docker)
+        /// - Use un host WCF de prueba para simular callbacks
+        /// - Ejecute escenarios completos de flujo de usuario
+        /// - Limpie datos entre pruebas para aislamiento
+        /// 
+        /// ALTERNATIVA: Refactorizar AmigosManejador para soportar inyección de dependencias:
+        /// - Crear IUsuarioRepositorio y IAmigoRepositorio como dependencias
+        /// - Crear IManejadorCallback como dependencia
+        /// - Crear INotificadorAmigos como dependencia
+        /// - Inyectar estas dependencias en el constructor o propiedades
+        /// - Esto permitiría pruebas unitarias completas con mocks
+        /// 
+        /// La lógica de negocio principal está bien testeada en AmistadServicio.
+        /// Las pruebas de AmigosManejador deben enfocarse en:
+        /// - Orquestación correcta de llamadas a servicios
+        /// - Manejo correcto de callbacks WCF
+        /// - Manejo de errores de comunicación
+        /// - Validación de permisos y autorización
         /// </summary>
         [TestMethod]
-        public void NotaRefactorizacion_DependencyInjection()
+        public void NotasPruebasIntegracion()
         {
-            Assert.IsTrue(true, "Ver comentarios de esta clase para notas de refactorización");
+            // Este método existe solo para documentar las necesidades de pruebas de integración
+            Assert.IsTrue(true, "Ver comentarios de documentación sobre pruebas de integración");
+        }
+
+        #endregion
+
+        #region Pruebas de Reglas de Negocio (Delegadas a AmistadServicio)
+
+        /// <summary>
+        /// Las siguientes reglas de negocio están implementadas en AmistadServicio
+        /// y se prueban exhaustivamente en PruebaAmistadServicio:
+        /// 
+        /// - No se puede enviar solicitud a uno mismo
+        /// - No se puede crear solicitud duplicada
+        /// - No se puede aceptar solicitud inexistente
+        /// - No se puede aceptar solicitud que no corresponde al receptor
+        /// - No se puede aceptar solicitud ya aceptada
+        /// - No se puede eliminar amistad consigo mismo
+        /// - No se puede eliminar amistad inexistente
+        /// - Filtrado correcto de solicitudes pendientes
+        /// - Filtrado correcto de lista de amigos
+        /// - Manejo de valores nulos y vacíos
+        /// 
+        /// AmigosManejador delega estas validaciones a AmistadServicio,
+        /// por lo que no es necesario duplicar estas pruebas aquí.
+        /// </summary>
+        [TestMethod]
+        public void NotasReglasNegocio()
+        {
+            // Este método existe solo para documentar que las reglas de negocio
+            // se prueban en PruebaAmistadServicio
+            Assert.IsTrue(true, "Las reglas de negocio se prueban en PruebaAmistadServicio");
         }
 
         #endregion
