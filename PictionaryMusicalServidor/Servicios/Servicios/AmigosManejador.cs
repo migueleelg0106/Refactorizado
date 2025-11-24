@@ -25,6 +25,20 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly ManejadorCallback<IAmigosManejadorCallback> _manejadorCallback = new(StringComparer.OrdinalIgnoreCase);
         private static readonly NotificadorAmigos _notificador = new(_manejadorCallback);
 
+        private readonly IContextoFactory _contextoFactory;
+        private readonly IAmistadServicio _amistadServicio;
+
+        /// <summary>
+        /// Constructor que recibe dependencias por inyección.
+        /// </summary>
+        /// <param name="contextoFactory">Factoría para crear instancias del contexto de base de datos.</param>
+        /// <param name="amistadServicio">Servicio de lógica de negocio de amistades.</param>
+        public AmigosManejador(IContextoFactory contextoFactory, IAmistadServicio amistadServicio)
+        {
+            _contextoFactory = contextoFactory ?? throw new ArgumentNullException(nameof(contextoFactory));
+            _amistadServicio = amistadServicio ?? throw new ArgumentNullException(nameof(amistadServicio));
+        }
+
         /// <summary>
         /// Suscribe un usuario para recibir notificaciones de solicitudes de amistad.
         /// Normaliza el nombre de usuario, registra el callback y notifica solicitudes pendientes.
@@ -44,7 +58,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory.CrearContexto())
                 {
                     var usuarioRepositorio = new UsuarioRepositorio(contexto);
                     usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
@@ -121,7 +135,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 Usuario usuarioEmisor;
                 Usuario usuarioReceptor;
 
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory.CrearContexto())
                 {
                     var usuarioRepositorio = new UsuarioRepositorio(contexto);
                     usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
@@ -137,7 +151,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
                     }
 
-                    AmistadServicio.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
+                    _amistadServicio.CrearSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
                 }
 
                 string nombreEmisor = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
@@ -196,7 +210,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 ValidadorNombreUsuario.Validar(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
                 ValidadorNombreUsuario.Validar(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
 
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory.CrearContexto())
                 {
                     var usuarioRepositorio = new UsuarioRepositorio(contexto);
                     Usuario usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
@@ -207,7 +221,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         throw new FaultException(MensajesError.Cliente.UsuariosEspecificadosNoExisten);
                     }
 
-                    AmistadServicio.AceptarSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
+                    _amistadServicio.AceptarSolicitud(usuarioEmisor.idUsuario, usuarioReceptor.idUsuario);
 
                     nombreEmisorNormalizado = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioEmisor.Nombre_Usuario, nombreUsuarioEmisor);
                     nombreReceptorNormalizado = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioReceptor.Nombre_Usuario, nombreUsuarioReceptor);
@@ -269,7 +283,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 Amigo relacionEliminada;
                 int idUsuarioA;
 
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory.CrearContexto())
                 {
                     var usuarioRepositorio = new UsuarioRepositorio(contexto);
                     Usuario usuarioA = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioA);
@@ -282,7 +296,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     idUsuarioA = usuarioA.idUsuario;
 
-                    relacionEliminada = AmistadServicio.EliminarAmistad(usuarioA.idUsuario, usuarioB.idUsuario);
+                    relacionEliminada = _amistadServicio.EliminarAmistad(usuarioA.idUsuario, usuarioB.idUsuario);
 
                     nombreUsuarioANormalizado = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioA.Nombre_Usuario, nombreUsuarioA);
                     nombreUsuarioBNormalizado = ValidadorNombreUsuario.ObtenerNombreNormalizado(usuarioB.Nombre_Usuario, nombreUsuarioB);

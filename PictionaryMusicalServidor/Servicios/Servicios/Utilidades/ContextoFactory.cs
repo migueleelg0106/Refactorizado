@@ -8,7 +8,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
     /// Factoría para la creación de contextos de base de datos.
     /// Centraliza la lógica de creación de instancias de contexto.
     /// </summary>
-    internal static class ContextoFactory
+    public class ContextoFactory : IContextoFactory
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ContextoFactory));
 
@@ -16,7 +16,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         /// Crea una nueva instancia del contexto de base de datos.
         /// </summary>
         /// <returns>Instancia del contexto de base de datos configurada.</returns>
-        public static BaseDatosPruebaEntities1 CrearContexto()
+        public BaseDatosPruebaEntities1 CrearContexto()
         {
             string conexion = Conexion.ObtenerConexion();
 

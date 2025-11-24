@@ -15,9 +15,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// Servicio interno para la gestion de logica de negocio relacionada con amistades.
     /// Proporciona metodos para crear, aceptar, eliminar y consultar relaciones de amistad entre usuarios.
     /// </summary>
-    internal static class AmistadServicio
+    public class AmistadServicio : IAmistadServicio
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(AmistadServicio));
+        private readonly IContextoFactory _contextoFactory;
+
+        /// <summary>
+        /// Constructor que recibe la factoría de contexto por inyección de dependencias.
+        /// </summary>
+        /// <param name="contextoFactory">Factoría para crear instancias del contexto de base de datos.</param>
+        public AmistadServicio(IContextoFactory contextoFactory)
+        {
+            _contextoFactory = contextoFactory ?? throw new ArgumentNullException(nameof(contextoFactory));
+        }
 
         /// <summary>
         /// Obtiene las solicitudes de amistad pendientes para un usuario especifico.
@@ -25,9 +35,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// </summary>
         /// <param name="usuarioId">Identificador del usuario receptor.</param>
         /// <returns>Lista de solicitudes de amistad pendientes como DTOs.</returns>
-        public static List<SolicitudAmistadDTO> ObtenerSolicitudesPendientesDTO(int usuarioId)
+        public List<SolicitudAmistadDTO> ObtenerSolicitudesPendientesDTO(int usuarioId)
         {
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = _contextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 var solicitudesPendientes = amigoRepositorio.ObtenerSolicitudesPendientes(usuarioId);
@@ -71,7 +81,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <param name="usuarioEmisorId">Identificador del usuario que envia la solicitud.</param>
         /// <param name="usuarioReceptorId">Identificador del usuario que recibe la solicitud.</param>
         /// <exception cref="InvalidOperationException">Se lanza si los usuarios son el mismo o ya existe una relacion.</exception>
-        public static void CrearSolicitud(int usuarioEmisorId, int usuarioReceptorId)
+        public void CrearSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
             if (usuarioEmisorId == usuarioReceptorId)
             {
@@ -79,7 +89,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadMismoUsuario);
             }
 
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = _contextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 if (amigoRepositorio.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
@@ -100,9 +110,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <param name="usuarioEmisorId">Identificador del usuario que envio la solicitud.</param>
         /// <param name="usuarioReceptorId">Identificador del usuario que acepta la solicitud.</param>
         /// <exception cref="InvalidOperationException">Se lanza si no existe la solicitud o ya fue aceptada.</exception>
-        public static void AceptarSolicitud(int usuarioEmisorId, int usuarioReceptorId)
+        public void AceptarSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = _contextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 var relacion = amigoRepositorio.ObtenerRelacion(usuarioEmisorId, usuarioReceptorId);
@@ -138,14 +148,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <param name="usuarioBId">Identificador del segundo usuario en la relacion.</param>
         /// <returns>La relacion de amistad que fue eliminada.</returns>
         /// <exception cref="InvalidOperationException">Se lanza si los usuarios son el mismo o la relacion no existe.</exception>
-        public static Amigo EliminarAmistad(int usuarioAId, int usuarioBId)
+        public Amigo EliminarAmistad(int usuarioAId, int usuarioBId)
         {
             if (usuarioAId == usuarioBId)
             {
                 throw new InvalidOperationException(MensajesError.Cliente.ErrorEliminarAmistad);
             }
 
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = _contextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 var relacion = amigoRepositorio.ObtenerRelacion(usuarioAId, usuarioBId);
@@ -168,9 +178,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// </summary>
         /// <param name="usuarioId">Identificador del usuario cuyos amigos se desean obtener.</param>
         /// <returns>Lista de amigos como DTOs, o lista vacia si no hay amigos.</returns>
-        public static List<AmigoDTO> ObtenerAmigosDTO(int usuarioId)
+        public List<AmigoDTO> ObtenerAmigosDTO(int usuarioId)
         {
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = _contextoFactory.CrearContexto())
             {
                 var amigoRepositorio = new AmigoRepositorio(contexto);
                 IList<Usuario> amigos = amigoRepositorio.ObtenerAmigos(usuarioId);
