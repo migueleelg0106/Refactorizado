@@ -54,6 +54,11 @@
     <Compile Include="PruebasUtilidades\PruebaCodigoVerificacionGenerador.cs" />
     <Compile Include="PruebasUtilidades\PruebaValidadorNombreUsuario.cs" />
     <Compile Include="PruebasUtilidades\PruebaEntradaComunValidador.cs" />
+    <Compile Include="PruebasManejadores\PruebaCodigoVerificacionManejador.cs" />
+    <Compile Include="PruebasManejadores\PruebaInicioSesionManejador.cs" />
+    <Compile Include="PruebasManejadores\PruebaCambioContrasenaManejador.cs" />
+    <Compile Include="PruebasManejadores\PruebaPerfilManejador.cs" />
+    <Compile Include="PruebasManejadores\PruebaCuentaManejador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
