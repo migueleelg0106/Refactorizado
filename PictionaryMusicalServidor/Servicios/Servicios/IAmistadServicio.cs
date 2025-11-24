@@ -42,7 +42,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <summary>
         /// Obtiene la lista de amigos de un usuario como objetos DTO.
         /// </summary>
-        /// <param name="usuarioId">Identificador del usuario cuyos amigos se desean obtener.</param>
+        /// <param name="usuarioId">Identificador del usuario cuyos amigos se quieren obtener.</param>
         /// <returns>Lista de amigos como DTOs.</returns>
         List<AmigoDTO> ObtenerAmigosDTO(int usuarioId);
     }
