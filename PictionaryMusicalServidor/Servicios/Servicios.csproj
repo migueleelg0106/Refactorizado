@@ -89,12 +89,14 @@
     <Compile Include="Contratos\IInicioPartidaManejador.cs" />
     <Compile Include="Contratos\IInicioSesionManejador.cs" />
     <Compile Include="Contratos\IInvitacionesManejador.cs" />
+    <Compile Include="Contratos\IAmistadServicio.cs" />
     <Compile Include="Contratos\ILienzoManejador.cs" />
     <Compile Include="Contratos\IListaAmigosManejador.cs" />
     <Compile Include="Contratos\IListaAmigosManejadorCallback.cs" />
     <Compile Include="Contratos\IPerfilManejador.cs" />
     <Compile Include="Contratos\ISalasCallback.cs" />
     <Compile Include="Contratos\ISalasManejador.cs" />
+    <Compile Include="Contratos\IContextoFactory.cs" />
     <Compile Include="Contratos\DTOs\ActualizacionContrasenaDTO.cs" />
     <Compile Include="Contratos\DTOs\ClasificacionUsuarioDTO.cs" />
     <Compile Include="Contratos\DTOs\ConfirmacionCodigoDTO.cs" />
