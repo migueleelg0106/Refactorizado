@@ -56,6 +56,8 @@
     <Compile Include="PruebaValidadorNombreUsuario.cs" />
     <Compile Include="PruebaManejadorCallback.cs" />
     <Compile Include="PruebaSalaInterna.cs" />
+    <Compile Include="PruebaAmistadServicio.cs" />
+    <Compile Include="PruebaAmigosManejador.cs" />
     <Compile Include="PruebaNotificadorSalas.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

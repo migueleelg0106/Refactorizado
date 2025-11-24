@@ -18,6 +18,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     internal static class AmistadServicio
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(AmistadServicio));
+        internal static Func<BaseDatosPruebaEntities1> CrearContexto { get; set; } = ContextoFactory.CrearContexto;
+        internal static Func<BaseDatosPruebaEntities1, IAmigoRepositorio> CrearAmigoRepositorio { get; set; } = contexto => new AmigoRepositorio(contexto);
+
+        internal static void RestablecerDependencias()
+        {
+            CrearContexto = ContextoFactory.CrearContexto;
+            CrearAmigoRepositorio = contexto => new AmigoRepositorio(contexto);
+        }
 
         /// <summary>
         /// Obtiene las solicitudes de amistad pendientes para un usuario especifico.
@@ -27,9 +35,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <returns>Lista de solicitudes de amistad pendientes como DTOs.</returns>
         public static List<SolicitudAmistadDTO> ObtenerSolicitudesPendientesDTO(int usuarioId)
         {
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = CrearContexto())
             {
-                var amigoRepositorio = new AmigoRepositorio(contexto);
+                var amigoRepositorio = CrearAmigoRepositorio(contexto);
                 var solicitudesPendientes = amigoRepositorio.ObtenerSolicitudesPendientes(usuarioId);
 
                 if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
@@ -79,9 +87,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new InvalidOperationException(MensajesError.Cliente.SolicitudAmistadMismoUsuario);
             }
 
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = CrearContexto())
             {
-                var amigoRepositorio = new AmigoRepositorio(contexto);
+                var amigoRepositorio = CrearAmigoRepositorio(contexto);
                 if (amigoRepositorio.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
                 {
                     _logger.WarnFormat("Intento de crear solicitud de amistad existente entre {0} y {1}", usuarioEmisorId, usuarioReceptorId);
@@ -102,9 +110,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <exception cref="InvalidOperationException">Se lanza si no existe la solicitud o ya fue aceptada.</exception>
         public static void AceptarSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = CrearContexto())
             {
-                var amigoRepositorio = new AmigoRepositorio(contexto);
+                var amigoRepositorio = CrearAmigoRepositorio(contexto);
                 var relacion = amigoRepositorio.ObtenerRelacion(usuarioEmisorId, usuarioReceptorId);
 
                 if (relacion == null)
@@ -145,9 +153,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new InvalidOperationException(MensajesError.Cliente.ErrorEliminarAmistad);
             }
 
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = CrearContexto())
             {
-                var amigoRepositorio = new AmigoRepositorio(contexto);
+                var amigoRepositorio = CrearAmigoRepositorio(contexto);
                 var relacion = amigoRepositorio.ObtenerRelacion(usuarioAId, usuarioBId);
 
                 if (relacion == null)
@@ -170,9 +178,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <returns>Lista de amigos como DTOs, o lista vacia si no hay amigos.</returns>
         public static List<AmigoDTO> ObtenerAmigosDTO(int usuarioId)
         {
-            using (var contexto = ContextoFactory.CrearContexto())
+            using (var contexto = CrearContexto())
             {
-                var amigoRepositorio = new AmigoRepositorio(contexto);
+                var amigoRepositorio = CrearAmigoRepositorio(contexto);
                 IList<Usuario> amigos = amigoRepositorio.ObtenerAmigos(usuarioId);
 
                 if (amigos == null)

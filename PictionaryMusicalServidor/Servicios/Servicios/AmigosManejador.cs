@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Entity.Core;
 using System.ServiceModel;
 using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
+using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Datos.Modelo;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos;
@@ -22,8 +23,45 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     public class AmigosManejador : IAmigosManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(AmigosManejador));
-        private static readonly ManejadorCallback<IAmigosManejadorCallback> _manejadorCallback = new(StringComparer.OrdinalIgnoreCase);
-        private static readonly NotificadorAmigos _notificador = new(_manejadorCallback);
+        private readonly ManejadorCallback<IAmigosManejadorCallback> _manejadorCallback;
+        private readonly NotificadorAmigos _notificador;
+        private readonly Func<BaseDatosPruebaEntities1> _contextoFactory;
+        private readonly Func<BaseDatosPruebaEntities1, IUsuarioRepositorio> _usuarioRepositorioFactory;
+        private readonly Func<BaseDatosPruebaEntities1, IAmigoRepositorio> _amigoRepositorioFactory;
+        private readonly Func<IAmigosManejadorCallback> _callbackActual;
+
+        /// <summary>
+        /// Constructor por defecto utilizado por WCF. Inicializa las dependencias
+        /// con sus implementaciones de producción.
+        /// </summary>
+        public AmigosManejador() : this(null, null, null, null, null, null)
+        {
+        }
+
+        /// <summary>
+        /// Constructor habilitado para pruebas: permite inyectar fábricas de
+        /// contexto, repositorios y manejadores de callbacks simulados sin
+        /// modificar la implementación de producción.
+        /// </summary>
+        /// <remarks>
+        /// En operación normal este constructor se invoca solo a través del
+        /// constructor por defecto, que mantiene el comportamiento original.
+        /// </remarks>
+        public AmigosManejador(
+            Func<BaseDatosPruebaEntities1> contextoFactory = null,
+            Func<BaseDatosPruebaEntities1, IUsuarioRepositorio> usuarioRepositorioFactory = null,
+            Func<BaseDatosPruebaEntities1, IAmigoRepositorio> amigoRepositorioFactory = null,
+            ManejadorCallback<IAmigosManejadorCallback> manejadorCallback = null,
+            NotificadorAmigos notificador = null,
+            Func<IAmigosManejadorCallback> callbackActual = null)
+        {
+            _contextoFactory = contextoFactory ?? ContextoFactory.CrearContexto;
+            _usuarioRepositorioFactory = usuarioRepositorioFactory ?? (ctx => new UsuarioRepositorio(ctx));
+            _amigoRepositorioFactory = amigoRepositorioFactory ?? (ctx => new AmigoRepositorio(ctx));
+            _manejadorCallback = manejadorCallback ?? new ManejadorCallback<IAmigosManejadorCallback>(StringComparer.OrdinalIgnoreCase);
+            _notificador = notificador ?? new NotificadorAmigos(_manejadorCallback);
+            _callbackActual = callbackActual ?? ManejadorCallback<IAmigosManejadorCallback>.ObtenerCallbackActual;
+        }
 
         /// <summary>
         /// Suscribe un usuario para recibir notificaciones de solicitudes de amistad.
@@ -44,9 +82,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory())
                 {
-                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                    var usuarioRepositorio = _usuarioRepositorioFactory(contexto);
                     usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
 
                     if (usuario == null)
@@ -62,7 +100,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     throw new FaultException(MensajesError.Cliente.UsuarioNoEncontrado);
                 }
 
-                callback = ManejadorCallback<IAmigosManejadorCallback>.ObtenerCallbackActual();
+                callback = _callbackActual();
                 _manejadorCallback.Suscribir(nombreNormalizado, callback);
 
                 if (!string.Equals(nombreUsuario, nombreNormalizado, StringComparison.Ordinal))
@@ -121,9 +159,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 Usuario usuarioEmisor;
                 Usuario usuarioReceptor;
 
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory())
                 {
-                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                    var usuarioRepositorio = _usuarioRepositorioFactory(contexto);
                     usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
                     usuarioReceptor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioReceptor);
 
@@ -196,9 +234,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 ValidadorNombreUsuario.Validar(nombreUsuarioEmisor, nameof(nombreUsuarioEmisor));
                 ValidadorNombreUsuario.Validar(nombreUsuarioReceptor, nameof(nombreUsuarioReceptor));
 
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory())
                 {
-                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                    var usuarioRepositorio = _usuarioRepositorioFactory(contexto);
                     Usuario usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioEmisor);
                     Usuario usuarioReceptor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioReceptor);
 
@@ -269,9 +307,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 Amigo relacionEliminada;
                 int idUsuarioA;
 
-                using (var contexto = ContextoFactory.CrearContexto())
+                using (var contexto = _contextoFactory())
                 {
-                    var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                    var usuarioRepositorio = _usuarioRepositorioFactory(contexto);
                     Usuario usuarioA = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioA);
                     Usuario usuarioB = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuarioB);
 
