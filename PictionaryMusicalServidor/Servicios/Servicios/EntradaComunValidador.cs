@@ -34,13 +34,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         /// <summary>
         /// Normaliza un texto eliminando espacios al inicio y final.
-        /// Retorna null si el valor es nulo o solo espacios en blanco.
         /// </summary>
         /// <param name="valor">Texto a normalizar.</param>
-        /// <returns>Texto normalizado o null.</returns>
+        /// <returns>
+        /// Texto normalizado sin espacios al inicio y final,
+        /// o cadena vacia si el valor es nulo o solo espacios en blanco.
+        /// </returns>
         public static string NormalizarTexto(string valor)
         {
-            return string.IsNullOrWhiteSpace(valor) ? null : valor.Trim();
+            return string.IsNullOrWhiteSpace(valor) ? string.Empty : valor.Trim();
         }
 
         /// <summary>
@@ -89,7 +91,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         public static bool EsTokenValido(string token)
         {
             string normalizado = NormalizarTexto(token);
-            return normalizado != null && TokenRegex.IsMatch(normalizado);
+            return !string.IsNullOrEmpty(normalizado) && TokenRegex.IsMatch(normalizado);
         }
 
         /// <summary>
@@ -100,7 +102,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         public static bool EsCodigoVerificacionValido(string codigo)
         {
             string normalizado = NormalizarTexto(codigo);
-            if (normalizado == null || normalizado.Length != LongitudCodigoVerificacion)
+            if (string.IsNullOrEmpty(normalizado) || normalizado.Length != LongitudCodigoVerificacion)
             {
                 return false;
             }
@@ -238,7 +240,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             campoNormalizado = NormalizarTexto(campo);
             if (!regla(campoNormalizado))
             {
-                campoNormalizado = null;
+                campoNormalizado = string.Empty;
                 return CrearResultadoOperacion(false, mensajeError);
             }
 
@@ -297,14 +299,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static ResultadoOperacionDTO ValidarRedSocial(string nombre, string valor, out string valorNormalizado)
         {
             valorNormalizado = NormalizarTexto(valor);
-            if (valorNormalizado == null)
+            if (string.IsNullOrEmpty(valorNormalizado))
             {
                 return null;
             }
 
             if (valorNormalizado.Length > LongitudMaximaTexto)
             {
-                valorNormalizado = null;
+                valorNormalizado = string.Empty;
                 return CrearResultadoOperacion(
                     false,
                     $"El identificador de {nombre} no debe exceder {LongitudMaximaTexto} caracteres.");

@@ -179,11 +179,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             return idiomaNormalizado == "en" ? AsuntoPredeterminadoEn : AsuntoPredeterminadoEs;
         }
 
+        /// <summary>
+        /// Obtiene un valor de configuracion probando multiples claves en orden.
+        /// </summary>
+        /// <param name="claves">Claves de configuracion a probar en orden de prioridad.</param>
+        /// <returns>
+        /// El primer valor de configuracion no vacio encontrado, 
+        /// o cadena vacia si ninguna clave tiene un valor configurado.
+        /// </returns>
         private static string ObtenerConfiguracion(params string[] claves)
         {
             if (claves == null)
             {
-                return null;
+                return string.Empty;
             }
 
             foreach (string clave in claves)
@@ -201,7 +209,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
                 }
             }
 
-            return null;
+            return string.Empty;
         }
     }
 }
