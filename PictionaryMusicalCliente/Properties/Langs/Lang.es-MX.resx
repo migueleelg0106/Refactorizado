@@ -1034,4 +1034,16 @@ aciertan o cuando se acaba el tiempo.
   <data name="partidaTooltipLimpiar" xml:space="preserve">
     <value>Limpiar todo</value>
   </data>
+  <data name="chatTextoJugadorAdivino" xml:space="preserve">
+    <value>{0} ha adivinado la canción.</value>
+  </data>
+  <data name="chatTextoFinRonda" xml:space="preserve">
+    <value>La ronda ha terminado. La canción era: {0}</value>
+  </data>
+  <data name="chatTextoEnviar" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="chatTextoEscribeMensaje" xml:space="preserve">
+    <value>Escribe tu mensaje...</value>
+  </data>
 </root>

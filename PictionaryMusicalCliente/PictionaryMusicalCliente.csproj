@@ -175,6 +175,7 @@
     <Compile Include="Modelo\OpcionEntero.cs" />
     <Compile Include="Modelo\OpcionTexto.cs" />
     <Compile Include="Modelo\SolicitudAmistadEntrada.cs" />
+    <Compile Include="Modelo\MensajeChat.cs" />
     <Compile Include="Sesiones\SesionUsuarioActual.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\AvisoAyudante.cs" />

@@ -71,6 +71,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
         private bool _aplicacionCerrando;
+        private ObservableCollection<MensajeChat> _listaMensajes;
+        private string _textoMensaje;
+        private bool _puedeEscribir;
 
         /// <summary>
         /// Define los destinos posibles al salir de la partida.
@@ -140,6 +143,10 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _jugadores = new ObservableCollection<JugadorElemento>();
             ActualizarJugadores(_sala.Jugadores);
             _puedeInvitarPorCorreo = true;
+
+            _listaMensajes = new ObservableCollection<MensajeChat>();
+            _textoMensaje = string.Empty;
+            _puedeEscribir = true;
 
             _salasServicio.JugadorSeUnio += SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio += SalasServicio_JugadorSalio;
@@ -426,6 +433,34 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         public bool EsInvitado => _esInvitado;
 
         /// <summary>
+        /// Coleccion de mensajes del chat del juego.
+        /// </summary>
+        public ObservableCollection<MensajeChat> ListaMensajes
+        {
+            get => _listaMensajes;
+            set => EstablecerPropiedad(ref _listaMensajes, value);
+        }
+
+        /// <summary>
+        /// Texto del mensaje que el usuario esta escribiendo.
+        /// </summary>
+        public string TextoMensaje
+        {
+            get => _textoMensaje;
+            set => EstablecerPropiedad(ref _textoMensaje, value);
+        }
+
+        /// <summary>
+        /// Indica si el usuario puede escribir en el chat.
+        /// Se deshabilita cuando el usuario ya adivino la cancion.
+        /// </summary>
+        public bool PuedeEscribir
+        {
+            get => _puedeEscribir;
+            private set => EstablecerPropiedad(ref _puedeEscribir, value);
+        }
+
+        /// <summary>
         /// Comando para invitar a un usuario por correo.
         /// </summary>
         public ICommand InvitarCorreoComando { get; private set; }
@@ -489,6 +524,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         /// Comando para cerrar la ventana de juego.
         /// </summary>
         public ICommand CerrarVentanaComando { get; private set; }
+
+        /// <summary>
+        /// Comando para enviar un mensaje en el chat del juego.
+        /// </summary>
+        public ICommand EnviarMensajeComando { get; private set; }
 
         /// <summary>
         /// Accion para abrir la ventana de ajustes.
@@ -574,6 +614,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 _ => EjecutarMostrarOverlayAdivinador());
             OcultarOverlayAlarmaComando = new ComandoDelegado(_ => OcultarOverlayAlarma());
             CerrarVentanaComando = new ComandoDelegado(_ => EjecutarCerrarVentana());
+            EnviarMensajeComando = new ComandoDelegado(
+                _ => EjecutarEnviarMensaje(),
+                _ => PuedeEscribir && !string.IsNullOrWhiteSpace(TextoMensaje));
         }
 
         private async Task EjecutarInvitarCorreoAsync()
@@ -811,6 +854,96 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             {
                 NotificarCierreAplicacionCompleta();
             }
+        }
+
+        private void EjecutarEnviarMensaje()
+        {
+            if (!PuedeEscribir)
+            {
+                return;
+            }
+
+            string mensaje = TextoMensaje?.Trim();
+            if (string.IsNullOrWhiteSpace(mensaje))
+            {
+                return;
+            }
+
+            TextoMensaje = string.Empty;
+
+            AgregarMensajeLocal(_nombreUsuarioSesion, mensaje, false);
+        }
+
+        /// <summary>
+        /// Maneja la recepcion de un mensaje de chat desde el servidor.
+        /// Este metodo debe ser llamado desde el callback de WCF.
+        /// </summary>
+        /// <param name="nombreJugador">Nombre del jugador que envio el mensaje.</param>
+        /// <param name="mensaje">Contenido del mensaje.</param>
+        public void RecibirMensajeChat(string nombreJugador, string mensaje)
+        {
+            EjecutarEnDispatcher(() =>
+            {
+                if (string.Equals(nombreJugador, _nombreUsuarioSesion, StringComparison.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+
+                AgregarMensajeLocal(nombreJugador, mensaje, false);
+            });
+        }
+
+        /// <summary>
+        /// Maneja la notificacion de que un jugador ha adivinado correctamente.
+        /// Este metodo debe ser llamado desde el callback de WCF.
+        /// </summary>
+        /// <param name="nombreJugador">Nombre del jugador que adivino.</param>
+        /// <param name="puntaje">Puntos obtenidos por adivinar.</param>
+        public void NotificarAcierto(string nombreJugador, int puntaje)
+        {
+            EjecutarEnDispatcher(() =>
+            {
+                string mensajeSistema = string.Format(
+                    Lang.chatTextoJugadorAdivino,
+                    nombreJugador);
+
+                AgregarMensajeLocal(string.Empty, mensajeSistema, true);
+
+                if (string.Equals(nombreJugador, _nombreUsuarioSesion, StringComparison.OrdinalIgnoreCase))
+                {
+                    PuedeEscribir = false;
+                    _logger.InfoFormat("Usuario '{0}' adivino. Chat deshabilitado.", _nombreUsuarioSesion);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Maneja la notificacion de fin de ronda.
+        /// </summary>
+        /// <param name="nombreCancion">Nombre de la cancion que se debia adivinar.</param>
+        public void NotificarFinRonda(string nombreCancion)
+        {
+            EjecutarEnDispatcher(() =>
+            {
+                string mensajeSistema = string.Format(
+                    Lang.chatTextoFinRonda,
+                    nombreCancion);
+
+                AgregarMensajeLocal(string.Empty, mensajeSistema, true);
+
+                PuedeEscribir = true;
+            });
+        }
+
+        private void AgregarMensajeLocal(string nombreUsuario, string contenido, bool esSistema)
+        {
+            if (ListaMensajes == null)
+            {
+                ListaMensajes = new ObservableCollection<MensajeChat>();
+            }
+
+            var mensaje = new MensajeChat(nombreUsuario, contenido, esSistema);
+            ListaMensajes.Add(mensaje);
         }
 
         private void OverlayTimer_Tick(object sender, EventArgs e)
