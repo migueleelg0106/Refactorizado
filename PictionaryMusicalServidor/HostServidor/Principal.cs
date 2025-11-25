@@ -30,6 +30,7 @@ namespace PictionaryMusicalServidor.HostServidor
             using (var hostListaAmigos = new ServiceHost(typeof(Servicios.Servicios.ListaAmigosManejador)))
             using (var hostSalas = new ServiceHost(typeof(Servicios.Servicios.SalasManejador)))
             using (var hostInvitaciones = new ServiceHost(typeof(Servicios.Servicios.InvitacionesManejador)))
+            using (var hostCursoPartida = new ServiceHost(typeof(Servicios.Servicios.CursoPartidaManejador)))
             {
                 try
                 {
@@ -93,6 +94,12 @@ namespace PictionaryMusicalServidor.HostServidor
                         _logger.InfoFormat("Invitaciones -> {0} ({1})", endpoint.Address, endpoint.Binding.Name);
                     }
 
+                    hostCursoPartida.Open();
+                    foreach (var endpoint in hostCursoPartida.Description.Endpoints)
+                    {
+                        _logger.InfoFormat("CursoPartida -> {0} ({1})", endpoint.Address, endpoint.Binding.Name);
+                    }
+
                     _logger.Info("Todos los servicios están arriba y escuchando. Presiona ENTER para salir.");
                     Console.ReadLine();
                 }
@@ -112,7 +119,7 @@ namespace PictionaryMusicalServidor.HostServidor
                 {
                     _logger.Error("Error de comunicacion al iniciar el host.", ex);
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     _logger.Fatal("Error crítico inesperado al iniciar el servidor.", ex);
                 }
@@ -128,6 +135,7 @@ namespace PictionaryMusicalServidor.HostServidor
                     CerrarFormaSegura(hostListaAmigos);
                     CerrarFormaSegura(hostSalas);
                     CerrarFormaSegura(hostInvitaciones);
+                    CerrarFormaSegura(hostCursoPartida);
                     _logger.Info("Host detenido.");
                 }
             }

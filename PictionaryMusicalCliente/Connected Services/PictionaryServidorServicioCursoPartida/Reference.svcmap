@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="7c112d8f-1ec8-420f-a3ae-7d58f0ec3683" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8523/Pictionary/CursoPartida" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CursoPartida.xsd" MetadataType="Schema" ID="1256cc08-2d85-45a9-a530-9d2c0e8181c2" SourceId="1" SourceUrl="http://localhost:8523/Pictionary/CursoPartida?xsd=xsd1" />
+    <MetadataFile FileName="CursoPartidaManejador.wsdl" MetadataType="Wsdl" ID="93e9293b-8a0c-46ed-8086-561035b3d6c0" SourceId="1" SourceUrl="http://localhost:8523/Pictionary/CursoPartida?wsdl" />
+    <MetadataFile FileName="CursoPartida1.xsd" MetadataType="Schema" ID="1fe68c9f-2044-4deb-8d78-d3eec2b7730f" SourceId="1" SourceUrl="http://localhost:8523/Pictionary/CursoPartida?xsd=xsd0" />
+    <MetadataFile FileName="CursoPartida2.xsd" MetadataType="Schema" ID="23f04bb4-0e48-41f7-85d2-be27875f7f63" SourceId="1" SourceUrl="http://localhost:8523/Pictionary/CursoPartida?xsd=xsd3" />
+    <MetadataFile FileName="CursoPartida.disco" MetadataType="Disco" ID="d5ae59de-49bf-42f3-b182-ae94e9e110df" SourceId="1" SourceUrl="http://localhost:8523/Pictionary/CursoPartida?disco" />
+    <MetadataFile FileName="CursoPartida3.xsd" MetadataType="Schema" ID="941633f1-ffeb-4d9c-ab46-4bede785b901" SourceId="1" SourceUrl="http://localhost:8523/Pictionary/CursoPartida?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

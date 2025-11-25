@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8523/Pictionary/CursoPartida?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" />
+  <xs:element name="SuscribirJugador">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="idSala" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idJugador" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="nombreUsuario" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="esHost" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SuscribirJugadorResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IniciarPartida">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="idSala" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idJugadorSolicitante" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IniciarPartidaResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EnviarMensajeJuego">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="mensaje" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idSala" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idJugador" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EnviarMensajeJuegoResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EnviarTrazo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="trazo" nillable="true" type="q1:TrazoDTO" />
+        <xs:element minOccurs="0" name="idSala" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idJugador" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EnviarTrazoResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarPartidaIniciada">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarInicioRonda">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="ronda" nillable="true" type="q2:RondaDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarJugadorAdivino">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="nombreJugador" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="puntos" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarMensajeChat">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="nombreJugador" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="mensaje" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarTrazoRecibido">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="trazo" nillable="true" type="q3:TrazoDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarFinRonda">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarFinPartida">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="resultado" nillable="true" type="q4:ResultadoPartidaDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

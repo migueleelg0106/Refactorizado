@@ -99,6 +99,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioCursoPartida\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioInicioSesion\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -358,6 +363,19 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioCuenta\CuentaManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioCursoPartida\CursoPartida.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCursoPartida\CursoPartida1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCursoPartida\CursoPartida2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCursoPartida\CursoPartida3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioCursoPartida\CursoPartidaManejador.wsdl" />
     <None Include="Connected Services\PictionaryServidorServicioInicioSesion\InicioSesion.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -636,6 +654,13 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Connected Services\PictionaryServidorServicioCursoPartida\CursoPartida.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioCursoPartida\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioCursoPartida\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioCursoPartida\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Recursos\Adivinador.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -703,6 +728,7 @@
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioClasificacion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCuenta\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCursoPartida\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioInicioSesion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioInvitaciones\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioListaAmigos\" />

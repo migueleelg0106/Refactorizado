@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="CursoPartidaManejador" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_ICursoPartidaManejador_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="600000" />
+          <wsrm:AcknowledgementInterval Milliseconds="200" />
+        </wsrm:RMAssertion>
+        <cdp:CompositeDuplex xmlns:cdp="http://schemas.microsoft.com/net/2006/06/duplex" />
+        <ow:OneWay xmlns:ow="http://schemas.microsoft.com/ws/2005/05/routing/policy" />
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="NetTcpBinding_ICursoPartidaManejador_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:8523/Pictionary/CursoPartida?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:8523/Pictionary/CursoPartida?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8523/Pictionary/CursoPartida?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" />
+      <xsd:import schemaLocation="http://localhost:8523/Pictionary/CursoPartida?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ICursoPartidaManejador_SuscribirJugador_InputMessage">
+    <wsdl:part name="parameters" element="tns:SuscribirJugador" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_SuscribirJugador_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SuscribirJugadorResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_IniciarPartida_InputMessage">
+    <wsdl:part name="parameters" element="tns:IniciarPartida" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_IniciarPartida_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IniciarPartidaResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_EnviarMensajeJuego_InputMessage">
+    <wsdl:part name="parameters" element="tns:EnviarMensajeJuego" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_EnviarMensajeJuego_OutputMessage">
+    <wsdl:part name="parameters" element="tns:EnviarMensajeJuegoResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_EnviarTrazo_InputMessage">
+    <wsdl:part name="parameters" element="tns:EnviarTrazo" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_EnviarTrazo_OutputMessage">
+    <wsdl:part name="parameters" element="tns:EnviarTrazoResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_NotificarPartidaIniciada_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarPartidaIniciada" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_NotificarInicioRonda_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarInicioRonda" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_NotificarJugadorAdivino_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarJugadorAdivino" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_NotificarMensajeChat_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarMensajeChat" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_NotificarTrazoRecibido_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarTrazoRecibido" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_NotificarFinRonda_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarFinRonda" />
+  </wsdl:message>
+  <wsdl:message name="ICursoPartidaManejador_NotificarFinPartida_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarFinPartida" />
+  </wsdl:message>
+  <wsdl:portType name="ICursoPartidaManejador">
+    <wsdl:operation name="SuscribirJugador">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICursoPartidaManejador/SuscribirJugador" message="tns:ICursoPartidaManejador_SuscribirJugador_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/SuscribirJugadorResponse" message="tns:ICursoPartidaManejador_SuscribirJugador_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IniciarPartida">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICursoPartidaManejador/IniciarPartida" message="tns:ICursoPartidaManejador_IniciarPartida_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/IniciarPartidaResponse" message="tns:ICursoPartidaManejador_IniciarPartida_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="EnviarMensajeJuego">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICursoPartidaManejador/EnviarMensajeJuego" message="tns:ICursoPartidaManejador_EnviarMensajeJuego_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/EnviarMensajeJuegoResponse" message="tns:ICursoPartidaManejador_EnviarMensajeJuego_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="EnviarTrazo">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo" message="tns:ICursoPartidaManejador_EnviarTrazo_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazoResponse" message="tns:ICursoPartidaManejador_EnviarTrazo_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarPartidaIniciada">
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/NotificarPartidaIniciada" message="tns:ICursoPartidaManejador_NotificarPartidaIniciada_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarInicioRonda">
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/NotificarInicioRonda" message="tns:ICursoPartidaManejador_NotificarInicioRonda_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorAdivino">
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/NotificarJugadorAdivino" message="tns:ICursoPartidaManejador_NotificarJugadorAdivino_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarMensajeChat">
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/NotificarMensajeChat" message="tns:ICursoPartidaManejador_NotificarMensajeChat_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarTrazoRecibido">
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/NotificarTrazoRecibido" message="tns:ICursoPartidaManejador_NotificarTrazoRecibido_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarFinRonda">
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/NotificarFinRonda" message="tns:ICursoPartidaManejador_NotificarFinRonda_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarFinPartida">
+      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/NotificarFinPartida" message="tns:ICursoPartidaManejador_NotificarFinPartida_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSDualHttpBinding_ICursoPartidaManejador" type="tns:ICursoPartidaManejador">
+    <wsp:PolicyReference URI="#WSDualHttpBinding_ICursoPartidaManejador_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SuscribirJugador">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/SuscribirJugador" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IniciarPartida">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/IniciarPartida" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EnviarMensajeJuego">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/EnviarMensajeJuego" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EnviarTrazo">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarPartidaIniciada">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarPartidaIniciada" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarInicioRonda">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarInicioRonda" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorAdivino">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarJugadorAdivino" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarMensajeChat">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarMensajeChat" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarTrazoRecibido">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarTrazoRecibido" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarFinRonda">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarFinRonda" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarFinPartida">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarFinPartida" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="NetTcpBinding_ICursoPartidaManejador" type="tns:ICursoPartidaManejador">
+    <wsp:PolicyReference URI="#NetTcpBinding_ICursoPartidaManejador_policy" />
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="SuscribirJugador">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/SuscribirJugador" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IniciarPartida">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/IniciarPartida" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EnviarMensajeJuego">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/EnviarMensajeJuego" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EnviarTrazo">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarPartidaIniciada">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarPartidaIniciada" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarInicioRonda">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarInicioRonda" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorAdivino">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarJugadorAdivino" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarMensajeChat">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarMensajeChat" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarTrazoRecibido">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarTrazoRecibido" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarFinRonda">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarFinRonda" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarFinPartida">
+      <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarFinPartida" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CursoPartidaManejador">
+    <wsdl:port name="WSDualHttpBinding_ICursoPartidaManejador" binding="tns:WSDualHttpBinding_ICursoPartidaManejador">
+      <soap12:address location="http://localhost:8523/Pictionary/CursoPartida/CursoPartida" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>http://localhost:8523/Pictionary/CursoPartida/CursoPartida</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+    <wsdl:port name="NetTcpBinding_ICursoPartidaManejador" binding="tns:NetTcpBinding_ICursoPartidaManejador">
+      <soap12:address location="net.tcp://localhost:8524/Pictionary/CursoPartida/CursoPartida" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:8524/Pictionary/CursoPartida/CursoPartida</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
