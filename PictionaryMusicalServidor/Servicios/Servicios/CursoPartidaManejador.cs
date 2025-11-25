@@ -153,13 +153,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
                 catch (CommunicationException ex)
                 {
-                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1}. Se removara su callback.", par.Key, idSala);
+                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
                 catch (TimeoutException ex)
                 {
-                    _logger.WarnFormat("Timeout al notificar a jugador {0} en sala {1}. Se removara su callback.", par.Key, idSala);
+                    _logger.WarnFormat("Timeout al notificar a jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
