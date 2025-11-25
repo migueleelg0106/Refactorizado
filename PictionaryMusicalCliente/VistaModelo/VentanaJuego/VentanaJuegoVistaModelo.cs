@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -18,6 +19,7 @@ using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Contratos;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 {
@@ -25,12 +27,13 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
     /// Coordina la logica de la partida, incluyendo dibujo, chat, rondas y gestion de jugadores.
     /// Mantiene el estado sincronizado con el servidor y gestiona los eventos de la UI.
     /// </summary>
-    public class VentanaJuegoVistaModelo : BaseVistaModelo
+    public class VentanaJuegoVistaModelo : BaseVistaModelo, ICursoPartidaCallback
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int MaximoJugadoresSala = 4;
+        private const string CursoPartidaEndpoint = "CursoPartidaManejadorEndpoint";
         private static readonly StringComparer ComparadorJugadores =
             StringComparer.OrdinalIgnoreCase;
         private readonly CancionManejador _manejadorCancion;
@@ -45,6 +48,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private readonly string _nombreUsuarioSesion;
         private readonly bool _esInvitado;
         private readonly HashSet<int> _amigosInvitados;
+        private readonly bool _esHost;
+        private readonly string _idJugador;
+        private readonly Dictionary<int, string> _catalogoAudio;
+        private ICursoPartidaManejador _proxyJuego;
+        private DuplexChannelFactory<ICursoPartidaManejador> _fabricaJuego;
 
         private bool _juegoIniciado;
         private double _grosor;
@@ -71,6 +79,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
         private bool _aplicacionCerrando;
+        private bool _puedeEscribir;
+        private bool _esDibujante;
 
         /// <summary>
         /// Define los destinos posibles al salir de la partida.
@@ -116,9 +126,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _nombreUsuarioSesion = !string.IsNullOrWhiteSpace(nombreJugador)
                 ? nombreJugador
                 : SesionUsuarioActual.Usuario?.NombreUsuario ?? string.Empty;
+            _esHost = string.Equals(
+                _sala.Creador,
+                _nombreUsuarioSesion,
+                StringComparison.OrdinalIgnoreCase);
+            _idJugador = ObtenerIdentificadorJugador();
 
             _manejadorCancion = new CancionManejador();
             _amigosInvitados = new HashSet<int>();
+            _catalogoAudio = InicializarCatalogoAudio();
 
             _grosor = 6;
             _color = Colors.Black;
@@ -162,6 +178,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             PuedeInvitarPorCorreo = !_esInvitado;
             PuedeInvitarAmigos = !_esInvitado;
+            PuedeEscribir = true;
+
+            InicializarProxyPartida();
         }
 
         /// <summary>
@@ -426,6 +445,24 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         public bool EsInvitado => _esInvitado;
 
         /// <summary>
+        /// Indica si el jugador actual puede escribir en el chat.
+        /// </summary>
+        public bool PuedeEscribir
+        {
+            get => _puedeEscribir;
+            private set => EstablecerPropiedad(ref _puedeEscribir, value);
+        }
+
+        /// <summary>
+        /// Indica si el usuario es el dibujante de la ronda.
+        /// </summary>
+        public bool EsDibujante
+        {
+            get => _esDibujante;
+            private set => EstablecerPropiedad(ref _esDibujante, value);
+        }
+
+        /// <summary>
         /// Comando para invitar a un usuario por correo.
         /// </summary>
         public ICommand InvitarCorreoComando { get; private set; }
@@ -516,6 +553,16 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         public Action LimpiarTrazos { get; set; }
 
         /// <summary>
+        /// Evento para trazo recibido desde el servidor.
+        /// </summary>
+        public event Action<DTOs.TrazoDTO> TrazoRecibidoServidor;
+
+        /// <summary>
+        /// Evento para notificar mensajes de chat entrantes.
+        /// </summary>
+        public event Action<string, string> MensajeChatRecibido;
+
+        /// <summary>
         /// Accion para mostrar mensajes al usuario.
         /// </summary>
         public Action<string> MostrarMensaje { get; set; }
@@ -576,6 +623,86 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             CerrarVentanaComando = new ComandoDelegado(_ => EjecutarCerrarVentana());
         }
 
+        private void InicializarProxyPartida()
+        {
+            try
+            {
+                var contexto = new InstanceContext(this);
+                _fabricaJuego = new DuplexChannelFactory<ICursoPartidaManejador>(
+                    contexto,
+                    CursoPartidaEndpoint);
+                _proxyJuego = _fabricaJuego.CreateChannel();
+
+                _proxyJuego?.SuscribirJugador(
+                    _codigoSala,
+                    _idJugador,
+                    _nombreUsuarioSesion,
+                    _esHost);
+            }
+            catch (Exception ex) when (ex is CommunicationException || ex is TimeoutException)
+            {
+                _logger.Error("Error de comunicación al suscribir al jugador en la partida.", ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error inesperado al inicializar el proxy de partida.", ex);
+            }
+        }
+
+        private string ObtenerIdentificadorJugador()
+        {
+            if (SesionUsuarioActual.Usuario?.JugadorId > 0)
+            {
+                return SesionUsuarioActual.Usuario.JugadorId.ToString();
+            }
+
+            if (!string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
+            {
+                return _nombreUsuarioSesion;
+            }
+
+            return Guid.NewGuid().ToString();
+        }
+
+        private static Dictionary<int, string> InicializarCatalogoAudio()
+        {
+            return new Dictionary<int, string>
+            {
+                { 1, "Black_Or_White_Michael_Jackson.mp3" },
+                { 2, "Bocanada_Gustavo_Cerati.mp3" },
+                { 3, "Dont_Stop_The_Music_Rihanna.mp3" },
+                { 4, "Earth_Song_Michael_Jackson.mp3" },
+                { 5, "Gasolina_Daddy_Yankee.mp3" },
+                { 6, "La_Nave_Del_Olvido_Jose_Jose.MP3" },
+                { 7, "Man_In_The_Mirror_Michael_Jackson.mp3" },
+                { 8, "Pupilas_De_Gato_Luis_Miguel.mp3" },
+                { 9, "Redbone_Childish_Gambino.mp3" },
+                { 10, "Tiburon_Proyecto_Uno.mp3" }
+            };
+        }
+
+        private string ObtenerNombreCancion(int idCancion)
+        {
+            if (_catalogoAudio.TryGetValue(idCancion, out string nombreArchivo))
+            {
+                return nombreArchivo;
+            }
+
+            return string.Empty;
+        }
+
+        private void AplicarInicioVisualPartida()
+        {
+            _logger.Info("Iniciando partida...");
+            JuegoIniciado = true;
+            VisibilidadCuadriculaDibujo = Visibility.Visible;
+            EsHerramientaLapiz = true;
+            AplicarEstiloLapiz?.Invoke();
+            ActualizarFormaGoma?.Invoke();
+            BotonIniciarPartidaHabilitado = false;
+            TextoBotonIniciarPartida = Lang.partidaTextoPartidaEnCurso;
+        }
+
         private async Task EjecutarInvitarCorreoAsync()
         {
             string correo = CorreoInvitacion?.Trim();
@@ -630,13 +757,13 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 				SonidoManejador.ReproducirError();
 				MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
 			}
-			catch (Exception ex)
-			{
-				_logger.Error("Error inesperado al invitar.", ex);
-				SonidoManejador.ReproducirError();
-				MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
-			}
-		}
+                        catch (Exception ex)
+                        {
+                                _logger.Error("Error inesperado al invitar.", ex);
+                                SonidoManejador.ReproducirError();
+                                MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+                        }
+                }
 
         private async Task EjecutarInvitarAmigosAsync()
         {
@@ -707,6 +834,50 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             AbrirAjustesPartida?.Invoke(_manejadorCancion);
         }
 
+        private void EjecutarEnviarMensaje(string mensaje)
+        {
+            if (string.IsNullOrWhiteSpace(mensaje))
+            {
+                return;
+            }
+
+            try
+            {
+                _proxyJuego?.EnviarMensajeJuego(mensaje, _codigoSala, _idJugador);
+            }
+            catch (Exception ex) when (ex is CommunicationException || ex is TimeoutException)
+            {
+                _logger.Error("No se pudo enviar el mensaje de juego.", ex);
+                SonidoManejador.ReproducirError();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error inesperado al enviar mensaje de juego.", ex);
+                SonidoManejador.ReproducirError();
+            }
+        }
+
+        public void EnviarTrazoAlServidor(DTOs.TrazoDTO trazo)
+        {
+            if (trazo == null)
+            {
+                return;
+            }
+
+            try
+            {
+                _proxyJuego?.EnviarTrazo(trazo, _codigoSala, _idJugador);
+            }
+            catch (Exception ex) when (ex is CommunicationException || ex is TimeoutException)
+            {
+                _logger.Error("No se pudo enviar el trazo al servidor.", ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error inesperado al enviar trazo al servidor.", ex);
+            }
+        }
+
         private void EjecutarIniciarPartida()
         {
             if (JuegoIniciado)
@@ -714,15 +885,29 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 return;
             }
 
-            _logger.Info("Iniciando partida...");
-            JuegoIniciado = true;
-            VisibilidadCuadriculaDibujo = Visibility.Visible;
-            EsHerramientaLapiz = true;
-            AplicarEstiloLapiz?.Invoke();
-            ActualizarFormaGoma?.Invoke();
+            try
+            {
+                if (_proxyJuego != null)
+                {
+                    _proxyJuego.IniciarPartida(_codigoSala, _idJugador);
+                }
+                else
+                {
+                    AplicarInicioVisualPartida();
+                }
 
-            BotonIniciarPartidaHabilitado = false;
-            TextoBotonIniciarPartida = Lang.partidaTextoPartidaEnCurso;
+                BotonIniciarPartidaHabilitado = false;
+            }
+            catch (Exception ex) when (ex is CommunicationException || ex is TimeoutException)
+            {
+                _logger.Error("No se pudo solicitar el inicio de la partida.", ex);
+                SonidoManejador.ReproducirError();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error inesperado al iniciar la partida.", ex);
+                SonidoManejador.ReproducirError();
+            }
         }
 
         private void EjecutarSeleccionarLapiz()
@@ -771,17 +956,17 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             VisibilidadOverlayAdivinador = Visibility.Collapsed;
             VisibilidadOverlayDibujante = Visibility.Visible;
+            VisibilidadPalabraAdivinar = Visibility.Visible;
 
             _overlayTimer.Stop();
             _overlayTimer.Start();
-
-            _manejadorCancion.Reproducir("Gasolina_Daddy_Yankee.mp3");
         }
 
         private void EjecutarMostrarOverlayAdivinador()
         {
             VisibilidadOverlayDibujante = Visibility.Collapsed;
             VisibilidadOverlayAdivinador = Visibility.Visible;
+            VisibilidadPalabraAdivinar = Visibility.Collapsed;
 
             _overlayTimer.Stop();
             _overlayTimer.Start();
@@ -790,8 +975,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private void MostrarOverlayAlarma()
         {
             VisibilidadOverlayAlarma = Visibility.Visible;
-
-            SonidoManejador.ReproducirSonido("alarma.mp3");
 
             _temporizadorAlarma.Stop();
             _temporizadorAlarma.Start();
@@ -825,16 +1008,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             OcultarOverlayAlarma();
 
-            _contador = 30;
+            _contador = Math.Max(0, _contador);
             TextoContador = _contador.ToString();
             ColorContador = Brushes.Black;
-
-            VisibilidadPalabraAdivinar = Visibility.Visible;
-            VisibilidadInfoCancion = Visibility.Visible;
-
-            PalabraAdivinar = "Gasolina";
-            TextoArtista = "Artista: Daddy Yankee";
-            TextoGenero = "Género: Reggaeton";
 
             _temporizador.Start();
         }
@@ -848,6 +1024,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             {
                 _temporizador.Stop();
                 TextoContador = "0";
+                _manejadorCancion.Detener();
 
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
                 VisibilidadInfoCancion = Visibility.Collapsed;
@@ -859,6 +1036,167 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private void TemporizadorAlarma_Tick(object sender, EventArgs e)
         {
             OcultarOverlayAlarma();
+        }
+
+        public void NotificarPartidaIniciada()
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() =>
+            {
+                AplicarInicioVisualPartida();
+                BotonIniciarPartidaHabilitado = false;
+                TextoBotonIniciarPartida = string.Empty;
+                SonidoManejador.ReproducirExito();
+            });
+        }
+
+        public void NotificarInicioRonda(DTOs.RondaDTO ronda)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() =>
+            {
+                if (ronda == null)
+                {
+                    return;
+                }
+
+                _temporizador.Stop();
+                _overlayTimer.Stop();
+                _manejadorCancion.Detener();
+
+                _contador = ronda.TiempoSegundos;
+                TextoContador = _contador.ToString();
+                ColorContador = Brushes.Black;
+                VisibilidadCuadriculaDibujo = Visibility.Visible;
+
+                string archivoCancion = ObtenerNombreCancion(ronda.IdCancion);
+
+                if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
+                {
+                    EsDibujante = true;
+                    PuedeEscribir = false;
+                    PalabraAdivinar = string.IsNullOrWhiteSpace(archivoCancion)
+                        ? PalabraAdivinar
+                        : archivoCancion;
+                    VisibilidadPalabraAdivinar = Visibility.Visible;
+                    VisibilidadInfoCancion = Visibility.Visible;
+                    TextoArtista = string.Empty;
+                    TextoGenero = string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(archivoCancion))
+                    {
+                        _manejadorCancion.Reproducir(archivoCancion);
+                    }
+
+                    EjecutarMostrarOverlayDibujante();
+                }
+                else
+                {
+                    EsDibujante = false;
+                    PuedeEscribir = true;
+                    PalabraAdivinar = string.Empty;
+                    VisibilidadPalabraAdivinar = Visibility.Collapsed;
+                    TextoArtista = string.Format("Artista: {0}", ronda.PistaArtista ?? string.Empty);
+                    TextoGenero = string.Format("Género: {0}", ronda.PistaGenero ?? string.Empty);
+                    VisibilidadInfoCancion = Visibility.Visible;
+
+                    _manejadorCancion.Detener();
+                    EjecutarMostrarOverlayAdivinador();
+                }
+            });
+        }
+
+        public void NotificarJugadorAdivino(string nombreJugador, int puntos)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() =>
+            {
+                string mensaje = $"{nombreJugador} ha adivinado la canción";
+                MensajeChatRecibido?.Invoke(nombreJugador, mensaje);
+                SonidoManejador.ReproducirExito();
+
+                if (string.Equals(
+                    nombreJugador,
+                    _nombreUsuarioSesion,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    PuedeEscribir = false;
+                }
+            });
+        }
+
+        public void NotificarMensajeChat(string nombreJugador, string mensaje)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() => MensajeChatRecibido?.Invoke(nombreJugador, mensaje));
+        }
+
+        public void NotificarTrazoRecibido(DTOs.TrazoDTO trazo)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() => TrazoRecibidoServidor?.Invoke(trazo));
+        }
+
+        public void NotificarFinRonda()
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() =>
+            {
+                _temporizador.Stop();
+                _manejadorCancion.Detener();
+                PuedeEscribir = false;
+                MostrarOverlayAlarma();
+                SonidoManejador.ReproducirSonido("alarma.mp3");
+            });
+        }
+
+        public void NotificarFinPartida(DTOs.ResultadoPartidaDTO resultado)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() =>
+            {
+                _temporizador.Stop();
+                _overlayTimer.Stop();
+                _manejadorCancion.Detener();
+                JuegoIniciado = false;
+                PuedeEscribir = false;
+                BotonIniciarPartidaHabilitado = false;
+            });
         }
 
         private void SalasServicio_JugadorSeUnio(object sender, string nombreJugador)
@@ -1092,6 +1430,43 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _salasServicio.JugadorSalio -= SalasServicio_JugadorSalio;
             _salasServicio.JugadorExpulsado -= SalasServicio_JugadorExpulsado;
             _salasServicio.SalaActualizada -= SalasServicio_SalaActualizada;
+
+            try
+            {
+                if (_proxyJuego is ICommunicationObject canal)
+                {
+                    if (canal.State == CommunicationState.Faulted)
+                    {
+                        canal.Abort();
+                    }
+                    else
+                    {
+                        canal.Close();
+                    }
+                }
+
+                _fabricaJuego?.Close();
+            }
+            catch (CommunicationException ex)
+            {
+                _logger.Warn("Error de comunicación al cerrar el canal de partida.", ex);
+                (_proxyJuego as ICommunicationObject)?.Abort();
+            }
+            catch (TimeoutException ex)
+            {
+                _logger.Warn("Timeout al cerrar el canal de partida.", ex);
+                (_proxyJuego as ICommunicationObject)?.Abort();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Warn("Operación inválida al cerrar el canal de partida.", ex);
+                (_proxyJuego as ICommunicationObject)?.Abort();
+            }
+            finally
+            {
+                _proxyJuego = null;
+                _fabricaJuego = null;
+            }
 
             if (_sala != null && !string.IsNullOrWhiteSpace(_sala.Codigo)
                 && !string.IsNullOrWhiteSpace(_nombreUsuarioSesion))
