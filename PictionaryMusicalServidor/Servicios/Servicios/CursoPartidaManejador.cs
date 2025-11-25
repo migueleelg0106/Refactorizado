@@ -53,7 +53,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     "Jugador '{0}' registrado en partida de sala '{1}'.",
                     nombreJugador, codigoSala);
             }
-            }
             catch (ArgumentException ex)
             {
                 _logger.Warn("Datos invalidos al registrar en partida.", ex);
