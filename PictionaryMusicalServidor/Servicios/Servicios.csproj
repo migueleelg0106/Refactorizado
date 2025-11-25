@@ -97,6 +97,9 @@
     <Compile Include="Contratos\ISalasCallback.cs" />
     <Compile Include="Contratos\ISalasManejador.cs" />
     <Compile Include="Contratos\IContextoFactory.cs" />
+    <Compile Include="LogicaNegocio\ControladorPartida.cs" />
+    <Compile Include="LogicaNegocio\EstadoPartida.cs" />
+    <Compile Include="LogicaNegocio\JugadorPartida.cs" />
     <Compile Include="Contratos\DTOs\ActualizacionContrasenaDTO.cs" />
     <Compile Include="Contratos\DTOs\ClasificacionUsuarioDTO.cs" />
     <Compile Include="Contratos\DTOs\ConfirmacionCodigoDTO.cs" />
@@ -105,6 +108,7 @@
     <Compile Include="Contratos\DTOs\ReenvioCodigoDTO.cs" />
     <Compile Include="Contratos\DTOs\ReenvioCodigoVerificacionDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoInicioSesionDTO.cs" />
+    <Compile Include="Contratos\DTOs\ResultadoPartidaDTO.cs" />
     <Compile Include="Contratos\DTOs\ActualizacionPerfilDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoOperacionDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoRegistroCuentaDTO.cs" />
