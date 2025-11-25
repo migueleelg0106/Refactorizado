@@ -2777,5 +2777,41 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("usuariosEspecificadosNoExisten", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a {0} ha adivinado la cancion..
+        /// </summary>
+        public static string chatTextoJugadorAdivino {
+            get {
+                return ResourceManager.GetString("chatTextoJugadorAdivino", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La ronda ha terminado. La cancion era: {0}.
+        /// </summary>
+        public static string chatTextoFinRonda {
+            get {
+                return ResourceManager.GetString("chatTextoFinRonda", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Enviar.
+        /// </summary>
+        public static string chatTextoEnviar {
+            get {
+                return ResourceManager.GetString("chatTextoEnviar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Escribe tu mensaje....
+        /// </summary>
+        public static string chatTextoEscribeMensaje {
+            get {
+                return ResourceManager.GetString("chatTextoEscribeMensaje", resourceCulture);
+            }
+        }
     }
 }

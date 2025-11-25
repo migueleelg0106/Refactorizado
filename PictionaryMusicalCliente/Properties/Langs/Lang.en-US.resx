@@ -1032,4 +1032,16 @@
   <data name="partidaTooltipLimpiar" xml:space="preserve">
     <value>Clear all</value>
   </data>
+  <data name="chatTextoJugadorAdivino" xml:space="preserve">
+    <value>{0} has guessed the song.</value>
+  </data>
+  <data name="chatTextoFinRonda" xml:space="preserve">
+    <value>Round ended. The song was: {0}</value>
+  </data>
+  <data name="chatTextoEnviar" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="chatTextoEscribeMensaje" xml:space="preserve">
+    <value>Type your message...</value>
+  </data>
 </root>

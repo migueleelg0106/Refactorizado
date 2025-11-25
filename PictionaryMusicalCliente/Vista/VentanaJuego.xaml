@@ -313,7 +313,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Background="LightYellow" BorderBrush="#FFD7D7A8" BorderThickness="1">
@@ -322,12 +322,71 @@
                            FontFamily="Comic Sans MS"/>
             </Border>
 
-            <ScrollViewer Grid.Row="1" Background="White" BorderBrush="Black" BorderThickness="1">
-                <StackPanel x:Name="panelApilableChat" Margin="6"/>
+            <ScrollViewer Grid.Row="1" Background="White" BorderBrush="Black" BorderThickness="1"
+                          x:Name="scrollViewerChat" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding ListaMensajes}" Margin="6">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="2" Padding="4" CornerRadius="4">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding EsSistema}" Value="True">
+                                                <Setter Property="Background" Value="#FFFFD700"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock TextWrapping="Wrap" FontFamily="Comic Sans MS">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontWeight" Value="Normal"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding EsSistema}" Value="True">
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                    <Setter Property="FontStyle" Value="Italic"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                    <Run Text="{Binding NombreUsuario, Mode=OneWay}" FontWeight="Bold"/>
+                                    <Run Text=": " FontWeight="Bold">
+                                        <Run.Style>
+                                            <Style TargetType="Run">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding EsSistema}" Value="True">
+                                                        <Setter Property="Text" Value=""/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Run.Style>
+                                    </Run>
+                                    <Run Text="{Binding Contenido, Mode=OneWay}"/>
+                                </TextBlock>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </ScrollViewer>
 
-            <TextBox Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1" 
-                     MaxLength="200"/>
+            <Grid Grid.Row="2" Margin="0,4,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Background="LightYellow" BorderBrush="Black" 
+                         BorderThickness="1" MaxLength="200" FontFamily="Comic Sans MS"
+                         Text="{Binding TextoMensaje, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding PuedeEscribir}" VerticalContentAlignment="Center"
+                         Padding="4"/>
+
+                <Button Grid.Column="1" Content="{x:Static language:Lang.chatTextoEnviar}"
+                        Command="{Binding EnviarMensajeComando}" Width="60" Margin="4,0,0,0"
+                        FontFamily="Comic Sans MS" Background="LightGreen"
+                        IsEnabled="{Binding PuedeEscribir}"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
