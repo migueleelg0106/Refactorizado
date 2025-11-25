@@ -358,8 +358,10 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 jugador.YaAdivino = false;
             }
 
-            while (_colaDibujantes.TryDequeue(out var idDibujante))
+            while (_colaDibujantes.Count > 0)
             {
+                var idDibujante = _colaDibujantes.Dequeue();
+
                 if (_jugadores.TryGetValue(idDibujante, out var dibujante))
                 {
                     dibujante.EsDibujante = true;
@@ -369,7 +371,6 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
 
             throw new InvalidOperationException("No hay dibujantes disponibles para la ronda.");
-        }
 
         private Cancion ObtenerCancionParaRonda()
         {
