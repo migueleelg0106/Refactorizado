@@ -23,6 +23,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             new ConcurrentDictionary<string, ControladorPartida>(StringComparer.OrdinalIgnoreCase);
         private static readonly ConcurrentDictionary<string, string> _jugadorASala =
             new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, string> _sesionAJugador =
+            new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Registra un jugador en el curso de una partida para recibir notificaciones.
@@ -42,11 +44,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 controlador.RegistrarJugador(nombreJugador, callback);
                 _jugadorASala[nombreJugador] = codigoSala;
 
-                ConfigurarEventosCierreCanal(nombreJugador, codigoSala);
+                string sesionId = OperationContext.Current.SessionId ?? Guid.NewGuid().ToString();
+                _sesionAJugador[sesionId] = nombreJugador;
+
+                ConfigurarEventosCierreCanal(nombreJugador, codigoSala, sesionId);
 
                 _logger.InfoFormat(
                     "Jugador '{0}' registrado en partida de sala '{1}'.",
                     nombreJugador, codigoSala);
+            }
             }
             catch (ArgumentException ex)
             {
@@ -138,7 +144,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     return;
                 }
 
-                DesregistrarJugadorInterno(nombreJugador, codigoSala);
+                string sesionId = OperationContext.Current?.SessionId ?? string.Empty;
+                DesregistrarJugadorInterno(nombreJugador, codigoSala, sesionId);
 
                 _logger.InfoFormat(
                     "Jugador '{0}' desregistrado de partida de sala '{1}'.",
@@ -202,31 +209,42 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private static string ObtenerNombreJugadorActual()
         {
-            foreach (var entrada in _jugadorASala)
+            string sesionId = OperationContext.Current?.SessionId;
+            if (string.IsNullOrWhiteSpace(sesionId))
             {
-                var callback = OperationContext.Current?.GetCallbackChannel<ICursoPartidaCallback>();
-                if (callback != null)
-                {
-                    return entrada.Key;
-                }
+                return null;
+            }
+
+            if (_sesionAJugador.TryGetValue(sesionId, out string nombreJugador))
+            {
+                return nombreJugador;
             }
 
             return null;
         }
 
-        private void ConfigurarEventosCierreCanal(string nombreJugador, string codigoSala)
+        private void ConfigurarEventosCierreCanal(
+            string nombreJugador,
+            string codigoSala,
+            string sesionId)
         {
             var canal = OperationContext.Current?.Channel;
             if (canal != null)
             {
-                canal.Closed += (_, __) => DesregistrarJugadorInterno(nombreJugador, codigoSala);
-                canal.Faulted += (_, __) => DesregistrarJugadorInterno(nombreJugador, codigoSala);
+                canal.Closed += (_, __) => DesregistrarJugadorInterno(
+                    nombreJugador, codigoSala, sesionId);
+                canal.Faulted += (_, __) => DesregistrarJugadorInterno(
+                    nombreJugador, codigoSala, sesionId);
             }
         }
 
-        private static void DesregistrarJugadorInterno(string nombreJugador, string codigoSala)
+        private static void DesregistrarJugadorInterno(
+            string nombreJugador,
+            string codigoSala,
+            string sesionId)
         {
             _jugadorASala.TryRemove(nombreJugador, out _);
+            _sesionAJugador.TryRemove(sesionId, out _);
 
             if (_controladores.TryGetValue(codigoSala, out var controlador))
             {
