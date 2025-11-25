@@ -20,6 +20,7 @@ using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Contratos;
+using PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 {
@@ -51,8 +52,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private readonly bool _esHost;
         private readonly string _idJugador;
         private readonly Dictionary<int, string> _catalogoAudio;
-        private ICursoPartidaManejador _proxyJuego;
-        private DuplexChannelFactory<ICursoPartidaManejador> _fabricaJuego;
+        private CursoPartidaManejadorClient _proxyJuego;
 
         private bool _juegoIniciado;
         private double _grosor;
@@ -628,16 +628,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             try
             {
                 var contexto = new InstanceContext(this);
-                _fabricaJuego = new DuplexChannelFactory<ICursoPartidaManejador>(
-                    contexto,
-                    CursoPartidaEndpoint);
-                _proxyJuego = _fabricaJuego.CreateChannel();
+                _proxyJuego = new CursoPartidaManejadorClient(contexto, CursoPartidaEndpoint);
 
-                _proxyJuego?.SuscribirJugador(
+                _proxyJuego.SuscribirJugador(
                     _codigoSala,
                     _idJugador,
                     _nombreUsuarioSesion,
                     _esHost);
+
+                _logger.Info("Cliente WCF de partida inicializado y jugador suscrito.");
             }
             catch (Exception ex) when (ex is CommunicationException || ex is TimeoutException)
             {
@@ -1425,6 +1424,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             _overlayTimer.Stop();
             _temporizador.Stop();
+            _manejadorCancion.Detener();
 
             _salasServicio.JugadorSeUnio -= SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio -= SalasServicio_JugadorSalio;
@@ -1444,8 +1444,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                         canal.Close();
                     }
                 }
-
-                _fabricaJuego?.Close();
             }
             catch (CommunicationException ex)
             {
@@ -1465,7 +1463,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             finally
             {
                 _proxyJuego = null;
-                _fabricaJuego = null;
             }
 
             if (_sala != null && !string.IsNullOrWhiteSpace(_sala.Codigo)
