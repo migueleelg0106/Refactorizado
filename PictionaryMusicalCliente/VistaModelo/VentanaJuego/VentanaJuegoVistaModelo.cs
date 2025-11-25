@@ -33,7 +33,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int MaximoJugadoresSala = 4;
-        private const string CursoPartidaEndpoint = "CursoPartidaManejadorEndpoint";
+        private const string CursoPartidaEndpoint = "NetTcpBinding_ICursoPartidaManejador";
         private static readonly StringComparer ComparadorJugadores =
             StringComparer.OrdinalIgnoreCase;
         private readonly CancionManejador _manejadorCancion;
