@@ -84,7 +84,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             CargarDatosUsuario();
             CargarOpcionesPartida();
-            CargarIdiomas();
 
             AbrirPerfilComando = new ComandoDelegado(_ =>
             {
@@ -420,12 +419,22 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private void CargarOpcionesPartida()
         {
             NumeroRondasOpciones = new ObservableCollection<OpcionEntero>(
-                new[] { new OpcionEntero(3), new OpcionEntero(5), new OpcionEntero(7) });
+                new[] { new OpcionEntero(2), new OpcionEntero(3), new OpcionEntero(4) });
             NumeroRondasSeleccionada = NumeroRondasOpciones.FirstOrDefault();
 
             TiempoRondaOpciones = new ObservableCollection<OpcionEntero>(
                 new[] { new OpcionEntero(60), new OpcionEntero(90), new OpcionEntero(120) });
             TiempoRondaSeleccionada = TiempoRondaOpciones.FirstOrDefault();
+
+            IdiomasDisponibles = new ObservableCollection<IdiomaOpcion>(
+                new[]
+                {
+                    new IdiomaOpcion("es-MX", Lang.idiomaTextoEspañol),
+                    new IdiomaOpcion("en-US", Lang.idiomaTextoIngles),
+                    new IdiomaOpcion("mixto", Lang.principalTextoMixto)
+                });
+
+            IdiomaSeleccionado = IdiomasDisponibles.FirstOrDefault();
 
             DificultadesDisponibles = new ObservableCollection<OpcionTexto>(
                 new[]
@@ -435,59 +444,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
                     new OpcionTexto("dificil", Lang.principalTextoDificil)
                 });
             DificultadSeleccionada = DificultadesDisponibles.FirstOrDefault();
-        }
-
-        private void CargarIdiomas()
-        {
-            WeakEventManager<ILocalizacionServicio, EventArgs>.AddHandler(
-                _localizacionServicio,
-                nameof(ILocalizacionServicio.IdiomaActualizado),
-                LocalizacionServicioEnIdiomaActualizado);
-
-            ActualizarIdiomasDisponibles(_localizacionServicio.CulturaActual?.Name
-                ?? CultureInfo.CurrentUICulture?.Name);
-        }
-
-        private void LocalizacionServicioEnIdiomaActualizado(object sender, EventArgs e)
-        {
-            ActualizarIdiomasDisponibles(_localizacionServicio.CulturaActual?.Name);
-        }
-
-        private void ActualizarIdiomasDisponibles(string culturaActual)
-        {
-            var opciones = new[]
-            {
-                new IdiomaOpcion("es-MX", Lang.idiomaTextoEspañol),
-                new IdiomaOpcion("en-US", Lang.idiomaTextoIngles),
-                new IdiomaOpcion("mixto", Lang.principalTextoMixto)
-            };
-
-            if (IdiomasDisponibles == null)
-            {
-                IdiomasDisponibles = new ObservableCollection<IdiomaOpcion>(opciones);
-            }
-            else
-            {
-                IdiomasDisponibles.Clear();
-
-                foreach (var opcion in opciones)
-                {
-                    IdiomasDisponibles.Add(opcion);
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(culturaActual))
-            {
-                IdiomaSeleccionado = IdiomasDisponibles.FirstOrDefault();
-                return;
-            }
-
-            IdiomaSeleccionado = IdiomasDisponibles
-                .FirstOrDefault(i => string.Equals(
-                    i.Codigo,
-                    culturaActual,
-                    StringComparison.OrdinalIgnoreCase))
-                ?? IdiomasDisponibles.FirstOrDefault();
         }
 
         private void ListaActualizada(object sender, IReadOnlyList<DTOs.AmigoDTO> amigos)
