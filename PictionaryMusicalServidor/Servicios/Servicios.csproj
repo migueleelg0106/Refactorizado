@@ -115,6 +115,8 @@
     <Compile Include="Contratos\DTOs\AmigoDTO.cs" />
     <Compile Include="Contratos\DTOs\UsuarioDTO.cs" />
     <Compile Include="Contratos\DTOs\InvitacionSalaDTO.cs" />
+    <Compile Include="Contratos\DTOs\RondaDTO.cs" />
+    <Compile Include="Contratos\DTOs\TrazoDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\AmigosManejador.cs" />
     <Compile Include="Servicios\AmistadServicio.cs" />
