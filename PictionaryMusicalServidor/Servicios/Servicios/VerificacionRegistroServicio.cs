@@ -5,6 +5,7 @@ using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 using log4net;
+using PictionaryMusicalServidor.Servicios.Contratos;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {

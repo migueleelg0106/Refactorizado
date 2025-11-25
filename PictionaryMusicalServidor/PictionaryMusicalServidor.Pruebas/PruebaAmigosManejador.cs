@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.ServiceModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
