@@ -366,11 +366,14 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 {
                     dibujante.EsDibujante = true;
                     dibujante.YaAdivino = true;
+
+                    _colaDibujantes.Enqueue(idDibujante);
                     return;
                 }
             }
 
             throw new InvalidOperationException("No hay dibujantes disponibles para la ronda.");
+        }
 
         private Cancion ObtenerCancionParaRonda()
         {
