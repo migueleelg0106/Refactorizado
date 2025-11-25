@@ -44,6 +44,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private readonly DTOs.SalaDTO _sala;
         private readonly string _nombreUsuarioSesion;
         private readonly bool _esInvitado;
+        private readonly bool _esAnfitrion;
         private readonly HashSet<int> _amigosInvitados;
 
         private bool _juegoIniciado;
@@ -119,6 +120,10 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _nombreUsuarioSesion = !string.IsNullOrWhiteSpace(nombreJugador)
                 ? nombreJugador
                 : SesionUsuarioActual.Usuario?.NombreUsuario ?? string.Empty;
+            _esAnfitrion = string.Equals(
+                _sala?.Creador,
+                _nombreUsuarioSesion,
+                StringComparison.OrdinalIgnoreCase);
 
             _manejadorCancion = new CancionManejador();
             _amigosInvitados = new HashSet<int>();
@@ -136,8 +141,10 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _visibilidadOverlayAlarma = Visibility.Collapsed;
             _visibilidadPalabraAdivinar = Visibility.Collapsed;
             _visibilidadInfoCancion = Visibility.Collapsed;
-            _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
-            _botonIniciarPartidaHabilitado = true;
+            _textoBotonIniciarPartida = _esAnfitrion
+                ? Lang.partidaAdminTextoIniciarPartida
+                : Lang.partidaTextoPartidaEnCurso;
+            _botonIniciarPartidaHabilitado = _esAnfitrion;
 
             _codigoSala = _sala.Codigo;
             _jugadores = new ObservableCollection<JugadorElemento>();
@@ -752,7 +759,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
         private void EjecutarIniciarPartida()
         {
-            if (JuegoIniciado)
+            if (JuegoIniciado || !_esAnfitrion)
             {
                 return;
             }
