@@ -19,7 +19,6 @@ using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
@@ -28,7 +27,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
     /// Coordina la logica de la partida, incluyendo dibujo, chat, rondas y gestion de jugadores.
     /// Mantiene el estado sincronizado con el servidor y gestiona los eventos de la UI.
     /// </summary>
-    public class VentanaJuegoVistaModelo : BaseVistaModelo, ICursoPartidaCallback
+    public class VentanaJuegoVistaModelo : BaseVistaModelo, ICursoPartidaManejadorCallback
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
