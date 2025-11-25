@@ -673,6 +673,7 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             _vistaModelo.TextoContador = "1";
             _vistaModelo.VisibilidadPalabraAdivinar = Visibility.Visible;
             _vistaModelo.VisibilidadInfoCancion = Visibility.Visible;
+            _vistaModelo.VisibilidadOverlayAlarma = Visibility.Collapsed;
             _mensajesMostrados.Clear();
 
             InvocarMetodoPrivado("Temporizador_Tick", this, EventArgs.Empty);
@@ -680,7 +681,8 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             Assert.AreEqual("0", _vistaModelo.TextoContador);
             Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadPalabraAdivinar);
             Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadInfoCancion);
-            Assert.AreEqual("¡Tiempo terminado!", _mensajesMostrados.Single());
+            Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadOverlayAlarma);
+            Assert.AreEqual(0, _mensajesMostrados.Count, "No se esperaban mensajes de texto, solo cambios visuales");
         }
 
         #endregion
