@@ -40,7 +40,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private DTOs.AmigoDTO _amigoSeleccionado;
 
         private readonly string _nombreUsuarioSesion;
-        private readonly ILocalizacionServicio _localizacionServicio;
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IAmigosServicio _amigosServicio;
         private readonly ISalasServicio _salasServicio;
@@ -68,8 +67,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             IAmigosServicio amigosServicio,
             ISalasServicio salasServicio)
         {
-            _localizacionServicio = localizacionServicio ??
-                throw new ArgumentNullException(nameof(localizacionServicio));
             _listaAmigosServicio = listaAmigosServicio ??
                 throw new ArgumentNullException(nameof(listaAmigosServicio));
             _amigosServicio = amigosServicio ??
