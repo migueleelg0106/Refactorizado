@@ -43,7 +43,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <param name="trazo">Trazo que se debe procesar.</param>
         /// <param name="idSala">Identificador de la sala.</param>
         /// <param name="idJugador">Identificador del jugador que envia el trazo.</param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void EnviarTrazo(TrazoDTO trazo, string idSala, string idJugador);
     }
 }

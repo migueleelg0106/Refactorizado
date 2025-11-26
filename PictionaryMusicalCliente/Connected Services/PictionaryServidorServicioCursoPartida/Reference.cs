@@ -33,11 +33,8 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICursoPartidaManejador/EnviarMensajeJuego", ReplyAction="http://tempuri.org/ICursoPartidaManejador/EnviarMensajeJuegoResponse")]
         System.Threading.Tasks.Task EnviarMensajeJuegoAsync(string mensaje, string idSala, string idJugador);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo", ReplyAction="http://tempuri.org/ICursoPartidaManejador/EnviarTrazoResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo")]
         void EnviarTrazo(PictionaryMusicalServidor.Servicios.Contratos.DTOs.TrazoDTO trazo, string idSala, string idJugador);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo", ReplyAction="http://tempuri.org/ICursoPartidaManejador/EnviarTrazoResponse")]
-        System.Threading.Tasks.Task EnviarTrazoAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.TrazoDTO trazo, string idSala, string idJugador);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -119,10 +116,6 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida {
         
         public void EnviarTrazo(PictionaryMusicalServidor.Servicios.Contratos.DTOs.TrazoDTO trazo, string idSala, string idJugador) {
             base.Channel.EnviarTrazo(trazo, idSala, idJugador);
-        }
-        
-        public System.Threading.Tasks.Task EnviarTrazoAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.TrazoDTO trazo, string idSala, string idJugador) {
-            return base.Channel.EnviarTrazoAsync(trazo, idSala, idJugador);
         }
     }
 }
