@@ -42,6 +42,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var callback = ObtenerCallbackActual();
                 var idSalaNormalizado = idSala.Trim();
                 var nombreNormalizado = nombreJugador.Trim();
+                List<ClienteChat> clientesANotificar;
 
                 lock (_sincronizacion)
                 {
@@ -65,7 +66,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         _logger.InfoFormat("Jugador '{0}' se unio al chat de la sala '{1}'. Total en sala: {2}.", nombreNormalizado, idSalaNormalizado, clientesSala.Count);
                     }
 
-                    NotificarJugadorUnido(idSalaNormalizado, nombreNormalizado);
+                    clientesANotificar = clientesSala
+                        .Where(c => !string.Equals(c.NombreJugador, nombreNormalizado, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
+
+                foreach (var cliente in clientesANotificar)
+                {
+                    EjecutarNotificacionSegura(idSalaNormalizado, cliente, cb => cb.NotificarJugadorUnido(nombreNormalizado));
                 }
 
                 ConfigurarEventosCanal(idSalaNormalizado, nombreNormalizado);
@@ -209,6 +217,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private void RemoverCliente(string idSala, string nombreJugador)
         {
+            List<ClienteChat> clientesANotificar = null;
+
             lock (_sincronizacion)
             {
                 if (!_clientesPorSala.TryGetValue(idSala, out var clientesSala))
@@ -221,7 +231,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (clienteRemovido)
                 {
-                    NotificarJugadorSalio(idSala, nombreJugador);
+                    clientesANotificar = clientesSala.ToList();
 
                     if (clientesSala.Count == 0)
                     {
@@ -230,47 +240,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     }
                 }
             }
-        }
 
-        private void NotificarJugadorUnido(string idSala, string nombreJugador)
-        {
-            List<ClienteChat> clientesANotificar;
-
-            lock (_sincronizacion)
+            if (clientesANotificar != null)
             {
-                if (!_clientesPorSala.TryGetValue(idSala, out var clientesSala))
+                foreach (var cliente in clientesANotificar)
                 {
-                    return;
+                    EjecutarNotificacionSegura(idSala, cliente, cb => cb.NotificarJugadorSalio(nombreJugador));
                 }
-
-                clientesANotificar = clientesSala
-                    .Where(c => !string.Equals(c.NombreJugador, nombreJugador, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
-
-            foreach (var cliente in clientesANotificar)
-            {
-                EjecutarNotificacionSegura(idSala, cliente, callback => callback.NotificarJugadorUnido(nombreJugador));
-            }
-        }
-
-        private void NotificarJugadorSalio(string idSala, string nombreJugador)
-        {
-            List<ClienteChat> clientesANotificar;
-
-            lock (_sincronizacion)
-            {
-                if (!_clientesPorSala.TryGetValue(idSala, out var clientesSala))
-                {
-                    return;
-                }
-
-                clientesANotificar = clientesSala.ToList();
-            }
-
-            foreach (var cliente in clientesANotificar)
-            {
-                EjecutarNotificacionSegura(idSala, cliente, callback => callback.NotificarJugadorSalio(nombreJugador));
             }
         }
 
