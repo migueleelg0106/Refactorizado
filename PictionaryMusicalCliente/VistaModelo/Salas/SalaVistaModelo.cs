@@ -63,8 +63,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private bool _aplicacionCerrando;
         private HashSet<string> _adivinadoresQuienYaAcertaron;
         private string _nombreDibujanteActual;
-        private int _puntosBonusDibujanteAcumulados;
         private bool _rondaTerminadaTemprano;
+
+        private const double PorcentajePuntosDibujante = 0.2;
 
         /// <summary>
         /// Define los destinos posibles al salir de la partida.
@@ -119,7 +120,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _amigosInvitados = new HashSet<int>();
             _adivinadoresQuienYaAcertaron = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             _nombreDibujanteActual = string.Empty;
-            _puntosBonusDibujanteAcumulados = 0;
             _rondaTerminadaTemprano = false;
 
             _partidaVistaModelo = new PartidaIniciadaVistaModelo();
@@ -1011,7 +1011,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public void NotificarInicioRonda(DTOs.RondaDTO ronda)
         {
             _adivinadoresQuienYaAcertaron.Clear();
-            _puntosBonusDibujanteAcumulados = 0;
             _rondaTerminadaTemprano = false;
 
             if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
@@ -1057,8 +1056,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     {
                         _adivinadoresQuienYaAcertaron.Add(nombreJugador);
 
-                        int puntosBonusDibujante = (int)(puntos * 0.2);
-                        _puntosBonusDibujanteAcumulados += puntosBonusDibujante;
+                        int puntosBonusDibujante = (int)(puntos * PorcentajePuntosDibujante);
 
                         AgregarPuntosAlDibujante(puntosBonusDibujante);
 
@@ -1090,12 +1088,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     j.Nombre,
                     _nombreDibujanteActual,
                     StringComparison.OrdinalIgnoreCase));
-            }
-
-            if (dibujante == null)
-            {
-                dibujante = Jugadores.FirstOrDefault(j =>
-                    !_adivinadoresQuienYaAcertaron.Contains(j.Nombre));
             }
 
             if (dibujante != null)
