@@ -197,5 +197,9 @@ namespace PictionaryMusicalServidor.Pruebas
         public void NotificarJugadorExpulsado(string codigoSala, string nombreJugador)
         {
         }
+
+        public void NotificarSalaCancelada(string codigoSala)
+        {
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace PictionaryMusicalServidor.Pruebas
         public int ContadorListaSalasActualizada { get; set; }
         public int ContadorSalaActualizada { get; set; }
         public int ContadorJugadorExpulsado { get; set; }
+        public int ContadorSalaCancelada { get; set; }
         public string UltimoCodigoSala { get; set; }
         public string UltimoNombreJugador { get; set; }
 
@@ -47,6 +48,12 @@ namespace PictionaryMusicalServidor.Pruebas
             ContadorJugadorExpulsado++;
             UltimoCodigoSala = codigoSala;
             UltimoNombreJugador = nombreJugador;
+        }
+
+        public void NotificarSalaCancelada(string codigoSala)
+        {
+            ContadorSalaCancelada++;
+            UltimoCodigoSala = codigoSala;
         }
     }
 

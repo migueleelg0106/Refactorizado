@@ -47,5 +47,12 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <param name="nombreJugador">Nombre del jugador expulsado.</param>
         [OperationContract(IsOneWay = true)]
         void NotificarJugadorExpulsado(string codigoSala, string nombreJugador);
+
+        /// <summary>
+        /// Notifica al cliente que la sala fue cancelada por la salida del anfitrion.
+        /// </summary>
+        /// <param name="codigoSala">Codigo identificador de la sala cancelada.</param>
+        [OperationContract(IsOneWay = true)]
+        void NotificarSalaCancelada(string codigoSala);
     }
 }

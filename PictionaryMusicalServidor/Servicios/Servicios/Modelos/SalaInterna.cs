@@ -106,7 +106,21 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
                 var salaActualizada = ToDto();
                 NotificarSalidaYActualizacion(nombreUsuario, salaActualizada);
 
-                if (DebeMarcarseParaEliminar(nombreUsuario))
+                bool anfitrionAbandono = string.Equals(
+                    nombreUsuario,
+                    Creador,
+                    StringComparison.OrdinalIgnoreCase);
+
+                if (anfitrionAbandono)
+                {
+                    NotificarCancelacionSala();
+                    Jugadores.Clear();
+                    _callbacks.Clear();
+                    DebeEliminarse = true;
+                    return;
+                }
+
+                if (Jugadores.Count == 0)
                 {
                     _logger.InfoFormat("Marcando sala {0} para eliminación (Host salió o sala vacía).", Codigo);
                     DebeEliminarse = true;
@@ -168,10 +182,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
             return true;
         }
 
-        private bool DebeMarcarseParaEliminar(string nombreUsuario)
+        private void NotificarCancelacionSala()
         {
-            return string.Equals(nombreUsuario, Creador, StringComparison.OrdinalIgnoreCase)
-                || Jugadores.Count == 0;
+            foreach (var callback in _callbacks.Select(callbakJugador => callbakJugador.Value))
+            {
+                NotificarSalaCancelada(callback);
+            }
         }
 
         private ISalasCallback ObtenerCallback(string nombreJugador)
@@ -271,6 +287,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
                 "Error al notificar la expulsión del jugador de la sala a través del callback.");
         }
 
+        private void NotificarSalaCancelada(ISalasCallback callback)
+        {
+            EjecutarNotificacion(
+                () => callback.NotificarSalaCancelada(Codigo),
+                "Error al notificar la cancelación de la sala a través del callback.");
+        }
+
         private static void NotificarSalaActualizada(ISalasCallback callback, SalaDTO salaActualizada)
         {
             EjecutarNotificacion(
@@ -297,6 +320,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
             }
 
             public void NotificarJugadorExpulsado(string codigoSala, string nombreJugador)
+            {
+            }
+
+            public void NotificarSalaCancelada(string codigoSala)
             {
             }
         }
