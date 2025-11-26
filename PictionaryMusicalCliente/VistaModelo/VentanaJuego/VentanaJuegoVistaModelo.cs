@@ -76,12 +76,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private Visibility _visibilidadArtista;
         private Visibility _visibilidadGenero;
         private bool _botonIniciarPartidaHabilitado;
+        private bool _mostrarBotonIniciarPartida;
         private string _codigoSala;
         private ObservableCollection<JugadorElemento> _jugadores;
         private string _correoInvitacion;
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
         private bool _mostrarEstadoRonda;
+        private int _turnosCompletadosEnCiclo;
         private bool _salaCancelada;
         private bool _aplicacionCerrando;
         private bool _puedeEscribir;
@@ -164,7 +166,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _visibilidadGenero = Visibility.Collapsed;
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
             _botonIniciarPartidaHabilitado = _esHost;
+            _mostrarBotonIniciarPartida = _esHost;
             _mostrarEstadoRonda = false;
+            _turnosCompletadosEnCiclo = 0;
 
             _codigoSala = _sala.Codigo;
             _jugadores = new ObservableCollection<JugadorElemento>();
@@ -224,7 +228,18 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         public bool JuegoIniciado
         {
             get => _juegoIniciado;
-            private set => EstablecerPropiedad(ref _juegoIniciado, value);
+            private set
+            {
+                if (EstablecerPropiedad(ref _juegoIniciado, value))
+                {
+                    MostrarBotonIniciarPartida = _esHost && !value;
+                    ActualizarVisibilidadBotonesExpulsion();
+                    if (!value)
+                    {
+                        _turnosCompletadosEnCiclo = 0;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -445,6 +460,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             get => _botonIniciarPartidaHabilitado;
             set => EstablecerPropiedad(ref _botonIniciarPartidaHabilitado, value);
+        }
+
+        /// <summary>
+        /// Controla la visibilidad del boton de inicio de partida.
+        /// </summary>
+        public bool MostrarBotonIniciarPartida
+        {
+            get => _mostrarBotonIniciarPartida;
+            private set => EstablecerPropiedad(ref _mostrarBotonIniciarPartida, value);
         }
 
         /// <summary>
@@ -767,6 +791,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _logger.Info("Iniciando partida...");
             JuegoIniciado = true;
             NumeroRondaActual = 0;
+            _turnosCompletadosEnCiclo = 0;
             MostrarEstadoRonda = false;
             VisibilidadCuadriculaDibujo = Visibility.Visible;
             EsHerramientaLapiz = true;
@@ -1217,7 +1242,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _overlayTimer.Stop();
             _manejadorCancion.Detener();
 
-            NumeroRondaActual++;
+            ActualizarContadorRondas();
             _contador = ronda.TiempoSegundos;
             TextoContador = _contador.ToString();
             ColorContador = Brushes.Black;
@@ -1439,8 +1464,10 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 if (jugadorExistente != null)
                 {
                     _logger.InfoFormat("Jugador salió de la sala: {0}",
-						nombreJugador);
+                                                nombreJugador);
                     Jugadores.Remove(jugadorExistente);
+                    AjustarProgresoRondaTrasCambioJugadores();
+                    ActualizarVisibilidadBotonesExpulsion();
                 }
             });
         }
@@ -1548,14 +1575,32 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                     break;
                 }
             }
+
+            AjustarProgresoRondaTrasCambioJugadores();
+            ActualizarVisibilidadBotonesExpulsion();
         }
 
         private void AgregarJugador(string nombreJugador)
         {
-            bool esHost = string.Equals(
-                _sala.Creador,
-                _nombreUsuarioSesion,
-                StringComparison.OrdinalIgnoreCase);
+            var jugadorElemento = new JugadorElemento
+            {
+                Nombre = nombreJugador,
+                MostrarBotonExpulsar = PuedeExpulsarJugador(nombreJugador),
+                ExpulsarComando = new ComandoAsincrono(async _ =>
+                    await EjecutarExpulsarJugadorAsync(nombreJugador))
+            };
+
+            Jugadores.Add(jugadorElemento);
+            AjustarProgresoRondaTrasCambioJugadores();
+        }
+
+        private bool PuedeExpulsarJugador(string nombreJugador)
+        {
+            if (string.IsNullOrWhiteSpace(nombreJugador))
+            {
+                return false;
+            }
+
             bool esElMismo = string.Equals(
                 nombreJugador,
                 _nombreUsuarioSesion,
@@ -1565,15 +1610,57 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 _sala.Creador,
                 StringComparison.OrdinalIgnoreCase);
 
-            var jugadorElemento = new JugadorElemento
-            {
-                Nombre = nombreJugador,
-                MostrarBotonExpulsar = esHost && !esElMismo && !esCreador,
-                ExpulsarComando = new ComandoAsincrono(async _ =>
-                    await EjecutarExpulsarJugadorAsync(nombreJugador))
-            };
+            return _esHost && !JuegoIniciado && !esElMismo && !esCreador;
+        }
 
-            Jugadores.Add(jugadorElemento);
+        private void ActualizarVisibilidadBotonesExpulsion()
+        {
+            if (Jugadores == null)
+            {
+                return;
+            }
+
+            foreach (var jugador in Jugadores)
+            {
+                jugador.MostrarBotonExpulsar = PuedeExpulsarJugador(jugador?.Nombre);
+            }
+        }
+
+        private void AjustarProgresoRondaTrasCambioJugadores()
+        {
+            int totalJugadores = Jugadores?.Count ?? 0;
+
+            if (totalJugadores <= 0)
+            {
+                _turnosCompletadosEnCiclo = 0;
+                NumeroRondaActual = 0;
+                return;
+            }
+
+            _turnosCompletadosEnCiclo = Math.Min(_turnosCompletadosEnCiclo, totalJugadores);
+        }
+
+        private void ActualizarContadorRondas()
+        {
+            int totalJugadores = Jugadores?.Count ?? 0;
+
+            if (totalJugadores <= 0)
+            {
+                NumeroRondaActual = 0;
+                _turnosCompletadosEnCiclo = 0;
+                return;
+            }
+
+            _turnosCompletadosEnCiclo = (_turnosCompletadosEnCiclo % totalJugadores) + 1;
+
+            if (NumeroRondaActual == 0)
+            {
+                NumeroRondaActual = 1;
+            }
+            else if (_turnosCompletadosEnCiclo == 1)
+            {
+                NumeroRondaActual++;
+            }
         }
 
         private async Task EjecutarExpulsarJugadorAsync(string nombreJugador)
