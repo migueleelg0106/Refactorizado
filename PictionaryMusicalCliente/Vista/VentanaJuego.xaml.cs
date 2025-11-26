@@ -239,10 +239,10 @@ namespace PictionaryMusicalCliente
                 return;
             }
 
-            var puntosTrayectoria = new StylusPointCollection();
+            var puntosTrayectoria = new List<Point>();
             for (int i = 0; i < Math.Min(trazo.PuntosX.Length, trazo.PuntosY.Length); i++)
             {
-                puntosTrayectoria.Add(new StylusPoint(trazo.PuntosX[i], trazo.PuntosY[i]));
+                puntosTrayectoria.Add(new Point(trazo.PuntosX[i], trazo.PuntosY[i]));
             }
 
             if (puntosTrayectoria.Count == 0)
