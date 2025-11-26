@@ -72,10 +72,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarSalaActualizada")]
         void NotificarSalaActualizada(PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO sala);
-
+        
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarJugadorExpulsado")]
         void NotificarJugadorExpulsado(string codigoSala, string nombreJugador);
-
+        
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ISalasManejador/NotificarSalaCancelada")]
         void NotificarSalaCancelada(string codigoSala);
     }

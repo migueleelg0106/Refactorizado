@@ -86,6 +86,9 @@
   <wsdl:message name="ISalasManejador_NotificarJugadorExpulsado_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:NotificarJugadorExpulsado" />
   </wsdl:message>
+  <wsdl:message name="ISalasManejador_NotificarSalaCancelada_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarSalaCancelada" />
+  </wsdl:message>
   <wsdl:portType name="ISalasManejador">
     <wsdl:operation name="CrearSala">
       <wsdl:input wsaw:Action="http://tempuri.org/ISalasManejador/CrearSala" message="tns:ISalasManejador_CrearSala_InputMessage" />
@@ -129,6 +132,9 @@
     </wsdl:operation>
     <wsdl:operation name="NotificarJugadorExpulsado">
       <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/NotificarJugadorExpulsado" message="tns:ISalasManejador_NotificarJugadorExpulsado_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarSalaCancelada">
+      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/NotificarSalaCancelada" message="tns:ISalasManejador_NotificarSalaCancelada_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSDualHttpBinding_ISalasManejador" type="tns:ISalasManejador">
@@ -227,6 +233,12 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="NotificarSalaCancelada">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarSalaCancelada" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="NetTcpBinding_ISalasManejador" type="tns:ISalasManejador">
     <wsp:PolicyReference URI="#NetTcpBinding_ISalasManejador_policy" />
@@ -320,6 +332,12 @@
     </wsdl:operation>
     <wsdl:operation name="NotificarJugadorExpulsado">
       <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarJugadorExpulsado" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarSalaCancelada">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/NotificarSalaCancelada" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
