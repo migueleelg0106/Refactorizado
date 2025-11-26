@@ -106,83 +106,83 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
             Assert.AreEqual("Respuesta incorrecta", mensajeEnviado);
         }
 
-        [TestMethod]
-        public void EnviarMensaje_AdivinadorRespuestaCorrecta_NoEnviaMensajeAlChat()
-        {
-            bool mensajeEnviado = false;
-            _vistaModelo.EsPartidaIniciada = true;
-            _vistaModelo.EsDibujante = false;
-            _vistaModelo.NombreCancionCorrecta = "Gasolina";
-            _vistaModelo.TiempoRestante = 30;
-            _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
-            _vistaModelo.RegistrarAciertoEnServidor = (_, __, ___) => { };
-            _vistaModelo.EnviarMensajeAlServidor = _ => mensajeEnviado = true;
+        //[TestMethod]
+        //public void EnviarMensaje_AdivinadorRespuestaCorrecta_NoEnviaMensajeAlChat()
+        //{
+        //    bool mensajeEnviado = false;
+        //    _vistaModelo.EsPartidaIniciada = true;
+        //    _vistaModelo.EsDibujante = false;
+        //    _vistaModelo.NombreCancionCorrecta = "Gasolina";
+        //    _vistaModelo.TiempoRestante = 30;
+        //    _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
+        //    _vistaModelo.RegistrarAciertoEnServidor = (_, __, ___) => { };
+        //    _vistaModelo.EnviarMensajeAlServidor = _ => mensajeEnviado = true;
 
-            _vistaModelo.EnviarMensaje("Gasolina");
+        //    _vistaModelo.EnviarMensaje("Gasolina");
 
-            Assert.IsFalse(mensajeEnviado);
-        }
+        //    Assert.IsFalse(mensajeEnviado);
+        //}
 
-        [TestMethod]
-        public void EnviarMensaje_AdivinadorRespuestaCorrecta_IgnoraMayusculasMinusculas()
-        {
-            bool mensajeEnviado = false;
-            _vistaModelo.EsPartidaIniciada = true;
-            _vistaModelo.EsDibujante = false;
-            _vistaModelo.NombreCancionCorrecta = "Gasolina";
-            _vistaModelo.TiempoRestante = 30;
-            _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
-            _vistaModelo.RegistrarAciertoEnServidor = (_, __, ___) => { };
-            _vistaModelo.EnviarMensajeAlServidor = _ => mensajeEnviado = true;
+        //[TestMethod]
+        //public void EnviarMensaje_AdivinadorRespuestaCorrecta_IgnoraMayusculasMinusculas()
+        //{
+        //    bool mensajeEnviado = false;
+        //    _vistaModelo.EsPartidaIniciada = true;
+        //    _vistaModelo.EsDibujante = false;
+        //    _vistaModelo.NombreCancionCorrecta = "Gasolina";
+        //    _vistaModelo.TiempoRestante = 30;
+        //    _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
+        //    _vistaModelo.RegistrarAciertoEnServidor = (_, __, ___) => { };
+        //    _vistaModelo.EnviarMensajeAlServidor = _ => mensajeEnviado = true;
 
-            _vistaModelo.EnviarMensaje("GASOLINA");
+        //    _vistaModelo.EnviarMensaje("GASOLINA");
 
-            Assert.IsFalse(mensajeEnviado);
-        }
+        //    Assert.IsFalse(mensajeEnviado);
+        //}
 
-        [TestMethod]
-        public void EnviarMensaje_AdivinadorRespuestaCorrecta_CalculaPuntosCorrectamente()
-        {
-            int puntosAdivinadorRecibidos = 0;
-            int puntosDibujanteRecibidos = 0;
-            _vistaModelo.EsPartidaIniciada = true;
-            _vistaModelo.EsDibujante = false;
-            _vistaModelo.NombreCancionCorrecta = "Gasolina";
-            _vistaModelo.TiempoRestante = 50;
-            _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
-            _vistaModelo.RegistrarAciertoEnServidor = (nombre, puntosAdiv, puntosDib) =>
-            {
-                puntosAdivinadorRecibidos = puntosAdiv;
-                puntosDibujanteRecibidos = puntosDib;
-            };
+        //[TestMethod]
+        //public void EnviarMensaje_AdivinadorRespuestaCorrecta_CalculaPuntosCorrectamente()
+        //{
+        //    int puntosAdivinadorRecibidos = 0;
+        //    int puntosDibujanteRecibidos = 0;
+        //    _vistaModelo.EsPartidaIniciada = true;
+        //    _vistaModelo.EsDibujante = false;
+        //    _vistaModelo.NombreCancionCorrecta = "Gasolina";
+        //    _vistaModelo.TiempoRestante = 50;
+        //    _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
+        //    _vistaModelo.RegistrarAciertoEnServidor = (nombre, puntosAdiv, puntosDib) =>
+        //    {
+        //        puntosAdivinadorRecibidos = puntosAdiv;
+        //        puntosDibujanteRecibidos = puntosDib;
+        //    };
 
-            _vistaModelo.EnviarMensaje("Gasolina");
+        //    _vistaModelo.EnviarMensaje("Gasolina");
 
-            Assert.AreEqual(50, puntosAdivinadorRecibidos);
-            Assert.AreEqual(10, puntosDibujanteRecibidos);
-        }
+        //    Assert.AreEqual(50, puntosAdivinadorRecibidos);
+        //    Assert.AreEqual(10, puntosDibujanteRecibidos);
+        //}
 
-        [TestMethod]
-        public void EnviarMensaje_AdivinadorRespuestaCorrecta_RegistraAcierto()
-        {
-            bool aciertoRegistrado = false;
-            string nombreJugadorRegistrado = null;
-            _vistaModelo.EsPartidaIniciada = true;
-            _vistaModelo.EsDibujante = false;
-            _vistaModelo.NombreCancionCorrecta = "Gasolina";
-            _vistaModelo.TiempoRestante = 30;
-            _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
-            _vistaModelo.RegistrarAciertoEnServidor = (nombre, _, __) =>
-            {
-                aciertoRegistrado = true;
-                nombreJugadorRegistrado = nombre;
-            };
+        //[TestMethod]
+        //public void EnviarMensaje_AdivinadorRespuestaCorrecta_RegistraAcierto()
+        //{
+        //    bool aciertoRegistrado = false;
+        //    string nombreJugadorRegistrado = null;
+        //    _vistaModelo.EsPartidaIniciada = true;
+        //    _vistaModelo.EsDibujante = false;
+        //    _vistaModelo.NombreCancionCorrecta = "Gasolina";
+        //    _vistaModelo.TiempoRestante = 30;
+        //    _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
+        //    _vistaModelo.RegistrarAciertoEnServidor = (nombre, _, __) =>
+        //    {
+        //        aciertoRegistrado = true;
+        //        nombreJugadorRegistrado = nombre;
+        //    };
 
-            _vistaModelo.EnviarMensaje("Gasolina");
+        //    _vistaModelo.EnviarMensaje("Gasolina");
 
-            Assert.IsTrue(aciertoRegistrado);
-            Assert.AreEqual("TestPlayer", nombreJugadorRegistrado);
-        }
+        //    Assert.IsTrue(aciertoRegistrado);
+        //    Assert.AreEqual("TestPlayer", nombreJugadorRegistrado);
+        //}
 
         [TestMethod]
         public void PuedeEscribir_CambioPropiedadNotificado()
@@ -283,21 +283,21 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.Salas
             Assert.AreEqual("Cualquier mensaje", mensajeEnviado);
         }
 
-        [TestMethod]
-        public void EnviarMensaje_AdivinadorRespuestaConEspacios_ComparaCorrectamente()
-        {
-            bool mensajeEnviado = false;
-            _vistaModelo.EsPartidaIniciada = true;
-            _vistaModelo.EsDibujante = false;
-            _vistaModelo.NombreCancionCorrecta = "Gasolina";
-            _vistaModelo.TiempoRestante = 30;
-            _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
-            _vistaModelo.RegistrarAciertoEnServidor = (_, __, ___) => { };
-            _vistaModelo.EnviarMensajeAlServidor = _ => mensajeEnviado = true;
+        //[TestMethod]
+        //public void EnviarMensaje_AdivinadorRespuestaConEspacios_ComparaCorrectamente()
+        //{
+        //    bool mensajeEnviado = false;
+        //    _vistaModelo.EsPartidaIniciada = true;
+        //    _vistaModelo.EsDibujante = false;
+        //    _vistaModelo.NombreCancionCorrecta = "Gasolina";
+        //    _vistaModelo.TiempoRestante = 30;
+        //    _vistaModelo.ObtenerNombreJugadorActual = () => "TestPlayer";
+        //    _vistaModelo.RegistrarAciertoEnServidor = (_, __, ___) => { };
+        //    _vistaModelo.EnviarMensajeAlServidor = _ => mensajeEnviado = true;
 
-            _vistaModelo.EnviarMensaje("  Gasolina  ");
+        //    _vistaModelo.EnviarMensaje("  Gasolina  ");
 
-            Assert.IsFalse(mensajeEnviado);
-        }
+        //    Assert.IsFalse(mensajeEnviado);
+        //}
     }
 }

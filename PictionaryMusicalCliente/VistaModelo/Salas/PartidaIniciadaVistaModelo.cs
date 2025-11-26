@@ -602,7 +602,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _overlayTimer.Stop();
             VisibilidadOverlayDibujante = Visibility.Collapsed;
             VisibilidadOverlayAdivinador = Visibility.Collapsed;
+            HabilitarEscrituraTrasOverlay();
             IniciarTemporizador();
+        }
+
+        private void HabilitarEscrituraTrasOverlay()
+        {
+            if (_alarmaActiva)
+            {
+                return;
+            }
+
+            bool puedeEscribir = !EsDibujante;
+            PuedeEscribirCambiado?.Invoke(puedeEscribir);
         }
 
         private void IniciarTemporizador()
@@ -781,7 +793,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             {
                 EsDibujante = false;
                 EsDibujanteCambiado?.Invoke(false);
-                PuedeEscribirCambiado?.Invoke(true);
+                PuedeEscribirCambiado?.Invoke(false);
                 PalabraAdivinar = string.Empty;
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
                 TextoArtista = string.IsNullOrWhiteSpace(ronda.PistaArtista)

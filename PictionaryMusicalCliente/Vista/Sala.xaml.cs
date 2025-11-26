@@ -478,9 +478,13 @@ namespace PictionaryMusicalCliente
                 return;
             }
 
+            string texto = string.IsNullOrWhiteSpace(nombreJugador)
+                ? mensaje
+                : $"{nombreJugador}: {mensaje}";
+
             var textoBloque = new TextBlock
             {
-                Text = $"{nombreJugador}: {mensaje}",
+                Text = texto,
                 Foreground = new SolidColorBrush(color),
                 TextWrapping = TextWrapping.Wrap,
                 FontFamily = new FontFamily("Comic Sans MS"),

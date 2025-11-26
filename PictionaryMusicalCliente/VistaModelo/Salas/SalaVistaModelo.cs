@@ -194,7 +194,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
             _chatVistaModelo.EnviarMensajeAlServidor = EjecutarEnviarMensaje;
             _chatVistaModelo.ObtenerNombreJugadorActual = () => _nombreUsuarioSesion;
-            _chatVistaModelo.RegistrarAciertoEnServidor = EjecutarRegistrarAcierto;
+            _chatVistaModelo.RegistrarAciertoEnServidor = EjecutarRegistrarAciertoAsync;
         }
 
         private void ChatVistaModelo_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -884,7 +884,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            _chatVistaModelo.EnviarMensaje(MensajeChat);
+            _ = _chatVistaModelo.EnviarMensaje(MensajeChat);
             MensajeChat = string.Empty;
         }
 
@@ -923,7 +923,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        private void EjecutarRegistrarAcierto(string nombreJugador, int puntosAdivinador, int puntosDibujante)
+        private async Task EjecutarRegistrarAciertoAsync(string nombreJugador, int puntosAdivinador, int puntosDibujante)
         {
             if (string.IsNullOrWhiteSpace(nombreJugador))
             {
@@ -944,7 +944,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     puntosAdivinador,
                     puntosDibujante);
 
-                _proxyJuego?.EnviarMensajeJuego(mensajeAcierto, _codigoSala, _idJugador);
+                if (_proxyJuego != null)
+                {
+                    await _proxyJuego.EnviarMensajeJuegoAsync(mensajeAcierto, _codigoSala, _idJugador)
+                        .ConfigureAwait(false);
+                }
             }
             catch (Exception ex) when (ex is CommunicationException || ex is TimeoutException)
             {
@@ -1159,6 +1163,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <param name="mensaje">Contenido del mensaje.</param>
         public void NotificarMensajeChat(string nombreJugador, string mensaje)
         {
+            if (EsMensajeAcierto(mensaje) && IntentarProcesarAciertoDesdeMensaje(mensaje))
+            {
+                return;
+            }
             _chatVistaModelo.NotificarMensajeChat(nombreJugador, mensaje);
         }
 
@@ -1221,6 +1229,34 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     ManejarNavegacion?.Invoke(DestinoNavegacion.VentanaPrincipal);
                 }
             });
+        }
+
+        private static bool EsMensajeAcierto(string mensaje)
+        {
+            return !string.IsNullOrWhiteSpace(mensaje) && mensaje.StartsWith("ACIERTO:", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool IntentarProcesarAciertoDesdeMensaje(string mensaje)
+        {
+            string[] partes = mensaje?.Split(':');
+            if (partes == null || partes.Length < 3)
+            {
+                return false;
+            }
+
+            string nombreJugador = partes[1];
+            if (string.IsNullOrWhiteSpace(nombreJugador))
+            {
+                return false;
+            }
+
+            if (!int.TryParse(partes[2], out int puntosAdivinador))
+            {
+                return false;
+            }
+
+            NotificarJugadorAdivino(nombreJugador, puntosAdivinador);
+            return true;
         }
 
         private void SalasServicio_JugadorSeUnio(object sender, string nombreJugador)

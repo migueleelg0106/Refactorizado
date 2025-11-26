@@ -1,6 +1,7 @@
 using log4net;
 using PictionaryMusicalCliente.Properties.Langs;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
@@ -96,10 +97,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public Action<string> EnviarMensajeAlServidor { get; set; }
 
         /// <summary>
-        /// Accion para registrar un acierto en el servidor de juego.
+        /// Funcion para registrar un acierto en el servidor de juego.
         /// Parametros: nombreJugador, puntosAdivinador, puntosDibujante.
         /// </summary>
-        public Action<string, int, int> RegistrarAciertoEnServidor { get; set; }
+        public Func<string, int, int, Task> RegistrarAciertoEnServidor { get; set; }
 
         /// <summary>
         /// Accion para obtener el nombre del jugador actual.
@@ -110,7 +111,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// Envia un mensaje de chat con logica de intercepcion segun el estado del juego.
         /// </summary>
         /// <param name="mensaje">Contenido del mensaje.</param>
-        public void EnviarMensaje(string mensaje)
+        public async Task EnviarMensaje(string mensaje)
         {
             if (string.IsNullOrWhiteSpace(mensaje))
             {
@@ -132,7 +133,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             if (EsRespuestaCorrecta(mensaje))
             {
-                ProcesarAcierto();
+                await ProcesarAciertoAsync().ConfigureAwait(false);
             }
             else
             {
@@ -179,11 +180,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             if (dispatcher.CheckAccess())
             {
-                MensajeDoradoRecibido?.Invoke(nombreJugador, mensajeDorado);
+                MensajeDoradoRecibido?.Invoke(string.Empty, mensajeDorado);
             }
             else
             {
-                dispatcher.BeginInvoke(() => MensajeDoradoRecibido?.Invoke(nombreJugador, mensajeDorado));
+                dispatcher.BeginInvoke(() => MensajeDoradoRecibido?.Invoke(string.Empty, mensajeDorado));
             }
         }
 
@@ -200,7 +201,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 StringComparison.OrdinalIgnoreCase);
         }
 
-        private void ProcesarAcierto()
+        private async Task ProcesarAciertoAsync()
         {
             string nombreJugador = ObtenerNombreJugadorActual?.Invoke() ?? string.Empty;
 
@@ -213,9 +214,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 puntosAdivinador,
                 puntosDibujante);
 
-            NotificarJugadorAdivinoEnChat(nombreJugador);
+            PuedeEscribir = false;
 
-            RegistrarAciertoEnServidor?.Invoke(nombreJugador, puntosAdivinador, puntosDibujante);
+            if (RegistrarAciertoEnServidor != null)
+            {
+                await RegistrarAciertoEnServidor(
+                    nombreJugador,
+                    puntosAdivinador,
+                    puntosDibujante)
+                    .ConfigureAwait(false);
+            }
         }
     }
 }
