@@ -1,6 +1,7 @@
 using log4net;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private int _totalJugadoresPendiente;
         private string _nombreCancionActual;
         private Brush _colorPalabraAdivinar;
+        private string _textoDibujoDe;
 
         /// <summary>
         /// Inicializa la VistaModelo con los componentes necesarios para el juego.
@@ -84,6 +86,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _mostrarEstadoRonda = false;
             _turnosCompletadosEnCiclo = 0;
             _nombreCancionActual = string.Empty;
+            _textoDibujoDe = string.Empty;
 
             _overlayTimer = new DispatcherTimer();
             _overlayTimer.Interval = TimeSpan.FromSeconds(5);
@@ -317,6 +320,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
         /// <summary>
+        /// Texto que muestra quien es el dibujante actual.
+        /// </summary>
+        public string TextoDibujoDe
+        {
+            get => _textoDibujoDe;
+            set => EstablecerPropiedad(ref _textoDibujoDe, value);
+        }
+
+        /// <summary>
         /// Indica si el usuario es el dibujante de la ronda.
         /// </summary>
         public bool EsDibujante
@@ -399,6 +411,21 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// Evento que notifica cuando cambia el estado de poder escribir del jugador.
         /// </summary>
         public event Action<bool> PuedeEscribirCambiado;
+
+        /// <summary>
+        /// Evento que notifica cuando cambia el rol de dibujante.
+        /// </summary>
+        public event Action<bool> EsDibujanteCambiado;
+
+        /// <summary>
+        /// Evento que notifica cuando cambia el nombre de la cancion correcta.
+        /// </summary>
+        public event Action<string> NombreCancionCambiado;
+
+        /// <summary>
+        /// Evento que notifica cuando cambia el tiempo restante.
+        /// </summary>
+        public event Action<int> TiempoRestanteCambiado;
 
         private void InicializarComandos()
         {
@@ -598,6 +625,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
             _contador--;
             TextoContador = _contador.ToString();
+            TiempoRestanteCambiado?.Invoke(_contador);
 
             if (_contador <= 0)
             {
@@ -719,11 +747,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             string archivoCancion = cancion?.Archivo ?? string.Empty;
             string nombreCancion = cancion?.Nombre ?? string.Empty;
             _nombreCancionActual = nombreCancion;
+            NombreCancionCambiado?.Invoke(nombreCancion);
+            TiempoRestanteCambiado?.Invoke(_contador);
             ColorPalabraAdivinar = Brushes.Black;
+
+            TextoDibujoDe = string.IsNullOrWhiteSpace(ronda.NombreDibujante)
+                ? string.Empty
+                : string.Format(Lang.partidaTextoDibujoDe, ronda.NombreDibujante);
 
             if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
             {
                 EsDibujante = true;
+                EsDibujanteCambiado?.Invoke(true);
                 PuedeEscribirCambiado?.Invoke(false);
                 PalabraAdivinar = string.IsNullOrWhiteSpace(nombreCancion)
                     ? PalabraAdivinar
@@ -745,6 +780,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             else
             {
                 EsDibujante = false;
+                EsDibujanteCambiado?.Invoke(false);
                 PuedeEscribirCambiado?.Invoke(true);
                 PalabraAdivinar = string.Empty;
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
@@ -827,6 +863,37 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 TextoContador = string.Empty;
                 MostrarOverlayAlarma();
                 SonidoManejador.ReproducirSonido("alarma.mp3");
+            });
+        }
+
+        /// <summary>
+        /// Procesa el fin de ronda temprano cuando todos los adivinadores acertaron.
+        /// No reproduce alarma ni muestra overlay de alarma, solo muestra la cancion en azul.
+        /// </summary>
+        public void NotificarFinRondaTemprano()
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() =>
+            {
+                _temporizador.Stop();
+                _manejadorCancion.Detener();
+                LimpiarTrazos?.Invoke();
+                PuedeEscribirCambiado?.Invoke(false);
+                MostrarEstadoRonda = false;
+                TextoContador = string.Empty;
+
+                if (!string.IsNullOrWhiteSpace(_nombreCancionActual))
+                {
+                    PalabraAdivinar = _nombreCancionActual;
+                }
+
+                VisibilidadPalabraAdivinar = Visibility.Visible;
+                ColorPalabraAdivinar = Brushes.Blue;
             });
         }
 

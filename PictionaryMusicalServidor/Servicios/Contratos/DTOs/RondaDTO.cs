@@ -37,5 +37,11 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
         /// </summary>
         [DataMember]
         public int TiempoSegundos { get; set; }
+
+        /// <summary>
+        /// Nombre del jugador que es el dibujante de la ronda.
+        /// </summary>
+        [DataMember]
+        public string NombreDibujante { get; set; }
     }
 }

@@ -61,6 +61,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private bool _puedeInvitarAmigos;
         private bool _salaCancelada;
         private bool _aplicacionCerrando;
+        private HashSet<string> _adivinadoresQuienYaAcertaron;
+        private string _nombreDibujanteActual;
+        private bool _rondaTerminadaTemprano;
+
+        private const double PorcentajePuntosDibujante = 0.2;
 
         /// <summary>
         /// Define los destinos posibles al salir de la partida.
@@ -113,6 +118,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _idJugador = ObtenerIdentificadorJugador();
 
             _amigosInvitados = new HashSet<int>();
+            _adivinadoresQuienYaAcertaron = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            _nombreDibujanteActual = string.Empty;
+            _rondaTerminadaTemprano = false;
 
             _partidaVistaModelo = new PartidaIniciadaVistaModelo();
             _chatVistaModelo = new ChatVistaModelo();
@@ -170,12 +178,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _partidaVistaModelo.JuegoIniciadoCambiado += OnJuegoIniciadoCambiado;
             _partidaVistaModelo.PuedeEscribirCambiado += valor =>
                 _chatVistaModelo.PuedeEscribir = valor;
+            _partidaVistaModelo.EsDibujanteCambiado += valor =>
+                _chatVistaModelo.EsDibujante = valor;
+            _partidaVistaModelo.NombreCancionCambiado += valor =>
+                _chatVistaModelo.NombreCancionCorrecta = valor;
+            _partidaVistaModelo.TiempoRestanteCambiado += valor =>
+                _chatVistaModelo.TiempoRestante = valor;
             _partidaVistaModelo.EnviarTrazoAlServidor = EnviarTrazoAlServidor;
         }
 
         private void ConfigurarChatVistaModelo()
         {
             _chatVistaModelo.EnviarMensajeAlServidor = EjecutarEnviarMensaje;
+            _chatVistaModelo.ObtenerNombreJugadorActual = () => _nombreUsuarioSesion;
+            _chatVistaModelo.RegistrarAciertoEnServidor = EjecutarRegistrarAcierto;
         }
 
         private void PartidaIniciadaVistaModelo_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -187,6 +203,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
             MostrarBotonIniciarPartida = _esHost && !juegoIniciado;
             ActualizarVisibilidadBotonesExpulsion();
+            _chatVistaModelo.EsPartidaIniciada = juegoIniciado;
         }
 
         /// <summary>
@@ -592,6 +609,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
         /// <summary>
+        /// Evento para notificar mensajes dorados (aciertos) al chat.
+        /// </summary>
+        public event Action<string, string> MensajeDoradoRecibido
+        {
+            add => _chatVistaModelo.MensajeDoradoRecibido += value;
+            remove => _chatVistaModelo.MensajeDoradoRecibido -= value;
+        }
+
+        /// <summary>
         /// Accion para mostrar mensajes al usuario.
         /// </summary>
         public Action<string> MostrarMensaje { get; set; }
@@ -845,6 +871,41 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
+        private void EjecutarRegistrarAcierto(string nombreJugador, int puntosAdivinador, int puntosDibujante)
+        {
+            if (string.IsNullOrWhiteSpace(nombreJugador))
+            {
+                return;
+            }
+
+            _logger.InfoFormat(
+                "Registrando acierto. Jugador: {0}, Puntos adivinador: {1}, Puntos dibujante: {2}",
+                nombreJugador,
+                puntosAdivinador,
+                puntosDibujante);
+
+            try
+            {
+                string mensajeAcierto = string.Format(
+                    "ACIERTO:{0}:{1}:{2}",
+                    nombreJugador,
+                    puntosAdivinador,
+                    puntosDibujante);
+
+                _proxyJuego?.EnviarMensajeJuego(mensajeAcierto, _codigoSala, _idJugador);
+            }
+            catch (Exception ex) when (ex is CommunicationException || ex is TimeoutException)
+            {
+                _logger.Error("No se pudo registrar el acierto en el servidor.", ex);
+                SonidoManejador.ReproducirError();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error inesperado al registrar acierto.", ex);
+                SonidoManejador.ReproducirError();
+            }
+        }
+
         /// <summary>
         /// Envia un trazo al servidor.
         /// </summary>
@@ -949,6 +1010,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <param name="ronda">Datos de la ronda.</param>
         public void NotificarInicioRonda(DTOs.RondaDTO ronda)
         {
+            _adivinadoresQuienYaAcertaron.Clear();
+            _rondaTerminadaTemprano = false;
+
+            _nombreDibujanteActual = ronda.NombreDibujante ?? string.Empty;
+
             _partidaVistaModelo.NotificarInicioRonda(ronda, Jugadores?.Count ?? 0);
         }
 
@@ -978,11 +1044,60 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     {
                         jugador.Puntos += puntos;
                     }
+
+                    if (!_adivinadoresQuienYaAcertaron.Contains(nombreJugador))
+                    {
+                        _adivinadoresQuienYaAcertaron.Add(nombreJugador);
+
+                        int puntosBonusDibujante = (int)(puntos * PorcentajePuntosDibujante);
+
+                        AgregarPuntosAlDibujante(puntosBonusDibujante);
+
+                        if (TodosLosAdivinadoresAcertaron() && !_rondaTerminadaTemprano)
+                        {
+                            _rondaTerminadaTemprano = true;
+                            _partidaVistaModelo.NotificarFinRondaTemprano();
+                        }
+                    }
                 }
 
                 _chatVistaModelo.NotificarJugadorAdivinoEnChat(nombreJugador);
                 _partidaVistaModelo.NotificarJugadorAdivino(nombreJugador, puntos, _nombreUsuarioSesion);
             });
+        }
+
+        private void AgregarPuntosAlDibujante(int puntosBonusDibujante)
+        {
+            if (puntosBonusDibujante <= 0 || Jugadores == null)
+            {
+                return;
+            }
+
+            JugadorElemento dibujante = null;
+
+            if (!string.IsNullOrWhiteSpace(_nombreDibujanteActual))
+            {
+                dibujante = Jugadores.FirstOrDefault(j => string.Equals(
+                    j.Nombre,
+                    _nombreDibujanteActual,
+                    StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (dibujante != null)
+            {
+                dibujante.Puntos += puntosBonusDibujante;
+            }
+        }
+
+        private int ObtenerTotalAdivinadores()
+        {
+            return Jugadores?.Count > 0 ? Jugadores.Count - 1 : 0;
+        }
+
+        private bool TodosLosAdivinadoresAcertaron()
+        {
+            int totalAdivinadores = ObtenerTotalAdivinadores();
+            return totalAdivinadores > 0 && _adivinadoresQuienYaAcertaron.Count >= totalAdivinadores;
         }
 
         /// <summary>
@@ -1009,6 +1124,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public void NotificarFinRonda()
         {
+            if (_rondaTerminadaTemprano)
+            {
+                return;
+            }
+
             _partidaVistaModelo.NotificarFinRonda();
         }
 

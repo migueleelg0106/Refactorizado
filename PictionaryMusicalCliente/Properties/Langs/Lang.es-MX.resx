@@ -1046,4 +1046,10 @@ aciertan o cuando se acaba el tiempo.
   <data name="errorTextoPartidaYaIniciada" xml:space="preserve">
     <value>La partida de la sala a la que te intentas unir ya comenzó.</value>
   </data>
+  <data name="chatTextoJugadorAdivino" xml:space="preserve">
+    <value>¡{0} adivinó la canción!</value>
+  </data>
+  <data name="partidaTextoDibujoDe" xml:space="preserve">
+    <value>Dibujo de {0}</value>
+  </data>
 </root>

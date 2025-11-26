@@ -1044,4 +1044,10 @@
   <data name="errorTextoPartidaYaIniciada" xml:space="preserve">
     <value>The game in the room you are trying to join has already started.</value>
   </data>
+  <data name="chatTextoJugadorAdivino" xml:space="preserve">
+    <value>{0} guessed the song!</value>
+  </data>
+  <data name="partidaTextoDibujoDe" xml:space="preserve">
+    <value>{0}'s drawing</value>
+  </data>
 </root>

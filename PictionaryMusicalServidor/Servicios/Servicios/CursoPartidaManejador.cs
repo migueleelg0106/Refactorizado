@@ -140,6 +140,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 var jugadoresEstado = controlador.ObtenerJugadores();
 
+                var dibujante = jugadoresEstado.FirstOrDefault(j => j.EsDibujante);
+                string nombreDibujante = dibujante?.NombreUsuario ?? string.Empty;
+
                 List<KeyValuePair<string, ICursoPartidaManejadorCallback>> callbacks;
                 lock (_sincronizacion)
                 {
@@ -163,7 +166,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         PistaArtista = rondaBase.PistaArtista,
                         PistaGenero = rondaBase.PistaGenero,
                         TiempoSegundos = rondaBase.TiempoSegundos,
-                        Rol = esDibujante ? "Dibujante" : "Adivinador"
+                        Rol = esDibujante ? "Dibujante" : "Adivinador",
+                        NombreDibujante = nombreDibujante
                     };
 
                     try
