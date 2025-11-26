@@ -107,16 +107,19 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0" Background="Red" LastChildFill="False">
-                <TextBlock Text="{x:Static language:Lang.partidaTextoRonda}" 
-                           Foreground="Black" FontSize="18" VerticalAlignment="Center" 
-                           Margin="10,0,0,0" FontFamily="Comic Sans MS" DockPanel.Dock="Left"/>
+                <TextBlock Text="{x:Static language:Lang.partidaTextoRonda}"
+                           Foreground="Black" FontSize="18" VerticalAlignment="Center"
+                           Margin="10,0,0,0" FontFamily="Comic Sans MS" DockPanel.Dock="Left"
+                           Visibility="{Binding MostrarEstadoRonda, Converter={StaticResource BooleanoVisibilidadColapsar}}"/>
 
-                <TextBlock Text="3" Foreground="Black" FontSize="18" FontWeight="Bold"
+                <TextBlock Text="{Binding NumeroRondaActual}" Foreground="Black" FontSize="18" FontWeight="Bold"
                            VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Comic Sans MS"
-                           DockPanel.Dock="Left"/>
+                           DockPanel.Dock="Left"
+                           Visibility="{Binding MostrarEstadoRonda, Converter={StaticResource BooleanoVisibilidadColapsar}}"/>
 
-                <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" 
-                      VerticalAlignment="Center" Margin="0,0,20,0">
+                <Grid DockPanel.Dock="Right" HorizontalAlignment="Right"
+                      VerticalAlignment="Center" Margin="0,0,20,0"
+                      Visibility="{Binding MostrarEstadoRonda, Converter={StaticResource BooleanoVisibilidadColapsar}}">
                     <Ellipse Width="50" Height="50" Fill="White" Stroke="Black" StrokeThickness="2"/>
                     <TextBlock x:Name="txtContador" Text="{Binding TextoContador}" FontSize="20"
                                FontWeight="Bold" Foreground="{Binding ColorContador}"

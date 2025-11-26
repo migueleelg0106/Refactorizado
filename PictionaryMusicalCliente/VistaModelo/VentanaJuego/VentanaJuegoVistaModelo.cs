@@ -55,6 +55,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private CursoPartidaManejadorClient _proxyJuego;
 
         private bool _juegoIniciado;
+        private int _numeroRondaActual;
         private double _grosor;
         private Color _color;
         private int _contador;
@@ -78,6 +79,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private string _correoInvitacion;
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
+        private bool _mostrarEstadoRonda;
         private bool _salaCancelada;
         private bool _aplicacionCerrando;
         private bool _puedeEscribir;
@@ -137,10 +139,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _amigosInvitados = new HashSet<int>();
             _catalogoAudio = InicializarCatalogoAudio();
 
+            _numeroRondaActual = 0;
             _grosor = 6;
             _color = Colors.Black;
-            _contador = 30;
-            _textoContador = "30";
+            _contador = 0;
+            _textoContador = string.Empty;
             _colorContador = Brushes.Black;
             _esHerramientaLapiz = true;
             _esHerramientaBorrador = false;
@@ -152,6 +155,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _visibilidadInfoCancion = Visibility.Collapsed;
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
             _botonIniciarPartidaHabilitado = _esHost;
+            _mostrarEstadoRonda = false;
 
             _codigoSala = _sala.Codigo;
             _jugadores = new ObservableCollection<JugadorElemento>();
@@ -219,6 +223,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         public bool EsHost => _esHost;
 
         /// <summary>
+        /// Numero de la ronda actual.
+        /// </summary>
+        public int NumeroRondaActual
+        {
+            get => _numeroRondaActual;
+            private set => EstablecerPropiedad(ref _numeroRondaActual, value);
+        }
+
+        /// <summary>
         /// Grosor del trazo del pincel.
         /// </summary>
         public double Grosor
@@ -252,6 +265,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             get => _colorContador;
             set => EstablecerPropiedad(ref _colorContador, value);
+        }
+
+        /// <summary>
+        /// Indica si se debe mostrar la informacion de la ronda y el temporizador.
+        /// </summary>
+        public bool MostrarEstadoRonda
+        {
+            get => _mostrarEstadoRonda;
+            private set => EstablecerPropiedad(ref _mostrarEstadoRonda, value);
         }
 
         /// <summary>
@@ -687,6 +709,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             _logger.Info("Iniciando partida...");
             JuegoIniciado = true;
+            NumeroRondaActual = 0;
+            MostrarEstadoRonda = false;
             VisibilidadCuadriculaDibujo = Visibility.Visible;
             EsHerramientaLapiz = true;
             AplicarEstiloLapiz?.Invoke();
@@ -1050,6 +1074,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 AplicarInicioVisualPartida();
                 BotonIniciarPartidaHabilitado = false;
                 TextoBotonIniciarPartida = string.Empty;
+                PuedeInvitarAmigos = false;
+                PuedeInvitarPorCorreo = false;
+                TextoContador = string.Empty;
                 SonidoManejador.ReproducirExito();
             });
         }
@@ -1073,10 +1100,12 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 _overlayTimer.Stop();
                 _manejadorCancion.Detener();
 
+                NumeroRondaActual++;
                 _contador = ronda.TiempoSegundos;
                 TextoContador = _contador.ToString();
                 ColorContador = Brushes.Black;
                 VisibilidadCuadriculaDibujo = Visibility.Visible;
+                MostrarEstadoRonda = true;
 
                 string archivoCancion = ObtenerNombreCancion(ronda.IdCancion);
 
@@ -1174,6 +1203,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 _temporizador.Stop();
                 _manejadorCancion.Detener();
                 PuedeEscribir = false;
+                MostrarEstadoRonda = false;
+                TextoContador = string.Empty;
                 MostrarOverlayAlarma();
                 SonidoManejador.ReproducirSonido("alarma.mp3");
             });
@@ -1193,6 +1224,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 _overlayTimer.Stop();
                 _manejadorCancion.Detener();
                 JuegoIniciado = false;
+                MostrarEstadoRonda = false;
+                TextoContador = string.Empty;
+                NumeroRondaActual = 0;
                 PuedeEscribir = false;
                 BotonIniciarPartidaHabilitado = false;
             });
@@ -1442,6 +1476,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _manejadorCancion.Detener();
 
             JuegoIniciado = false;
+            MostrarEstadoRonda = false;
+            TextoContador = string.Empty;
+            NumeroRondaActual = 0;
             BotonIniciarPartidaHabilitado = false;
             VisibilidadCuadriculaDibujo = Visibility.Collapsed;
             VisibilidadOverlayAdivinador = Visibility.Collapsed;
