@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -16,10 +17,6 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class CursoPartidaManejador : ICursoPartidaManejador
     {
-        private const int TiempoRondaPorDefectoSegundos = 90;
-        private const int NumeroRondasPorDefecto = 3;
-        private const string DificultadPorDefecto = "Media";
-
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CursoPartidaManejador));
         private static readonly Dictionary<string, ControladorPartida> _partidasActivas = new(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, Dictionary<string, ICursoPartidaManejadorCallback>> _callbacksPorSala = new(StringComparer.OrdinalIgnoreCase);
@@ -112,7 +109,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     return existente;
                 }
 
-                var controlador = new ControladorPartida(TiempoRondaPorDefectoSegundos, DificultadPorDefecto, NumeroRondasPorDefecto);
+                var configuracion = SalasManejador.ObtenerSalaPorCodigo(idSala).Configuracion;
+
+                if (configuracion == null)
+                {
+                    throw new FaultException("No se encontró la configuración de la sala.");
+                }
+
+                var controlador = new ControladorPartida(
+                    configuracion.TiempoPorRondaSegundos,
+                    configuracion.Dificultad,
+                    configuracion.NumeroRondas);
+
+                controlador.ConfigurarIdiomaCanciones(configuracion.IdiomaCanciones);
                 SuscribirEventos(controlador, idSala);
                 _partidasActivas[idSala] = controlador;
                 _callbacksPorSala[idSala] = new Dictionary<string, ICursoPartidaManejadorCallback>(StringComparer.OrdinalIgnoreCase);
@@ -124,13 +133,64 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private void SuscribirEventos(ControladorPartida controlador, string idSala)
         {
-            controlador.PartidaIniciada += () => NotificarCallbacks(idSala, callback => callback.NotificarPartidaIniciada());
-            controlador.InicioRonda += ronda => NotificarCallbacks(idSala, callback => callback.NotificarInicioRonda(ronda));
-            controlador.JugadorAdivino += (jugador, puntos) => NotificarCallbacks(idSala, callback => callback.NotificarJugadorAdivino(jugador, puntos));
-            controlador.MensajeChatRecibido += (jugador, mensaje) => NotificarCallbacks(idSala, callback => callback.NotificarMensajeChat(jugador, mensaje));
-            controlador.TrazoRecibido += trazo => NotificarCallbacks(idSala, callback => callback.NotificarTrazoRecibido(trazo));
-            controlador.FinRonda += () => NotificarCallbacks(idSala, callback => callback.NotificarFinRonda());
-            controlador.FinPartida += resultado => NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado));
+            controlador.PartidaIniciada += () => Task.Run(() => NotificarCallbacks(idSala, callback => callback.NotificarPartidaIniciada()));
+            controlador.InicioRonda += ronda => Task.Run(() => NotificarInicioRonda(idSala, controlador, ronda));
+            controlador.JugadorAdivino += (jugador, puntos) => Task.Run(() => NotificarCallbacks(idSala, callback => callback.NotificarJugadorAdivino(jugador, puntos)));
+            controlador.MensajeChatRecibido += (jugador, mensaje) => Task.Run(() => NotificarCallbacks(idSala, callback => callback.NotificarMensajeChat(jugador, mensaje)));
+            controlador.TrazoRecibido += trazo => Task.Run(() => NotificarCallbacks(idSala, callback => callback.NotificarTrazoRecibido(trazo)));
+            controlador.FinRonda += () => Task.Run(() => NotificarCallbacks(idSala, callback => callback.NotificarFinRonda()));
+            controlador.FinPartida += resultado => Task.Run(() => NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado)));
+        }
+
+        private void NotificarInicioRonda(string idSala, ControladorPartida controlador, RondaDTO ronda)
+        {
+            List<KeyValuePair<string, ICursoPartidaManejadorCallback>> callbacks;
+            lock (_sincronizacion)
+            {
+                if (!_callbacksPorSala.TryGetValue(idSala, out var callbacksSala))
+                {
+                    return;
+                }
+
+                callbacks = callbacksSala.ToList();
+            }
+
+            var jugadores = controlador.ObtenerJugadores();
+            var dibujante = jugadores.FirstOrDefault(jugador => jugador.EsDibujante);
+            var idDibujante = dibujante?.IdConexion;
+
+            foreach (var par in callbacks)
+            {
+                var rol = string.Equals(par.Key, idDibujante, StringComparison.OrdinalIgnoreCase)
+                    ? "Dibujante"
+                    : "Adivinador";
+
+                var rondaPersonalizada = new RondaDTO
+                {
+                    IdCancion = ronda.IdCancion,
+                    Rol = rol,
+                    PistaArtista = ronda.PistaArtista,
+                    PistaGenero = ronda.PistaGenero,
+                    TiempoSegundos = ronda.TiempoSegundos
+                };
+
+                try
+                {
+                    par.Value.NotificarInicioRonda(rondaPersonalizada);
+                }
+                catch (CommunicationException ex)
+                {
+                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1} durante inicio de ronda. Se quitar su callback.", par.Key, idSala);
+                    _logger.Warn(ex);
+                    RemoverCallback(idSala, par.Key);
+                }
+                catch (TimeoutException ex)
+                {
+                    _logger.WarnFormat("Timeout al notificar inicio de ronda a jugador {0} en sala {1}. Se quitar su callback.", par.Key, idSala);
+                    _logger.Warn(ex);
+                    RemoverCallback(idSala, par.Key);
+                }
+            }
         }
 
         private void NotificarCallbacks(string idSala, Action<ICursoPartidaManejadorCallback> accion)
@@ -154,13 +214,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
                 catch (CommunicationException ex)
                 {
-                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1}. Se quitar� su callback.", par.Key, idSala);
+                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
                 catch (TimeoutException ex)
                 {
-                    _logger.WarnFormat("Timeout al notificar a jugador {0} en sala {1}. Se quitar� su callback.", par.Key, idSala);
+                    _logger.WarnFormat("Timeout al notificar a jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
