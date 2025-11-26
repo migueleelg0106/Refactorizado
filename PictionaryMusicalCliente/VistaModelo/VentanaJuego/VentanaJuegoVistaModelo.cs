@@ -515,16 +515,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         public ICommand LimpiarDibujoComando { get; private set; }
 
         /// <summary>
-        /// Comando para mostrar el overlay del dibujante.
-        /// </summary>
-        public ICommand MostrarOverlayDibujanteComando { get; private set; }
-
-        /// <summary>
-        /// Comando para mostrar el overlay del adivinador.
-        /// </summary>
-        public ICommand MostrarOverlayAdivinadorComando { get; private set; }
-
-        /// <summary>
         /// Comando para ocultar el overlay de tiempo terminado.
         /// </summary>
         public ICommand OcultarOverlayAlarmaComando { get; private set; }
@@ -622,10 +612,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             CambiarGrosorComando = new ComandoDelegado(p => EjecutarCambiarGrosor(p));
             CambiarColorComando = new ComandoDelegado(p => EjecutarCambiarColor(p));
             LimpiarDibujoComando = new ComandoDelegado(_ => EjecutarLimpiarDibujo());
-            MostrarOverlayDibujanteComando = new ComandoDelegado(
-                _ => EjecutarMostrarOverlayDibujante());
-            MostrarOverlayAdivinadorComando = new ComandoDelegado(
-                _ => EjecutarMostrarOverlayAdivinador());
             OcultarOverlayAlarmaComando = new ComandoDelegado(_ => OcultarOverlayAlarma());
             CerrarVentanaComando = new ComandoDelegado(_ => EjecutarCerrarVentana());
         }
