@@ -579,8 +579,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
                 _logger.Error("Error al unirse a sala.", ex);
 
                 string mensaje;
-                if (ex?.Tipo == TipoErrorServicio.FallaServicio || string.IsNullOrWhiteSpace
-                    (ex?.Message))
+                if (string.IsNullOrWhiteSpace(ex?.Message))
                 {
                     mensaje = Lang.errorTextoNoEncuentraPartida;
                 }

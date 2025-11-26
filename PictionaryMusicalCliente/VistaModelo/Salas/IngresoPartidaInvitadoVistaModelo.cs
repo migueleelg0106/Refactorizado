@@ -246,8 +246,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             {
                 _logger.Error("Excepción de servicio al intentar unirse como invitado.", ex);
                 string mensaje;
-                if (ex?.Tipo == TipoErrorServicio.FallaServicio || string.IsNullOrWhiteSpace
-                    (ex?.Message))
+                if (string.IsNullOrWhiteSpace(ex?.Message))
                 {
                     mensaje = Lang.errorTextoNoEncuentraPartida;
                 }
