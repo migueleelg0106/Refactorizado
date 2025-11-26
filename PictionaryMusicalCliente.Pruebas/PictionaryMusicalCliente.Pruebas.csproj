@@ -77,6 +77,7 @@
     <Compile Include="PruebasVistaModelo\VentanaJuego\PruebaClasificacionVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\InicioSesion\PruebaCreacionCuentaVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\Amigos\PruebaEliminacionAmigoVistaModelo.cs" />
+    <Compile Include="PruebasVistaModelo\Salas\PruebaChatVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\Salas\PruebaExpulsionJugadorVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\Salas\PruebaIngresoPartidaInvitadoVistaModelo.cs" />
     <Compile Include="PruebasVistaModelo\InicioSesion\PruebaInicioSesionVistaModelo.cs" />
