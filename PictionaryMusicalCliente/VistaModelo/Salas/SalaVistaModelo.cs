@@ -61,6 +61,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private bool _puedeInvitarAmigos;
         private bool _salaCancelada;
         private bool _aplicacionCerrando;
+        private HashSet<string> _adivinadoresQuienYaAcertaron;
+        private string _nombreDibujanteActual;
+        private int _puntosBonusDibujanteAcumulados;
+        private bool _rondaTerminadaTemprano;
 
         /// <summary>
         /// Define los destinos posibles al salir de la partida.
@@ -113,6 +117,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _idJugador = ObtenerIdentificadorJugador();
 
             _amigosInvitados = new HashSet<int>();
+            _adivinadoresQuienYaAcertaron = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            _nombreDibujanteActual = string.Empty;
+            _puntosBonusDibujanteAcumulados = 0;
+            _rondaTerminadaTemprano = false;
 
             _partidaVistaModelo = new PartidaIniciadaVistaModelo();
             _chatVistaModelo = new ChatVistaModelo();
@@ -1002,6 +1010,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <param name="ronda">Datos de la ronda.</param>
         public void NotificarInicioRonda(DTOs.RondaDTO ronda)
         {
+            _adivinadoresQuienYaAcertaron.Clear();
+            _puntosBonusDibujanteAcumulados = 0;
+            _rondaTerminadaTemprano = false;
+
+            if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
+            {
+                _nombreDibujanteActual = _nombreUsuarioSesion;
+            }
+            else
+            {
+                _nombreDibujanteActual = string.Empty;
+            }
+
             _partidaVistaModelo.NotificarInicioRonda(ronda, Jugadores?.Count ?? 0);
         }
 
@@ -1031,11 +1052,67 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     {
                         jugador.Puntos += puntos;
                     }
+
+                    if (!_adivinadoresQuienYaAcertaron.Contains(nombreJugador))
+                    {
+                        _adivinadoresQuienYaAcertaron.Add(nombreJugador);
+
+                        int puntosBonusDibujante = (int)(puntos * 0.2);
+                        _puntosBonusDibujanteAcumulados += puntosBonusDibujante;
+
+                        AgregarPuntosAlDibujante(puntosBonusDibujante);
+
+                        if (TodosLosAdivinadoresAcertaron() && !_rondaTerminadaTemprano)
+                        {
+                            _rondaTerminadaTemprano = true;
+                            _partidaVistaModelo.NotificarFinRondaTemprano();
+                        }
+                    }
                 }
 
                 _chatVistaModelo.NotificarJugadorAdivinoEnChat(nombreJugador);
                 _partidaVistaModelo.NotificarJugadorAdivino(nombreJugador, puntos, _nombreUsuarioSesion);
             });
+        }
+
+        private void AgregarPuntosAlDibujante(int puntosBonusDibujante)
+        {
+            if (puntosBonusDibujante <= 0 || Jugadores == null)
+            {
+                return;
+            }
+
+            JugadorElemento dibujante = null;
+
+            if (!string.IsNullOrWhiteSpace(_nombreDibujanteActual))
+            {
+                dibujante = Jugadores.FirstOrDefault(j => string.Equals(
+                    j.Nombre,
+                    _nombreDibujanteActual,
+                    StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (dibujante == null)
+            {
+                dibujante = Jugadores.FirstOrDefault(j =>
+                    !_adivinadoresQuienYaAcertaron.Contains(j.Nombre));
+            }
+
+            if (dibujante != null)
+            {
+                dibujante.Puntos += puntosBonusDibujante;
+            }
+        }
+
+        private int ObtenerTotalAdivinadores()
+        {
+            return Jugadores?.Count > 0 ? Jugadores.Count - 1 : 0;
+        }
+
+        private bool TodosLosAdivinadoresAcertaron()
+        {
+            int totalAdivinadores = ObtenerTotalAdivinadores();
+            return totalAdivinadores > 0 && _adivinadoresQuienYaAcertaron.Count >= totalAdivinadores;
         }
 
         /// <summary>
@@ -1062,6 +1139,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public void NotificarFinRonda()
         {
+            if (_rondaTerminadaTemprano)
+            {
+                return;
+            }
+
             _partidaVistaModelo.NotificarFinRonda();
         }
 

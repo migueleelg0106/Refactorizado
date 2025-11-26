@@ -851,6 +851,37 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
         /// <summary>
+        /// Procesa el fin de ronda temprano cuando todos los adivinadores acertaron.
+        /// No reproduce alarma ni muestra overlay de alarma, solo muestra la cancion en azul.
+        /// </summary>
+        public void NotificarFinRondaTemprano()
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() =>
+            {
+                _temporizador.Stop();
+                _manejadorCancion.Detener();
+                LimpiarTrazos?.Invoke();
+                PuedeEscribirCambiado?.Invoke(false);
+                MostrarEstadoRonda = false;
+                TextoContador = string.Empty;
+
+                if (!string.IsNullOrWhiteSpace(_nombreCancionActual))
+                {
+                    PalabraAdivinar = _nombreCancionActual;
+                }
+
+                VisibilidadPalabraAdivinar = Visibility.Visible;
+                ColorPalabraAdivinar = Brushes.Blue;
+            });
+        }
+
+        /// <summary>
         /// Procesa la notificacion de fin de partida.
         /// </summary>
         public void NotificarFinPartida()
