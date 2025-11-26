@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.LogicaNegocio;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -134,59 +135,53 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private void SuscribirEventos(ControladorPartida controlador, string idSala)
         {
             controlador.PartidaIniciada += () => NotificarCallbacks(idSala, callback => callback.NotificarPartidaIniciada());
-            controlador.InicioRonda += ronda => NotificarInicioRonda(idSala, controlador, ronda);
+            controlador.InicioRonda += rondaBase =>
+            Task.Run(() =>
+            {
+                var jugadoresEstado = controlador.ObtenerJugadores();
+
+                List<KeyValuePair<string, ICursoPartidaManejadorCallback>> callbacks;
+                lock (_sincronizacion)
+                {
+                    if (!_callbacksPorSala.TryGetValue(idSala, out var callbacksSala)) return;
+                    callbacks = callbacksSala.ToList();
+                }
+
+                foreach (var par in callbacks)
+                {
+                    var idJugador = par.Key;
+                    var callback = par.Value;
+
+                    var datosJugador = jugadoresEstado.FirstOrDefault(j =>
+                        string.Equals(j.IdConexion, idJugador, StringComparison.OrdinalIgnoreCase));
+
+                    bool esDibujante = datosJugador != null && datosJugador.EsDibujante;
+
+                    var rondaPersonalizada = new RondaDTO
+                    {
+                        IdCancion = rondaBase.IdCancion,
+                        PistaArtista = rondaBase.PistaArtista,
+                        PistaGenero = rondaBase.PistaGenero,
+                        TiempoSegundos = rondaBase.TiempoSegundos,
+                        Rol = esDibujante ? "Dibujante" : "Adivinador"
+                    };
+
+                    try
+                    {
+                        callback.NotificarInicioRonda(rondaPersonalizada);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn($"Error notificando inicio de ronda a {idJugador}", ex);
+                        RemoverCallback(idSala, idJugador);
+                    }
+                }
+            });
             controlador.JugadorAdivino += (jugador, puntos) => NotificarCallbacks(idSala, callback => callback.NotificarJugadorAdivino(jugador, puntos));
             controlador.MensajeChatRecibido += (jugador, mensaje) => NotificarCallbacks(idSala, callback => callback.NotificarMensajeChat(jugador, mensaje));
             controlador.TrazoRecibido += trazo => NotificarCallbacks(idSala, callback => callback.NotificarTrazoRecibido(trazo));
             controlador.FinRonda += () => NotificarCallbacks(idSala, callback => callback.NotificarFinRonda());
             controlador.FinPartida += resultado => NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado));
-        }
-
-        private void NotificarInicioRonda(string idSala, ControladorPartida controlador, RondaDTO ronda)
-        {
-            List<KeyValuePair<string, ICursoPartidaManejadorCallback>> callbacks;
-            lock (_sincronizacion)
-            {
-                if (!_callbacksPorSala.TryGetValue(idSala, out var callbacksSala))
-                {
-                    return;
-                }
-
-                callbacks = callbacksSala.ToList();
-            }
-
-            var jugadores = controlador.ObtenerJugadores();
-            var jugadoresPorId = jugadores.ToDictionary(j => j.IdConexion, StringComparer.OrdinalIgnoreCase);
-
-            foreach (var par in callbacks)
-            {
-                try
-                {
-                    jugadoresPorId.TryGetValue(par.Key, out var jugadorActual);
-                    var rondaParaJugador = new RondaDTO
-                    {
-                        IdCancion = ronda.IdCancion,
-                        Rol = jugadorActual?.EsDibujante == true ? "Dibujante" : "Adivinador",
-                        PistaArtista = ronda.PistaArtista,
-                        PistaGenero = ronda.PistaGenero,
-                        TiempoSegundos = ronda.TiempoSegundos
-                    };
-
-                    par.Value.NotificarInicioRonda(rondaParaJugador);
-                }
-                catch (CommunicationException ex)
-                {
-                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
-                    _logger.Warn(ex);
-                    RemoverCallback(idSala, par.Key);
-                }
-                catch (TimeoutException ex)
-                {
-                    _logger.WarnFormat("Timeout al notificar a jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
-                    _logger.Warn(ex);
-                    RemoverCallback(idSala, par.Key);
-                }
-            }
         }
 
         private void NotificarCallbacks(string idSala, Action<ICursoPartidaManejadorCallback> accion)
