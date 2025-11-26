@@ -233,7 +233,7 @@ namespace PictionaryMusicalCliente
                 return;
             }
 
-            if (trazo.PuntosX.Length == 0 && trazo.PuntosY.Length == 0 && trazo.EsLimpiarTodo)
+            if (trazo.EsLimpiarTodo)
             {
                 ink.Strokes.Clear();
                 return;
@@ -252,7 +252,7 @@ namespace PictionaryMusicalCliente
 
             var tamano = Math.Max(1, trazo.Grosor);
             var formaBorrador = new EllipseStylusShape(tamano, tamano);
-            var strokesActuales = new StrokeCollection(ink.Strokes);
+            var strokesActuales = ink.Strokes.ToList();
 
             foreach (var stroke in strokesActuales)
             {

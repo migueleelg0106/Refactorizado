@@ -1061,8 +1061,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             var trazoLimpiar = new DTOs.TrazoDTO
             {
-                PuntosX = new double[0],
-                PuntosY = new double[0],
+                PuntosX = Array.Empty<double>(),
+                PuntosY = Array.Empty<double>(),
                 ColorHex = string.Empty,
                 Grosor = 0,
                 EsBorrado = true,
