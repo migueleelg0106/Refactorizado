@@ -141,11 +141,16 @@ namespace PictionaryMusicalServidor.Datos
 
         private static List<Cancion> ObtenerCandidatos(string idiomaNormalizado, HashSet<int> idsRechazados)
         {
-            return _canciones.Values
-                .Where(cancion =>
-                    string.Equals(NormalizarTexto(cancion.Idioma), idiomaNormalizado, StringComparison.OrdinalIgnoreCase)
-                    && !idsRechazados.Contains(cancion.Id))
-                .ToList();
+            var candidatos = _canciones.Values
+                .Where(cancion => !idsRechazados.Contains(cancion.Id));
+
+            if (!string.Equals(idiomaNormalizado, "mixto", StringComparison.OrdinalIgnoreCase))
+            {
+                candidatos = candidatos.Where(cancion =>
+                    string.Equals(NormalizarTexto(cancion.Idioma), idiomaNormalizado, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return candidatos.ToList();
         }
 
         private static void RegistrarErrorFaltaCanciones(string idiomaOriginal, string idiomaMapeado, string idiomaNorm)

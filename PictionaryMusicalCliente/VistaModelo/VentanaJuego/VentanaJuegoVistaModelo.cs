@@ -51,7 +51,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private readonly HashSet<int> _amigosInvitados;
         private readonly bool _esHost;
         private readonly string _idJugador;
-        private readonly Dictionary<int, string> _catalogoAudio;
+        private readonly Dictionary<int, CancionCatalogo> _catalogoAudio;
         private CursoPartidaManejadorClient _proxyJuego;
 
         private bool _juegoIniciado;
@@ -73,6 +73,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private string _textoArtista;
         private string _textoGenero;
         private string _textoBotonIniciarPartida;
+        private Visibility _visibilidadArtista;
+        private Visibility _visibilidadGenero;
         private bool _botonIniciarPartidaHabilitado;
         private string _codigoSala;
         private ObservableCollection<JugadorElemento> _jugadores;
@@ -153,6 +155,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _visibilidadOverlayAlarma = Visibility.Collapsed;
             _visibilidadPalabraAdivinar = Visibility.Collapsed;
             _visibilidadInfoCancion = Visibility.Collapsed;
+            _visibilidadArtista = Visibility.Collapsed;
+            _visibilidadGenero = Visibility.Collapsed;
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
             _botonIniciarPartidaHabilitado = _esHost;
             _mostrarEstadoRonda = false;
@@ -363,6 +367,24 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             get => _visibilidadInfoCancion;
             set => EstablecerPropiedad(ref _visibilidadInfoCancion, value);
+        }
+
+        /// <summary>
+        /// Visibilidad del texto de artista.
+        /// </summary>
+        public Visibility VisibilidadArtista
+        {
+            get => _visibilidadArtista;
+            set => EstablecerPropiedad(ref _visibilidadArtista, value);
+        }
+
+        /// <summary>
+        /// Visibilidad del texto de genero musical.
+        /// </summary>
+        public Visibility VisibilidadGenero
+        {
+            get => _visibilidadGenero;
+            set => EstablecerPropiedad(ref _visibilidadGenero, value);
         }
 
         /// <summary>
@@ -678,31 +700,51 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             return Guid.NewGuid().ToString();
         }
 
-        private static Dictionary<int, string> InicializarCatalogoAudio()
+        private static Dictionary<int, CancionCatalogo> InicializarCatalogoAudio()
         {
-            return new Dictionary<int, string>
+            return new Dictionary<int, CancionCatalogo>
             {
-                { 1, "Black_Or_White_Michael_Jackson.mp3" },
-                { 2, "Bocanada_Gustavo_Cerati.mp3" },
-                { 3, "Dont_Stop_The_Music_Rihanna.mp3" },
-                { 4, "Earth_Song_Michael_Jackson.mp3" },
-                { 5, "Gasolina_Daddy_Yankee.mp3" },
-                { 6, "La_Nave_Del_Olvido_Jose_Jose.MP3" },
-                { 7, "Man_In_The_Mirror_Michael_Jackson.mp3" },
-                { 8, "Pupilas_De_Gato_Luis_Miguel.mp3" },
-                { 9, "Redbone_Childish_Gambino.mp3" },
-                { 10, "Tiburon_Proyecto_Uno.mp3" }
+                { 1, new CancionCatalogo("Gasolina", "Gasolina_Daddy_Yankee.mp3", "Español") },
+                { 2, new CancionCatalogo("Bocanada", "Bocanada_Gustavo_Cerati.mp3", "Español") },
+                { 3, new CancionCatalogo("La Nave Del Olvido", "La_Nave_Del_Olvido_Jose_Jose.MP3", "Español") },
+                { 4, new CancionCatalogo("Tiburón", "Tiburon_Proyecto_Uno.mp3", "Español") },
+                { 5, new CancionCatalogo("Pupilas De Gato", "Pupilas_De_Gato_Luis_Miguel.mp3", "Español") },
+                { 6, new CancionCatalogo("Black Or White", "Black_Or_White_Michael_Jackson.mp3", "Ingles") },
+                { 7, new CancionCatalogo("Don't Stop The Music", "Dont_Stop_The_Music_Rihanna.mp3", "Ingles") },
+                { 8, new CancionCatalogo("Man In The Mirror", "Man_In_The_Mirror_Michael_Jackson.mp3", "Ingles") },
+                { 9, new CancionCatalogo("Earth Song", "Earth_Song_Michael_Jackson.mp3", "Ingles") },
+                { 10, new CancionCatalogo("Redbone", "Redbone_Childish_Gambino.mp3", "Ingles") }
             };
         }
 
-        private string ObtenerNombreCancion(int idCancion)
+        private CancionCatalogo ObtenerCancion(int idCancion)
         {
-            if (_catalogoAudio.TryGetValue(idCancion, out string nombreArchivo))
+            if (_catalogoAudio.TryGetValue(idCancion, out var cancion))
             {
-                return nombreArchivo;
+                return cancion;
             }
 
-            return string.Empty;
+            _logger.WarnFormat("No se encontró la canción con id {0} en el catálogo local.", idCancion);
+            return null;
+        }
+
+        private static Visibility DeterminarVisibilidadPista(string textoPista)
+        {
+            return string.IsNullOrWhiteSpace(textoPista) ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private class CancionCatalogo
+        {
+            public CancionCatalogo(string nombre, string archivo, string idioma)
+            {
+                Nombre = nombre;
+                Archivo = archivo;
+                Idioma = idioma;
+            }
+
+            public string Nombre { get; }
+            public string Archivo { get; }
+            public string Idioma { get; }
         }
 
         private void AplicarInicioVisualPartida()
@@ -1045,18 +1087,20 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _contador--;
             TextoContador = _contador.ToString();
 
-            if (_contador <= 0)
-            {
-                _temporizador.Stop();
-                TextoContador = "0";
-                _manejadorCancion.Detener();
+                if (_contador <= 0)
+                {
+                    _temporizador.Stop();
+                    TextoContador = "0";
+                    _manejadorCancion.Detener();
 
-                VisibilidadPalabraAdivinar = Visibility.Collapsed;
-                VisibilidadInfoCancion = Visibility.Collapsed;
+                    VisibilidadPalabraAdivinar = Visibility.Collapsed;
+                    VisibilidadInfoCancion = Visibility.Collapsed;
+                    VisibilidadArtista = Visibility.Collapsed;
+                    VisibilidadGenero = Visibility.Collapsed;
 
-                MostrarOverlayAlarma();
+                    MostrarOverlayAlarma();
+                }
             }
-        }
 
         private void TemporizadorAlarma_Tick(object sender, EventArgs e)
         {
@@ -1109,19 +1153,23 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 VisibilidadCuadriculaDibujo = Visibility.Visible;
                 MostrarEstadoRonda = true;
 
-                string archivoCancion = ObtenerNombreCancion(ronda.IdCancion);
+                var cancion = ObtenerCancion(ronda.IdCancion);
+                string archivoCancion = cancion?.Archivo ?? string.Empty;
+                string nombreCancion = cancion?.Nombre ?? string.Empty;
 
                 if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
                 {
                     EsDibujante = true;
                     PuedeEscribir = false;
-                    PalabraAdivinar = string.IsNullOrWhiteSpace(archivoCancion)
+                    PalabraAdivinar = string.IsNullOrWhiteSpace(nombreCancion)
                         ? PalabraAdivinar
-                        : archivoCancion;
+                        : nombreCancion;
                     VisibilidadPalabraAdivinar = Visibility.Visible;
                     VisibilidadInfoCancion = Visibility.Visible;
                     TextoArtista = string.Empty;
                     TextoGenero = string.Empty;
+                    VisibilidadArtista = Visibility.Collapsed;
+                    VisibilidadGenero = Visibility.Collapsed;
 
                     if (!string.IsNullOrWhiteSpace(archivoCancion))
                     {
@@ -1136,8 +1184,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                     PuedeEscribir = true;
                     PalabraAdivinar = string.Empty;
                     VisibilidadPalabraAdivinar = Visibility.Collapsed;
-                    TextoArtista = string.Format("Artista: {0}", ronda.PistaArtista ?? string.Empty);
-                    TextoGenero = string.Format("Género: {0}", ronda.PistaGenero ?? string.Empty);
+                    TextoArtista = string.IsNullOrWhiteSpace(ronda.PistaArtista)
+                        ? string.Empty
+                        : string.Format("Artista: {0}", ronda.PistaArtista);
+                    TextoGenero = string.IsNullOrWhiteSpace(ronda.PistaGenero)
+                        ? string.Empty
+                        : string.Format("Género: {0}", ronda.PistaGenero);
+                    VisibilidadArtista = DeterminarVisibilidadPista(TextoArtista);
+                    VisibilidadGenero = DeterminarVisibilidadPista(TextoGenero);
                     VisibilidadInfoCancion = Visibility.Visible;
 
                     _manejadorCancion.Detener();
