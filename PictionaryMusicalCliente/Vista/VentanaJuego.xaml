@@ -19,85 +19,93 @@
             <ColumnDefinition Width="320"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Margin="8" Background="Wheat">
+        <Grid Grid.Column="0" Margin="8" Background="Wheat">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <Border Margin="6" Background="White" BorderBrush="Black" 
-                    BorderThickness="2" CornerRadius="3">
+            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <TextBlock Text="{x:Static language:Lang.partidaTextoJugadores}" 
-                               FontWeight="Bold" FontFamily="Comic Sans MS" 
-                               HorizontalAlignment="Center" Margin="4"/>
+                    <Border Margin="6" Background="White" BorderBrush="Black"
+                            BorderThickness="2" CornerRadius="3">
+                        <StackPanel>
+                            <TextBlock Text="{x:Static language:Lang.partidaTextoJugadores}"
+                                       FontWeight="Bold" FontFamily="Comic Sans MS"
+                                       HorizontalAlignment="Center" Margin="4"/>
 
-                    <ItemsControl ItemsSource="{Binding Jugadores}" FontFamily="Comic Sans MS" 
-                                  Margin="4">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                            <ItemsControl ItemsSource="{Binding Jugadores}" FontFamily="Comic Sans MS"
+                                          Margin="4">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0" Text="{Binding Nombre}" 
-                                               VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="0" Text="{Binding Nombre}"
+                                                       VerticalAlignment="Center"/>
 
-                                    <Button Grid.Column="1" Background="Transparent"
-                                            BorderThickness="0"
-                                            Command="{Binding ExpulsarComando}"
-                                            Visibility="{Binding MostrarBotonExpulsar, Converter={StaticResource BooleanoVisibilidadColapsar}}"
-                                            Cursor="Hand" ToolTip="Expulsar jugador">
-                                        <Image Source="/Recursos/Rechazar.png" Width="18" 
-                                               Height="18"/>
-                                    </Button>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                                            <Button Grid.Column="1" Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Command="{Binding ExpulsarComando}"
+                                                    Visibility="{Binding MostrarBotonExpulsar, Converter={StaticResource BooleanoVisibilidadColapsar}}"
+                                                    Cursor="Hand" ToolTip="Expulsar jugador">
+                                                <Image Source="/Recursos/Rechazar.png" Width="18"
+                                                       Height="18"/>
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Margin="6"
+                            Content="{x:Static language:Lang.invitarAmigosTextoInvitarAmigos}"
+                            FontFamily="Comic Sans MS" Background="LightGreen"
+                            Command="{Binding InvitarAmigosComando}"
+                            Visibility="{Binding PuedeInvitarAmigos, Converter={StaticResource BooleanoVisibilidadColapsar}}"/>
+
+                    <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2"
+                            CornerRadius="3" Visibility="{Binding PuedeInvitarPorCorreo, Converter={StaticResource BooleanoVisibilidadColapsar}}">
+                        <StackPanel Margin="8">
+                            <TextBlock Text="{x:Static language:Lang.globalTextoCorreo}" FontWeight="Bold"
+                                       Margin="0,0,0,6" HorizontalAlignment="Center"
+                                       FontFamily="Comic Sans MS"/>
+
+                            <TextBox x:Name="campoTextoCorreoInvitacion" Height="28" Margin="0,0,0,6"
+                                     MaxLength="50" Text="{Binding CorreoInvitacion, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Button Content="{x:Static language:Lang.partidaAdminTextoInvitarCorreo}"
+                                    Background="LightGreen" FontFamily="Comic Sans MS"
+                                    Command="{Binding InvitarCorreoComando}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2"
+                            CornerRadius="3">
+                        <StackPanel Margin="8">
+                            <TextBlock Text="{x:Static language:Lang.partidaTextoCodigo}" FontWeight="Bold"
+                                       Margin="0,0,0,6" HorizontalAlignment="Center"
+                                       FontFamily="Comic Sans MS"/>
+
+                            <TextBlock Text="{Binding CodigoSala}" FontSize="16" FontWeight="Bold"
+                                       HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
-            </Border>
+            </ScrollViewer>
 
-            <Button Margin="6"
-                    Content="{x:Static language:Lang.invitarAmigosTextoInvitarAmigos}"
-                    FontFamily="Comic Sans MS" Background="LightGreen"
-                    Command="{Binding InvitarAmigosComando}"
-                    Visibility="{Binding PuedeInvitarAmigos, Converter={StaticResource BooleanoVisibilidadColapsar}}"/>
-
-            <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" 
-                    CornerRadius="3" Visibility="{Binding PuedeInvitarPorCorreo, Converter={StaticResource BooleanoVisibilidadColapsar}}">
-                <StackPanel Margin="8">
-                    <TextBlock Text="{x:Static language:Lang.globalTextoCorreo}" FontWeight="Bold" 
-                               Margin="0,0,0,6" HorizontalAlignment="Center" 
-                               FontFamily="Comic Sans MS"/>
-
-                    <TextBox x:Name="campoTextoCorreoInvitacion" Height="28" Margin="0,0,0,6" 
-                             MaxLength="50" Text="{Binding CorreoInvitacion, UpdateSourceTrigger=PropertyChanged}"/>
-
-                    <Button Content="{x:Static language:Lang.partidaAdminTextoInvitarCorreo}" 
-                            Background="LightGreen" FontFamily="Comic Sans MS" 
-                            Command="{Binding InvitarCorreoComando}"/>
-                </StackPanel>
-            </Border>
-
-            <Border Margin="6" Background="White" BorderBrush="Black" BorderThickness="2" 
-                    CornerRadius="3">
-                <StackPanel Margin="8">
-                    <TextBlock Text="{x:Static language:Lang.partidaTextoCodigo}" FontWeight="Bold" 
-                               Margin="0,0,0,6" HorizontalAlignment="Center" 
-                               FontFamily="Comic Sans MS"/>
-
-                    <TextBlock Text="{Binding CodigoSala}" FontSize="16" FontWeight="Bold" 
-                               HorizontalAlignment="Center" FontFamily="Comic Sans MS"/>
-                </StackPanel>
-            </Border>
-
-            <StackPanel Margin="10,220,0,0">
-                <Button Name="botonAjustesPartida" Content="{x:Static language:Lang.globalTextoAjustes}" 
-                        FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
-                        Height="35" Width="107" FontFamily="Comic Sans MS" 
+            <Grid Grid.Row="1" Margin="6,10,0,8">
+                <Button Name="botonAjustesPartida" Content="{x:Static language:Lang.globalTextoAjustes}"
+                        FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                        Height="35" Width="107" FontFamily="Comic Sans MS"
                         Command="{Binding AbrirAjustesComando}"/>
-            </StackPanel>
+            </Grid>
 
-        </StackPanel>
+        </Grid>
 
         <Grid Grid.Column="1" Margin="8">
             <Grid.RowDefinitions>
