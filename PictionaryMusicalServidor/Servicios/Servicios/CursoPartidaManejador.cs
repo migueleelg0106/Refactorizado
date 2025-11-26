@@ -158,15 +158,29 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             var jugadores = controlador.ObtenerJugadores();
             var jugadoresPorId = jugadores.ToDictionary(j => j.IdConexion, StringComparer.OrdinalIgnoreCase);
 
+            _logger.InfoFormat("Notificando inicio de ronda en sala {0}. Jugadores registrados: {1}, Callbacks registrados: {2}",
+                idSala, jugadores.Count, callbacks.Count);
+
+            foreach (var jugador in jugadores)
+            {
+                _logger.InfoFormat("Jugador en partida: Id={0}, Nombre={1}, EsDibujante={2}",
+                    jugador.IdConexion, jugador.NombreUsuario, jugador.EsDibujante);
+            }
+
             foreach (var par in callbacks)
             {
                 try
                 {
-                    jugadoresPorId.TryGetValue(par.Key, out var jugadorActual);
+                    var encontrado = jugadoresPorId.TryGetValue(par.Key, out var jugadorActual);
+                    var rol = jugadorActual?.EsDibujante == true ? "Dibujante" : "Adivinador";
+
+                    _logger.InfoFormat("Asignando rol a callback {0}: Encontrado={1}, EsDibujante={2}, Rol={3}",
+                        par.Key, encontrado, jugadorActual?.EsDibujante, rol);
+
                     var rondaParaJugador = new RondaDTO
                     {
                         IdCancion = ronda.IdCancion,
-                        Rol = jugadorActual?.EsDibujante == true ? "Dibujante" : "Adivinador",
+                        Rol = rol,
                         PistaArtista = ronda.PistaArtista,
                         PistaGenero = ronda.PistaGenero,
                         TiempoSegundos = ronda.TiempoSegundos

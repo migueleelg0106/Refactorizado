@@ -142,7 +142,8 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 _jugadores.Add(idConexion, jugador);
                 _colaDibujantes.Enqueue(idConexion);
 
-                _logger.InfoFormat("Jugador {0} agregado a la partida. Total jugadores: {1}.", nombreUsuario, _jugadores.Count);
+                _logger.InfoFormat("Jugador {0} (IdConexion={1}) agregado a la partida. Total jugadores: {2}. Cola dibujantes: {3}.",
+                    nombreUsuario, idConexion, _jugadores.Count, _colaDibujantes.Count);
             }
         }
 
@@ -352,6 +353,9 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
         private void SeleccionarDibujante()
         {
+            _logger.InfoFormat("Seleccionando dibujante. Jugadores: {0}, Cola: {1}",
+                _jugadores.Count, _colaDibujantes.Count);
+
             foreach (var jugador in _jugadores.Values)
             {
                 jugador.EsDibujante = false;
@@ -367,8 +371,15 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     dibujante.EsDibujante = true;
                     dibujante.YaAdivino = true;
 
+                    _logger.InfoFormat("Dibujante seleccionado: Id={0}, Nombre={1}",
+                        idDibujante, dibujante.NombreUsuario);
+
                     _colaDibujantes.Enqueue(idDibujante);
                     return;
+                }
+                else
+                {
+                    _logger.WarnFormat("Jugador con Id={0} ya no está en la partida, buscando siguiente.", idDibujante);
                 }
             }
 
