@@ -16,6 +16,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
     public class ControladorPartida
     {
         private const string RolDibujante = "Dibujante";
+        private const string MensajeCancelacionFaltaJugadores = "No hay suficientes jugadores para seguir jugando, se canceló la partida.";
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ControladorPartida));
 
         private readonly Dictionary<string, JugadorPartida> _jugadores = new Dictionary<string, JugadorPartida>(StringComparer.Ordinal);
@@ -153,12 +154,31 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 return;
             }
 
+            ResultadoPartidaDTO resultadoCancelacion = null;
+
             lock (_sincronizacion)
             {
                 if (_jugadores.Remove(idConexion))
                 {
                     _logger.InfoFormat("Jugador con conexión {0} removido de la partida.", idConexion);
+
+                    if (_estadoActual == EstadoPartida.Jugando && QuedaSoloHost())
+                    {
+                        _estadoActual = EstadoPartida.Finalizada;
+                        _timerRonda.Stop();
+
+                        resultadoCancelacion = new ResultadoPartidaDTO
+                        {
+                            Clasificacion = ObtenerClasificacion(),
+                            Mensaje = MensajeCancelacionFaltaJugadores
+                        };
+                    }
                 }
+            }
+
+            if (resultadoCancelacion != null)
+            {
+                FinPartida?.Invoke(resultadoCancelacion);
             }
         }
 
@@ -491,6 +511,11 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             {
                 Clasificacion = clasificacion
             });
+        }
+
+        private bool QuedaSoloHost()
+        {
+            return _jugadores.Count == 1 && _jugadores.Values.All(jugador => jugador.EsHost);
         }
     }
 }

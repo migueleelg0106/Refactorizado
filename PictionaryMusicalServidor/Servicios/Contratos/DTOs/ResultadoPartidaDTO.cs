@@ -11,5 +11,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
     {
         [DataMember]
         public List<ClasificacionUsuarioDTO> Clasificacion { get; set; }
+
+        [DataMember]
+        public string Mensaje { get; set; }
     }
 }
