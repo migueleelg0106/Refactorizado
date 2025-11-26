@@ -628,7 +628,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 async () => await EjecutarInvitarAmigosAsync(),
                 () => PuedeInvitarAmigos);
             AbrirAjustesComando = new ComandoDelegado(_ => EjecutarAbrirAjustes());
-            IniciarPartidaComando = new ComandoDelegado(_ => EjecutarIniciarPartida());
+            IniciarPartidaComando = new ComandoAsincrono(
+                async _ => await EjecutarIniciarPartidaAsync());
             SeleccionarLapizComando = new ComandoDelegado(_ => EjecutarSeleccionarLapiz());
             SeleccionarBorradorComando = new ComandoDelegado(_ => EjecutarSeleccionarBorrador());
             CambiarGrosorComando = new ComandoDelegado(p => EjecutarCambiarGrosor(p));
@@ -894,7 +895,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             }
         }
 
-        private void EjecutarIniciarPartida()
+        private async Task EjecutarIniciarPartidaAsync()
         {
             if (JuegoIniciado)
             {
@@ -910,26 +911,29 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             try
             {
+                BotonIniciarPartidaHabilitado = false;
+
                 if (_proxyJuego != null)
                 {
-                    _proxyJuego.IniciarPartida(_codigoSala, _idJugador);
+                    await _proxyJuego.IniciarPartidaAsync(_codigoSala, _idJugador)
+                        .ConfigureAwait(true);
                 }
                 else
                 {
                     AplicarInicioVisualPartida();
                 }
-
-                BotonIniciarPartidaHabilitado = false;
             }
             catch (Exception ex) when (ex is CommunicationException || ex is TimeoutException)
             {
                 _logger.Error("No se pudo solicitar el inicio de la partida.", ex);
                 SonidoManejador.ReproducirError();
+                BotonIniciarPartidaHabilitado = true;
             }
             catch (Exception ex)
             {
                 _logger.Error("Error inesperado al iniciar la partida.", ex);
                 SonidoManejador.ReproducirError();
+                BotonIniciarPartidaHabilitado = true;
             }
         }
 
