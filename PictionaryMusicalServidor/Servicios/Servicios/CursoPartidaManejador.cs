@@ -156,25 +156,21 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
 
             var jugadores = controlador.ObtenerJugadores();
-            var dibujante = jugadores.FirstOrDefault(jugador => jugador.EsDibujante);
+            var jugadoresPorId = jugadores.ToDictionary(j => j.IdConexion, StringComparer.OrdinalIgnoreCase);
 
             foreach (var par in callbacks)
             {
                 try
                 {
-                    var esDibujante = dibujante != null &&
-                        string.Equals(par.Key, dibujante.IdConexion, StringComparison.OrdinalIgnoreCase);
-
-                    var rondaParaJugador = esDibujante
-                        ? ronda
-                        : new RondaDTO
-                        {
-                            IdCancion = ronda.IdCancion,
-                            Rol = "Adivinador",
-                            PistaArtista = ronda.PistaArtista,
-                            PistaGenero = ronda.PistaGenero,
-                            TiempoSegundos = ronda.TiempoSegundos
-                        };
+                    jugadoresPorId.TryGetValue(par.Key, out var jugadorActual);
+                    var rondaParaJugador = new RondaDTO
+                    {
+                        IdCancion = ronda.IdCancion,
+                        Rol = jugadorActual?.EsDibujante == true ? "Dibujante" : "Adivinador",
+                        PistaArtista = ronda.PistaArtista,
+                        PistaGenero = ronda.PistaGenero,
+                        TiempoSegundos = ronda.TiempoSegundos
+                    };
 
                     par.Value.NotificarInicioRonda(rondaParaJugador);
                 }
