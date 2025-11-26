@@ -136,7 +136,7 @@
                 </Grid>
 
                 <TextBlock x:Name="campoTextoPalabraAdivinar" Text="{Binding PalabraAdivinar}"
-                           Foreground="Black" FontSize="25" FontWeight="Bold"
+                           Foreground="{Binding ColorPalabraAdivinar}" FontSize="25" FontWeight="Bold"
                            VerticalAlignment="Center" HorizontalAlignment="Center"
                            FontFamily="Comic Sans MS" DockPanel.Dock="Top"
                            Visibility="{Binding VisibilidadPalabraAdivinar}"/>
