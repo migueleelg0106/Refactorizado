@@ -22,6 +22,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         private static readonly Dictionary<string, Func<string>> MapaMensajes =
             new Dictionary<string, Func<string>>(StringComparer.Ordinal)
             {
+                ["La partida ya comenzó"]
+                    = () => LangResources.Lang.errorTextoPartidaYaIniciada,
                 ["No fue posible procesar la solicitud de verificación."]
                     = () => LangResources.Lang.errorTextoProcesarSolicitudVerificacion,
                 ["No fue posible reenviar el código de verificación."]
