@@ -211,6 +211,8 @@
     <Compile Include="VistaModelo\InicioSesion\CreacionCuentaVistaModelo.cs" />
     <Compile Include="VistaModelo\Sesion\TerminacionSesionVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\SalaVistaModelo.cs" />
+    <Compile Include="VistaModelo\Salas\PartidaIniciadaVistaModelo.cs" />
+    <Compile Include="VistaModelo\Salas\ChatVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\ExpulsionJugadorVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\IngresoPartidaInvitadoVistaModelo.cs" />
     <Compile Include="VistaModelo\VentanaPrincipal\VentanaPrincipalVistaModelo.cs" />

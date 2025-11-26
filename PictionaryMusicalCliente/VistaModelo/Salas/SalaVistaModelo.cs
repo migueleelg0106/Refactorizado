@@ -1,4 +1,4 @@
-﻿using log4net;
+using log4net;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
@@ -19,14 +19,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
     /// <summary>
-    /// Coordina la logica de la partida, incluyendo dibujo, chat, rondas y gestion de jugadores.
-    /// Mantiene el estado sincronizado con el servidor y gestiona los eventos de la UI.
+    /// Coordina la logica de la sala anterior al inicio de la partida.
+    /// Gestiona jugadores, invitaciones, codigo de sala y eventos de la UI.
     /// </summary>
     public class SalaVistaModelo : BaseVistaModelo, ICursoPartidaManejadorCallback
     {
@@ -37,10 +36,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private const string CursoPartidaEndpoint = "NetTcpBinding_ICursoPartidaManejador";
         private static readonly StringComparer ComparadorJugadores =
             StringComparer.OrdinalIgnoreCase;
-        private readonly CancionManejador _manejadorCancion;
-        private readonly DispatcherTimer _overlayTimer;
-        private readonly DispatcherTimer _temporizadorAlarma;
-        private readonly DispatcherTimer _temporizador;
+
         private readonly ISalasServicio _salasServicio;
         private readonly IInvitacionesServicio _invitacionesServicio;
         private readonly IListaAmigosServicio _listaAmigosServicio;
@@ -51,30 +47,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private readonly HashSet<int> _amigosInvitados;
         private readonly bool _esHost;
         private readonly string _idJugador;
-        private readonly Dictionary<int, CancionCatalogo> _catalogoAudio;
+        private readonly PartidaIniciadaVistaModelo _partidaVistaModelo;
+        private readonly ChatVistaModelo _chatVistaModelo;
         private CursoPartidaManejadorClient _proxyJuego;
 
-        private bool _juegoIniciado;
-        private int _numeroRondaActual;
-        private double _grosor;
-        private Color _color;
-        private int _contador;
-        private string _textoContador;
-        private Brush _colorContador;
-        private bool _esHerramientaLapiz;
-        private bool _esHerramientaBorrador;
-        private Visibility _visibilidadCuadriculaDibujo;
-        private Visibility _visibilidadOverlayDibujante;
-        private Visibility _visibilidadOverlayAdivinador;
-        private Visibility _visibilidadOverlayAlarma;
-        private Visibility _visibilidadPalabraAdivinar;
-        private Visibility _visibilidadInfoCancion;
-        private string _palabraAdivinar;
-        private string _textoArtista;
-        private string _textoGenero;
         private string _textoBotonIniciarPartida;
-        private Visibility _visibilidadArtista;
-        private Visibility _visibilidadGenero;
         private bool _botonIniciarPartidaHabilitado;
         private bool _mostrarBotonIniciarPartida;
         private string _codigoSala;
@@ -82,16 +59,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private string _correoInvitacion;
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
-        private bool _mostrarEstadoRonda;
-        private int _turnosCompletadosEnCiclo;
         private bool _salaCancelada;
         private bool _aplicacionCerrando;
-        private bool _puedeEscribir;
-        private bool _esDibujante;
-        private bool _alarmaActiva;
-        private DTOs.RondaDTO _rondaPendiente;
-        private string _nombreCancionActual;
-        private Brush _colorPalabraAdivinar;
 
         /// <summary>
         /// Define los destinos posibles al salir de la partida.
@@ -143,38 +112,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 StringComparison.OrdinalIgnoreCase);
             _idJugador = ObtenerIdentificadorJugador();
 
-            _manejadorCancion = new CancionManejador();
             _amigosInvitados = new HashSet<int>();
-            _catalogoAudio = InicializarCatalogoAudio();
 
-            _numeroRondaActual = 0;
-            _grosor = 6;
-            _color = Colors.Black;
-            _contador = 0;
-            _textoContador = string.Empty;
-            _colorContador = Brushes.Black;
-            _esHerramientaLapiz = true;
-            _esHerramientaBorrador = false;
-            _visibilidadCuadriculaDibujo = Visibility.Collapsed;
-            _visibilidadOverlayDibujante = Visibility.Collapsed;
-            _visibilidadOverlayAdivinador = Visibility.Collapsed;
-            _visibilidadOverlayAlarma = Visibility.Collapsed;
-            _visibilidadPalabraAdivinar = Visibility.Collapsed;
-            _visibilidadInfoCancion = Visibility.Collapsed;
-            _colorPalabraAdivinar = Brushes.Black;
-            _visibilidadArtista = Visibility.Collapsed;
-            _visibilidadGenero = Visibility.Collapsed;
+            _partidaVistaModelo = new PartidaIniciadaVistaModelo();
+            _chatVistaModelo = new ChatVistaModelo();
+
+            ConfigurarPartidaVistaModelo();
+            ConfigurarChatVistaModelo();
+
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
             _botonIniciarPartidaHabilitado = _esHost;
             _mostrarBotonIniciarPartida = _esHost;
-            _mostrarEstadoRonda = false;
-            _turnosCompletadosEnCiclo = 0;
 
             _codigoSala = _sala.Codigo;
             _jugadores = new ObservableCollection<JugadorElemento>();
             ActualizarJugadores(_sala.Jugadores);
             _puedeInvitarPorCorreo = true;
-            _nombreCancionActual = string.Empty;
 
             _salasServicio.JugadorSeUnio += SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio += SalasServicio_JugadorSalio;
@@ -182,23 +135,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _salasServicio.SalaActualizada += SalasServicio_SalaActualizada;
             _salasServicio.SalaCancelada += SalasServicio_SalaCancelada;
 
-            _overlayTimer = new DispatcherTimer();
-            _overlayTimer.Interval = TimeSpan.FromSeconds(5);
-            _overlayTimer.Tick += OverlayTimer_Tick;
-
-            _temporizadorAlarma = new DispatcherTimer();
-            _temporizadorAlarma.Interval = TimeSpan.FromSeconds(5);
-            _temporizadorAlarma.Tick += TemporizadorAlarma_Tick;
-
-            _temporizador = new DispatcherTimer();
-            _temporizador.Interval = TimeSpan.FromSeconds(1);
-            _temporizador.Tick += Temporizador_Tick;
-
             InicializarComandos();
 
             PuedeInvitarPorCorreo = !_esInvitado;
             PuedeInvitarAmigos = !_esInvitado;
-            PuedeEscribir = true;
+            _chatVistaModelo.PuedeEscribir = true;
 
             InicializarProxyPartida();
         }
@@ -222,25 +163,39 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
         }
 
+        private void ConfigurarPartidaVistaModelo()
+        {
+            _partidaVistaModelo.JuegoIniciadoCambiado += OnJuegoIniciadoCambiado;
+            _partidaVistaModelo.PuedeEscribirCambiado += valor =>
+                _chatVistaModelo.PuedeEscribir = valor;
+            _partidaVistaModelo.EnviarTrazoAlServidor = EnviarTrazoAlServidor;
+        }
+
+        private void ConfigurarChatVistaModelo()
+        {
+            _chatVistaModelo.EnviarMensajeAlServidor = EjecutarEnviarMensaje;
+        }
+
+        private void OnJuegoIniciadoCambiado(bool juegoIniciado)
+        {
+            MostrarBotonIniciarPartida = _esHost && !juegoIniciado;
+            ActualizarVisibilidadBotonesExpulsion();
+        }
+
+        /// <summary>
+        /// VistaModelo que coordina la logica de la partida iniciada.
+        /// </summary>
+        public PartidaIniciadaVistaModelo PartidaVistaModelo => _partidaVistaModelo;
+
+        /// <summary>
+        /// VistaModelo que coordina la logica del chat.
+        /// </summary>
+        public ChatVistaModelo ChatVistaModelo => _chatVistaModelo;
+
         /// <summary>
         /// Indica si la partida ha comenzado.
         /// </summary>
-        public bool JuegoIniciado
-        {
-            get => _juegoIniciado;
-            private set
-            {
-                if (EstablecerPropiedad(ref _juegoIniciado, value))
-                {
-                    MostrarBotonIniciarPartida = _esHost && !value;
-                    ActualizarVisibilidadBotonesExpulsion();
-                    if (!value)
-                    {
-                        _turnosCompletadosEnCiclo = 0;
-                    }
-                }
-            }
-        }
+        public bool JuegoIniciado => _partidaVistaModelo.JuegoIniciado;
 
         /// <summary>
         /// Indica si el usuario actual es el anfitrion de la sala.
@@ -250,19 +205,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <summary>
         /// Numero de la ronda actual.
         /// </summary>
-        public int NumeroRondaActual
-        {
-            get => _numeroRondaActual;
-            private set => EstablecerPropiedad(ref _numeroRondaActual, value);
-        }
+        public int NumeroRondaActual => _partidaVistaModelo.NumeroRondaActual;
 
         /// <summary>
         /// Grosor del trazo del pincel.
         /// </summary>
         public double Grosor
         {
-            get => _grosor;
-            set => EstablecerPropiedad(ref _grosor, value);
+            get => _partidaVistaModelo.Grosor;
+            set => _partidaVistaModelo.Grosor = value;
         }
 
         /// <summary>
@@ -270,51 +221,32 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Color Color
         {
-            get => _color;
-            set => EstablecerPropiedad(ref _color, value);
+            get => _partidaVistaModelo.Color;
+            set => _partidaVistaModelo.Color = value;
         }
 
         /// <summary>
         /// Texto a mostrar en el temporizador.
         /// </summary>
-        public string TextoContador
-        {
-            get => _textoContador;
-            set => EstablecerPropiedad(ref _textoContador, value);
-        }
+        public string TextoContador => _partidaVistaModelo.TextoContador;
 
         /// <summary>
         /// Color del texto del temporizador (para alertas).
         /// </summary>
-        public Brush ColorContador
-        {
-            get => _colorContador;
-            set => EstablecerPropiedad(ref _colorContador, value);
-        }
+        public Brush ColorContador => _partidaVistaModelo.ColorContador;
 
         /// <summary>
         /// Indica si se debe mostrar la informacion de la ronda y el temporizador.
         /// </summary>
-        public bool MostrarEstadoRonda
-        {
-            get => _mostrarEstadoRonda;
-            private set => EstablecerPropiedad(ref _mostrarEstadoRonda, value);
-        }
+        public bool MostrarEstadoRonda => _partidaVistaModelo.MostrarEstadoRonda;
 
         /// <summary>
         /// Indica si la herramienta seleccionada es el lapiz.
         /// </summary>
         public bool EsHerramientaLapiz
         {
-            get => _esHerramientaLapiz;
-            set
-            {
-                if (EstablecerPropiedad(ref _esHerramientaLapiz, value))
-                {
-                    EsHerramientaBorrador = !value;
-                    NotificarCambioHerramienta?.Invoke(value);
-                }
-            }
+            get => _partidaVistaModelo.EsHerramientaLapiz;
+            set => _partidaVistaModelo.EsHerramientaLapiz = value;
         }
 
         /// <summary>
@@ -322,18 +254,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public bool EsHerramientaBorrador
         {
-            get => _esHerramientaBorrador;
-            set
-            {
-                if (EstablecerPropiedad(ref _esHerramientaBorrador, value))
-                {
-                    if (value)
-                    {
-                        EsHerramientaLapiz = false;
-                    }
-                    NotificarCambioHerramienta?.Invoke(!value);
-                }
-            }
+            get => _partidaVistaModelo.EsHerramientaBorrador;
+            set => _partidaVistaModelo.EsHerramientaBorrador = value;
         }
 
         /// <summary>
@@ -341,8 +263,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Visibility VisibilidadCuadriculaDibujo
         {
-            get => _visibilidadCuadriculaDibujo;
-            set => EstablecerPropiedad(ref _visibilidadCuadriculaDibujo, value);
+            get => _partidaVistaModelo.VisibilidadCuadriculaDibujo;
+            set => _partidaVistaModelo.VisibilidadCuadriculaDibujo = value;
         }
 
         /// <summary>
@@ -350,8 +272,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Visibility VisibilidadOverlayDibujante
         {
-            get => _visibilidadOverlayDibujante;
-            set => EstablecerPropiedad(ref _visibilidadOverlayDibujante, value);
+            get => _partidaVistaModelo.VisibilidadOverlayDibujante;
+            set => _partidaVistaModelo.VisibilidadOverlayDibujante = value;
         }
 
         /// <summary>
@@ -359,8 +281,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Visibility VisibilidadOverlayAdivinador
         {
-            get => _visibilidadOverlayAdivinador;
-            set => EstablecerPropiedad(ref _visibilidadOverlayAdivinador, value);
+            get => _partidaVistaModelo.VisibilidadOverlayAdivinador;
+            set => _partidaVistaModelo.VisibilidadOverlayAdivinador = value;
         }
 
         /// <summary>
@@ -368,8 +290,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Visibility VisibilidadOverlayAlarma
         {
-            get => _visibilidadOverlayAlarma;
-            set => EstablecerPropiedad(ref _visibilidadOverlayAlarma, value);
+            get => _partidaVistaModelo.VisibilidadOverlayAlarma;
+            set => _partidaVistaModelo.VisibilidadOverlayAlarma = value;
         }
 
         /// <summary>
@@ -377,8 +299,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Visibility VisibilidadPalabraAdivinar
         {
-            get => _visibilidadPalabraAdivinar;
-            set => EstablecerPropiedad(ref _visibilidadPalabraAdivinar, value);
+            get => _partidaVistaModelo.VisibilidadPalabraAdivinar;
+            set => _partidaVistaModelo.VisibilidadPalabraAdivinar = value;
         }
 
         /// <summary>
@@ -386,8 +308,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Visibility VisibilidadInfoCancion
         {
-            get => _visibilidadInfoCancion;
-            set => EstablecerPropiedad(ref _visibilidadInfoCancion, value);
+            get => _partidaVistaModelo.VisibilidadInfoCancion;
+            set => _partidaVistaModelo.VisibilidadInfoCancion = value;
         }
 
         /// <summary>
@@ -395,8 +317,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Visibility VisibilidadArtista
         {
-            get => _visibilidadArtista;
-            set => EstablecerPropiedad(ref _visibilidadArtista, value);
+            get => _partidaVistaModelo.VisibilidadArtista;
+            set => _partidaVistaModelo.VisibilidadArtista = value;
         }
 
         /// <summary>
@@ -404,8 +326,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Visibility VisibilidadGenero
         {
-            get => _visibilidadGenero;
-            set => EstablecerPropiedad(ref _visibilidadGenero, value);
+            get => _partidaVistaModelo.VisibilidadGenero;
+            set => _partidaVistaModelo.VisibilidadGenero = value;
         }
 
         /// <summary>
@@ -413,8 +335,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public string PalabraAdivinar
         {
-            get => _palabraAdivinar;
-            set => EstablecerPropiedad(ref _palabraAdivinar, value);
+            get => _partidaVistaModelo.PalabraAdivinar;
+            set => _partidaVistaModelo.PalabraAdivinar = value;
         }
 
         /// <summary>
@@ -422,8 +344,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public Brush ColorPalabraAdivinar
         {
-            get => _colorPalabraAdivinar;
-            set => EstablecerPropiedad(ref _colorPalabraAdivinar, value);
+            get => _partidaVistaModelo.ColorPalabraAdivinar;
+            set => _partidaVistaModelo.ColorPalabraAdivinar = value;
         }
 
         /// <summary>
@@ -431,8 +353,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public string TextoArtista
         {
-            get => _textoArtista;
-            set => EstablecerPropiedad(ref _textoArtista, value);
+            get => _partidaVistaModelo.TextoArtista;
+            set => _partidaVistaModelo.TextoArtista = value;
         }
 
         /// <summary>
@@ -440,8 +362,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public string TextoGenero
         {
-            get => _textoGenero;
-            set => EstablecerPropiedad(ref _textoGenero, value);
+            get => _partidaVistaModelo.TextoGenero;
+            set => _partidaVistaModelo.TextoGenero = value;
         }
 
         /// <summary>
@@ -539,18 +461,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public bool PuedeEscribir
         {
-            get => _puedeEscribir;
-            private set => EstablecerPropiedad(ref _puedeEscribir, value);
+            get => _chatVistaModelo.PuedeEscribir;
+            private set => _chatVistaModelo.PuedeEscribir = value;
         }
 
         /// <summary>
         /// Indica si el usuario es el dibujante de la ronda.
         /// </summary>
-        public bool EsDibujante
-        {
-            get => _esDibujante;
-            private set => EstablecerPropiedad(ref _esDibujante, value);
-        }
+        public bool EsDibujante => _partidaVistaModelo.EsDibujante;
 
         /// <summary>
         /// Comando para invitar a un usuario por correo.
@@ -575,32 +493,32 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <summary>
         /// Comando para seleccionar el lapiz como herramienta.
         /// </summary>
-        public ICommand SeleccionarLapizComando { get; private set; }
+        public ICommand SeleccionarLapizComando => _partidaVistaModelo.SeleccionarLapizComando;
 
         /// <summary>
         /// Comando para seleccionar el borrador como herramienta.
         /// </summary>
-        public ICommand SeleccionarBorradorComando { get; private set; }
+        public ICommand SeleccionarBorradorComando => _partidaVistaModelo.SeleccionarBorradorComando;
 
         /// <summary>
         /// Comando para cambiar el grosor del trazo.
         /// </summary>
-        public ICommand CambiarGrosorComando { get; private set; }
+        public ICommand CambiarGrosorComando => _partidaVistaModelo.CambiarGrosorComando;
 
         /// <summary>
         /// Comando para cambiar el color del trazo.
         /// </summary>
-        public ICommand CambiarColorComando { get; private set; }
+        public ICommand CambiarColorComando => _partidaVistaModelo.CambiarColorComando;
 
         /// <summary>
         /// Comando para limpiar el lienzo de dibujo.
         /// </summary>
-        public ICommand LimpiarDibujoComando { get; private set; }
+        public ICommand LimpiarDibujoComando => _partidaVistaModelo.LimpiarDibujoComando;
 
         /// <summary>
         /// Comando para ocultar el overlay de tiempo terminado.
         /// </summary>
-        public ICommand OcultarOverlayAlarmaComando { get; private set; }
+        public ICommand OcultarOverlayAlarmaComando => _partidaVistaModelo.OcultarOverlayAlarmaComando;
 
         /// <summary>
         /// Comando para cerrar la ventana de juego.
@@ -615,32 +533,56 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <summary>
         /// Accion notificar cambio de herramienta a la vista.
         /// </summary>
-        public Action<bool> NotificarCambioHerramienta { get; set; }
+        public Action<bool> NotificarCambioHerramienta
+        {
+            get => _partidaVistaModelo.NotificarCambioHerramienta;
+            set => _partidaVistaModelo.NotificarCambioHerramienta = value;
+        }
 
         /// <summary>
         /// Accion para aplicar estilo visual de lapiz.
         /// </summary>
-        public Action AplicarEstiloLapiz { get; set; }
+        public Action AplicarEstiloLapiz
+        {
+            get => _partidaVistaModelo.AplicarEstiloLapiz;
+            set => _partidaVistaModelo.AplicarEstiloLapiz = value;
+        }
 
         /// <summary>
         /// Accion para actualizar cursor de goma.
         /// </summary>
-        public Action ActualizarFormaGoma { get; set; }
+        public Action ActualizarFormaGoma
+        {
+            get => _partidaVistaModelo.ActualizarFormaGoma;
+            set => _partidaVistaModelo.ActualizarFormaGoma = value;
+        }
 
         /// <summary>
         /// Accion para limpiar el Canvas.
         /// </summary>
-        public Action LimpiarTrazos { get; set; }
+        public Action LimpiarTrazos
+        {
+            get => _partidaVistaModelo.LimpiarTrazos;
+            set => _partidaVistaModelo.LimpiarTrazos = value;
+        }
 
         /// <summary>
         /// Evento para trazo recibido desde el servidor.
         /// </summary>
-        public event Action<DTOs.TrazoDTO> TrazoRecibidoServidor;
+        public event Action<DTOs.TrazoDTO> TrazoRecibidoServidor
+        {
+            add => _partidaVistaModelo.TrazoRecibidoServidor += value;
+            remove => _partidaVistaModelo.TrazoRecibidoServidor -= value;
+        }
 
         /// <summary>
         /// Evento para notificar mensajes de chat entrantes.
         /// </summary>
-        public event Action<string, string> MensajeChatRecibido;
+        public event Action<string, string> MensajeChatRecibido
+        {
+            add => _chatVistaModelo.MensajeChatRecibido += value;
+            remove => _chatVistaModelo.MensajeChatRecibido -= value;
+        }
 
         /// <summary>
         /// Accion para mostrar mensajes al usuario.
@@ -690,12 +632,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 () => PuedeInvitarAmigos);
             AbrirAjustesComando = new ComandoDelegado(_ => EjecutarAbrirAjustes());
             IniciarPartidaComando = new ComandoAsincrono(async _ => await EjecutarIniciarPartidaAsync());
-            SeleccionarLapizComando = new ComandoDelegado(_ => EjecutarSeleccionarLapiz());
-            SeleccionarBorradorComando = new ComandoDelegado(_ => EjecutarSeleccionarBorrador());
-            CambiarGrosorComando = new ComandoDelegado(p => EjecutarCambiarGrosor(p));
-            CambiarColorComando = new ComandoDelegado(p => EjecutarCambiarColor(p));
-            LimpiarDibujoComando = new ComandoDelegado(_ => EjecutarLimpiarDibujo());
-            OcultarOverlayAlarmaComando = new ComandoDelegado(_ => OcultarOverlayAlarma());
             CerrarVentanaComando = new ComandoDelegado(_ => EjecutarCerrarVentana());
         }
 
@@ -739,65 +675,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             return Guid.NewGuid().ToString();
         }
 
-        private static Dictionary<int, CancionCatalogo> InicializarCatalogoAudio()
-        {
-            return new Dictionary<int, CancionCatalogo>
-            {
-                { 1, new CancionCatalogo("Gasolina", "Gasolina_Daddy_Yankee.mp3", "Español") },
-                { 2, new CancionCatalogo("Bocanada", "Bocanada_Gustavo_Cerati.mp3", "Español") },
-                { 3, new CancionCatalogo("La Nave Del Olvido", "La_Nave_Del_Olvido_Jose_Jose.MP3", "Español") },
-                { 4, new CancionCatalogo("Tiburón", "Tiburon_Proyecto_Uno.mp3", "Español") },
-                { 5, new CancionCatalogo("Pupilas De Gato", "Pupilas_De_Gato_Luis_Miguel.mp3", "Español") },
-                { 6, new CancionCatalogo("Black Or White", "Black_Or_White_Michael_Jackson.mp3", "Ingles") },
-                { 7, new CancionCatalogo("Don't Stop The Music", "Dont_Stop_The_Music_Rihanna.mp3", "Ingles") },
-                { 8, new CancionCatalogo("Man In The Mirror", "Man_In_The_Mirror_Michael_Jackson.mp3", "Ingles") },
-                { 9, new CancionCatalogo("Earth Song", "Earth_Song_Michael_Jackson.mp3", "Ingles") },
-                { 10, new CancionCatalogo("Redbone", "Redbone_Childish_Gambino.mp3", "Ingles") }
-            };
-        }
-
-        private CancionCatalogo ObtenerCancion(int idCancion)
-        {
-            if (_catalogoAudio.TryGetValue(idCancion, out var cancion))
-            {
-                return cancion;
-            }
-
-            _logger.WarnFormat("No se encontró la canción con id {0} en el catálogo local.", idCancion);
-            return null;
-        }
-
-        private static Visibility DeterminarVisibilidadPista(string textoPista)
-        {
-            return string.IsNullOrWhiteSpace(textoPista) ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        private class CancionCatalogo
-        {
-            public CancionCatalogo(string nombre, string archivo, string idioma)
-            {
-                Nombre = nombre;
-                Archivo = archivo;
-                Idioma = idioma;
-            }
-
-            public string Nombre { get; }
-            public string Archivo { get; }
-            public string Idioma { get; }
-        }
-
         private void AplicarInicioVisualPartida()
         {
             _logger.Info("Iniciando partida...");
-            JuegoIniciado = true;
+            _partidaVistaModelo.AplicarInicioVisualPartida(Jugadores?.Count ?? 0);
             ReiniciarPuntajesJugadores();
-            NumeroRondaActual = 0;
-            _turnosCompletadosEnCiclo = 0;
-            MostrarEstadoRonda = false;
-            VisibilidadCuadriculaDibujo = Visibility.Visible;
-            EsHerramientaLapiz = true;
-            AplicarEstiloLapiz?.Invoke();
-            ActualizarFormaGoma?.Invoke();
             BotonIniciarPartidaHabilitado = false;
             TextoBotonIniciarPartida = Lang.partidaTextoPartidaEnCurso;
         }
@@ -930,7 +812,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void EjecutarAbrirAjustes()
         {
-            AbrirAjustesPartida?.Invoke(_manejadorCancion);
+            AbrirAjustesPartida?.Invoke(_partidaVistaModelo.ManejadorCancion);
         }
 
         private void EjecutarEnviarMensaje(string mensaje)
@@ -956,6 +838,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
+        /// <summary>
+        /// Envia un trazo al servidor.
+        /// </summary>
+        /// <param name="trazo">Datos del trazo a enviar.</param>
         public void EnviarTrazoAlServidor(DTOs.TrazoDTO trazo)
         {
             if (trazo == null)
@@ -1018,102 +904,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        private void EjecutarSeleccionarLapiz()
-        {
-            EsHerramientaLapiz = true;
-        }
-
-        private void EjecutarSeleccionarBorrador()
-        {
-            EsHerramientaBorrador = true;
-        }
-
-        private void EjecutarCambiarGrosor(object parametro)
-        {
-            if (parametro != null &&
-                double.TryParse(parametro.ToString(), out var nuevoGrosor))
-            {
-                Grosor = nuevoGrosor;
-                if (EsHerramientaLapiz)
-                {
-                    AplicarEstiloLapiz?.Invoke();
-                }
-                else
-                {
-                    ActualizarFormaGoma?.Invoke();
-                }
-            }
-        }
-
-        private void EjecutarCambiarColor(object parametro)
-        {
-            if (parametro is string colorName)
-            {
-                Color = (Color)ColorConverter.ConvertFromString(colorName);
-                EsHerramientaLapiz = true;
-                AplicarEstiloLapiz?.Invoke();
-            }
-        }
-
-        private void EjecutarLimpiarDibujo()
-        {
-            LimpiarTrazos?.Invoke();
-
-            var trazoLimpiar = new DTOs.TrazoDTO
-            {
-                PuntosX = Array.Empty<double>(),
-                PuntosY = Array.Empty<double>(),
-                ColorHex = string.Empty,
-                Grosor = 0,
-                EsBorrado = true,
-                EsLimpiarTodo = true
-            };
-
-            EnviarTrazoAlServidor(trazoLimpiar);
-        }
-
-        private void EjecutarMostrarOverlayDibujante()
-        {
-            VisibilidadOverlayAdivinador = Visibility.Collapsed;
-            VisibilidadOverlayDibujante = Visibility.Visible;
-            VisibilidadPalabraAdivinar = Visibility.Visible;
-
-            _overlayTimer.Stop();
-            _overlayTimer.Start();
-        }
-
-        private void EjecutarMostrarOverlayAdivinador()
-        {
-            VisibilidadOverlayDibujante = Visibility.Collapsed;
-            VisibilidadOverlayAdivinador = Visibility.Visible;
-            VisibilidadPalabraAdivinar = Visibility.Collapsed;
-
-            _overlayTimer.Stop();
-            _overlayTimer.Start();
-        }
-
-        private void MostrarOverlayAlarma()
-        {
-            _alarmaActiva = true;
-
-            if (!string.IsNullOrWhiteSpace(_nombreCancionActual))
-            {
-                PalabraAdivinar = _nombreCancionActual;
-            }
-
-            VisibilidadPalabraAdivinar = Visibility.Visible;
-            ColorPalabraAdivinar = Brushes.Blue;
-            VisibilidadOverlayAlarma = Visibility.Visible;
-
-            _temporizadorAlarma.Stop();
-            _temporizadorAlarma.Start();
-        }
-
-        private void OcultarOverlayAlarma()
-        {
-            FinalizarAlarma();
-        }
-
         private void EjecutarCerrarVentana()
         {
             bool cerrandoPorVentana = ChequearCierreAplicacionGlobal?.Invoke() ?? true;
@@ -1124,84 +914,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        private void OverlayTimer_Tick(object sender, EventArgs e)
-        {
-            _overlayTimer.Stop();
-            VisibilidadOverlayDibujante = Visibility.Collapsed;
-            VisibilidadOverlayAdivinador = Visibility.Collapsed;
-            IniciarTemporizador();
-        }
-
-        private void IniciarTemporizador()
-        {
-            if (_alarmaActiva)
-            {
-                return;
-            }
-
-            OcultarOverlayAlarma();
-
-            _contador = Math.Max(0, _contador);
-            TextoContador = _contador.ToString();
-            ColorContador = Brushes.Black;
-
-            _temporizador.Start();
-        }
-
-        private void Temporizador_Tick(object sender, EventArgs e)
-        {
-            _contador--;
-            TextoContador = _contador.ToString();
-
-                if (_contador <= 0)
-                {
-                    _temporizador.Stop();
-                    TextoContador = "0";
-                    _manejadorCancion.Detener();
-
-                    VisibilidadPalabraAdivinar = Visibility.Collapsed;
-                    VisibilidadInfoCancion = Visibility.Collapsed;
-                    VisibilidadArtista = Visibility.Collapsed;
-                    VisibilidadGenero = Visibility.Collapsed;
-
-                    MostrarOverlayAlarma();
-                }
-            }
-
-        private void TemporizadorAlarma_Tick(object sender, EventArgs e)
-        {
-            FinalizarAlarma();
-        }
-
-        private void FinalizarAlarma()
-        {
-            if (!_alarmaActiva && VisibilidadOverlayAlarma == Visibility.Collapsed)
-            {
-                return;
-            }
-
-            _temporizadorAlarma.Stop();
-            VisibilidadOverlayAlarma = Visibility.Collapsed;
-            _alarmaActiva = false;
-
-            RestablecerPalabraTrasAlarma();
-
-            if (_rondaPendiente != null)
-            {
-                var rondaPendiente = _rondaPendiente;
-                _rondaPendiente = null;
-                ProcesarInicioRonda(rondaPendiente);
-            }
-        }
-
-        private void RestablecerPalabraTrasAlarma()
-        {
-            ColorPalabraAdivinar = Brushes.Black;
-            PalabraAdivinar = string.Empty;
-            VisibilidadPalabraAdivinar = Visibility.Collapsed;
-            VisibilidadInfoCancion = Visibility.Collapsed;
-        }
-
+        /// <summary>
+        /// Procesa la notificacion de que la partida ha iniciado desde el servidor.
+        /// </summary>
         public void NotificarPartidaIniciada()
         {
             var dispatcher = Application.Current?.Dispatcher;
@@ -1213,104 +928,28 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             dispatcher.Invoke(() =>
             {
                 AplicarInicioVisualPartida();
+                _partidaVistaModelo.NotificarPartidaIniciada();
                 BotonIniciarPartidaHabilitado = false;
                 TextoBotonIniciarPartida = string.Empty;
                 PuedeInvitarAmigos = false;
                 PuedeInvitarPorCorreo = false;
-                TextoContador = string.Empty;
-                SonidoManejador.ReproducirExito();
             });
         }
 
+        /// <summary>
+        /// Procesa la notificacion de inicio de una nueva ronda desde el servidor.
+        /// </summary>
+        /// <param name="ronda">Datos de la ronda.</param>
         public void NotificarInicioRonda(DTOs.RondaDTO ronda)
         {
-            var dispatcher = Application.Current?.Dispatcher;
-            if (dispatcher == null)
-            {
-                return;
-            }
-
-            dispatcher.Invoke(() =>
-            {
-                if (ronda == null)
-                {
-                    return;
-                }
-
-                if (_alarmaActiva)
-                {
-                    _rondaPendiente = ronda;
-                    return;
-                }
-
-                ProcesarInicioRonda(ronda);
-            });
+            _partidaVistaModelo.NotificarInicioRonda(ronda, Jugadores?.Count ?? 0);
         }
 
-        private void ProcesarInicioRonda(DTOs.RondaDTO ronda)
-        {
-            _rondaPendiente = null;
-
-            _temporizador.Stop();
-            _overlayTimer.Stop();
-            _manejadorCancion.Detener();
-            LimpiarTrazos?.Invoke();
-
-            ActualizarContadorRondas();
-            _contador = ronda.TiempoSegundos;
-            TextoContador = _contador.ToString();
-            ColorContador = Brushes.Black;
-            VisibilidadCuadriculaDibujo = Visibility.Visible;
-            MostrarEstadoRonda = true;
-
-            var cancion = ObtenerCancion(ronda.IdCancion);
-            string archivoCancion = cancion?.Archivo ?? string.Empty;
-            string nombreCancion = cancion?.Nombre ?? string.Empty;
-            _nombreCancionActual = nombreCancion;
-            ColorPalabraAdivinar = Brushes.Black;
-
-            if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
-            {
-                EsDibujante = true;
-                PuedeEscribir = false;
-                PalabraAdivinar = string.IsNullOrWhiteSpace(nombreCancion)
-                    ? PalabraAdivinar
-                    : nombreCancion;
-                VisibilidadPalabraAdivinar = Visibility.Visible;
-                VisibilidadInfoCancion = Visibility.Visible;
-                TextoArtista = string.Empty;
-                TextoGenero = string.Empty;
-                VisibilidadArtista = Visibility.Collapsed;
-                VisibilidadGenero = Visibility.Collapsed;
-
-                if (!string.IsNullOrWhiteSpace(archivoCancion))
-                {
-                    _manejadorCancion.Reproducir(archivoCancion);
-                }
-
-                EjecutarMostrarOverlayDibujante();
-            }
-            else
-            {
-                EsDibujante = false;
-                PuedeEscribir = true;
-                PalabraAdivinar = string.Empty;
-                VisibilidadPalabraAdivinar = Visibility.Collapsed;
-                TextoArtista = string.IsNullOrWhiteSpace(ronda.PistaArtista)
-                    ? string.Empty
-                    : string.Format("Artista: {0}", ronda.PistaArtista);
-                TextoGenero = string.IsNullOrWhiteSpace(ronda.PistaGenero)
-                    ? string.Empty
-                    : string.Format("Género: {0}", ronda.PistaGenero);
-                VisibilidadArtista = DeterminarVisibilidadPista(TextoArtista);
-                VisibilidadGenero = DeterminarVisibilidadPista(TextoGenero);
-                VisibilidadInfoCancion = Visibility.Visible;
-
-                _manejadorCancion.Detener();
-                EjecutarMostrarOverlayAdivinador();
-            }
-        }
-
+        /// <summary>
+        /// Procesa la notificacion de que un jugador adivino la cancion.
+        /// </summary>
+        /// <param name="nombreJugador">Nombre del jugador que adivino.</param>
+        /// <param name="puntos">Puntos obtenidos.</param>
         public void NotificarJugadorAdivino(string nombreJugador, int puntos)
         {
             var dispatcher = Application.Current?.Dispatcher;
@@ -1334,63 +973,42 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     }
                 }
 
-                string mensaje = $"{nombreJugador} ha adivinado la canción";
-                MensajeChatRecibido?.Invoke(nombreJugador, mensaje);
-                SonidoManejador.ReproducirExito();
-
-                if (string.Equals(
-                    nombreJugador,
-                    _nombreUsuarioSesion,
-                    StringComparison.OrdinalIgnoreCase))
-                {
-                    PuedeEscribir = false;
-                }
+                _chatVistaModelo.NotificarJugadorAdivinoEnChat(nombreJugador);
+                _partidaVistaModelo.NotificarJugadorAdivino(nombreJugador, puntos, _nombreUsuarioSesion);
             });
         }
 
+        /// <summary>
+        /// Procesa la notificacion de un mensaje de chat desde el servidor.
+        /// </summary>
+        /// <param name="nombreJugador">Nombre del jugador que envio el mensaje.</param>
+        /// <param name="mensaje">Contenido del mensaje.</param>
         public void NotificarMensajeChat(string nombreJugador, string mensaje)
         {
-            var dispatcher = Application.Current?.Dispatcher;
-            if (dispatcher == null)
-            {
-                return;
-            }
-
-            dispatcher.Invoke(() => MensajeChatRecibido?.Invoke(nombreJugador, mensaje));
+            _chatVistaModelo.NotificarMensajeChat(nombreJugador, mensaje);
         }
 
+        /// <summary>
+        /// Procesa la recepcion de un trazo desde el servidor.
+        /// </summary>
+        /// <param name="trazo">Datos del trazo.</param>
         public void NotificarTrazoRecibido(DTOs.TrazoDTO trazo)
         {
-            var dispatcher = Application.Current?.Dispatcher;
-            if (dispatcher == null)
-            {
-                return;
-            }
-
-            dispatcher.Invoke(() => TrazoRecibidoServidor?.Invoke(trazo));
+            _partidaVistaModelo.NotificarTrazoRecibido(trazo);
         }
 
+        /// <summary>
+        /// Procesa la notificacion de fin de ronda desde el servidor.
+        /// </summary>
         public void NotificarFinRonda()
         {
-            var dispatcher = Application.Current?.Dispatcher;
-            if (dispatcher == null)
-            {
-                return;
-            }
-
-            dispatcher.Invoke(() =>
-            {
-                _temporizador.Stop();
-                _manejadorCancion.Detener();
-                LimpiarTrazos?.Invoke();
-                PuedeEscribir = false;
-                MostrarEstadoRonda = false;
-                TextoContador = string.Empty;
-                MostrarOverlayAlarma();
-                SonidoManejador.ReproducirSonido("alarma.mp3");
-            });
+            _partidaVistaModelo.NotificarFinRonda();
         }
 
+        /// <summary>
+        /// Procesa la notificacion de fin de partida desde el servidor.
+        /// </summary>
+        /// <param name="resultado">Resultado de la partida.</param>
         public void NotificarFinPartida(DTOs.ResultadoPartidaDTO resultado)
         {
             var dispatcher = Application.Current?.Dispatcher;
@@ -1408,20 +1026,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             dispatcher.Invoke(() =>
             {
-                _temporizador.Stop();
-                _overlayTimer.Stop();
-                _temporizadorAlarma.Stop();
-                _manejadorCancion.Detener();
-                JuegoIniciado = false;
-                MostrarEstadoRonda = false;
-                TextoContador = string.Empty;
-                NumeroRondaActual = 0;
-                PuedeEscribir = false;
+                _partidaVistaModelo.NotificarFinPartida();
                 BotonIniciarPartidaHabilitado = false;
-                _alarmaActiva = false;
-                _rondaPendiente = null;
-                VisibilidadOverlayAlarma = Visibility.Collapsed;
-                RestablecerPalabraTrasAlarma();
 
                 if (!string.IsNullOrWhiteSpace(mensaje))
                 {
@@ -1670,39 +1276,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void AjustarProgresoRondaTrasCambioJugadores()
         {
-            int totalJugadores = Jugadores?.Count ?? 0;
-
-            if (totalJugadores <= 0)
-            {
-                _turnosCompletadosEnCiclo = 0;
-                NumeroRondaActual = 0;
-                return;
-            }
-
-            _turnosCompletadosEnCiclo = Math.Min(_turnosCompletadosEnCiclo, totalJugadores);
-        }
-
-        private void ActualizarContadorRondas()
-        {
-            int totalJugadores = Jugadores?.Count ?? 0;
-
-            if (totalJugadores <= 0)
-            {
-                NumeroRondaActual = 0;
-                _turnosCompletadosEnCiclo = 0;
-                return;
-            }
-
-            _turnosCompletadosEnCiclo = (_turnosCompletadosEnCiclo % totalJugadores) + 1;
-
-            if (NumeroRondaActual == 0)
-            {
-                NumeroRondaActual = 1;
-            }
-            else if (_turnosCompletadosEnCiclo == 1)
-            {
-                NumeroRondaActual++;
-            }
+            _partidaVistaModelo.AjustarProgresoRondaTrasCambioJugadores(Jugadores?.Count ?? 0);
         }
 
         private async Task EjecutarExpulsarJugadorAsync(string nombreJugador)
@@ -1753,19 +1327,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _salaCancelada = true;
             _logger.Warn("La sala se canceló porque el anfitrión abandonó la partida.");
 
-            _temporizador.Stop();
-            _overlayTimer.Stop();
-            _manejadorCancion.Detener();
-
-            JuegoIniciado = false;
-            MostrarEstadoRonda = false;
-            TextoContador = string.Empty;
-            NumeroRondaActual = 0;
+            _partidaVistaModelo.ReiniciarEstadoVisualSalaCancelada();
             BotonIniciarPartidaHabilitado = false;
-            VisibilidadCuadriculaDibujo = Visibility.Collapsed;
-            VisibilidadOverlayAdivinador = Visibility.Collapsed;
-            VisibilidadOverlayDibujante = Visibility.Collapsed;
-            VisibilidadOverlayAlarma = Visibility.Collapsed;
             Jugadores.Clear();
 
             DestinoNavegacion destino = _esInvitado
@@ -1801,9 +1364,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public async Task FinalizarAsync()
         {
-            _overlayTimer.Stop();
-            _temporizador.Stop();
-            _manejadorCancion.Detener();
+            _partidaVistaModelo.Detener();
 
             _salasServicio.JugadorSeUnio -= SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio -= SalasServicio_JugadorSalio;
