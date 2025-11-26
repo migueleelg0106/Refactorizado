@@ -117,6 +117,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _partidaVistaModelo = new PartidaIniciadaVistaModelo();
             _chatVistaModelo = new ChatVistaModelo();
 
+            _partidaVistaModelo.PropertyChanged += PartidaVistaModelo_PropertyChanged;
+
             ConfigurarPartidaVistaModelo();
             ConfigurarChatVistaModelo();
 
@@ -174,6 +176,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private void ConfigurarChatVistaModelo()
         {
             _chatVistaModelo.EnviarMensajeAlServidor = EjecutarEnviarMensaje;
+        }
+
+        private void PartidaVistaModelo_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            NotificarCambio(e.PropertyName);
         }
 
         private void OnJuegoIniciadoCambiado(bool juegoIniciado)
@@ -1364,6 +1371,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public async Task FinalizarAsync()
         {
+            _partidaVistaModelo.PropertyChanged -= PartidaVistaModelo_PropertyChanged;
             _partidaVistaModelo.Detener();
 
             _salasServicio.JugadorSeUnio -= SalasServicio_JugadorSeUnio;
