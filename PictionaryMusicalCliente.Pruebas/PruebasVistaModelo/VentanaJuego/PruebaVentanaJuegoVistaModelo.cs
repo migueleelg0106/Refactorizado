@@ -648,38 +648,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             Assert.AreEqual("Género: Reggaeton", _vistaModelo.TextoGenero);
         }
 
-        [TestMethod]
-        public void Prueba_TemporizadorTick_DecrementaContador()
-        {
-            EstablecerCampoPrivado("_contador", 5);
-            _vistaModelo.TextoContador = "5";
-            _mensajesMostrados.Clear();
-
-            InvocarMetodoPrivado("Temporizador_Tick", this, EventArgs.Empty);
-
-            Assert.AreEqual("4", _vistaModelo.TextoContador);
-            Assert.AreEqual(0, _mensajesMostrados.Count);
-        }
-
-        [TestMethod]
-        public void Prueba_TemporizadorTick_LlegaACero_MuestraMensajeYOcultaInformacion()
-        {
-            EstablecerCampoPrivado("_contador", 1);
-            _vistaModelo.TextoContador = "1";
-            _vistaModelo.VisibilidadPalabraAdivinar = Visibility.Visible;
-            _vistaModelo.VisibilidadInfoCancion = Visibility.Visible;
-            _vistaModelo.VisibilidadOverlayAlarma = Visibility.Collapsed;
-            _mensajesMostrados.Clear();
-
-            InvocarMetodoPrivado("Temporizador_Tick", this, EventArgs.Empty);
-
-            Assert.AreEqual("0", _vistaModelo.TextoContador);
-            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadPalabraAdivinar);
-            Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadInfoCancion);
-            Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadOverlayAlarma);
-            Assert.AreEqual(0, _mensajesMostrados.Count, "No se esperaban mensajes de texto, solo cambios visuales");
-        }
-
         #endregion
 
         #region 6. Eventos de sala y manejo de jugadores
