@@ -1220,6 +1220,12 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 return;
             }
 
+            string mensaje = resultado?.Mensaje;
+            if (!string.IsNullOrWhiteSpace(mensaje))
+            {
+                mensaje = MensajeServidorAyudante.ObtenerMensaje(mensaje);
+            }
+
             dispatcher.Invoke(() =>
             {
                 _temporizador.Stop();
@@ -1231,6 +1237,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 NumeroRondaActual = 0;
                 PuedeEscribir = false;
                 BotonIniciarPartidaHabilitado = false;
+
+                if (!string.IsNullOrWhiteSpace(mensaje))
+                {
+                    MostrarMensaje?.Invoke(mensaje);
+                }
             });
         }
 

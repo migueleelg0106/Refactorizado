@@ -474,6 +474,9 @@
   <data name="partidaTextoHostCanceloSala" xml:space="preserve">
     <value>El anfitrión de la sala abandonó la partida, por lo tanto, esta fue cancelada.</value>
   </data>
+  <data name="partidaTextoJugadoresInsuficientes" xml:space="preserve">
+    <value>No hay suficientes jugadores para seguir jugando, se canceló la partida.</value>
+  </data>
   <data name="avisoTextoCodigoDescripcionCambio" xml:space="preserve">
     <value>Ingresa el código que enviamos para confirmar el cambio de contraseña.</value>
   </data>

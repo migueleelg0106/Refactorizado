@@ -2354,6 +2354,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("partidaTextoHostCanceloSala", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a No hay suficientes jugadores para seguir jugando, se canceló la partida..
+        /// </summary>
+        public static string partidaTextoJugadoresInsuficientes {
+            get {
+                return ResourceManager.GetString("partidaTextoJugadoresInsuficientes", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Busca una cadena traducida similar a Ronda:.
