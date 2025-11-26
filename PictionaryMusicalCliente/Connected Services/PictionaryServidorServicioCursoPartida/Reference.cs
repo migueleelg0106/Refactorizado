@@ -33,10 +33,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICursoPartidaManejador/EnviarMensajeJuego", ReplyAction="http://tempuri.org/ICursoPartidaManejador/EnviarMensajeJuegoResponse")]
         System.Threading.Tasks.Task EnviarMensajeJuegoAsync(string mensaje, string idSala, string idJugador);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo", ReplyAction="http://tempuri.org/ICursoPartidaManejador/EnviarTrazoResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo")]
         void EnviarTrazo(PictionaryMusicalServidor.Servicios.Contratos.DTOs.TrazoDTO trazo, string idSala, string idJugador);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo", ReplyAction="http://tempuri.org/ICursoPartidaManejador/EnviarTrazoResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo")]
         System.Threading.Tasks.Task EnviarTrazoAsync(PictionaryMusicalServidor.Servicios.Contratos.DTOs.TrazoDTO trazo, string idSala, string idJugador);
     }
     

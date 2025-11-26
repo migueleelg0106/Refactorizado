@@ -52,11 +52,6 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="EnviarTrazoResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="NotificarPartidaIniciada">
     <xs:complexType>
       <xs:sequence />

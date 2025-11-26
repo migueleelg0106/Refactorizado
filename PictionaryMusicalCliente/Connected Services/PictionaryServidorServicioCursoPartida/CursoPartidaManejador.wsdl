@@ -50,9 +50,6 @@
   <wsdl:message name="ICursoPartidaManejador_EnviarTrazo_InputMessage">
     <wsdl:part name="parameters" element="tns:EnviarTrazo" />
   </wsdl:message>
-  <wsdl:message name="ICursoPartidaManejador_EnviarTrazo_OutputMessage">
-    <wsdl:part name="parameters" element="tns:EnviarTrazoResponse" />
-  </wsdl:message>
   <wsdl:message name="ICursoPartidaManejador_NotificarPartidaIniciada_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:NotificarPartidaIniciada" />
   </wsdl:message>
@@ -89,7 +86,6 @@
     </wsdl:operation>
     <wsdl:operation name="EnviarTrazo">
       <wsdl:input wsaw:Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazo" message="tns:ICursoPartidaManejador_EnviarTrazo_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/EnviarTrazoResponse" message="tns:ICursoPartidaManejador_EnviarTrazo_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="NotificarPartidaIniciada">
       <wsdl:output wsaw:Action="http://tempuri.org/ICursoPartidaManejador/NotificarPartidaIniciada" message="tns:ICursoPartidaManejador_NotificarPartidaIniciada_OutputCallbackMessage" />
@@ -148,9 +144,6 @@
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="NotificarPartidaIniciada">
       <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarPartidaIniciada" style="document" />
@@ -230,9 +223,6 @@
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="NotificarPartidaIniciada">
       <soap12:operation soapAction="http://tempuri.org/ICursoPartidaManejador/NotificarPartidaIniciada" style="document" />
