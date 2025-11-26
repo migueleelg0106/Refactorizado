@@ -1013,14 +1013,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _adivinadoresQuienYaAcertaron.Clear();
             _rondaTerminadaTemprano = false;
 
-            if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
-            {
-                _nombreDibujanteActual = _nombreUsuarioSesion;
-            }
-            else
-            {
-                _nombreDibujanteActual = string.Empty;
-            }
+            _nombreDibujanteActual = ronda.NombreDibujante ?? string.Empty;
 
             _partidaVistaModelo.NotificarInicioRonda(ronda, Jugadores?.Count ?? 0);
         }

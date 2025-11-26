@@ -1,6 +1,7 @@
 using log4net;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private int _totalJugadoresPendiente;
         private string _nombreCancionActual;
         private Brush _colorPalabraAdivinar;
+        private string _textoDibujoDe;
 
         /// <summary>
         /// Inicializa la VistaModelo con los componentes necesarios para el juego.
@@ -84,6 +86,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _mostrarEstadoRonda = false;
             _turnosCompletadosEnCiclo = 0;
             _nombreCancionActual = string.Empty;
+            _textoDibujoDe = string.Empty;
 
             _overlayTimer = new DispatcherTimer();
             _overlayTimer.Interval = TimeSpan.FromSeconds(5);
@@ -314,6 +317,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
             get => _textoGenero;
             set => EstablecerPropiedad(ref _textoGenero, value);
+        }
+
+        /// <summary>
+        /// Texto que muestra quien es el dibujante actual.
+        /// </summary>
+        public string TextoDibujoDe
+        {
+            get => _textoDibujoDe;
+            set => EstablecerPropiedad(ref _textoDibujoDe, value);
         }
 
         /// <summary>
@@ -738,6 +750,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             NombreCancionCambiado?.Invoke(nombreCancion);
             TiempoRestanteCambiado?.Invoke(_contador);
             ColorPalabraAdivinar = Brushes.Black;
+
+            TextoDibujoDe = string.IsNullOrWhiteSpace(ronda.NombreDibujante)
+                ? string.Empty
+                : string.Format(Lang.partidaTextoDibujoDe, ronda.NombreDibujante);
 
             if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
             {

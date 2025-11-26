@@ -323,6 +323,10 @@
                                    Foreground="Black" FontFamily="Comic Sans MS"
                                    FontSize="16" FontWeight="Bold"
                                    HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="txtDibujoDe" Text="{Binding TextoDibujoDe}"
+                                   Foreground="DarkBlue" FontFamily="Comic Sans MS"
+                                   FontSize="14" FontStyle="Italic"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Grid>
             </Grid>
