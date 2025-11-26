@@ -1,9 +1,15 @@
-﻿using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Utilidades;
+﻿using log4net;
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.Sesiones;
+using PictionaryMusicalCliente.ClienteServicios.Wcf;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida;
+using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Sesiones;
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,12 +20,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using PictionaryMusicalCliente.ClienteServicios;
-using PictionaryMusicalCliente.VistaModelo.Amigos;
-using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 {
@@ -880,6 +881,13 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             if (JuegoIniciado)
             {
+                return;
+            }
+
+            if (Jugadores.Count < 2)
+            {
+                SonidoManejador.ReproducirError();
+                AvisoAyudante.Mostrar(Lang.errorTextoPartidaUnJugador);
                 return;
             }
 

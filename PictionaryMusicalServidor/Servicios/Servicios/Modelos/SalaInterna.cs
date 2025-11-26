@@ -27,6 +27,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
             Creador = creador;
             Configuracion = configuracion;
             Jugadores = new List<string>();
+            PartidaIniciada = false;
         }
 
         public string Codigo { get; }
@@ -34,6 +35,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
         public ConfiguracionPartidaDTO Configuracion { get; }
         public List<string> Jugadores { get; }
         public bool DebeEliminarse { get; private set; }
+        public bool PartidaIniciada { get; set; }
 
         /// <summary>
         /// Convierte la sala interna a su representación DTO.

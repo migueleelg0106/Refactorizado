@@ -109,6 +109,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
                 }
 
+                if (sala.PartidaIniciada)
+                {
+                    _logger.WarnFormat("Intento de unirse a sala ya iniciada: '{0}'.", codigoSala);
+                    throw new FaultException("La partida ya comenzó");
+                }
+
                 var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
                 var resultado = sala.AgregarJugador(nombreUsuario.Trim(), callback, notificar: true);
 
@@ -379,6 +385,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             throw new InvalidOperationException(MensajesError.Cliente.SalaNoEncontrada);
         }
 
+        /// <summary>
+        /// Marca una sala como iniciada para prevenir que nuevos jugadores se unan.
+        /// </summary>
+        internal static void MarcarPartidaComoIniciada(string codigoSala)
+        {
+            if (_salas.TryGetValue(codigoSala, out var sala))
+            {
+                sala.PartidaIniciada = true;
+            }
+        }
 
         private static string GenerarCodigoSala()
         {

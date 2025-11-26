@@ -1034,4 +1034,10 @@ aciertan o cuando se acaba el tiempo.
   <data name="partidaTooltipLimpiar" xml:space="preserve">
     <value>Limpiar todo</value>
   </data>
+  <data name="errorTextoPartidaUnJugador" xml:space="preserve">
+    <value>Se necesitan al menos 2 personas para poder iniciar una partida.</value>
+  </data>
+  <data name="errorTextoPartidaYaIniciada" xml:space="preserve">
+    <value>La partida de la sala a la que te intentas unir ya comenzó.</value>
+  </data>
 </root>

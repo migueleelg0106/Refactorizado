@@ -64,6 +64,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new FaultException("El identificador de sala es obligatorio.");
             }
 
+            SalasManejador.MarcarPartidaComoIniciada(idSala.Trim());
             var controlador = ObtenerOCrearControlador(idSala.Trim());
             controlador.IniciarPartida(idJugadorSolicitante?.Trim());
         }

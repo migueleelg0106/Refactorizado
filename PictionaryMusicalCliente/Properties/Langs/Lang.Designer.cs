@@ -1438,6 +1438,24 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Se necesitan al menos 2 personas para poder iniciar una partida..
+        /// </summary>
+        public static string errorTextoPartidaUnJugador {
+            get {
+                return ResourceManager.GetString("errorTextoPartidaUnJugador", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La partida de la sala a la que te intentas unir ya comenzó..
+        /// </summary>
+        public static string errorTextoPartidaYaIniciada {
+            get {
+                return ResourceManager.GetString("errorTextoPartidaYaIniciada", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a No fue posible obtener la información actualizada del perfil..
         /// </summary>
         public static string errorTextoPerfilActualizarInformacion {
@@ -2327,7 +2345,16 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("partidaTextoPartidaEnCurso", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ronda:.
+        /// </summary>
+        public static string partidaTextoRonda {
+            get {
+                return ResourceManager.GetString("partidaTextoRonda", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Busca una cadena traducida similar a ¡Tiempo terminado!.
         /// </summary>
@@ -2336,13 +2363,31 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("partidaTextoTiempoTerminado", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Busca una cadena traducida similar a Ronda:.
+        ///   Busca una cadena traducida similar a Borrador.
         /// </summary>
-        public static string partidaTextoRonda {
+        public static string partidaTooltipBorrador {
             get {
-                return ResourceManager.GetString("partidaTextoRonda", resourceCulture);
+                return ResourceManager.GetString("partidaTooltipBorrador", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Lápiz.
+        /// </summary>
+        public static string partidaTooltipLapiz {
+            get {
+                return ResourceManager.GetString("partidaTooltipLapiz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Limpiar todo.
+        /// </summary>
+        public static string partidaTooltipLimpiar {
+            get {
+                return ResourceManager.GetString("partidaTooltipLimpiar", resourceCulture);
             }
         }
         
@@ -2588,34 +2633,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("solicitudInvitacionInvalida", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Busca una cadena traducida similar a Borrador.
-        /// </summary>
-        public static string partidaTooltipBorrador {
-            get {
-                return ResourceManager.GetString("partidaTooltipBorrador", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Busca una cadena traducida similar a Lápiz.
-        /// </summary>
-        public static string partidaTooltipLapiz {
-            get {
-                return ResourceManager.GetString("partidaTooltipLapiz", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Busca una cadena traducida similar a Limpiar todo.
-        /// </summary>
-        public static string partidaTooltipLimpiar {
-            get {
-                return ResourceManager.GetString("partidaTooltipLimpiar", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Busca una cadena traducida similar a No se encontró una cuenta con el usuario o correo proporcionado..
         /// </summary>

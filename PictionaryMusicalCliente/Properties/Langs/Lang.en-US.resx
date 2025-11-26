@@ -1032,4 +1032,10 @@
   <data name="partidaTooltipLimpiar" xml:space="preserve">
     <value>Clear all</value>
   </data>
+  <data name="errorTextoPartidaUnJugador" xml:space="preserve">
+    <value>At least 2 people are needed to start a game.</value>
+  </data>
+  <data name="errorTextoPartidaYaIniciada" xml:space="preserve">
+    <value>The game in the room you are trying to join has already started.</value>
+  </data>
 </root>
