@@ -112,7 +112,16 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     return existente;
                 }
 
-                var controlador = new ControladorPartida(TiempoRondaPorDefectoSegundos, DificultadPorDefecto, NumeroRondasPorDefecto);
+                var configuracion = ObtenerConfiguracionSala(idSala);
+                var controlador = new ControladorPartida(
+                    configuracion?.TiempoPorRondaSegundos ?? TiempoRondaPorDefectoSegundos,
+                    configuracion?.Dificultad ?? DificultadPorDefecto,
+                    configuracion?.NumeroRondas ?? NumeroRondasPorDefecto);
+
+                if (!string.IsNullOrWhiteSpace(configuracion?.IdiomaCanciones))
+                {
+                    controlador.ConfigurarIdiomaCanciones(configuracion.IdiomaCanciones);
+                }
                 SuscribirEventos(controlador, idSala);
                 _partidasActivas[idSala] = controlador;
                 _callbacksPorSala[idSala] = new Dictionary<string, ICursoPartidaManejadorCallback>(StringComparer.OrdinalIgnoreCase);
@@ -125,12 +134,63 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private void SuscribirEventos(ControladorPartida controlador, string idSala)
         {
             controlador.PartidaIniciada += () => NotificarCallbacks(idSala, callback => callback.NotificarPartidaIniciada());
-            controlador.InicioRonda += ronda => NotificarCallbacks(idSala, callback => callback.NotificarInicioRonda(ronda));
+            controlador.InicioRonda += ronda => NotificarInicioRonda(idSala, controlador, ronda);
             controlador.JugadorAdivino += (jugador, puntos) => NotificarCallbacks(idSala, callback => callback.NotificarJugadorAdivino(jugador, puntos));
             controlador.MensajeChatRecibido += (jugador, mensaje) => NotificarCallbacks(idSala, callback => callback.NotificarMensajeChat(jugador, mensaje));
             controlador.TrazoRecibido += trazo => NotificarCallbacks(idSala, callback => callback.NotificarTrazoRecibido(trazo));
             controlador.FinRonda += () => NotificarCallbacks(idSala, callback => callback.NotificarFinRonda());
             controlador.FinPartida += resultado => NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado));
+        }
+
+        private void NotificarInicioRonda(string idSala, ControladorPartida controlador, RondaDTO ronda)
+        {
+            List<KeyValuePair<string, ICursoPartidaManejadorCallback>> callbacks;
+            lock (_sincronizacion)
+            {
+                if (!_callbacksPorSala.TryGetValue(idSala, out var callbacksSala))
+                {
+                    return;
+                }
+
+                callbacks = callbacksSala.ToList();
+            }
+
+            var jugadores = controlador.ObtenerJugadores();
+            var dibujante = jugadores.FirstOrDefault(jugador => jugador.EsDibujante);
+
+            foreach (var par in callbacks)
+            {
+                try
+                {
+                    var esDibujante = dibujante != null &&
+                        string.Equals(par.Key, dibujante.IdConexion, StringComparison.OrdinalIgnoreCase);
+
+                    var rondaParaJugador = esDibujante
+                        ? ronda
+                        : new RondaDTO
+                        {
+                            IdCancion = ronda.IdCancion,
+                            Rol = "Adivinador",
+                            PistaArtista = ronda.PistaArtista,
+                            PistaGenero = ronda.PistaGenero,
+                            TiempoSegundos = ronda.TiempoSegundos
+                        };
+
+                    par.Value.NotificarInicioRonda(rondaParaJugador);
+                }
+                catch (CommunicationException ex)
+                {
+                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
+                    _logger.Warn(ex);
+                    RemoverCallback(idSala, par.Key);
+                }
+                catch (TimeoutException ex)
+                {
+                    _logger.WarnFormat("Timeout al notificar a jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
+                    _logger.Warn(ex);
+                    RemoverCallback(idSala, par.Key);
+                }
+            }
         }
 
         private void NotificarCallbacks(string idSala, Action<ICursoPartidaManejadorCallback> accion)
@@ -154,13 +214,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
                 catch (CommunicationException ex)
                 {
-                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1}. Se quitar� su callback.", par.Key, idSala);
+                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
                 catch (TimeoutException ex)
                 {
-                    _logger.WarnFormat("Timeout al notificar a jugador {0} en sala {1}. Se quitar� su callback.", par.Key, idSala);
+                    _logger.WarnFormat("Timeout al notificar a jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
@@ -219,6 +279,20 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
 
             return callback;
+        }
+
+        private ConfiguracionPartidaDTO ObtenerConfiguracionSala(string idSala)
+        {
+            try
+            {
+                return SalasManejador.ObtenerSalaPorCodigo(idSala)?.Configuracion;
+            }
+            catch (Exception ex)
+            {
+                _logger.WarnFormat("No se pudo obtener la configuracion de la sala {0}. Se usaran valores por defecto.", idSala);
+                _logger.Warn(ex);
+                return null;
+            }
         }
     }
 }
