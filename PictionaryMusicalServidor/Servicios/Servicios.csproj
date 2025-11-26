@@ -88,6 +88,8 @@
     <Compile Include="Contratos\ICursoPartidaManejadorCallback.cs" />
     <Compile Include="Contratos\ICursoPartidaManejador.cs" />
     <Compile Include="Contratos\IInicioPartidaManejador.cs" />
+    <Compile Include="Contratos\IPartidaManejador.cs" />
+    <Compile Include="Contratos\IPartidaManejadorCallback.cs" />
     <Compile Include="Contratos\IInicioSesionManejador.cs" />
     <Compile Include="Contratos\IInvitacionesManejador.cs" />
     <Compile Include="Contratos\IAmistadServicio.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="Contratos\DTOs\ReenvioCodigoVerificacionDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoInicioSesionDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoPartidaDTO.cs" />
+    <Compile Include="Contratos\DTOs\ResultadoRondaDTO.cs" />
     <Compile Include="Contratos\DTOs\ActualizacionPerfilDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoOperacionDTO.cs" />
     <Compile Include="Contratos\DTOs\ResultadoRegistroCuentaDTO.cs" />
