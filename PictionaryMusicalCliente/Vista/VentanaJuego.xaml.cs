@@ -2,15 +2,17 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.VistaModelo.VentanaJuego;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Ink;
-using System.Windows.Controls;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Media;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using System.Windows.Input;
-using System.Linq;
 
 namespace PictionaryMusicalCliente
 {
@@ -21,6 +23,8 @@ namespace PictionaryMusicalCliente
     {
         private readonly VentanaJuegoVistaModelo _vistaModelo;
         private readonly Action _accionAlCerrar;
+        private readonly List<Point> _puntosBorrador = new();
+        private bool _borradoEnProgreso;
 
         /// <summary>
         /// Inicializa la partida con la configuracion de la sala y el usuario.
@@ -55,7 +59,7 @@ namespace PictionaryMusicalCliente
             _vistaModelo.NotificarCambioHerramienta = EstablecerHerramienta;
             _vistaModelo.AplicarEstiloLapiz = AplicarEstiloLapiz;
             _vistaModelo.ActualizarFormaGoma = ActualizarFormaGoma;
-            _vistaModelo.LimpiarTrazos = () => ink?.Strokes.Clear();
+            _vistaModelo.LimpiarTrazos = LimpiarLienzo;
             _vistaModelo.MostrarMensaje = AvisoAyudante.Mostrar;
             _vistaModelo.MostrarConfirmacion = MostrarConfirmacion;
             _vistaModelo.MostrarInvitarAmigos = MostrarInvitarAmigosAsync;
@@ -65,10 +69,187 @@ namespace PictionaryMusicalCliente
 
             _vistaModelo.ChequearCierreAplicacionGlobal = DebeCerrarAplicacionPorCierreDeVentana;
 
+            _vistaModelo.TrazoRecibidoServidor += VistaModelo_TrazoRecibidoServidor;
+
             DataContext = _vistaModelo;
+
+            RegistrarEventosLienzo();
 
             Closing += VentanaJuego_Closing;
             Closed += VentanaJuego_ClosedAsync;
+        }
+
+        private void RegistrarEventosLienzo()
+        {
+            if (ink == null)
+            {
+                return;
+            }
+
+            ink.StrokeCollected += Ink_StrokeCollected;
+            ink.PreviewMouseLeftButtonDown += Ink_PreviewMouseLeftButtonDown;
+            ink.PreviewMouseMove += Ink_PreviewMouseMove;
+            ink.PreviewMouseLeftButtonUp += Ink_PreviewMouseLeftButtonUp;
+        }
+
+        private void Ink_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
+            if (!_vistaModelo.EsDibujante || e.Stroke == null)
+            {
+                return;
+            }
+
+            var trazo = ConvertirStrokeATrazo(e.Stroke, false);
+            _vistaModelo.EnviarTrazoAlServidor(trazo);
+        }
+
+        private void Ink_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!_vistaModelo.EsDibujante || !_vistaModelo.EsHerramientaBorrador)
+            {
+                return;
+            }
+
+            _borradoEnProgreso = true;
+            _puntosBorrador.Clear();
+            _puntosBorrador.Add(e.GetPosition(ink));
+        }
+
+        private void Ink_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!_borradoEnProgreso)
+            {
+                return;
+            }
+
+            _puntosBorrador.Add(e.GetPosition(ink));
+        }
+
+        private void Ink_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!_borradoEnProgreso)
+            {
+                return;
+            }
+
+            _borradoEnProgreso = false;
+
+            var trazo = ConvertirPuntosATrazoBorrador(_puntosBorrador, _vistaModelo.Grosor);
+            if (trazo != null)
+            {
+                _vistaModelo.EnviarTrazoAlServidor(trazo);
+            }
+
+            _puntosBorrador.Clear();
+        }
+
+        private static TrazoDTO ConvertirPuntosATrazoBorrador(IEnumerable<Point> puntos, double grosor)
+        {
+            if (puntos == null)
+            {
+                return null;
+            }
+
+            var listaPuntos = puntos.ToList();
+            if (listaPuntos.Count == 0)
+            {
+                return null;
+            }
+
+            return new TrazoDTO
+            {
+                PuntosX = listaPuntos.Select(p => p.X).ToArray(),
+                PuntosY = listaPuntos.Select(p => p.Y).ToArray(),
+                ColorHex = Colors.Transparent.ToString(),
+                Grosor = grosor,
+                EsBorrado = true
+            };
+        }
+
+        private static TrazoDTO ConvertirStrokeATrazo(Stroke stroke, bool esBorrado)
+        {
+            if (stroke == null)
+            {
+                return null;
+            }
+
+            var puntos = stroke.StylusPoints;
+
+            return new TrazoDTO
+            {
+                PuntosX = puntos.Select(p => p.X).ToArray(),
+                PuntosY = puntos.Select(p => p.Y).ToArray(),
+                ColorHex = ColorAHex(stroke.DrawingAttributes.Color),
+                Grosor = stroke.DrawingAttributes.Width,
+                EsBorrado = esBorrado
+            };
+        }
+
+        private void VistaModelo_TrazoRecibidoServidor(TrazoDTO trazo)
+        {
+            if (trazo == null || ink == null)
+            {
+                return;
+            }
+
+            if (trazo.EsBorrado)
+            {
+                AplicarBorradoRemoto(trazo);
+                return;
+            }
+
+            if (trazo.PuntosX == null || trazo.PuntosY == null)
+            {
+                return;
+            }
+
+            var puntos = new StylusPointCollection();
+            for (int i = 0; i < Math.Min(trazo.PuntosX.Length, trazo.PuntosY.Length); i++)
+            {
+                puntos.Add(new StylusPoint(trazo.PuntosX[i], trazo.PuntosY[i]));
+            }
+
+            var atributos = new DrawingAttributes
+            {
+                Color = (Color)ColorConverter.ConvertFromString(trazo.ColorHex ?? Colors.Black.ToString()),
+                Width = trazo.Grosor,
+                Height = trazo.Grosor,
+                FitToCurve = false,
+                IgnorePressure = true
+            };
+
+            var stroke = new Stroke(puntos)
+            {
+                DrawingAttributes = atributos
+            };
+
+            ink.Strokes.Add(stroke);
+        }
+
+        private void AplicarBorradoRemoto(TrazoDTO trazo)
+        {
+            if (trazo.PuntosX == null || trazo.PuntosY == null)
+            {
+                return;
+            }
+
+            var puntosTrayectoria = new List<Point>();
+            for (int i = 0; i < Math.Min(trazo.PuntosX.Length, trazo.PuntosY.Length); i++)
+            {
+                puntosTrayectoria.Add(new Point(trazo.PuntosX[i], trazo.PuntosY[i]));
+            }
+
+            if (puntosTrayectoria.Count == 0)
+            {
+                return;
+            }
+
+            var radio = Math.Max(1, trazo.Grosor);
+            var strokesABorrar = ink.Strokes.HitTest(puntosTrayectoria, radio / 2);
+            foreach (var stroke in strokesABorrar.ToList())
+            {
+                ink.Strokes.Remove(stroke);
+            }
         }
 
         private void VentanaJuego_Closing(object sender, CancelEventArgs e)
@@ -209,6 +390,16 @@ namespace PictionaryMusicalCliente
 
             var tamano = Math.Max(1, _vistaModelo.Grosor);
             lienzoTinta.EraserShape = new EllipseStylusShape(tamano, tamano);
+        }
+
+        private void LimpiarLienzo()
+        {
+            ink?.Strokes.Clear();
+        }
+
+        private static string ColorAHex(Color color)
+        {
+            return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
         }
 
         private bool DebeCerrarAplicacionPorCierreDeVentana()
