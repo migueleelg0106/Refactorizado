@@ -1242,6 +1242,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _temporizador.Stop();
             _overlayTimer.Stop();
             _manejadorCancion.Detener();
+            LimpiarTrazos?.Invoke();
 
             ActualizarContadorRondas();
             _contador = ronda.TiempoSegundos;
@@ -1369,6 +1370,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             {
                 _temporizador.Stop();
                 _manejadorCancion.Detener();
+                LimpiarTrazos?.Invoke();
                 PuedeEscribir = false;
                 MostrarEstadoRonda = false;
                 TextoContador = string.Empty;
