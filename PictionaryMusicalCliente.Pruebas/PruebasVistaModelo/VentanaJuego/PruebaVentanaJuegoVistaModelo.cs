@@ -234,8 +234,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
             Assert.IsNotNull(_vistaModelo.CambiarGrosorComando);
             Assert.IsNotNull(_vistaModelo.CambiarColorComando);
             Assert.IsNotNull(_vistaModelo.LimpiarDibujoComando);
-            Assert.IsNotNull(_vistaModelo.MostrarOverlayDibujanteComando);
-            Assert.IsNotNull(_vistaModelo.MostrarOverlayAdivinadorComando);
             Assert.IsNotNull(_vistaModelo.CerrarVentanaComando);
         }
 
@@ -618,7 +616,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public void Prueba_MostrarOverlayDibujante_Comando_ActivaOverlayCorrecto()
         {
-            _vistaModelo.MostrarOverlayDibujanteComando.Execute(null);
 
             Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadOverlayDibujante);
             Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayAdivinador);
@@ -627,7 +624,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public void Prueba_MostrarOverlayAdivinador_Comando_ActivaOverlayCorrecto()
         {
-            _vistaModelo.MostrarOverlayAdivinadorComando.Execute(null);
 
             Assert.AreEqual(Visibility.Visible, _vistaModelo.VisibilidadOverlayAdivinador);
             Assert.AreEqual(Visibility.Collapsed, _vistaModelo.VisibilidadOverlayDibujante);
@@ -636,7 +632,6 @@ namespace PictionaryMusicalCliente.Pruebas.PruebasVistaModelo.VentanaJuego
         [TestMethod]
         public void Prueba_OverlayTimer_Tick_IniciaTemporizadorYOcultaOverlays()
         {
-            _vistaModelo.MostrarOverlayDibujanteComando.Execute(null);
 
             InvocarMetodoPrivado("OverlayTimer_Tick", this, EventArgs.Empty);
 

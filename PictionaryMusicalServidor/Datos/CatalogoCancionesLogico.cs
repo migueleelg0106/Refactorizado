@@ -41,37 +41,37 @@ namespace PictionaryMusicalServidor.Datos
         /// <returns>Una instancia de <see cref="Cancion"/> que cumple los criterios.</returns>
         /// <exception cref="ArgumentException">Se produce cuando el idioma es nulo o vacio.</exception>
         /// <exception cref="CancionNoDisponibleException">Se produce cuando no hay canciones disponibles.</exception>
+        // En PictionaryMusicalServidor/Datos/CatalogoCancionesLogico.cs
+
         public static Cancion ObtenerCancionAleatoria(string idioma, HashSet<int> idsExcluidos)
         {
+            // 1. Validar entrada
             if (string.IsNullOrWhiteSpace(idioma))
             {
-                var exception = new ArgumentException("El idioma no puede ser nulo o vacio.", nameof(idioma));
-                _logger.Error("Se recibio un idioma invalido al solicitar cancion.", exception);
-                throw exception;
+                var ex = new ArgumentException("El idioma no puede ser nulo o vacio.", nameof(idioma));
+                _logger.Error("Se recibio un idioma invalido al solicitar cancion.", ex);
+                throw ex;
             }
-
-            var idiomaNormalizado = idioma.Trim();
-            var idsRechazados = idsExcluidos ?? new HashSet<int>();
 
             try
             {
-                var disponibles = _canciones.Values
-                    .Where(cancion => string.Equals(cancion.Idioma, idiomaNormalizado, StringComparison.OrdinalIgnoreCase)
-                        && !idsRechazados.Contains(cancion.Id))
-                    .ToList();
+                // 2. Preparar criterios de búsqueda
+                string idiomaInterno = MapearIdiomaInterno(idioma);
+                string idiomaBusqueda = NormalizarTexto(idiomaInterno);
+                var idsRechazados = idsExcluidos ?? new HashSet<int>();
 
-                if (!disponibles.Any())
+                // 3. Filtrar candidatos
+                var candidatos = ObtenerCandidatos(idiomaBusqueda, idsRechazados);
+
+                // 4. Verificar resultados
+                if (!candidatos.Any())
                 {
-                    var exception = new CancionNoDisponibleException(MensajeCancionesNoDisponibles);
-                    _logger.Error("No se encontraron canciones disponibles para los criterios proporcionados.", exception);
-                    throw exception;
+                    RegistrarErrorFaltaCanciones(idioma, idiomaInterno, idiomaBusqueda);
+                    throw new CancionNoDisponibleException(MensajeCancionesNoDisponibles);
                 }
 
-                lock (_randomLock)
-                {
-                    var indice = _random.Next(disponibles.Count);
-                    return disponibles[indice];
-                }
+                // 5. Seleccionar ganador
+                return SeleccionarAleatorio(candidatos);
             }
             catch (CancionNoDisponibleException)
             {
@@ -122,6 +122,48 @@ namespace PictionaryMusicalServidor.Datos
                 Genero = genero,
                 Idioma = idioma
             };
+        }
+
+        private static string MapearIdiomaInterno(string idiomaEntrada)
+        {
+            if (idiomaEntrada.StartsWith("es", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Español";
+            }
+
+            if (idiomaEntrada.StartsWith("en", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Ingles";
+            }
+
+            return idiomaEntrada;
+        }
+
+        private static List<Cancion> ObtenerCandidatos(string idiomaNormalizado, HashSet<int> idsRechazados)
+        {
+            return _canciones.Values
+                .Where(cancion =>
+                    string.Equals(NormalizarTexto(cancion.Idioma), idiomaNormalizado, StringComparison.OrdinalIgnoreCase)
+                    && !idsRechazados.Contains(cancion.Id))
+                .ToList();
+        }
+
+        private static void RegistrarErrorFaltaCanciones(string idiomaOriginal, string idiomaMapeado, string idiomaNorm)
+        {
+            _logger.WarnFormat("Fallo al buscar canción. Idioma Entrante: {0}, Mapeado: {1}, Normalizado: {2}.",
+                idiomaOriginal, idiomaMapeado, idiomaNorm);
+
+            var exception = new CancionNoDisponibleException(MensajeCancionesNoDisponibles);
+            _logger.Error("No se encontraron canciones disponibles para los criterios proporcionados.", exception);
+        }
+
+        private static Cancion SeleccionarAleatorio(List<Cancion> candidatos)
+        {
+            lock (_randomLock)
+            {
+                var indice = _random.Next(candidatos.Count);
+                return candidatos[indice];
+            }
         }
 
         private static string NormalizarTexto(string texto)
