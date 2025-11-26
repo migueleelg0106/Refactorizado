@@ -52,6 +52,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private bool _esDibujante;
         private bool _alarmaActiva;
         private DTOs.RondaDTO _rondaPendiente;
+        private int _totalJugadoresPendiente;
         private string _nombreCancionActual;
         private Brush _colorPalabraAdivinar;
 
@@ -686,6 +687,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     return;
                 }
 
+                _totalJugadoresPendiente = totalJugadores;
+
                 if (_alarmaActiva)
                 {
                     _rondaPendiente = ronda;
@@ -705,7 +708,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _manejadorCancion.Detener();
             LimpiarTrazos?.Invoke();
 
-            ActualizarContadorRondas(0);
+            ActualizarContadorRondas(_totalJugadoresPendiente);
             _contador = ronda.TiempoSegundos;
             TextoContador = _contador.ToString();
             ColorContador = Brushes.Black;
