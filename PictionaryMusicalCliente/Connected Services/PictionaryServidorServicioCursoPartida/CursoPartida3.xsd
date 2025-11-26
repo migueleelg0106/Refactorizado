@@ -15,6 +15,7 @@
   <xs:complexType name="RondaDTO">
     <xs:sequence>
       <xs:element minOccurs="0" name="IdCancion" type="xs:int" />
+      <xs:element minOccurs="0" name="NombreDibujante" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PistaArtista" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PistaGenero" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Rol" nillable="true" type="xs:string" />

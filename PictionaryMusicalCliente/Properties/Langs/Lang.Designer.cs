@@ -502,6 +502,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a ¡{0} adivinó la canción!.
+        /// </summary>
+        public static string chatTextoJugadorAdivino {
+            get {
+                return ResourceManager.GetString("chatTextoJugadorAdivino", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Ordenar por puntos.
         /// </summary>
         public static string clasificacionTextoOrdenarPuntos {
@@ -2329,6 +2338,24 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Dibujo de {0}.
+        /// </summary>
+        public static string partidaTextoDibujoDe {
+            get {
+                return ResourceManager.GetString("partidaTextoDibujoDe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El anfitrión de la sala abandonó la partida, por lo tanto, esta fue cancelada..
+        /// </summary>
+        public static string partidaTextoHostCanceloSala {
+            get {
+                return ResourceManager.GetString("partidaTextoHostCanceloSala", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a JUGADORES.
         /// </summary>
         public static string partidaTextoJugadores {
@@ -2338,29 +2365,20 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Partida en curso.
-        /// </summary>
-        public static string partidaTextoPartidaEnCurso {
-            get {
-                return ResourceManager.GetString("partidaTextoPartidaEnCurso", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Busca una cadena traducida similar a El anfitrión de la sala abandonó la partida, por lo tanto, esta fue cancelada..
-        /// </summary>
-        public static string partidaTextoHostCanceloSala {
-            get {
-                return ResourceManager.GetString("partidaTextoHostCanceloSala", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Busca una cadena traducida similar a No hay suficientes jugadores para seguir jugando, se canceló la partida..
         /// </summary>
         public static string partidaTextoJugadoresInsuficientes {
             get {
                 return ResourceManager.GetString("partidaTextoJugadoresInsuficientes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Partida en curso.
+        /// </summary>
+        public static string partidaTextoPartidaEnCurso {
+            get {
+                return ResourceManager.GetString("partidaTextoPartidaEnCurso", resourceCulture);
             }
         }
         
