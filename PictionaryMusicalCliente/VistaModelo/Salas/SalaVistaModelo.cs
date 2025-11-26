@@ -882,9 +882,21 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
+            _ = EnviarMensajeAsync(mensaje);
+        }
+
+        private async Task EnviarMensajeAsync(string mensaje)
+        {
             try
             {
-                _proxyJuego?.EnviarMensajeJuego(mensaje, _codigoSala, _idJugador);
+                if (_proxyJuego == null)
+                {
+                    _logger.Warn("Proxy de juego no disponible para enviar mensaje.");
+                    return;
+                }
+
+                await _proxyJuego.EnviarMensajeJuegoAsync(mensaje, _codigoSala, _idJugador)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex) when (ex is CommunicationException || ex is TimeoutException)
             {
