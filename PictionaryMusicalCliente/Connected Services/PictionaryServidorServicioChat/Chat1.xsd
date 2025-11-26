@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Unirse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="idSala" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="nombreJugador" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UnirseResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EnviarMensaje">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="idSala" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="mensaje" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="nombreJugador" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EnviarMensajeResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Salir">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="idSala" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="nombreJugador" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SalirResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RecibirMensaje">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="nombreJugador" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="mensaje" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarJugadorUnido">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="nombreJugador" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NotificarJugadorSalio">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="nombreJugador" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

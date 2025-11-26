@@ -84,6 +84,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioChat\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioClasificacion\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -335,6 +340,13 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioCambioContrasena\CambioContrasenaManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioChat\Chat.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioChat\Chat1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioChat\ChatManejador.wsdl" />
     <None Include="Connected Services\PictionaryServidorServicioClasificacion\Clasificacion.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -663,6 +675,13 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Connected Services\PictionaryServidorServicioChat\Chat.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioChat\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioChat\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioChat\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Recursos\Adivinador.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -727,6 +746,7 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioAmigos\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCambioContrasena\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioChat\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioClasificacion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCodigoVerificacion\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioCuenta\" />

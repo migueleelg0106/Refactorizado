@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="ChatManejador" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IChatManejador_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="600000" />
+          <wsrm:AcknowledgementInterval Milliseconds="200" />
+        </wsrm:RMAssertion>
+        <cdp:CompositeDuplex xmlns:cdp="http://schemas.microsoft.com/net/2006/06/duplex" />
+        <ow:OneWay xmlns:ow="http://schemas.microsoft.com/ws/2005/05/routing/policy" />
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="NetTcpBinding_IChatManejador_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:8525/Pictionary/Chat?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:8525/Pictionary/Chat?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IChatManejador_Unirse_InputMessage">
+    <wsdl:part name="parameters" element="tns:Unirse" />
+  </wsdl:message>
+  <wsdl:message name="IChatManejador_Unirse_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UnirseResponse" />
+  </wsdl:message>
+  <wsdl:message name="IChatManejador_EnviarMensaje_InputMessage">
+    <wsdl:part name="parameters" element="tns:EnviarMensaje" />
+  </wsdl:message>
+  <wsdl:message name="IChatManejador_EnviarMensaje_OutputMessage">
+    <wsdl:part name="parameters" element="tns:EnviarMensajeResponse" />
+  </wsdl:message>
+  <wsdl:message name="IChatManejador_Salir_InputMessage">
+    <wsdl:part name="parameters" element="tns:Salir" />
+  </wsdl:message>
+  <wsdl:message name="IChatManejador_Salir_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SalirResponse" />
+  </wsdl:message>
+  <wsdl:message name="IChatManejador_RecibirMensaje_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:RecibirMensaje" />
+  </wsdl:message>
+  <wsdl:message name="IChatManejador_NotificarJugadorUnido_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarJugadorUnido" />
+  </wsdl:message>
+  <wsdl:message name="IChatManejador_NotificarJugadorSalio_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotificarJugadorSalio" />
+  </wsdl:message>
+  <wsdl:portType name="IChatManejador">
+    <wsdl:operation name="Unirse">
+      <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/Unirse" message="tns:IChatManejador_Unirse_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/UnirseResponse" message="tns:IChatManejador_Unirse_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="EnviarMensaje">
+      <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/EnviarMensaje" message="tns:IChatManejador_EnviarMensaje_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/EnviarMensajeResponse" message="tns:IChatManejador_EnviarMensaje_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Salir">
+      <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/Salir" message="tns:IChatManejador_Salir_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/SalirResponse" message="tns:IChatManejador_Salir_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RecibirMensaje">
+      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/RecibirMensaje" message="tns:IChatManejador_RecibirMensaje_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorUnido">
+      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/NotificarJugadorUnido" message="tns:IChatManejador_NotificarJugadorUnido_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorSalio">
+      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/NotificarJugadorSalio" message="tns:IChatManejador_NotificarJugadorSalio_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSDualHttpBinding_IChatManejador" type="tns:IChatManejador">
+    <wsp:PolicyReference URI="#WSDualHttpBinding_IChatManejador_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Unirse">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/Unirse" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EnviarMensaje">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/EnviarMensaje" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Salir">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/Salir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RecibirMensaje">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/RecibirMensaje" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorUnido">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/NotificarJugadorUnido" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorSalio">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/NotificarJugadorSalio" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="NetTcpBinding_IChatManejador" type="tns:IChatManejador">
+    <wsp:PolicyReference URI="#NetTcpBinding_IChatManejador_policy" />
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="Unirse">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/Unirse" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EnviarMensaje">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/EnviarMensaje" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Salir">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/Salir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RecibirMensaje">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/RecibirMensaje" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorUnido">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/NotificarJugadorUnido" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotificarJugadorSalio">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/NotificarJugadorSalio" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ChatManejador">
+    <wsdl:port name="WSDualHttpBinding_IChatManejador" binding="tns:WSDualHttpBinding_IChatManejador">
+      <soap12:address location="http://localhost:8525/Pictionary/Chat/Chat" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>http://localhost:8525/Pictionary/Chat/Chat</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+    <wsdl:port name="NetTcpBinding_IChatManejador" binding="tns:NetTcpBinding_IChatManejador">
+      <soap12:address location="net.tcp://localhost:8526/Pictionary/Chat/Chat" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:8526/Pictionary/Chat/Chat</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

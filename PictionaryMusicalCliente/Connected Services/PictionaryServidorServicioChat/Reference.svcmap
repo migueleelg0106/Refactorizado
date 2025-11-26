@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="4f3be4da-550b-41a6-aa81-2706b09d04c5" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies>
+      <ReferencedAssembly AssemblyName="Servicios" />
+    </ReferencedAssemblies>
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8525/Pictionary/Chat" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Chat.xsd" MetadataType="Schema" ID="765f8058-d011-42e6-9ebc-c4cb16436863" SourceId="1" SourceUrl="http://localhost:8525/Pictionary/Chat?xsd=xsd1" />
+    <MetadataFile FileName="Chat.disco" MetadataType="Disco" ID="6915080a-bb64-43cf-a281-8defa28bb3c8" SourceId="1" SourceUrl="http://localhost:8525/Pictionary/Chat?disco" />
+    <MetadataFile FileName="Chat1.xsd" MetadataType="Schema" ID="08691928-c9e4-45c4-ada0-e77e632c9c18" SourceId="1" SourceUrl="http://localhost:8525/Pictionary/Chat?xsd=xsd0" />
+    <MetadataFile FileName="ChatManejador.wsdl" MetadataType="Wsdl" ID="265e413d-7680-4b35-8212-8b17b571cdcc" SourceId="1" SourceUrl="http://localhost:8525/Pictionary/Chat?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
