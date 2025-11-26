@@ -23,6 +23,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         private readonly Queue<string> _colaDibujantes = new Queue<string>();
         private readonly HashSet<int> _cancionesUsadas = new HashSet<int>();
         private readonly object _sincronizacion = new object();
+        private readonly Random _random = new Random();
 
         private readonly int _tiempoRondaSegundos;
         private readonly string _dificultad;
@@ -141,7 +142,6 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 };
 
                 _jugadores.Add(idConexion, jugador);
-                _colaDibujantes.Enqueue(idConexion);
 
                 _logger.InfoFormat("Jugador {0} agregado a la partida. Total jugadores: {1}.", nombreUsuario, _jugadores.Count);
             }
@@ -321,19 +321,22 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     return;
                 }
 
-                if (_rondaActual >= _cantidadRondas)
+                if (_colaDibujantes.Count == 0)
                 {
-                    _estadoActual = EstadoPartida.Finalizada;
-                    debeFinalizar = true;
+                    if (_rondaActual >= _cantidadRondas)
+                    {
+                        _estadoActual = EstadoPartida.Finalizada;
+                        debeFinalizar = true;
+                    }
+                    else
+                    {
+                        PrepararColaDibujantes();
+                        _rondaActual++;
+                    }
                 }
 
-                if (debeFinalizar)
+                if (!debeFinalizar)
                 {
-                    ronda = null;
-                }
-                else
-                {
-                    PrepararColaDibujantes();
                     SeleccionarDibujante();
                     var cancion = ObtenerCancionParaRonda();
 
@@ -341,8 +344,6 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     _timerRonda.Interval = _tiempoRondaSegundos * 1000;
                     _inicioRonda = DateTime.UtcNow;
                     _timerRonda.Start();
-
-                    _rondaActual++;
 
                     ronda = CrearRondaDto(cancion);
                 }
@@ -359,12 +360,9 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
         private void PrepararColaDibujantes()
         {
-            if (_colaDibujantes.Count > 0)
-            {
-                return;
-            }
+            _colaDibujantes.Clear();
 
-            foreach (var jugador in _jugadores.Keys)
+            foreach (var jugador in _jugadores.Keys.OrderBy(_ => _random.Next()))
             {
                 _colaDibujantes.Enqueue(jugador);
             }
@@ -386,8 +384,6 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 {
                     dibujante.EsDibujante = true;
                     dibujante.YaAdivino = true;
-
-                    _colaDibujantes.Enqueue(idDibujante);
                     return;
                 }
             }
@@ -400,7 +396,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             var cancion = CatalogoCancionesLogico.ObtenerCancionAleatoria(_idiomaCanciones, _cancionesUsadas);
             _cancionActualId = cancion.Id;
             _cancionesUsadas.Add(cancion.Id);
-            _logger.InfoFormat("Canción {0} seleccionada para la ronda {1}.", cancion.Nombre, _rondaActual + 1);
+            _logger.InfoFormat("Canción {0} seleccionada para la ronda {1}.", cancion.Nombre, _rondaActual);
             return cancion;
         }
 
@@ -461,7 +457,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
                 _timerRonda.Stop();
 
-                partidaFinalizada = _rondaActual >= _cantidadRondas;
+                partidaFinalizada = _colaDibujantes.Count == 0 && _rondaActual >= _cantidadRondas;
                 clasificacion = ObtenerClasificacion();
 
                 if (partidaFinalizada)
