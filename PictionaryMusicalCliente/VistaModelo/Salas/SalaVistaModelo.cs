@@ -13,6 +13,7 @@ using PictionaryMusicalCliente.VistaModelo.Amigos;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -125,6 +126,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             _partidaVistaModelo = new PartidaIniciadaVistaModelo();
             _chatVistaModelo = new ChatVistaModelo();
+            _chatVistaModelo.PropertyChanged += ChatVistaModelo_PropertyChanged;
 
             _partidaVistaModelo.PropertyChanged += PartidaIniciadaVistaModelo_PropertyChanged;
 
@@ -193,6 +195,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _chatVistaModelo.EnviarMensajeAlServidor = EjecutarEnviarMensaje;
             _chatVistaModelo.ObtenerNombreJugadorActual = () => _nombreUsuarioSesion;
             _chatVistaModelo.RegistrarAciertoEnServidor = EjecutarRegistrarAcierto;
+        }
+
+        private void ChatVistaModelo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (string.Equals(
+                e.PropertyName,
+                nameof(ChatVistaModelo.PuedeEscribir),
+                StringComparison.Ordinal))
+            {
+                NotificarCambio(nameof(PuedeEscribir));
+            }
         }
 
         private void PartidaIniciadaVistaModelo_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
