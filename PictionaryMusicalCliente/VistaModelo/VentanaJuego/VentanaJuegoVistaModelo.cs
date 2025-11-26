@@ -792,6 +792,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             JuegoIniciado = true;
             NumeroRondaActual = 0;
             _turnosCompletadosEnCiclo = 0;
+            ReiniciarPuntuacionRondaJugadores();
             MostrarEstadoRonda = false;
             VisibilidadCuadriculaDibujo = Visibility.Visible;
             EsHerramientaLapiz = true;
@@ -1242,6 +1243,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _overlayTimer.Stop();
             _manejadorCancion.Detener();
 
+            ReiniciarPuntuacionRondaJugadores();
             ActualizarContadorRondas();
             _contador = ronda.TiempoSegundos;
             TextoContador = _contador.ToString();
@@ -1310,6 +1312,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 string mensaje = $"{nombreJugador} ha adivinado la canción";
                 MensajeChatRecibido?.Invoke(nombreJugador, mensaje);
                 SonidoManejador.ReproducirExito();
+                IncrementarPuntuacionJugador(nombreJugador);
 
                 if (string.Equals(
                     nombreJugador,
@@ -1547,6 +1550,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 Jugadores = new ObservableCollection<JugadorElemento>();
             }
 
+            var puntajesPrevios = Jugadores.ToDictionary(
+                j => j.Nombre,
+                j => j.PuntuacionRonda,
+                ComparadorJugadores);
+
             Jugadores.Clear();
 
             if (jugadores == null)
@@ -1568,7 +1576,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                     continue;
                 }
 
-                AgregarJugador(jugador);
+                puntajesPrevios.TryGetValue(jugador, out var puntuacionRonda);
+                AgregarJugador(jugador, puntuacionRonda);
 
                 if (jugadoresUnicos.Count >= MaximoJugadoresSala)
                 {
@@ -1580,18 +1589,40 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             ActualizarVisibilidadBotonesExpulsion();
         }
 
-        private void AgregarJugador(string nombreJugador)
+        private void AgregarJugador(string nombreJugador, int puntuacionRonda = 0)
         {
             var jugadorElemento = new JugadorElemento
             {
                 Nombre = nombreJugador,
                 MostrarBotonExpulsar = PuedeExpulsarJugador(nombreJugador),
                 ExpulsarComando = new ComandoAsincrono(async _ =>
-                    await EjecutarExpulsarJugadorAsync(nombreJugador))
+                    await EjecutarExpulsarJugadorAsync(nombreJugador)),
+                PuntuacionRonda = puntuacionRonda
             };
 
             Jugadores.Add(jugadorElemento);
             AjustarProgresoRondaTrasCambioJugadores();
+        }
+
+        private void ReiniciarPuntuacionRondaJugadores()
+        {
+            foreach (var jugador in Jugadores)
+            {
+                jugador.PuntuacionRonda = 0;
+            }
+        }
+
+        private void IncrementarPuntuacionJugador(string nombreJugador)
+        {
+            var jugador = Jugadores.FirstOrDefault(j => string.Equals(
+                j.Nombre,
+                nombreJugador,
+                StringComparison.OrdinalIgnoreCase));
+
+            if (jugador != null)
+            {
+                jugador.PuntuacionRonda++;
+            }
         }
 
         private bool PuedeExpulsarJugador(string nombreJugador)

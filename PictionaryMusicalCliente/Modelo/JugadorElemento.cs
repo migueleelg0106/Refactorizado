@@ -13,6 +13,7 @@ namespace PictionaryMusicalCliente.Modelo
         private string _nombre;
         private bool _mostrarBotonExpulsar;
         private ICommand _expulsarComando;
+        private int _puntuacionRonda;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -42,6 +43,15 @@ namespace PictionaryMusicalCliente.Modelo
         {
             get => _expulsarComando;
             set => EstablecerPropiedad(ref _expulsarComando, value);
+        }
+
+        /// <summary>
+        /// Puntaje obtenido por el jugador en la ronda actual.
+        /// </summary>
+        public int PuntuacionRonda
+        {
+            get => _puntuacionRonda;
+            set => EstablecerPropiedad(ref _puntuacionRonda, value);
         }
 
         private bool EstablecerPropiedad<T>(ref T campo, T valor, [CallerMemberName] string nombrePropiedad = null)
