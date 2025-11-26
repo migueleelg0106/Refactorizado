@@ -233,6 +233,12 @@ namespace PictionaryMusicalCliente
                 return;
             }
 
+            if (trazo.EsLimpiarTodo)
+            {
+                ink.Strokes.Clear();
+                return;
+            }
+
             var puntosTrayectoria = new List<Point>();
             for (int i = 0; i < Math.Min(trazo.PuntosX.Length, trazo.PuntosY.Length); i++)
             {
@@ -244,23 +250,19 @@ namespace PictionaryMusicalCliente
                 return;
             }
 
-            var radio = Math.Max(1, trazo.Grosor);
-            var strokesABorrar = new List<Stroke>();
-            foreach (var punto in puntosTrayectoria)
-            {
-                var strokes = ink.Strokes.HitTest(punto, radio / 2);
-                foreach (var stroke in strokes)
-                {
-                    if (!strokesABorrar.Contains(stroke))
-                    {
-                        strokesABorrar.Add(stroke);
-                    }
-                }
-            }
+            var tamano = Math.Max(1, trazo.Grosor);
+            var formaBorrador = new EllipseStylusShape(tamano, tamano);
+            var strokesActuales = ink.Strokes.ToList();
 
-            foreach (var stroke in strokesABorrar.ToList())
+            foreach (var stroke in strokesActuales)
             {
+                var resultado = stroke.GetEraseResult(puntosTrayectoria, formaBorrador);
                 ink.Strokes.Remove(stroke);
+
+                if (resultado != null && resultado.Count > 0)
+                {
+                    ink.Strokes.Add(resultado);
+                }
             }
         }
 

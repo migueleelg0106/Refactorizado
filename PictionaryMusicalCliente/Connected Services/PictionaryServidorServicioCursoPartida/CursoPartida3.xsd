@@ -5,6 +5,7 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="ColorHex" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="EsBorrado" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EsLimpiarTodo" type="xs:boolean" />
       <xs:element minOccurs="0" name="Grosor" type="xs:double" />
       <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="PuntosX" nillable="true" type="q1:ArrayOfdouble" />
       <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="PuntosY" nillable="true" type="q2:ArrayOfdouble" />

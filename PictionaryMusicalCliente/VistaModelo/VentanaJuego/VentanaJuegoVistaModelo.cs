@@ -1058,6 +1058,18 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private void EjecutarLimpiarDibujo()
         {
             LimpiarTrazos?.Invoke();
+
+            var trazoLimpiar = new DTOs.TrazoDTO
+            {
+                PuntosX = Array.Empty<double>(),
+                PuntosY = Array.Empty<double>(),
+                ColorHex = string.Empty,
+                Grosor = 0,
+                EsBorrado = true,
+                EsLimpiarTodo = true
+            };
+
+            EnviarTrazoAlServidor(trazoLimpiar);
         }
 
         private void EjecutarMostrarOverlayDibujante()
