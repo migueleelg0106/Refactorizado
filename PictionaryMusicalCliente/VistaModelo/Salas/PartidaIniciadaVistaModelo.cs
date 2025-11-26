@@ -400,6 +400,21 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public event Action<bool> PuedeEscribirCambiado;
 
+        /// <summary>
+        /// Evento que notifica cuando cambia el rol de dibujante.
+        /// </summary>
+        public event Action<bool> EsDibujanteCambiado;
+
+        /// <summary>
+        /// Evento que notifica cuando cambia el nombre de la cancion correcta.
+        /// </summary>
+        public event Action<string> NombreCancionCambiado;
+
+        /// <summary>
+        /// Evento que notifica cuando cambia el tiempo restante.
+        /// </summary>
+        public event Action<int> TiempoRestanteCambiado;
+
         private void InicializarComandos()
         {
             SeleccionarLapizComando = new ComandoDelegado(_ => EjecutarSeleccionarLapiz());
@@ -598,6 +613,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
             _contador--;
             TextoContador = _contador.ToString();
+            TiempoRestanteCambiado?.Invoke(_contador);
 
             if (_contador <= 0)
             {
@@ -719,11 +735,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             string archivoCancion = cancion?.Archivo ?? string.Empty;
             string nombreCancion = cancion?.Nombre ?? string.Empty;
             _nombreCancionActual = nombreCancion;
+            NombreCancionCambiado?.Invoke(nombreCancion);
+            TiempoRestanteCambiado?.Invoke(_contador);
             ColorPalabraAdivinar = Brushes.Black;
 
             if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
             {
                 EsDibujante = true;
+                EsDibujanteCambiado?.Invoke(true);
                 PuedeEscribirCambiado?.Invoke(false);
                 PalabraAdivinar = string.IsNullOrWhiteSpace(nombreCancion)
                     ? PalabraAdivinar
@@ -745,6 +764,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             else
             {
                 EsDibujante = false;
+                EsDibujanteCambiado?.Invoke(false);
                 PuedeEscribirCambiado?.Invoke(true);
                 PalabraAdivinar = string.Empty;
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
