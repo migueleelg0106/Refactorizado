@@ -86,6 +86,10 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private bool _aplicacionCerrando;
         private bool _puedeEscribir;
         private bool _esDibujante;
+        private bool _alarmaActiva;
+        private DTOs.RondaDTO _rondaPendiente;
+        private string _nombreCancionActual;
+        private Brush _colorPalabraAdivinar;
 
         /// <summary>
         /// Define los destinos posibles al salir de la partida.
@@ -155,6 +159,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _visibilidadOverlayAlarma = Visibility.Collapsed;
             _visibilidadPalabraAdivinar = Visibility.Collapsed;
             _visibilidadInfoCancion = Visibility.Collapsed;
+            _colorPalabraAdivinar = Brushes.Black;
             _visibilidadArtista = Visibility.Collapsed;
             _visibilidadGenero = Visibility.Collapsed;
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
@@ -165,6 +170,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _jugadores = new ObservableCollection<JugadorElemento>();
             ActualizarJugadores(_sala.Jugadores);
             _puedeInvitarPorCorreo = true;
+            _nombreCancionActual = string.Empty;
 
             _salasServicio.JugadorSeUnio += SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio += SalasServicio_JugadorSalio;
@@ -394,6 +400,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             get => _palabraAdivinar;
             set => EstablecerPropiedad(ref _palabraAdivinar, value);
+        }
+
+        /// <summary>
+        /// Color del texto de la palabra a adivinar.
+        /// </summary>
+        public Brush ColorPalabraAdivinar
+        {
+            get => _colorPalabraAdivinar;
+            set => EstablecerPropiedad(ref _colorPalabraAdivinar, value);
         }
 
         /// <summary>
@@ -1041,6 +1056,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
         private void MostrarOverlayAlarma()
         {
+            _alarmaActiva = true;
+
+            if (!string.IsNullOrWhiteSpace(_nombreCancionActual))
+            {
+                PalabraAdivinar = _nombreCancionActual;
+            }
+
+            VisibilidadPalabraAdivinar = Visibility.Visible;
+            ColorPalabraAdivinar = Brushes.Blue;
             VisibilidadOverlayAlarma = Visibility.Visible;
 
             _temporizadorAlarma.Stop();
@@ -1049,8 +1073,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
         private void OcultarOverlayAlarma()
         {
-            _temporizadorAlarma.Stop();
-            VisibilidadOverlayAlarma = Visibility.Collapsed;
+            FinalizarAlarma();
         }
 
         private void EjecutarCerrarVentana()
@@ -1073,6 +1096,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
         private void IniciarTemporizador()
         {
+            if (_alarmaActiva)
+            {
+                return;
+            }
+
             OcultarOverlayAlarma();
 
             _contador = Math.Max(0, _contador);
@@ -1104,7 +1132,36 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
         private void TemporizadorAlarma_Tick(object sender, EventArgs e)
         {
-            OcultarOverlayAlarma();
+            FinalizarAlarma();
+        }
+
+        private void FinalizarAlarma()
+        {
+            if (!_alarmaActiva && VisibilidadOverlayAlarma == Visibility.Collapsed)
+            {
+                return;
+            }
+
+            _temporizadorAlarma.Stop();
+            VisibilidadOverlayAlarma = Visibility.Collapsed;
+            _alarmaActiva = false;
+
+            RestablecerPalabraTrasAlarma();
+
+            if (_rondaPendiente != null)
+            {
+                var rondaPendiente = _rondaPendiente;
+                _rondaPendiente = null;
+                ProcesarInicioRonda(rondaPendiente);
+            }
+        }
+
+        private void RestablecerPalabraTrasAlarma()
+        {
+            ColorPalabraAdivinar = Brushes.Black;
+            PalabraAdivinar = string.Empty;
+            VisibilidadPalabraAdivinar = Visibility.Collapsed;
+            VisibilidadInfoCancion = Visibility.Collapsed;
         }
 
         public void NotificarPartidaIniciada()
@@ -1142,62 +1199,77 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                     return;
                 }
 
-                _temporizador.Stop();
-                _overlayTimer.Stop();
-                _manejadorCancion.Detener();
-
-                NumeroRondaActual++;
-                _contador = ronda.TiempoSegundos;
-                TextoContador = _contador.ToString();
-                ColorContador = Brushes.Black;
-                VisibilidadCuadriculaDibujo = Visibility.Visible;
-                MostrarEstadoRonda = true;
-
-                var cancion = ObtenerCancion(ronda.IdCancion);
-                string archivoCancion = cancion?.Archivo ?? string.Empty;
-                string nombreCancion = cancion?.Nombre ?? string.Empty;
-
-                if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
+                if (_alarmaActiva)
                 {
-                    EsDibujante = true;
-                    PuedeEscribir = false;
-                    PalabraAdivinar = string.IsNullOrWhiteSpace(nombreCancion)
-                        ? PalabraAdivinar
-                        : nombreCancion;
-                    VisibilidadPalabraAdivinar = Visibility.Visible;
-                    VisibilidadInfoCancion = Visibility.Visible;
-                    TextoArtista = string.Empty;
-                    TextoGenero = string.Empty;
-                    VisibilidadArtista = Visibility.Collapsed;
-                    VisibilidadGenero = Visibility.Collapsed;
-
-                    if (!string.IsNullOrWhiteSpace(archivoCancion))
-                    {
-                        _manejadorCancion.Reproducir(archivoCancion);
-                    }
-
-                    EjecutarMostrarOverlayDibujante();
+                    _rondaPendiente = ronda;
+                    return;
                 }
-                else
-                {
-                    EsDibujante = false;
-                    PuedeEscribir = true;
-                    PalabraAdivinar = string.Empty;
-                    VisibilidadPalabraAdivinar = Visibility.Collapsed;
-                    TextoArtista = string.IsNullOrWhiteSpace(ronda.PistaArtista)
-                        ? string.Empty
-                        : string.Format("Artista: {0}", ronda.PistaArtista);
-                    TextoGenero = string.IsNullOrWhiteSpace(ronda.PistaGenero)
-                        ? string.Empty
-                        : string.Format("Género: {0}", ronda.PistaGenero);
-                    VisibilidadArtista = DeterminarVisibilidadPista(TextoArtista);
-                    VisibilidadGenero = DeterminarVisibilidadPista(TextoGenero);
-                    VisibilidadInfoCancion = Visibility.Visible;
 
-                    _manejadorCancion.Detener();
-                    EjecutarMostrarOverlayAdivinador();
-                }
+                ProcesarInicioRonda(ronda);
             });
+        }
+
+        private void ProcesarInicioRonda(DTOs.RondaDTO ronda)
+        {
+            _rondaPendiente = null;
+
+            _temporizador.Stop();
+            _overlayTimer.Stop();
+            _manejadorCancion.Detener();
+
+            NumeroRondaActual++;
+            _contador = ronda.TiempoSegundos;
+            TextoContador = _contador.ToString();
+            ColorContador = Brushes.Black;
+            VisibilidadCuadriculaDibujo = Visibility.Visible;
+            MostrarEstadoRonda = true;
+
+            var cancion = ObtenerCancion(ronda.IdCancion);
+            string archivoCancion = cancion?.Archivo ?? string.Empty;
+            string nombreCancion = cancion?.Nombre ?? string.Empty;
+            _nombreCancionActual = nombreCancion;
+            ColorPalabraAdivinar = Brushes.Black;
+
+            if (string.Equals(ronda.Rol, "Dibujante", StringComparison.OrdinalIgnoreCase))
+            {
+                EsDibujante = true;
+                PuedeEscribir = false;
+                PalabraAdivinar = string.IsNullOrWhiteSpace(nombreCancion)
+                    ? PalabraAdivinar
+                    : nombreCancion;
+                VisibilidadPalabraAdivinar = Visibility.Visible;
+                VisibilidadInfoCancion = Visibility.Visible;
+                TextoArtista = string.Empty;
+                TextoGenero = string.Empty;
+                VisibilidadArtista = Visibility.Collapsed;
+                VisibilidadGenero = Visibility.Collapsed;
+
+                if (!string.IsNullOrWhiteSpace(archivoCancion))
+                {
+                    _manejadorCancion.Reproducir(archivoCancion);
+                }
+
+                EjecutarMostrarOverlayDibujante();
+            }
+            else
+            {
+                EsDibujante = false;
+                PuedeEscribir = true;
+                PalabraAdivinar = string.Empty;
+                VisibilidadPalabraAdivinar = Visibility.Collapsed;
+                TextoArtista = string.IsNullOrWhiteSpace(ronda.PistaArtista)
+                    ? string.Empty
+                    : string.Format("Artista: {0}", ronda.PistaArtista);
+                TextoGenero = string.IsNullOrWhiteSpace(ronda.PistaGenero)
+                    ? string.Empty
+                    : string.Format("Género: {0}", ronda.PistaGenero);
+                VisibilidadArtista = DeterminarVisibilidadPista(TextoArtista);
+                VisibilidadGenero = DeterminarVisibilidadPista(TextoGenero);
+                VisibilidadInfoCancion = Visibility.Visible;
+
+                _manejadorCancion.Detener();
+                EjecutarMostrarOverlayAdivinador();
+            }
         }
 
         public void NotificarJugadorAdivino(string nombreJugador, int puntos)
@@ -1285,6 +1357,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             {
                 _temporizador.Stop();
                 _overlayTimer.Stop();
+                _temporizadorAlarma.Stop();
                 _manejadorCancion.Detener();
                 JuegoIniciado = false;
                 MostrarEstadoRonda = false;
@@ -1292,6 +1365,10 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 NumeroRondaActual = 0;
                 PuedeEscribir = false;
                 BotonIniciarPartidaHabilitado = false;
+                _alarmaActiva = false;
+                _rondaPendiente = null;
+                VisibilidadOverlayAlarma = Visibility.Collapsed;
+                RestablecerPalabraTrasAlarma();
 
                 if (!string.IsNullOrWhiteSpace(mensaje))
                 {
