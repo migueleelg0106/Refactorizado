@@ -234,14 +234,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private void NotificarJugadorUnido(string idSala, string nombreJugador)
         {
-            if (!_clientesPorSala.TryGetValue(idSala, out var clientesSala))
-            {
-                return;
-            }
+            List<ClienteChat> clientesANotificar;
 
-            var clientesANotificar = clientesSala
-                .Where(c => !string.Equals(c.NombreJugador, nombreJugador, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            lock (_sincronizacion)
+            {
+                if (!_clientesPorSala.TryGetValue(idSala, out var clientesSala))
+                {
+                    return;
+                }
+
+                clientesANotificar = clientesSala
+                    .Where(c => !string.Equals(c.NombreJugador, nombreJugador, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
 
             foreach (var cliente in clientesANotificar)
             {
@@ -251,12 +256,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private void NotificarJugadorSalio(string idSala, string nombreJugador)
         {
-            if (!_clientesPorSala.TryGetValue(idSala, out var clientesSala))
-            {
-                return;
-            }
+            List<ClienteChat> clientesANotificar;
 
-            var clientesANotificar = clientesSala.ToList();
+            lock (_sincronizacion)
+            {
+                if (!_clientesPorSala.TryGetValue(idSala, out var clientesSala))
+                {
+                    return;
+                }
+
+                clientesANotificar = clientesSala.ToList();
+            }
 
             foreach (var cliente in clientesANotificar)
             {
