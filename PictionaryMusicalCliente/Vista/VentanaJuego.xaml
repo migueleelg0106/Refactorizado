@@ -308,10 +308,12 @@
                       Visibility="{Binding VisibilidadInfoCancion}">
                     <StackPanel VerticalAlignment="Center" Margin="10,0,10,0">
                         <TextBlock x:Name="txtArtista" Text="{Binding TextoArtista}"
+                                   Visibility="{Binding VisibilidadArtista}"
                                    Foreground="Black" FontFamily="Comic Sans MS"
                                    FontSize="16" FontWeight="Bold"
                                    HorizontalAlignment="Center" Margin="0,0,0,2"/>
                         <TextBlock x:Name="txtGenero" Text="{Binding TextoGenero}"
+                                   Visibility="{Binding VisibilidadGenero}"
                                    Foreground="Black" FontFamily="Comic Sans MS"
                                    FontSize="16" FontWeight="Bold"
                                    HorizontalAlignment="Center"/>
