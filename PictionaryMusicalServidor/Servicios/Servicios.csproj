@@ -82,6 +82,7 @@
     <Compile Include="Contratos\IAmigosManejadorCallback.cs" />
     <Compile Include="Contratos\ICambioContrasenaManejador.cs" />
     <Compile Include="Contratos\IChatManejador.cs" />
+    <Compile Include="Contratos\IChatManejadorCallback.cs" />
     <Compile Include="Contratos\IClasificacionManejador.cs" />
     <Compile Include="Contratos\ICodigoVerificacionManejador.cs" />
     <Compile Include="Contratos\ICuentaManejador.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Servicios\CursoPartidaManejador.cs" />
     <Compile Include="Servicios\InicioSesionManejador.cs" />
     <Compile Include="Servicios\CambioContrasenaManejador.cs" />
+    <Compile Include="Servicios\ChatManejador.cs" />
     <Compile Include="Servicios\Modelos\SalaInterna.cs" />
     <Compile Include="Servicios\NotificacionCodigosServicio.cs" />
     <Compile Include="Servicios\Notificadores\NotificadorAmigos.cs" />
