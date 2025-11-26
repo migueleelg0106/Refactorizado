@@ -1,18 +1,19 @@
-using System;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Core;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using log4net;
 using PictionaryMusicalServidor.Datos.Modelo;
 using PictionaryMusicalServidor.Datos.Utilidades;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Core;
+using System.Linq;
 using System.ServiceModel;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -140,8 +141,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     .Include(u => u.Jugador)
                     .FirstOrDefaultAsync(u => u.Jugador.Correo == correo);
 
-                return !string.IsNullOrWhiteSpace(usuario?.Nombre_Usuario)
-                    && sala.Jugadores.Contains(usuario.Nombre_Usuario, StringComparer.OrdinalIgnoreCase);
+                if (string.IsNullOrWhiteSpace(usuario?.Nombre_Usuario))
+                {
+                    return false;
+                }
+
+                var listaJugadores = (IEnumerable<string>)sala.Jugadores;
+
+                return listaJugadores.Contains(usuario.Nombre_Usuario, StringComparer.OrdinalIgnoreCase);
             }
         }
 

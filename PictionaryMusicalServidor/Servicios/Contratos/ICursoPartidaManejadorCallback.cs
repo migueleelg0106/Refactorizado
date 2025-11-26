@@ -7,7 +7,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
     /// Contrato de callback para notificar eventos del curso de la partida a los clientes.
     /// </summary>
     [ServiceContract]
-    public interface ICursoPartidaCallback
+    public interface ICursoPartidaManejadorCallback
     {
         /// <summary>
         /// Notifica que la partida ha sido iniciada por el host.

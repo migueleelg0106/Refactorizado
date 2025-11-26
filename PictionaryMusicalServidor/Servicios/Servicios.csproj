@@ -85,7 +85,7 @@
     <Compile Include="Contratos\IClasificacionManejador.cs" />
     <Compile Include="Contratos\ICodigoVerificacionManejador.cs" />
     <Compile Include="Contratos\ICuentaManejador.cs" />
-    <Compile Include="Contratos\ICursoPartidaCallback.cs" />
+    <Compile Include="Contratos\ICursoPartidaManejadorCallback.cs" />
     <Compile Include="Contratos\ICursoPartidaManejador.cs" />
     <Compile Include="Contratos\IInicioPartidaManejador.cs" />
     <Compile Include="Contratos\IInicioSesionManejador.cs" />

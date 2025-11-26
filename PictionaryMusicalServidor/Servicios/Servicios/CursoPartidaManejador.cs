@@ -22,7 +22,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CursoPartidaManejador));
         private static readonly Dictionary<string, ControladorPartida> _partidasActivas = new(StringComparer.OrdinalIgnoreCase);
-        private static readonly Dictionary<string, Dictionary<string, ICursoPartidaCallback>> _callbacksPorSala = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, Dictionary<string, ICursoPartidaManejadorCallback>> _callbacksPorSala = new(StringComparer.OrdinalIgnoreCase);
         private static readonly object _sincronizacion = new();
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 var controlador = new ControladorPartida(TiempoRondaPorDefectoSegundos, DificultadPorDefecto, NumeroRondasPorDefecto);
                 SuscribirEventos(controlador, idSala);
                 _partidasActivas[idSala] = controlador;
-                _callbacksPorSala[idSala] = new Dictionary<string, ICursoPartidaCallback>(StringComparer.OrdinalIgnoreCase);
+                _callbacksPorSala[idSala] = new Dictionary<string, ICursoPartidaManejadorCallback>(StringComparer.OrdinalIgnoreCase);
 
                 _logger.InfoFormat("Controlador de partida creado para la sala {0}.", idSala);
                 return controlador;
@@ -132,9 +132,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             controlador.FinPartida += resultado => NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado));
         }
 
-        private void NotificarCallbacks(string idSala, Action<ICursoPartidaCallback> accion)
+        private void NotificarCallbacks(string idSala, Action<ICursoPartidaManejadorCallback> accion)
         {
-            List<KeyValuePair<string, ICursoPartidaCallback>> callbacks;
+            List<KeyValuePair<string, ICursoPartidaManejadorCallback>> callbacks;
             lock (_sincronizacion)
             {
                 if (!_callbacksPorSala.TryGetValue(idSala, out var callbacksSala))
@@ -166,13 +166,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private void RegistrarCallback(string idSala, string idJugador, ICursoPartidaCallback callback)
+        private void RegistrarCallback(string idSala, string idJugador, ICursoPartidaManejadorCallback callback)
         {
             lock (_sincronizacion)
             {
                 if (!_callbacksPorSala.TryGetValue(idSala, out var callbacks))
                 {
-                    callbacks = new Dictionary<string, ICursoPartidaCallback>(StringComparer.OrdinalIgnoreCase);
+                    callbacks = new Dictionary<string, ICursoPartidaManejadorCallback>(StringComparer.OrdinalIgnoreCase);
                     _callbacksPorSala[idSala] = callbacks;
                 }
 
@@ -203,7 +203,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private static ICursoPartidaCallback ObtenerCallbackActual()
+        private static ICursoPartidaManejadorCallback ObtenerCallbackActual()
         {
             var contexto = OperationContext.Current;
             if (contexto == null)
@@ -211,7 +211,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new FaultException("No se encontro un contexto de operacion activo.");
             }
 
-            var callback = contexto.GetCallbackChannel<ICursoPartidaCallback>();
+            var callback = contexto.GetCallbackChannel<ICursoPartidaManejadorCallback>();
             if (callback == null)
             {
                 throw new FaultException("No se pudo obtener el callback del cliente.");
