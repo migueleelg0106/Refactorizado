@@ -345,12 +345,13 @@
                            FontFamily="Comic Sans MS"/>
             </Border>
 
-            <ScrollViewer Grid.Row="1" Background="White" BorderBrush="Black" BorderThickness="1">
+            <ScrollViewer x:Name="scrollChat" Grid.Row="1" Background="White" BorderBrush="Black" BorderThickness="1">
                 <StackPanel x:Name="panelApilableChat" Margin="6"/>
             </ScrollViewer>
 
-            <TextBox Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1" 
-                     MaxLength="200"/>
+            <TextBox x:Name="campoTextoChat" Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1" 
+                     MaxLength="200" Text="{Binding MensajeChat, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding PuedeEscribir}" KeyDown="CampoTextoChat_KeyDown"/>
         </Grid>
     </Grid>
 </Window>

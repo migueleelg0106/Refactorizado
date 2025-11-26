@@ -70,6 +70,8 @@ namespace PictionaryMusicalCliente
             _vistaModelo.ChequearCierreAplicacionGlobal = DebeCerrarAplicacionPorCierreDeVentana;
 
             _vistaModelo.TrazoRecibidoServidor += VistaModelo_TrazoRecibidoServidor;
+            _vistaModelo.MensajeChatRecibido += VistaModelo_MensajeChatRecibido;
+            _vistaModelo.MensajeDoradoRecibido += VistaModelo_MensajeDoradoRecibido;
 
             DataContext = _vistaModelo;
 
@@ -279,6 +281,10 @@ namespace PictionaryMusicalCliente
             Closed -= VentanaJuego_ClosedAsync;
             Closing -= VentanaJuego_Closing;
 
+            _vistaModelo.TrazoRecibidoServidor -= VistaModelo_TrazoRecibidoServidor;
+            _vistaModelo.MensajeChatRecibido -= VistaModelo_MensajeChatRecibido;
+            _vistaModelo.MensajeDoradoRecibido -= VistaModelo_MensajeDoradoRecibido;
+
             await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
 
             if (_accionAlCerrar != null && _vistaModelo.DebeEjecutarAccionAlCerrar())
@@ -440,6 +446,50 @@ namespace PictionaryMusicalCliente
             }
 
             return true;
+        }
+
+        private void CampoTextoChat_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Return)
+            {
+                if (_vistaModelo.EnviarMensajeChatComando?.CanExecute(null) == true)
+                {
+                    _vistaModelo.EnviarMensajeChatComando.Execute(null);
+                }
+
+                e.Handled = true;
+            }
+        }
+
+        private void VistaModelo_MensajeChatRecibido(string nombreJugador, string mensaje)
+        {
+            AgregarMensajeAlChat(nombreJugador, mensaje, Colors.Black);
+        }
+
+        private void VistaModelo_MensajeDoradoRecibido(string nombreJugador, string mensaje)
+        {
+            AgregarMensajeAlChat(nombreJugador, mensaje, Colors.Goldenrod);
+        }
+
+        private void AgregarMensajeAlChat(string nombreJugador, string mensaje, Color color)
+        {
+            if (panelApilableChat == null)
+            {
+                return;
+            }
+
+            var textoBloque = new TextBlock
+            {
+                Text = $"{nombreJugador}: {mensaje}",
+                Foreground = new SolidColorBrush(color),
+                TextWrapping = TextWrapping.Wrap,
+                FontFamily = new FontFamily("Comic Sans MS"),
+                Margin = new Thickness(0, 2, 0, 2)
+            };
+
+            panelApilableChat.Children.Add(textoBloque);
+
+            scrollChat?.ScrollToEnd();
         }
     }
 }

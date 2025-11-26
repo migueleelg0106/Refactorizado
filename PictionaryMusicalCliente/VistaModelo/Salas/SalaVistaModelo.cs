@@ -64,6 +64,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private HashSet<string> _adivinadoresQuienYaAcertaron;
         private string _nombreDibujanteActual;
         private bool _rondaTerminadaTemprano;
+        private string _mensajeChat;
 
         private const double PorcentajePuntosDibujante = 0.2;
 
@@ -495,6 +496,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public bool EsDibujante => _partidaVistaModelo.EsDibujante;
 
         /// <summary>
+        /// Texto del mensaje de chat a enviar.
+        /// </summary>
+        public string MensajeChat
+        {
+            get => _mensajeChat;
+            set => EstablecerPropiedad(ref _mensajeChat, value);
+        }
+
+        /// <summary>
         /// Comando para invitar a un usuario por correo.
         /// </summary>
         public ICommand InvitarCorreoComando { get; private set; }
@@ -548,6 +558,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// Comando para cerrar la ventana de juego.
         /// </summary>
         public ICommand CerrarVentanaComando { get; private set; }
+
+        /// <summary>
+        /// Comando para enviar un mensaje de chat.
+        /// </summary>
+        public ICommand EnviarMensajeChatComando { get; private set; }
 
         /// <summary>
         /// Accion para abrir la ventana de ajustes.
@@ -666,6 +681,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             AbrirAjustesComando = new ComandoDelegado(_ => EjecutarAbrirAjustes());
             IniciarPartidaComando = new ComandoAsincrono(async _ => await EjecutarIniciarPartidaAsync());
             CerrarVentanaComando = new ComandoDelegado(_ => EjecutarCerrarVentana());
+            EnviarMensajeChatComando = new ComandoDelegado(_ => EjecutarEnviarMensajeChat());
         }
 
         private void InicializarProxyPartida()
@@ -846,6 +862,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private void EjecutarAbrirAjustes()
         {
             AbrirAjustesPartida?.Invoke(_partidaVistaModelo.ManejadorCancion);
+        }
+
+        private void EjecutarEnviarMensajeChat()
+        {
+            if (string.IsNullOrWhiteSpace(MensajeChat))
+            {
+                return;
+            }
+
+            _chatVistaModelo.EnviarMensaje(MensajeChat);
+            MensajeChat = string.Empty;
         }
 
         private void EjecutarEnviarMensaje(string mensaje)
