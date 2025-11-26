@@ -154,7 +154,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() => MensajeChatRecibido?.Invoke(nombreJugador, mensaje));
+            if (dispatcher.CheckAccess())
+            {
+                MensajeChatRecibido?.Invoke(nombreJugador, mensaje);
+            }
+            else
+            {
+                dispatcher.BeginInvoke(() => MensajeChatRecibido?.Invoke(nombreJugador, mensaje));
+            }
         }
 
         /// <summary>
@@ -164,15 +171,19 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public void NotificarJugadorAdivinoEnChat(string nombreJugador)
         {
             var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
             string mensajeDorado = string.Format(Lang.chatTextoJugadorAdivino, nombreJugador);
 
-            if (dispatcher == null || dispatcher.CheckAccess())
+            if (dispatcher.CheckAccess())
             {
                 MensajeDoradoRecibido?.Invoke(nombreJugador, mensajeDorado);
             }
             else
             {
-                dispatcher.Invoke(() => MensajeDoradoRecibido?.Invoke(nombreJugador, mensajeDorado));
+                dispatcher.BeginInvoke(() => MensajeDoradoRecibido?.Invoke(nombreJugador, mensajeDorado));
             }
         }
 

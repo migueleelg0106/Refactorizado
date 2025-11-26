@@ -36,9 +36,6 @@
   <wsdl:message name="IChatManejador_EnviarMensaje_InputMessage">
     <wsdl:part name="parameters" element="tns:EnviarMensaje" />
   </wsdl:message>
-  <wsdl:message name="IChatManejador_EnviarMensaje_OutputMessage">
-    <wsdl:part name="parameters" element="tns:EnviarMensajeResponse" />
-  </wsdl:message>
   <wsdl:message name="IChatManejador_Salir_InputMessage">
     <wsdl:part name="parameters" element="tns:Salir" />
   </wsdl:message>
@@ -61,7 +58,6 @@
     </wsdl:operation>
     <wsdl:operation name="EnviarMensaje">
       <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/EnviarMensaje" message="tns:IChatManejador_EnviarMensaje_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/EnviarMensajeResponse" message="tns:IChatManejador_EnviarMensaje_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="Salir">
       <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/Salir" message="tns:IChatManejador_Salir_InputMessage" />
@@ -94,9 +90,6 @@
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="Salir">
       <soap12:operation soapAction="http://tempuri.org/IChatManejador/Salir" style="document" />
@@ -143,9 +136,6 @@
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="Salir">
       <soap12:operation soapAction="http://tempuri.org/IChatManejador/Salir" style="document" />

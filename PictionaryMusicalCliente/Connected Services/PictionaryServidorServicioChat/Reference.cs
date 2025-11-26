@@ -21,10 +21,10 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioChat {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/Unirse", ReplyAction="http://tempuri.org/IChatManejador/UnirseResponse")]
         System.Threading.Tasks.Task UnirseAsync(string idSala, string nombreJugador);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/EnviarMensaje", ReplyAction="http://tempuri.org/IChatManejador/EnviarMensajeResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManejador/EnviarMensaje")]
         void EnviarMensaje(string idSala, string mensaje, string nombreJugador);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/EnviarMensaje", ReplyAction="http://tempuri.org/IChatManejador/EnviarMensajeResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManejador/EnviarMensaje")]
         System.Threading.Tasks.Task EnviarMensajeAsync(string idSala, string mensaje, string nombreJugador);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/Salir", ReplyAction="http://tempuri.org/IChatManejador/SalirResponse")]

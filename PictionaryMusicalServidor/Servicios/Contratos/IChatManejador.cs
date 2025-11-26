@@ -24,7 +24,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <param name="idSala">Identificador de la sala.</param>
         /// <param name="mensaje">Contenido del mensaje a enviar.</param>
         /// <param name="nombreJugador">Nombre del jugador que envia el mensaje.</param>
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void EnviarMensaje(string idSala, string mensaje, string nombreJugador);
 
         /// <summary>
