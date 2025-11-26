@@ -790,6 +790,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         {
             _logger.Info("Iniciando partida...");
             JuegoIniciado = true;
+            ReiniciarPuntajesJugadores();
             NumeroRondaActual = 0;
             _turnosCompletadosEnCiclo = 0;
             MostrarEstadoRonda = false;
@@ -1307,6 +1308,19 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 
             dispatcher.Invoke(() =>
             {
+                if (Jugadores != null && puntos > 0)
+                {
+                    var jugador = Jugadores.FirstOrDefault(j => string.Equals(
+                        j.Nombre,
+                        nombreJugador,
+                        StringComparison.OrdinalIgnoreCase));
+
+                    if (jugador != null)
+                    {
+                        jugador.Puntos += puntos;
+                    }
+                }
+
                 string mensaje = $"{nombreJugador} ha adivinado la canción";
                 MensajeChatRecibido?.Invoke(nombreJugador, mensaje);
                 SonidoManejador.ReproducirExito();
@@ -1587,11 +1601,25 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 Nombre = nombreJugador,
                 MostrarBotonExpulsar = PuedeExpulsarJugador(nombreJugador),
                 ExpulsarComando = new ComandoAsincrono(async _ =>
-                    await EjecutarExpulsarJugadorAsync(nombreJugador))
+                    await EjecutarExpulsarJugadorAsync(nombreJugador)),
+                Puntos = 0
             };
 
             Jugadores.Add(jugadorElemento);
             AjustarProgresoRondaTrasCambioJugadores();
+        }
+
+        private void ReiniciarPuntajesJugadores()
+        {
+            if (Jugadores == null)
+            {
+                return;
+            }
+
+            foreach (var jugador in Jugadores)
+            {
+                jugador.Puntos = 0;
+            }
         }
 
         private bool PuedeExpulsarJugador(string nombreJugador)

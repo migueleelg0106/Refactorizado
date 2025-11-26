@@ -42,12 +42,18 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
                                             <TextBlock Grid.Column="0" Text="{Binding Nombre}"
                                                        VerticalAlignment="Center"/>
 
-                                            <Button Grid.Column="1" Background="Transparent"
+                                            <TextBlock Grid.Column="1" Text="{Binding Puntos}"
+                                                       FontWeight="Bold" Margin="10,0"
+                                                       HorizontalAlignment="Right"
+                                                       Visibility="{Binding DataContext.JuegoIniciado, RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource BooleanoVisibilidadColapsar}}"/>
+
+                                            <Button Grid.Column="2" Background="Transparent"
                                                     BorderThickness="0"
                                                     Command="{Binding ExpulsarComando}"
                                                     Visibility="{Binding MostrarBotonExpulsar, Converter={StaticResource BooleanoVisibilidadColapsar}}"
