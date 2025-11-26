@@ -37,5 +37,11 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
         /// </summary>
         [DataMember]
         public bool EsBorrado { get; set; }
+
+        /// <summary>
+        /// Indica si se debe limpiar todo el lienzo.
+        /// </summary>
+        [DataMember]
+        public bool EsLimpiarTodo { get; set; }
     }
 }
