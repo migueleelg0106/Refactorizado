@@ -18,7 +18,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         private const string RolDibujante = "Dibujante";
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ControladorPartida));
 
-        private readonly Dictionary<string, JugadorPartida> _jugadores = new Dictionary<string, JugadorPartida>(StringComparer.Ordinal);
+        private readonly Dictionary<string, JugadorPartida> _jugadores = new Dictionary<string, JugadorPartida>(StringComparer.OrdinalIgnoreCase);
         private readonly Queue<string> _colaDibujantes = new Queue<string>();
         private readonly HashSet<int> _cancionesUsadas = new HashSet<int>();
         private readonly object _sincronizacion = new object();
