@@ -1220,10 +1220,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 return;
             }
 
-            string mensaje = resultado?.Mensaje;
+            string mensajeOriginal = resultado?.Mensaje;
+            string mensaje = mensajeOriginal;
             if (!string.IsNullOrWhiteSpace(mensaje))
             {
-                mensaje = MensajeServidorAyudante.ObtenerMensaje(mensaje);
+                mensaje = MensajeServidorAyudante.Localizar(mensaje, mensaje);
             }
 
             dispatcher.Invoke(() =>
@@ -1241,6 +1242,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                 if (!string.IsNullOrWhiteSpace(mensaje))
                 {
                     MostrarMensaje?.Invoke(mensaje);
+                }
+
+                if (string.Equals(
+                    mensajeOriginal,
+                    "No hay suficientes jugadores para seguir jugando, se canceló la partida.",
+                    StringComparison.Ordinal))
+                {
+                    ManejarNavegacion?.Invoke(DestinoNavegacion.VentanaPrincipal);
                 }
             });
         }

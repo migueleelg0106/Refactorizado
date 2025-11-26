@@ -24,6 +24,7 @@
   <xs:complexType name="ResultadoPartidaDTO">
     <xs:sequence>
       <xs:element minOccurs="0" name="Clasificacion" nillable="true" type="tns:ArrayOfClasificacionUsuarioDTO" />
+      <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ResultadoPartidaDTO" nillable="true" type="tns:ResultadoPartidaDTO" />
