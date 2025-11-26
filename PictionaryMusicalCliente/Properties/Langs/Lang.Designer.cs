@@ -2345,6 +2345,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
                 return ResourceManager.GetString("partidaTextoPartidaEnCurso", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Busca una cadena traducida similar a El anfitrión de la sala abandonó la partida, por lo tanto, esta fue cancelada..
+        /// </summary>
+        public static string partidaTextoHostCanceloSala {
+            get {
+                return ResourceManager.GetString("partidaTextoHostCanceloSala", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Busca una cadena traducida similar a Ronda:.

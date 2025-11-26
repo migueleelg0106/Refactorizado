@@ -232,6 +232,7 @@
                             Grid.Row="1"
                             Content="{Binding TextoBotonIniciarPartida}"
                             IsEnabled="{Binding BotonIniciarPartidaHabilitado}"
+                            Visibility="{Binding EsHost, Converter={StaticResource BooleanoVisibilidadColapsar}}"
                             Width="150" Height="42"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Margin="0,8,0,10"

@@ -480,6 +480,9 @@
   <data name="partidaTextoPartidaEnCurso" xml:space="preserve">
     <value>Ongoing game</value>
   </data>
+  <data name="partidaTextoHostCanceloSala" xml:space="preserve">
+    <value>The host left the room, so the match was cancelled.</value>
+  </data>
   <data name="avisoTextoCodigoDescripcionCambio" xml:space="preserve">
     <value>Enter the code we sent to confirm the password change.</value>
   </data>

@@ -471,6 +471,9 @@
   <data name="partidaTextoPartidaEnCurso" xml:space="preserve">
     <value>Partida en curso</value>
   </data>
+  <data name="partidaTextoHostCanceloSala" xml:space="preserve">
+    <value>El anfitrión de la sala abandonó la partida, por lo tanto, esta fue cancelada.</value>
+  </data>
   <data name="avisoTextoCodigoDescripcionCambio" xml:space="preserve">
     <value>Ingresa el código que enviamos para confirmar el cambio de contraseña.</value>
   </data>

@@ -78,6 +78,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         private string _correoInvitacion;
         private bool _puedeInvitarPorCorreo;
         private bool _puedeInvitarAmigos;
+        private bool _salaCancelada;
         private bool _aplicacionCerrando;
         private bool _puedeEscribir;
         private bool _esDibujante;
@@ -150,7 +151,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _visibilidadPalabraAdivinar = Visibility.Collapsed;
             _visibilidadInfoCancion = Visibility.Collapsed;
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
-            _botonIniciarPartidaHabilitado = true;
+            _botonIniciarPartidaHabilitado = _esHost;
 
             _codigoSala = _sala.Codigo;
             _jugadores = new ObservableCollection<JugadorElemento>();
@@ -161,6 +162,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _salasServicio.JugadorSalio += SalasServicio_JugadorSalio;
             _salasServicio.JugadorExpulsado += SalasServicio_JugadorExpulsado;
             _salasServicio.SalaActualizada += SalasServicio_SalaActualizada;
+            _salasServicio.SalaCancelada += SalasServicio_SalaCancelada;
 
             _overlayTimer = new DispatcherTimer();
             _overlayTimer.Interval = TimeSpan.FromSeconds(5);
@@ -210,6 +212,11 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             get => _juegoIniciado;
             private set => EstablecerPropiedad(ref _juegoIniciado, value);
         }
+
+        /// <summary>
+        /// Indica si el usuario actual es el anfitrion de la sala.
+        /// </summary>
+        public bool EsHost => _esHost;
 
         /// <summary>
         /// Grosor del trazo del pincel.
@@ -1242,6 +1249,15 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
                     return;
                 }
 
+                if (string.Equals(
+                    nombreJugador,
+                    _sala.Creador,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    CancelarSalaPorAnfitrion();
+                    return;
+                }
+
                 JugadorElemento jugadorExistente = Jugadores.FirstOrDefault(j => string.Equals(
                     j.Nombre,
                     nombreJugador,
@@ -1253,6 +1269,22 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
 						nombreJugador);
                     Jugadores.Remove(jugadorExistente);
                 }
+            });
+        }
+
+        private void SalasServicio_SalaCancelada(object sender, string codigoSala)
+        {
+            EjecutarEnDispatcher(() =>
+            {
+                if (!string.Equals(
+                    codigoSala,
+                    _codigoSala,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+
+                CancelarSalaPorAnfitrion();
             });
         }
 
@@ -1409,6 +1441,41 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             }
         }
 
+        private void CancelarSalaPorAnfitrion()
+        {
+            if (_salaCancelada)
+            {
+                return;
+            }
+
+            _salaCancelada = true;
+            _logger.Warn("La sala se canceló porque el anfitrión abandonó la partida.");
+
+            _temporizador.Stop();
+            _overlayTimer.Stop();
+            _manejadorCancion.Detener();
+
+            JuegoIniciado = false;
+            BotonIniciarPartidaHabilitado = false;
+            VisibilidadCuadriculaDibujo = Visibility.Collapsed;
+            VisibilidadOverlayAdivinador = Visibility.Collapsed;
+            VisibilidadOverlayDibujante = Visibility.Collapsed;
+            VisibilidadOverlayAlarma = Visibility.Collapsed;
+            Jugadores.Clear();
+
+            DestinoNavegacion destino = _esInvitado
+                ? DestinoNavegacion.InicioSesion
+                : DestinoNavegacion.VentanaPrincipal;
+
+            if (destino == DestinoNavegacion.InicioSesion)
+            {
+                _aplicacionCerrando = true;
+            }
+
+            ManejarNavegacion?.Invoke(destino);
+            MostrarMensaje?.Invoke(Lang.partidaTextoHostCanceloSala);
+        }
+
         private static void EjecutarEnDispatcher(Action accion)
         {
             if (accion == null) return;
@@ -1437,6 +1504,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
             _salasServicio.JugadorSalio -= SalasServicio_JugadorSalio;
             _salasServicio.JugadorExpulsado -= SalasServicio_JugadorExpulsado;
             _salasServicio.SalaActualizada -= SalasServicio_SalaActualizada;
+            _salasServicio.SalaCancelada -= SalasServicio_SalaCancelada;
 
             try
             {

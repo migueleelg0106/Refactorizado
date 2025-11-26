@@ -44,6 +44,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         public event EventHandler<string> JugadorExpulsado;
 
         /// <summary>
+        /// Evento disparado cuando la sala es cancelada por el anfitrion.
+        /// </summary>
+        public event EventHandler<string> SalaCancelada;
+
+        /// <summary>
         /// Evento disparado cuando se actualiza la lista de salas disponibles.
         /// </summary>
         public event EventHandler<IReadOnlyList<DTOs.SalaDTO>> ListaSalasActualizada;
@@ -415,6 +420,16 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             _logger.InfoFormat("Callback recibido: '{0}' fue expulsado de la sala '{1}'.",
                 nombreJugador, codigoSala);
             JugadorExpulsado?.Invoke(this, nombreJugador);
+        }
+
+        /// <summary>
+        /// Callback: Notifica localmente que la sala fue cancelada por el anfitrion.
+        /// </summary>
+        public void NotificarSalaCancelada(string codigoSala)
+        {
+            _logger.InfoFormat("Callback recibido: la sala '{0}' fue cancelada por el anfitrión.",
+                codigoSala);
+            SalaCancelada?.Invoke(this, codigoSala);
         }
 
         /// <summary>

@@ -27,6 +27,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
         event EventHandler<string> JugadorExpulsado;
 
         /// <summary>
+        /// Notifica cuando la sala es cancelada por la salida del anfitrion.
+        /// </summary>
+        event EventHandler<string> SalaCancelada;
+
+        /// <summary>
         /// Se dispara cuando cambia el listado global de salas disponibles en el servidor.
         /// </summary>
         event EventHandler<IReadOnlyList<DTOs.SalaDTO>> ListaSalasActualizada;
