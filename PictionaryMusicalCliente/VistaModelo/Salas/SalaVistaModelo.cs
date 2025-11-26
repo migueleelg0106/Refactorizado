@@ -22,13 +22,13 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
-namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
+namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
     /// <summary>
     /// Coordina la logica de la partida, incluyendo dibujo, chat, rondas y gestion de jugadores.
     /// Mantiene el estado sincronizado con el servidor y gestiona los eventos de la UI.
     /// </summary>
-    public class VentanaJuegoVistaModelo : BaseVistaModelo, ICursoPartidaManejadorCallback
+    public class SalaVistaModelo : BaseVistaModelo, ICursoPartidaManejadorCallback
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -114,7 +114,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         /// <param name="perfilServicio">Servicio de perfil de usuario.</param>
         /// <param name="nombreJugador">Nombre del jugador actual (opcional).</param>
         /// <param name="esInvitado">Indica si el usuario es invitado.</param>
-        public VentanaJuegoVistaModelo(
+        public SalaVistaModelo(
             DTOs.SalaDTO sala,
             ISalasServicio salasServicio,
             IInvitacionesServicio invitacionesServicio,
@@ -206,7 +206,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaJuego
         /// <summary>
         /// Constructor de conveniencia que inicializa servicios por defecto.
         /// </summary>
-        public VentanaJuegoVistaModelo(
+        public SalaVistaModelo(
             DTOs.SalaDTO sala,
             ISalasServicio salasServicio,
             string nombreJugador = null,

@@ -1,6 +1,5 @@
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
-using PictionaryMusicalCliente.VistaModelo.VentanaJuego;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalCliente.VistaModelo.Salas;
 
 namespace PictionaryMusicalCliente
 {
@@ -21,7 +21,7 @@ namespace PictionaryMusicalCliente
     /// </summary>
     public partial class VentanaJuego : Window
     {
-        private readonly VentanaJuegoVistaModelo _vistaModelo;
+        private readonly SalaVistaModelo _vistaModelo;
         private readonly Action _accionAlCerrar;
         private readonly List<Point> _puntosBorrador = new();
         private bool _borradoEnProgreso;
@@ -45,7 +45,7 @@ namespace PictionaryMusicalCliente
 
             _accionAlCerrar = accionAlCerrar;
 
-            _vistaModelo = new VentanaJuegoVistaModelo(
+            _vistaModelo = new SalaVistaModelo(
                 sala,
                 salasServicio,
                 nombreJugador,
@@ -294,9 +294,9 @@ namespace PictionaryMusicalCliente
             }
         }
 
-        private void EjecutarNavegacion(VentanaJuegoVistaModelo.DestinoNavegacion destino)
+        private void EjecutarNavegacion(SalaVistaModelo.DestinoNavegacion destino)
         {
-            Window ventanaDestino = destino == VentanaJuegoVistaModelo.DestinoNavegacion.
+            Window ventanaDestino = destino == SalaVistaModelo.DestinoNavegacion.
                 InicioSesion
                 ? new InicioSesion()
                 : new VentanaPrincipal();

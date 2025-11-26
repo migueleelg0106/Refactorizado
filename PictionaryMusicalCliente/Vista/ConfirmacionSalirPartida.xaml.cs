@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using PictionaryMusicalCliente.VistaModelo.VentanaJuego;
+using PictionaryMusicalCliente.VistaModelo.Salas;
 
 namespace PictionaryMusicalCliente
 {
@@ -22,7 +22,7 @@ namespace PictionaryMusicalCliente
             Window ventanaDestino = null;
 
             if (Owner?.Owner is VentanaJuego ventanaJuego
-                && ventanaJuego.DataContext is VentanaJuegoVistaModelo vistaModelo
+                && ventanaJuego.DataContext is SalaVistaModelo vistaModelo
                 && vistaModelo.EsInvitado)
             {
                 debeAbrirVentanaPrincipal = false;
