@@ -245,7 +245,19 @@ namespace PictionaryMusicalCliente
             }
 
             var radio = Math.Max(1, trazo.Grosor);
-            var strokesABorrar = ink.Strokes.HitTest(puntosTrayectoria, radio / 2);
+            var strokesABorrar = new List<Stroke>();
+            foreach (var punto in puntosTrayectoria)
+            {
+                var strokes = ink.Strokes.HitTest(punto, radio / 2);
+                foreach (var stroke in strokes)
+                {
+                    if (!strokesABorrar.Contains(stroke))
+                    {
+                        strokesABorrar.Add(stroke);
+                    }
+                }
+            }
+
             foreach (var stroke in strokesABorrar.ToList())
             {
                 ink.Strokes.Remove(stroke);
