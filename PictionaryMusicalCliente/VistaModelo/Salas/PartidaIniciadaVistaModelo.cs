@@ -685,10 +685,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             VisibilidadOverlayAlarma = Visibility.Collapsed;
             _alarmaActiva = false;
 
-            RestablecerPalabraTrasAlarma();
-
             if (_rondaPendiente != null)
             {
+                RestablecerPalabraTrasAlarma();
                 var rondaPendiente = _rondaPendiente;
                 _rondaPendiente = null;
                 ProcesarInicioRonda(rondaPendiente);
@@ -914,12 +913,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             dispatcher.Invoke(() =>
             {
+                if (_alarmaActiva)
+                {
+                    return;
+                }
+
                 _temporizador.Stop();
                 _overlayTimer.Stop();
                 LimpiarTrazos?.Invoke();
                 PuedeEscribirCambiado?.Invoke(false);
-                MostrarEstadoRonda = false;
-                TextoContador = string.Empty;
 
                 if (!string.IsNullOrWhiteSpace(_nombreCancionActual))
                 {
@@ -928,6 +930,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 VisibilidadPalabraAdivinar = Visibility.Visible;
                 ColorPalabraAdivinar = Brushes.Blue;
+                VisibilidadInfoCancion = Visibility.Visible;
+                VisibilidadArtista = Visibility.Collapsed;
+                VisibilidadGenero = Visibility.Collapsed;
 
                 if (!string.IsNullOrWhiteSpace(_archivoCancionActual))
                 {

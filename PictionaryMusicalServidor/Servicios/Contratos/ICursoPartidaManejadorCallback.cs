@@ -52,6 +52,12 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         void NotificarFinRonda();
 
         /// <summary>
+        /// Notifica que la ronda actual finalizo temprano porque todos los jugadores adivinaron.
+        /// </summary>
+        [OperationContract(IsOneWay = true)]
+        void NotificarFinRondaTemprano();
+
+        /// <summary>
         /// Notifica que la partida termino y envia los resultados finales.
         /// </summary>
         /// <param name="resultado">Resultados de la partida.</param>

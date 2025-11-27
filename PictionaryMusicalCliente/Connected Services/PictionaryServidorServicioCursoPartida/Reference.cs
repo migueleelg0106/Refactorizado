@@ -61,6 +61,9 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida {
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ICursoPartidaManejador/NotificarFinRonda")]
         void NotificarFinRonda();
         
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ICursoPartidaManejador/NotificarFinRondaTemprano")]
+        void NotificarFinRondaTemprano();
+        
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ICursoPartidaManejador/NotificarFinPartida")]
         void NotificarFinPartida(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoPartidaDTO resultado);
     }

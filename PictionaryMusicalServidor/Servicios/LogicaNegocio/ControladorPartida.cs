@@ -82,6 +82,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         public event Action<string, string> MensajeChatRecibido;
         public event Action<TrazoDTO> TrazoRecibido;
         public event Action FinRonda;
+        public event Action FinRondaTemprano;
         public event Action<ResultadoPartidaDTO> FinPartida;
 
         public EstadoPartida EstadoActual
@@ -509,7 +510,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 }
             }
 
-            FinRonda?.Invoke();
+            FinRondaTemprano?.Invoke();
 
             if (partidaFinalizada)
             {

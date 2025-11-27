@@ -1204,6 +1204,25 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
         /// <summary>
+        /// Procesa la notificacion de fin de ronda temprano desde el servidor.
+        /// Se invoca cuando todos los jugadores adivinaron antes de que termine el tiempo.
+        /// </summary>
+        public void NotificarFinRondaTemprano()
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            dispatcher.Invoke(() =>
+            {
+                _rondaTerminadaTemprano = true;
+                _partidaVistaModelo.NotificarFinRondaTemprano();
+            });
+        }
+
+        /// <summary>
         /// Procesa la notificacion de fin de partida desde el servidor.
         /// </summary>
         /// <param name="resultado">Resultado de la partida.</param>
