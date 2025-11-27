@@ -17,6 +17,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
     {
         private const string RolDibujante = "Dibujante";
         private const string MensajeCancelacionFaltaJugadores = "No hay suficientes jugadores para seguir jugando, se canceló la partida.";
+        private const int TiempoOverlayClienteSegundos = 5;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ControladorPartida));
 
         private readonly Dictionary<string, JugadorPartida> _jugadores = new Dictionary<string, JugadorPartida>(StringComparer.Ordinal);
@@ -31,10 +32,12 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         private string _idiomaCanciones = "Español";
 
         private Timer _timerRonda;
+        private Timer _timerTransicionRonda;
         private EstadoPartida _estadoActual = EstadoPartida.EnSalaEspera;
         private int _rondaActual;
         private int _cancionActualId;
         private DateTime _inicioRonda;
+        private bool _rondaTerminadaPorTodosAdivinaron;
 
         public ControladorPartida(int tiempoRondaSegundos, string dificultad, int cantidadRondas)
         {
@@ -62,6 +65,13 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 AutoReset = false
             };
             _timerRonda.Elapsed += OnTiempoRondaCumplido;
+
+            _timerTransicionRonda = new Timer
+            {
+                AutoReset = false,
+                Interval = TiempoOverlayClienteSegundos * 1000
+            };
+            _timerTransicionRonda.Elapsed += OnTransicionRondaCompletada;
         }
 
         public event Action PartidaIniciada;
@@ -166,6 +176,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     {
                         _estadoActual = EstadoPartida.Finalizada;
                         _timerRonda.Stop();
+                        _timerTransicionRonda.Stop();
 
                         resultadoCancelacion = new ResultadoPartidaDTO
                         {
@@ -277,7 +288,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
                 if (debeFinalizarRonda)
                 {
-                    FinalizarRonda();
+                    FinalizarRondaPorTodosAdivinaron();
                 }
             }
             else
@@ -341,7 +352,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     var cancion = ObtenerCancionParaRonda();
 
                     _timerRonda.Stop();
-                    _timerRonda.Interval = _tiempoRondaSegundos * 1000;
+                    _timerRonda.Interval = (_tiempoRondaSegundos + TiempoOverlayClienteSegundos) * 1000;
                     _inicioRonda = DateTime.UtcNow;
                     _timerRonda.Start();
 
@@ -434,13 +445,75 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         private int CalcularSegundosRestantes()
         {
             var transcurrido = (int)(DateTime.UtcNow - _inicioRonda).TotalSeconds;
-            var restante = _tiempoRondaSegundos - transcurrido;
+            var transcurridoSinOverlay = Math.Max(0, transcurrido - TiempoOverlayClienteSegundos);
+            var restante = _tiempoRondaSegundos - transcurridoSinOverlay;
             return Math.Max(0, restante);
         }
 
         private void OnTiempoRondaCumplido(object sender, ElapsedEventArgs e)
         {
             FinalizarRonda();
+        }
+
+        private void OnTransicionRondaCompletada(object sender, ElapsedEventArgs e)
+        {
+            ContinuarDespuesDeTransicion();
+        }
+
+        private void FinalizarRondaPorTodosAdivinaron()
+        {
+            bool partidaFinalizada = false;
+            List<ClasificacionUsuarioDTO> clasificacion = null;
+
+            lock (_sincronizacion)
+            {
+                if (_estadoActual != EstadoPartida.Jugando)
+                {
+                    return;
+                }
+
+                _timerRonda.Stop();
+                _timerTransicionRonda.Stop();
+                _rondaTerminadaPorTodosAdivinaron = true;
+
+                partidaFinalizada = _colaDibujantes.Count == 0 && _rondaActual >= _cantidadRondas;
+                clasificacion = ObtenerClasificacion();
+
+                if (partidaFinalizada)
+                {
+                    _estadoActual = EstadoPartida.Finalizada;
+                }
+            }
+
+            FinRonda?.Invoke();
+
+            if (partidaFinalizada)
+            {
+                FinPartida?.Invoke(new ResultadoPartidaDTO
+                {
+                    Clasificacion = clasificacion
+                });
+            }
+            else
+            {
+                _timerTransicionRonda.Start();
+            }
+        }
+
+        private void ContinuarDespuesDeTransicion()
+        {
+            lock (_sincronizacion)
+            {
+                _timerTransicionRonda.Stop();
+                _rondaTerminadaPorTodosAdivinaron = false;
+
+                if (_estadoActual != EstadoPartida.Jugando)
+                {
+                    return;
+                }
+            }
+
+            IniciarNuevaRonda();
         }
 
         private void FinalizarRonda()
@@ -456,6 +529,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 }
 
                 _timerRonda.Stop();
+                _timerTransicionRonda.Stop();
 
                 partidaFinalizada = _colaDibujantes.Count == 0 && _rondaActual >= _cantidadRondas;
                 clasificacion = ObtenerClasificacion();
