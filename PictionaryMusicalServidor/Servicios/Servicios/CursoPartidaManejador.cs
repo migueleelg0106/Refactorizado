@@ -1,8 +1,10 @@
 using log4net;
 using PictionaryMusicalServidor.Datos;
+using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.LogicaNegocio;
+using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly Dictionary<string, ControladorPartida> _partidasActivas = new(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, Dictionary<string, ICursoPartidaManejadorCallback>> _callbacksPorSala = new(StringComparer.OrdinalIgnoreCase);
         private static readonly object _sincronizacion = new();
+
+        private readonly IContextoFactory _contextoFactory;
+
+        public CursoPartidaManejador()
+            : this(new ContextoFactory())
+        {
+        }
+
+        public CursoPartidaManejador(IContextoFactory contextoFactory)
+        {
+            _contextoFactory = contextoFactory ?? throw new ArgumentNullException(nameof(contextoFactory));
+        }
 
         /// <summary>
         /// Registra a un jugador para recibir notificaciones de la partida de la sala especificada.
@@ -197,7 +211,79 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             controlador.MensajeChatRecibido += (jugador, mensaje) => NotificarCallbacks(idSala, callback => callback.NotificarMensajeChat(jugador, mensaje));
             controlador.TrazoRecibido += trazo => NotificarCallbacks(idSala, callback => callback.NotificarTrazoRecibido(trazo));
             controlador.FinRonda += () => NotificarCallbacks(idSala, callback => callback.NotificarFinRonda());
-            controlador.FinPartida += resultado => NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado));
+            controlador.FinPartida += resultado =>
+            {
+                Task.Run(() => ActualizarClasificacionPartida(controlador, resultado));
+                NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado));
+            };
+        }
+
+        private void ActualizarClasificacionPartida(ControladorPartida controlador, ResultadoPartidaDTO resultado)
+        {
+            if (controlador == null || resultado?.Clasificacion == null || !resultado.Clasificacion.Any())
+            {
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(resultado.Mensaje))
+            {
+                _logger.Info("La partida finalizó de forma anticipada o con mensaje informativo. No se actualizará la clasificación.");
+                return;
+            }
+
+            List<JugadorPartida> jugadoresFinales;
+
+            try
+            {
+                jugadoresFinales = controlador.ObtenerJugadores()?.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error al obtener los jugadores para actualizar la clasificación al finalizar la partida.", ex);
+                return;
+            }
+
+            if (jugadoresFinales == null || jugadoresFinales.Count == 0)
+            {
+                return;
+            }
+
+            int puntajeMaximo = jugadoresFinales.Max(j => j.PuntajeTotal);
+            var ganadores = jugadoresFinales
+                .Where(j => j.PuntajeTotal == puntajeMaximo)
+                .Select(j => j.IdConexion)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            try
+            {
+                using (var contexto = _contextoFactory.CrearContexto())
+                {
+                    var clasificacionRepositorio = new ClasificacionRepositorio(contexto);
+
+                    foreach (var jugador in jugadoresFinales)
+                    {
+                        if (!int.TryParse(jugador.IdConexion, out int jugadorId) || jugadorId <= 0)
+                        {
+                            continue;
+                        }
+
+                        bool ganoPartida = ganadores.Contains(jugador.IdConexion);
+
+                        try
+                        {
+                            clasificacionRepositorio.ActualizarEstadisticas(jugadorId, jugador.PuntajeTotal, ganoPartida);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error($"No se pudo actualizar la clasificación del jugador {jugadorId}.", ex);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error inesperado al actualizar las clasificaciones de la partida.", ex);
+            }
         }
 
         private void NotificarCallbacks(string idSala, Action<ICursoPartidaManejadorCallback> accion)
