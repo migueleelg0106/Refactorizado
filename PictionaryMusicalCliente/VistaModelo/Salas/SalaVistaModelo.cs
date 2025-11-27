@@ -1254,7 +1254,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             string titulo = esGanador ? Lang.partidaTextoGanasteTitulo : Lang.partidaTextoPerdisteTitulo;
             string mensajeResultado = esGanador ? Lang.partidaTextoGanasteMensaje : Lang.partidaTextoPerdisteMensaje;
 
-            string mensajeFinal = string.Format("{0}\n{1}", titulo, mensajeResultado);
+            string mensajeFinal = $"{titulo}\n{mensajeResultado}";
             MostrarMensaje?.Invoke(mensajeFinal);
 
             DestinoNavegacion destino = _esInvitado
