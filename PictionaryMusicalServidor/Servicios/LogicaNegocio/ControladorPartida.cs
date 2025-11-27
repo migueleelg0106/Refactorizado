@@ -289,6 +289,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
                 if (debeFinalizarRonda)
                 {
+                    _logger.Info("Todos los jugadores han adivinado. Finalizando ronda anticipadamente.");
                     FinalizarRondaPorTodosAdivinaron();
                 }
             }
@@ -460,7 +461,14 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
         private bool TodosAdivinaron()
         {
-            return _jugadores.Values.Where(jugador => !jugador.EsDibujante).All(jugador => jugador.YaAdivino);
+            var adivinadores = _jugadores.Values.Where(jugador => !jugador.EsDibujante).ToList();
+            
+            if (adivinadores.Count == 0)
+            {
+                return true;
+            }
+
+            return adivinadores.All(jugador => jugador.YaAdivino);
         }
 
         private int CalcularSegundosRestantes()
