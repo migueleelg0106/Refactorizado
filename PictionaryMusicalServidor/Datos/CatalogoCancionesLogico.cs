@@ -85,6 +85,22 @@ namespace PictionaryMusicalServidor.Datos
         }
 
         /// <summary>
+        /// Obtiene una canción por su identificador.
+        /// </summary>
+        /// <param name="idCancion">Identificador de la canción.</param>
+        /// <returns>La canción correspondiente o null si no existe.</returns>
+        public static Cancion ObtenerCancionPorId(int idCancion)
+        {
+            if (_canciones.TryGetValue(idCancion, out var cancion))
+            {
+                return cancion;
+            }
+
+            _logger.WarnFormat("No se encontró la canción con id {0} en el catálogo.", idCancion);
+            return null;
+        }
+
+        /// <summary>
         /// Valida si el intento del usuario coincide con el nombre de la cancion indicada.
         /// </summary>
         /// <param name="idCancion">Identificador de la cancion a evaluar.</param>

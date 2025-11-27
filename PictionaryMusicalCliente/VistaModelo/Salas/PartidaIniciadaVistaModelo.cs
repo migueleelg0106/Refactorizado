@@ -807,6 +807,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     _manejadorCancion.Reproducir(archivoCancion);
                 }
 
+                TextoArtista = string.IsNullOrWhiteSpace(ronda.PistaArtista)
+                    ? string.Empty
+                    : string.Format("Artista: {0}", ronda.PistaArtista);
+                TextoGenero = string.IsNullOrWhiteSpace(ronda.PistaGenero)
+                    ? string.Empty
+                    : string.Format("Género: {0}", ronda.PistaGenero);
+                VisibilidadArtista = DeterminarVisibilidadPista(TextoArtista);
+                VisibilidadGenero = DeterminarVisibilidadPista(TextoGenero);
+                VisibilidadInfoCancion = Visibility.Visible;
+
                 EjecutarMostrarOverlayDibujante();
             }
             else

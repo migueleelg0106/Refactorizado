@@ -1050,7 +1050,7 @@ aciertan o cuando se acaba el tiempo.
     <value>¡{0} adivinó la canción!</value>
   </data>
   <data name="partidaTextoDibujoDe" xml:space="preserve">
-    <value>Dibujo de {0}</value>
+    <value>Está dibujando: {0}</value>
   </data>
   <data name="partidaTextoGanasteTitulo" xml:space="preserve">
     <value>GANASTE</value>

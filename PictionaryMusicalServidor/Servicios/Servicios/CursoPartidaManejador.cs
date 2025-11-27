@@ -1,4 +1,5 @@
 using log4net;
+using PictionaryMusicalServidor.Datos;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.LogicaNegocio;
@@ -150,6 +151,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     callbacks = callbacksSala.ToList();
                 }
 
+                var cancionActual = CatalogoCancionesLogico.ObtenerCancionPorId(rondaBase.IdCancion);
+
                 foreach (var par in callbacks)
                 {
                     var idJugador = par.Key;
@@ -160,11 +163,20 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     bool esDibujante = datosJugador != null && datosJugador.EsDibujante;
 
+                    string pistaArtista = rondaBase.PistaArtista;
+                    string pistaGenero = rondaBase.PistaGenero;
+
+                    if (esDibujante && cancionActual != null)
+                    {
+                        pistaArtista = cancionActual.Artista;
+                        pistaGenero = cancionActual.Genero;
+                    }
+
                     var rondaPersonalizada = new RondaDTO
                     {
                         IdCancion = rondaBase.IdCancion,
-                        PistaArtista = rondaBase.PistaArtista,
-                        PistaGenero = rondaBase.PistaGenero,
+                        PistaArtista = pistaArtista,
+                        PistaGenero = pistaGenero,
                         TiempoSegundos = rondaBase.TiempoSegundos,
                         Rol = esDibujante ? "Dibujante" : "Adivinador",
                         NombreDibujante = nombreDibujante

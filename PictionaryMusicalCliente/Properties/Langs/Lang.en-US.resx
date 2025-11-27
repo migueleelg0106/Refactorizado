@@ -1048,7 +1048,7 @@
     <value>{0} guessed the song!</value>
   </data>
   <data name="partidaTextoDibujoDe" xml:space="preserve">
-    <value>{0}'s drawing</value>
+    <value>{0} is drawing</value>
   </data>
   <data name="partidaTextoGanasteTitulo" xml:space="preserve">
     <value>YOU WON</value>
