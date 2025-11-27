@@ -167,14 +167,24 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
 
             ResultadoPartidaDTO resultadoCancelacion = null;
+            bool jugadorEraDibujante = false;
+            bool debeAvanzarTurno = false;
 
             lock (_sincronizacion)
             {
-                if (_jugadores.Remove(idConexion))
+                if (_jugadores.TryGetValue(idConexion, out var jugadorRemovido) && _jugadores.Remove(idConexion))
                 {
                     _logger.InfoFormat("Jugador con conexión {0} removido de la partida.", idConexion);
 
-                    if (_estadoActual == EstadoPartida.Jugando && QuedaSoloHost())
+                    jugadorEraDibujante = jugadorRemovido.EsDibujante;
+
+                    if (_estadoActual == EstadoPartida.Jugando)
+                    {
+                        ActualizarColaDibujantes(idConexion);
+                        debeAvanzarTurno = jugadorEraDibujante;
+                    }
+
+                    if (_estadoActual == EstadoPartida.Jugando && _jugadores.Count < 2)
                     {
                         _estadoActual = EstadoPartida.Finalizada;
                         DetenerTimers();
@@ -191,6 +201,29 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             if (resultadoCancelacion != null)
             {
                 FinPartida?.Invoke(resultadoCancelacion);
+            }
+            else if (debeAvanzarTurno)
+            {
+                FinalizarRonda();
+            }
+        }
+
+        private void ActualizarColaDibujantes(string idConexionRemovida)
+        {
+            if (_colaDibujantes.Count == 0)
+            {
+                return;
+            }
+
+            var colaActualizada = _colaDibujantes
+                .Where(id => !id.Equals(idConexionRemovida, StringComparison.Ordinal) && _jugadores.ContainsKey(id))
+                .ToList();
+
+            _colaDibujantes.Clear();
+
+            foreach (var id in colaActualizada)
+            {
+                _colaDibujantes.Enqueue(id);
             }
         }
 

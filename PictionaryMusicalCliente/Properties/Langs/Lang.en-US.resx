@@ -385,13 +385,13 @@
     <value>Are you sure you want to log out?</value>
   </data>
   <data name="clasificacionTextoTotalRondas" xml:space="preserve">
-    <value>Total rounds won</value>
+    <value>Total matches won</value>
   </data>
   <data name="clasificacionTextoTotalPuntos" xml:space="preserve">
     <value>Total points</value>
   </data>
   <data name="clasificacionTextoOrdenarRondas" xml:space="preserve">
-    <value>Sort by rounds</value>
+    <value>Sort by matches</value>
   </data>
   <data name="clasificacionTextoOrdenarPuntos" xml:space="preserve">
     <value>Sort by points</value>

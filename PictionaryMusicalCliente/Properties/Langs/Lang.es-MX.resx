@@ -387,13 +387,13 @@ aciertan o cuando se acaba el tiempo.
     <value>¿Está seguro de querer cerrar la sesión?</value>
   </data>
   <data name="clasificacionTextoTotalRondas" xml:space="preserve">
-    <value>Total de rondas ganadas</value>
+    <value>Total de partidas ganadas</value>
   </data>
   <data name="clasificacionTextoTotalPuntos" xml:space="preserve">
     <value>Total de puntos</value>
   </data>
   <data name="clasificacionTextoOrdenarRondas" xml:space="preserve">
-    <value>Ordenar por rondas</value>
+    <value>Ordenar por partidas</value>
   </data>
   <data name="clasificacionTextoOrdenarPuntos" xml:space="preserve">
     <value>Ordenar por puntos</value>
