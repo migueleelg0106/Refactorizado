@@ -1050,4 +1050,16 @@
   <data name="partidaTextoDibujoDe" xml:space="preserve">
     <value>{0}'s drawing</value>
   </data>
+  <data name="partidaTextoGanasteTitulo" xml:space="preserve">
+    <value>YOU WON</value>
+  </data>
+  <data name="partidaTextoGanasteMensaje" xml:space="preserve">
+    <value>Congratulations, you won this game!</value>
+  </data>
+  <data name="partidaTextoPerdisteTitulo" xml:space="preserve">
+    <value>YOU LOST</value>
+  </data>
+  <data name="partidaTextoPerdisteMensaje" xml:space="preserve">
+    <value>You lost this game, better luck next time!</value>
+  </data>
 </root>

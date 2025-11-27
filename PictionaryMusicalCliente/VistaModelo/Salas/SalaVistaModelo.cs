@@ -188,6 +188,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _partidaVistaModelo.TiempoRestanteCambiado += valor =>
                 _chatVistaModelo.TiempoRestante = valor;
             _partidaVistaModelo.EnviarTrazoAlServidor = EnviarTrazoAlServidor;
+            _partidaVistaModelo.CelebracionFinRondaTerminada += OnCelebracionFinRondaTerminada;
+        }
+
+        private void OnCelebracionFinRondaTerminada()
+        {
+            _rondaTerminadaTemprano = false;
         }
 
         private void ConfigurarChatVistaModelo()
@@ -1221,19 +1227,67 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _partidaVistaModelo.NotificarFinPartida();
                 BotonIniciarPartidaHabilitado = false;
 
-                if (!string.IsNullOrWhiteSpace(mensaje))
-                {
-                    MostrarMensaje?.Invoke(mensaje);
-                }
-
-                if (string.Equals(
+                bool esCancelacionPorFaltaDeJugadores = string.Equals(
                     mensajeOriginal,
                     "No hay suficientes jugadores para seguir jugando, se canceló la partida.",
-                    StringComparison.Ordinal))
+                    StringComparison.Ordinal);
+
+                if (esCancelacionPorFaltaDeJugadores)
                 {
+                    if (!string.IsNullOrWhiteSpace(mensaje))
+                    {
+                        MostrarMensaje?.Invoke(mensaje);
+                    }
+
                     ManejarNavegacion?.Invoke(DestinoNavegacion.VentanaPrincipal);
                 }
+                else
+                {
+                    MostrarResultadoFinalPartida(resultado);
+                }
             });
+        }
+
+        private void MostrarResultadoFinalPartida(DTOs.ResultadoPartidaDTO resultado)
+        {
+            bool esGanador = DeterminarSiEsGanador(resultado);
+            string titulo = esGanador ? Lang.partidaTextoGanasteTitulo : Lang.partidaTextoPerdisteTitulo;
+            string mensajeResultado = esGanador ? Lang.partidaTextoGanasteMensaje : Lang.partidaTextoPerdisteMensaje;
+
+            string mensajeFinal = $"{titulo}\n{mensajeResultado}";
+            MostrarMensaje?.Invoke(mensajeFinal);
+
+            DestinoNavegacion destino = _esInvitado
+                ? DestinoNavegacion.InicioSesion
+                : DestinoNavegacion.VentanaPrincipal;
+
+            if (destino == DestinoNavegacion.InicioSesion)
+            {
+                _aplicacionCerrando = true;
+            }
+
+            ManejarNavegacion?.Invoke(destino);
+        }
+
+        private bool DeterminarSiEsGanador(DTOs.ResultadoPartidaDTO resultado)
+        {
+            if (resultado?.Clasificacion == null || resultado.Clasificacion.Count == 0)
+            {
+                return false;
+            }
+
+            var clasificacion = resultado.Clasificacion;
+            var ganador = clasificacion.FirstOrDefault();
+
+            if (ganador == null)
+            {
+                return false;
+            }
+
+            return string.Equals(
+                ganador.Usuario,
+                _nombreUsuarioSesion,
+                StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool EsMensajeAcierto(string mensaje)
@@ -1585,6 +1639,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public async Task FinalizarAsync()
         {
             _partidaVistaModelo.PropertyChanged -= PartidaIniciadaVistaModelo_PropertyChanged;
+            _partidaVistaModelo.CelebracionFinRondaTerminada -= OnCelebracionFinRondaTerminada;
 
             _partidaVistaModelo.Detener();
 

@@ -433,6 +433,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// </summary>
         public event Action<int> TiempoRestanteCambiado;
 
+        /// <summary>
+        /// Evento que notifica cuando la celebracion de fin de ronda temprano ha terminado.
+        /// </summary>
+        public event Action CelebracionFinRondaTerminada;
+
         private void InicializarComandos()
         {
             SeleccionarLapizComando = new ComandoDelegado(_ => EjecutarSeleccionarLapiz());
@@ -686,6 +691,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 var rondaPendiente = _rondaPendiente;
                 _rondaPendiente = null;
                 ProcesarInicioRonda(rondaPendiente);
+            }
+            else
+            {
+                CelebracionFinRondaTerminada?.Invoke();
             }
         }
 
