@@ -613,7 +613,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
             else
             {
-                IniciarNuevaRonda();
+                _timerTransicionRonda.Start();
             }
         }
 
