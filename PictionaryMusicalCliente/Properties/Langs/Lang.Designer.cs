@@ -2347,6 +2347,24 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a ¡Felicidades, ganaste esta partida!.
+        /// </summary>
+        public static string partidaTextoGanasteMensaje {
+            get {
+                return ResourceManager.GetString("partidaTextoGanasteMensaje", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a GANASTE.
+        /// </summary>
+        public static string partidaTextoGanasteTitulo {
+            get {
+                return ResourceManager.GetString("partidaTextoGanasteTitulo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El anfitrión de la sala abandonó la partida, por lo tanto, esta fue cancelada..
         /// </summary>
         public static string partidaTextoHostCanceloSala {
@@ -2379,6 +2397,24 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string partidaTextoPartidaEnCurso {
             get {
                 return ResourceManager.GetString("partidaTextoPartidaEnCurso", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Perdiste esta partida, ¡suerte para la próxima!.
+        /// </summary>
+        public static string partidaTextoPerdisteMensaje {
+            get {
+                return ResourceManager.GetString("partidaTextoPerdisteMensaje", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a PERDISTE.
+        /// </summary>
+        public static string partidaTextoPerdisteTitulo {
+            get {
+                return ResourceManager.GetString("partidaTextoPerdisteTitulo", resourceCulture);
             }
         }
         

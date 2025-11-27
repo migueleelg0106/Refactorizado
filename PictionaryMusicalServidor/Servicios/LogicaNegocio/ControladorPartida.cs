@@ -523,6 +523,11 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     return;
                 }
 
+                if (_rondaTerminadaPorTodosAdivinaron)
+                {
+                    return;
+                }
+
                 DetenerTimers();
 
                 partidaFinalizada = EsUltimaRonda();

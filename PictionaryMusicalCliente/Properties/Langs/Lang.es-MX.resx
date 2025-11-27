@@ -1052,4 +1052,16 @@ aciertan o cuando se acaba el tiempo.
   <data name="partidaTextoDibujoDe" xml:space="preserve">
     <value>Dibujo de {0}</value>
   </data>
+  <data name="partidaTextoGanasteTitulo" xml:space="preserve">
+    <value>GANASTE</value>
+  </data>
+  <data name="partidaTextoGanasteMensaje" xml:space="preserve">
+    <value>¡Felicidades, ganaste esta partida!</value>
+  </data>
+  <data name="partidaTextoPerdisteTitulo" xml:space="preserve">
+    <value>PERDISTE</value>
+  </data>
+  <data name="partidaTextoPerdisteMensaje" xml:space="preserve">
+    <value>Perdiste esta partida, ¡suerte para la próxima!</value>
+  </data>
 </root>
