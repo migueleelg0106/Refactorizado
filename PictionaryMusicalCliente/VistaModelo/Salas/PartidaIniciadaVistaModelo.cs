@@ -592,7 +592,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             if (!string.IsNullOrWhiteSpace(_nombreCancionActual))
             {
-                PalabraAdivinar = _nombreCancionActual;
+                _manejadorCancion.Reproducir(_archivoCancionActual);
             }
 
             VisibilidadPalabraAdivinar = Visibility.Visible;
@@ -657,7 +657,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _temporizador.Stop();
                 TextoContador = "0";
                 _manejadorCancion.Detener();
-                SonidoManejador.ReproducirSonido("alarma.mp3");
 
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
                 VisibilidadInfoCancion = Visibility.Collapsed;
@@ -896,7 +895,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 MostrarEstadoRonda = false;
                 TextoContador = string.Empty;
                 MostrarOverlayAlarma();
-                SonidoManejador.ReproducirSonido("alarma.mp3");
             });
         }
 
