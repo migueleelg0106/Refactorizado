@@ -273,10 +273,19 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
                 acierto = CatalogoCancionesLogico.ValidarRespuesta(_cancionActualId, mensaje);
 
+                if (!acierto && EsMensajeAcierto(mensaje, out int puntosCliente))
+                {
+                    acierto = true;
+                    puntosObtenidos = puntosCliente > 0 ? puntosCliente : CalcularSegundosRestantes();
+                }
+
                 if (acierto)
                 {
                     jugador.YaAdivino = true;
-                    puntosObtenidos = CalcularSegundosRestantes();
+                    if (puntosObtenidos == 0)
+                    {
+                        puntosObtenidos = CalcularSegundosRestantes();
+                    }
                     jugador.PuntajeTotal += puntosObtenidos;
                     debeFinalizarRonda = TodosAdivinaron();
                 }
@@ -297,6 +306,29 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             {
                 MensajeChatRecibido?.Invoke(jugador.NombreUsuario, mensaje);
             }
+        }
+
+        private static bool EsMensajeAcierto(string mensaje, out int puntos)
+        {
+            puntos = 0;
+
+            if (string.IsNullOrWhiteSpace(mensaje))
+            {
+                return false;
+            }
+
+            if (!mensaje.StartsWith("ACIERTO:", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            var partes = mensaje.Split(':');
+            if (partes.Length >= 3 && int.TryParse(partes[2], out int puntosParseados))
+            {
+                puntos = puntosParseados;
+            }
+
+            return true;
         }
 
         public void ProcesarTrazo(string idConexion, TrazoDTO trazo)
