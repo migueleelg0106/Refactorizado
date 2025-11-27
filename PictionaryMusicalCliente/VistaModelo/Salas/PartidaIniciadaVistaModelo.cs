@@ -5,6 +5,7 @@ using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -33,6 +34,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private double _grosor;
         private Color _color;
         private int _contador;
+        private int _tiempoRondaSegundos;
+        private readonly Stopwatch _cronometroRonda;
         private string _textoContador;
         private Brush _colorContador;
         private bool _esHerramientaLapiz;
@@ -55,6 +58,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private DTOs.RondaDTO _rondaPendiente;
         private int _totalJugadoresPendiente;
         private string _nombreCancionActual;
+        private string _archivoCancionActual;
         private Brush _colorPalabraAdivinar;
         private string _textoDibujoDe;
 
@@ -65,6 +69,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
             _manejadorCancion = new CancionManejador();
             _catalogoAudio = InicializarCatalogoAudio();
+            _cronometroRonda = new Stopwatch();
 
             _numeroRondaActual = 0;
             _grosor = 6;
@@ -86,6 +91,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _mostrarEstadoRonda = false;
             _turnosCompletadosEnCiclo = 0;
             _nombreCancionActual = string.Empty;
+            _archivoCancionActual = string.Empty;
             _textoDibujoDe = string.Empty;
 
             _overlayTimer = new DispatcherTimer();
@@ -626,6 +632,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             OcultarOverlayAlarma();
 
+            _cronometroRonda.Restart();
             _contador = Math.Max(0, _contador);
             TextoContador = _contador.ToString();
             ColorContador = Brushes.Black;
@@ -635,7 +642,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void Temporizador_Tick(object sender, EventArgs e)
         {
-            _contador--;
+            var tiempoTranscurrido = (int)_cronometroRonda.Elapsed.TotalSeconds;
+            _contador = Math.Max(0, _tiempoRondaSegundos - tiempoTranscurrido);
             TextoContador = _contador.ToString();
             TiempoRestanteCambiado?.Invoke(_contador);
 
@@ -667,6 +675,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
 
             _temporizadorAlarma.Stop();
+            _manejadorCancion.Detener();
             VisibilidadOverlayAlarma = Visibility.Collapsed;
             _alarmaActiva = false;
 
@@ -749,6 +758,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             LimpiarTrazos?.Invoke();
 
             ActualizarContadorRondas(_totalJugadoresPendiente);
+            _tiempoRondaSegundos = ronda.TiempoSegundos;
             _contador = ronda.TiempoSegundos;
             TextoContador = _contador.ToString();
             ColorContador = Brushes.Black;
@@ -759,6 +769,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             string archivoCancion = cancion?.Archivo ?? string.Empty;
             string nombreCancion = cancion?.Nombre ?? string.Empty;
             _nombreCancionActual = nombreCancion;
+            _archivoCancionActual = archivoCancion;
             NombreCancionCambiado?.Invoke(nombreCancion);
             TiempoRestanteCambiado?.Invoke(_contador);
             ColorPalabraAdivinar = Brushes.Black;
@@ -881,7 +892,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         /// <summary>
         /// Procesa el fin de ronda temprano cuando todos los adivinadores acertaron.
-        /// No reproduce alarma ni muestra overlay de alarma, solo muestra la cancion en azul.
+        /// Muestra la cancion en azul y la reproduce durante 5 segundos.
         /// </summary>
         public void NotificarFinRondaTemprano()
         {
@@ -895,7 +906,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             {
                 _temporizador.Stop();
                 _overlayTimer.Stop();
-                _manejadorCancion.Detener();
                 LimpiarTrazos?.Invoke();
                 PuedeEscribirCambiado?.Invoke(false);
                 MostrarEstadoRonda = false;
@@ -908,6 +918,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 VisibilidadPalabraAdivinar = Visibility.Visible;
                 ColorPalabraAdivinar = Brushes.Blue;
+
+                if (!string.IsNullOrWhiteSpace(_archivoCancionActual))
+                {
+                    _manejadorCancion.Reproducir(_archivoCancionActual);
+                }
+
+                _alarmaActiva = true;
+                _temporizadorAlarma.Stop();
+                _temporizadorAlarma.Start();
             });
         }
 
@@ -985,6 +1004,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _overlayTimer.Stop();
             _temporizador.Stop();
             _temporizadorAlarma.Stop();
+            _cronometroRonda.Stop();
             _manejadorCancion.Detener();
         }
 

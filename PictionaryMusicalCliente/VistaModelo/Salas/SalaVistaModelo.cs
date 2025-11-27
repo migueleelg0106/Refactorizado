@@ -405,6 +405,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
         /// <summary>
+        /// Texto que muestra quien es el dibujante actual.
+        /// </summary>
+        public string TextoDibujoDe => _partidaVistaModelo.TextoDibujoDe;
+
+        /// <summary>
         /// Texto del boton de inicio de partida.
         /// </summary>
         public string TextoBotonIniciarPartida
