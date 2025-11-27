@@ -23,6 +23,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private const int TiempoRondaPorDefectoSegundos = 90;
         private const int NumeroRondasPorDefecto = 3;
         private const string DificultadPorDefecto = "Media";
+        private const int LimitePalabrasMensaje = 150;
 
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CursoPartidaManejador));
         private static readonly Dictionary<string, ControladorPartida> _partidasActivas = new(StringComparer.OrdinalIgnoreCase);
@@ -98,8 +99,24 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new FaultException("El identificador de sala es obligatorio.");
             }
 
+            if (SuperaLimitePalabras(mensaje))
+            {
+                throw new FaultException($"El mensaje supera el límite de {LimitePalabrasMensaje} palabras.");
+            }
+
             var controlador = ObtenerOCrearControlador(idSala.Trim());
             controlador.ProcesarMensaje(idJugador?.Trim(), mensaje);
+        }
+
+        private static bool SuperaLimitePalabras(string mensaje)
+        {
+            if (string.IsNullOrWhiteSpace(mensaje))
+            {
+                return false;
+            }
+
+            var palabras = mensaje.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+            return palabras.Length > LimitePalabrasMensaje;
         }
 
         /// <summary>
