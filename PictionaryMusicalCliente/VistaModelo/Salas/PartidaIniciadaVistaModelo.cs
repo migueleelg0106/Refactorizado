@@ -694,6 +694,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
             else
             {
+                // No se restablece la UI aqui intencionalmente.
+                // Cuando todos adivinaron y no hay ronda pendiente, se mantiene
+                // la informacion de la cancion visible hasta que llegue la siguiente ronda.
                 CelebracionFinRondaTerminada?.Invoke();
             }
         }
@@ -902,6 +905,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <summary>
         /// Procesa el fin de ronda temprano cuando todos los adivinadores acertaron.
         /// Muestra la cancion en azul y la reproduce durante 5 segundos.
+        /// No se oculta MostrarEstadoRonda ni TextoContador para mantener la UI visible
+        /// durante la celebracion hasta que llegue la siguiente ronda.
         /// </summary>
         public void NotificarFinRondaTemprano()
         {
