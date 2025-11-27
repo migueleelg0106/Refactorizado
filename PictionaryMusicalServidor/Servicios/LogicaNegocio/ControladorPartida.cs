@@ -276,16 +276,13 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 if (!acierto && EsMensajeAcierto(mensaje, out int puntosCliente))
                 {
                     acierto = true;
-                    puntosObtenidos = puntosCliente > 0 ? puntosCliente : CalcularSegundosRestantes();
+                    puntosObtenidos = puntosCliente;
                 }
 
                 if (acierto)
                 {
                     jugador.YaAdivino = true;
-                    if (puntosObtenidos == 0)
-                    {
-                        puntosObtenidos = CalcularSegundosRestantes();
-                    }
+                    puntosObtenidos = puntosObtenidos > 0 ? puntosObtenidos : CalcularSegundosRestantes();
                     jugador.PuntajeTotal += puntosObtenidos;
                     debeFinalizarRonda = TodosAdivinaron();
                 }
@@ -323,7 +320,10 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
 
             var partes = mensaje.Split(':');
-            if (partes.Length >= 3 && int.TryParse(partes[2], out int puntosParseados))
+            if (partes.Length >= 3 && 
+                !string.IsNullOrWhiteSpace(partes[2]) && 
+                int.TryParse(partes[2], out int puntosParseados) &&
+                puntosParseados > 0)
             {
                 puntos = puntosParseados;
             }
