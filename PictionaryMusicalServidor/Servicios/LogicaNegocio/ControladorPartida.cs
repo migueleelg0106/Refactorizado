@@ -175,8 +175,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     if (_estadoActual == EstadoPartida.Jugando && QuedaSoloHost())
                     {
                         _estadoActual = EstadoPartida.Finalizada;
-                        _timerRonda.Stop();
-                        _timerTransicionRonda.Stop();
+                        DetenerTimers();
 
                         resultadoCancelacion = new ResultadoPartidaDTO
                         {
@@ -462,8 +461,8 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
         private void FinalizarRondaPorTodosAdivinaron()
         {
-            bool partidaFinalizada = false;
-            List<ClasificacionUsuarioDTO> clasificacion = null;
+            bool partidaFinalizada;
+            List<ClasificacionUsuarioDTO> clasificacion;
 
             lock (_sincronizacion)
             {
@@ -472,11 +471,10 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     return;
                 }
 
-                _timerRonda.Stop();
-                _timerTransicionRonda.Stop();
+                DetenerTimers();
                 _rondaTerminadaPorTodosAdivinaron = true;
 
-                partidaFinalizada = _colaDibujantes.Count == 0 && _rondaActual >= _cantidadRondas;
+                partidaFinalizada = EsUltimaRonda();
                 clasificacion = ObtenerClasificacion();
 
                 if (partidaFinalizada)
@@ -489,10 +487,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
             if (partidaFinalizada)
             {
-                FinPartida?.Invoke(new ResultadoPartidaDTO
-                {
-                    Clasificacion = clasificacion
-                });
+                NotificarFinPartidaConClasificacion(clasificacion);
             }
             else
             {
@@ -518,8 +513,8 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
         private void FinalizarRonda()
         {
-            bool partidaFinalizada = false;
-            List<ClasificacionUsuarioDTO> clasificacion = null;
+            bool partidaFinalizada;
+            List<ClasificacionUsuarioDTO> clasificacion;
 
             lock (_sincronizacion)
             {
@@ -528,10 +523,9 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     return;
                 }
 
-                _timerRonda.Stop();
-                _timerTransicionRonda.Stop();
+                DetenerTimers();
 
-                partidaFinalizada = _colaDibujantes.Count == 0 && _rondaActual >= _cantidadRondas;
+                partidaFinalizada = EsUltimaRonda();
                 clasificacion = ObtenerClasificacion();
 
                 if (partidaFinalizada)
@@ -544,15 +538,31 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
             if (partidaFinalizada)
             {
-                FinPartida?.Invoke(new ResultadoPartidaDTO
-                {
-                    Clasificacion = clasificacion
-                });
+                NotificarFinPartidaConClasificacion(clasificacion);
             }
             else
             {
                 IniciarNuevaRonda();
             }
+        }
+
+        private void DetenerTimers()
+        {
+            _timerRonda.Stop();
+            _timerTransicionRonda.Stop();
+        }
+
+        private bool EsUltimaRonda()
+        {
+            return _colaDibujantes.Count == 0 && _rondaActual >= _cantidadRondas;
+        }
+
+        private void NotificarFinPartidaConClasificacion(List<ClasificacionUsuarioDTO> clasificacion)
+        {
+            FinPartida?.Invoke(new ResultadoPartidaDTO
+            {
+                Clasificacion = clasificacion
+            });
         }
 
         private List<ClasificacionUsuarioDTO> ObtenerClasificacion()
