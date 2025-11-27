@@ -33,7 +33,6 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         private string _idiomaCanciones = "Español";
 
         private Timer _timerRonda;
-        private Timer _timerTransicionRonda;
         private EstadoPartida _estadoActual = EstadoPartida.EnSalaEspera;
         private int _rondaActual;
         private int _cancionActualId;
@@ -67,13 +66,6 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 AutoReset = false
             };
             _timerRonda.Elapsed += OnTiempoRondaCumplido;
-
-            _timerTransicionRonda = new Timer
-            {
-                AutoReset = false,
-                Interval = TiempoOverlayClienteSegundos * 1000
-            };
-            _timerTransicionRonda.Elapsed += OnTransicionRondaCompletada;
         }
 
         public event Action PartidaIniciada;
@@ -480,11 +472,6 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             FinalizarRonda();
         }
 
-        private void OnTransicionRondaCompletada(object sender, ElapsedEventArgs e)
-        {
-            ContinuarDespuesDeTransicion();
-        }
-
         private void FinalizarRondaPorTodosAdivinaron()
         {
             bool partidaFinalizada;
@@ -517,7 +504,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
             else
             {
-                _timerTransicionRonda.Start();
+                ProgramarTransicionDespuesDeCelebracion();
             }
         }
 
@@ -525,7 +512,6 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         {
             lock (_sincronizacion)
             {
-                _timerTransicionRonda.Stop();
                 _rondaTerminadaPorTodosAdivinaron = false;
 
                 if (_estadoActual != EstadoPartida.Jugando)
@@ -535,6 +521,15 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
 
             IniciarNuevaRonda();
+        }
+
+        private void ProgramarTransicionDespuesDeCelebracion()
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(TiempoOverlayClienteSegundos * 1000).ConfigureAwait(false);
+                ContinuarDespuesDeTransicion();
+            });
         }
 
         private void FinalizarRonda()
@@ -580,7 +575,6 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         private void DetenerTimers()
         {
             _timerRonda.Stop();
-            _timerTransicionRonda.Stop();
             _inicioRonda = default;
         }
 
