@@ -81,7 +81,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         public event Action<string, int> JugadorAdivino;
         public event Action<string, string> MensajeChatRecibido;
         public event Action<TrazoDTO> TrazoRecibido;
-        public event Action FinRonda;
+        public event Action<bool> FinRonda;
         public event Action<ResultadoPartidaDTO> FinPartida;
 
         public EstadoPartida EstadoActual
@@ -509,7 +509,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 }
             }
 
-            FinRonda?.Invoke();
+            FinRonda?.Invoke(true);
 
             if (partidaFinalizada)
             {
@@ -565,7 +565,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 }
             }
 
-            FinRonda?.Invoke();
+            FinRonda?.Invoke(false);
 
             if (partidaFinalizada)
             {

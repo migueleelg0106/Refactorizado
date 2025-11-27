@@ -59,7 +59,7 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida {
         void NotificarTrazoRecibido(PictionaryMusicalServidor.Servicios.Contratos.DTOs.TrazoDTO trazo);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ICursoPartidaManejador/NotificarFinRonda")]
-        void NotificarFinRonda();
+        void NotificarFinRonda(bool todosAdivinaron);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ICursoPartidaManejador/NotificarFinPartida")]
         void NotificarFinPartida(PictionaryMusicalServidor.Servicios.Contratos.DTOs.ResultadoPartidaDTO resultado);

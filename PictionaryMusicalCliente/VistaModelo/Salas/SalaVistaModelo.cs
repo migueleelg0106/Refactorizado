@@ -1193,14 +1193,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <summary>
         /// Procesa la notificacion de fin de ronda desde el servidor.
         /// </summary>
-        public void NotificarFinRonda()
+        /// <param name="todosAdivinaron">Indica si la ronda termino porque todos adivinaron (true) o por timeout (false).</param>
+        public void NotificarFinRonda(bool todosAdivinaron)
         {
             if (_rondaTerminadaTemprano)
             {
                 return;
             }
 
-            _partidaVistaModelo.NotificarFinRonda();
+            if (todosAdivinaron)
+            {
+                _rondaTerminadaTemprano = true;
+                _partidaVistaModelo.NotificarFinRondaTemprano();
+            }
+            else
+            {
+                _partidaVistaModelo.NotificarFinRonda();
+            }
         }
 
         /// <summary>

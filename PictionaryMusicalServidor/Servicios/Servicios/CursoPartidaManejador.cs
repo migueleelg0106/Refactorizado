@@ -184,7 +184,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             controlador.JugadorAdivino += (jugador, puntos) => NotificarCallbacks(idSala, callback => callback.NotificarJugadorAdivino(jugador, puntos));
             controlador.MensajeChatRecibido += (jugador, mensaje) => NotificarCallbacks(idSala, callback => callback.NotificarMensajeChat(jugador, mensaje));
             controlador.TrazoRecibido += trazo => NotificarCallbacks(idSala, callback => callback.NotificarTrazoRecibido(trazo));
-            controlador.FinRonda += () => NotificarCallbacks(idSala, callback => callback.NotificarFinRonda());
+            controlador.FinRonda += todosAdivinaron => NotificarCallbacks(idSala, callback => callback.NotificarFinRonda(todosAdivinaron));
             controlador.FinPartida += resultado => NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado));
         }
 

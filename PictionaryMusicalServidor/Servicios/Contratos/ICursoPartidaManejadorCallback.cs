@@ -48,8 +48,9 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <summary>
         /// Notifica que la ronda actual ha finalizado.
         /// </summary>
+        /// <param name="todosAdivinaron">Indica si la ronda termino porque todos adivinaron (true) o por timeout (false).</param>
         [OperationContract(IsOneWay = true)]
-        void NotificarFinRonda();
+        void NotificarFinRonda(bool todosAdivinaron);
 
         /// <summary>
         /// Notifica que la partida termino y envia los resultados finales.
