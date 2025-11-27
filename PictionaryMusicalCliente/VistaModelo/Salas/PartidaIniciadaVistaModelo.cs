@@ -750,12 +750,21 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 if (_alarmaActiva)
                 {
-                    _rondaPendiente = ronda;
-                    return;
+                    FinalizarAlarmaTemprana();
                 }
 
                 ProcesarInicioRonda(ronda);
             });
+        }
+
+        private void FinalizarAlarmaTemprana()
+        {
+            _temporizadorAlarma.Stop();
+            _manejadorCancion.Detener();
+            VisibilidadOverlayAlarma = Visibility.Collapsed;
+            _alarmaActiva = false;
+            _rondaPendiente = null;
+            RestablecerPalabraTrasAlarma();
         }
 
         private void ProcesarInicioRonda(DTOs.RondaDTO ronda)

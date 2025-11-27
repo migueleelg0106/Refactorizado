@@ -19,6 +19,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         private const string RolDibujante = "Dibujante";
         private const string MensajeCancelacionFaltaJugadores = "No hay suficientes jugadores para seguir jugando, se canceló la partida.";
         private const int TiempoOverlayClienteSegundos = 5;
+        private const int TiempoTransicionRondaTempranaMilisegundos = 2000;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ControladorPartida));
 
         private readonly Dictionary<string, JugadorPartida> _jugadores = new Dictionary<string, JugadorPartida>(StringComparer.Ordinal);
@@ -517,6 +518,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
             else
             {
+                _timerTransicionRonda.Interval = TiempoTransicionRondaTempranaMilisegundos;
                 _timerTransicionRonda.Start();
             }
         }
