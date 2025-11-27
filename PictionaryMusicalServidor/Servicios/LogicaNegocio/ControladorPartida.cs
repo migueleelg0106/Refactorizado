@@ -264,6 +264,8 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 return;
             }
 
+            int versionRondaAlAcertar = 0;
+
             lock (_sincronizacion)
             {
                 if (jugador.YaAdivino)
@@ -279,6 +281,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     puntosObtenidos = CalcularSegundosRestantes();
                     jugador.PuntajeTotal += puntosObtenidos;
                     debeFinalizarRonda = TodosAdivinaron();
+                    versionRondaAlAcertar = _versionInicioRonda;
                 }
             }
 
@@ -289,7 +292,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
                 if (debeFinalizarRonda)
                 {
-                    FinalizarRondaPorTodosAdivinaron();
+                    FinalizarRondaPorTodosAdivinaron(versionRondaAlAcertar);
                 }
             }
             else
@@ -485,7 +488,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             ContinuarDespuesDeTransicion();
         }
 
-        private void FinalizarRondaPorTodosAdivinaron()
+        private void FinalizarRondaPorTodosAdivinaron(int versionRonda)
         {
             bool partidaFinalizada;
             List<ClasificacionUsuarioDTO> clasificacion;
@@ -494,6 +497,12 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             {
                 if (_estadoActual != EstadoPartida.Jugando)
                 {
+                    return;
+                }
+
+                if (versionRonda != _versionInicioRonda)
+                {
+                    _logger.InfoFormat("Ignorando finalización de ronda porque la versión {0} no coincide con la actual {1}.", versionRonda, _versionInicioRonda);
                     return;
                 }
 
