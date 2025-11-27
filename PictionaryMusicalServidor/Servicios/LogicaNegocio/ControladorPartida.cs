@@ -517,8 +517,23 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
             else
             {
-                _timerTransicionRonda.Start();
+                ContinuarDespuesDeFinRondaTemprano();
             }
+        }
+
+        private void ContinuarDespuesDeFinRondaTemprano()
+        {
+            lock (_sincronizacion)
+            {
+                _rondaTerminadaPorTodosAdivinaron = false;
+
+                if (_estadoActual != EstadoPartida.Jugando)
+                {
+                    return;
+                }
+            }
+
+            IniciarNuevaRonda();
         }
 
         private void ContinuarDespuesDeTransicion()
