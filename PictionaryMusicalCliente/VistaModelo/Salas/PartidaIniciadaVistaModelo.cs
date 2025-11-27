@@ -55,6 +55,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private int _turnosCompletadosEnCiclo;
         private bool _esDibujante;
         private bool _alarmaActiva;
+        private bool _esFinPorTiempo;
         private DTOs.RondaDTO _rondaPendiente;
         private int _totalJugadoresPendiente;
         private string _nombreCancionActual;
@@ -586,9 +587,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _overlayTimer.Start();
         }
 
-        private void MostrarOverlayAlarma()
+        private void MostrarOverlayAlarma(bool esPorTiempo)
         {
             _alarmaActiva = true;
+            _esFinPorTiempo = esPorTiempo;
 
             if (!string.IsNullOrWhiteSpace(_nombreCancionActual))
             {
@@ -599,6 +601,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             ColorPalabraAdivinar = Brushes.Blue;
             VisibilidadOverlayAlarma = Visibility.Visible;
 
+            if (esPorTiempo && !string.IsNullOrWhiteSpace(_archivoCancionActual))
+            {
+                _manejadorCancion.Reproducir(_archivoCancionActual);
+            }
+
+            _temporizadorAlarma.Interval = esPorTiempo
+                ? TimeSpan.FromSeconds(10)
+                : TimeSpan.FromSeconds(5);
             _temporizadorAlarma.Stop();
             _temporizadorAlarma.Start();
         }
@@ -657,14 +667,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _temporizador.Stop();
                 TextoContador = "0";
                 _manejadorCancion.Detener();
-                SonidoManejador.ReproducirSonido("alarma.mp3");
 
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
                 VisibilidadInfoCancion = Visibility.Collapsed;
                 VisibilidadArtista = Visibility.Collapsed;
                 VisibilidadGenero = Visibility.Collapsed;
 
-                MostrarOverlayAlarma();
+                MostrarOverlayAlarma(true);
             }
         }
 
@@ -684,6 +693,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _manejadorCancion.Detener();
             VisibilidadOverlayAlarma = Visibility.Collapsed;
             _alarmaActiva = false;
+            _esFinPorTiempo = false;
 
             RestablecerPalabraTrasAlarma();
 
@@ -895,8 +905,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 PuedeEscribirCambiado?.Invoke(false);
                 MostrarEstadoRonda = false;
                 TextoContador = string.Empty;
-                MostrarOverlayAlarma();
-                SonidoManejador.ReproducirSonido("alarma.mp3");
+                MostrarOverlayAlarma(true);
             });
         }
 
@@ -963,6 +972,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 NumeroRondaActual = 0;
                 PuedeEscribirCambiado?.Invoke(false);
                 _alarmaActiva = false;
+                _esFinPorTiempo = false;
                 _rondaPendiente = null;
                 VisibilidadOverlayAlarma = Visibility.Collapsed;
                 RestablecerPalabraTrasAlarma();
