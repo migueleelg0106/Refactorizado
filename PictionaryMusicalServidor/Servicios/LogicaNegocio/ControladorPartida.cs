@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
+using System.Threading.Tasks;
 using System.Timers;
 using log4net;
 using PictionaryMusicalServidor.Datos;
@@ -38,6 +39,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         private int _cancionActualId;
         private DateTime _inicioRonda;
         private bool _rondaTerminadaPorTodosAdivinaron;
+        private int _versionInicioRonda;
 
         public ControladorPartida(int tiempoRondaSegundos, string dificultad, int cantidadRondas)
         {
@@ -350,11 +352,8 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     SeleccionarDibujante();
                     var cancion = ObtenerCancionParaRonda();
 
-                    _timerRonda.Stop();
-                    _timerRonda.Interval = (_tiempoRondaSegundos + TiempoOverlayClienteSegundos) * 1000;
-                    _inicioRonda = DateTime.UtcNow;
-                    _timerRonda.Start();
-
+                    var versionInicio = ++_versionInicioRonda;
+                    ProgramarInicioCronometro(versionInicio);
                     ronda = CrearRondaDto(cancion);
                 }
             }
@@ -366,6 +365,29 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
 
             InicioRonda?.Invoke(ronda);
+        }
+
+        private void ProgramarInicioCronometro(int versionInicio)
+        {
+            _timerRonda.Stop();
+            _timerRonda.Interval = _tiempoRondaSegundos * 1000;
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(TiempoOverlayClienteSegundos * 1000).ConfigureAwait(false);
+
+                lock (_sincronizacion)
+                {
+                    if (_estadoActual != EstadoPartida.Jugando || versionInicio != _versionInicioRonda)
+                    {
+                        return;
+                    }
+
+                    _inicioRonda = DateTime.UtcNow;
+                    _timerRonda.Stop();
+                    _timerRonda.Start();
+                }
+            });
         }
 
         private void PrepararColaDibujantes()
@@ -443,9 +465,13 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 
         private int CalcularSegundosRestantes()
         {
+            if (_inicioRonda == default)
+            {
+                return _tiempoRondaSegundos;
+            }
+
             var transcurrido = (int)(DateTime.UtcNow - _inicioRonda).TotalSeconds;
-            var transcurridoSinOverlay = Math.Max(0, transcurrido - TiempoOverlayClienteSegundos);
-            var restante = _tiempoRondaSegundos - transcurridoSinOverlay;
+            var restante = _tiempoRondaSegundos - transcurrido;
             return Math.Max(0, restante);
         }
 
@@ -555,6 +581,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         {
             _timerRonda.Stop();
             _timerTransicionRonda.Stop();
+            _inicioRonda = default;
         }
 
         private bool EsUltimaRonda()

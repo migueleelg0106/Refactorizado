@@ -657,6 +657,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _temporizador.Stop();
                 TextoContador = "0";
                 _manejadorCancion.Detener();
+                SonidoManejador.ReproducirSonido("alarma.mp3");
 
                 VisibilidadPalabraAdivinar = Visibility.Collapsed;
                 VisibilidadInfoCancion = Visibility.Collapsed;
