@@ -349,8 +349,8 @@
                 <StackPanel x:Name="panelApilableChat" Margin="6"/>
             </ScrollViewer>
 
-            <TextBox x:Name="campoTextoChat" Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1" 
-                     MaxLength="200" Text="{Binding MensajeChat, UpdateSourceTrigger=PropertyChanged}"
+            <TextBox x:Name="campoTextoChat" Grid.Row="2" Background="LightYellow" BorderBrush="Black" BorderThickness="1"
+                     Text="{Binding MensajeChat, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding PuedeEscribir}" KeyDown="CampoTextoChat_KeyDown"/>
         </Grid>
     </Grid>

@@ -18,6 +18,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
     {
         private const string RolDibujante = "Dibujante";
         private const string MensajeCancelacionFaltaJugadores = "No hay suficientes jugadores para seguir jugando, se canceló la partida.";
+        private const int LimitePalabrasMensaje = 150;
         private const int TiempoOverlayClienteSegundos = 5;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ControladorPartida));
 
@@ -268,6 +269,15 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 throw new ArgumentException("El identificador de conexión es obligatorio.", nameof(idConexion));
             }
 
+            if (MensajeExcedeLimite(mensaje))
+            {
+                _logger.WarnFormat(
+                    "Mensaje rechazado por exceder {0} palabras. Jugador: {1}",
+                    LimitePalabrasMensaje,
+                    idConexion);
+                return;
+            }
+
             JugadorPartida jugador;
             bool acierto;
             bool debeFinalizarRonda = false;
@@ -336,6 +346,17 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             {
                 MensajeChatRecibido?.Invoke(jugador.NombreUsuario, mensaje);
             }
+        }
+
+        private static bool MensajeExcedeLimite(string mensaje)
+        {
+            if (string.IsNullOrWhiteSpace(mensaje))
+            {
+                return false;
+            }
+
+            var palabras = mensaje.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+            return palabras.Length > LimitePalabrasMensaje;
         }
 
         private static bool EsMensajeAcierto(string mensaje, out int puntos)
