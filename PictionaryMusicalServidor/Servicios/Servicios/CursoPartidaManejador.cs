@@ -202,7 +202,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     }
                     catch (Exception ex)
                     {
-                        _logger.Warn($"Error notificando inicio de ronda a {idJugador}", ex);
+                        _logger.WarnFormat("Error notificando inicio de ronda a {0}", idJugador, ex);
                         RemoverCallback(idSala, idJugador);
                     }
                 }
@@ -275,7 +275,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error($"No se pudo actualizar la clasificación del jugador {jugadorId}.", ex);
+                            _logger.ErrorFormat("No se pudo actualizar la clasificación del jugador {0}.", jugadorId, ex);
                         }
                     }
                 }
