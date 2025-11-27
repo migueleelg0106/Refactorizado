@@ -868,6 +868,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             dispatcher.Invoke(() =>
             {
                 _temporizador.Stop();
+                _overlayTimer.Stop();
                 _manejadorCancion.Detener();
                 LimpiarTrazos?.Invoke();
                 PuedeEscribirCambiado?.Invoke(false);
@@ -893,6 +894,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             dispatcher.Invoke(() =>
             {
                 _temporizador.Stop();
+                _overlayTimer.Stop();
                 _manejadorCancion.Detener();
                 LimpiarTrazos?.Invoke();
                 PuedeEscribirCambiado?.Invoke(false);
