@@ -217,7 +217,25 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 try
                 {
+                    if (!CanalActivo(par.Value))
+                    {
+                        _logger.WarnFormat("El canal de jugador {0} en sala {1} ya no está activo. Se quitará su callback.", par.Key, idSala);
+                        RemoverCallback(idSala, par.Key);
+                        continue;
+                    }
                     accion(par.Value);
+                }
+                catch (ObjectDisposedException ex)
+                {
+                    _logger.WarnFormat("El canal de jugador {0} en sala {1} fue desechado. Se quitará su callback.", par.Key, idSala);
+                    _logger.Warn(ex);
+                    RemoverCallback(idSala, par.Key);
+                }
+                catch (CommunicationObjectFaultedException ex)
+                {
+                    _logger.WarnFormat("El canal de jugador {0} en sala {1} está en estado Faulted. Se quitará su callback.", par.Key, idSala);
+                    _logger.Warn(ex);
+                    RemoverCallback(idSala, par.Key);
                 }
                 catch (CommunicationException ex)
                 {
@@ -232,6 +250,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     RemoverCallback(idSala, par.Key);
                 }
             }
+        }
+        private static bool CanalActivo(ICursoPartidaManejadorCallback callback)
+        {
+            if (callback is ICommunicationObject canal)
+            {
+                return canal.State == CommunicationState.Opened;
+            }
+
+            return true;
         }
 
         private void RegistrarCallback(string idSala, string idJugador, ICursoPartidaManejadorCallback callback)
