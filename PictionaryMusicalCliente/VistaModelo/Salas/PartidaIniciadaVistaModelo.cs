@@ -5,6 +5,7 @@ using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -34,7 +35,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private Color _color;
         private int _contador;
         private int _tiempoRondaSegundos;
-        private DateTime _inicioRonda;
+        private readonly Stopwatch _cronometroRonda;
         private string _textoContador;
         private Brush _colorContador;
         private bool _esHerramientaLapiz;
@@ -68,6 +69,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
             _manejadorCancion = new CancionManejador();
             _catalogoAudio = InicializarCatalogoAudio();
+            _cronometroRonda = new Stopwatch();
 
             _numeroRondaActual = 0;
             _grosor = 6;
@@ -630,7 +632,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             OcultarOverlayAlarma();
 
-            _inicioRonda = DateTime.UtcNow;
+            _cronometroRonda.Restart();
             _contador = Math.Max(0, _contador);
             TextoContador = _contador.ToString();
             ColorContador = Brushes.Black;
@@ -640,7 +642,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void Temporizador_Tick(object sender, EventArgs e)
         {
-            var tiempoTranscurrido = (int)(DateTime.UtcNow - _inicioRonda).TotalSeconds;
+            var tiempoTranscurrido = (int)_cronometroRonda.Elapsed.TotalSeconds;
             _contador = Math.Max(0, _tiempoRondaSegundos - tiempoTranscurrido);
             TextoContador = _contador.ToString();
             TiempoRestanteCambiado?.Invoke(_contador);
@@ -1002,6 +1004,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _overlayTimer.Stop();
             _temporizador.Stop();
             _temporizadorAlarma.Stop();
+            _cronometroRonda.Stop();
             _manejadorCancion.Detener();
         }
 
