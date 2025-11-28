@@ -10,6 +10,12 @@ namespace PictionaryMusicalServidor.Datos.Utilidades
     /// </summary>
     public static class Conexion
     {
+        private const string VariableServidor = "BD_SERVIDOR";
+        private const string VariableUsuario = "BD_USUARIO";
+        private const string VariableContrasena = "BD_CONTRASENA";
+        private const string ServidorPorDefecto = "localhost";
+        private const string NombreBaseDatos = "BaseDatosPrueba";
+
         /// <summary>
         /// Obtiene la cadena de conexión para Entity Framework usando variables de entorno.
         /// </summary>
@@ -17,19 +23,36 @@ namespace PictionaryMusicalServidor.Datos.Utilidades
         /// Las siguientes variables de entorno deben estar configuradas:
         /// <list type="bullet">
         ///   <item><description>BD_SERVIDOR: Nombre del servidor o instancia de SQL Server (por ejemplo: localhost o EQUIPO\SQLEXPRESS). Por defecto: localhost</description></item>
-        ///   <item><description>BD_USUARIO: Usuario de la base de datos SQL</description></item>
-        ///   <item><description>BD_CONTRASENA: Contraseña del usuario de la base de datos SQL</description></item>
+        ///   <item><description>BD_USUARIO: Usuario de la base de datos SQL (requerido)</description></item>
+        ///   <item><description>BD_CONTRASENA: Contraseña del usuario de la base de datos SQL (requerido)</description></item>
         /// </list>
         /// </remarks>
         /// <returns>Cadena de conexión de Entity Framework configurada para la base de datos.</returns>
+        /// <exception cref="InvalidOperationException">Se lanza cuando las variables de entorno requeridas no están configuradas.</exception>
         public static string ObtenerConexion()
         {
+            string servidor = Environment.GetEnvironmentVariable(VariableServidor);
+            string usuario = Environment.GetEnvironmentVariable(VariableUsuario);
+            string contrasena = Environment.GetEnvironmentVariable(VariableContrasena);
+
+            if (string.IsNullOrEmpty(usuario))
+            {
+                throw new InvalidOperationException(
+                    $"La variable de entorno '{VariableUsuario}' es requerida pero no está configurada.");
+            }
+
+            if (string.IsNullOrEmpty(contrasena))
+            {
+                throw new InvalidOperationException(
+                    $"La variable de entorno '{VariableContrasena}' es requerida pero no está configurada.");
+            }
+
             var constructorSql = new SqlConnectionStringBuilder
             {
-                DataSource = Environment.GetEnvironmentVariable("BD_SERVIDOR") ?? "localhost",
-                InitialCatalog = "BaseDatosPrueba",
-                UserID = Environment.GetEnvironmentVariable("BD_USUARIO"),
-                Password = Environment.GetEnvironmentVariable("BD_CONTRASENA"),
+                DataSource = string.IsNullOrEmpty(servidor) ? ServidorPorDefecto : servidor,
+                InitialCatalog = NombreBaseDatos,
+                UserID = usuario,
+                Password = contrasena,
                 MultipleActiveResultSets = true
             };
 

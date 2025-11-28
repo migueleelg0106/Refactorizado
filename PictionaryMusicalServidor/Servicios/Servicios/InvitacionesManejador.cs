@@ -155,9 +155,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static BaseDatosPruebaEntities1 CrearContexto()
         {
             string cadenaConexion = Conexion.ObtenerConexion();
-            return string.IsNullOrWhiteSpace(cadenaConexion)
-                ? new BaseDatosPruebaEntities1()
-                : new BaseDatosPruebaEntities1(cadenaConexion);
+            return new BaseDatosPruebaEntities1(cadenaConexion);
         }
 
         private static ResultadoOperacionDTO CrearFallo(string mensaje)

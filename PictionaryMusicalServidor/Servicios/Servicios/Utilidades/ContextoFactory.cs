@@ -1,3 +1,4 @@
+using System;
 using log4net;
 using PictionaryMusicalServidor.Datos.Modelo;
 using PictionaryMusicalServidor.Datos.Utilidades;
@@ -17,16 +18,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         /// Crea una nueva instancia del contexto de base de datos.
         /// </summary>
         /// <returns>Instancia del contexto de base de datos configurada.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Se lanza cuando las variables de entorno requeridas (BD_USUARIO, BD_CONTRASENA) no están configuradas.
+        /// </exception>
         public BaseDatosPruebaEntities1 CrearContexto()
         {
             string conexion = Conexion.ObtenerConexion();
-
-            if (string.IsNullOrWhiteSpace(conexion))
-            {
-                _logger.Warn("La cadena de conexión obtenida está vacía. Se intentará usar la configuración predeterminada (App.config).");
-                return new BaseDatosPruebaEntities1();
-            }
-
             return new BaseDatosPruebaEntities1(conexion);
         }
     }

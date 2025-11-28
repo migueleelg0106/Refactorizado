@@ -391,9 +391,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static BaseDatosPruebaEntities1 CrearContexto()
         {
             string conexion = Conexion.ObtenerConexion();
-            return string.IsNullOrWhiteSpace(conexion)
-                ? new BaseDatosPruebaEntities1()
-                : new BaseDatosPruebaEntities1(conexion);
+            return new BaseDatosPruebaEntities1(conexion);
         }
 
         private static void LimpiarSolicitudesRecuperacion(int usuarioId)
