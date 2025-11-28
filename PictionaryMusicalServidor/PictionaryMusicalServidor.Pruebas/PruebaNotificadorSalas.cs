@@ -173,7 +173,7 @@ namespace PictionaryMusicalServidor.Pruebas
     }
 
     // Callback especial para capturar las salas enviadas
-    public class TestCallbackConCaptura : ISalasCallback
+    public class TestCallbackConCaptura : ISalasManejadorCallback
     {
         public SalaDTO[] UltimasSalas { get; set; }
 

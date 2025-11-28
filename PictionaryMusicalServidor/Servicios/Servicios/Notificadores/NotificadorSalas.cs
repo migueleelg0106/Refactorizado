@@ -16,7 +16,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
     internal class NotificadorSalas
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(NotificadorSalas));
-        private readonly ConcurrentDictionary<Guid, ISalasCallback> _suscripciones = new();
+        private readonly ConcurrentDictionary<Guid, ISalasManejadorCallback> _suscripciones = new();
         private readonly Func<IEnumerable<SalaInterna>> _obtenerSalas;
 
         public NotificadorSalas(Func<IEnumerable<SalaInterna>> obtenerSalas)
@@ -29,7 +29,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// </summary>
         /// <param name="callback">Callback a suscribir.</param>
         /// <returns>ID de la suscripción.</returns>
-        public Guid Suscribir(ISalasCallback callback)
+        public Guid Suscribir(ISalasManejadorCallback callback)
         {
             var sesionId = Guid.NewGuid();
             _suscripciones.AddOrUpdate(sesionId, callback, (_, __) => callback);
@@ -53,7 +53,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// Elimina todas las suscripciones asociadas a un callback específico.
         /// </summary>
         /// <param name="callback">Callback a desuscribir.</param>
-        public void DesuscribirPorCallback(ISalasCallback callback)
+        public void DesuscribirPorCallback(ISalasManejadorCallback callback)
         {
             var keysToRemove = _suscripciones
                 .Where(kvp => ReferenceEquals(kvp.Value, callback))
@@ -75,7 +75,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// Notifica la lista actualizada de salas a un callback específico.
         /// </summary>
         /// <param name="callback">Callback a notificar.</param>
-        public void NotificarListaSalas(ISalasCallback callback)
+        public void NotificarListaSalas(ISalasManejadorCallback callback)
         {
             try
             {

@@ -8,7 +8,7 @@ using System.ServiceModel;
 namespace PictionaryMusicalServidor.Pruebas
 {
     // Mock callback para pruebas
-    public class SalasCallbackMock : ISalasCallback
+    public class SalasCallbackMock : ISalasManejadorCallback
     {
         public int ContadorJugadorSeUnio { get; set; }
         public int ContadorJugadorSalio { get; set; }

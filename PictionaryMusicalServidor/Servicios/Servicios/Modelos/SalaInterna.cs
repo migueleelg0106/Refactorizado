@@ -17,9 +17,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
     {
         private const int MaximoJugadores = 4;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(SalaInterna));
-        private static readonly ISalasCallback CallbackNulo = new SalasCallbackNulo();
+        private static readonly ISalasManejadorCallback CallbackNulo = new SalasCallbackNulo();
         private readonly object _sync = new();
-        private readonly Dictionary<string, ISalasCallback> _callbacks = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, ISalasManejadorCallback> _callbacks = new(StringComparer.OrdinalIgnoreCase);
 
         public SalaInterna(string codigo, string creador, ConfiguracionPartidaDTO configuracion)
         {
@@ -61,7 +61,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
         /// <param name="callback">Callback del jugador.</param>
         /// <param name="notificar">Indica si se debe notificar a otros jugadores.</param>
         /// <returns>Estado actualizado de la sala.</returns>
-        public SalaDTO AgregarJugador(string nombreUsuario, ISalasCallback callback, bool notificar)
+        public SalaDTO AgregarJugador(string nombreUsuario, ISalasManejadorCallback callback, bool notificar)
         {
             lock (_sync)
             {
@@ -190,7 +190,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
             }
         }
 
-        private ISalasCallback ObtenerCallback(string nombreJugador)
+        private ISalasManejadorCallback ObtenerCallback(string nombreJugador)
         {
             if (_callbacks.TryGetValue(nombreJugador, out var callback))
             {
@@ -266,42 +266,42 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Modelos
             }
         }
 
-        private void NotificarJugadorSeUnio(ISalasCallback callback, string nombreJugador)
+        private void NotificarJugadorSeUnio(ISalasManejadorCallback callback, string nombreJugador)
         {
             EjecutarNotificacion(
                 () => callback.NotificarJugadorSeUnio(Codigo, nombreJugador),
                 "Error al notificar la unión del jugador a la sala a través del callback.");
         }
 
-        private void NotificarJugadorSalio(ISalasCallback callback, string nombreJugador)
+        private void NotificarJugadorSalio(ISalasManejadorCallback callback, string nombreJugador)
         {
             EjecutarNotificacion(
                 () => callback.NotificarJugadorSalio(Codigo, nombreJugador),
                 "Error al notificar la salida del jugador de la sala a través del callback.");
         }
 
-        private void NotificarJugadorExpulsado(ISalasCallback callback, string nombreJugador)
+        private void NotificarJugadorExpulsado(ISalasManejadorCallback callback, string nombreJugador)
         {
             EjecutarNotificacion(
                 () => callback.NotificarJugadorExpulsado(Codigo, nombreJugador),
                 "Error al notificar la expulsión del jugador de la sala a través del callback.");
         }
 
-        private void NotificarSalaCancelada(ISalasCallback callback)
+        private void NotificarSalaCancelada(ISalasManejadorCallback callback)
         {
             EjecutarNotificacion(
                 () => callback.NotificarSalaCancelada(Codigo),
                 "Error al notificar la cancelación de la sala a través del callback.");
         }
 
-        private static void NotificarSalaActualizada(ISalasCallback callback, SalaDTO salaActualizada)
+        private static void NotificarSalaActualizada(ISalasManejadorCallback callback, SalaDTO salaActualizada)
         {
             EjecutarNotificacion(
                 () => callback.NotificarSalaActualizada(salaActualizada),
                 "Error al notificar la actualización de la sala a través del callback.");
         }
 
-        private sealed class SalasCallbackNulo : ISalasCallback
+        private sealed class SalasCallbackNulo : ISalasManejadorCallback
         {
             public void NotificarJugadorSeUnio(string codigoSala, string nombreJugador)
             {

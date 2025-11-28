@@ -41,7 +41,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 ValidarConfiguracion(configuracion);
 
                 string codigo = GenerarCodigoSala();
-                var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
+                var callback = OperationContext.Current.GetCallbackChannel<ISalasManejadorCallback>();
 
                 var sala = new SalaInterna(codigo, nombreCreador.Trim(), configuracion);
                 sala.AgregarJugador(nombreCreador.Trim(), callback, notificar: false);
@@ -115,7 +115,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     throw new FaultException("La partida ya comenzó");
                 }
 
-                var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
+                var callback = OperationContext.Current.GetCallbackChannel<ISalasManejadorCallback>();
                 var resultado = sala.AgregarJugador(nombreUsuario.Trim(), callback, notificar: true);
 
                 _notificador.NotificarListaSalasATodos();
@@ -241,7 +241,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
+                var callback = OperationContext.Current.GetCallbackChannel<ISalasManejadorCallback>();
                 var sesionId = _notificador.Suscribir(callback);
 
                 var canal = OperationContext.Current?.Channel;
@@ -284,7 +284,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var callback = OperationContext.Current.GetCallbackChannel<ISalasCallback>();
+                var callback = OperationContext.Current.GetCallbackChannel<ISalasManejadorCallback>();
                 _notificador.DesuscribirPorCallback(callback);
                 _logger.Info("Cliente canceló suscripción al lobby de salas.");
             }

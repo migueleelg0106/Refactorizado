@@ -96,7 +96,7 @@
     <Compile Include="Contratos\IListaAmigosManejador.cs" />
     <Compile Include="Contratos\IListaAmigosManejadorCallback.cs" />
     <Compile Include="Contratos\IPerfilManejador.cs" />
-    <Compile Include="Contratos\ISalasCallback.cs" />
+    <Compile Include="Contratos\ISalasManejadorCallback.cs" />
     <Compile Include="Contratos\ISalasManejador.cs" />
     <Compile Include="Contratos\IContextoFactory.cs" />
     <Compile Include="LogicaNegocio\ControladorPartida.cs" />

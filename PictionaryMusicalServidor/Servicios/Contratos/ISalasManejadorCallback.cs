@@ -8,7 +8,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
     /// Permite al servidor notificar a los clientes sobre cambios en salas.
     /// </summary>
     [ServiceContract]
-    public interface ISalasCallback
+    public interface ISalasManejadorCallback
     {
         /// <summary>
         /// Notifica al cliente cuando un jugador se une a una sala.
