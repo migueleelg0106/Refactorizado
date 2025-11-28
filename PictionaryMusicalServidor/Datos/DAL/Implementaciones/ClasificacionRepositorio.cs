@@ -3,16 +3,16 @@ using System.Data.Entity;
 using System.Linq;
 using log4net;
 using PictionaryMusicalServidor.Datos.DAL.Interfaces;
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 
 namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 {
     public class ClasificacionRepositorio : IClasificacionRepositorio
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ClasificacionRepositorio));
-        private readonly BaseDatosPruebaEntities1 _contexto;
+        private readonly BaseDatosPruebaEntities _contexto;
 
-        public ClasificacionRepositorio(BaseDatosPruebaEntities1 contexto)
+        public ClasificacionRepositorio(BaseDatosPruebaEntities contexto)
         {
             _contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
         }

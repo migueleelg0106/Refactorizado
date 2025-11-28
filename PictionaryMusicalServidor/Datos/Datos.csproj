@@ -86,7 +86,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BaseDatosPictionaryMusical.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Modelo\BaseDatosPruebaEntities1.cs" />
+    <Compile Include="Modelo\BaseDatosPruebaEntities.cs" />
     <Compile Include="Modelo\Clasificacion.cs">
       <DependentUpon>BaseDatosPictionaryMusical.tt</DependentUpon>
     </Compile>

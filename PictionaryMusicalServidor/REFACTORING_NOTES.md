@@ -89,7 +89,7 @@ public AmigosManejador(IContextoFactory contextoFactory, IAmistadServicio amista
 ```csharp
 public interface IContextoFactory
 {
-    BaseDatosPruebaEntities1 CrearContexto();
+    BaseDatosPruebaEntities CrearContexto();
 }
 ```
 
