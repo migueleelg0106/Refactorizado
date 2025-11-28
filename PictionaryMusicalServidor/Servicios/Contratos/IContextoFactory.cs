@@ -1,4 +1,4 @@
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 
 namespace PictionaryMusicalServidor.Servicios.Contratos
 {
@@ -12,6 +12,6 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// Crea una nueva instancia del contexto de base de datos.
         /// </summary>
         /// <returns>Instancia del contexto de base de datos configurada.</returns>
-        BaseDatosPruebaEntities1 CrearContexto();
+        BaseDatosPruebaEntities CrearContexto();
     }
 }

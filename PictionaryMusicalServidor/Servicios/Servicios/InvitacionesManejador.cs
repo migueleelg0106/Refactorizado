@@ -1,5 +1,5 @@
 using log4net;
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 using PictionaryMusicalServidor.Datos.Utilidades;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -152,12 +152,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private static BaseDatosPruebaEntities1 CrearContexto()
+        private static BaseDatosPruebaEntities CrearContexto()
         {
             string cadenaConexion = Conexion.ObtenerConexion();
             return string.IsNullOrWhiteSpace(cadenaConexion)
-                ? new BaseDatosPruebaEntities1()
-                : new BaseDatosPruebaEntities1(cadenaConexion);
+                ? new BaseDatosPruebaEntities()
+                : new BaseDatosPruebaEntities(cadenaConexion);
         }
 
         private static ResultadoOperacionDTO CrearFallo(string mensaje)

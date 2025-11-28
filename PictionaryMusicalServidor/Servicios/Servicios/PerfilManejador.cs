@@ -6,7 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.ServiceModel;
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using log4net;
@@ -53,7 +53,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     throw new ArgumentException(MensajesError.Cliente.DatosInvalidos);
                 }
 
-                using (BaseDatosPruebaEntities1 contexto = _contextoFactory.CrearContexto())
+                using (BaseDatosPruebaEntities contexto = _contextoFactory.CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
                         .Include(u => u.Jugador.RedSocial)
@@ -137,7 +137,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     return validacion;
                 }
 
-                using (BaseDatosPruebaEntities1 contexto = _contextoFactory.CrearContexto())
+                using (BaseDatosPruebaEntities contexto = _contextoFactory.CrearContexto())
                 {
                     Usuario usuario = contexto.Usuario
                         .Include(u => u.Jugador.RedSocial)

@@ -3,7 +3,7 @@ using System;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Linq;
 using System.Data;
@@ -157,7 +157,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private ResultadoRegistroCuentaDTO ValidarPrecondicionesRegistro(BaseDatosPruebaEntities1 contexto, NuevaCuentaDTO nuevaCuenta)
+        private ResultadoRegistroCuentaDTO ValidarPrecondicionesRegistro(BaseDatosPruebaEntities contexto, NuevaCuentaDTO nuevaCuenta)
         {
             if (!VerificacionRegistroServicio.EstaVerificacionConfirmada(nuevaCuenta))
             {

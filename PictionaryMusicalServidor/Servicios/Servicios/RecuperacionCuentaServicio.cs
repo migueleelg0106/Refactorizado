@@ -5,7 +5,7 @@ using System.Data;
 using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 using PictionaryMusicalServidor.Datos.Utilidades;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
@@ -388,12 +388,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private static BaseDatosPruebaEntities1 CrearContexto()
+        private static BaseDatosPruebaEntities CrearContexto()
         {
             string conexion = Conexion.ObtenerConexion();
             return string.IsNullOrWhiteSpace(conexion)
-                ? new BaseDatosPruebaEntities1()
-                : new BaseDatosPruebaEntities1(conexion);
+                ? new BaseDatosPruebaEntities()
+                : new BaseDatosPruebaEntities(conexion);
         }
 
         private static void LimpiarSolicitudesRecuperacion(int usuarioId)
@@ -408,7 +408,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities1 contexto, string identificador)
+        private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities contexto, string identificador)
         {
             var usuariosPorNombre = contexto.Usuario
                 .Include(u => u.Jugador)

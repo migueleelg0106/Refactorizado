@@ -6,16 +6,16 @@ using System.Data.SqlClient;
 using System.Linq;
 using log4net;
 using PictionaryMusicalServidor.Datos.DAL.Interfaces;
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 
 namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 {
     public class AmigoRepositorio : IAmigoRepositorio
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(AmigoRepositorio));
-        private readonly BaseDatosPruebaEntities1 _contexto;
+        private readonly BaseDatosPruebaEntities _contexto;
 
-        public AmigoRepositorio(BaseDatosPruebaEntities1 contexto)
+        public AmigoRepositorio(BaseDatosPruebaEntities contexto)
         {
             _contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
         }

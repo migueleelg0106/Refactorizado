@@ -21,7 +21,7 @@ namespace PictionaryMusicalServidor.Datos.Utilidades
             {
                 Provider = "System.Data.SqlClient",
                 ProviderConnectionString = constructorSql.ToString(),
-                Metadata = "res://*/Modelo.BasePictionaryMusical.csdl|res://*/Modelo.BasePictionaryMusical.ssdl|res://*/Modelo.BasePictionaryMusical.msl"
+                Metadata = "res://*/Modelo.BaseDatosPictionaryMusical.csdl|res://*/Modelo.BaseDatosPictionaryMusical.ssdl|res://*/Modelo.BaseDatosPictionaryMusical.msl"
             };
 
             return constructorEntidad.ToString();

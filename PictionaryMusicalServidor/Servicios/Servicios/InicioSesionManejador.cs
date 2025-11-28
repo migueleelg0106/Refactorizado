@@ -1,6 +1,6 @@
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 using System;
 using System.Linq;
 using log4net;
@@ -126,7 +126,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities1 contexto, string identificador)
+        private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities contexto, string identificador)
         {
             var usuariosPorNombre = contexto.Usuario
                 .Where(u => u.Nombre_Usuario == identificador)
