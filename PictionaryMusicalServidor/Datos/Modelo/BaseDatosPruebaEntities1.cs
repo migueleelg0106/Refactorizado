@@ -1,8 +1,8 @@
-﻿namespace PictionaryMusicalServidor.Datos.Modelo
+﻿namespace Datos.Modelo
 {
-    public partial class BaseDatosPruebaEntities1
+    public partial class BaseDatosPruebaEntities
     {
-        public BaseDatosPruebaEntities1(string conexion) : base(conexion)
+        public BaseDatosPruebaEntities(string conexion) : base(conexion)
         {
             
         }

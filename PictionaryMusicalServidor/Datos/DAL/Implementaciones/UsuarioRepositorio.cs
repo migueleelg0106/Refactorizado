@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using log4net;
 using PictionaryMusicalServidor.Datos.DAL.Interfaces;
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 
 namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 {
@@ -14,14 +14,14 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(UsuarioRepositorio));
-        private readonly BaseDatosPruebaEntities1 _contexto;
+        private readonly BaseDatosPruebaEntities _contexto;
 
         /// <summary>
         /// Inicializa una nueva instancia del repositorio de usuarios.
         /// </summary>
         /// <param name="contexto">Contexto de base de datos.</param>
         /// <exception cref="ArgumentNullException">Se lanza si contexto es null.</exception>
-        public UsuarioRepositorio(BaseDatosPruebaEntities1 contexto)
+        public UsuarioRepositorio(BaseDatosPruebaEntities contexto)
         {
             _contexto = contexto ?? throw new ArgumentNullException(nameof(contexto));
         }

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using PictionaryMusicalServidor.Datos.Modelo;
+using Datos.Modelo;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalServidor.Servicios.Contratos
