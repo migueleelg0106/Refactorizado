@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PictionaryMusicalServidor.Datos.Modelo
+namespace Datos.Modelo
 {
     using System;
     using System.Collections.Generic;
@@ -17,7 +17,6 @@ namespace PictionaryMusicalServidor.Datos.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Jugador()
         {
-            this.Expulsion = new HashSet<Expulsion>();
             this.RedSocial = new HashSet<RedSocial>();
             this.Usuario = new HashSet<Usuario>();
         }
@@ -26,12 +25,10 @@ namespace PictionaryMusicalServidor.Datos.Modelo
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Correo { get; set; }
-        public int Id_Avatar { get; set; }
+        public Nullable<int> Id_Avatar { get; set; }
         public int Clasificacion_idClasificacion { get; set; }
     
         public virtual Clasificacion Clasificacion { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Expulsion> Expulsion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RedSocial> RedSocial { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -69,56 +69,38 @@
     <Compile Include="Entidades\Cancion.cs" />
     <Compile Include="Excepciones\CancionNoDisponibleException.cs" />
     <Compile Include="Modelo\Amigo.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
+      <DependentUpon>BaseDatosPictionaryMusical.tt</DependentUpon>
     </Compile>
-    <Compile Include="Modelo\Artista.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
+    <Compile Include="Modelo\BaseDatosPictionaryMusical.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseDatosPictionaryMusical.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\BaseDatosPictionaryMusical.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseDatosPictionaryMusical.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\BaseDatosPictionaryMusical.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseDatosPictionaryMusical.edmx</DependentUpon>
     </Compile>
     <Compile Include="Modelo\BaseDatosPruebaEntities1.cs" />
-    <Compile Include="Modelo\BasePictionaryMusical.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BasePictionaryMusical.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Modelo\BasePictionaryMusical.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Modelo\BasePictionaryMusical.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BasePictionaryMusical.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Modelo\Cancion.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
-    </Compile>
     <Compile Include="Modelo\Clasificacion.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Modelo\Expulsion.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Modelo\Genero.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
+      <DependentUpon>BaseDatosPictionaryMusical.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\Jugador.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
+      <DependentUpon>BaseDatosPictionaryMusical.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\RedSocial.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
+      <DependentUpon>BaseDatosPictionaryMusical.tt</DependentUpon>
     </Compile>
-    <Compile Include="Modelo\sp_helpdiagramdefinition_Result.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Modelo\sp_helpdiagrams_Result.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Modelo\sysdiagrams.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
+    <Compile Include="Modelo\Reporte.cs">
+      <DependentUpon>BaseDatosPictionaryMusical.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\Usuario.cs">
-      <DependentUpon>BasePictionaryMusical.tt</DependentUpon>
+      <DependentUpon>BaseDatosPictionaryMusical.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilidades\Conexion.cs" />
@@ -126,12 +108,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="Modelo\BasePictionaryMusical.edmx">
+    <EntityDeploy Include="Modelo\BaseDatosPictionaryMusical.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BasePictionaryMusical.Designer.cs</LastGenOutput>
+      <LastGenOutput>BaseDatosPictionaryMusical.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Modelo\BasePictionaryMusical.edmx.diagram">
-      <DependentUpon>BasePictionaryMusical.edmx</DependentUpon>
+    <None Include="Modelo\BaseDatosPictionaryMusical.edmx.diagram">
+      <DependentUpon>BaseDatosPictionaryMusical.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -139,15 +121,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Modelo\BasePictionaryMusical.Context.tt">
+    <Content Include="Modelo\BaseDatosPictionaryMusical.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BasePictionaryMusical.edmx</DependentUpon>
-      <LastGenOutput>BasePictionaryMusical.Context.cs</LastGenOutput>
+      <DependentUpon>BaseDatosPictionaryMusical.edmx</DependentUpon>
+      <LastGenOutput>BaseDatosPictionaryMusical.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Modelo\BasePictionaryMusical.tt">
+    <Content Include="Modelo\BaseDatosPictionaryMusical.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BasePictionaryMusical.edmx</DependentUpon>
-      <LastGenOutput>BasePictionaryMusical.cs</LastGenOutput>
+      <DependentUpon>BaseDatosPictionaryMusical.edmx</DependentUpon>
+      <LastGenOutput>BaseDatosPictionaryMusical.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

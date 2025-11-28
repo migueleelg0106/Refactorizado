@@ -1,0 +1,475 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BaseDatosPruebaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Amigo">
+          <Key>
+            <PropertyRef Name="UsuarioEmisor" />
+            <PropertyRef Name="UsuarioReceptor" />
+          </Key>
+          <Property Name="Estado" Type="bit" Nullable="false" />
+          <Property Name="UsuarioEmisor" Type="int" Nullable="false" />
+          <Property Name="UsuarioReceptor" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Clasificacion">
+          <Key>
+            <PropertyRef Name="idClasificacion" />
+          </Key>
+          <Property Name="idClasificacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Puntos_Ganados" Type="int" />
+          <Property Name="Rondas_Ganadas" Type="int" />
+        </EntityType>
+        <EntityType Name="Jugador">
+          <Key>
+            <PropertyRef Name="idJugador" />
+          </Key>
+          <Property Name="idJugador" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Apellido" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Id_Avatar" Type="int" />
+          <Property Name="Clasificacion_idClasificacion" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RedSocial">
+          <Key>
+            <PropertyRef Name="idRedSocial" />
+          </Key>
+          <Property Name="idRedSocial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Jugador_idJugador" Type="int" Nullable="false" />
+          <Property Name="Instagram" Type="varchar" MaxLength="50" />
+          <Property Name="discord" Type="varchar" MaxLength="50" />
+          <Property Name="facebook" Type="varchar" MaxLength="50" />
+          <Property Name="x" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Reporte">
+          <Key>
+            <PropertyRef Name="idReporte" />
+          </Key>
+          <Property Name="idReporte" Type="int" Nullable="false" />
+          <Property Name="idReportado" Type="int" Nullable="false" />
+          <Property Name="Motivo" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Fecha_Reporte" Type="date" Nullable="false" />
+          <Property Name="idReportante" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="idUsuario" />
+          </Key>
+          <Property Name="idUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre_Usuario" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Contrasena" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="Jugador_idJugador" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Amigo_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Amigo" Type="Self.Amigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Amigo">
+              <PropertyRef Name="UsuarioEmisor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Amigo_Usuario1">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Amigo" Type="Self.Amigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Amigo">
+              <PropertyRef Name="UsuarioReceptor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Jugador_Clasificacion">
+          <End Role="Clasificacion" Type="Self.Clasificacion" Multiplicity="1" />
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clasificacion">
+              <PropertyRef Name="idClasificacion" />
+            </Principal>
+            <Dependent Role="Jugador">
+              <PropertyRef Name="Clasificacion_idClasificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RedSocial_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="RedSocial" Type="Self.RedSocial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="RedSocial">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reporte_UsuarioReportado">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Reporte" Type="Self.Reporte" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Reporte">
+              <PropertyRef Name="idReportado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reporte_UsuarioReportante">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Reporte" Type="Self.Reporte" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Reporte">
+              <PropertyRef Name="idReportante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BaseDatosPruebaModelStoreContainer">
+          <EntitySet Name="Amigo" EntityType="Self.Amigo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Clasificacion" EntityType="Self.Clasificacion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Jugador" EntityType="Self.Jugador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RedSocial" EntityType="Self.RedSocial" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reporte" EntityType="Self.Reporte" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Amigo_Usuario" Association="Self.FK_Amigo_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Amigo" EntitySet="Amigo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Amigo_Usuario1" Association="Self.FK_Amigo_Usuario1">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Amigo" EntitySet="Amigo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Jugador_Clasificacion" Association="Self.FK_Jugador_Clasificacion">
+            <End Role="Clasificacion" EntitySet="Clasificacion" />
+            <End Role="Jugador" EntitySet="Jugador" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RedSocial_Jugador" Association="Self.FK_RedSocial_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="RedSocial" EntitySet="RedSocial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reporte_UsuarioReportado" Association="Self.FK_Reporte_UsuarioReportado">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Reporte" EntitySet="Reporte" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reporte_UsuarioReportante" Association="Self.FK_Reporte_UsuarioReportante">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Reporte" EntitySet="Reporte" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Jugador" Association="Self.FK_Usuario_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BaseDatosPruebaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Amigo">
+          <Key>
+            <PropertyRef Name="UsuarioEmisor" />
+            <PropertyRef Name="UsuarioReceptor" />
+          </Key>
+          <Property Name="Estado" Type="Boolean" Nullable="false" />
+          <Property Name="UsuarioEmisor" Type="Int32" Nullable="false" />
+          <Property Name="UsuarioReceptor" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Amigo_Usuario" FromRole="Amigo" ToRole="Usuario" />
+          <NavigationProperty Name="Usuario1" Relationship="Self.FK_Amigo_Usuario1" FromRole="Amigo" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Clasificacion">
+          <Key>
+            <PropertyRef Name="idClasificacion" />
+          </Key>
+          <Property Name="idClasificacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Puntos_Ganados" Type="Int32" />
+          <Property Name="Rondas_Ganadas" Type="Int32" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_Jugador_Clasificacion" FromRole="Clasificacion" ToRole="Jugador" />
+        </EntityType>
+        <EntityType Name="Jugador">
+          <Key>
+            <PropertyRef Name="idJugador" />
+          </Key>
+          <Property Name="idJugador" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Apellido" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Id_Avatar" Type="Int32" />
+          <Property Name="Clasificacion_idClasificacion" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Clasificacion" Relationship="Self.FK_Jugador_Clasificacion" FromRole="Jugador" ToRole="Clasificacion" />
+          <NavigationProperty Name="RedSocial" Relationship="Self.FK_RedSocial_Jugador" FromRole="Jugador" ToRole="RedSocial" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Jugador" FromRole="Jugador" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="RedSocial">
+          <Key>
+            <PropertyRef Name="idRedSocial" />
+          </Key>
+          <Property Name="idRedSocial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Jugador_idJugador" Type="Int32" Nullable="false" />
+          <Property Name="Instagram" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="discord" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="facebook" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="x" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_RedSocial_Jugador" FromRole="RedSocial" ToRole="Jugador" />
+        </EntityType>
+        <EntityType Name="Reporte">
+          <Key>
+            <PropertyRef Name="idReporte" />
+          </Key>
+          <Property Name="idReporte" Type="Int32" Nullable="false" />
+          <Property Name="idReportado" Type="Int32" Nullable="false" />
+          <Property Name="Motivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Fecha_Reporte" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="idReportante" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Reporte_UsuarioReportado" FromRole="Reporte" ToRole="Usuario" />
+          <NavigationProperty Name="Usuario1" Relationship="Self.FK_Reporte_UsuarioReportante" FromRole="Reporte" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="idUsuario" />
+          </Key>
+          <Property Name="idUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre_Usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Contrasena" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Jugador_idJugador" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Amigo" Relationship="Self.FK_Amigo_Usuario" FromRole="Usuario" ToRole="Amigo" />
+          <NavigationProperty Name="Amigo1" Relationship="Self.FK_Amigo_Usuario1" FromRole="Usuario" ToRole="Amigo" />
+          <NavigationProperty Name="Jugador" Relationship="Self.FK_Usuario_Jugador" FromRole="Usuario" ToRole="Jugador" />
+          <NavigationProperty Name="Reporte" Relationship="Self.FK_Reporte_UsuarioReportado" FromRole="Usuario" ToRole="Reporte" />
+          <NavigationProperty Name="Reporte1" Relationship="Self.FK_Reporte_UsuarioReportante" FromRole="Usuario" ToRole="Reporte" />
+        </EntityType>
+        <Association Name="FK_Amigo_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Amigo" Type="Self.Amigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Amigo">
+              <PropertyRef Name="UsuarioEmisor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Amigo_Usuario1">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Amigo" Type="Self.Amigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Amigo">
+              <PropertyRef Name="UsuarioReceptor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Jugador_Clasificacion">
+          <End Role="Clasificacion" Type="Self.Clasificacion" Multiplicity="1" />
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clasificacion">
+              <PropertyRef Name="idClasificacion" />
+            </Principal>
+            <Dependent Role="Jugador">
+              <PropertyRef Name="Clasificacion_idClasificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RedSocial_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="RedSocial" Type="Self.RedSocial" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="RedSocial">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Jugador">
+          <End Role="Jugador" Type="Self.Jugador" Multiplicity="1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jugador">
+              <PropertyRef Name="idJugador" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="Jugador_idJugador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reporte_UsuarioReportado">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Reporte" Type="Self.Reporte" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Reporte">
+              <PropertyRef Name="idReportado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Reporte_UsuarioReportante">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Reporte" Type="Self.Reporte" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="idUsuario" />
+            </Principal>
+            <Dependent Role="Reporte">
+              <PropertyRef Name="idReportante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BaseDatosPruebaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Amigo" EntityType="Self.Amigo" />
+          <EntitySet Name="Clasificacion" EntityType="Self.Clasificacion" />
+          <EntitySet Name="Jugador" EntityType="Self.Jugador" />
+          <EntitySet Name="RedSocial" EntityType="Self.RedSocial" />
+          <EntitySet Name="Reporte" EntityType="Self.Reporte" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+          <AssociationSet Name="FK_Amigo_Usuario" Association="Self.FK_Amigo_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Amigo" EntitySet="Amigo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Amigo_Usuario1" Association="Self.FK_Amigo_Usuario1">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Amigo" EntitySet="Amigo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Jugador_Clasificacion" Association="Self.FK_Jugador_Clasificacion">
+            <End Role="Clasificacion" EntitySet="Clasificacion" />
+            <End Role="Jugador" EntitySet="Jugador" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RedSocial_Jugador" Association="Self.FK_RedSocial_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="RedSocial" EntitySet="RedSocial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Jugador" Association="Self.FK_Usuario_Jugador">
+            <End Role="Jugador" EntitySet="Jugador" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reporte_UsuarioReportado" Association="Self.FK_Reporte_UsuarioReportado">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Reporte" EntitySet="Reporte" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Reporte_UsuarioReportante" Association="Self.FK_Reporte_UsuarioReportante">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Reporte" EntitySet="Reporte" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BaseDatosPruebaModelStoreContainer" CdmEntityContainer="BaseDatosPruebaEntities">
+          <EntitySetMapping Name="Amigo">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Amigo">
+              <MappingFragment StoreEntitySet="Amigo">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="UsuarioEmisor" ColumnName="UsuarioEmisor" />
+                <ScalarProperty Name="UsuarioReceptor" ColumnName="UsuarioReceptor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Clasificacion">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Clasificacion">
+              <MappingFragment StoreEntitySet="Clasificacion">
+                <ScalarProperty Name="idClasificacion" ColumnName="idClasificacion" />
+                <ScalarProperty Name="Puntos_Ganados" ColumnName="Puntos_Ganados" />
+                <ScalarProperty Name="Rondas_Ganadas" ColumnName="Rondas_Ganadas" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jugador">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Jugador">
+              <MappingFragment StoreEntitySet="Jugador">
+                <ScalarProperty Name="idJugador" ColumnName="idJugador" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Apellido" ColumnName="Apellido" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Id_Avatar" ColumnName="Id_Avatar" />
+                <ScalarProperty Name="Clasificacion_idClasificacion" ColumnName="Clasificacion_idClasificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RedSocial">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.RedSocial">
+              <MappingFragment StoreEntitySet="RedSocial">
+                <ScalarProperty Name="idRedSocial" ColumnName="idRedSocial" />
+                <ScalarProperty Name="Jugador_idJugador" ColumnName="Jugador_idJugador" />
+                <ScalarProperty Name="Instagram" ColumnName="Instagram" />
+                <ScalarProperty Name="discord" ColumnName="discord" />
+                <ScalarProperty Name="facebook" ColumnName="facebook" />
+                <ScalarProperty Name="x" ColumnName="x" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reporte">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Reporte">
+              <MappingFragment StoreEntitySet="Reporte">
+                <ScalarProperty Name="idReporte" ColumnName="idReporte" />
+                <ScalarProperty Name="idReportado" ColumnName="idReportado" />
+                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
+                <ScalarProperty Name="Fecha_Reporte" ColumnName="Fecha_Reporte" />
+                <ScalarProperty Name="idReportante" ColumnName="idReportante" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuario">
+            <EntityTypeMapping TypeName="BaseDatosPruebaModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+                <ScalarProperty Name="Nombre_Usuario" ColumnName="Nombre_Usuario" />
+                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+                <ScalarProperty Name="Jugador_idJugador" ColumnName="Jugador_idJugador" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -7,18 +7,20 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PictionaryMusicalServidor.Datos.Modelo
+namespace Datos.Modelo
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Expulsion
+    public partial class Reporte
     {
-        public int idExpulsion { get; set; }
-        public string Causa { get; set; }
-        public System.DateTime Fecha { get; set; }
-        public int Jugador_idJugador { get; set; }
+        public int idReporte { get; set; }
+        public int idReportado { get; set; }
+        public string Motivo { get; set; }
+        public System.DateTime Fecha_Reporte { get; set; }
+        public int idReportante { get; set; }
     
-        public virtual Jugador Jugador { get; set; }
+        public virtual Usuario Usuario { get; set; }
+        public virtual Usuario Usuario1 { get; set; }
     }
 }

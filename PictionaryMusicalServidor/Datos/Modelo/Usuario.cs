@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PictionaryMusicalServidor.Datos.Modelo
+namespace Datos.Modelo
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +19,8 @@ namespace PictionaryMusicalServidor.Datos.Modelo
         {
             this.Amigo = new HashSet<Amigo>();
             this.Amigo1 = new HashSet<Amigo>();
+            this.Reporte = new HashSet<Reporte>();
+            this.Reporte1 = new HashSet<Reporte>();
         }
     
         public int idUsuario { get; set; }
@@ -31,5 +33,9 @@ namespace PictionaryMusicalServidor.Datos.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Amigo> Amigo1 { get; set; }
         public virtual Jugador Jugador { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Reporte> Reporte { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Reporte> Reporte1 { get; set; }
     }
 }
