@@ -72,15 +72,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PruebaCorreoCodigoVerificacionNotificador.cs" />
-    <Compile Include="PruebaCodigoVerificacionGenerador.cs" />
-    <Compile Include="PruebaTokenGenerador.cs" />
-    <Compile Include="PruebaValidadorNombreUsuario.cs" />
-    <Compile Include="PruebaManejadorCallback.cs" />
-    <Compile Include="PruebaSalaInterna.cs" />
-    <Compile Include="PruebaNotificadorSalas.cs" />
-    <Compile Include="PruebaAmistadServicio.cs" />
-    <Compile Include="PruebaAmigosManejador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
