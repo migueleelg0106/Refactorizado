@@ -16,6 +16,7 @@ using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
+using log4net;
 
 namespace PictionaryMusicalCliente.Vista
 {
@@ -24,6 +25,9 @@ namespace PictionaryMusicalCliente.Vista
     /// </summary>
     public partial class Sala : Window
     {
+        private static readonly ILog _logger = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly SalaVistaModelo _vistaModelo;
         private readonly IAvisoServicio _avisoServicio;
         private readonly ISalasServicio _salaServicio;
@@ -45,8 +49,8 @@ namespace PictionaryMusicalCliente.Vista
         private bool _navegacionEjecutada;
 
         /// <summary>
-        /// Constructor por defecto, solo para uso del diseñador/XAML. 
-        /// La aplicación debe usar el constructor que recibe dependencias.
+        /// Constructor por defecto, solo para uso del diseï¿½ador/XAML. 
+        /// La aplicaciï¿½n debe usar el constructor que recibe dependencias.
         /// </summary>
         public Sala()
         {
@@ -396,19 +400,24 @@ namespace PictionaryMusicalCliente.Vista
             }
 
             _navegacionEjecutada = true;
+            _logger.InfoFormat("EjecutarNavegacion - Destino: {0}", destino);
 
             bool requiereInicioSesion =
                 destino == SalaVistaModelo.DestinoNavegacion.InicioSesion ||
                 !_usuarioSesion.EstaAutenticado;
 
+            _logger.InfoFormat("EjecutarNavegacion - requiereInicioSesion: {0}", requiereInicioSesion);
+
             if (requiereInicioSesion)
             {
+                _logger.Info("EjecutarNavegacion - Invocando _navegarInicioSesion");
                 _usuarioSesion.Limpiar();
                 _navegarInicioSesion?.Invoke();
             }
 
             if (!requiereInicioSesion)
             {
+                _logger.Info("EjecutarNavegacion - Invocando _navegarMenuPrincipal");
                 _navegarMenuPrincipal?.Invoke();
             }
 

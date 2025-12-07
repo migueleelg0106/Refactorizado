@@ -7,6 +7,7 @@ using PictionaryMusicalCliente.VistaModelo.Perfil;
 using PictionaryMusicalCliente.VistaModelo.VentanaPrincipal;
 using System;
 using System.Windows;
+using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.Vista
@@ -16,6 +17,9 @@ namespace PictionaryMusicalCliente.Vista
     /// </summary>
     public partial class VentanaPrincipal : Window
     {
+        private static readonly ILog _logger = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IMusicaManejador _musica;
         private readonly IListaAmigosServicio _listaAmigos;
         private readonly IAmigosServicio _amigos;
@@ -126,6 +130,12 @@ namespace PictionaryMusicalCliente.Vista
             _navegarInicioSesion = navegarInicioSesion ??
                 throw new ArgumentNullException(nameof(navegarInicioSesion));
 
+            _logger.InfoFormat("VentanaPrincipal constructor - _musica es null: {0}", _musica == null);
+            if (_musica != null)
+            {
+                _logger.InfoFormat("VentanaPrincipal constructor - Tipo de _musica: {0}", _musica.GetType().FullName);
+            }
+
             _musica.ReproducirEnBucle("ventana_principal_musica.mp3");
 
             _vistaModelo = new VentanaPrincipalVistaModelo(
@@ -218,11 +228,18 @@ namespace PictionaryMusicalCliente.Vista
 
         private void MostrarVentanaJuego(DTOs.SalaDTO sala)
         {
+            _logger.InfoFormat("MostrarVentanaJuego - Deteniendo musica, _musica es null: {0}", _musica == null);
             _musica.Detener();
             _abrioVentanaJuego = true;
 
             Action irMenu = () =>
             {
+                _logger.InfoFormat("irMenu action - Creando nueva VentanaPrincipal, _musica es null: {0}", _musica == null);
+                if (_musica != null)
+                {
+                    _logger.InfoFormat("irMenu action - Tipo de _musica: {0}", _musica.GetType().FullName);
+                }
+
                 var nuevaPrincipal = new VentanaPrincipal(
                     _musica, _listaAmigos, _amigos, _salas,
                     _idioma, _aviso, _perfilServicio, _cambioPass,
@@ -237,6 +254,7 @@ namespace PictionaryMusicalCliente.Vista
 
             Action irInicioSesion = () =>
             {
+                _logger.InfoFormat("irInicioSesion action - Navegando a inicio sesion, _musica es null: {0}", _musica == null);
                 NavegarAInicioSesion();
             };
 

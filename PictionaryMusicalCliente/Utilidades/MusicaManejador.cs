@@ -85,6 +85,10 @@ namespace PictionaryMusicalCliente.ClienteServicios
         /// <param name="nombreArchivo">Nombre del archivo en la carpeta Recursos.</param>
         public void ReproducirEnBucle(string nombreArchivo)
         {
+            _logger.InfoFormat("ReproducirEnBucle llamado con archivo: {0}", nombreArchivo ?? "null");
+            _logger.InfoFormat("Estado antes de reproducir - EstaReproduciendo: {0}, EstaSilenciado: {1}, Volumen: {2}", 
+                EstaReproduciendo, EstaSilenciado, Volumen);
+
             if (string.IsNullOrWhiteSpace(nombreArchivo))
             {
                 _logger.Warn("Intento de reproducir musica con nombre vacio.");
@@ -96,6 +100,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
             try
             {
                 var uri = new Uri($"Recursos/{nombreArchivo}", UriKind.Relative);
+                _logger.InfoFormat("Abriendo archivo de musica: {0}", uri);
                 _reproductor.Open(uri);
             }
             catch (Exception ex)
@@ -133,6 +138,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         /// </summary>
         public void Detener()
         {
+            _logger.InfoFormat("Detener() llamado - EstaReproduciendo antes de detener: {0}", EstaReproduciendo);
             DetenerReproduccionActual();
         }
 
@@ -180,6 +186,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         {
             if (EstaReproduciendo)
             {
+                _logger.Info("Deteniendo reproduccion actual");
                 _reproductor.Stop();
                 EstaReproduciendo = false;
             }
@@ -187,6 +194,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
         private void EnMedioAbierto(object sender, EventArgs e)
         {
+            _logger.Info("EnMedioAbierto - Archivo cargado exitosamente, iniciando reproduccion");
             _reproductor.Play();
             EstaReproduciendo = true;
         }
@@ -194,7 +202,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         private void EnMedioFallido(object sender, ExceptionEventArgs e)
         {
             EstaReproduciendo = false;
-            _logger.ErrorFormat("Fallo crítico en reproducción de medio", e.ErrorException);
+            _logger.ErrorFormat("Fallo crítico en reproducción de medio: {0}", e.ErrorException);
         }
 
         private static double ObtenerVolumenGuardado()

@@ -13,6 +13,7 @@ using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using log4net;
 
 namespace PictionaryMusicalCliente.Vista
 {
@@ -21,6 +22,9 @@ namespace PictionaryMusicalCliente.Vista
     /// </summary>
     public partial class InicioSesion : Window
     {
+        private static readonly ILog _logger = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IMusicaManejador _musica;
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly ISonidoManejador _sonidos;
@@ -131,6 +135,12 @@ namespace PictionaryMusicalCliente.Vista
                 throw new ArgumentNullException(nameof(inicioSesion));
             _fabricaSalas = fabricaSalas ??
                 throw new ArgumentNullException(nameof(fabricaSalas));
+
+            _logger.InfoFormat("InicioSesion constructor - _musica es null: {0}", _musica == null);
+            if (_musica != null)
+            {
+                _logger.InfoFormat("InicioSesion constructor - Tipo de _musica: {0}", _musica.GetType().FullName);
+            }
 
             _musica.ReproducirEnBucle("inicio_sesion_musica.mp3");
 
@@ -253,6 +263,7 @@ namespace PictionaryMusicalCliente.Vista
             string nombre,
             bool esInvitado)
         {
+            _logger.InfoFormat("NavegarAVentanaJuego - Deteniendo musica, _musica es null: {0}", _musica == null);
             _musica.Detener();
 
             var cancionManejador = new CancionManejador();
@@ -261,6 +272,11 @@ namespace PictionaryMusicalCliente.Vista
 
             Action irInicioSesion = () =>
             {
+                _logger.InfoFormat("irInicioSesion action (invitado) - _musica es null: {0}", _musica == null);
+                if (_musica != null)
+                {
+                    _logger.InfoFormat("irInicioSesion action (invitado) - Tipo de _musica: {0}", _musica.GetType().FullName);
+                }
                 _usuarioSesion.Limpiar();
                 CrearVentanaInicioSesion();
             };
