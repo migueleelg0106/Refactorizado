@@ -99,6 +99,11 @@ namespace PictionaryMusicalCliente.ClienteServicios
 
             try
             {
+                // Cerrar completamente el reproductor antes de abrir un nuevo archivo
+                // para asegurar que el evento MediaOpened se dispare correctamente
+                _reproductor.Close();
+                _logger.Info("Reproductor cerrado, abriendo nuevo archivo");
+
                 var uri = new Uri($"Recursos/{nombreArchivo}", UriKind.Relative);
                 _logger.InfoFormat("Abriendo archivo de musica: {0}", uri);
                 _reproductor.Open(uri);
