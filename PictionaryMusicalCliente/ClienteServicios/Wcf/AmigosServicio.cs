@@ -1,6 +1,6 @@
 ﻿using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Administrador;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
@@ -18,15 +18,27 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         PictionaryServidorServicioAmigos.IAmigosManejadorCallback
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(AmigosServicio));
-        private const string NombreEndpoint = "NetTcpBinding_IAmigosManejador";
-
         private readonly SemaphoreSlim _semaforo = new(1, 1);
-        private readonly object _solicitudesBloqueo = new();
-        private readonly List<DTOs.SolicitudAmistadDTO> _solicitudes = new();
+        private readonly IWcfClienteFabrica _fabricaClientes; 
+        private readonly ISolicitudesAmistadAdministrador _administradorSolicitudes;
+        private readonly IManejadorErrorServicio _manejadorError;
 
         private PictionaryServidorServicioAmigos.AmigosManejadorClient _cliente;
         private string _usuarioSuscrito;
         private bool _recursosLiberados;
+
+        public AmigosServicio(
+            ISolicitudesAmistadAdministrador administradorSolicitudes,
+            IManejadorErrorServicio manejadorError, 
+            IWcfClienteFabrica fabricaClientes)
+        {
+            _administradorSolicitudes = administradorSolicitudes ??
+                throw new ArgumentNullException(nameof(administradorSolicitudes));
+            _manejadorError = manejadorError ??
+                throw new ArgumentNullException(nameof(manejadorError));
+            _fabricaClientes = fabricaClientes ??
+                throw new ArgumentNullException(nameof(fabricaClientes));
+        }
 
         /// <summary>
         /// Evento disparado al recibir cambios desde el servidor.
@@ -41,12 +53,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         {
             get
             {
-                lock (_solicitudesBloqueo)
-                {
-                    return _solicitudes.Count == 0
-                        ? Array.Empty<DTOs.SolicitudAmistadDTO>()
-                        : _solicitudes.ToArray();
-                }
+                return _administradorSolicitudes.ObtenerSolicitudes();
             }
         }
 
@@ -55,52 +62,16 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public async Task SuscribirAsync(string nombreUsuario)
         {
-            if (string.IsNullOrWhiteSpace(nombreUsuario))
-            {
-                throw new ArgumentException(
-                    "El nombre de usuario es obligatorio.",
-                    nameof(nombreUsuario));
-            }
+            ValidarNombreUsuario(nombreUsuario);
 
-            await _semaforo.WaitAsync().ConfigureAwait(false);
-
-            try
+            await EjecutarEnSeccionCriticaAsync(async () =>
             {
-                if (string.Equals(
-                    _usuarioSuscrito,
-                    nombreUsuario,
-                    StringComparison.OrdinalIgnoreCase) && _cliente != null)
+                if (EsSuscripcionActual(nombreUsuario))
                 {
                     return;
                 }
-
-                await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
-
-                LimpiarSolicitudes();
-                var cliente = CrearCliente();
-                _usuarioSuscrito = nombreUsuario;
-
-                try
-                {
-                    await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
-                    _cliente = cliente;
-                    NotificarSolicitudesActualizadas();
-                    _logger.InfoFormat("Suscripción a servicio de amigos exitosa para: {0}", 
-                        nombreUsuario);
-                }
-                catch (Exception ex) when (EsExcepcionDeServicio(ex))
-                {
-                    _logger.ErrorFormat("Fallo al suscribir a servicio de amigos para: {0}",
-                        nombreUsuario, ex);
-                    _usuarioSuscrito = null;
-                    cliente.Abort();
-                    ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
-                }
-            }
-            finally
-            {
-                _semaforo.Release();
-            }
+                await SuscribirNuevoClienteAsync(nombreUsuario);
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -113,81 +84,41 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 return;
             }
 
-            await _semaforo.WaitAsync().ConfigureAwait(false);
-
-            try
+            await EjecutarEnSeccionCriticaAsync(async () =>
             {
-                if (_cliente == null || !string.Equals(
-                    _usuarioSuscrito,
-                    nombreUsuario,
-                    StringComparison.OrdinalIgnoreCase))
+                if (CoincideUsuarioSuscrito(nombreUsuario))
                 {
-                    return;
+                    await CancelarSuscripcionInternaAsync();
                 }
+            }).ConfigureAwait(false);
 
-                await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
-                _logger.InfoFormat("Suscripción a servicio de amigos cancelada para: {0}", 
-                    nombreUsuario);
-            }
-            finally
-            {
-                _semaforo.Release();
-            }
         }
 
         /// <summary>
         /// Envia una nueva peticion de amistad al servidor.
         /// </summary>
-        public Task EnviarSolicitudAsync(
-            string nombreUsuarioEmisor,
-            string nombreUsuarioReceptor) => EjecutarOperacionAsync(
-                c => c.EnviarSolicitudAmistadAsync(nombreUsuarioEmisor, nombreUsuarioReceptor));
+        public Task EnviarSolicitudAsync(string emisor, string receptor) =>
+            EjecutarOperacionAsync(c => c.EnviarSolicitudAmistadAsync(emisor, receptor));
 
         /// <summary>
         /// Responde a una peticion existente (aceptar/rechazar).
         /// </summary>
-        public Task ResponderSolicitudAsync(
-            string nombreUsuarioEmisor,
-            string nombreUsuarioReceptor) => EjecutarOperacionAsync(
-                c => c.ResponderSolicitudAmistadAsync(nombreUsuarioEmisor, nombreUsuarioReceptor));
+        public Task ResponderSolicitudAsync(string emisor, string receptor) =>
+            EjecutarOperacionAsync(c => c.ResponderSolicitudAmistadAsync(emisor, receptor));
 
         /// <summary>
         /// Elimina a un amigo de la lista de contactos.
         /// </summary>
-        public Task EliminarAmigoAsync(
-            string nombreUsuarioA,
-            string nombreUsuarioB) => EjecutarOperacionAsync(
-                c => c.EliminarAmigoAsync(nombreUsuarioA, nombreUsuarioB));
+        public Task EliminarAmigoAsync(string usuarioA, string usuarioB) =>
+            EjecutarOperacionAsync(c => c.EliminarAmigoAsync(usuarioA, usuarioB));
 
         /// <summary>
         /// Callback del servidor: Notifica que una solicitud cambio de estado.
         /// </summary>
         public void NotificarSolicitudActualizada(DTOs.SolicitudAmistadDTO solicitud)
         {
-            if (solicitud == null ||
-                string.IsNullOrWhiteSpace(solicitud.UsuarioEmisor) ||
-                string.IsNullOrWhiteSpace(solicitud.UsuarioReceptor))
-            {
-                return;
-            }
-
-            _logger.InfoFormat("Callback recibido: Solicitud actualizada entre {0} y {1}.",
-                solicitud.UsuarioEmisor,
-                solicitud.UsuarioReceptor);
-
-            string usuarioActual = _usuarioSuscrito;
-
-            if (string.IsNullOrWhiteSpace(usuarioActual))
-            {
-                return;
-            }
-
-            bool modificada = ActualizarSolicitudInterna(solicitud, usuarioActual);
-
-            if (modificada)
-            {
-                NotificarSolicitudesActualizadas();
-            }
+            ProcesarNotificacion(solicitud, (solicita, usuario) => 
+                _administradorSolicitudes.ActualizarSolicitud(solicita, usuario));
         }
 
         /// <summary>
@@ -195,39 +126,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarAmistadEliminada(DTOs.SolicitudAmistadDTO solicitud)
         {
-            if (solicitud == null)
-            {
-                return;
-            }
-
-            _logger.InfoFormat("Callback recibido: Amistad eliminada entre {0} y {1}.", 
-                solicitud.UsuarioEmisor, solicitud.UsuarioReceptor);
-
-            string usuarioActual = _usuarioSuscrito;
-            if (string.IsNullOrWhiteSpace(usuarioActual))
-            {
-                return;
-            }
-
-            bool modificada = false;
-
-            lock (_solicitudesBloqueo)
-            {
-                int indice = _solicitudes.FindIndex(s =>
-                    s.UsuarioEmisor == solicitud.UsuarioEmisor &&
-                    s.UsuarioReceptor == usuarioActual);
-
-                if (indice >= 0)
-                {
-                    _solicitudes.RemoveAt(indice);
-                    modificada = true;
-                }
-            }
-
-            if (modificada)
-            {
-                NotificarSolicitudesActualizadas();
-            }
+            ProcesarNotificacion(solicitud, (solicita, usuario) =>
+                _administradorSolicitudes.EliminaAmistadParaUsuario(solicita, usuario));
         }
 
         /// <summary>
@@ -235,28 +135,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         protected virtual void Dispose(bool liberando)
         {
-            if (!_recursosLiberados)
+            if (_recursosLiberados) return;
+
+            if (liberando)
             {
-                if (liberando)
-                {
-                    try
-                    {
-                        CerrarCliente(_cliente);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Warn("Error al cerrar cliente de amigos durante Dispose.", ex);
-                    }
-
-                    _cliente = null;
-                    _usuarioSuscrito = null;
-                    LimpiarSolicitudes();
-
-                    _semaforo?.Dispose();
-                }
-
-                _recursosLiberados = true;
+                CerrarClienteSeguro(_cliente);
+                LimpiarEstadoLocal();
+                _semaforo?.Dispose();
             }
+            _recursosLiberados = true;
         }
 
         /// <summary>
@@ -268,40 +155,32 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             GC.SuppressFinalize(this);
         }
 
+        private void ProcesarNotificacion(
+            DTOs.SolicitudAmistadDTO solicitud,
+            Func<DTOs.SolicitudAmistadDTO, string, bool> accionActualizacion)
+        {
+            if (!EsSolicitudValida(solicitud)) return;
+
+            string usuarioActual = _usuarioSuscrito;
+            if (string.IsNullOrWhiteSpace(usuarioActual)) return;
+
+            bool modificada = accionActualizacion(solicitud, usuarioActual);
+            if (modificada)
+            {
+                NotificarSolicitudesActualizadas();
+            }
+        }
+
         private async Task EjecutarOperacionAsync(
             Func<PictionaryServidorServicioAmigos.AmigosManejadorClient, Task> operacion)
         {
-            if (operacion == null)
-            {
-                throw new ArgumentNullException(nameof(operacion));
-            }
-
-            PictionaryServidorServicioAmigos.AmigosManejadorClient cliente = null;
-            bool esTemporal = false;
-
             await _semaforo.WaitAsync().ConfigureAwait(false);
-
             try
             {
-                cliente = _cliente ?? CrearCliente();
-                esTemporal = (_cliente == null);
+                var cliente = _cliente ?? CrearCliente();
+                bool esTemporal = (_cliente == null);
 
-                try
-                {
-                    await operacion(cliente).ConfigureAwait(false);
-                    if (esTemporal)
-                    {
-                        CerrarCliente(cliente);
-                    }
-                }
-                catch (Exception ex) when (EsExcepcionDeServicio(ex))
-                {
-                    _logger.Error("Error al ejecutar operación en servicio de amigos.", ex);
-                    await ManejarExcepcionOperacionAsync(
-                        ex,
-                        cliente,
-                        esTemporal).ConfigureAwait(false);
-                }
+                await EjecutarLogicaClienteAsync(cliente, operacion, esTemporal);
             }
             finally
             {
@@ -309,116 +188,97 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private async Task ReiniciarClienteConSuscripcionAsync()
+        private async Task EjecutarLogicaClienteAsync(
+            PictionaryServidorServicioAmigos.AmigosManejadorClient cliente,
+            Func<PictionaryServidorServicioAmigos.AmigosManejadorClient, Task> operacion,
+            bool esTemporal)
         {
-            string usuario = _usuarioSuscrito;
-            if (string.IsNullOrWhiteSpace(usuario))
-            {
-                return;
-            }
-
-            await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
-
             try
             {
-                await SuscribirAsync(usuario).ConfigureAwait(false);
+                await operacion(cliente).ConfigureAwait(false);
+                if (esTemporal) CerrarClienteSeguro(cliente);
             }
             catch (Exception ex)
             {
-                _logger.Error("Fallo al intentar reconectar suscripción de amigos.", ex);
+                await ManejarErrorOperacionAsync(ex, cliente, esTemporal);
             }
         }
 
-        private bool ActualizarSolicitudInterna(
-            DTOs.SolicitudAmistadDTO solicitud,
-            string usuarioActual)
-        {
-            lock (_solicitudesBloqueo)
-            {
-                int indice = _solicitudes.FindIndex(s =>
-                    s.UsuarioEmisor == solicitud.UsuarioEmisor &&
-                    s.UsuarioReceptor == usuarioActual);
-
-                if (solicitud.SolicitudAceptada)
-                {
-                    if (indice >= 0)
-                    {
-                        _solicitudes.RemoveAt(indice);
-                        return true;
-                    }
-                }
-                else if (string.Equals(
-                    solicitud.UsuarioReceptor,
-                    usuarioActual,
-                    StringComparison.OrdinalIgnoreCase))
-                {
-                    if (indice >= 0)
-                    {
-                        _solicitudes[indice] = solicitud;
-                    }
-                    else
-                    {
-                        _solicitudes.Add(solicitud);
-                    }
-
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private async Task ManejarExcepcionOperacionAsync(
+        private async Task ManejarErrorOperacionAsync(
             Exception ex,
             ICommunicationObject cliente,
             bool esTemporal)
         {
-            bool esErrorComunicacion = !(ex is FaultException);
-
             if (esTemporal)
             {
                 cliente.Abort();
             }
-            else if (esErrorComunicacion)
+            else if (EsErrorComunicacion(ex))
             {
-                _logger.Warn("Detectado error de comunicación en canal permanente. " +
-                    "Intentando reconexión.");
-                await ReiniciarClienteConSuscripcionAsync().ConfigureAwait(false);
+                _logger.Warn("Error comunicacion permanente. Intentando reconexion.");
+                await IntentarReconexionAsync();
             }
-            ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+
+            LanzarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
         }
 
-        private static bool EsExcepcionDeServicio(Exception ex)
+        private async Task IntentarReconexionAsync()
         {
-            return ex is FaultException ||
-                   ex is EndpointNotFoundException ||
-                   ex is TimeoutException ||
-                   ex is CommunicationException ||
-                   ex is InvalidOperationException ||
-                   ex is OperationCanceledException;
+            string usuario = _usuarioSuscrito;
+            if (string.IsNullOrWhiteSpace(usuario)) return;
+
+            await CancelarSuscripcionInternaAsync();
+
+            try
+            {
+                await SuscribirNuevoClienteAsync(usuario);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Fallo critico al reconectar suscripcion.", ex);
+            }
         }
 
-        private PictionaryServidorServicioAmigos.AmigosManejadorClient CrearCliente()
+        private async Task SuscribirNuevoClienteAsync(string nombreUsuario)
         {
-            var contexto = new InstanceContext(this);
-            return new PictionaryServidorServicioAmigos.AmigosManejadorClient(
-                contexto,
-                NombreEndpoint);
+            await CancelarSuscripcionInternaAsync();
+            LimpiarEstadoLocal();
+
+            var cliente = CrearCliente();
+            _cliente = cliente;
+            _usuarioSuscrito = nombreUsuario;
+
+            try
+            {
+                await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
+                NotificarSolicitudesActualizadas();
+            }
+            catch (Exception ex)
+            {
+                cliente.Abort();
+                LimpiarEstadoLocal();
+                LanzarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+            }
         }
 
         private async Task CancelarSuscripcionInternaAsync()
         {
             var cliente = _cliente;
             var usuario = _usuarioSuscrito;
-            _cliente = null;
-            _usuarioSuscrito = null;
 
-            if (cliente == null)
+            LimpiarEstadoLocal();
+
+            if (cliente != null)
             {
-                LimpiarSolicitudes();
-                NotificarSolicitudesActualizadas();
-                return;
+                await IntentarCancelarEnServidorAsync(cliente, usuario);
+                CerrarClienteSeguro(cliente);
             }
+        }
 
+        private static async Task IntentarCancelarEnServidorAsync(
+            PictionaryServidorServicioAmigos.AmigosManejadorClient cliente,
+            string usuario)
+        {
             try
             {
                 if (!string.IsNullOrWhiteSpace(usuario) &&
@@ -426,104 +286,114 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 {
                     await cliente.CancelarSuscripcionAsync(usuario).ConfigureAwait(false);
                 }
-                CerrarCliente(cliente);
             }
-            catch (Exception ex) when (EsExcepcionDeServicio(ex))
+            catch (Exception ex)
             {
-                _logger.Warn("Excepción al cancelar suscripción interna de amigos.", ex);
+                _logger.Warn("No se pudo cancelar suscripcion en servidor.", ex);
+            }
+        }
+
+        private void LanzarExcepcionServicio(Exception ex, string mensajeDefault)
+        {
+            if (ex is FaultException fault)
+            {
+                string mensaje = _manejadorError.ObtenerMensaje(fault, mensajeDefault);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+            }
+
+            if (ex is TimeoutException)
+            {
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.TiempoAgotado,
+                    Lang.errorTextoServidorTiempoAgotado,
+                    ex);
+            }
+
+            if (EsErrorComunicacion(ex))
+            {
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
+            }
+
+            throw new ServicioExcepcion(TipoErrorServicio.Desconocido, mensajeDefault, ex);
+        }
+
+        private static bool EsErrorComunicacion(Exception ex)
+        {
+            return ex is CommunicationException || ex is EndpointNotFoundException;
+        }
+
+        private void LimpiarEstadoLocal()
+        {
+            _cliente = null;
+            _usuarioSuscrito = null;
+            _administradorSolicitudes.LimpiarSolicitudes();
+            NotificarSolicitudesActualizadas();
+        }
+
+        private static void CerrarClienteSeguro(ICommunicationObject cliente)
+        {
+            if (cliente == null) return;
+            try
+            {
+                if (cliente.State == CommunicationState.Opened) cliente.Close();
+                else cliente.Abort();
+            }
+            catch (Exception)
+            {
                 cliente.Abort();
+            }
+        }
+
+        private PictionaryServidorServicioAmigos.AmigosManejadorClient CrearCliente()
+        {
+            var contexto = new InstanceContext(this);
+            return (PictionaryServidorServicioAmigos.AmigosManejadorClient)
+                   _fabricaClientes.CrearClienteAmigos(contexto);
+        }
+
+        private async Task EjecutarEnSeccionCriticaAsync(Func<Task> accion)
+        {
+            await _semaforo.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                await accion().ConfigureAwait(false);
             }
             finally
             {
-                LimpiarSolicitudes();
-                NotificarSolicitudesActualizadas();
-            }
-        }
-
-        private static void CerrarCliente(
-            PictionaryServidorServicioAmigos.AmigosManejadorClient cliente)
-        {
-            if (cliente == null)
-            {
-                return;
-            }
-
-            try
-            {
-                if (cliente.State != CommunicationState.Faulted)
-                {
-                    cliente.Close();
-                }
-                else
-                {
-                    cliente.Abort();
-                }
-            }
-            catch (CommunicationException ex)
-            {
-                _logger.Warn("Excepción de comunicación al cerrar cliente de amigos.", ex);
-                cliente.Abort();
-            }
-            catch (TimeoutException ex)
-            {
-                _logger.Warn("Timeout al cerrar cliente de amigos.", ex);
-                cliente.Abort();
-            }
-        }
-
-        private static void ManejarExcepcionServicio(Exception ex, string mensajePredeterminado)
-        {
-            switch (ex)
-            {
-                case FaultException faultEx:
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.FallaServicio,
-                        ErrorServicioAyudante.ObtenerMensaje(faultEx, mensajePredeterminado),
-                        ex);
-                case EndpointNotFoundException _:
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                case TimeoutException _:
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.TiempoAgotado,
-                        Lang.errorTextoServidorTiempoAgotado,
-                        ex);
-                case CommunicationException _:
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                case InvalidOperationException _:
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.OperacionInvalida,
-                        Lang.errorTextoErrorProcesarSolicitud,
-                        ex);
-                default:
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Desconocido,
-                        mensajePredeterminado,
-                        ex);
-            }
-        }
-
-        private void LimpiarSolicitudes()
-        {
-            lock (_solicitudesBloqueo)
-            {
-                _solicitudes.Clear();
+                _semaforo.Release();
             }
         }
 
         private void NotificarSolicitudesActualizadas()
         {
-            IReadOnlyCollection<DTOs.SolicitudAmistadDTO> instantaneo;
-            lock (_solicitudesBloqueo)
-            {
-                instantaneo = _solicitudes.ToArray();
-            }
-            SolicitudesActualizadas?.Invoke(this, instantaneo);
+            SolicitudesActualizadas?.Invoke(this, _administradorSolicitudes.ObtenerSolicitudes());
+        }
+
+        private bool EsSuscripcionActual(string usuario)
+        {
+            return string.Equals(_usuarioSuscrito, usuario, StringComparison.OrdinalIgnoreCase)
+                   && _cliente != null;
+        }
+
+        private bool CoincideUsuarioSuscrito(string usuario)
+        {
+            return string.Equals(_usuarioSuscrito, usuario, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static void ValidarNombreUsuario(string nombre)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                throw new ArgumentException("Usuario obligatorio.", nameof(nombre));
+        }
+
+        private static bool EsSolicitudValida(DTOs.SolicitudAmistadDTO s)
+        {
+            return s != null &&
+                   !string.IsNullOrWhiteSpace(s.UsuarioEmisor) &&
+                   !string.IsNullOrWhiteSpace(s.UsuarioReceptor);
         }
     }
 }

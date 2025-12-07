@@ -1,9 +1,9 @@
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using System;
 using System.Windows.Input;
 using log4net;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
@@ -14,6 +14,31 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ISonidoManejador _sonidoManejador;
+
+        public EliminacionAmigoVistaModelo(ISonidoManejador sonidoManejador,
+            string nombreAmigo)
+        {
+            _sonidoManejador = sonidoManejador ??
+                throw new ArgumentNullException(nameof(sonidoManejador));
+            MensajeConfirmacion = string.IsNullOrWhiteSpace(nombreAmigo)
+                ? Lang.eliminarAmigoTextoConfirmacion
+                : string.Concat(Lang.eliminarAmigoTextoConfirmacion, nombreAmigo, "?");
+            AceptarComando = new ComandoDelegado(_ =>
+            {
+                _sonidoManejador.ReproducirClick();
+                _logger.InfoFormat("Usuario confirmó la eliminación del amigo: {0}",
+                    nombreAmigo);
+                Cerrar?.Invoke(true);
+            });
+            CancelarComando = new ComandoDelegado(_ =>
+            {
+                _sonidoManejador.ReproducirClick();
+                _logger.InfoFormat("Usuario canceló la eliminación del amigo: {0}",
+                    nombreAmigo);
+                Cerrar?.Invoke(false);
+            });
+        }
 
         /// <summary>
         /// Inicializa el ViewModel construyendo el mensaje de confirmacion.
@@ -27,7 +52,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             AceptarComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 _logger.InfoFormat("Usuario confirmó la eliminación del amigo: {0}",
                     nombreAmigo);
                 Cerrar?.Invoke(true);
@@ -35,7 +60,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             CancelarComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 _logger.InfoFormat("Usuario canceló la eliminación del amigo: {0}",
                     nombreAmigo);
                 Cerrar?.Invoke(false);

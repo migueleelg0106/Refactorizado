@@ -8,7 +8,7 @@ namespace PictionaryMusicalCliente.Modelo.Catalogos
     /// <summary>
     /// Provee acceso centralizado a los recursos de imagen estaticos utilizados en el perfil.
     /// </summary>
-    public static class CatalogoImagenesPerfilLocales
+    public class CatalogoImagenesPerfilLocales : ICatalogoImagenesPerfil
     {
         private static readonly IReadOnlyDictionary<string, ImageSource> IconosRedesSociales =
             new Dictionary<string, ImageSource>(StringComparer.OrdinalIgnoreCase)
@@ -24,7 +24,7 @@ namespace PictionaryMusicalCliente.Modelo.Catalogos
         /// </summary>
         /// <param name="nombre">Nombre clave de la red social.</param>
         /// <returns>El recurso grafico correspondiente o null si no existe.</returns>
-        public static ImageSource ObtenerIconoRedSocial(string nombre)
+        public ImageSource ObtenerIconoRedSocial(string nombre)
         {
             if (string.IsNullOrWhiteSpace(nombre))
             {

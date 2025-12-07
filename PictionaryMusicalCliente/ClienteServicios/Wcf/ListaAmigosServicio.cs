@@ -1,13 +1,12 @@
-using PictionaryMusicalCliente.Properties.Langs;
+using log4net;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
+using PictionaryMusicalCliente.Properties.Langs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
-using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
@@ -19,14 +18,26 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         PictionaryServidorServicioListaAmigos.IListaAmigosManejadorCallback
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ListaAmigosServicio));
-        private const string Endpoint = "NetTcpBinding_IListaAmigosManejador";
-
+        private readonly IWcfClienteFabrica _fabricaClientes;
         private readonly SemaphoreSlim _semaforo = new(1, 1);
         private readonly object _amigosBloqueo = new();
         private readonly List<DTOs.AmigoDTO> _amigos = new();
+        private readonly IManejadorErrorServicio _manejadorError;
 
         private PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient _cliente;
         private string _usuarioSuscrito;
+
+        /// <summary>
+        /// Inicializa el servicio de lista de amigos.
+        /// </summary>
+        public ListaAmigosServicio(IManejadorErrorServicio manejadorError,
+            IWcfClienteFabrica fabricaClientes)
+        {
+            _manejadorError = manejadorError ??
+                throw new ArgumentNullException(nameof(manejadorError));
+            _fabricaClientes = fabricaClientes ??
+                throw new ArgumentNullException(nameof(fabricaClientes));
+        }
 
         /// <summary>
         /// Evento que se dispara cuando la lista de amigos cambia en el servidor.
@@ -55,82 +66,24 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         public async Task SuscribirAsync(string nombreUsuario)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
-            {
-                throw new ArgumentException(
-                    "El nombre de usuario es obligatorio.",
-                    nameof(nombreUsuario));
-            }
+                throw new ArgumentException("Usuario obligatorio.", nameof(nombreUsuario));
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
-
             try
             {
-                if (string.Equals(
-                    _usuarioSuscrito,
-                    nombreUsuario,
-                    StringComparison.OrdinalIgnoreCase) && _cliente != null)
-                {
-                    return;
-                }
+                if (EsSuscripcionActiva(nombreUsuario)) return;
 
-                await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
+                await CancelarSuscripcionInternaAsync();
 
                 var cliente = CrearCliente();
+                await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
 
-                try
-                {
-                    await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
-                    _cliente = cliente;
-                    _usuarioSuscrito = nombreUsuario;
-                    _logger.InfoFormat("Usuario '{0}' suscrito a la lista de amigos.", 
-                        nombreUsuario);
-                }
-                catch (FaultException ex)
-                {
-                    _logger.Warn("Error de lógica del servidor al suscribir a lista de amigos.",
-                        ex);
-                    cliente.Abort();
-                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(
-                        ex,
-                        Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
-                }
-                catch (EndpointNotFoundException ex)
-                {
-                    _logger.Error("Endpoint de lista de amigos no encontrado.", ex);
-                    cliente.Abort();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
-                catch (TimeoutException ex)
-                {
-                    _logger.Error("Timeout al suscribir a lista de amigos.", ex);
-                    cliente.Abort();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.TiempoAgotado,
-                        Lang.errorTextoServidorTiempoAgotado,
-                        ex);
-                }
-                catch (CommunicationException ex)
-                {
-                    _logger.Error("Error de comunicación al suscribir a lista de amigos.", ex);
-                    cliente.Abort();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    _logger.Error("Operación inválida al suscribir a lista de amigos.", ex);
-                    cliente.Abort();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.OperacionInvalida,
-                        Lang.errorTextoErrorProcesarSolicitud,
-                        ex);
-                }
+                _cliente = cliente;
+                _usuarioSuscrito = nombreUsuario;
+            }
+            catch (Exception ex)
+            {
+                ManejarErrorSuscripcion(ex);
             }
             finally
             {
@@ -143,31 +96,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public async Task CancelarSuscripcionAsync(string nombreUsuario)
         {
-            if (string.IsNullOrWhiteSpace(nombreUsuario))
-            {
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(nombreUsuario)) return;
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
-
             try
             {
-                if (_cliente == null)
+                if (EsSuscripcionActiva(nombreUsuario))
                 {
-                    return;
+                    await CancelarSuscripcionInternaAsync();
                 }
-
-                if (!string.Equals(
-                    _usuarioSuscrito,
-                    nombreUsuario,
-                    StringComparison.OrdinalIgnoreCase))
-                {
-                    return;
-                }
-
-                await CancelarSuscripcionInternaAsync().ConfigureAwait(false);
-                _logger.InfoFormat("Suscripción a lista de amigos cancelada para: {0}", 
-                    nombreUsuario);
             }
             finally
             {
@@ -181,41 +118,27 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         public async Task<IReadOnlyList<DTOs.AmigoDTO>> ObtenerAmigosAsync(string nombreUsuario)
         {
             if (string.IsNullOrWhiteSpace(nombreUsuario))
-            {
-                throw new ArgumentException(
-                    "El nombre de usuario es obligatorio.",
-                    nameof(nombreUsuario));
-            }
+                throw new ArgumentException("Usuario obligatorio.", nameof(nombreUsuario));
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
 
-            PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente = null;
-            bool esClienteTemporal = false;
+            var cliente = _cliente ?? CrearCliente();
+            bool esTemporal = (_cliente == null);
 
             try
             {
-                cliente = _cliente ?? CrearCliente();
-                esClienteTemporal = _cliente == null;
-
                 var amigos = await cliente.ObtenerAmigosAsync(nombreUsuario).ConfigureAwait(false);
-                var lista = Convertir(amigos);
+                var lista = ConvertirLista(amigos);
 
-                if (!esClienteTemporal)
-                {
-                    ActualizarListaInterna(lista);
-                }
-                else
-                {
-                    CerrarCliente(cliente);
-                }
+                if (!esTemporal) ActualizarListaInterna(lista);
+                else CerrarClienteSeguro(cliente);
 
                 return lista;
             }
             catch (Exception ex)
             {
-                _logger.ErrorFormat("Error al obtener lista de amigos para {0}",
-                    nombreUsuario, ex);
-                throw ManejarExcepcionWcf(ex, cliente, esClienteTemporal);
+                if (esTemporal) cliente.Abort();
+                throw ConvertirExcepcion(ex);
             }
             finally
             {
@@ -223,91 +146,40 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private static Exception ManejarExcepcionWcf(
-            Exception ex,
-            PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente,
-            bool esTemporal)
-        {
-            if (esTemporal && cliente != null)
-            {
-                cliente.Abort();
-            }
-
-            return ex switch
-            {
-                FaultException fe => new ServicioExcepcion(
-                    TipoErrorServicio.FallaServicio,
-                    ErrorServicioAyudante.ObtenerMensaje(fe,
-                    Lang.errorTextoErrorProcesarSolicitud),
-                    fe),
-
-                EndpointNotFoundException or CommunicationException => new ServicioExcepcion(
-                    TipoErrorServicio.Comunicacion,
-                    Lang.errorTextoServidorNoDisponible,
-                    ex),
-
-                TimeoutException => new ServicioExcepcion(
-                    TipoErrorServicio.TiempoAgotado,
-                    Lang.errorTextoServidorTiempoAgotado,
-                    ex),
-
-                InvalidOperationException => new ServicioExcepcion(
-                    TipoErrorServicio.OperacionInvalida,
-                    Lang.errorTextoErrorProcesarSolicitud,
-                    ex),
-
-                _ => ex
-            };
-        }
-
         /// <summary>
         /// Callback del servidor: Actualiza la lista local de amigos.
         /// </summary>
         public void NotificarListaAmigosActualizada(DTOs.AmigoDTO[] amigos)
         {
-            var lista = Convertir(amigos);
-
-            lock (_amigosBloqueo)
-            {
-                _amigos.Clear();
-                _amigos.AddRange(lista);
-            }
-
-            _logger.Info("Callback recibido: Lista de amigos actualizada.");
+            var lista = ConvertirLista(amigos);
+            ActualizarListaInterna(lista);
             ListaActualizada?.Invoke(this, lista);
         }
 
-        /// <summary>
-        /// Libera recursos.
-        /// </summary>
+        /// <inheritdoc />
         public void Dispose()
         {
-            CerrarCliente(_cliente);
+            CerrarClienteSeguro(_cliente);
             _cliente = null;
             _usuarioSuscrito = null;
-
             _semaforo?.Dispose();
         }
 
-        private PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient CrearCliente()
+        private bool EsSuscripcionActiva(string usuario)
         {
-            var contexto = new InstanceContext(this);
-            return new PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient(
-                contexto,
-                Endpoint);
+            return _cliente != null &&
+                   string.Equals(_usuarioSuscrito, usuario, StringComparison.OrdinalIgnoreCase);
         }
 
         private async Task CancelarSuscripcionInternaAsync()
         {
             var cliente = _cliente;
             var usuario = _usuarioSuscrito;
+
             _cliente = null;
             _usuarioSuscrito = null;
 
-            if (cliente == null)
-            {
-                return;
-            }
+            if (cliente == null) return;
 
             try
             {
@@ -315,113 +187,95 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 {
                     await cliente.CancelarSuscripcionAsync(usuario).ConfigureAwait(false);
                 }
+                CerrarClienteSeguro(cliente);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("Error al cancelar suscripcion.", ex);
+                cliente.Abort();
+            }
+        }
 
-                CerrarCliente(cliente);
-            }
-            catch (FaultException ex)
+        private void ManejarErrorSuscripcion(Exception ex)
+        {
+            _cliente?.Abort();
+            _cliente = null;
+            _usuarioSuscrito = null;
+            throw ConvertirExcepcion(ex);
+        }
+
+        private Exception ConvertirExcepcion(Exception ex)
+        {
+            if (ex is FaultException fe)
             {
-                _logger.Warn("Fallo al cancelar suscripción interna de lista de amigos.", ex);
-                cliente.Abort();
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
-                    ex,
+                string msg = _manejadorError.ObtenerMensaje(
+                    fe,
                     Lang.errorTextoErrorProcesarSolicitud);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                return new ServicioExcepcion(TipoErrorServicio.FallaServicio, msg, fe);
             }
-            catch (EndpointNotFoundException ex)
+
+            if (ex is CommunicationException || ex is EndpointNotFoundException)
             {
-                _logger.Error("Endpoint no encontrado al cancelar suscripción.", ex);
-                cliente.Abort();
-                throw new ServicioExcepcion(
+                return new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
                     ex);
             }
-            catch (TimeoutException ex)
+
+            if (ex is TimeoutException)
             {
-                _logger.Error("Timeout al cancelar suscripción.", ex);
-                cliente.Abort();
-                throw new ServicioExcepcion(
+                return new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
                     ex);
             }
-            catch (CommunicationException ex)
-            {
-                _logger.Error("Error de comunicación al cancelar suscripción.", ex);
-                cliente.Abort();
-                throw new ServicioExcepcion(
-                    TipoErrorServicio.Comunicacion,
-                    Lang.errorTextoServidorNoDisponible,
-                    ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.Error("Operación inválida al cancelar suscripción.", ex);
-                cliente.Abort();
-                throw new ServicioExcepcion(
-                    TipoErrorServicio.OperacionInvalida,
-                    Lang.errorTextoErrorProcesarSolicitud,
-                    ex);
-            }
+
+            return new ServicioExcepcion(
+                TipoErrorServicio.Desconocido,
+                Lang.errorTextoErrorProcesarSolicitud,
+                ex);
         }
 
-        private static void CerrarCliente(
-            PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient cliente)
+        private PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient CrearCliente()
         {
-            if (cliente == null)
-            {
-                return;
-            }
+            var contexto = new InstanceContext(this);
+            return (PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient)
+                   _fabricaClientes.CrearClienteListaAmigos(contexto);
+        }
 
+        private static void CerrarClienteSeguro(ICommunicationObject cliente)
+        {
+            if (cliente == null) return;
             try
             {
-                if (cliente.State == CommunicationState.Faulted)
-                {
-                    cliente.Abort();
-                }
-                else
-                {
-                    cliente.Close();
-                }
+                if (cliente.State == CommunicationState.Opened) cliente.Close();
+                else cliente.Abort();
             }
-            catch (CommunicationException ex)
+            catch (Exception)
             {
-                _logger.Warn("Excepción de comunicación al cerrar cliente lista de amigos.", ex);
-                cliente.Abort();
-            }
-            catch (TimeoutException ex)
-            {
-                _logger.Warn("Timeout al cerrar cliente lista de amigos.", ex);
                 cliente.Abort();
             }
         }
 
-        private static IReadOnlyList<DTOs.AmigoDTO> Convertir(IEnumerable<DTOs.AmigoDTO> amigos)
+        private static IReadOnlyList<DTOs.AmigoDTO> ConvertirLista(
+            IEnumerable<DTOs.AmigoDTO> amigos)
         {
-            if (amigos == null)
-            {
-                return Array.Empty<DTOs.AmigoDTO>();
-            }
+            if (amigos == null) return Array.Empty<DTOs.AmigoDTO>();
 
             var lista = amigos
-                .Where(amigo => amigo != null && !string.IsNullOrWhiteSpace(amigo.NombreUsuario))
-                .Select(amigo => new DTOs.AmigoDTO
+                .Where(a => !string.IsNullOrWhiteSpace(a?.NombreUsuario))
+                .Select(a => new DTOs.AmigoDTO
                 {
-                    UsuarioId = amigo.UsuarioId,
-                    NombreUsuario = amigo.NombreUsuario
+                    UsuarioId = a.UsuarioId,
+                    NombreUsuario = a.NombreUsuario
                 })
                 .ToList();
 
-            return lista.Count == 0 ? Array.Empty<DTOs.AmigoDTO>() : lista.AsReadOnly();
+            return lista.AsReadOnly();
         }
 
         private void ActualizarListaInterna(IReadOnlyList<DTOs.AmigoDTO> lista)
         {
-            if (lista == null)
-            {
-                return;
-            }
-
             lock (_amigosBloqueo)
             {
                 _amigos.Clear();

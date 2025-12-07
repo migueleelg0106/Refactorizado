@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="3fc79c68-dd40-4292-bcf4-eb3e43ff7670" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8527/Pictionary/Reportes" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Reportes.xsd" MetadataType="Schema" ID="34b92ddb-a197-49f1-8b62-54eae519f080" SourceId="1" SourceUrl="http://localhost:8527/Pictionary/Reportes?xsd=xsd2" />
+    <MetadataFile FileName="Reportes1.xsd" MetadataType="Schema" ID="09b525d9-e899-4f49-95c0-8293ea67af73" SourceId="1" SourceUrl="http://localhost:8527/Pictionary/Reportes?xsd=xsd1" />
+    <MetadataFile FileName="ReportesManejador.wsdl" MetadataType="Wsdl" ID="8a05e0e9-1834-4ab9-9776-9a00ffe2d3a2" SourceId="1" SourceUrl="http://localhost:8527/Pictionary/Reportes?wsdl" />
+    <MetadataFile FileName="Reportes.disco" MetadataType="Disco" ID="62065f23-ac07-4cd2-aced-73f48f6a0b57" SourceId="1" SourceUrl="http://localhost:8527/Pictionary/Reportes?disco" />
+    <MetadataFile FileName="Reportes2.xsd" MetadataType="Schema" ID="48ae742f-7a30-441d-b7b0-f88c60e3bcc9" SourceId="1" SourceUrl="http://localhost:8527/Pictionary/Reportes?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

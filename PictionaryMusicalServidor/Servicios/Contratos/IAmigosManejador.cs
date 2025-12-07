@@ -4,7 +4,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
 {
     /// <summary>
     /// Contrato de servicio para la gestion de amistades entre usuarios.
-    /// Proporciona operaciones para enviar, responder y gestionar solicitudes de amistad con soporte de callbacks.
+    /// Proporciona operaciones para enviar, responder y gestionar solicitudes de amistad con 
+    /// soporte de callbacks.
     /// </summary>
     [ServiceContract(CallbackContract = typeof(IAmigosManejadorCallback))]
     public interface IAmigosManejador
@@ -34,8 +35,10 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <summary>
         /// Responde una solicitud de amistad aceptandola.
         /// </summary>
-        /// <param name="nombreUsuarioEmisor">Nombre del usuario que envio la solicitud original.</param>
-        /// <param name="nombreUsuarioReceptor">Nombre del usuario que responde la solicitud.</param>
+        /// <param name="nombreUsuarioEmisor">Nombre del usuario que envio la solicitud original.
+        /// </param>
+        /// <param name="nombreUsuarioReceptor">Nombre del usuario que responde la solicitud.
+        /// </param>
         [OperationContract]
         void ResponderSolicitudAmistad(string nombreUsuarioEmisor, string nombreUsuarioReceptor);
 

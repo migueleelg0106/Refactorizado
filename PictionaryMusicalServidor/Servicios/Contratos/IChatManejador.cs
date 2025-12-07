@@ -1,4 +1,4 @@
-﻿using System.ServiceModel;
+using System.ServiceModel;
 
 namespace PictionaryMusicalServidor.Servicios.Contratos
 {
@@ -16,7 +16,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <param name="idSala">Identificador de la sala.</param>
         /// <param name="nombreJugador">Nombre del jugador que se une.</param>
         [OperationContract]
-        void Unirse(string idSala, string nombreJugador);
+        void UnirseChatSala(string idSala, string nombreJugador);
 
         /// <summary>
         /// Envia un mensaje a todos los participantes del chat de una sala.
@@ -34,6 +34,6 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <param name="idSala">Identificador de la sala.</param>
         /// <param name="nombreJugador">Nombre del jugador que sale.</param>
         [OperationContract]
-        void Salir(string idSala, string nombreJugador);
+        void SalirChatSala(string idSala, string nombreJugador);
     }
 }

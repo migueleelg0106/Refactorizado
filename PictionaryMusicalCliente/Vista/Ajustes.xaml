@@ -1,4 +1,4 @@
-﻿<Window x:Class="PictionaryMusicalCliente.Ajustes"
+﻿<Window x:Class="PictionaryMusicalCliente.Vista.Ajustes"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"

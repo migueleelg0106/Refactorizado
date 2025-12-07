@@ -887,6 +887,9 @@ aciertan o cuando se acaba el tiempo.
   <data name="errorInicioSesion" xml:space="preserve">
     <value>No fue posible iniciar sesión. Por favor, intente nuevamente.</value>
   </data>
+  <data name="errorTextoUsuarioBaneado" xml:space="preserve">
+    <value>Has sido baneado del juego por mala conducta.</value>
+  </data>
   <data name="errorObtenerCallback" xml:space="preserve">
     <value>No fue posible establecer la conexión con el servidor.</value>
   </data>
@@ -1063,5 +1066,47 @@ aciertan o cuando se acaba el tiempo.
   </data>
   <data name="partidaTextoPerdisteMensaje" xml:space="preserve">
     <value>Perdiste esta partida, ¡suerte para la próxima!</value>
+  </data>
+  <data name="errorTextoServidorSolicitudCodigo" xml:space="preserve">
+    <value>No se pudo solicitar el código de verificación. Por favor, intente más tarde.</value>
+  </data>
+  <data name="reportarJugadorTextoTitulo" xml:space="preserve">
+    <value>REPORTAR JUGADOR</value>
+  </data>
+  <data name="reportarJugadorTextoDescripcion" xml:space="preserve">
+    <value>Vas a reportar a {0}</value>
+  </data>
+  <data name="reportarJugadorTextoMotivoEtiqueta" xml:space="preserve">
+    <value>Motivo del reporte</value>
+  </data>
+  <data name="reportarJugadorTextoConfirmar" xml:space="preserve">
+    <value>REPORTAR</value>
+  </data>
+  <data name="reportarJugadorTextoMotivoRequerido" xml:space="preserve">
+    <value>El motivo del reporte es obligatorio</value>
+  </data>
+  <data name="reportarJugadorTextoExito" xml:space="preserve">
+    <value>El reporte se envió correctamente</value>
+  </data>
+  <data name="reportarJugadorTextoDuplicado" xml:space="preserve">
+    <value>Ya has reportado a este jugador</value>
+  </data>
+  <data name="reportarJugadorTextoAutoReporte" xml:space="preserve">
+    <value>No puedes reportarte a ti mismo</value>
+  </data>
+  <data name="errorTextoReportarJugador" xml:space="preserve">
+    <value>Ocurrió un error al enviar el reporte</value>
+  </data>
+  <data name="reportarJugadorTextoMotivoLongitud" xml:space="preserve">
+    <value>El motivo del reporte no debe exceder 100 caracteres</value>
+  </data>
+  <data name="MensajeChatTextoMotivoLongitud" xml:space="preserve">
+    <value>El mensaje supera el limite de caracteres.</value>
+  </data>
+  <data name="errorTextoNoCargaronAvatares" xml:space="preserve">
+    <value>No se pudieron cargar los avatares, intente de nuevo más tarde.</value>
+  </data>
+  <data name="avisoTextoReinicioSesion" xml:space="preserve">
+    <value>Hubo un cambio en su cuenta, tiene que volver a iniciar sesión.</value>
   </data>
 </root>

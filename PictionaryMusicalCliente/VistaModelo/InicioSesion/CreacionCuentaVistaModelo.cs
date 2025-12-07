@@ -1,6 +1,5 @@
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Idiomas;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
@@ -14,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 {
@@ -31,6 +31,11 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private readonly ISeleccionarAvatarServicio _seleccionarAvatarServicio;
         private readonly IVerificacionCodigoDialogoServicio _verificarCodigoDialogoServicio;
         private readonly ILocalizacionServicio _localizacionServicio;
+        private readonly ISonidoManejador _sonidoManejador;
+        private readonly IValidadorEntrada _validadorEntrada;
+        private readonly ICatalogoAvatares _catalogoAvatares;
+        private readonly IAvisoServicio _avisoServicio;
+        private readonly ILocalizadorServicio _localizador;
 
         private string _usuario;
         private string _nombre;
@@ -55,7 +60,13 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             ICuentaServicio cuentaServicio,
             ISeleccionarAvatarServicio seleccionarAvatarServicio,
             IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio,
-            ILocalizacionServicio localizacionServicio = null)
+            ISonidoManejador sonidoManejador,
+            IValidadorEntrada validadorEntrada,
+            ICatalogoAvatares catalogoAvatares,
+            IAvisoServicio avisoServicio,
+            ILocalizadorServicio localizador,
+            ILocalizacionServicio localizacionServicio = null
+            )
         {
             _codigoVerificacionServicio = codigoVerificacionServicio ??
                 throw new ArgumentNullException(nameof(codigoVerificacionServicio));
@@ -65,23 +76,33 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 throw new ArgumentNullException(nameof(seleccionarAvatarServicio));
             _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ??
                 throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));
-            _localizacionServicio = localizacionServicio ?? LocalizacionServicio.Instancia;
+            _sonidoManejador = sonidoManejador ??
+                throw new ArgumentNullException(nameof(sonidoManejador));
+            _catalogoAvatares = catalogoAvatares ??
+                throw new ArgumentNullException(nameof(catalogoAvatares));
+            _validadorEntrada = validadorEntrada ??
+                throw new ArgumentNullException(nameof(validadorEntrada));
+            _localizacionServicio = localizacionServicio ?? _localizacionServicio;
+            _avisoServicio = avisoServicio ??
+                throw new ArgumentNullException(nameof(avisoServicio));
+            _localizador = localizador ??
+                throw new ArgumentNullException(nameof(localizador));
 
             CrearCuentaComando = new ComandoAsincrono(async _ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 await CrearCuentaAsync();
             }, _ => !EstaProcesando);
 
             CancelarComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 Cancelar();
             });
 
             SeleccionarAvatarComando = new ComandoAsincrono(async _ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 await SeleccionarAvatarAsync();
             });
 
@@ -222,7 +243,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 var (esValido, solicitud) = ValidarEntradasYMostrarErrores();
                 if (!esValido)
                 {
-                    SonidoManejador.ReproducirError();
+                    _sonidoManejador.ReproducirError();
 					_logger.Warn(
                         "Intento de creación de cuenta fallido por validación de campos.");
                     return;
@@ -235,7 +256,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             catch (ServicioExcepcion ex)
             {
                 _logger.Error("Error de servicio durante la creación de cuenta.", ex);
-                SonidoManejador.ReproducirError();
+                _sonidoManejador.ReproducirError();
                 MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoRegistrarCuentaMasTarde);
             }
             finally
@@ -271,7 +292,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!codigoEnviado)
             {
-                SonidoManejador.ReproducirError();
+                _sonidoManejador.ReproducirError();
                 if (errorDuplicado)
                 {
                     _logger.Info("Intento de registro con usuario o correo ya existente.");
@@ -286,7 +307,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             if (!verificacionExitosa)
             {
                 _logger.Info("Verificación de código fallida o cancelada por el usuario.");
-                SonidoManejador.ReproducirError();
+                _sonidoManejador.ReproducirError();
                 return;
             }
 
@@ -297,14 +318,14 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             {
                 _logger.InfoFormat("Cuenta creada exitosamente para usuario: {0}",
                     solicitud.Usuario);
-                SonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirExito();
                 MostrarMensaje?.Invoke(Lang.crearCuentaTextoExitosoMensaje);
                 CerrarAccion?.Invoke();
             }
             else
             {
                 _logger.Warn("Fallo en el paso final de registro de cuenta.");
-                SonidoManejador.ReproducirError();
+                _sonidoManejador.ReproducirError();
                 MostrarErroresCamposDuplicados();
             }
         }
@@ -329,15 +350,15 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             var camposInvalidos = new List<string>();
             string primerMensajeError = null;
 
-            ValidarCampo(ValidacionEntrada.ValidarUsuario(Usuario), nameof(Usuario),
+            ValidarCampo(_validadorEntrada.ValidarUsuario(Usuario), nameof(Usuario),
                 camposInvalidos, ref primerMensajeError);
-            ValidarCampo(ValidacionEntrada.ValidarNombre(Nombre), nameof(Nombre),
+            ValidarCampo(_validadorEntrada.ValidarNombre(Nombre), nameof(Nombre),
                 camposInvalidos, ref primerMensajeError);
-            ValidarCampo(ValidacionEntrada.ValidarApellido(Apellido), nameof(Apellido),
+            ValidarCampo(_validadorEntrada.ValidarApellido(Apellido), nameof(Apellido),
                 camposInvalidos, ref primerMensajeError);
-            ValidarCampo(ValidacionEntrada.ValidarCorreo(Correo), nameof(Correo),
+            ValidarCampo(_validadorEntrada.ValidarCorreo(Correo), nameof(Correo),
                 camposInvalidos, ref primerMensajeError);
-            ValidarCampo(ValidacionEntrada.ValidarContrasena(Contrasena), nameof(Contrasena),
+            ValidarCampo(_validadorEntrada.ValidarContrasena(Contrasena), nameof(Contrasena),
                 camposInvalidos, ref primerMensajeError);
 
             if (AvatarSeleccionadoId <= 0)
@@ -420,7 +441,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 await _verificarCodigoDialogoServicio.MostrarDialogoAsync(
                     Lang.cambiarContrasenaTextoCodigoVerificacion,
                     resultadoSolicitud.TokenCodigo,
-                    _codigoVerificacionServicio).ConfigureAwait(true);
+                    _codigoVerificacionServicio, _avisoServicio,
+                    _localizador, _sonidoManejador).ConfigureAwait(true);
 
             if (resultadoVerificacion == null || !resultadoVerificacion.RegistroExitoso)
             {
@@ -485,7 +507,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
         private void EstablecerAvatarPredeterminado()
         {
-            var avatares = CatalogoAvataresLocales.ObtenerAvatares();
+            var avatares = _catalogoAvatares.ObtenerAvatares();
             if (avatares != null && avatares.Count > 0)
             {
                 var avatar = avatares[0];

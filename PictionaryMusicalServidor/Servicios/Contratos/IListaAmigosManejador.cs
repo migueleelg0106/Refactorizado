@@ -6,7 +6,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
 {
     /// <summary>
     /// Contrato de servicio para la gestion de listas de amigos.
-    /// Proporciona operaciones para suscribirse y obtener listas de amigos con soporte de callbacks.
+    /// Proporciona operaciones para suscribirse y obtener listas de amigos con soporte de 
+    /// callbacks.
     /// </summary>
     [ServiceContract(CallbackContract = typeof(IListaAmigosManejadorCallback))]
     public interface IListaAmigosManejador
@@ -28,7 +29,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <summary>
         /// Obtiene la lista de amigos de un usuario especifico.
         /// </summary>
-        /// <param name="nombreUsuario">Nombre del usuario cuya lista de amigos se desea obtener.</param>
+        /// <param name="nombreUsuario">Nombre del usuario cuya lista de amigos se desea obtener.
+        /// </param>
         /// <returns>Lista de amigos del usuario.</returns>
         [OperationContract]
         List<AmigoDTO> ObtenerAmigos(string nombreUsuario);

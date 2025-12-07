@@ -1,8 +1,7 @@
-﻿using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.ClienteServicios;
+﻿using PictionaryMusicalCliente.Comandos;
 using System;
 using System.Windows.Input;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 {
@@ -11,7 +10,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
     /// </summary>
     public class AjustesPartidaVistaModelo : BaseVistaModelo
     {
-        private readonly CancionManejador _cancionManejador;
+        private readonly ICancionManejador _cancionManejador;
+        private readonly ISonidoManejador _sonidoManejador;
 
         /// <summary>
         /// Accion para cerrar la ventana actual.
@@ -26,11 +26,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         /// <summary>
         /// Inicializa el ViewModel con el servicio de control de audio del juego.
         /// </summary>
-        /// <param name="servicioCancion">Servicio que gestiona la reproduccion de pistas.</param>
-        public AjustesPartidaVistaModelo(CancionManejador servicioCancion)
+        /// <param name="cancionManejador">Servicio que gestiona la reproduccion de pistas.</param>
+        /// <param name="sonidoManejador">Servicio que gestiona los efectos de sonido.</param>
+        public AjustesPartidaVistaModelo(ICancionManejador cancionManejador,
+            ISonidoManejador sonidoManejador)
         {
-            _cancionManejador = servicioCancion ??
-                throw new ArgumentNullException(nameof(servicioCancion));
+            _cancionManejador = cancionManejador ??
+                throw new ArgumentNullException(nameof(cancionManejador));
+            _sonidoManejador = sonidoManejador ?? 
+                throw new ArgumentNullException(nameof(sonidoManejador));
 
             ConfirmarComando = new ComandoDelegado(_ => EjecutarConfirmar());
             SalirPartidaComando = new ComandoDelegado(_ => EjecutarSalirPartida());
@@ -57,12 +61,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         /// </summary>
         public bool SonidosSilenciados
         {
-            get => SonidoManejador.Silenciado;
+            get => _sonidoManejador.Silenciado;
             set
             {
-                if (SonidoManejador.Silenciado != value)
+                if (_sonidoManejador.Silenciado != value)
                 {
-                    SonidoManejador.Silenciado = value;
+                    _sonidoManejador.Silenciado = value;
                     NotificarCambio(nameof(SonidosSilenciados));
                 }
             }

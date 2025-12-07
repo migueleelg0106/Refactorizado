@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AnalysisConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
-  <SonarConfigDir>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\.sonarqube\conf</SonarConfigDir>
-  <SonarOutputDir>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\.sonarqube\out</SonarOutputDir>
-  <SonarBinDir>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\.sonarqube\bin</SonarBinDir>
-  <SonarScannerWorkingDirectory>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor</SonarScannerWorkingDirectory>
+  <SonarConfigDir>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor\.sonarqube\conf</SonarConfigDir>
+  <SonarOutputDir>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor\.sonarqube\out</SonarOutputDir>
+  <SonarBinDir>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor\.sonarqube\bin</SonarBinDir>
+  <SonarScannerWorkingDirectory>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor</SonarScannerWorkingDirectory>
   <JavaExePath>C:\Users\Usuario\.sonar\cache\11a61a94d383e755b08b4e5890a13d148bc9f95b7149cbbeec62efb8c75a4a67\OpenJDK17U-jre_x64_windows_hotspot_17.0.13_11.zip_extracted\jdk-17.0.13+11-jre/bin/java.exe</JavaExePath>
   <EngineJarPath>C:\Users\Usuario\.sonar\cache\5370664af11ed9502c5e9da2fca3e7b2465b6b01c7248962ef899d0551837b42\sonar-scanner-engine-shaded-25.10.0.114319-all.jar</EngineJarPath>
   <UseSonarScannerCli>false</UseSonarScannerCli>
@@ -18,8 +18,8 @@
     <ConfigSetting Id="TfsUri" />
     <ConfigSetting Id="VsCoverageConverterToolPath" />
     <ConfigSetting Id="UnchangedFilesPath" />
-    <ConfigSetting Id="sonar.pullrequest.cache.basepath" Value="C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor" />
-    <ConfigSetting Id="settings.file.path" Value="C:\Users\Usuario\Downloads\Sonar para netframework\sonar-scanner-11.0.0.126294-net-framework\SonarQube.Analysis.xml" />
+    <ConfigSetting Id="sonar.pullrequest.cache.basepath" Value="C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor" />
+    <ConfigSetting Id="settings.file.path" Value="C:\Users\Usuario\Downloads\SonarNetframework\SonarQube.Analysis.xml" />
   </AdditionalConfig>
   <ServerSettings>
     <Property Name="sonar.cs.ignoreHeaderComments">true</Property>
@@ -148,7 +148,7 @@
     <Property Name="sonar.java.jvmframeworkconfig.activate">true</Property>
     <Property Name="sonar.updatecenter.url">https://downloads.sonarsource.com/sonarqube/update/update-center.properties</Property>
     <Property Name="sonar.core.id">147B411E-AZqFPExmUVyoCNJSDjGr</Property>
-    <Property Name="sonar.core.startTime">17/11/2025 06:10:16 p. m.</Property>
+    <Property Name="sonar.core.startTime">06/12/2025 02:15:27 a. m.</Property>
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.host.url">http://localhost:9000</Property>
@@ -158,34 +158,34 @@
   <AnalyzersSettings>
     <AnalyzerSettings>
       <Language>cs</Language>
-      <RulesetPath>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\.sonarqube\conf\Sonar-cs.ruleset</RulesetPath>
-      <DeactivatedRulesetPath>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\.sonarqube\conf\Sonar-cs-none.ruleset</DeactivatedRulesetPath>
+      <RulesetPath>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor\.sonarqube\conf\Sonar-cs.ruleset</RulesetPath>
+      <DeactivatedRulesetPath>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor\.sonarqube\conf\Sonar-cs-none.ruleset</DeactivatedRulesetPath>
       <AnalyzerPlugins>
         <AnalyzerPlugin Key="csharp" Version="10.15.0.120848" StaticResourceName="SonarAnalyzer-csharp-10.15.0.120848.zip">
           <AssemblyPaths>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\0\SonarAnalyzer.CSharp.dll</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\0\THIRD-PARTY-NOTICES.txt</Path>
+            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\2\SonarAnalyzer.CSharp.dll</Path>
+            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\2\THIRD-PARTY-NOTICES.txt</Path>
           </AssemblyPaths>
         </AnalyzerPlugin>
       </AnalyzerPlugins>
       <AdditionalFilePaths>
-        <Path>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\.sonarqube\conf\cs\SonarLint.xml</Path>
+        <Path>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor\.sonarqube\conf\cs\SonarLint.xml</Path>
       </AdditionalFilePaths>
     </AnalyzerSettings>
     <AnalyzerSettings>
       <Language>vbnet</Language>
-      <RulesetPath>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\.sonarqube\conf\Sonar-vbnet.ruleset</RulesetPath>
-      <DeactivatedRulesetPath>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\.sonarqube\conf\Sonar-vbnet-none.ruleset</DeactivatedRulesetPath>
+      <RulesetPath>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor\.sonarqube\conf\Sonar-vbnet.ruleset</RulesetPath>
+      <DeactivatedRulesetPath>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor\.sonarqube\conf\Sonar-vbnet-none.ruleset</DeactivatedRulesetPath>
       <AnalyzerPlugins>
         <AnalyzerPlugin Key="vbnet" Version="10.15.0.120848" StaticResourceName="SonarAnalyzer-vbnet-10.15.0.120848.zip">
           <AssemblyPaths>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\1\SonarAnalyzer.VisualBasic.dll</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\1\THIRD-PARTY-NOTICES.txt</Path>
+            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\3\SonarAnalyzer.VisualBasic.dll</Path>
+            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\3\THIRD-PARTY-NOTICES.txt</Path>
           </AssemblyPaths>
         </AnalyzerPlugin>
       </AnalyzerPlugins>
       <AdditionalFilePaths>
-        <Path>C:\Users\Usuario\Refactorizado\Refactorizado\PictionaryMusicalServidor\.sonarqube\conf\vbnet\SonarLint.xml</Path>
+        <Path>C:\Users\Usuario\source\repos\PictionaryMusical\PictionaryMusicalServidor\.sonarqube\conf\vbnet\SonarLint.xml</Path>
       </AdditionalFilePaths>
     </AnalyzerSettings>
   </AnalyzersSettings>

@@ -1,9 +1,10 @@
-using System;
-using System.Windows.Input;
+using log4net;
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
-using log4net;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using System;
+using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
@@ -14,27 +15,32 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ISonidoManejador _sonidoManejador;
 
         /// <summary>
         /// Inicializa el ViewModel con el mensaje de confirmacion.
         /// </summary>
         /// <param name="mensajeConfirmacion">Texto que se mostrara al usuario.</param>
-        public ExpulsionJugadorVistaModelo(string mensajeConfirmacion)
+        public ExpulsionJugadorVistaModelo(string mensajeConfirmacion,
+            ISonidoManejador sonidoManejador)
         {
+            _sonidoManejador = sonidoManejador ??
+                throw new ArgumentNullException(nameof(sonidoManejador));
+
             MensajeConfirmacion = string.IsNullOrWhiteSpace(mensajeConfirmacion)
                 ? Lang.expulsarTextoConfirmacion
                 : mensajeConfirmacion;
 
             ConfirmarComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 _logger.Info("Usuario confirmó la expulsión del jugador.");
                 Cerrar?.Invoke(true);
             });
 
             CancelarComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 _logger.Info("Usuario canceló la expulsión del jugador.");
                 Cerrar?.Invoke(false);
             });

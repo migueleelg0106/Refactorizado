@@ -71,6 +71,18 @@
   <wsdl:message name="ISalasManejador_ExpulsarJugador_OutputMessage">
     <wsdl:part name="parameters" element="tns:ExpulsarJugadorResponse" />
   </wsdl:message>
+  <wsdl:message name="ISalasManejador_ObtenerSalaPorCodigo_InputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerSalaPorCodigo" />
+  </wsdl:message>
+  <wsdl:message name="ISalasManejador_ObtenerSalaPorCodigo_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ObtenerSalaPorCodigoResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISalasManejador_MarcarPartidaComoIniciada_InputMessage">
+    <wsdl:part name="parameters" element="tns:MarcarPartidaComoIniciada" />
+  </wsdl:message>
+  <wsdl:message name="ISalasManejador_MarcarPartidaComoIniciada_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MarcarPartidaComoIniciadaResponse" />
+  </wsdl:message>
   <wsdl:message name="ISalasManejador_NotificarJugadorSeUnio_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:NotificarJugadorSeUnio" />
   </wsdl:message>
@@ -117,6 +129,14 @@
     <wsdl:operation name="ExpulsarJugador">
       <wsdl:input wsaw:Action="http://tempuri.org/ISalasManejador/ExpulsarJugador" message="tns:ISalasManejador_ExpulsarJugador_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/ExpulsarJugadorResponse" message="tns:ISalasManejador_ExpulsarJugador_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ObtenerSalaPorCodigo">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISalasManejador/ObtenerSalaPorCodigo" message="tns:ISalasManejador_ObtenerSalaPorCodigo_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/ObtenerSalaPorCodigoResponse" message="tns:ISalasManejador_ObtenerSalaPorCodigo_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="MarcarPartidaComoIniciada">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciada" message="tns:ISalasManejador_MarcarPartidaComoIniciada_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciadaResponse" message="tns:ISalasManejador_MarcarPartidaComoIniciada_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="NotificarJugadorSeUnio">
       <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/NotificarJugadorSeUnio" message="tns:ISalasManejador_NotificarJugadorSeUnio_OutputCallbackMessage" />
@@ -196,6 +216,24 @@
     </wsdl:operation>
     <wsdl:operation name="ExpulsarJugador">
       <soap12:operation soapAction="http://tempuri.org/ISalasManejador/ExpulsarJugador" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenerSalaPorCodigo">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/ObtenerSalaPorCodigo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MarcarPartidaComoIniciada">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciada" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -299,6 +337,24 @@
     </wsdl:operation>
     <wsdl:operation name="ExpulsarJugador">
       <soap12:operation soapAction="http://tempuri.org/ISalasManejador/ExpulsarJugador" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenerSalaPorCodigo">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/ObtenerSalaPorCodigo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MarcarPartidaComoIniciada">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciada" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

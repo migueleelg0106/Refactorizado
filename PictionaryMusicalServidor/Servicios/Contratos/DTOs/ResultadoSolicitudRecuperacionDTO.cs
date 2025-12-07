@@ -3,7 +3,8 @@ using System.Runtime.Serialization;
 namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
 {
     /// <summary>
-    /// Objeto de transferencia de datos para el resultado de una solicitud de recuperacion de cuenta.
+    /// Objeto de transferencia de datos para el resultado de una solicitud de recuperacion de 
+    /// cuenta.
     /// Contiene informacion sobre si la cuenta fue encontrada y si el codigo fue enviado.
     /// </summary>
     [DataContract]

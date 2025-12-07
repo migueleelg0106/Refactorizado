@@ -1,6 +1,5 @@
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +18,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         PictionaryServidorServicioSalas.ISalasManejadorCallback
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(SalasServicio));
-        private const string Endpoint = "NetTcpBinding_ISalasManejador";
+        private readonly IWcfClienteFabrica _fabricaClientes;
+        private readonly IManejadorErrorServicio _manejadorError;
 
         private readonly SemaphoreSlim _semaforo = new(1, 1);
         private readonly object _salasBloqueo = new();
@@ -27,6 +27,19 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
         private PictionaryServidorServicioSalas.SalasManejadorClient _cliente;
         private bool _suscrito;
+
+        /// <summary>
+        /// Inicializa el servicio de salas.
+        /// </summary>
+        public SalasServicio(
+            IWcfClienteFabrica fabricaClientes,
+            IManejadorErrorServicio manejadorError)
+        {
+            _fabricaClientes = fabricaClientes ??
+                throw new ArgumentNullException(nameof(fabricaClientes));
+            _manejadorError = manejadorError ??
+                throw new ArgumentNullException(nameof(manejadorError));
+        }
 
         /// <summary>
         /// Evento disparado cuando un jugador entra a la sala actual.
@@ -81,69 +94,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             string nombreCreador,
             DTOs.ConfiguracionPartidaDTO configuracion)
         {
-            if (string.IsNullOrWhiteSpace(nombreCreador))
-            {
-                throw new ArgumentException(
-                    "El nombre de creador es obligatorio.",
-                    nameof(nombreCreador));
-            }
-
-            if (configuracion == null)
-            {
-                throw new ArgumentNullException(nameof(configuracion));
-            }
+            ValidarCreacionSala(nombreCreador, configuracion);
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
-
             try
             {
                 var cliente = ObtenerOCrearCliente();
+                var sala = await cliente.CrearSalaAsync(nombreCreador, configuracion)
+                    .ConfigureAwait(false);
 
-                try
-                {
-                    var sala = await cliente.CrearSalaAsync(
-                        nombreCreador,
-                        configuracion).ConfigureAwait(false);
-
-                    _logger.InfoFormat("Sala creada exitosamente por '{0}'. Código: {1}", 
-                        nombreCreador, sala.Codigo);
-                    return sala;
-                }
-                catch (FaultException ex)
-                {
-                    _logger.Warn("El servidor rechazó la creación de la sala.", ex);
-                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(
-                        ex,
-                        Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
-                }
-                catch (EndpointNotFoundException ex)
-                {
-                    _logger.Error("No se encontró el endpoint para crear sala.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
-                catch (TimeoutException ex)
-                {
-                    _logger.Error("Timeout al intentar crear sala.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.TiempoAgotado,
-                        Lang.errorTextoServidorTiempoAgotado,
-                        ex);
-                }
-                catch (CommunicationException ex)
-                {
-                    _logger.Error("Error de comunicación al crear sala.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
+                _logger.InfoFormat("Sala creada por '{0}'. Codigo: {1}", nombreCreador, sala.Codigo);
+                return sala;
+            }
+            catch (Exception ex)
+            {
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                throw;
             }
             finally
             {
@@ -156,72 +122,20 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public async Task<DTOs.SalaDTO> UnirseSalaAsync(string codigoSala, string nombreUsuario)
         {
-            if (string.IsNullOrWhiteSpace(codigoSala))
-            {
-                throw new ArgumentException(
-                    "El código de sala es obligatorio.",
-                    nameof(codigoSala));
-            }
-
-            if (string.IsNullOrWhiteSpace(nombreUsuario))
-            {
-                throw new ArgumentException(
-                    "El nombre de usuario es obligatorio.",
-                    nameof(nombreUsuario));
-            }
+            ValidarDatosSalaUsuario(codigoSala, nombreUsuario);
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
-
             try
             {
                 var cliente = ObtenerOCrearCliente();
-
-                try
-                {
-                    var sala = await cliente.UnirseSalaAsync(
-                        codigoSala,
-                        nombreUsuario).ConfigureAwait(false);
-
-                    _logger.InfoFormat("Usuario '{0}' se unió a la sala '{1}'.",
-                        nombreUsuario, codigoSala);
-                    return sala;
-                }
-                catch (FaultException ex)
-                {
-                    _logger.WarnFormat("Fallo al unirse a sala '{0}'. Razón: {1}",
-                        codigoSala, ex.Message);
-                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(
-                        ex,
-                        Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
-                }
-                catch (EndpointNotFoundException ex)
-                {
-                    _logger.Error("No se encontró el endpoint para unirse a la sala.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
-                catch (TimeoutException ex)
-                {
-                    _logger.Error("Timeout al unirse a la sala.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.TiempoAgotado,
-                        Lang.errorTextoServidorTiempoAgotado,
-                        ex);
-                }
-                catch (CommunicationException ex)
-                {
-                    _logger.Error("Error de comunicación al unirse a la sala.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
+                var sala = await cliente.UnirseSalaAsync(codigoSala, nombreUsuario)
+                    .ConfigureAwait(false);
+                return sala;
+            }
+            catch (Exception ex)
+            {
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                throw;
             }
             finally
             {
@@ -234,69 +148,21 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public async Task AbandonarSalaAsync(string codigoSala, string nombreUsuario)
         {
-            if (string.IsNullOrWhiteSpace(codigoSala))
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(nombreUsuario))
+            if (string.IsNullOrWhiteSpace(codigoSala) || string.IsNullOrWhiteSpace(nombreUsuario))
             {
                 return;
             }
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
-
             try
             {
-                if (_cliente == null)
-                {
-                    return;
-                }
+                if (_cliente == null) return;
 
-                try
-                {
-                    await _cliente.AbandonarSalaAsync(
-                        codigoSala,
-                        nombreUsuario).ConfigureAwait(false);
-
-                    _logger.InfoFormat("Usuario '{0}' abandonó la sala '{1}'.", 
-                        nombreUsuario, codigoSala);
-                }
-                catch (FaultException ex)
-                {
-                    _logger.Warn("Error de lógica al abandonar sala.", ex);
-                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(
-                        ex,
-                        Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
-                }
-                catch (EndpointNotFoundException ex)
-                {
-                    _logger.Error("Endpoint no encontrado al abandonar sala.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
-                catch (TimeoutException ex)
-                {
-                    _logger.Error("Timeout al abandonar sala.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.TiempoAgotado,
-                        Lang.errorTextoServidorTiempoAgotado,
-                        ex);
-                }
-                catch (CommunicationException ex)
-                {
-                    _logger.Error("Error de comunicación al abandonar sala.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
+                await _cliente.AbandonarSalaAsync(codigoSala, nombreUsuario).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {
@@ -312,79 +178,68 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             string nombreHost,
             string nombreJugadorAExpulsar)
         {
-            if (string.IsNullOrWhiteSpace(codigoSala))
-            {
-                throw new ArgumentException(
-                    "El código de sala es obligatorio.",
-                    nameof(codigoSala));
-            }
-
-            if (string.IsNullOrWhiteSpace(nombreHost))
-            {
-                throw new ArgumentException(
-                    "El nombre del host es obligatorio.",
-                    nameof(nombreHost));
-            }
-
-            if (string.IsNullOrWhiteSpace(nombreJugadorAExpulsar))
-            {
-                throw new ArgumentException(
-                    "El nombre del jugador a expulsar es obligatorio.",
-                    nameof(nombreJugadorAExpulsar));
-            }
+            ValidarExpulsion(codigoSala, nombreHost, nombreJugadorAExpulsar);
 
             await _semaforo.WaitAsync().ConfigureAwait(false);
-
             try
             {
                 var cliente = ObtenerOCrearCliente();
+                await cliente.ExpulsarJugadorAsync(
+                    codigoSala,
+                    nombreHost,
+                    nombreJugadorAExpulsar).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+            }
+            finally
+            {
+                _semaforo.Release();
+            }
+        }
 
-                try
-                {
-                    await cliente.ExpulsarJugadorAsync(
-                        codigoSala,
-                        nombreHost,
-                        nombreJugadorAExpulsar).ConfigureAwait(false);
+        /// <summary>
+        /// Se suscribe para recibir actualizaciones sobre las salas publicas.
+        /// </summary>
+        public async Task SuscribirListaSalasAsync()
+        {
+            await _semaforo.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                if (_suscrito && _cliente != null) return;
 
-                    _logger.InfoFormat("El host '{0}' expulsó a '{1}' de la sala '{2}'.",
-                        nombreHost, nombreJugadorAExpulsar, codigoSala);
-                }
-                catch (FaultException ex)
-                {
-                    _logger.Warn("Error al intentar expulsar jugador (Permisos o jugador no " +
-                        "existe).", ex);
-                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(
-                        ex,
-                        Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
-                }
-                catch (EndpointNotFoundException ex)
-                {
-                    _logger.Error("Endpoint no encontrado al expulsar jugador.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
-                catch (TimeoutException ex)
-                {
-                    _logger.Error("Timeout al expulsar jugador.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.TiempoAgotado,
-                        Lang.errorTextoServidorTiempoAgotado,
-                        ex);
-                }
-                catch (CommunicationException ex)
-                {
-                    _logger.Error("Error de comunicación al expulsar jugador.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
+                var cliente = ObtenerOCrearCliente();
+                await cliente.SuscribirListaSalasAsync().ConfigureAwait(false);
+
+                _suscrito = true;
+            }
+            catch (Exception ex)
+            {
+                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+            }
+            finally
+            {
+                _semaforo.Release();
+            }
+        }
+
+        /// <summary>
+        /// Cancela la suscripcion de actualizaciones de salas publicas.
+        /// </summary>
+        public async Task CancelarSuscripcionListaSalasAsync()
+        {
+            await _semaforo.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                if (!_suscrito || _cliente == null) return;
+
+                await _cliente.CancelarSuscripcionListaSalasAsync().ConfigureAwait(false);
+                _suscrito = false;
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("Error al cancelar suscripcion de salas.", ex);
             }
             finally
             {
@@ -457,106 +312,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         }
 
         /// <summary>
-        /// Se suscribe para recibir actualizaciones sobre las salas publicas.
-        /// </summary>
-        public async Task SuscribirListaSalasAsync()
-        {
-            await _semaforo.WaitAsync().ConfigureAwait(false);
-
-            try
-            {
-                if (_suscrito && _cliente != null)
-                {
-                    return;
-                }
-
-                var cliente = ObtenerOCrearCliente();
-
-                try
-                {
-                    await cliente.SuscribirListaSalasAsync().ConfigureAwait(false);
-                    _suscrito = true;
-                    _logger.Info("Suscripción al lobby de salas exitosa.");
-                }
-                catch (FaultException ex)
-                {
-                    _logger.Warn("Error del servidor al suscribir a lista de salas.", ex);
-                    string mensaje = ErrorServicioAyudante.ObtenerMensaje(
-                        ex,
-                        Lang.errorTextoErrorProcesarSolicitud);
-                    throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
-                }
-                catch (EndpointNotFoundException ex)
-                {
-                    _logger.Error("Endpoint no encontrado al suscribir a lista de salas.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
-                catch (TimeoutException ex)
-                {
-                    _logger.Error("Timeout al suscribir a lista de salas.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.TiempoAgotado,
-                        Lang.errorTextoServidorTiempoAgotado,
-                        ex);
-                }
-                catch (CommunicationException ex)
-                {
-                    _logger.Error("Error de comunicación al suscribir a lista de salas.", ex);
-                    CerrarCliente();
-                    throw new ServicioExcepcion(
-                        TipoErrorServicio.Comunicacion,
-                        Lang.errorTextoServidorNoDisponible,
-                        ex);
-                }
-            }
-            finally
-            {
-                _semaforo.Release();
-            }
-        }
-
-        /// <summary>
-        /// Cancela la suscripcion de actualizaciones de salas publicas.
-        /// </summary>
-        public async Task CancelarSuscripcionListaSalasAsync()
-        {
-            await _semaforo.WaitAsync().ConfigureAwait(false);
-
-            try
-            {
-                if (!_suscrito || _cliente == null)
-                {
-                    return;
-                }
-
-                try
-                {
-                    await _cliente.CancelarSuscripcionListaSalasAsync().ConfigureAwait(false);
-                    _suscrito = false;
-                    _logger.Info("Suscripción al lobby de salas cancelada.");
-                }
-                catch (CommunicationException ex)
-                {
-                    _logger.Warn("Advertencia: Error de comunicación al cancelar suscripción " +
-                        "de salas (posible cierre forzado).", ex);
-                }
-                catch (TimeoutException ex)
-                {
-                    _logger.Warn("Advertencia: Timeout al cancelar suscripción de salas.", ex);
-                }
-            }
-            finally
-            {
-                _semaforo.Release();
-            }
-        }
-
-        /// <summary>
         /// Libera los recursos y cierra la conexion.
         /// </summary>
         public void Dispose()
@@ -567,110 +322,154 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 if (lockTomado)
                 {
-                    if (_suscrito && _cliente != null)
-                    {
-                        try
-                        {
-                            Task.Run(async () =>
-                                await _cliente.CancelarSuscripcionListaSalasAsync()).Wait(2000);
-                        }
-                        catch (CommunicationException ex)
-                        {
-                            _logger.Warn("Error de red al cerrar servicio de salas.", ex);
-                        }
-                        catch (TimeoutException ex)
-                        {
-                            _logger.Warn("Timeout al cerrar servicio de salas.", ex);
-                        }
-                        catch (AggregateException ex)
-                        {
-                            _logger.Warn("Error agregado al cerrar servicio de salas.", ex);
-                        }
-                    }
+                    IntentarCancelarSuscripcionAlCerrar();
                     CerrarCliente();
                 }
                 else
                 {
-                    _cliente?.Abort();
+                    AbortarCliente();
                 }
             }
             finally
             {
-                if (lockTomado)
-                {
-                    _semaforo.Release();
-                }
+                if (lockTomado) _semaforo.Release();
                 _semaforo.Dispose();
             }
         }
 
-        private PictionaryServidorServicioSalas.SalasManejadorClient ObtenerOCrearCliente()
+        private void IntentarCancelarSuscripcionAlCerrar()
         {
-            if (_cliente == null || _cliente.State == CommunicationState.Faulted)
+            if (_suscrito && _cliente != null)
+            {
+                try
+                {
+                    Task.Run(async () =>
+                        await _cliente.CancelarSuscripcionListaSalasAsync()).Wait(2000);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn("Error al cerrar suscripcion de salas en Dispose.", ex);
+                }
+            }
+        }
+
+        private PictionaryServidorServicioSalas.ISalasManejador ObtenerOCrearCliente()
+        {
+            var canal = _cliente as ICommunicationObject;
+            if (_cliente == null || canal.State == CommunicationState.Faulted)
             {
                 CerrarCliente();
                 var contexto = new InstanceContext(this);
-                _cliente = new PictionaryServidorServicioSalas
-                    .SalasManejadorClient(contexto, Endpoint);
+                _cliente = (PictionaryServidorServicioSalas.SalasManejadorClient)
+                    _fabricaClientes.CrearClienteSalas(contexto);
             }
-
             return _cliente;
         }
 
         private void CerrarCliente()
         {
-            if (_cliente == null)
+            if (_cliente is ICommunicationObject canal)
             {
-                return;
+                try
+                {
+                    if (canal.State == CommunicationState.Faulted) canal.Abort();
+                    else canal.Close();
+                }
+                catch (Exception)
+                {
+                    canal.Abort();
+                }
+            }
+            _cliente = null;
+            _suscrito = false;
+        }
+
+        private void AbortarCliente()
+        {
+            if (_cliente is ICommunicationObject canal)
+            {
+                canal.Abort();
+            }
+        }
+
+        private void ManejarExcepcionServicio(Exception ex, string mensajeDefault)
+        {
+            if (ex is CommunicationException || ex is TimeoutException)
+            {
+                CerrarCliente();
             }
 
-            try
+            if (ex is FaultException fe)
             {
-                if (_cliente.State == CommunicationState.Faulted)
-                {
-                    _cliente.Abort();
-                }
-                else
-                {
-                    _cliente.Close();
-                }
+                string msg = _manejadorError.ObtenerMensaje(fe, mensajeDefault);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, msg, fe);
             }
-            catch (CommunicationException)
+
+            if (ex is CommunicationException || ex is EndpointNotFoundException)
             {
-                _cliente.Abort();
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.Comunicacion,
+                    Lang.errorTextoServidorNoDisponible,
+                    ex);
             }
-            catch (TimeoutException)
+
+            if (ex is TimeoutException)
             {
-                _cliente.Abort();
+                throw new ServicioExcepcion(
+                    TipoErrorServicio.TiempoAgotado,
+                    Lang.errorTextoServidorTiempoAgotado,
+                    ex);
             }
-            finally
-            {
-                _cliente = null;
-                _suscrito = false;
-            }
+
+            throw new ServicioExcepcion(
+                TipoErrorServicio.OperacionInvalida,
+                mensajeDefault,
+                ex);
+        }
+
+        private static void ValidarCreacionSala(
+            string creador,
+            DTOs.ConfiguracionPartidaDTO config)
+        {
+            if (string.IsNullOrWhiteSpace(creador))
+                throw new ArgumentException("Creador obligatorio.", nameof(creador));
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
+        }
+
+        private static void ValidarDatosSalaUsuario(string codigo, string usuario)
+        {
+            if (string.IsNullOrWhiteSpace(codigo))
+                throw new ArgumentException("Codigo obligatorio.", nameof(codigo));
+            if (string.IsNullOrWhiteSpace(usuario))
+                throw new ArgumentException("Usuario obligatorio.", nameof(usuario));
+        }
+
+        private static void ValidarExpulsion(string codigo, string host, string jugador)
+        {
+            ValidarDatosSalaUsuario(codigo, host);
+            if (string.IsNullOrWhiteSpace(jugador))
+                throw new ArgumentException("Jugador a expulsar obligatorio.", nameof(jugador));
         }
 
         private static IReadOnlyList<DTOs.SalaDTO> Convertir(IEnumerable<DTOs.SalaDTO> salas)
         {
-            if (salas == null)
-            {
-                return Array.Empty<DTOs.SalaDTO>();
-            }
+            if (salas == null) return Array.Empty<DTOs.SalaDTO>();
 
             var lista = salas
-                .Where(sala => sala != null && !string.IsNullOrWhiteSpace(sala.Codigo))
-                .Select(sala => new DTOs.SalaDTO
+                .Where(s => s != null && !string.IsNullOrWhiteSpace(s.Codigo))
+                .Select(s => new DTOs.SalaDTO
                 {
-                    Codigo = sala.Codigo,
-                    Creador = sala.Creador,
-                    Configuracion = sala.Configuracion,
-                    Jugadores = sala.Jugadores != null
-                        ? new List<string>(sala.Jugadores)
+                    Codigo = s.Codigo,
+                    Creador = s.Creador,
+                    Configuracion = s.Configuracion,
+                    Jugadores = s.Jugadores != null
+                        ? new List<string>(s.Jugadores)
                         : new List<string>()
                 })
                 .ToList();
 
-            return lista.Count == 0 ? Array.Empty<DTOs.SalaDTO>() : lista.AsReadOnly();
+            return lista.AsReadOnly();
         }
     }
 }

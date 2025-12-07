@@ -1,13 +1,13 @@
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using log4net;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Perfil
 {
@@ -18,6 +18,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly IAvisoServicio _avisoServicio;
+        private readonly ISonidoManejador _sonidoManejador;
 
         private ObjetoAvatar _avatarSeleccionado;
 
@@ -25,8 +27,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         /// Inicializa el ViewModel con la lista de avatares disponibles.
         /// </summary>
         /// <param name="avatares">Lista de objetos avatar cargados.</param>
-        public SeleccionAvatarVistaModelo(IEnumerable<ObjetoAvatar> avatares)
+        public SeleccionAvatarVistaModelo(IEnumerable<ObjetoAvatar> avatares,
+            IAvisoServicio avisoServicio,
+            ISonidoManejador sonidoManejador)
         {
+            _avisoServicio = avisoServicio ??
+                throw new ArgumentNullException(nameof(avisoServicio));
+            _sonidoManejador = sonidoManejador ??
+                throw new ArgumentNullException(nameof(sonidoManejador));
             if (avatares == null)
             {
                 throw new ArgumentNullException(nameof(avatares));
@@ -35,7 +43,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             Avatares = new ObservableCollection<ObjetoAvatar>(avatares);
             ConfirmarSeleccionComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 ConfirmarSeleccion();
             });
         }
@@ -74,8 +82,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             if (AvatarSeleccionado == null)
             {
 				_logger.Warn("Intento de confirmar selección sin avatar elegido.");
-                SonidoManejador.ReproducirError();
-                AvisoAyudante.Mostrar(Lang.errorTextoSeleccionAvatarValido);
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(Lang.errorTextoSeleccionAvatarValido);
                 return;
             }
 

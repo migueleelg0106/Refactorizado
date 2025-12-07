@@ -16,7 +16,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <param name="solicitud">Datos de la solicitud de recuperacion de cuenta.</param>
         /// <returns>Resultado de la solicitud del codigo de recuperacion.</returns>
         [OperationContract]
-        ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(SolicitudRecuperarCuentaDTO solicitud);
+        ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion
+            (SolicitudRecuperarCuentaDTO solicitud);
 
         /// <summary>
         /// Reenvia el codigo de recuperacion previamente solicitado.

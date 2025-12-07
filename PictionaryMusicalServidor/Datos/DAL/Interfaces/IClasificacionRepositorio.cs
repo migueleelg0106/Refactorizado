@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Datos.Modelo;
 
 namespace PictionaryMusicalServidor.Datos.DAL.Interfaces
@@ -15,12 +16,22 @@ namespace PictionaryMusicalServidor.Datos.DAL.Interfaces
         Clasificacion CrearClasificacionInicial();
 
         /// <summary>
-        /// Actualiza los puntos ganados y las rondas ganadas de la clasificación asociada a un jugador.
+        /// Actualiza los puntos ganados y las rondas ganadas de la clasificacion asociada a un 
+        /// jugador.
         /// </summary>
-        /// <param name="jugadorId">Identificador del jugador propietario de la clasificación.</param>
+        /// <param name="jugadorId">Identificador del jugador propietario de la clasificacion.
+        /// </param>
         /// <param name="puntosObtenidos">Puntos conseguidos en la partida.</param>
-        /// <param name="ganoPartida">Indica si el jugador ganó la partida.</param>
-        /// <returns><c>true</c> si la actualización se aplicó correctamente; de lo contrario, <c>false</c>.</returns>
+        /// <param name="ganoPartida">Indica si el jugador gano la partida.</param>
+        /// <returns><c>true</c> si la actualizacion se aplico correctamente; de lo contrario, 
+        /// <c>false</c>.</returns>
         bool ActualizarEstadisticas(int jugadorId, int puntosObtenidos, bool ganoPartida);
+
+        /// <summary>
+        /// Obtiene la lista de usuarios con sus clasificaciones ordenadas por puntuacion.
+        /// </summary>
+        /// <param name="cantidad">Numero maximo de registros a recuperar.</param>
+        /// <returns>Lista de entidades de Usuario con datos cargados.</returns>
+        IList<Usuario> ObtenerMejoresJugadores(int cantidad);
     }
 }

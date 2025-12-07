@@ -1,46 +1,64 @@
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 using System;
 using System.Windows;
-using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.VistaModelo.Amigos;
 
-namespace PictionaryMusicalCliente
+namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
-    /// Lógica de interacción para la ventana de búsqueda y solicitud de amistad.
+    /// Logica de interaccion para la ventana de busqueda y solicitud de amistad.
     /// </summary>
     public partial class BusquedaAmigo : Window
     {
         private readonly BusquedaAmigoVistaModelo _vistaModelo;
+        private readonly ISonidoManejador _sonidoManejador;
+        private readonly IAmigosServicio _amigosServicio;
+        private readonly IAvisoServicio _avisoServicio;
+        private readonly ILocalizadorServicio _localizador;
+        private readonly IUsuarioAutenticado _usuarioSesion;
 
         /// <summary>
-        /// Constructor por defecto que inicializa el servicio de amigos real.
+        /// Constructor por defecto, solo para uso del dise�ador/XAML. 
+        /// La aplicaci�n debe usar el constructor que recibe dependencias.
         /// </summary>
         public BusquedaAmigo()
-            : this(new BusquedaAmigoVistaModelo(new AmigosServicio()))
         {
         }
 
         /// <summary>
-        /// Constructor que permite inyectar una implementación especifica del servicio 
-        /// (Unit Testing).
+        /// Inicializa la ventana inyectando el servicio requerido.
         /// </summary>
-        public BusquedaAmigo(IAmigosServicio amigosServicio)
-            : this(new BusquedaAmigoVistaModelo(amigosServicio))
+        /// <param name="amigosServicio">Servicio de gestion de amigos ya configurado.</param>
+        public BusquedaAmigo(IAmigosServicio amigosServicio,
+            ISonidoManejador sonidoManejador,
+            IAvisoServicio avisoServicio,
+            ILocalizadorServicio localizadorServicio,
+            IUsuarioAutenticado usuarioSesion)
         {
-        }
-
-        /// <summary>
-        /// Constructor principal que configura la vista modelo y sus eventos.
-        /// </summary>
-        public BusquedaAmigo(BusquedaAmigoVistaModelo vistaModelo)
-        {
-            _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));
+            _amigosServicio = amigosServicio ??
+                throw new ArgumentNullException(nameof(amigosServicio));
+            _sonidoManejador = sonidoManejador ??
+                throw new ArgumentNullException(nameof(sonidoManejador));
+            _avisoServicio = avisoServicio ??
+                throw new ArgumentNullException(nameof(avisoServicio));
+            _localizador = localizadorServicio ??
+                throw new ArgumentNullException(nameof(localizadorServicio));
+            _usuarioSesion = usuarioSesion ??
+                throw new ArgumentNullException(nameof(usuarioSesion));
 
             InitializeComponent();
 
+            _vistaModelo = new BusquedaAmigoVistaModelo(_amigosServicio, _sonidoManejador,
+                _avisoServicio, _localizador, _usuarioSesion);
             DataContext = _vistaModelo;
 
+            ConfigurarEventos();
+        }
+
+        private void ConfigurarEventos()
+        {
             _vistaModelo.SolicitudEnviada += VistaModelo_SolicitudEnviada;
             _vistaModelo.Cancelado += VistaModelo_Cancelado;
             Closed += BuscarAmigo_Closed;
@@ -53,7 +71,6 @@ namespace PictionaryMusicalCliente
                 Dispatcher.Invoke(VistaModelo_SolicitudEnviada);
                 return;
             }
-
             Close();
         }
 
@@ -64,15 +81,17 @@ namespace PictionaryMusicalCliente
                 Dispatcher.Invoke(VistaModelo_Cancelado);
                 return;
             }
-
             Close();
         }
 
         private void BuscarAmigo_Closed(object sender, EventArgs e)
         {
             Closed -= BuscarAmigo_Closed;
-            _vistaModelo.SolicitudEnviada -= VistaModelo_SolicitudEnviada;
-            _vistaModelo.Cancelado -= VistaModelo_Cancelado;
+            if (_vistaModelo != null)
+            {
+                _vistaModelo.SolicitudEnviada -= VistaModelo_SolicitudEnviada;
+                _vistaModelo.Cancelado -= VistaModelo_Cancelado;
+            }
         }
     }
 }

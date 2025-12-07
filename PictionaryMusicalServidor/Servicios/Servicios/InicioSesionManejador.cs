@@ -1,151 +1,234 @@
+using Datos.Modelo;
+using log4net;
+using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
+using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using Datos.Modelo;
-using System;
-using System.Linq;
-using log4net;
-using BCryptNet = BCrypt.Net.BCrypt;
-using System.Data;
-using System.Data.Entity.Core;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity.Core;
+using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
     /// <summary>
     /// Implementacion del servicio de autenticacion de usuarios.
-    /// Valida credenciales comparando identificador (usuario o correo) y contrasena con hash BCrypt.
-    /// Verifica que el identificador y contrasena sean validos antes de buscar el usuario.
+    /// Valida credenciales comparando identificador y contrasena con hash BCrypt.
     /// </summary>
     public class InicioSesionManejador : IInicioSesionManejador
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(InicioSesionManejador));
-        private readonly IContextoFactory _contextoFactory;
+        private static readonly ILog _logger =
+            LogManager.GetLogger(typeof(InicioSesionManejador));
 
-        public InicioSesionManejador() : this(new ContextoFactory())
+        private const int LimiteReportesParaBaneo = 3;
+
+        private readonly IContextoFactoria _contextoFactory;
+
+        public InicioSesionManejador() : this(new ContextoFactoria())
         {
         }
 
-        public InicioSesionManejador(IContextoFactory contextoFactory)
+        public InicioSesionManejador(IContextoFactoria contextoFactory)
         {
-            _contextoFactory = contextoFactory ?? throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactory = contextoFactory ??
+                throw new ArgumentNullException(nameof(contextoFactory));
         }
 
         /// <summary>
         /// Inicia sesion de un usuario validando sus credenciales.
-        /// Busca el usuario por nombre de usuario o correo, verifica la contrasena con BCrypt,
-        /// y retorna los datos del usuario si es exitoso.
         /// </summary>
         /// <param name="credenciales">Credenciales de inicio de sesion del usuario.</param>
         /// <returns>Resultado del inicio de sesion con datos del usuario si es exitoso.</returns>
-        /// <exception cref="ArgumentNullException">Se lanza si credenciales es null.</exception>
-        /// <exception cref="EntityException">Se lanza si hay errores de conexion con la base de datos.</exception>
-        /// <exception cref="DataException">Se lanza si hay errores de datos durante el inicio de sesion.</exception>
-        /// <exception cref="InvalidOperationException">Se lanza si hay operaciones invalidas durante el inicio de sesion.</exception>
-        public ResultadoInicioSesionDTO IniciarSesion(CredencialesInicioSesionDTO credenciales)
+        public ResultadoInicioSesionDTO IniciarSesion(
+            CredencialesInicioSesionDTO credenciales)
         {
             if (credenciales == null)
             {
                 throw new ArgumentNullException(nameof(credenciales));
             }
 
-            string identificador = EntradaComunValidador.NormalizarTexto(credenciales.Identificador);
-            string contrasena = credenciales.Contrasena?.Trim();
-
-            if (!EntradaComunValidador.EsLongitudValida(identificador) || string.IsNullOrWhiteSpace(contrasena))
+            if (!SonCredencialesValidas(credenciales))
             {
-                _logger.WarnFormat("Intento de inicio de sesión con datos inválidos. Identificador: {0}", identificador);
-                return new ResultadoInicioSesionDTO
-                {
-                    CuentaEncontrada = true,
-                    Mensaje = MensajesError.Cliente.CredencialesInvalidas
-                };
+                _logger.Warn("Intento de inicio de sesion con formato de datos invalido.");
+                return CrearRespuestaDatosInvalidos();
             }
 
             try
             {
                 using (var contexto = _contextoFactory.CrearContexto())
                 {
-                    Usuario usuario = BuscarUsuarioPorIdentificador(contexto, identificador);
-
-                    if (usuario == null)
-                    {
-                        _logger.WarnFormat("Intento de inicio de sesión fallido. Usuario no encontrado: {0}", identificador);
-                        return new ResultadoInicioSesionDTO
-                        {
-                            CuentaEncontrada = false,
-                            Mensaje = MensajesError.Cliente.CredencialesIncorrectas
-                        };
-                    }
-
-                    if (!BCryptNet.Verify(contrasena, usuario.Contrasena))
-                    {
-                        _logger.WarnFormat("Intento de inicio de sesión fallido. Contraseña incorrecta para: {0}", usuario.Nombre_Usuario);
-                        return new ResultadoInicioSesionDTO
-                        {
-                            ContrasenaIncorrecta = true,
-                            Mensaje = MensajesError.Cliente.CredencialesIncorrectas
-                        };
-                    }
-
-                    _logger.InfoFormat("Inicio de sesión exitoso. Usuario: {0}, ID: {1}", usuario.Nombre_Usuario, usuario.idUsuario);
-
-                    return new ResultadoInicioSesionDTO
-                    {
-                        InicioSesionExitoso = true,
-                        Usuario = MapearUsuario(usuario)
-                    };
+                    return ProcesarAutenticacion(contexto, credenciales);
                 }
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos durante el inicio de sesión. Fallo en la consulta de usuario.", ex);
-                return new ResultadoInicioSesionDTO
-                {
-                    InicioSesionExitoso = false,
-                    Mensaje = MensajesError.Cliente.ErrorInicioSesion
-                };
+                _logger.Error("Error de base de datos durante el inicio de sesion.", ex);
+                return CrearErrorGenerico();
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos durante el inicio de sesión. Los datos del usuario no se pudieron recuperar.", ex);
-                return new ResultadoInicioSesionDTO
-                {
-                    InicioSesionExitoso = false,
-                    Mensaje = MensajesError.Cliente.ErrorInicioSesion
-                };
+                _logger.Error("Error de datos durante el inicio de sesion.", ex);
+                return CrearErrorGenerico();
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Operación inválida durante el inicio de sesión. Estado inconsistente del contexto.", ex);
-                return new ResultadoInicioSesionDTO
-                {
-                    InicioSesionExitoso = false,
-                    Mensaje = MensajesError.Cliente.ErrorInicioSesion
-                };
+                _logger.Error("Operacion invalida durante el inicio de sesion.", ex);
+                return CrearErrorGenerico();
             }
         }
 
-        private static Usuario BuscarUsuarioPorIdentificador(BaseDatosPruebaEntities contexto, string identificador)
+        private bool SonCredencialesValidas(CredencialesInicioSesionDTO credenciales)
         {
-            var usuariosPorNombre = contexto.Usuario
-                .Where(u => u.Nombre_Usuario == identificador)
-                .ToList();
+            string identificador = EntradaComunValidador.NormalizarTexto(
+                credenciales.Identificador);
 
-            Usuario usuario = usuariosPorNombre
-                .FirstOrDefault(u => string.Equals(u.Nombre_Usuario, identificador, StringComparison.Ordinal));
+            string contrasena = credenciales.Contrasena?.Trim();
 
-            if (usuario != null)
+            if (!EntradaComunValidador.EsLongitudValida(identificador))
             {
-                return usuario;
+                return false;
             }
 
-            var usuariosPorCorreo = contexto.Usuario
-                .Where(u => u.Jugador.Correo == identificador)
-                .ToList();
+            if (string.IsNullOrWhiteSpace(contrasena))
+            {
+                return false;
+            }
 
-            return usuariosPorCorreo
-                .FirstOrDefault(u => string.Equals(u.Jugador?.Correo, identificador, StringComparison.Ordinal));
+            return true;
+        }
+
+        private ResultadoInicioSesionDTO CrearRespuestaDatosInvalidos()
+        {
+            return new ResultadoInicioSesionDTO
+            {
+                CuentaEncontrada = true,
+                Mensaje = MensajesError.Cliente.CredencialesInvalidas
+            };
+        }
+
+        private ResultadoInicioSesionDTO ProcesarAutenticacion(
+            BaseDatosPruebaEntities contexto,
+            CredencialesInicioSesionDTO credenciales)
+        {
+            string identificador = EntradaComunValidador.NormalizarTexto(
+                credenciales.Identificador);
+
+            Usuario usuario;
+            try
+            {
+                usuario = ObtenerUsuarioPorCredencial(contexto, identificador);
+            }
+            catch
+            {
+                _logger.Warn("Inicio de sesion fallido. Usuario no encontrado.");
+                return new ResultadoInicioSesionDTO
+                {
+                    CuentaEncontrada = false,
+                    Mensaje = MensajesError.Cliente.CredencialesIncorrectas
+                };
+            }
+
+            if (!VerificarContrasena(credenciales.Contrasena, usuario.Contrasena))
+            {
+                _logger.Warn("Inicio de sesion fallido. Contrasena incorrecta.");
+
+                return new ResultadoInicioSesionDTO
+                {
+                    ContrasenaIncorrecta = true,
+                    Mensaje = MensajesError.Cliente.CredencialesIncorrectas
+                };
+            }
+
+            if (UsuarioAlcanzoLimiteReportes(contexto, usuario.idUsuario))
+            {
+                _logger.WarnFormat(
+                    "Usuario con id {0} bloqueado por superar limite de reportes.",
+                    usuario.idUsuario);
+
+                return new ResultadoInicioSesionDTO
+                {
+                    InicioSesionExitoso = false,
+                    CuentaEncontrada = true,
+                    Mensaje = MensajesError.Cliente.UsuarioBaneadoPorReportes
+                };
+            }
+
+            _logger.InfoFormat(
+                "Inicio de sesion exitoso para usuario con id {0}.",
+                usuario.idUsuario);
+
+            return new ResultadoInicioSesionDTO
+            {
+                InicioSesionExitoso = true,
+                Usuario = MapearUsuario(usuario)
+            };
+        }
+
+        private bool VerificarContrasena(string contrasenaEntrada, string hashAlmacenado)
+        {
+            if (string.IsNullOrWhiteSpace(contrasenaEntrada) ||
+                string.IsNullOrWhiteSpace(hashAlmacenado))
+            {
+                return false;
+            }
+
+            return BCryptNet.Verify(contrasenaEntrada.Trim(), hashAlmacenado);
+        }
+
+        private bool UsuarioAlcanzoLimiteReportes(BaseDatosPruebaEntities contexto, int usuarioId)
+        {
+            IReporteRepositorio reporteRepositorio = new ReporteRepositorio(contexto);
+            int totalReportes = reporteRepositorio.ContarReportesRecibidos(usuarioId);
+
+            return totalReportes >= LimiteReportesParaBaneo;
+        }
+
+        private static ResultadoInicioSesionDTO CrearErrorGenerico()
+        {
+            return new ResultadoInicioSesionDTO
+            {
+                InicioSesionExitoso = false,
+                Mensaje = MensajesError.Cliente.ErrorInicioSesion
+            };
+        }
+
+        private Usuario ObtenerUsuarioPorCredencial(
+            BaseDatosPruebaEntities contexto,
+            string identificador)
+        {
+            try
+            {
+                return BuscarPorNombreUsuario(contexto, identificador);
+            }
+            catch (KeyNotFoundException)
+            {
+                return BuscarPorCorreoElectronico(contexto, identificador);
+            }
+        }
+
+        private Usuario BuscarPorNombreUsuario(
+            BaseDatosPruebaEntities contexto,
+            string nombreUsuario)
+        {
+            IUsuarioRepositorio repositorio = new UsuarioRepositorio(contexto);
+            return repositorio.ObtenerPorNombreUsuario(nombreUsuario);
+        }
+
+        private Usuario BuscarPorCorreoElectronico(
+            BaseDatosPruebaEntities contexto,
+            string correo)
+        {
+            IUsuarioRepositorio repositorio = new UsuarioRepositorio(contexto);
+            var usuario = repositorio.ObtenerPorCorreo(correo);
+
+            if (usuario == null)
+            {
+                throw new KeyNotFoundException("Usuario no encontrado por correo.");
+            }
+            return usuario;
         }
 
         private static UsuarioDTO MapearUsuario(Usuario usuario)

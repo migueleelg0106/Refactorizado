@@ -1,59 +1,52 @@
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Perfil;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using PictionaryMusicalCliente.ClienteServicios.Dialogos;
-using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.VistaModelo.Perfil;
 
-namespace PictionaryMusicalCliente
+namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
     /// Ventana de gestion del perfil de usuario.
     /// </summary>
     public partial class Perfil : Window
     {
+        private readonly PerfilVistaModelo _vistaModelo;
+
         /// <summary>
-        /// Inicializa la ventana y carga los datos del perfil.
+        /// Constructor por defecto, solo para uso del diseñador/XAML. 
+        /// La aplicacion debe usar el constructor que recibe dependencias.
         /// </summary>
         public Perfil()
         {
+        }
+
+        /// <summary>
+        /// Inicializa la ventana inyectando el ViewModel configurado.
+        /// </summary>
+        /// <param name="vistaModelo">Logica de negocio del perfil.</param>
+        public Perfil(PerfilVistaModelo vistaModelo)
+        {
+            _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));
+
             InitializeComponent();
 
-            IPerfilServicio perfilServicio = new PerfilServicio();
-            ISeleccionarAvatarServicio seleccionarAvatarServicio =
-                new SeleccionAvatarDialogoServicio();
-            ICambioContrasenaServicio cambioContrasenaServicio =
-                new CambioContrasenaServicio();
-            IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio =
-                new VerificacionCodigoDialogoServicio();
-            IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio =
-                new RecuperacionCuentaDialogoServicio(verificarCodigoDialogoServicio);
+            ConfigurarInteraccion();
+            DataContext = _vistaModelo;
+        }
 
-            var vistaModelo = new PerfilVistaModelo(
-                perfilServicio,
-                seleccionarAvatarServicio,
-                cambioContrasenaServicio,
-                recuperacionCuentaDialogoServicio)
-            {
-                CerrarAccion = Close
-            };
-
-            vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
-
-            DataContext = vistaModelo;
+        private void ConfigurarInteraccion()
+        {
+            _vistaModelo.CerrarAccion = Close;
+            _vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
         }
 
         private async void Perfil_LoadedAsync(object sender, RoutedEventArgs e)
         {
-            if (DataContext is PerfilVistaModelo vistaModelo)
-            {
-                await vistaModelo.CargarPerfilAsync().ConfigureAwait(true);
-            }
+            await _vistaModelo.CargarPerfilAsync().ConfigureAwait(true);
         }
 
         private void PopupRedSocial_Opened(object sender, EventArgs e)
@@ -83,10 +76,7 @@ namespace PictionaryMusicalCliente
             ControlVisual.RestablecerEstadoCampo(campoTextoNombre);
             ControlVisual.RestablecerEstadoCampo(campoTextoApellido);
 
-            if (camposInvalidos == null)
-            {
-                return;
-            }
+            if (camposInvalidos == null) return;
 
             if (camposInvalidos.Contains(nameof(PerfilVistaModelo.Nombre)))
             {

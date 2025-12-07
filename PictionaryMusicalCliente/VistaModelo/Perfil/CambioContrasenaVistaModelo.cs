@@ -2,7 +2,6 @@
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Utilidades;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Perfil
 {
@@ -23,6 +23,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
         private readonly string _tokenCodigo;
         private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
+        private readonly ISonidoManejador _sonidoManejador;
+        private readonly IAvisoServicio _avisoServicio;
+        private readonly IValidadorEntrada _validadorEntrada;
 
         private string _nuevaContrasena;
         private string _confirmacionContrasena;
@@ -35,21 +38,30 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         /// <param name="cambioContrasenaServicio">Servicio para ejecutar la actualizacion.</param>
         public CambioContrasenaVistaModelo(
             string tokenCodigo,
-            ICambioContrasenaServicio cambioContrasenaServicio)
+            ICambioContrasenaServicio cambioContrasenaServicio,
+            IAvisoServicio avisoServicio,
+            IValidadorEntrada validadorEntrada,
+            ISonidoManejador sonidoManejador)
         {
             _tokenCodigo = tokenCodigo ?? throw new ArgumentNullException(nameof(tokenCodigo));
             _cambioContrasenaServicio = cambioContrasenaServicio ??
                 throw new ArgumentNullException(nameof(cambioContrasenaServicio));
+            _avisoServicio = avisoServicio ??
+                throw new ArgumentNullException(nameof(avisoServicio));
+            _validadorEntrada = validadorEntrada ??
+                throw new ArgumentNullException(nameof(validadorEntrada));
+            _sonidoManejador = sonidoManejador ??
+                throw new ArgumentNullException(nameof(sonidoManejador));
 
             ConfirmarComando = new ComandoAsincrono(async _ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 await ConfirmarAsync();
             }, _ => !EstaProcesando);
 
             CancelarComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 Cancelar();
             });
         }
@@ -120,7 +132,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             if (camposInvalidos != null && camposInvalidos.Count > 0)
             {
 				_logger.Warn("Validación de contraseña fallida en cliente.");
-                SonidoManejador.ReproducirError();
+                _sonidoManejador.ReproducirError();
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
                 return;
             }
@@ -160,22 +172,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             if (camposInvalidos.Count > 0)
             {
-                AvisoAyudante.Mostrar(Lang.errorTextoConfirmacionContrasenaRequerida);
+                _avisoServicio.Mostrar(Lang.errorTextoConfirmacionContrasenaRequerida);
                 return camposInvalidos;
             }
 
-            DTOs.ResultadoOperacionDTO validacion = ValidacionEntrada.ValidarContrasena(
+            DTOs.ResultadoOperacionDTO validacion = _validadorEntrada.ValidarContrasena(
                 NuevaContrasena);
 
             if (validacion?.OperacionExitosa != true)
             {
-                AvisoAyudante.Mostrar(validacion?.Mensaje ?? Lang.errorTextoContrasenaFormato);
+                _avisoServicio.Mostrar(validacion?.Mensaje ?? Lang.errorTextoContrasenaFormato);
                 return new List<string> { nameof(NuevaContrasena) };
             }
 
             if (!string.Equals(NuevaContrasena, ConfirmacionContrasena, StringComparison.Ordinal))
             {
-                AvisoAyudante.Mostrar(Lang.errorTextoContrasenasNoCoinciden);
+                _avisoServicio.Mostrar(Lang.errorTextoContrasenasNoCoinciden);
                 return new List<string>
                 {
                     nameof(NuevaContrasena),
@@ -196,8 +208,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (resultado == null)
                 {
                     _logger.Error("Servicio de cambio de contraseña devolvió null.");
-                    SonidoManejador.ReproducirError();
-                    AvisoAyudante.Mostrar(Lang.errorTextoActualizarContrasena);
+                    _sonidoManejador.ReproducirError();
+                    _avisoServicio.Mostrar(Lang.errorTextoActualizarContrasena);
                     return null;
                 }
 
@@ -208,15 +220,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
                 if (resultado.OperacionExitosa)
                 {
-                    SonidoManejador.ReproducirExito();
+                    _sonidoManejador.ReproducirExito();
                 }
                 else
                 {
                     _logger.WarnFormat("Fallo al actualizar contraseña en servidor: {0}",
                         resultado.Mensaje);
-                    SonidoManejador.ReproducirError();
+                    _sonidoManejador.ReproducirError();
                 }
-                AvisoAyudante.Mostrar(mensaje);
+                _avisoServicio.Mostrar(mensaje);
                 resultado.Mensaje = mensaje;
 
                 return resultado;
@@ -224,8 +236,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             catch (ServicioExcepcion ex)
             {
                 _logger.Error("Excepción de servicio al actualizar contraseña.", ex);
-                SonidoManejador.ReproducirError();
-                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoActualizarContrasena);
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoActualizarContrasena);
                 return null;
             }
         }

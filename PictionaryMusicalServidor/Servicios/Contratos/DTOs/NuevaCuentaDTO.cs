@@ -46,7 +46,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
         public int AvatarId { get; set; }
 
         /// <summary>
-        /// Codigo de idioma seleccionado por el usuario (opcional, ej. "es-MX" o "en-US").
+        /// Codigo de idioma seleccionado por el usuario.
         /// </summary>
         [DataMember]
         public string Idioma { get; set; }

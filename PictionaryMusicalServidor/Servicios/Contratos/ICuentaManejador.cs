@@ -24,7 +24,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <param name="solicitud">Datos para el reenvio del codigo de verificacion.</param>
         /// <returns>Resultado del reenvio del codigo de verificacion.</returns>
         [OperationContract]
-        ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenvioCodigoVerificacionDTO solicitud);
+        ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion
+            (ReenvioCodigoVerificacionDTO solicitud);
 
         /// <summary>
         /// Confirma el codigo de verificacion ingresado por el usuario.

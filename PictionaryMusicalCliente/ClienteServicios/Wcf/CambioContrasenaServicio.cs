@@ -1,5 +1,4 @@
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Properties.Langs;
 using System;
 using System.ServiceModel;
@@ -16,7 +15,28 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     {
         private static readonly ILog _logger = 
             LogManager.GetLogger(typeof(CambioContrasenaServicio));
-        private const string Endpoint = "BasicHttpBinding_ICambioContrasenaManejador";
+
+        private readonly IWcfClienteEjecutor _ejecutor;
+        private readonly IWcfClienteFabrica _fabricaClientes;
+        private readonly IManejadorErrorServicio _manejadorError;
+        private readonly ILocalizadorServicio _localizador;
+
+        /// <summary>
+        /// Inicializa el servicio con las dependencias necesarias.
+        /// </summary>
+        public CambioContrasenaServicio(
+            IWcfClienteEjecutor ejecutor,
+            IWcfClienteFabrica fabricaClientes,
+            IManejadorErrorServicio manejadorError,
+            ILocalizadorServicio localizador)
+        {
+            _ejecutor = ejecutor ?? throw new ArgumentNullException(nameof(ejecutor));
+            _fabricaClientes = fabricaClientes ??
+                throw new ArgumentNullException(nameof(fabricaClientes));
+            _manejadorError = manejadorError ??
+                throw new ArgumentNullException(nameof(manejadorError));
+            _localizador = localizador ?? throw new ArgumentNullException(nameof(localizador));
+        }
 
         /// <summary>
         /// Inicia el proceso de recuperacion solicitando un codigo al identificador dado.
@@ -24,34 +44,28 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         public async Task<DTOs.ResultadoSolicitudRecuperacionDTO> SolicitarCodigoRecuperacionAsync(
             string identificador)
         {
-            if (string.IsNullOrWhiteSpace(identificador))
-            {
-                throw new ArgumentException(
-                    Lang.errorTextoIdentificadorRecuperacionRequerido,
-                    nameof(identificador));
-            }
+            ValidarTextoObligatorio(
+                identificador,
+                Lang.errorTextoIdentificadorRecuperacionRequerido,
+                nameof(identificador));
 
-            DTOs.ResultadoSolicitudRecuperacionDTO resultado =
-                await EjecutarConManejoDeErroresAsync(
-                () => CodigoVerificacionServicioAyudante.SolicitarCodigoRecuperacionAsync
-                (identificador),
-                Lang.errorTextoServidorSolicitudCambioContrasena
-            ).ConfigureAwait(false);
-
-            if (resultado != null && resultado.CodigoEnviado)
+            var solicitud = new DTOs.SolicitudRecuperarCuentaDTO
             {
-                _logger.InfoFormat("Código de recuperación solicitado para: {0}", 
-                    identificador);
-            }
-
-            return resultado == null ? null : new DTOs.ResultadoSolicitudRecuperacionDTO
-            {
-                CuentaEncontrada = resultado.CuentaEncontrada,
-                CodigoEnviado = resultado.CodigoEnviado,
-                CorreoDestino = resultado.CorreoDestino,
-                Mensaje = resultado.Mensaje,
-                TokenCodigo = resultado.TokenCodigo
+                Identificador = identificador.Trim(),
+                Idioma = ObtenerIdiomaActual()
             };
+
+            DTOs.ResultadoSolicitudRecuperacionDTO resultado = await EjecutarOperacionAsync(
+                async () =>
+                {
+                    var cliente = _fabricaClientes.CrearClienteVerificacion();
+                    return await _ejecutor.EjecutarAsincronoAsync(
+                        cliente,
+                        c => c.SolicitarCodigoRecuperacionAsync(solicitud));
+                },
+                Lang.errorTextoServidorSolicitudCambioContrasena).ConfigureAwait(false);
+            
+            return MapearResultadoSolicitudRecuperacion(resultado);
         }
 
         /// <summary>
@@ -60,30 +74,27 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         public async Task<DTOs.ResultadoSolicitudCodigoDTO> ReenviarCodigoRecuperacionAsync(
             string tokenCodigo)
         {
-            if (string.IsNullOrWhiteSpace(tokenCodigo))
-            {
-                throw new ArgumentException(
-                    Lang.errorTextoTokenCodigoObligatorio,
-                    nameof(tokenCodigo));
-            }
+            ValidarTextoObligatorio(
+                tokenCodigo,
+                Lang.errorTextoTokenCodigoObligatorio,
+                nameof(tokenCodigo));
 
-            DTOs.ResultadoSolicitudCodigoDTO resultado = await EjecutarConManejoDeErroresAsync(
-                () => CodigoVerificacionServicioAyudante.ReenviarCodigoRecuperacionAsync
-                (tokenCodigo),
-                Lang.errorTextoServidorReenviarCodigo
-            ).ConfigureAwait(false);
-
-            if (resultado != null && resultado.CodigoEnviado)
-            {
-                _logger.Info("Reenvío de código de recuperación solicitado.");
-            }
-
-            return resultado == null ? null : new DTOs.ResultadoSolicitudCodigoDTO
-            {
-                CodigoEnviado = resultado.CodigoEnviado,
-                Mensaje = resultado.Mensaje,
-                TokenCodigo = resultado.TokenCodigo
+            var solicitud = new DTOs.ReenvioCodigoDTO 
+            { 
+                TokenCodigo = tokenCodigo.Trim() 
             };
+
+            DTOs.ResultadoSolicitudCodigoDTO resultado = await EjecutarOperacionAsync(
+                async () =>
+                {
+                    var cliente = _fabricaClientes.CrearClienteCambioContrasena();
+                    return await _ejecutor.EjecutarAsincronoAsync(
+                        cliente,
+                        c => c.ReenviarCodigoRecuperacionAsync(solicitud));
+                },
+                Lang.errorTextoServidorReenviarCodigo).ConfigureAwait(false);
+
+            return MapearResultadoSolicitudCodigo(resultado);
         }
 
         /// <summary>
@@ -93,37 +104,25 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             string tokenCodigo,
             string codigoIngresado)
         {
-            if (string.IsNullOrWhiteSpace(tokenCodigo))
-            {
-                throw new ArgumentException(
-                    Lang.errorTextoTokenCodigoObligatorio,
-                    nameof(tokenCodigo));
-            }
+            ValidarConfirmacion(tokenCodigo, codigoIngresado);
 
-            if (string.IsNullOrWhiteSpace(codigoIngresado))
+            var solicitud = new DTOs.ConfirmacionCodigoDTO
             {
-                throw new ArgumentException(
-                    Lang.errorTextoCodigoVerificacionRequerido,
-                    nameof(codigoIngresado));
-            }
-
-            DTOs.ResultadoOperacionDTO resultado = await EjecutarConManejoDeErroresAsync(
-                () => CodigoVerificacionServicioAyudante.ConfirmarCodigoRecuperacionAsync(
-                    tokenCodigo,
-                    codigoIngresado),
-                Lang.errorTextoServidorValidarCodigo
-            ).ConfigureAwait(false);
-
-            if (resultado != null && resultado.OperacionExitosa)
-            {
-                _logger.Info("Código de recuperación confirmado.");
-            }
-
-            return resultado == null ? null : new DTOs.ResultadoOperacionDTO
-            {
-                OperacionExitosa = resultado.OperacionExitosa,
-                Mensaje = resultado.Mensaje
+                TokenCodigo = tokenCodigo,
+                CodigoIngresado = codigoIngresado.Trim()
             };
+
+            DTOs.ResultadoOperacionDTO resultado = await EjecutarOperacionAsync(
+                async () =>
+                {
+                    var cliente = _fabricaClientes.CrearClienteVerificacion();
+                    return await _ejecutor.EjecutarAsincronoAsync(
+                        cliente,
+                        c => c.ConfirmarCodigoRecuperacionAsync(solicitud));
+                },
+                Lang.errorTextoServidorValidarCodigo).ConfigureAwait(false);
+
+            return MapearResultadoOperacion(resultado);
         }
 
         /// <summary>
@@ -133,49 +132,27 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             string tokenCodigo,
             string nuevaContrasena)
         {
-            if (string.IsNullOrWhiteSpace(tokenCodigo))
-            {
-                throw new ArgumentException(
-                    Lang.errorTextoTokenCodigoObligatorio,
-                    nameof(tokenCodigo));
-            }
+            ValidarActualizacion(tokenCodigo, nuevaContrasena);
 
-            if (string.IsNullOrWhiteSpace(nuevaContrasena))
-            {
-                throw new ArgumentNullException(nameof(nuevaContrasena));
-            }
+            var solicitud = CrearSolicitudCambio(tokenCodigo, nuevaContrasena);
 
-            var cliente = new PictionaryServidorServicioCambioContrasena
-                .CambioContrasenaManejadorClient(Endpoint);
+            DTOs.ResultadoOperacionDTO resultado = await EjecutarOperacionAsync(
+                async () =>
+                {
+                    var cliente = _fabricaClientes.CrearClienteCambioContrasena();
+                    return await _ejecutor.EjecutarAsincronoAsync(
+                        cliente,
+                        c => c.ActualizarContrasenaAsync(solicitud));
+                },
+                Lang.errorTextoServidorActualizarContrasena).ConfigureAwait(false);
 
-            var solicitud = new DTOs.ActualizacionContrasenaDTO
-            {
-                TokenCodigo = tokenCodigo,
-                NuevaContrasena = nuevaContrasena
-            };
-
-            DTOs.ResultadoOperacionDTO resultado = await EjecutarConManejoDeErroresAsync(
-                () => WcfClienteAyudante.UsarAsincronoAsync(
-                    cliente,
-                    c => c.ActualizarContrasenaAsync(solicitud)),
-                Lang.errorTextoServidorActualizarContrasena
-            ).ConfigureAwait(false);
-
-            if (resultado != null && resultado.OperacionExitosa)
-            {
-                _logger.Info("Contraseña actualizada mediante recuperación.");
-            }
-
-            return resultado == null ? null : new DTOs.ResultadoOperacionDTO
-            {
-                OperacionExitosa = resultado.OperacionExitosa,
-                Mensaje = resultado.Mensaje
-            };
+            RegistrarActualizacionExitosa(resultado);
+            return MapearResultadoOperacion(resultado);
         }
 
-        private static async Task<TResult> EjecutarConManejoDeErroresAsync<TResult>(
-            Func<Task<TResult>> operacion,
-            string mensajeFallaPredeterminado)
+        private async Task<T> EjecutarOperacionAsync<T>(
+            Func<Task<T>> operacion,
+            string mensajeError)
         {
             try
             {
@@ -183,16 +160,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
-                _logger.WarnFormat("Error de servidor en flujo de cambio de contraseña: {0}",
-                    mensajeFallaPredeterminado, ex);
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
-                    ex,
-                    mensajeFallaPredeterminado);
+                _logger.WarnFormat("Falla controlada en cambio de contrasena: {0}", ex);
+                string mensaje = _manejadorError.ObtenerMensaje(ex, mensajeError);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
-            catch (EndpointNotFoundException ex)
+            catch (CommunicationException ex)
             {
-                _logger.Error("Endpoint no encontrado en flujo de cambio de contraseña.", ex);
+                _logger.Error("Error de comunicacion WCF.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -200,27 +174,116 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
-                _logger.Error("Timeout en flujo de cambio de contraseña.", ex);
+                _logger.Error("Timeout WCF.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
                     ex);
             }
-            catch (CommunicationException ex)
+            catch (Exception ex)
             {
-                _logger.Error("Error de comunicación en flujo de cambio de contraseña.", ex);
-                throw new ServicioExcepcion(
-                    TipoErrorServicio.Comunicacion,
-                    Lang.errorTextoServidorNoDisponible,
-                    ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.Error("Operación inválida en flujo de cambio de contraseña.", ex);
+                _logger.Error("Error inesperado en servicio.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
-                    Lang.errorTextoPrepararSolicitudCambioContrasena,
+                    Lang.errorTextoErrorProcesarSolicitud,
                     ex);
+            }
+        }
+
+        private static void ValidarConfirmacion(string token, string codigo)
+        {
+            ValidarTextoObligatorio(
+                token,
+                Lang.errorTextoTokenCodigoObligatorio,
+                nameof(token));
+            ValidarTextoObligatorio(
+                codigo,
+                Lang.errorTextoCodigoVerificacionRequerido,
+                nameof(codigo));
+        }
+
+        private static void ValidarActualizacion(string token, string contrasena)
+        {
+            ValidarTextoObligatorio(
+                token,
+                Lang.errorTextoTokenCodigoObligatorio,
+                nameof(token));
+
+            if (string.IsNullOrWhiteSpace(contrasena))
+            {
+                throw new ArgumentNullException(nameof(contrasena));
+            }
+        }
+
+        private static DTOs.ActualizacionContrasenaDTO CrearSolicitudCambio(
+            string token,
+            string contrasena)
+        {
+            return new DTOs.ActualizacionContrasenaDTO
+            {
+                TokenCodigo = token,
+                NuevaContrasena = contrasena
+            };
+        }
+
+        private string ObtenerIdiomaActual()
+        {
+            return _localizador.Localizar(null, null) ?? "es-MX";
+        }
+
+        private static DTOs.ResultadoSolicitudRecuperacionDTO MapearResultadoSolicitudRecuperacion(
+            DTOs.ResultadoSolicitudRecuperacionDTO dto)
+        {
+            if (dto == null) return null;
+            return new DTOs.ResultadoSolicitudRecuperacionDTO
+            {
+                CuentaEncontrada = dto.CuentaEncontrada,
+                CodigoEnviado = dto.CodigoEnviado,
+                CorreoDestino = dto.CorreoDestino,
+                Mensaje = dto.Mensaje,
+                TokenCodigo = dto.TokenCodigo
+            };
+        }
+
+        private static DTOs.ResultadoSolicitudCodigoDTO MapearResultadoSolicitudCodigo(
+            DTOs.ResultadoSolicitudCodigoDTO dto)
+        {
+            if (dto == null) return null;
+            return new DTOs.ResultadoSolicitudCodigoDTO
+            {
+                CodigoEnviado = dto.CodigoEnviado,
+                Mensaje = dto.Mensaje,
+                TokenCodigo = dto.TokenCodigo
+            };
+        }
+
+        private static DTOs.ResultadoOperacionDTO MapearResultadoOperacion(
+            DTOs.ResultadoOperacionDTO dto)
+        {
+            if (dto == null) return null;
+            return new DTOs.ResultadoOperacionDTO
+            {
+                OperacionExitosa = dto.OperacionExitosa,
+                Mensaje = dto.Mensaje
+            };
+        }
+
+        private void RegistrarActualizacionExitosa(DTOs.ResultadoOperacionDTO resultado)
+        {
+            if (resultado?.OperacionExitosa == true)
+            {
+                _logger.Info("Contrasena actualizada mediante recuperacion.");
+            }
+        }
+
+        private static void ValidarTextoObligatorio(
+            string valor,
+            string mensajeError,
+            string nombreParametro)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+            {
+                throw new ArgumentException(mensajeError, nombreParametro);
             }
         }
     }

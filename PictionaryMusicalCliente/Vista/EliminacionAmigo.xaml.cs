@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 
-namespace PictionaryMusicalCliente
+namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
     /// Dialogo modal para confirmar la eliminacion de un contacto.

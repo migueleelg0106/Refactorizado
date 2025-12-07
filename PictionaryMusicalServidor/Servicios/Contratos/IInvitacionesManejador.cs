@@ -12,7 +12,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
     public interface IInvitacionesManejador
     {
         /// <summary>
-        /// Envia una invitacion a una sala de juego a un usuario de forma asíncrona.
+        /// Envia una invitacion a una sala de juego a un usuario de forma asincrona.
         /// </summary>
         /// <param name="invitacion">Datos de la invitacion a enviar.</param>
         /// <returns>Resultado del envio de la invitacion.</returns>

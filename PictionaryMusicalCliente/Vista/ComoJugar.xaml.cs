@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace PictionaryMusicalCliente
+namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
     /// Ventana informativa que muestra las instrucciones del juego.

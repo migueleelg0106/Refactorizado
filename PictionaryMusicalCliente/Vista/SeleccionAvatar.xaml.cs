@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace PictionaryMusicalCliente
+namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
     /// Ventana de dialogo modal para seleccionar un avatar de la lista predefinida.

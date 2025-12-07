@@ -6,7 +6,8 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
 {
     /// <summary>
-    /// Gestiona las operaciones relacionadas con solicitudes de amistad y eliminacion de contactos.
+    /// Gestiona las operaciones relacionadas con solicitudes de amistad y 
+    /// eliminacion de contactos.
     /// </summary>
     public interface IAmigosServicio : IDisposable
     {

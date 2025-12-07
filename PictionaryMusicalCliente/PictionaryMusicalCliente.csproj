@@ -72,8 +72,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ClienteServicios\Abstracciones\IAvisoServicio.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IInvitacionSalaServicio.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\ILocalizadorServicio.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IManejadorErrorServicio.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IReportesServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\ISalasServicio.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IUsuarioMapeador.cs" />
+    <Compile Include="ClienteServicios\Abstracciones\IWcfClienteEjecutor.cs" />
+    <Compile Include="ClienteServicios\Wcf\Administrador\ISolicitudesAmistadAdministrador.cs" />
+    <Compile Include="ClienteServicios\Wcf\Administrador\SolicitudesAmistadAdministrador.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\ResultadosInvitacion.cs" />
+    <Compile Include="ClienteServicios\Wcf\ChatServicio.cs" />
+    <Compile Include="ClienteServicios\Wcf\InvitacionSalaServicio.cs" />
+    <Compile Include="ClienteServicios\Wcf\ReportesServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\SalasServicio.cs" />
+    <Compile Include="ClienteServicios\Wcf\WcfClienteFabrica.cs" />
     <Compile Include="Connected Services\PictionaryServidorServicioAmigos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -129,17 +143,28 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\PictionaryServidorServicioReportes\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\PictionaryServidorServicioSalas\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\Catalogos\ICatalogos.cs" />
+    <Compile Include="Modelo\IUsuarioAutenticado.cs" />
     <Compile Include="Modelo\JugadorElemento.cs" />
+    <Compile Include="Modelo\ResultadoReporteJugador.cs" />
+    <Compile Include="Utilidades\Abstracciones\IRecursosManejador.cs" />
+    <Compile Include="Utilidades\Abstracciones\INombreInvitadoGenerador.cs" />
+    <Compile Include="Utilidades\Abstracciones\IValidadorEntrada.cs" />
     <Compile Include="Utilidades\CancionManejador.cs" />
     <Compile Include="Utilidades\MusicaManejador.cs" />
     <Compile Include="Utilidades\EntradaNumerica.cs" />
     <Compile Include="Utilidades\NombreInvitadoGenerador.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\ServicioCodigoRecuperacionAdaptador.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\CodigoRecuperacionServicioAdaptador.cs" />
     <Compile Include="Comandos\Comando.cs" />
     <Compile Include="Comandos\ComandoAsincrono.cs" />
     <Compile Include="Comandos\ComandoDelegado.cs" />
@@ -166,7 +191,6 @@
     <Compile Include="ClienteServicios\Abstracciones\ISeleccionarAvatarServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\IVerificacionCodigoDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Abstracciones\IPerfilServicio.cs" />
-    <Compile Include="ClienteServicios\Abstracciones\IVerificacionCodigoServicio.cs" />
     <Compile Include="ClienteServicios\Dialogos\RecuperacionCuentaDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Dialogos\SeleccionAvatarDialogoServicio.cs" />
     <Compile Include="ClienteServicios\Dialogos\VerificacionCodigoDialogoServicio.cs" />
@@ -174,7 +198,6 @@
     <Compile Include="ClienteServicios\ServicioExcepcion.cs" />
     <Compile Include="ClienteServicios\Wcf\CambioContrasenaServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\ClasificacionServicio.cs" />
-    <Compile Include="ClienteServicios\Wcf\CodigoVerificacionServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\CuentaServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\InvitacionesServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\AmigosServicio.cs" />
@@ -185,18 +208,16 @@
     <Compile Include="Modelo\OpcionEntero.cs" />
     <Compile Include="Modelo\OpcionTexto.cs" />
     <Compile Include="Modelo\SolicitudAmistadEntrada.cs" />
-    <Compile Include="Sesiones\SesionUsuarioActual.cs" />
     <Compile Include="Modelo\UsuarioAutenticado.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\AvisoAyudante.cs" />
+    <Compile Include="ClienteServicios\Wcf\AvisoServicio.cs" />
     <Compile Include="Utilidades\ControlVisual.cs" />
     <Compile Include="Utilidades\Idiomas\LocalizacionContexto.cs" />
     <Compile Include="Utilidades\SonidoManejador.cs" />
-    <Compile Include="Utilidades\ValidacionEntrada.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\CodigoVerificacionServicioAyudante.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\ErrorServicioAyudante.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\MensajeServidorAyudante.cs" />
+    <Compile Include="Utilidades\ValidadorEntrada.cs" />
+    <Compile Include="ClienteServicios\Wcf\ManejadorErrorServicio.cs" />
+    <Compile Include="ClienteServicios\Wcf\LocalizadorServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\UsuarioMapeador.cs" />
-    <Compile Include="ClienteServicios\Wcf\Ayudante\WcfClienteAyudante.cs" />
+    <Compile Include="ClienteServicios\Wcf\Ayudante\WcfClienteEjecutor.cs" />
     <Compile Include="VistaModelo\BaseVistaModelo.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -207,6 +228,7 @@
     <Compile Include="VistaModelo\Amigos\InvitarAmigosVistaModelo.cs" />
     <Compile Include="VistaModelo\Amigos\SolicitudesVistaModelo.cs" />
     <Compile Include="VistaModelo\Perfil\CambioContrasenaVistaModelo.cs" />
+    <Compile Include="VistaModelo\Salas\ReportarJugadorVistaModelo .cs" />
     <Compile Include="VistaModelo\VentanaPrincipal\ClasificacionVistaModelo.cs" />
     <Compile Include="VistaModelo\Ajustes\AjustesVistaModelo.cs" />
     <Compile Include="VistaModelo\Ajustes\AjustesPartidaVistaModelo.cs" />
@@ -236,6 +258,9 @@
     </Compile>
     <Compile Include="Vista\CambioContrasena.xaml.cs">
       <DependentUpon>CambioContrasena.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\ReportarJugador.xaml.cs">
+      <DependentUpon>ReportarJugador.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vista\TerminacionSesion.xaml.cs">
       <DependentUpon>TerminacionSesion.xaml</DependentUpon>
@@ -315,6 +340,7 @@
     <EmbeddedResource Include="Properties\Langs\Lang.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -430,6 +456,16 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\PictionaryServidorServicioPerfil\PerfilManejador.wsdl" />
+    <None Include="Connected Services\PictionaryServidorServicioReportes\Reportes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioReportes\Reportes1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioReportes\Reportes2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PictionaryServidorServicioReportes\ReportesManejador.wsdl" />
     <None Include="Connected Services\PictionaryServidorServicioSalas\Salas.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -522,6 +558,10 @@
     <Page Include="Vista\CambioContrasena.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\ReportarJugador.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Vista\TerminacionSesion.xaml">
       <SubType>Designer</SubType>
@@ -682,6 +722,13 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Connected Services\PictionaryServidorServicioReportes\Reportes.disco" />
+    <None Include="Connected Services\PictionaryServidorServicioReportes\configuration91.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioReportes\configuration.svcinfo" />
+    <None Include="Connected Services\PictionaryServidorServicioReportes\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Recursos\Adivinador.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -728,7 +775,7 @@
     <Content Include="Recursos\Canciones\El_Telefono_Wisin_&amp;_Yandel.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Recursos\Canciones\El_Triste_José_José.mp3">
+    <Content Include="Recursos\Canciones\El_Triste_Jose_Jose.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Recursos\Canciones\Gasolina_Daddy_Yankee.mp3">
@@ -826,6 +873,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Recursos\Reloj_Alarma.png" />
+    <Resource Include="Recursos\Reportar.png" />
     <Content Include="Recursos\ventana_principal_musica.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -842,6 +890,7 @@
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioInvitaciones\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioListaAmigos\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioPerfil\" />
+    <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioReportes\" />
     <WCFMetadataStorage Include="Connected Services\PictionaryServidorServicioSalas\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

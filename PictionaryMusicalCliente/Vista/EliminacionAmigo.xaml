@@ -1,4 +1,4 @@
-﻿<Window x:Class="PictionaryMusicalCliente.EliminacionAmigo"
+﻿<Window x:Class="PictionaryMusicalCliente.Vista.EliminacionAmigo"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"

@@ -3,7 +3,6 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
@@ -14,8 +13,25 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// </summary>
     public class CuentaServicio : ICuentaServicio
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(CuentaServicio));
-        private const string CuentaEndpoint = "BasicHttpBinding_ICuentaManejador";
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(CuentaServicio)); 
+        private readonly IWcfClienteEjecutor _ejecutor;
+        private readonly IWcfClienteFabrica _fabricaClientes;
+        private readonly IManejadorErrorServicio _manejadorError;
+
+        /// <summary>
+        /// Inicializa el servicio de cuentas con sus dependencias.
+        /// </summary>
+        public CuentaServicio(
+            IWcfClienteEjecutor ejecutor,
+            IWcfClienteFabrica fabricaClientes,
+            IManejadorErrorServicio manejadorError)
+        {
+            _ejecutor = ejecutor ?? throw new ArgumentNullException(nameof(ejecutor));
+            _fabricaClientes = fabricaClientes ??
+                throw new ArgumentNullException(nameof(fabricaClientes));
+            _manejadorError = manejadorError ??
+                throw new ArgumentNullException(nameof(manejadorError));
+        }
 
         /// <summary>
         /// Envia una solicitud de registro al servidor.
@@ -28,39 +44,27 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            var cliente = new PictionaryServidorServicioCuenta.CuentaManejadorClient
-                (CuentaEndpoint);
-
             try
             {
-                var resultado = await WcfClienteAyudante
-                    .UsarAsincronoAsync(cliente, c => c.RegistrarCuentaAsync(solicitud))
-                    .ConfigureAwait(false);
+                var resultado = await _ejecutor.EjecutarAsincronoAsync(
+                    _fabricaClientes.CrearClienteCuenta(),
+                    c => c.RegistrarCuentaAsync(solicitud)
+                ).ConfigureAwait(false);
 
-                if (resultado != null && resultado.RegistroExitoso)
-                {
-                    _logger.InfoFormat("Registro de cuenta exitoso para: {}", 
-                        solicitud.Correo);
-                }
-                else
-                {
-                    _logger.WarnFormat("Registro de cuenta fallido para: {0}. Razón: {1}",
-                        solicitud.Correo, resultado?.Mensaje);
-                }
-
+                RegistrarLogResultado(resultado, solicitud.Correo);
                 return resultado;
             }
             catch (FaultException ex)
             {
-                _logger.Warn("Servidor rechazó el registro (Validación/Negocio).", ex);
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                _logger.Warn("Servidor rechazo el registro (Validacion/Negocio).", ex);
+                string mensaje = _manejadorError.ObtenerMensaje(
                     ex,
                     Lang.errorTextoRegistrarCuentaMasTarde);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
-            catch (EndpointNotFoundException ex)
+            catch (CommunicationException ex)
             {
-                _logger.Error("Endpoint de cuenta no encontrado.", ex);
+                _logger.Error("Error de comunicacion al registrar cuenta.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -74,21 +78,28 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     Lang.errorTextoServidorTiempoAgotado,
                     ex);
             }
-            catch (CommunicationException ex)
+            catch (Exception ex)
             {
-                _logger.Error("Error de comunicación al registrar cuenta.", ex);
-                throw new ServicioExcepcion(
-                    TipoErrorServicio.Comunicacion,
-                    Lang.errorTextoServidorNoDisponible,
-                    ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.Error("Operación inválida al registrar cuenta.", ex);
+                _logger.Error("Error inesperado al registrar cuenta.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
                     ex);
+            }
+        }
+
+        private static void RegistrarLogResultado(
+            DTOs.ResultadoRegistroCuentaDTO resultado,
+            string correo)
+        {
+            if (resultado?.RegistroExitoso == true)
+            {
+                _logger.InfoFormat("Registro de cuenta exitoso para: {0}", correo);
+            }
+            else
+            {
+                _logger.WarnFormat("Registro fallido para: {0}. Razon: {1}",
+                    correo, resultado?.Mensaje);
             }
         }
     }

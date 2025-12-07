@@ -90,6 +90,32 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="ObtenerSalaPorCodigo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="codigoSala" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ObtenerSalaPorCodigoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="ObtenerSalaPorCodigoResult" nillable="true" type="q5:SalaDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MarcarPartidaComoIniciada">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="codigoSala" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MarcarPartidaComoIniciadaResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="NotificarJugadorSeUnio">
     <xs:complexType>
       <xs:sequence>
@@ -109,14 +135,14 @@
   <xs:element name="NotificarListaSalasActualizada">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="salas" nillable="true" type="q5:ArrayOfSalaDTO" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="salas" nillable="true" type="q6:ArrayOfSalaDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="NotificarSalaActualizada">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="sala" nillable="true" type="q6:SalaDTO" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/PictionaryMusicalServidor.Servicios.Contratos.DTOs" minOccurs="0" name="sala" nillable="true" type="q7:SalaDTO" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

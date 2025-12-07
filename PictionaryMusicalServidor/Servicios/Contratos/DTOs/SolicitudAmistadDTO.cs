@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+
 namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
 {
     /// <summary>

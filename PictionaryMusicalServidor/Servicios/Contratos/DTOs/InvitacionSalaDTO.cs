@@ -22,7 +22,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
         public string Correo { get; set; }
 
         /// <summary>
-        /// Codigo de idioma para personalizar el correo de invitacion (opcional).
+        /// Codigo de idioma para personalizar el correo de invitacion.
         /// </summary>
         [DataMember]
         public string Idioma { get; set; }

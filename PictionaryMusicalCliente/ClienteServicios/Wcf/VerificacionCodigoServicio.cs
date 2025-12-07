@@ -3,7 +3,6 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
@@ -12,10 +11,61 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     /// <summary>
     /// Servicio para manejar la confirmacion y reenvio de codigos de verificacion.
     /// </summary>
-    public class VerificacionCodigoServicio : IVerificacionCodigoServicio
+    public class VerificacionCodigoServicio : ICodigoVerificacionServicio
     {
         private static readonly ILog _logger = 
             LogManager.GetLogger(typeof(VerificacionCodigoServicio));
+
+        private readonly IWcfClienteEjecutor _ejecutor;
+        private readonly IWcfClienteFabrica _fabricaClientes;
+        private readonly ILocalizadorServicio _localizador;
+        private readonly IManejadorErrorServicio _errorServicio;
+
+        /// <summary>
+        /// Inicializa el servicio con las dependencias necesarias.
+        /// </summary>
+        /// <param name="ejecutor">Manejador seguro de llamadas WCF.</param>
+        /// <param name="fabricaClientes">Fabrica para crear clientes WCF.</param>
+        /// <param name="localizador">Servicio para obtener la cultura actual.</param>
+        public VerificacionCodigoServicio(
+            IWcfClienteEjecutor ejecutor,
+            IWcfClienteFabrica fabricaClientes,
+            ILocalizadorServicio localizador,
+            IManejadorErrorServicio errorServicio)
+        {
+            _ejecutor = ejecutor ?? throw new ArgumentNullException(nameof(ejecutor));
+            _fabricaClientes = fabricaClientes ??
+                throw new ArgumentNullException(nameof(fabricaClientes));
+            _localizador = localizador ?? throw new ArgumentNullException(nameof(localizador));
+            _errorServicio = errorServicio ?? 
+                throw new ArgumentNullException(nameof(errorServicio));
+        }
+
+        /// <summary>
+        /// Solicita un codigo de verificacion para el registro de una nueva cuenta.
+        /// </summary>
+        public async Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(
+            DTOs.NuevaCuentaDTO solicitud)
+        {
+            if (solicitud == null)
+            {
+                throw new ArgumentNullException(nameof(solicitud));
+            }
+
+            solicitud.Idioma ??= _localizador.Localizar(null, null) ?? "es-MX";
+
+            DTOs.ResultadoSolicitudCodigoDTO resultado = await EjecutarOperacionAsync(
+                async () =>
+                {
+                    var cliente = _fabricaClientes.CrearClienteVerificacion();
+                    return await _ejecutor.EjecutarAsincronoAsync(
+                        cliente,
+                        c => c.SolicitarCodigoVerificacionAsync(solicitud));
+                },
+                Lang.errorTextoServidorSolicitudCodigo).ConfigureAwait(false);
+
+            return resultado;
+        }
 
         /// <summary>
         /// Valida el codigo ingresado por el usuario contra el token del servidor.
@@ -31,28 +81,21 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     nameof(tokenCodigo));
             }
 
+            var solicitud = new DTOs.ConfirmacionCodigoDTO
+            {
+                TokenCodigo = tokenCodigo,
+                CodigoIngresado = codigoIngresado?.Trim()
+            };
+
             DTOs.ResultadoRegistroCuentaDTO resultado = await EjecutarOperacionAsync(
-                () => CodigoVerificacionServicioAyudante.ConfirmarCodigoRegistroAsync(
-                    tokenCodigo,
-                    codigoIngresado),
+                async () =>
+                {
+                    var cliente = _fabricaClientes.CrearClienteVerificacion();
+                    return await _ejecutor.EjecutarAsincronoAsync(
+                        cliente,
+                        c => c.ConfirmarCodigoVerificacionAsync(solicitud));
+                },
                 Lang.errorTextoServidorValidarCodigo).ConfigureAwait(false);
-
-            if (resultado == null)
-            {
-                _logger.Warn("El servicio de confirmación de código retornó null.");
-                return null;
-            }
-
-            if (resultado.RegistroExitoso)
-            {
-                _logger.InfoFormat("Código de registro confirmado exitosamente. Token: {0}",
-                    tokenCodigo);
-            }
-            else
-            {
-                _logger.WarnFormat("Confirmación de código fallida. Razón: {0}",
-                    resultado.Mensaje);
-            }
 
             return resultado;
         }
@@ -70,26 +113,25 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     nameof(tokenCodigo));
             }
 
+            var solicitud = new DTOs.ReenvioCodigoVerificacionDTO
+            {
+                TokenCodigo = tokenCodigo.Trim()
+            };
+
             DTOs.ResultadoSolicitudCodigoDTO resultado = await EjecutarOperacionAsync(
-                () => CodigoVerificacionServicioAyudante.ReenviarCodigoRegistroAsync(tokenCodigo),
+                async () =>
+                {
+                    var cliente = _fabricaClientes.CrearClienteCuenta();
+                    return await _ejecutor.EjecutarAsincronoAsync(
+                        cliente,
+                        c => c.ReenviarCodigoVerificacionAsync(solicitud));
+                },
                 Lang.errorTextoServidorReenviarCodigo).ConfigureAwait(false);
-
-            if (resultado == null)
-            {
-                _logger.Warn("El servicio de reenvío de código retornó null.");
-                return null;
-            }
-
-            if (resultado.CodigoEnviado)
-            {
-                _logger.InfoFormat("Código de registro reenviado exitosamente. Token: {0}",
-                    tokenCodigo);
-            }
 
             return resultado;
         }
 
-        private static async Task<T> EjecutarOperacionAsync<T>(
+        private async Task<T> EjecutarOperacionAsync<T>(
             Func<Task<T>> operacion,
             string mensajeErrorPredeterminado)
         {
@@ -99,16 +141,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (FaultException ex)
             {
-                _logger.WarnFormat("Error de lógica del servidor en verificación de código: {0}",
-                    mensajeErrorPredeterminado, ex);
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                _logger.WarnFormat("Error de logica del servidor: {0}", ex);
+                string mensaje = _errorServicio.ObtenerMensaje(
                     ex,
                     mensajeErrorPredeterminado);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
             catch (EndpointNotFoundException ex)
             {
-                _logger.Error("Endpoint de verificación de código no encontrado.", ex);
+                _logger.Error("Endpoint no encontrado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -116,7 +157,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (TimeoutException ex)
             {
-                _logger.Error("Timeout en servicio de verificación de código.", ex);
+                _logger.Error("Timeout en servicio.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
@@ -124,15 +165,15 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación en servicio de verificación.", ex);
+                _logger.Error("Error de comunicacion.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
                     ex);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                _logger.Error("Operación inválida en servicio de verificación.", ex);
+                _logger.Error("Error inesperado.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,

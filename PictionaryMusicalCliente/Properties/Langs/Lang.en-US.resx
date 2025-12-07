@@ -885,6 +885,9 @@
   <data name="errorInicioSesion" xml:space="preserve">
     <value>Could not log in. Please try again.</value>
   </data>
+  <data name="errorTextoUsuarioBaneado" xml:space="preserve">
+    <value>You have been banned from the game for misconduct.</value>
+  </data>
   <data name="errorObtenerCallback" xml:space="preserve">
     <value>Could not establish connection with the server.</value>
   </data>
@@ -1061,5 +1064,47 @@
   </data>
   <data name="partidaTextoPerdisteMensaje" xml:space="preserve">
     <value>You lost this game, better luck next time!</value>
+  </data>
+  <data name="errorTextoServidorSolicitudCodigo" xml:space="preserve">
+    <value>The verification code could not be requested. Please try again later.</value>
+  </data>
+  <data name="reportarJugadorTextoTitulo" xml:space="preserve">
+    <value>REPORT PLAYER</value>
+  </data>
+  <data name="reportarJugadorTextoDescripcion" xml:space="preserve">
+    <value>You are going to report {0}</value>
+  </data>
+  <data name="reportarJugadorTextoMotivoEtiqueta" xml:space="preserve">
+    <value>Report reason</value>
+  </data>
+  <data name="reportarJugadorTextoConfirmar" xml:space="preserve">
+    <value>REPORT</value>
+  </data>
+  <data name="reportarJugadorTextoMotivoRequerido" xml:space="preserve">
+    <value>Report reason is required</value>
+  </data>
+  <data name="reportarJugadorTextoExito" xml:space="preserve">
+    <value>The report was sent successfully</value>
+  </data>
+  <data name="reportarJugadorTextoDuplicado" xml:space="preserve">
+    <value>You have already reported this player</value>
+  </data>
+  <data name="reportarJugadorTextoAutoReporte" xml:space="preserve">
+    <value>You cannot report yourself</value>
+  </data>
+  <data name="errorTextoReportarJugador" xml:space="preserve">
+    <value>An error occurred while sending the report</value>
+  </data>
+  <data name="reportarJugadorTextoMotivoLongitud" xml:space="preserve">
+    <value>The reason for the report should not exceed 100 characters.</value>
+  </data>
+  <data name="MensajeChatTextoMotivoLongitud" xml:space="preserve">
+    <value>The message exceeds the character limit.</value>
+  </data>
+  <data name="errorTextoNoCargaronAvatares" xml:space="preserve">
+    <value>The avatars could not be loaded, please try again later.</value>
+  </data>
+  <data name="avisoTextoReinicioSesion" xml:space="preserve">
+    <value>There was a change in your account, you need to sign in again.</value>
   </data>
 </root>

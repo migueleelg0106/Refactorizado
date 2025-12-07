@@ -2,10 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos;
-using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
-using PictionaryMusicalServidor.Servicios.Servicios.Modelos;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
 {
@@ -13,13 +12,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
     /// Servicio especializado en notificaciones de cambios en salas.
     /// Gestiona las suscripciones y notificaciones de listas de salas.
     /// </summary>
-    internal class NotificadorSalas
+    internal class NotificadorSalas : INotificadorSalas
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(NotificadorSalas));
-        private readonly ConcurrentDictionary<Guid, ISalasManejadorCallback> _suscripciones = new();
-        private readonly Func<IEnumerable<SalaInterna>> _obtenerSalas;
+        private readonly ConcurrentDictionary<Guid, ISalasManejadorCallback> _suscripciones =
+            new ConcurrentDictionary<Guid, ISalasManejadorCallback>();
+        private readonly Func<IEnumerable<SalaInternaManejador>> _obtenerSalas;
 
-        public NotificadorSalas(Func<IEnumerable<SalaInterna>> obtenerSalas)
+        public NotificadorSalas(Func<IEnumerable<SalaInternaManejador>> obtenerSalas)
         {
             _obtenerSalas = obtenerSalas;
         }
@@ -28,29 +28,26 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// Suscribe un callback a las notificaciones de la lista de salas.
         /// </summary>
         /// <param name="callback">Callback a suscribir.</param>
-        /// <returns>ID de la suscripción.</returns>
+        /// <returns>ID de la suscripcion.</returns>
         public Guid Suscribir(ISalasManejadorCallback callback)
         {
             var sesionId = Guid.NewGuid();
             _suscripciones.AddOrUpdate(sesionId, callback, (_, __) => callback);
-            _logger.InfoFormat("Nueva suscripción a lista de salas. Sesión ID: {0}", sesionId);
+
             return sesionId;
         }
 
         /// <summary>
-        /// Elimina una suscripción específica.
+        /// Elimina una suscripcion especifica.
         /// </summary>
-        /// <param name="sesionId">ID de la suscripción a eliminar.</param>
+        /// <param name="sesionId">ID de la suscripcion a eliminar.</param>
         public void Desuscribir(Guid sesionId)
         {
-            if (_suscripciones.TryRemove(sesionId, out _))
-            {
-                _logger.InfoFormat("Suscripción a lista de salas eliminada. Sesión ID: {0}", sesionId);
-            }
+            _suscripciones.TryRemove(sesionId, out _);
         }
 
         /// <summary>
-        /// Elimina todas las suscripciones asociadas a un callback específico.
+        /// Elimina todas las suscripciones asociadas a un callback especifico.
         /// </summary>
         /// <param name="callback">Callback a desuscribir.</param>
         public void DesuscribirPorCallback(ISalasManejadorCallback callback)
@@ -64,15 +61,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             {
                 _suscripciones.TryRemove(key, out _);
             }
-
-            if (keysToRemove.Count > 0)
-            {
-                _logger.InfoFormat("Se eliminaron {0} suscripciones por limpieza de callback.", keysToRemove.Count);
-            }
         }
 
         /// <summary>
-        /// Notifica la lista actualizada de salas a un callback específico.
+        /// Notifica la lista actualizada de salas a un callback especifico.
         /// </summary>
         /// <param name="callback">Callback a notificar.</param>
         public void NotificarListaSalas(ISalasManejadorCallback callback)
@@ -82,21 +74,20 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 var salas = _obtenerSalas().Select(s => s.ToDto()).ToArray();
                 callback.NotificarListaSalasActualizada(salas);
             }
-            catch (System.ServiceModel.CommunicationException ex)
+            catch (CommunicationException ex)
             {
-                _logger.Warn("Error de comunicación al notificar la lista de salas a los suscriptores.", ex);
+                _logger.Warn(
+                    "Error de comunicacion al notificar la lista de salas a los suscriptores.", 
+                    ex);
             }
             catch (TimeoutException ex)
             {
                 _logger.Warn("Timeout al notificar la lista de salas a los suscriptores.", ex);
             }
-            catch (InvalidOperationException ex)
+            catch (ObjectDisposedException ex)
             {
-                _logger.Warn("Operación inválida en comunicación WCF. El canal no está en el estado correcto para la operación.", ex);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error inesperado al notificar la lista de salas a los suscriptores.", ex);
+                _logger.Error(
+                    "Error inesperado al notificar la lista de salas a los suscriptores.", ex);
             }
         }
 
@@ -113,23 +104,24 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 {
                     kvp.Value.NotificarListaSalasActualizada(salas);
                 }
-                catch (System.ServiceModel.CommunicationException ex)
+                catch (CommunicationException ex)
                 {
-                    _logger.Warn(string.Format("{0} (Sesión: {1})", "Error de comunicación al notificar la lista de salas a los suscriptores.", kvp.Key), ex);
+                    _logger.Warn(
+                        "Error de comunicacion al notificar masivamente. Eliminando suscripcion defectuosa.", 
+                        ex);
                     _suscripciones.TryRemove(kvp.Key, out _);
                 }
                 catch (TimeoutException ex)
                 {
-                    _logger.Warn(string.Format("{0} (Sesión: {1})", "Timeout al notificar la lista de salas a los suscriptores.", kvp.Key), ex);
-                    _suscripciones.TryRemove(kvp.Key, out _);
+                    _logger.Warn(
+                        "Error de comunicacion al notificar masivamente. Eliminando suscripcion defectuosa.",
+                        ex);
+                        _suscripciones.TryRemove(kvp.Key, out _);
                 }
-                catch (InvalidOperationException ex)
+                catch (ObjectDisposedException ex)
                 {
-                    _logger.Warn("Operación inválida en comunicación WCF. El canal no está en el estado correcto para la operación.", ex);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error("Error inesperado al notificar la lista de salas a los suscriptores.", ex);
+                    _logger.Error(
+                        "Error inesperado al notificar la lista de salas a los suscriptores.", ex);
                 }
             }
         }

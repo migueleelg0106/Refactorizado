@@ -1,4 +1,4 @@
-﻿using System.ServiceModel;
+using System.ServiceModel;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalServidor.Servicios.Contratos
@@ -11,7 +11,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
     public interface ICursoPartidaManejador
     {
         /// <summary>
-        /// Suscribe a un jugador a la partida de una sala especifica y registra su callback para notificaciones.
+        /// Suscribe a un jugador a la partida de una sala especifica y registra su callback para
+        /// notificaciones.
         /// </summary>
         /// <param name="idSala">Identificador de la sala.</param>
         /// <param name="idJugador">Identificador unico del jugador.</param>
@@ -24,7 +25,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// Inicia la partida de la sala indicada.
         /// </summary>
         /// <param name="idSala">Identificador de la sala.</param>
-        /// <param name="idJugadorSolicitante">Identificador del jugador que solicita el inicio.</param>
+        /// <param name="idJugadorSolicitante">Identificador del jugador que solicita el inicio.
+        /// </param>
         [OperationContract]
         void IniciarPartida(string idSala, string idJugadorSolicitante);
 

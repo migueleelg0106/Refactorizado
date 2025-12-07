@@ -4,7 +4,8 @@ using Datos.Modelo;
 namespace PictionaryMusicalServidor.Datos.DAL.Interfaces
 {
     /// <summary>
-    /// Interfaz de repositorio para la gestion de relaciones de amistad en la capa de acceso a datos.
+    /// Interfaz de repositorio para la gestion de relaciones de amistad en la capa de acceso a 
+    /// datos.
     /// Define operaciones para crear, consultar, actualizar y eliminar amistades.
     /// </summary>
     public interface IAmigoRepositorio
@@ -21,7 +22,8 @@ namespace PictionaryMusicalServidor.Datos.DAL.Interfaces
         /// Crea una solicitud de amistad entre dos usuarios.
         /// </summary>
         /// <param name="usuarioEmisorId">Identificador del usuario que envia la solicitud.</param>
-        /// <param name="usuarioReceptorId">Identificador del usuario que recibe la solicitud.</param>
+        /// <param name="usuarioReceptorId">Identificador del usuario que recibe la solicitud.
+        /// </param>
         /// <returns>Relacion de amistad creada.</returns>
         Amigo CrearSolicitud(int usuarioEmisorId, int usuarioReceptorId);
 

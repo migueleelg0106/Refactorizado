@@ -7,6 +7,9 @@ using PictionaryMusicalServidor.Servicios.LogicaNegocio;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -15,42 +18,61 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 {
     /// <summary>
     /// Implementa una fachada para administrar el curso de las partidas activas.
-    /// Gestiona los callbacks y delega la logica al <see cref="ControladorPartida"/> correspondiente por sala.
+    /// Gestiona los callbacks y delega la logica al ControladorPartida por sala.
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single,
+        ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class CursoPartidaManejador : ICursoPartidaManejador
     {
         private const int TiempoRondaPorDefectoSegundos = 90;
         private const int NumeroRondasPorDefecto = 3;
         private const string DificultadPorDefecto = "Media";
-        private const int LimitePalabrasMensaje = 150;
+        private const int LimiteCaracteresMensaje = 150;
 
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(CursoPartidaManejador));
-        private static readonly Dictionary<string, ControladorPartida> _partidasActivas = new(StringComparer.OrdinalIgnoreCase);
-        private static readonly Dictionary<string, Dictionary<string, ICursoPartidaManejadorCallback>> _callbacksPorSala = new(StringComparer.OrdinalIgnoreCase);
-        private static readonly object _sincronizacion = new();
+        private static readonly ILog _logger =
+            LogManager.GetLogger(typeof(CursoPartidaManejador));
 
-        private readonly IContextoFactory _contextoFactory;
+        private static readonly Dictionary<string, ControladorPartida> _partidasActivas =
+            new Dictionary<string, ControladorPartida>(StringComparer.OrdinalIgnoreCase);
 
-        public CursoPartidaManejador()
-            : this(new ContextoFactory())
+        private static readonly Dictionary<string,
+            Dictionary<string, ICursoPartidaManejadorCallback>> _callbacksPorSala =
+            new Dictionary<string, Dictionary<string, ICursoPartidaManejadorCallback>>(
+                StringComparer.OrdinalIgnoreCase);
+
+        private static readonly object _sincronizacion = new object();
+
+        private readonly IContextoFactoria _contextoFactory;
+        private readonly ISalasManejador _salasManejador;
+        private readonly ICatalogoCanciones _catalogoCanciones;
+
+        public CursoPartidaManejador() : this(
+            new ContextoFactoria(),
+            new SalasManejador(),
+            new CatalogoCanciones())
         {
         }
 
-        public CursoPartidaManejador(IContextoFactory contextoFactory)
+        public CursoPartidaManejador(
+            IContextoFactoria contextoFactory,
+            ISalasManejador salasManejador,
+            ICatalogoCanciones catalogoCanciones)
         {
-            _contextoFactory = contextoFactory ?? throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactory = contextoFactory
+                ?? throw new ArgumentNullException(nameof(contextoFactory));
+
+            _salasManejador = salasManejador
+                ?? throw new ArgumentNullException(nameof(salasManejador));
+
+            _catalogoCanciones = catalogoCanciones
+                ?? throw new ArgumentNullException(nameof(catalogoCanciones));
         }
 
         /// <summary>
-        /// Registra a un jugador para recibir notificaciones de la partida de la sala especificada.
-        /// Tambien agrega al jugador al controlador de partida correspondiente.
+        /// Registra a un jugador para recibir notificaciones de la partida.
         /// </summary>
-        /// <param name="idSala">Identificador de la sala.</param>
-        /// <param name="idJugador">Identificador unico del jugador.</param>
-        /// <param name="nombreUsuario">Nombre visible del jugador.</param>
-        /// <param name="esHost">Indica si el jugador es el host de la sala.</param>
-        public void SuscribirJugador(string idSala, string idJugador, string nombreUsuario, bool esHost)
+        public void SuscribirJugador(string idSala, string idJugador, string nombreUsuario,
+            bool esHost)
         {
             if (string.IsNullOrWhiteSpace(idSala))
             {
@@ -65,15 +87,25 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             var callback = ObtenerCallbackActual();
             var controlador = ObtenerOCrearControlador(idSala.Trim());
 
-            controlador.AgregarJugador(idJugador.Trim(), nombreUsuario?.Trim() ?? string.Empty, esHost);
+            controlador.AgregarJugador(
+                idJugador.Trim(),
+                nombreUsuario?.Trim() ?? string.Empty,
+                esHost);
+
             RegistrarCallback(idSala.Trim(), idJugador.Trim(), callback);
+
+            _logger.InfoFormat(
+                "Jugador id {0} suscrito para partida en sala {1}.",
+                idJugador.Trim(),
+                idSala.Trim());
         }
 
         /// <summary>
         /// Inicia la partida de la sala indicada.
         /// </summary>
         /// <param name="idSala">Identificador de la sala.</param>
-        /// <param name="idJugadorSolicitante">Identificador del jugador que solicita el inicio.</param>
+        /// <param name="idJugadorSolicitante">Identificador del jugador que solicita el inicio.
+        /// </param>
         public void IniciarPartida(string idSala, string idJugadorSolicitante)
         {
             if (string.IsNullOrWhiteSpace(idSala))
@@ -81,7 +113,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new FaultException("El identificador de sala es obligatorio.");
             }
 
-            SalasManejador.MarcarPartidaComoIniciada(idSala.Trim());
+            _logger.InfoFormat(
+                "Inicio de partida solicitado para sala {0} por jugador id {1}.",
+                idSala.Trim(),
+                idJugadorSolicitante?.Trim());
+
+            _salasManejador.MarcarPartidaComoIniciada(idSala.Trim());
             var controlador = ObtenerOCrearControlador(idSala.Trim());
             controlador.IniciarPartida(idJugadorSolicitante?.Trim());
         }
@@ -99,32 +136,28 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new FaultException("El identificador de sala es obligatorio.");
             }
 
-            if (SuperaLimitePalabras(mensaje))
+            if (SuperaLimiteCaracteres(mensaje))
             {
-                throw new FaultException($"El mensaje supera el límite de {LimitePalabrasMensaje} palabras.");
+                throw new FaultException("El mensaje supera el limite de caracteres.");
             }
 
             var controlador = ObtenerOCrearControlador(idSala.Trim());
             controlador.ProcesarMensaje(idJugador?.Trim(), mensaje);
         }
 
-        private static bool SuperaLimitePalabras(string mensaje)
+        private static bool SuperaLimiteCaracteres(string mensaje)
         {
             if (string.IsNullOrWhiteSpace(mensaje))
             {
                 return false;
             }
 
-            var palabras = mensaje.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
-            return palabras.Length > LimitePalabrasMensaje;
+            return mensaje.Length > LimiteCaracteresMensaje;
         }
 
         /// <summary>
         /// Procesa un trazo dibujado por el jugador actual de la sala.
         /// </summary>
-        /// <param name="trazo">Trazo a procesar.</param>
-        /// <param name="idSala">Identificador de la sala.</param>
-        /// <param name="idJugador">Identificador del jugador.</param>
         public void EnviarTrazo(TrazoDTO trazo, string idSala, string idJugador)
         {
             if (string.IsNullOrWhiteSpace(idSala))
@@ -146,130 +179,220 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
 
                 var configuracion = ObtenerConfiguracionSala(idSala);
+                var gestorJugadores = new GestorJugadoresPartida();
+
                 var controlador = new ControladorPartida(
                     configuracion?.TiempoPorRondaSegundos ?? TiempoRondaPorDefectoSegundos,
                     configuracion?.Dificultad ?? DificultadPorDefecto,
-                    configuracion?.NumeroRondas ?? NumeroRondasPorDefecto);
+                    configuracion?.NumeroRondas ?? NumeroRondasPorDefecto,
+                    _catalogoCanciones,
+                    gestorJugadores);
 
                 if (!string.IsNullOrWhiteSpace(configuracion?.IdiomaCanciones))
                 {
                     controlador.ConfigurarIdiomaCanciones(configuracion.IdiomaCanciones);
                 }
+
                 SuscribirEventos(controlador, idSala);
                 _partidasActivas[idSala] = controlador;
-                _callbacksPorSala[idSala] = new Dictionary<string, ICursoPartidaManejadorCallback>(StringComparer.OrdinalIgnoreCase);
+                _callbacksPorSala[idSala] =
+                    new Dictionary<string, ICursoPartidaManejadorCallback>(
+                        StringComparer.OrdinalIgnoreCase);
 
-                _logger.InfoFormat("Controlador de partida creado para la sala {0}.", idSala);
                 return controlador;
             }
         }
 
         private void SuscribirEventos(ControladorPartida controlador, string idSala)
         {
-            controlador.PartidaIniciada += () => NotificarCallbacks(idSala, callback => callback.NotificarPartidaIniciada());
-            controlador.InicioRonda += rondaBase =>
-            Task.Run(() =>
-            {
-                var jugadoresEstado = controlador.ObtenerJugadores();
+            controlador.PartidaIniciada += () => ManejarPartidaIniciada(idSala);
 
-                var dibujante = jugadoresEstado.FirstOrDefault(j => j.EsDibujante);
-                string nombreDibujante = dibujante?.NombreUsuario ?? string.Empty;
+            controlador.InicioRonda += (ronda) =>
+                Task.Run(() => ManejarInicioRonda(idSala, ronda, controlador));
 
-                List<KeyValuePair<string, ICursoPartidaManejadorCallback>> callbacks;
-                lock (_sincronizacion)
-                {
-                    if (!_callbacksPorSala.TryGetValue(idSala, out var callbacksSala)) return;
-                    callbacks = callbacksSala.ToList();
-                }
+            controlador.JugadorAdivino += (jugador, puntos) =>
+                ManejarJugadorAdivino(idSala, jugador, puntos);
 
-                var cancionActual = CatalogoCancionesLogico.ObtenerCancionPorId(rondaBase.IdCancion);
+            controlador.MensajeChatRecibido += (jugador, mensaje) =>
+                ManejarMensajeChat(idSala, jugador, mensaje);
 
-                foreach (var par in callbacks)
-                {
-                    var idJugador = par.Key;
-                    var callback = par.Value;
+            controlador.TrazoRecibido += (trazo) =>
+                ManejarTrazoRecibido(idSala, trazo);
 
-                    var datosJugador = jugadoresEstado.FirstOrDefault(j =>
-                        string.Equals(j.IdConexion, idJugador, StringComparison.OrdinalIgnoreCase));
+            controlador.FinRonda += () => ManejarFinRonda(idSala);
 
-                    bool esDibujante = datosJugador != null && datosJugador.EsDibujante;
-
-                    string pistaArtista = rondaBase.PistaArtista;
-                    string pistaGenero = rondaBase.PistaGenero;
-
-                    if (esDibujante && cancionActual != null)
-                    {
-                        pistaArtista = cancionActual.Artista;
-                        pistaGenero = cancionActual.Genero;
-                    }
-
-                    var rondaPersonalizada = new RondaDTO
-                    {
-                        IdCancion = rondaBase.IdCancion,
-                        PistaArtista = pistaArtista,
-                        PistaGenero = pistaGenero,
-                        TiempoSegundos = rondaBase.TiempoSegundos,
-                        Rol = esDibujante ? "Dibujante" : "Adivinador",
-                        NombreDibujante = nombreDibujante
-                    };
-
-                    try
-                    {
-                        callback.NotificarInicioRonda(rondaPersonalizada);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.WarnFormat("Error notificando inicio de ronda a {0}", idJugador, ex);
-                        RemoverCallback(idSala, idJugador);
-                    }
-                }
-            });
-            controlador.JugadorAdivino += (jugador, puntos) => NotificarCallbacks(idSala, callback => callback.NotificarJugadorAdivino(jugador, puntos));
-            controlador.MensajeChatRecibido += (jugador, mensaje) => NotificarCallbacks(idSala, callback => callback.NotificarMensajeChat(jugador, mensaje));
-            controlador.TrazoRecibido += trazo => NotificarCallbacks(idSala, callback => callback.NotificarTrazoRecibido(trazo));
-            controlador.FinRonda += () => NotificarCallbacks(idSala, callback => callback.NotificarFinRonda());
-            controlador.FinPartida += resultado =>
-            {
-                Task.Run(() => ActualizarClasificacionPartida(controlador, resultado));
-                NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado));
-            };
+            controlador.FinPartida += (resultado) =>
+                ManejarFinPartida(idSala, resultado, controlador);
         }
 
-        private void ActualizarClasificacionPartida(ControladorPartida controlador, ResultadoPartidaDTO resultado)
+        private void ManejarPartidaIniciada(string idSala)
         {
-            if (controlador == null || resultado?.Clasificacion == null || !resultado.Clasificacion.Any())
+            NotificarCallbacks(idSala, cb => cb.NotificarPartidaIniciada());
+        }
+
+        private void ManejarInicioRonda(
+            string idSala,
+            RondaDTO rondaBase,
+            ControladorPartida controlador)
+        {
+            var jugadoresEstado = controlador.ObtenerJugadores();
+            var dibujante = jugadoresEstado.FirstOrDefault(j => j.EsDibujante);
+            string nombreDibujante = dibujante?.NombreUsuario ?? string.Empty;
+
+            List<KeyValuePair<string, ICursoPartidaManejadorCallback>> callbacks;
+
+            lock (_sincronizacion)
+            {
+                if (!_callbacksPorSala.TryGetValue(idSala, out var callbacksSala))
+                {
+                    return;
+                }
+                callbacks = callbacksSala.ToList();
+            }
+
+            var cancionActual = _catalogoCanciones.ObtenerCancionPorId(rondaBase.IdCancion);
+
+            foreach (var par in callbacks)
+            {
+                NotificarInicioRondaIndividual(
+                    idSala,
+                    par.Key,
+                    par.Value,
+                    rondaBase,
+                    jugadoresEstado,
+                    nombreDibujante,
+                    cancionActual);
+            }
+        }
+
+        private void NotificarInicioRondaIndividual(
+            string idSala,
+            string idJugador,
+            ICursoPartidaManejadorCallback callback,
+            RondaDTO rondaBase,
+            IEnumerable<JugadorPartida> jugadoresEstado,
+            string nombreDibujante,
+            Datos.Entidades.Cancion cancionActual)
+        {
+            var datosJugador = jugadoresEstado.FirstOrDefault(j =>
+                string.Equals(
+                    j.IdConexion,
+                    idJugador,
+                    StringComparison.OrdinalIgnoreCase));
+
+            bool esDibujante = datosJugador != null && datosJugador.EsDibujante;
+
+            string pistaArtista = rondaBase.PistaArtista;
+            string pistaGenero = rondaBase.PistaGenero;
+
+            if (esDibujante && cancionActual != null)
+            {
+                pistaArtista = cancionActual.Artista;
+                pistaGenero = cancionActual.Genero;
+            }
+
+            var rondaPersonalizada = new RondaDTO
+            {
+                IdCancion = rondaBase.IdCancion,
+                PistaArtista = pistaArtista,
+                PistaGenero = pistaGenero,
+                TiempoSegundos = rondaBase.TiempoSegundos,
+                Rol = esDibujante ? "Dibujante" : "Adivinador",
+                NombreDibujante = nombreDibujante
+            };
+
+            try
+            {
+                callback.NotificarInicioRonda(rondaPersonalizada);
+            }
+            catch (CommunicationException ex)
+            {
+                _logger.WarnFormat(
+                    "Error notificando inicio de ronda a {0}",
+                    idJugador,
+                    ex);
+
+                RemoverCallback(idSala, idJugador);
+            }
+            catch (TimeoutException ex)
+            {
+                _logger.WarnFormat(
+                    "Error notificando inicio de ronda a {0}",
+                    idJugador,
+                    ex);
+
+                RemoverCallback(idSala, idJugador);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                _logger.WarnFormat(
+                    "Error notificando inicio de ronda a {0}",
+                    idJugador,
+                    ex);
+
+                RemoverCallback(idSala, idJugador);
+            }
+        }
+
+        private void ManejarJugadorAdivino(string idSala, string jugador, int puntos)
+        {
+            NotificarCallbacks(
+                idSala,
+                cb => cb.NotificarJugadorAdivino(jugador, puntos));
+        }
+
+        private void ManejarMensajeChat(string idSala, string jugador, string mensaje)
+        {
+            NotificarCallbacks(
+                idSala,
+                cb => cb.NotificarMensajeChat(jugador, mensaje));
+        }
+
+        private void ManejarTrazoRecibido(string idSala, TrazoDTO trazo)
+        {
+            NotificarCallbacks(idSala, cb => cb.NotificarTrazoRecibido(trazo));
+        }
+
+        private void ManejarFinRonda(string idSala)
+        {
+            NotificarCallbacks(idSala, cb => cb.NotificarFinRonda());
+        }
+
+        private void ManejarFinPartida(
+            string idSala,
+            ResultadoPartidaDTO resultado,
+            ControladorPartida controlador)
+        {
+            _salasManejador.MarcarPartidaComoFinalizada(idSala);
+            Task.Run(() => ActualizarClasificacionPartida(controlador, resultado));
+            NotificarCallbacks(idSala, cb => cb.NotificarFinPartida(resultado));
+        }
+
+        private void ActualizarClasificacionPartida(
+            ControladorPartida controlador,
+            ResultadoPartidaDTO resultado)
+        {
+            if (controlador == null ||
+                resultado?.Clasificacion == null ||
+                !resultado.Clasificacion.Any())
             {
                 return;
             }
 
             if (!string.IsNullOrWhiteSpace(resultado.Mensaje))
             {
-                _logger.Info("La partida finalizó de forma anticipada o con mensaje informativo. No se actualizará la clasificación.");
+                _logger.Info("Partida finalizada sin clasificacion por mensaje de error.");
                 return;
             }
 
-            List<JugadorPartida> jugadoresFinales;
-
-            try
-            {
-                jugadoresFinales = controlador.ObtenerJugadores()?.ToList();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error al obtener los jugadores para actualizar la clasificación al finalizar la partida.", ex);
-                return;
-            }
+            var jugadoresFinales = ObtenerJugadoresFinales(controlador);
 
             if (jugadoresFinales == null || jugadoresFinales.Count == 0)
             {
                 return;
             }
 
-            int puntajeMaximo = jugadoresFinales.Max(j => j.PuntajeTotal);
-            var ganadores = jugadoresFinales
-                .Where(j => j.PuntajeTotal == puntajeMaximo)
-                .Select(j => j.IdConexion)
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var ganadores = CalcularGanadores(jugadoresFinales);
 
             try
             {
@@ -279,31 +402,111 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                     foreach (var jugador in jugadoresFinales)
                     {
-                        if (!int.TryParse(jugador.IdConexion, out int jugadorId) || jugadorId <= 0)
-                        {
-                            continue;
-                        }
-
-                        bool ganoPartida = ganadores.Contains(jugador.IdConexion);
-
-                        try
-                        {
-                            clasificacionRepositorio.ActualizarEstadisticas(jugadorId, jugador.PuntajeTotal, ganoPartida);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.ErrorFormat("No se pudo actualizar la clasificación del jugador {0}.", jugadorId, ex);
-                        }
+                        PersistirEstadisticasJugador(
+                            clasificacionRepositorio,
+                            jugador,
+                            ganadores);
                     }
                 }
             }
-            catch (Exception ex)
+            catch (DbUpdateException ex)
             {
-                _logger.Error("Error inesperado al actualizar las clasificaciones de la partida.", ex);
+                _logger.Error("Error inesperado al actualizar clasificaciones.", ex);
+            }
+            catch (EntityException ex)
+            {
+                _logger.Error("Error inesperado al actualizar clasificaciones.", ex);
+            }
+            catch (DataException ex)
+            {
+                _logger.Error("Error inesperado al actualizar clasificaciones.", ex);
             }
         }
 
-        private void NotificarCallbacks(string idSala, Action<ICursoPartidaManejadorCallback> accion)
+        private List<JugadorPartida> ObtenerJugadoresFinales(ControladorPartida controlador)
+        {
+            try
+            {
+                return controlador.ObtenerJugadores()?.ToList();
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.Error(
+                    "Error al obtener jugadores para actualizar clasificacion.",
+                    ex);
+                return new List<JugadorPartida>();
+            }
+            catch (EntityException ex)
+            {
+                _logger.Error(
+                    "Error al obtener jugadores para actualizar clasificacion.",
+                    ex);
+                return new List<JugadorPartida>();
+            }
+            catch (DataException ex)
+            {
+                _logger.Error(
+                    "Error al obtener jugadores para actualizar clasificacion.",
+                    ex);
+                return new List<JugadorPartida>();
+            }
+        }
+
+        private HashSet<string> CalcularGanadores(List<JugadorPartida> jugadores)
+        {
+            int puntajeMaximo = jugadores.Max(j => j.PuntajeTotal);
+
+            return jugadores
+                .Where(j => j.PuntajeTotal == puntajeMaximo)
+                .Select(j => j.IdConexion)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        }
+
+        private void PersistirEstadisticasJugador(
+            ClasificacionRepositorio repositorio,
+            JugadorPartida jugador,
+            HashSet<string> ganadores)
+        {
+            if (!int.TryParse(jugador.IdConexion, out int jugadorId) || jugadorId <= 0)
+            {
+                return;
+            }
+
+            bool ganoPartida = ganadores.Contains(jugador.IdConexion);
+
+            try
+            {
+                repositorio.ActualizarEstadisticas(
+                    jugadorId,
+                    jugador.PuntajeTotal,
+                    ganoPartida);
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.ErrorFormat(
+                    "No se pudo actualizar clasificacion del jugador {0}.",
+                    jugadorId,
+                    ex);
+            }
+            catch (EntityException ex)
+            {
+                _logger.ErrorFormat(
+                    "No se pudo actualizar clasificacion del jugador {0}.",
+                    jugadorId,
+                    ex);
+            }
+            catch (DataException ex)
+            {
+                _logger.ErrorFormat(
+                    "No se pudo actualizar clasificacion del jugador {0}.",
+                    jugadorId,
+                    ex);
+            }
+        }
+
+        private void NotificarCallbacks(
+            string idSala,
+            Action<ICursoPartidaManejadorCallback> accion)
         {
             List<KeyValuePair<string, ICursoPartidaManejadorCallback>> callbacks;
             lock (_sincronizacion)
@@ -322,7 +525,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 {
                     if (!CanalActivo(par.Value))
                     {
-                        _logger.WarnFormat("El canal de jugador {0} en sala {1} ya no está activo. Se quitará su callback.", par.Key, idSala);
+                        _logger.WarnFormat(
+                            "Canal inactivo para jugador {0} en sala {1}. Removiendo.",
+                            par.Key,
+                            idSala);
+
                         RemoverCallback(idSala, par.Key);
                         continue;
                     }
@@ -330,30 +537,43 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
                 catch (ObjectDisposedException ex)
                 {
-                    _logger.WarnFormat("El canal de jugador {0} en sala {1} fue desechado. Se quitará su callback.", par.Key, idSala);
+                    _logger.WarnFormat(
+                        "Canal desechado para jugador {0} en sala {1}. Removiendo.",
+                        par.Key,
+                        idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
                 catch (CommunicationObjectFaultedException ex)
                 {
-                    _logger.WarnFormat("El canal de jugador {0} en sala {1} está en estado Faulted. Se quitará su callback.", par.Key, idSala);
+                    _logger.WarnFormat(
+                        "Canal en falta para jugador {0} en sala {1}. Removiendo.",
+                        par.Key,
+                        idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
                 catch (CommunicationException ex)
                 {
-                    _logger.WarnFormat("Error de comunicacion con jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
+                    _logger.WarnFormat(
+                        "Error comunicacion con jugador {0} en sala {1}. Removiendo.",
+                        par.Key,
+                        idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
                 catch (TimeoutException ex)
                 {
-                    _logger.WarnFormat("Timeout al notificar a jugador {0} en sala {1}. Se quitará su callback.", par.Key, idSala);
+                    _logger.WarnFormat(
+                        "Timeout con jugador {0} en sala {1}. Removiendo.",
+                        par.Key,
+                        idSala);
                     _logger.Warn(ex);
                     RemoverCallback(idSala, par.Key);
                 }
             }
         }
+
         private static bool CanalActivo(ICursoPartidaManejadorCallback callback)
         {
             if (callback is ICommunicationObject canal)
@@ -364,13 +584,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             return true;
         }
 
-        private void RegistrarCallback(string idSala, string idJugador, ICursoPartidaManejadorCallback callback)
+        private void RegistrarCallback(
+            string idSala,
+            string idJugador,
+            ICursoPartidaManejadorCallback callback)
         {
             lock (_sincronizacion)
             {
                 if (!_callbacksPorSala.TryGetValue(idSala, out var callbacks))
                 {
-                    callbacks = new Dictionary<string, ICursoPartidaManejadorCallback>(StringComparer.OrdinalIgnoreCase);
+                    callbacks = new Dictionary<string, ICursoPartidaManejadorCallback>(
+                        StringComparer.OrdinalIgnoreCase);
+
                     _callbacksPorSala[idSala] = callbacks;
                 }
 
@@ -394,7 +619,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     callbacks.Remove(idJugador);
                 }
 
-                if (_partidasActivas.TryGetValue(idSala, out var controlador))
+                if (_partidasActivas.TryGetValue(idSala, out var controlador)
+                    && !controlador.EstaFinalizada)
                 {
                     controlador.RemoverJugador(idJugador);
                 }
@@ -422,14 +648,43 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return SalasManejador.ObtenerSalaPorCodigo(idSala)?.Configuracion;
+                return _salasManejador.ObtenerSalaPorCodigo(idSala)?.Configuracion;
             }
-            catch (Exception ex)
+            catch (CommunicationException ex)
             {
-                _logger.WarnFormat("No se pudo obtener la configuracion de la sala {0}. Se usaran valores por defecto.", idSala);
+                _logger.WarnFormat(
+                    "No se pudo obtener configuracion de sala. Usará la sala por defecto.",
+                    idSala);
                 _logger.Warn(ex);
-                return null;
+                return CrearConfiguracionPorDefecto();
             }
+            catch (TimeoutException ex)
+            {
+                _logger.WarnFormat(
+                    "No se pudo obtener configuracion de sala. Usará la sala por defecto.",
+                    idSala);
+                _logger.Warn(ex);
+                return CrearConfiguracionPorDefecto();
+            }
+            catch (ObjectDisposedException ex)
+            {
+                _logger.WarnFormat(
+                    "No se pudo obtener configuracion de sala. Usará la sala por defecto.",
+                    idSala);
+                _logger.Warn(ex);
+                return CrearConfiguracionPorDefecto();
+            }
+        }
+
+        private ConfiguracionPartidaDTO CrearConfiguracionPorDefecto()
+        {
+            return new ConfiguracionPartidaDTO
+            {
+                TiempoPorRondaSegundos = TiempoRondaPorDefectoSegundos,
+                NumeroRondas = NumeroRondasPorDefecto,
+                Dificultad = DificultadPorDefecto,
+                IdiomaCanciones = "Espanol"
+            };
         }
     }
 }

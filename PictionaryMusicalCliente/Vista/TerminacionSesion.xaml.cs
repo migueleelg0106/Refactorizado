@@ -1,46 +1,52 @@
-﻿using PictionaryMusicalCliente.VistaModelo.Sesion;
-using System.Linq;
+﻿using System;
 using System.Windows;
+using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.VistaModelo.Sesion;
 
-namespace PictionaryMusicalCliente
+namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
-    /// Ventana de dialogo para confirmar y ejecutar el cierre de sesion del usuario.
+    /// Ventana de dialogo para confirmar y ejecutar el cierre de sesion.
     /// </summary>
     public partial class TerminacionSesion : Window
     {
         private readonly TerminacionSesionVistaModelo _vistaModelo;
+        private readonly Action _navegarAlInicio;
+        IUsuarioAutenticado _usuarioAutenticado;
 
         /// <summary>
-        /// Inicializa la ventana y configura la logica de navegacion post-cierre.
+        /// Constructor por defecto, solo para uso del diseñador/XAML. 
+        /// La aplicación debe usar el constructor que recibe dependencias.
         /// </summary>
         public TerminacionSesion()
         {
+        }
+
+        /// <summary>
+        /// Inicializa la ventana.
+        /// </summary>
+        /// <param name="navegarAlInicio">Accion opcional para navegar al login.</param>
+        public TerminacionSesion(IUsuarioAutenticado usuarioAutenticado,
+            Action navegarAlInicio)
+        {
+            _usuarioAutenticado = usuarioAutenticado ??
+                throw new ArgumentNullException(nameof(usuarioAutenticado));
+
             InitializeComponent();
 
-            _vistaModelo = new TerminacionSesionVistaModelo();
+            _navegarAlInicio = navegarAlInicio ?? (() => Close());
+
+            _vistaModelo = new TerminacionSesionVistaModelo(_usuarioAutenticado);
             _vistaModelo.OcultarDialogo = () => Close();
-            _vistaModelo.EjecutarCierreSesionYNavegacion = EjecutarNavegacionInicioSesion;
+            _vistaModelo.EjecutarCierreSesionYNavegacion = EjecutarNavegacionSegura;
 
             DataContext = _vistaModelo;
         }
 
-        private static void EjecutarNavegacionInicioSesion()
+        private void EjecutarNavegacionSegura()
         {
-            var inicioSesion = new InicioSesion();
-
-            var ventanasACerrar = Application.Current.Windows
-                .Cast<Window>()
-                .Where(v => v != inicioSesion)
-                .ToList();
-
-            inicioSesion.Show();
-            Application.Current.MainWindow = inicioSesion;
-
-            foreach (var ventana in ventanasACerrar)
-            {
-                ventana.Close();
-            }
+            _navegarAlInicio?.Invoke();
+            Close();
         }
     }
 }

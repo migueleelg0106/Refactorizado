@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Perfil;
 
-namespace PictionaryMusicalCliente
+namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
     /// Ventana para gestionar el cambio de contraseña del usuario.

@@ -2,13 +2,14 @@
 using System.IO;
 using System.Windows.Media;
 using log4net;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.Utilidades
 {
     /// <summary>
     /// Maneja la reproduccion de canciones especificas del juego.
     /// </summary>
-    public class CancionManejador : IDisposable
+    public class CancionManejador : ICancionManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -16,30 +17,6 @@ namespace PictionaryMusicalCliente.Utilidades
         private const double VolumenPredeterminado = 0.5;
         private readonly MediaPlayer _reproductor;
         private bool _desechado;
-
-        /// <summary>
-        /// Obtiene o establece el volumen de la reproduccion (0.0 a 1.0).
-        /// </summary>
-        public double Volumen
-        {
-            get => _reproductor.Volume;
-            set
-            {
-                double clamped = Math.Max(0, Math.Min(1, value));
-                if (Math.Abs(_reproductor.Volume - clamped) < 0.0001)
-                {
-                    return;
-                }
-
-                _reproductor.Volume = clamped;
-                GuardarPreferencia(clamped);
-            }
-        }
-
-        /// <summary>
-        /// Indica si actualmente se esta reproduciendo una cancion.
-        /// </summary>
-        public bool EstaReproduciendo { get; private set; }
 
         /// <summary>
         /// Inicializa una nueva instancia del manejador de canciones.
@@ -52,6 +29,30 @@ namespace PictionaryMusicalCliente.Utilidades
         }
 
         /// <summary>
+        /// Obtiene o establece el volumen de la reproduccion (0.0 a 1.0).
+        /// </summary>
+        public double Volumen
+        {
+            get => _reproductor.Volume;
+            set
+            {
+                double ajustado = Math.Max(0, Math.Min(1, value));
+                if (Math.Abs(_reproductor.Volume - ajustado) < 0.0001)
+                {
+                    return;
+                }
+
+                _reproductor.Volume = ajustado;
+                GuardarPreferencia(ajustado);
+            }
+        }
+
+        /// <summary>
+        /// Indica si actualmente se esta reproduciendo una cancion.
+        /// </summary>
+        public bool EstaReproduciendo { get; private set; }
+
+        /// <summary>
         /// Reproduce una canción ubicada en la carpeta 'Recursos'.
         /// </summary>
         /// <param name="nombreArchivo">Nombre del archivo con extensión.</param>
@@ -59,45 +60,26 @@ namespace PictionaryMusicalCliente.Utilidades
         {
             if (string.IsNullOrWhiteSpace(nombreArchivo))
             {
-                _logger.Warn("Se intentó reproducir una canción con nombre de archivo vacío.");
+                _logger.Warn("Intento de reproducir archivo con nombre vacio.");
                 return;
             }
 
             try
             {
-                string rutaCompleta = Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "Recursos",
-                    "Canciones",
-                    nombreArchivo);
+                string ruta = ConstruirRutaArchivo(nombreArchivo);
 
-                if (File.Exists(rutaCompleta))
+                if (File.Exists(ruta))
                 {
-                    _reproductor.Open(new Uri(rutaCompleta, UriKind.Absolute));
-                    _reproductor.Play();
-                    EstaReproduciendo = true;
-                    _logger.InfoFormat("Reproduciendo canción: {0}", nombreArchivo);
+                    IniciarReproduccion(ruta, nombreArchivo);
                 }
                 else
                 {
-                    _logger.ErrorFormat("Archivo de audio no encontrado en ruta: {0}",
-                        rutaCompleta);
+                    _logger.ErrorFormat("Archivo de audio no encontrado: {0}", ruta);
                 }
             }
-            catch (UriFormatException uriEx)
+            catch (Exception ex)
             {
-                _logger.ErrorFormat("Formato de URI inválido para canción: {0}",
-                    nombreArchivo, uriEx);
-            }
-            catch (InvalidOperationException opEx)
-            {
-                _logger.ErrorFormat("Error de operación en reproductor para: {0}", 
-                    nombreArchivo, opEx);
-            }
-            catch (ArgumentException argEx)
-            {
-                _logger.ErrorFormat("Argumento inválido en ruta de canción: {0}",
-                    nombreArchivo, argEx);
+                ManejarExcepcionReproduccion(ex, nombreArchivo);
             }
         }
 
@@ -129,35 +111,69 @@ namespace PictionaryMusicalCliente.Utilidades
         /// </summary>
         protected virtual void Dispose(bool disposing)
         {
-            if (!_desechado)
+            if (_desechado)
             {
-                if (disposing)
+                return;
+            }
+
+            if (disposing)
+            {
+                try
                 {
-                    try
-                    {
-                        _reproductor.Stop();
-                        _reproductor.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Se usa Exception aqui para evitar fugas en el Dispose, 
-                        // pero se loguea como advertencia.
-                        _logger.Warn("Excepción durante Dispose de CancionManejador.", ex);
-                    }
+                    _reproductor.Stop();
+                    _reproductor.Close();
                 }
-                _desechado = true;
+                catch (Exception ex)
+                {
+                    // Se usa Exception aqui para evitar fugas en el Dispose, 
+                    // pero se loguea como advertencia.
+                    _logger.Warn("Excepcion durante Dispose de CancionManejador.", ex);
+                }
+            }
+            _desechado = true;
+        }
+
+        private static string ConstruirRutaArchivo(string nombreArchivo)
+        {
+            return Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Recursos",
+                "Canciones",
+                nombreArchivo);
+        }
+
+        private void IniciarReproduccion(string ruta, string nombre)
+        {
+            _reproductor.Open(new Uri(ruta, UriKind.Absolute));
+            _reproductor.Play();
+            EstaReproduciendo = true;
+            _logger.InfoFormat("Reproduciendo: {0}", nombre);
+        }
+
+        private static void ManejarExcepcionReproduccion(Exception ex, string nombre)
+        {
+            if (ex is UriFormatException)
+            {
+                _logger.ErrorFormat("URI invalido para cancion: {0}", nombre);
+            }
+            else if (ex is InvalidOperationException)
+            {
+                _logger.ErrorFormat("Error de operacion en reproductor para: {0}", nombre);
+            }
+            else
+            {
+                _logger.ErrorFormat("Error inesperado reproduciendo {0}: {1}", nombre, ex);
             }
         }
 
         private static double ObtenerVolumenGuardado()
         {
-            double volumenGuardado = Properties.Settings.Default.volumenCancion;
-            if (double.IsNaN(volumenGuardado) || double.IsInfinity(volumenGuardado))
+            double valor = Properties.Settings.Default.volumenCancion;
+            if (double.IsNaN(valor) || double.IsInfinity(valor))
             {
                 return VolumenPredeterminado;
             }
-
-            return Math.Max(0, Math.Min(1, volumenGuardado));
+            return Math.Max(0, Math.Min(1, valor));
         }
 
         private static void GuardarPreferencia(double volumen)

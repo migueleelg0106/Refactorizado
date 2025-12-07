@@ -1,5 +1,6 @@
 using log4net;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,7 +17,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const double PorcentajePuntosDibujante = 0.2;
+        private readonly IChatMensajeria _chatMensajeria;
+        private readonly IChatReglasPartida _chatReglasPartida;
 
         private bool _puedeEscribir;
         private bool _esPartidaIniciada;
@@ -27,8 +29,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <summary>
         /// Inicializa la VistaModelo del chat.
         /// </summary>
-        public ChatVistaModelo()
+        public ChatVistaModelo(IChatMensajeria chatMensajeria,
+            IChatReglasPartida chatReglasPartida)
         {
+            _chatMensajeria = chatMensajeria
+                ?? throw new ArgumentNullException(nameof(chatMensajeria));
+            _chatReglasPartida = chatReglasPartida
+                ?? throw new ArgumentNullException(nameof(chatReglasPartida));
             _puedeEscribir = true;
             _esPartidaIniciada = false;
             _esDibujante = false;
@@ -69,7 +76,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public string NombreCancionCorrecta
         {
             get => _nombreCancionCorrecta;
-            set => EstablecerPropiedad(ref _nombreCancionCorrecta, value);
+            set
+            {
+                if (EstablecerPropiedad(ref _nombreCancionCorrecta, value))
+                {
+                    _chatReglasPartida.NombreCancionCorrecta = value;
+                }
+            }
         }
 
         /// <summary>
@@ -78,7 +91,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public int TiempoRestante
         {
             get => _tiempoRestante;
-            set => EstablecerPropiedad(ref _tiempoRestante, value);
+            set
+            {
+                if (EstablecerPropiedad(ref _tiempoRestante, value))
+                {
+                    _chatReglasPartida.TiempoRestante = value;
+                }
+            }
         }
 
         /// <summary>
@@ -92,22 +111,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public event Action<string, string> MensajeDoradoRecibido;
 
         /// <summary>
-        /// Accion para enviar mensaje al servidor de chat.
-        /// </summary>
-        public Action<string> EnviarMensajeAlServidor { get; set; }
-
-        /// <summary>
-        /// Funcion para registrar un acierto en el servidor de juego.
-        /// Parametros: nombreJugador, puntosAdivinador, puntosDibujante.
-        /// </summary>
-        public Func<string, int, int, Task> RegistrarAciertoEnServidor { get; set; }
-
-        /// <summary>
-        /// Accion para obtener el nombre del jugador actual.
-        /// </summary>
-        public Func<string> ObtenerNombreJugadorActual { get; set; }
-
-        /// <summary>
         /// Envia un mensaje de chat con logica de intercepcion segun el estado del juego.
         /// </summary>
         /// <param name="mensaje">Contenido del mensaje.</param>
@@ -118,27 +121,28 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            if (!EsPartidaIniciada)
-            {
-                _logger.InfoFormat("Enviando mensaje de chat (partida no iniciada): {0}", mensaje);
-                EnviarMensajeAlServidor?.Invoke(mensaje);
-                return;
-            }
+            var decision = await _chatReglasPartida
+                .EvaluarMensajeAsync(mensaje, EsPartidaIniciada, EsDibujante)
+                .ConfigureAwait(false);
 
-            if (EsDibujante)
+            switch (decision)
             {
-                _logger.Info("El dibujante no puede enviar mensajes durante su turno.");
-                return;
-            }
-
-            if (EsRespuestaCorrecta(mensaje))
-            {
-                await ProcesarAciertoAsync().ConfigureAwait(false);
-            }
-            else
-            {
-                _logger.InfoFormat("Enviando mensaje de chat (intento fallido): {0}", mensaje);
-                EnviarMensajeAlServidor?.Invoke(mensaje);
+                case ChatDecision.CanalLibre:
+                    _logger.InfoFormat(
+                        "Enviando mensaje de chat (partida no iniciada): {0}",
+                        mensaje);
+                    _chatMensajeria.Enviar(mensaje);
+                    break;
+                case ChatDecision.IntentoFallido:
+                    _logger.InfoFormat("Enviando mensaje de chat (intento fallido): {0}", mensaje);
+                    _chatMensajeria.Enviar(mensaje);
+                    break;
+                case ChatDecision.MensajeBloqueado:
+                    _logger.Info("El dibujante no puede enviar mensajes durante su turno.");
+                    break;
+                case ChatDecision.AciertoRegistrado:
+                    PuedeEscribir = false;
+                    break;
             }
         }
 
@@ -185,44 +189,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             else
             {
                 dispatcher.BeginInvoke(() => MensajeDoradoRecibido?.Invoke(string.Empty, mensajeDorado));
-            }
-        }
-
-        private bool EsRespuestaCorrecta(string mensaje)
-        {
-            if (string.IsNullOrWhiteSpace(NombreCancionCorrecta))
-            {
-                return false;
-            }
-
-            return string.Equals(
-                mensaje.Trim(),
-                NombreCancionCorrecta.Trim(),
-                StringComparison.OrdinalIgnoreCase);
-        }
-
-        private async Task ProcesarAciertoAsync()
-        {
-            string nombreJugador = ObtenerNombreJugadorActual?.Invoke() ?? string.Empty;
-
-            int puntosAdivinador = TiempoRestante;
-            int puntosDibujante = (int)(puntosAdivinador * PorcentajePuntosDibujante);
-
-            _logger.InfoFormat(
-                "Acierto detectado. Jugador: {0}, Puntos adivinador: {1}, Puntos dibujante: {2}",
-                nombreJugador,
-                puntosAdivinador,
-                puntosDibujante);
-
-            PuedeEscribir = false;
-
-            if (RegistrarAciertoEnServidor != null)
-            {
-                await RegistrarAciertoEnServidor(
-                    nombreJugador,
-                    puntosAdivinador,
-                    puntosDibujante)
-                    .ConfigureAwait(false);
             }
         }
     }

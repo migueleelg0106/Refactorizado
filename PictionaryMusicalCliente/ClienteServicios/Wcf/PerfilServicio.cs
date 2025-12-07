@@ -1,6 +1,5 @@
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -15,38 +14,51 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
     public class PerfilServicio : IPerfilServicio
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(PerfilServicio));
-        private const string PerfilEndpoint = "BasicHttpBinding_IPerfilManejador";
+        private readonly IWcfClienteEjecutor _ejecutor;
+        private readonly IWcfClienteFabrica _fabricaClientes;
+        private readonly IManejadorErrorServicio _manejadorError;
+
+        /// <summary>
+        /// Inicializa el servicio de perfil con las dependencias requeridas.
+        /// </summary>
+        public PerfilServicio(
+            IWcfClienteEjecutor ejecutor,
+            IWcfClienteFabrica fabricaClientes,
+            IManejadorErrorServicio manejadorError)
+        {
+            _ejecutor = ejecutor ?? throw new ArgumentNullException(nameof(ejecutor));
+            _fabricaClientes = fabricaClientes ??
+                throw new ArgumentNullException(nameof(fabricaClientes));
+            _manejadorError = manejadorError ??
+                throw new ArgumentNullException(nameof(manejadorError));
+        }
 
         /// <summary>
         /// Obtiene la informacion del perfil de un usuario por su ID.
         /// </summary>
         public async Task<DTOs.UsuarioDTO> ObtenerPerfilAsync(int usuarioId)
         {
-            var cliente = new PictionaryServidorServicioPerfil.PerfilManejadorClient
-                (PerfilEndpoint);
-
             try
             {
-                DTOs.UsuarioDTO perfilDto = await WcfClienteAyudante
-                    .UsarAsincronoAsync(cliente, c => c.ObtenerPerfilAsync(usuarioId))
-                    .ConfigureAwait(false);
+                DTOs.UsuarioDTO perfil = await _ejecutor.EjecutarAsincronoAsync(
+                    _fabricaClientes.CrearClientePerfil(),
+                    c => c.ObtenerPerfilAsync(usuarioId)
+                ).ConfigureAwait(false);
 
-                _logger.InfoFormat("Perfil obtenido exitosamente para Usuario ID: {0}",
-                    usuarioId);
-                return perfilDto;
+                _logger.InfoFormat("Perfil obtenido para ID: {0}", usuarioId);
+                return perfil;
             }
             catch (FaultException ex)
             {
-                _logger.WarnFormat("Fallo al obtener perfil para ID {0}.",
-                    usuarioId, ex);
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                _logger.WarnFormat("Fallo al obtener perfil para ID {0}.", usuarioId);
+                string mensaje = _manejadorError.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorObtenerPerfil);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
-            catch (EndpointNotFoundException ex)
+            catch (CommunicationException ex)
             {
-                _logger.Error("Endpoint de perfil no encontrado.", ex);
+                _logger.Error("Error de comunicacion al obtener perfil.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.avisoTextoComunicacionServidorSesion,
@@ -60,17 +72,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     Lang.avisoTextoServidorTiempoSesion,
                     ex);
             }
-            catch (CommunicationException ex)
+            catch (Exception ex)
             {
-                _logger.Error("Error de comunicación al obtener perfil.", ex);
-                throw new ServicioExcepcion(
-                    TipoErrorServicio.Comunicacion,
-                    Lang.avisoTextoComunicacionServidorSesion,
-                    ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.Error("Operación inválida al obtener perfil.", ex);
+                _logger.Error("Error inesperado en perfil.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoPerfilActualizarInformacion,
@@ -89,25 +93,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            var cliente = new PictionaryServidorServicioPerfil.PerfilManejadorClient
-                (PerfilEndpoint);
-
             try
             {
-                DTOs.ResultadoOperacionDTO resultado = await WcfClienteAyudante
-                    .UsarAsincronoAsync(cliente, c => c.ActualizarPerfilAsync(solicitud))
-                    .ConfigureAwait(false);
+                DTOs.ResultadoOperacionDTO resultado = await _ejecutor.EjecutarAsincronoAsync(
+                    _fabricaClientes.CrearClientePerfil(),
+                    c => c.ActualizarPerfilAsync(solicitud)
+                ).ConfigureAwait(false);
 
-                if (resultado != null && resultado.OperacionExitosa)
-                {
-                    _logger.InfoFormat("Perfil actualizado correctamente para Usuario ID: {0}",
-                        solicitud.UsuarioId);
-                }
-                else
-                {
-                    _logger.WarnFormat("No se pudo actualizar el perfil. Mensaje: {0}",
-                        resultado?.Mensaje);
-                }
+                RegistrarLogActualizacion(resultado, solicitud.UsuarioId);
 
                 return new DTOs.ResultadoOperacionDTO
                 {
@@ -118,14 +111,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             catch (FaultException ex)
             {
                 _logger.Warn("Error de servidor al actualizar perfil.", ex);
-                string mensaje = ErrorServicioAyudante.ObtenerMensaje(
+                string mensaje = _manejadorError.ObtenerMensaje(
                     ex,
                     Lang.errorTextoServidorActualizarPerfil);
                 throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
             }
-            catch (EndpointNotFoundException ex)
+            catch (CommunicationException ex)
             {
-                _logger.Error("Endpoint no encontrado al actualizar perfil.", ex);
+                _logger.Error("Error de comunicacion al actualizar perfil.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
@@ -139,21 +132,27 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     Lang.errorTextoServidorTiempoAgotado,
                     ex);
             }
-            catch (CommunicationException ex)
+            catch (Exception ex)
             {
-                _logger.Error("Error de comunicación al actualizar perfil.", ex);
-                throw new ServicioExcepcion(
-                    TipoErrorServicio.Comunicacion,
-                    Lang.errorTextoServidorNoDisponible,
-                    ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.Error("Operación inválida al actualizar perfil.", ex);
+                _logger.Error("Error inesperado al actualizar perfil.", ex);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
                     ex);
+            }
+        }
+
+        private static void RegistrarLogActualizacion(
+            DTOs.ResultadoOperacionDTO resultado,
+            int usuarioId)
+        {
+            if (resultado?.OperacionExitosa == true)
+            {
+                _logger.InfoFormat("Perfil actualizado para ID: {0}", usuarioId);
+            }
+            else
+            {
+                _logger.WarnFormat("Fallo actualizacion perfil: {0}", resultado?.Mensaje);
             }
         }
     }

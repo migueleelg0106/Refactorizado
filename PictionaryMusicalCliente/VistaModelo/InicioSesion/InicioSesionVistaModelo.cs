@@ -3,8 +3,6 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Sesiones;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.VistaModelo.Salas;
 using System;
 using System.Collections.Generic;
@@ -16,6 +14,7 @@ using System.Windows;
 using System.Windows.Input;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 {
@@ -31,6 +30,11 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
         private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogoServicio;
         private readonly ILocalizacionServicio _localizacionServicio;
+        private readonly ISonidoManejador _sonidoManejador;
+        private readonly IAvisoServicio _avisoServicio;
+        private readonly ILocalizadorServicio _localizador;
+        private readonly INombreInvitadoGenerador _generadorNombres;
+        private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly Func<ISalasServicio> _salasServicioFactory;
 
         /// <summary>
@@ -52,6 +56,11 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             ICambioContrasenaServicio cambioContrasenaServicio,
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
             ILocalizacionServicio localizacionServicio,
+            ILocalizadorServicio localizador,
+            IAvisoServicio avisoServicio,
+            ISonidoManejador sonidoManejador,
+            INombreInvitadoGenerador generadorNombres,
+            IUsuarioAutenticado usuarioSesion,
             Func<ISalasServicio> salasServicioFactory)
         {
             _inicioSesionServicio = inicioSesionServicio ??
@@ -64,28 +73,38 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 throw new ArgumentNullException(nameof(localizacionServicio));
             _salasServicioFactory = salasServicioFactory ??
                 throw new ArgumentNullException(nameof(salasServicioFactory));
+            _localizador = localizador ??
+                throw new ArgumentNullException(nameof(localizador));
+            _avisoServicio = avisoServicio ??
+                throw new ArgumentNullException(nameof(avisoServicio));
+            _sonidoManejador = sonidoManejador ??
+                throw new ArgumentNullException(nameof(sonidoManejador));
+            _usuarioSesion = usuarioSesion ??
+                throw new ArgumentNullException(nameof(usuarioSesion));
+            _generadorNombres = generadorNombres ??
+                throw new ArgumentNullException(nameof(generadorNombres));
 
             IniciarSesionComando = new ComandoAsincrono(async _ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 await IniciarSesionAsync();
             }, _ => !EstaProcesando);
 
             RecuperarCuentaComando = new ComandoAsincrono(async _ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 await RecuperarCuentaAsync();
             }, _ => !EstaProcesando);
 
             AbrirCrearCuentaComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 AbrirCrearCuenta?.Invoke();
             });
 
             IniciarSesionInvitadoComando = new ComandoAsincrono(async _ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 await IniciarSesionInvitadoAsync().ConfigureAwait(true);
             }, _ => !EstaProcesando);
 
@@ -220,13 +239,13 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 if (salasServicio == null)
                 {
 					_logger.Error("La fábrica de servicios devolvió un servicio de salas nulo.");
-                    SonidoManejador.ReproducirError();
-                    AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
+                    _sonidoManejador.ReproducirError();
+                    _avisoServicio.Mostrar(Lang.errorTextoNoEncuentraPartida);
                     return Task.CompletedTask;
                 }
 
                 var vistaModelo = new IngresoPartidaInvitadoVistaModelo(_localizacionServicio,
-                    salasServicio);
+                    salasServicio, _avisoServicio, _sonidoManejador, _generadorNombres);
 
                 vistaModelo.SalaUnida = (sala, nombreInvitado) =>
                 {
@@ -237,8 +256,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
                 if (MostrarIngresoInvitado == null)
                 {
-                    SonidoManejador.ReproducirError();
-                    AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
+                    _sonidoManejador.ReproducirError();
+                    _avisoServicio.Mostrar(Lang.errorTextoNoEncuentraPartida);
                     salasServicio.Dispose();
                     return Task.CompletedTask;
                 }
@@ -256,8 +275,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 // dado que factory.Invoke() podria lanzar excepciones no tipadas.
                 _logger.Error("Error crítico al iniciar flujo de invitado.", ex);
                 salasServicio?.Dispose();
-                SonidoManejador.ReproducirError();
-                AvisoAyudante.Mostrar(Lang.errorTextoNoEncuentraPartida);
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(Lang.errorTextoNoEncuentraPartida);
             }
 
             return Task.CompletedTask;
@@ -268,7 +287,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             var (esValido, identificadorTrimmed) = ValidarEntradasYMostrarErrores();
             if (!esValido)
             {
-                SonidoManejador.ReproducirError();
+                _sonidoManejador.ReproducirError();
                 _logger.Warn("Intento de inicio de sesión con campos vacíos.");
                 return;
             }
@@ -293,8 +312,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             catch (ServicioExcepcion ex)
             {
                 _logger.Error("Excepción de servicio durante inicio de sesión.", ex);
-                SonidoManejador.ReproducirError();
-                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoServidorInicioSesion);
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoServidorInicioSesion);
             }
             finally
             {
@@ -325,7 +344,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             if (camposInvalidos.Any())
             {
                 MostrarCamposInvalidos?.Invoke(camposInvalidos);
-                AvisoAyudante.Mostrar(Lang.errorTextoCamposInvalidosGenerico);
+                _avisoServicio.Mostrar(Lang.errorTextoCamposInvalidosGenerico);
                 return (false, null);
             }
 
@@ -337,8 +356,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             if (resultado == null)
             {
                 _logger.Error("El servicio de inicio de sesión retornó null.");
-                SonidoManejador.ReproducirError();
-                AvisoAyudante.Mostrar(Lang.errorTextoServidorInicioSesion);
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(Lang.errorTextoServidorInicioSesion);
                 return;
             }
 
@@ -346,7 +365,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             {
                 _logger.WarnFormat("Inicio de sesión fallido. Mensaje servidor: {0}",
                     resultado.Mensaje);
-                SonidoManejador.ReproducirError();
+                _sonidoManejador.ReproducirError();
                 MostrarErrorInicioSesion(resultado);
                 return;
             }
@@ -355,15 +374,15 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             {
                 _logger.InfoFormat("Sesión establecida exitosamente para ID: {0}", 
                     resultado.Usuario.UsuarioId);
-                SesionUsuarioActual.EstablecerUsuario(resultado.Usuario);
+                _usuarioSesion.CargarDesdeDTO(resultado.Usuario);
             }
 
-            SonidoManejador.ReproducirExito();
+            _sonidoManejador.ReproducirExito();
             InicioSesionCompletado?.Invoke(resultado);
             CerrarAccion?.Invoke();
         }
 
-        private static void MostrarErrorInicioSesion(DTOs.ResultadoInicioSesionDTO resultado)
+        private void MostrarErrorInicioSesion(DTOs.ResultadoInicioSesionDTO resultado)
         {
             string mensaje = resultado?.Mensaje;
 
@@ -374,7 +393,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!string.IsNullOrWhiteSpace(mensaje))
             {
-                AvisoAyudante.Mostrar(mensaje);
+                _avisoServicio.Mostrar(mensaje);
             }
         }
 
@@ -384,8 +403,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (string.IsNullOrWhiteSpace(identificador))
             {
-                SonidoManejador.ReproducirError();
-                AvisoAyudante.Mostrar(Lang.errorTextoIdentificadorRecuperacionRequerido);
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(Lang.errorTextoIdentificadorRecuperacionRequerido);
                 return;
             }
 
@@ -404,19 +423,19 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 {
                     _logger.WarnFormat("Recuperación fallida o cancelada: {0}",
                         resultado.Mensaje);
-                    SonidoManejador.ReproducirError();
-                    string mensajeLocalizado = MensajeServidorAyudante.Localizar(
+                    _sonidoManejador.ReproducirError();
+                    string mensajeLocalizado = _localizador.Localizar(
                         resultado.Mensaje,
                         Lang.errorTextoCuentaNoRegistrada);
 
-                    AvisoAyudante.Mostrar(mensajeLocalizado);
+                    _avisoServicio.Mostrar(mensajeLocalizado);
                 }
             }
             catch (ServicioExcepcion ex)
             {
                 _logger.Error("Error al intentar recuperar cuenta.", ex);
-                SonidoManejador.ReproducirError();
-                AvisoAyudante.Mostrar(ex.Message ??
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(ex.Message ??
                     Lang.errorTextoServidorSolicitudCambioContrasena);
             }
             finally

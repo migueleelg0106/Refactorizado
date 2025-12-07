@@ -1,21 +1,38 @@
 ﻿using System;
 using System.Windows.Media;
 using log4net;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.ClienteServicios
 {
     /// <summary>
     /// Controla la reproduccion de musica de fondo en la aplicacion.
     /// </summary>
-    public class MusicaManejador : IDisposable
+    public class MusicaManejador : IMusicaManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private const double VolumenPredeterminado = 0.5;
+
         private readonly MediaPlayer _reproductor;
         private bool _desechado;
         private double _volumenGuardado;
+
+        /// <summary>
+        /// Inicializa una nueva instancia del manejador de musica.
+        /// </summary>
+        public MusicaManejador()
+        {
+            _reproductor = new MediaPlayer();
+            _reproductor.MediaEnded += EnMedioTerminado;
+            _reproductor.MediaOpened += EnMedioAbierto;
+            _reproductor.MediaFailed += EnMedioFallido;
+
+            double volumenPreferido = ObtenerVolumenGuardado();
+            _volumenGuardado = volumenPreferido;
+            Volumen = volumenPreferido;
+            EstaSilenciado = _volumenGuardado < 0.0001;
+        }
 
         /// <summary>
         /// Indica si el reproductor esta actualmente emitiendo sonido.
@@ -35,37 +52,21 @@ namespace PictionaryMusicalCliente.ClienteServicios
             get => _reproductor.Volume;
             set
             {
-                double clamped = Math.Max(0, Math.Min(1, value));
-                if (Math.Abs(_reproductor.Volume - clamped) < 0.0001)
+                double ajustado = Math.Max(0, Math.Min(1, value));
+                if (Math.Abs(_reproductor.Volume - ajustado) < 0.0001)
                 {
                     return;
                 }
 
-                _reproductor.Volume = clamped;
+                _reproductor.Volume = ajustado;
+                EstaSilenciado = ajustado < 0.0001;
 
-                EstaSilenciado = clamped < 0.0001;
                 if (!EstaSilenciado)
                 {
-                    _volumenGuardado = clamped;
+                    _volumenGuardado = ajustado;
                 }
-
-                GuardarPreferencia(clamped);
+                GuardarPreferencia(ajustado);
             }
-        }
-
-        /// <summary>
-        /// Inicializa una nueva instancia del manejador de musica.
-        /// </summary>
-        public MusicaManejador()
-        {
-            _reproductor = new MediaPlayer();
-            _reproductor.MediaEnded += EnMedioTerminado;
-            _reproductor.MediaOpened += EnMedioAbierto;
-            _reproductor.MediaFailed += EnMedioFallido;
-            double volumenPreferido = ObtenerVolumenGuardado();
-            _volumenGuardado = volumenPreferido;
-            this.Volumen = volumenPreferido;
-            EstaSilenciado = _volumenGuardado < 0.0001;
         }
 
         /// <summary>
@@ -74,14 +75,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         /// <returns>True si esta silenciado, false si tiene volumen.</returns>
         public bool AlternarSilencio()
         {
-            if (EstaSilenciado)
-            {
-                this.Volumen = _volumenGuardado;
-            }
-            else
-            {
-                this.Volumen = 0;
-            }
+            Volumen = EstaSilenciado ? _volumenGuardado : 0;
             return EstaSilenciado;
         }
 
@@ -93,35 +87,20 @@ namespace PictionaryMusicalCliente.ClienteServicios
         {
             if (string.IsNullOrWhiteSpace(nombreArchivo))
             {
-                _logger.Warn("Se intentó reproducir música con nombre de archivo vacío.");
+                _logger.Warn("Intento de reproducir musica con nombre vacio.");
                 return;
             }
 
-            if (EstaReproduciendo)
-            {
-                _reproductor.Stop();
-                EstaReproduciendo = false;
-            }
+            DetenerReproduccionActual();
 
             try
             {
                 var uri = new Uri($"Recursos/{nombreArchivo}", UriKind.Relative);
                 _reproductor.Open(uri);
             }
-            catch (UriFormatException ex)
+            catch (Exception ex)
             {
-                _logger.ErrorFormat("Formato URI inválido para música: {0}", 
-                    nombreArchivo, ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.ErrorFormat("Error de operación al abrir música: {0}", 
-                    nombreArchivo, ex);
-            }
-            catch (System.IO.IOException ex)
-            {
-                _logger.ErrorFormat("Error de E/S al cargar música: {0}",
-                    nombreArchivo, ex);
+                _logger.ErrorFormat("Error al cargar musica: {0}. Detalles: {1}", nombreArchivo, ex);
             }
         }
 
@@ -154,11 +133,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         /// </summary>
         public void Detener()
         {
-            if (EstaReproduciendo)
-            {
-                _reproductor.Stop();
-                EstaReproduciendo = false;
-            }
+            DetenerReproduccionActual();
         }
 
         /// <summary>
@@ -201,18 +176,25 @@ namespace PictionaryMusicalCliente.ClienteServicios
             _desechado = true;
         }
 
+        private void DetenerReproduccionActual()
+        {
+            if (EstaReproduciendo)
+            {
+                _reproductor.Stop();
+                EstaReproduciendo = false;
+            }
+        }
+
         private void EnMedioAbierto(object sender, EventArgs e)
         {
             _reproductor.Play();
             EstaReproduciendo = true;
-            _logger.Info("Reproducción de música iniciada exitosamente.");
         }
 
         private void EnMedioFallido(object sender, ExceptionEventArgs e)
         {
             EstaReproduciendo = false;
-            _logger.ErrorFormat("Fallo crítico en reproducción de medio: {0}",
-                e.ErrorException.Message, e.ErrorException);
+            _logger.ErrorFormat("Fallo crítico en reproducción de medio", e.ErrorException);
         }
 
         private static double ObtenerVolumenGuardado()

@@ -10,13 +10,13 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
     public class SolicitudRecuperarCuentaDTO
     {
         /// <summary>
-        /// Identificador del usuario (nombre de usuario o correo electronico) (dato requerido).
+        /// Identificador del usuario (nombre de usuario o correo electronico).
         /// </summary>
         [DataMember(IsRequired = true)]
         public string Identificador { get; set; }
 
         /// <summary>
-        /// Codigo de idioma solicitado para los mensajes de recuperacion (opcional).
+        /// Codigo de idioma solicitado para los mensajes de recuperacion.
         /// </summary>
         [DataMember]
         public string Idioma { get; set; }

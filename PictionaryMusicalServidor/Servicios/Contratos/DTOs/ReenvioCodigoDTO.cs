@@ -10,7 +10,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
     public class ReenvioCodigoDTO
     {
         /// <summary>
-        /// Token de identificacion de la sesion de verificacion (dato requerido).
+        /// Token de identificacion de la sesion de verificacion.
         /// </summary>
         [DataMember(IsRequired = true)]
         public string TokenCodigo { get; set; }

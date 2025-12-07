@@ -1,27 +1,61 @@
+using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos;
+using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 using System;
 using System.Data;
 using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
-using log4net;
-using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
     /// <summary>
     /// Implementacion del servicio de gestion de codigos de verificacion.
-    /// Maneja solicitud, reenvio y confirmacion de codigos para registro y recuperacion de cuentas.
-    /// Delega la logica de negocio a VerificacionRegistroServicio y RecuperacionCuentaServicio.
+    /// Maneja solicitud, reenvio y confirmacion de codigos para registro y recuperacion de 
+    /// cuentas.
+    /// Delega la logica de negocio a los servicios correspondientes inyectados.
     /// </summary>
     public class CodigoVerificacionManejador : ICodigoVerificacionManejador
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(CodigoVerificacionManejador));
+        private static readonly ILog _logger =
+            LogManager.GetLogger(typeof(CodigoVerificacionManejador));
+
+        private readonly IVerificacionRegistroServicio _verificacionRegistroServicio;
+        private readonly IRecuperacionCuentaServicio _recuperacionCuentaServicio;
+
+        /// <summary>
+        /// Constructor por defecto para WCF.
+        /// Inicializa los servicios con sus dependencias por defecto.
+        /// </summary>
+        public CodigoVerificacionManejador() : this(
+            new VerificacionRegistroServicio(
+                new ContextoFactoria(),
+                new NotificacionCodigosServicio(new CorreoCodigoVerificacionNotificador())),
+            new RecuperacionCuentaServicio(
+                new ContextoFactoria(),
+                new NotificacionCodigosServicio(new CorreoCodigoVerificacionNotificador())))
+        {
+        }
+
+        /// <summary>
+        /// Constructor con inyeccion de dependencias.
+        /// </summary>
+        public CodigoVerificacionManejador(
+            IVerificacionRegistroServicio verificacionRegistroServicio,
+            IRecuperacionCuentaServicio recuperacionCuentaServicio)
+        {
+            _verificacionRegistroServicio = verificacionRegistroServicio ??
+                throw new ArgumentNullException(nameof(verificacionRegistroServicio));
+
+            _recuperacionCuentaServicio = recuperacionCuentaServicio ??
+                throw new ArgumentNullException(nameof(recuperacionCuentaServicio));
+        }
 
         /// <summary>
         /// Solicita un codigo de verificacion para registrar una nueva cuenta.
-        /// Valida datos, verifica disponibilidad de usuario y correo, genera codigo y lo envia por correo.
+        /// Valida datos, verifica disponibilidad, genera codigo y lo envia por correo.
         /// </summary>
         /// <param name="nuevaCuenta">Datos de la nueva cuenta a verificar.</param>
         /// <returns>Resultado indicando si el codigo fue enviado y posibles conflictos.</returns>
@@ -29,22 +63,20 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var resultado = VerificacionRegistroServicio.SolicitarCodigo(nuevaCuenta);
+                var resultado = _verificacionRegistroServicio.SolicitarCodigo(nuevaCuenta);
 
-                if (resultado.CodigoEnviado)
+                if (!resultado.CodigoEnviado)
                 {
-                    _logger.InfoFormat("Código de verificación para registro solicitado exitosamente para '{0}'.", nuevaCuenta.Correo);
-                }
-                else
-                {
-                    _logger.WarnFormat("Solicitud de código para registro fallida. Correo: '{0}'. Motivo: {1}", nuevaCuenta.Correo, resultado.Mensaje);
+                    _logger.WarnFormat(
+                        "Solicitud de codigo fallida. Motivo: {0}",
+                        resultado.Mensaje);
                 }
 
                 return resultado;
             }
             catch (ArgumentNullException ex)
             {
-                _logger.Warn("Argumento nulo al solicitar código de verificación. Los datos de la cuenta son nulos.", ex);
+                _logger.Warn("Argumento nulo al solicitar codigo de verificacion.", ex);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -53,7 +85,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al solicitar código de verificación. Fallo en la consulta de verificación.", ex);
+                _logger.Error(
+                    "Error de base de datos al solicitar codigo de verificacion.",
+                    ex);
+
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -62,7 +97,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al solicitar código de verificación. No se pudo procesar la solicitud.", ex);
+                _logger.Error("Error de datos al solicitar codigo de verificacion.", ex);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -77,26 +112,25 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// </summary>
         /// <param name="solicitud">Datos con el token de la sesion de verificacion.</param>
         /// <returns>Resultado indicando si el codigo fue reenviado exitosamente.</returns>
-        public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenvioCodigoVerificacionDTO solicitud)
+        public ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(
+            ReenvioCodigoVerificacionDTO solicitud)
         {
             try
             {
-                var resultado = VerificacionRegistroServicio.ReenviarCodigo(solicitud);
+                var resultado = _verificacionRegistroServicio.ReenviarCodigo(solicitud);
 
-                if (resultado.CodigoEnviado)
+                if (!resultado.CodigoEnviado)
                 {
-                    _logger.InfoFormat("Código de verificación para registro reenviado. Token sesión: {0}", solicitud.TokenCodigo);
-                }
-                else
-                {
-                    _logger.WarnFormat("Fallo al reenviar código de registro. Token sesión: {0}. Motivo: {1}", solicitud.TokenCodigo, resultado.Mensaje);
+                    _logger.WarnFormat(
+                        "Fallo al reenviar codigo de registro. Motivo: {0}",
+                        resultado.Mensaje);
                 }
 
                 return resultado;
             }
             catch (ArgumentNullException ex)
             {
-                _logger.Warn("Argumento nulo al reenviar código de verificación. Los datos de la solicitud son nulos.", ex);
+                _logger.Warn("Argumento nulo al reenviar codigo de verificacion.", ex);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -105,7 +139,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al reenviar código de verificación. Fallo en la consulta de solicitud.", ex);
+                _logger.Error(
+                    "Error de base de datos al reenviar codigo de verificacion.",
+                    ex);
+
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -114,7 +151,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al reenviar código de verificación. No se pudo procesar la solicitud.", ex);
+                _logger.Error("Error de datos al reenviar codigo de verificacion.", ex);
                 return new ResultadoSolicitudCodigoDTO
                 {
                     CodigoEnviado = false,
@@ -125,30 +162,30 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         /// <summary>
         /// Confirma el codigo de verificacion ingresado para registro.
-        /// Valida el token de sesion y el codigo, y permite continuar con el registro de la cuenta.
+        /// Valida el token de sesion y el codigo, y permite continuar con el registro de la 
+        /// cuenta.
         /// </summary>
         /// <param name="confirmacion">Datos con el token y codigo ingresado.</param>
         /// <returns>Resultado indicando si el codigo fue confirmado exitosamente.</returns>
-        public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(ConfirmacionCodigoDTO confirmacion)
+        public ResultadoRegistroCuentaDTO ConfirmarCodigoVerificacion(
+            ConfirmacionCodigoDTO confirmacion)
         {
             try
             {
-                var resultado = VerificacionRegistroServicio.ConfirmarCodigo(confirmacion);
+                var resultado = _verificacionRegistroServicio.ConfirmarCodigo(confirmacion);
 
-                if (resultado.RegistroExitoso)
+                if (!resultado.RegistroExitoso)
                 {
-                    _logger.InfoFormat("Código de verificación de registro confirmado correctamente. Token sesión: {0}", confirmacion.TokenCodigo);
-                }
-                else
-                {
-                    _logger.WarnFormat("Intento fallido de confirmación de código de registro. Token sesión: {0}. Motivo: {1}", confirmacion.TokenCodigo, resultado.Mensaje);
+                    _logger.WarnFormat(
+                        "Intento fallido de confirmacion de codigo. Motivo: {0}",
+                        resultado.Mensaje);
                 }
 
                 return resultado;
             }
             catch (ArgumentNullException ex)
             {
-                _logger.Warn("Argumento nulo al confirmar código de verificación. Los datos de confirmación son nulos.", ex);
+                _logger.Warn("Argumento nulo al confirmar codigo de verificacion.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -157,7 +194,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DbEntityValidationException ex)
             {
-                _logger.Error("Validación de entidad fallida al confirmar código de verificación. Datos inconsistentes.", ex);
+                _logger.Error("Validacion de entidad fallida al confirmar codigo.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -166,7 +203,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DbUpdateException ex)
             {
-                _logger.Error("Error de actualización de base de datos al confirmar código de verificación. Conflicto de concurrencia.", ex);
+                _logger.Error("Error de actualizacion de BD al confirmar codigo.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -175,7 +212,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al confirmar código de verificación. Fallo en la consulta de solicitud.", ex);
+                _logger.Error("Error de base de datos al confirmar codigo.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -184,7 +221,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al confirmar código de verificación. No se pudo procesar la confirmación.", ex);
+                _logger.Error("Error de datos al confirmar codigo.", ex);
                 return new ResultadoRegistroCuentaDTO
                 {
                     RegistroExitoso = false,
@@ -197,28 +234,27 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// Solicita un codigo de verificacion para recuperar una cuenta.
         /// Busca la cuenta por identificador, genera codigo y lo envia por correo.
         /// </summary>
-        /// <param name="solicitud">Datos con identificador del usuario que solicita recuperacion.</param>
-        /// <returns>Resultado indicando si la cuenta fue encontrada y si el codigo fue enviado.</returns>
-        public ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(SolicitudRecuperarCuentaDTO solicitud)
+        /// <param name="solicitud">Datos con identificador del usuario que solicita.</param>
+        /// <returns>Resultado indicando si la cuenta fue encontrada y codigo enviado.</returns>
+        public ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(
+            SolicitudRecuperarCuentaDTO solicitud)
         {
             try
             {
-                var resultado = RecuperacionCuentaServicio.SolicitarCodigoRecuperacion(solicitud);
+                var resultado = _recuperacionCuentaServicio.SolicitarCodigoRecuperacion(solicitud);
 
-                if (resultado.CodigoEnviado)
+                if (!resultado.CodigoEnviado)
                 {
-                    _logger.InfoFormat("Solicitud de recuperación de cuenta iniciada para '{0}'.", solicitud.Identificador);
-                }
-                else
-                {
-                    _logger.WarnFormat("Solicitud de recuperación fallida para '{0}'. Motivo: {1}", solicitud.Identificador, resultado.Mensaje);
+                    _logger.WarnFormat(
+                        "Solicitud de recuperacion fallida. Motivo: {0}",
+                        resultado.Mensaje);
                 }
 
                 return resultado;
             }
             catch (ArgumentNullException ex)
             {
-                _logger.Warn("Argumento nulo al solicitar código de recuperación. Los datos de solicitud son nulos.", ex);
+                _logger.Warn("Argumento nulo al solicitar codigo de recuperacion.", ex);
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CodigoEnviado = false,
@@ -227,7 +263,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al solicitar código de recuperación. Fallo en la búsqueda de usuario.", ex);
+                _logger.Error("Error de base de datos al solicitar codigo de recuperacion.", ex);
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CodigoEnviado = false,
@@ -236,7 +272,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al solicitar código de recuperación. No se pudo procesar la solicitud.", ex);
+                _logger.Error("Error de datos al solicitar codigo de recuperacion.", ex);
                 return new ResultadoSolicitudRecuperacionDTO
                 {
                     CodigoEnviado = false,
@@ -247,30 +283,30 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         /// <summary>
         /// Confirma el codigo de verificacion ingresado para recuperacion.
-        /// Valida el token de sesion y el codigo, y permite continuar con el cambio de contrasena.
+        /// Valida el token y el codigo, y permite continuar con el cambio de contrasena.
         /// </summary>
         /// <param name="confirmacion">Datos con el token y codigo ingresado.</param>
         /// <returns>Resultado indicando si el codigo fue confirmado exitosamente.</returns>
-        public ResultadoOperacionDTO ConfirmarCodigoRecuperacion(ConfirmacionCodigoDTO confirmacion)
+        public ResultadoOperacionDTO ConfirmarCodigoRecuperacion
+            (ConfirmacionCodigoDTO confirmacion)
         {
             try
             {
-                var resultado = RecuperacionCuentaServicio.ConfirmarCodigoRecuperacion(confirmacion);
+                var resultado = _recuperacionCuentaServicio.ConfirmarCodigoRecuperacion(
+                    confirmacion);
 
-                if (resultado.OperacionExitosa)
+                if (!resultado.OperacionExitosa)
                 {
-                    _logger.InfoFormat("Código de recuperación confirmado correctamente. Token sesión: {0}", confirmacion.TokenCodigo);
-                }
-                else
-                {
-                    _logger.WarnFormat("Intento fallido de confirmación de código de recuperación. Token sesión: {0}. Motivo: {1}", confirmacion.TokenCodigo, resultado.Mensaje);
+                    _logger.WarnFormat(
+                        "Intento fallido de confirmacion de recuperacion. Motivo: {0}",
+                        resultado.Mensaje);
                 }
 
                 return resultado;
             }
             catch (ArgumentNullException ex)
             {
-                _logger.Warn("Argumento nulo al confirmar código de recuperación. Los datos de confirmación son nulos.", ex);
+                _logger.Warn("Argumento nulo al confirmar codigo de recuperacion.", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -279,7 +315,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al confirmar código de recuperación. Fallo en la verificación de código.", ex);
+                _logger.Error(
+                    "Error de base de datos al confirmar codigo de recuperacion.",
+                    ex);
+
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,
@@ -288,7 +327,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al confirmar código de recuperación. No se pudo confirmar el código.", ex);
+                _logger.Error("Error de datos al confirmar codigo de recuperacion.", ex);
                 return new ResultadoOperacionDTO
                 {
                     OperacionExitosa = false,

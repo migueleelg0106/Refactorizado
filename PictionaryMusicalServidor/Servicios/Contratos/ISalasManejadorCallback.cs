@@ -1,5 +1,4 @@
-﻿using System.ServiceModel;
-using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using System.ServiceModel;
 
 namespace PictionaryMusicalServidor.Servicios.Contratos
 {

@@ -10,7 +10,7 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
     public class CredencialesInicioSesionDTO
     {
         /// <summary>
-        /// Identificador del usuario (nombre de usuario o correo electronico) (dato requerido).
+        /// Identificador del usuario (nombre de usuario o correo electronico).
         /// </summary>
         [DataMember(IsRequired = true)]
         public string Identificador { get; set; }

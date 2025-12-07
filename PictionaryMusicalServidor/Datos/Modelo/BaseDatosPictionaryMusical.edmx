@@ -48,7 +48,7 @@
           <Key>
             <PropertyRef Name="idReporte" />
           </Key>
-          <Property Name="idReporte" Type="int" Nullable="false" />
+          <Property Name="idReporte" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="idReportado" Type="int" Nullable="false" />
           <Property Name="Motivo" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Fecha_Reporte" Type="date" Nullable="false" />
@@ -238,7 +238,7 @@
           <Key>
             <PropertyRef Name="idReporte" />
           </Key>
-          <Property Name="idReporte" Type="Int32" Nullable="false" />
+          <Property Name="idReporte" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="idReportado" Type="Int32" Nullable="false" />
           <Property Name="Motivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Fecha_Reporte" Type="DateTime" Nullable="false" Precision="0" />

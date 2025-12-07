@@ -1,5 +1,5 @@
-﻿using PictionaryMusicalCliente.ClienteServicios;
-using PictionaryMusicalCliente.Comandos;
+﻿using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Windows.Input;
 
@@ -10,7 +10,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
     /// </summary>
     public class AjustesVistaModelo : BaseVistaModelo
     {
-        private readonly MusicaManejador _musicaManejador;
+        private readonly IMusicaManejador _musicaManejador;
+        private readonly ISonidoManejador _sonidoManejador;
 
         /// <summary>
         /// Accion para cerrar la ventana de ajustes.
@@ -26,10 +27,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         /// Inicializa el ViewModel con el manejador de musica global.
         /// </summary>
         /// <param name="servicioMusica">Servicio de control de audio.</param>
-        public AjustesVistaModelo(MusicaManejador servicioMusica)
+        /// <param name="sonidoManejador">Servicio que gestiona los efectos de sonido.</param>
+        public AjustesVistaModelo(IMusicaManejador servicioMusica, 
+            ISonidoManejador sonidoManejador)
         {
             _musicaManejador = servicioMusica ??
                 throw new ArgumentNullException(nameof(servicioMusica));
+            _sonidoManejador = sonidoManejador ?? 
+                throw new ArgumentNullException(nameof(sonidoManejador));
 
             ConfirmarComando = new ComandoDelegado(_ => EjecutarConfirmar());
             CerrarSesionComando = new ComandoDelegado(_ => EjecutarCerrarSesion());
@@ -56,12 +61,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         /// </summary>
         public bool SonidosSilenciados
         {
-            get => SonidoManejador.Silenciado;
+            get => _sonidoManejador.Silenciado;
             set
             {
-                if (SonidoManejador.Silenciado != value)
+                if (_sonidoManejador.Silenciado != value)
                 {
-                    SonidoManejador.Silenciado = value;
+                    _sonidoManejador.Silenciado = value;
                     NotificarCambio(nameof(SonidosSilenciados));
                 }
             }

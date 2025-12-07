@@ -421,6 +421,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Hubo un cambio en su cuenta, tiene que volver a iniciar sesión..
+        /// </summary>
+        public static string avisoTextoReinicioSesion {
+            get {
+                return ResourceManager.GetString("avisoTextoReinicioSesion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El servidor tardó demasiado en responder. Se mostrarán los datos actuales de la sesión..
         /// </summary>
         public static string avisoTextoServidorTiempoSesion {
@@ -1420,6 +1429,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a No se pudieron cargar los avatares..
+        /// </summary>
+        public static string errorTextoNoCargaronAvatares {
+            get {
+                return ResourceManager.GetString("errorTextoNoCargaronAvatares", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a No se encontró una partida con el código ingresado. Intente con otro distinto..
         /// </summary>
         public static string errorTextoNoEncuentraPartida {
@@ -1497,6 +1515,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string errorTextoRegistrarCuentaMasTarde {
             get {
                 return ResourceManager.GetString("errorTextoRegistrarCuentaMasTarde", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ocurrió un error al enviar el reporte.
+        /// </summary>
+        public static string errorTextoReportarJugador {
+            get {
+                return ResourceManager.GetString("errorTextoReportarJugador", resourceCulture);
             }
         }
         
@@ -1609,6 +1636,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a No se pudo solicitar el código de verificación. Por favor, intente más tarde..
+        /// </summary>
+        public static string errorTextoServidorSolicitudCodigo {
+            get {
+                return ResourceManager.GetString("errorTextoServidorSolicitudCodigo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El servidor tardó demasiado tiempo en responder. Intente más tarde..
         /// </summary>
         public static string errorTextoServidorTiempoAgotado {
@@ -1713,6 +1749,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string errorTextoTokenCodigoObligatorio {
             get {
                 return ResourceManager.GetString("errorTextoTokenCodigoObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Has sido baneado del juego por mala conducta..
+        /// </summary>
+        public static string errorTextoUsuarioBaneado {
+            get {
+                return ResourceManager.GetString("errorTextoUsuarioBaneado", resourceCulture);
             }
         }
         
@@ -2248,6 +2293,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a El mensaje supera el limite de caracteres..
+        /// </summary>
+        public static string MensajeChatTextoMotivoLongitud {
+            get {
+                return ResourceManager.GetString("MensajeChatTextoMotivoLongitud", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El nombre es obligatorio y no debe exceder 50 caracteres..
         /// </summary>
         public static string nombreRegistroInvalido {
@@ -2631,6 +2685,87 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         public static string relacionAmistadNoExiste {
             get {
                 return ResourceManager.GetString("relacionAmistadNoExiste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a No puedes reportarte a ti mismo.
+        /// </summary>
+        public static string reportarJugadorTextoAutoReporte {
+            get {
+                return ResourceManager.GetString("reportarJugadorTextoAutoReporte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a REPORTAR.
+        /// </summary>
+        public static string reportarJugadorTextoConfirmar {
+            get {
+                return ResourceManager.GetString("reportarJugadorTextoConfirmar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Vas a reportar a {0}.
+        /// </summary>
+        public static string reportarJugadorTextoDescripcion {
+            get {
+                return ResourceManager.GetString("reportarJugadorTextoDescripcion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ya has reportado a este jugador.
+        /// </summary>
+        public static string reportarJugadorTextoDuplicado {
+            get {
+                return ResourceManager.GetString("reportarJugadorTextoDuplicado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El reporte se envió correctamente.
+        /// </summary>
+        public static string reportarJugadorTextoExito {
+            get {
+                return ResourceManager.GetString("reportarJugadorTextoExito", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Motivo del reporte.
+        /// </summary>
+        public static string reportarJugadorTextoMotivoEtiqueta {
+            get {
+                return ResourceManager.GetString("reportarJugadorTextoMotivoEtiqueta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El motivo del reporte no debe exceder 100 caracteres.
+        /// </summary>
+        public static string reportarJugadorTextoMotivoLongitud {
+            get {
+                return ResourceManager.GetString("reportarJugadorTextoMotivoLongitud", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El motivo del reporte es obligatorio.
+        /// </summary>
+        public static string reportarJugadorTextoMotivoRequerido {
+            get {
+                return ResourceManager.GetString("reportarJugadorTextoMotivoRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a REPORTAR JUGADOR.
+        /// </summary>
+        public static string reportarJugadorTextoTitulo {
+            get {
+                return ResourceManager.GetString("reportarJugadorTextoTitulo", resourceCulture);
             }
         }
         

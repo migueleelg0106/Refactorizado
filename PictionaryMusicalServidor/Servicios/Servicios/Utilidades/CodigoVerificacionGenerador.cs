@@ -16,7 +16,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         /// </summary>
         /// <param name="longitud">Longitud del codigo a generar (por defecto 6 digitos).</param>
         /// <returns>Codigo de verificacion numerico como cadena.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Se lanza si longitud es menor o igual a 0.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Se lanza si longitud es menor o 
+        /// igual a 0.</exception>
         public static string GenerarCodigo(int longitud = 6)
         {
             if (longitud <= 0)

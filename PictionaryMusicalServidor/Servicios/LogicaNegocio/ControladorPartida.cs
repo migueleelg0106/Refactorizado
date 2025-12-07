@@ -1,293 +1,249 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
-using System.Timers;
 using log4net;
 using PictionaryMusicalServidor.Datos;
 using PictionaryMusicalServidor.Datos.Entidades;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
 
 namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
 {
     /// <summary>
-    /// Gestiona el flujo central de la partida de Pictionary Musical.
+    /// Controlador principal (Orquestador) que coordina el flujo de la partida.
+    /// Delega la logica especifica a los gestores de jugadores y tiempos, manteniendo la 
+    /// coherencia del estado global.
     /// </summary>
     public class ControladorPartida
     {
+        private static readonly ILog _logger =
+            LogManager.GetLogger(typeof(ControladorPartida));
+
         private const string RolDibujante = "Dibujante";
-        private const string MensajeCancelacionFaltaJugadores = "No hay suficientes jugadores para seguir jugando, se canceló la partida.";
         private const int LimitePalabrasMensaje = 150;
         private const int TiempoOverlayClienteSegundos = 5;
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(ControladorPartida));
 
-        private readonly Dictionary<string, JugadorPartida> _jugadores = new Dictionary<string, JugadorPartida>(StringComparer.Ordinal);
-        private readonly Queue<string> _colaDibujantes = new Queue<string>();
-        private readonly HashSet<int> _cancionesUsadas = new HashSet<int>();
         private readonly object _sincronizacion = new object();
-        private readonly Random _random = new Random();
 
-        private readonly int _tiempoRondaSegundos;
+        private readonly ICatalogoCanciones _catalogoCanciones;
+        private readonly GestorJugadoresPartida _gestorJugadores;
+        private readonly GestorTiemposPartida _gestorTiempos;
+        private readonly HashSet<int> _cancionesUsadas;
+
+        private readonly int _duracionRondaSegundos;
         private readonly string _dificultad;
-        private readonly int _cantidadRondas;
-        private string _idiomaCanciones = "Español";
+        private readonly int _totalRondas;
+        private string _idiomaCanciones = "Espanol";
 
-        private Timer _timerRonda;
-        private Timer _timerTransicionRonda;
-        private EstadoPartida _estadoActual = EstadoPartida.EnSalaEspera;
+        private EstadoPartida _estadoActual;
         private int _rondaActual;
         private int _cancionActualId;
-        private DateTime _inicioRonda;
-        private bool _rondaTerminadaPorTodosAdivinaron;
-        private int _versionInicioRonda;
+        private bool _rondaFinalizadaPorAciertos;
 
-        public ControladorPartida(int tiempoRondaSegundos, string dificultad, int cantidadRondas)
+        /// <summary>
+        /// Inicializa una nueva instancia del controlador de partida.
+        /// </summary>
+        /// <param name="tiempoRonda">Tiempo limite en segundos por ronda.</param>
+        /// <param name="dificultad">Nivel de dificultad de la partida (facil, medio, dificil).
+        /// </param>
+        /// <param name="totalRondas">Numero total de rondas a jugar.</param>
+        /// <param name="catalogo">Servicio de catalogo de canciones inyectado.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Se lanza si el tiempo o las rondas son 
+        /// invalidos.</exception>
+        /// <exception cref="ArgumentNullException">Se lanza si el catalogo es nulo.</exception>
+        public ControladorPartida(int tiempoRonda, string dificultad, int totalRondas, 
+            ICatalogoCanciones catalogo, GestorJugadoresPartida gestorJugadores)
         {
-            if (tiempoRondaSegundos <= 0)
+            if (tiempoRonda <= 0 || totalRondas <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(tiempoRondaSegundos));
-            }
-
-            if (cantidadRondas <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(cantidadRondas));
+                throw new ArgumentOutOfRangeException();
             }
 
             if (string.IsNullOrWhiteSpace(dificultad))
             {
-                throw new ArgumentException("La dificultad es obligatoria.", nameof(dificultad));
+                throw new ArgumentException(nameof(dificultad));
             }
 
-            _tiempoRondaSegundos = tiempoRondaSegundos;
+            _catalogoCanciones = catalogo ??
+                throw new ArgumentNullException(nameof(catalogo));
+
+            _gestorJugadores = gestorJugadores ??
+                throw new ArgumentNullException(nameof(gestorJugadores));
+
+            _duracionRondaSegundos = tiempoRonda;
             _dificultad = dificultad.Trim();
-            _cantidadRondas = cantidadRondas;
+            _totalRondas = totalRondas;
 
-            _timerRonda = new Timer
-            {
-                AutoReset = false
-            };
-            _timerRonda.Elapsed += OnTiempoRondaCumplido;
+            _gestorTiempos = new GestorTiemposPartida(tiempoRonda, TiempoOverlayClienteSegundos);
+            _cancionesUsadas = new HashSet<int>();
+            _estadoActual = EstadoPartida.EnSalaEspera;
 
-            _timerTransicionRonda = new Timer
-            {
-                AutoReset = false,
-                Interval = TiempoOverlayClienteSegundos * 1000
-            };
-            _timerTransicionRonda.Elapsed += OnTransicionRondaCompletada;
+            SuscribirEventosTiempo();
         }
 
+        /// <summary>
+        /// Evento que se dispara cuando la partida cambia al estado Jugando.
+        /// </summary>
         public event Action PartidaIniciada;
+
+        /// <summary>
+        /// Evento que notifica el inicio de una nueva ronda con sus datos correspondientes.
+        /// </summary>
         public event Action<RondaDTO> InicioRonda;
+
+        /// <summary>
+        /// Evento que notifica cuando un jugador ha acertado la cancion.
+        /// </summary>
         public event Action<string, int> JugadorAdivino;
+
+        /// <summary>
+        /// Evento que retransmite un mensaje de chat publico a los clientes.
+        /// </summary>
         public event Action<string, string> MensajeChatRecibido;
+
+        /// <summary>
+        /// Evento que retransmite los datos de un trazo de dibujo.
+        /// </summary>
         public event Action<TrazoDTO> TrazoRecibido;
+
+        /// <summary>
+        /// Evento que notifica la finalizacion de una ronda.
+        /// </summary>
         public event Action FinRonda;
+
+        /// <summary>
+        /// Evento que notifica el fin de la partida y envia los resultados finales.
+        /// </summary>
         public event Action<ResultadoPartidaDTO> FinPartida;
 
-        public EstadoPartida EstadoActual
+        /// <summary>
+        /// Indica si la partida ya llego a su estado finalizado.
+        /// </summary>
+        public bool EstaFinalizada
         {
             get
             {
                 lock (_sincronizacion)
                 {
-                    return _estadoActual;
+                    return _estadoActual == EstadoPartida.Finalizada;
                 }
             }
         }
 
-        public IReadOnlyCollection<JugadorPartida> ObtenerJugadores()
-        {
-            lock (_sincronizacion)
-            {
-                return _jugadores.Values.Select(j => j.CopiarDatosBasicos()).ToList();
-            }
-        }
-
+        /// <summary>
+        /// Configura el idioma que se utilizara para seleccionar las canciones.
+        /// </summary>
+        /// <param name="idioma">Nombre del idioma (Ej. Espanol, Ingles).</param>
         public void ConfigurarIdiomaCanciones(string idioma)
         {
-            if (string.IsNullOrWhiteSpace(idioma))
-            {
-                throw new ArgumentException("El idioma de las canciones es obligatorio.", nameof(idioma));
-            }
-
             lock (_sincronizacion)
             {
-                _idiomaCanciones = idioma.Trim();
+                _idiomaCanciones = idioma;
             }
         }
 
-        public void AgregarJugador(string idConexion, string nombreUsuario, bool esHost)
+        /// <summary>
+        /// Intenta agregar un nuevo jugador a la partida.
+        /// </summary>
+        /// <param name="id">Identificador de conexion.</param>
+        /// <param name="nombre">Nombre de usuario.</param>
+        /// <param name="esHost">Indica si es el creador de la partida.</param>
+        /// <exception cref="InvalidOperationException">Se lanza si la partida ya ha iniciado.
+        /// </exception>
+        public void AgregarJugador(string id, string nombre, bool esHost)
         {
-            if (string.IsNullOrWhiteSpace(idConexion))
-            {
-                throw new ArgumentException("El identificador de conexión es obligatorio.", nameof(idConexion));
-            }
-
-            if (string.IsNullOrWhiteSpace(nombreUsuario))
-            {
-                throw new ArgumentException("El nombre de usuario es obligatorio.", nameof(nombreUsuario));
-            }
-
             lock (_sincronizacion)
             {
                 if (_estadoActual != EstadoPartida.EnSalaEspera)
                 {
-                    throw new InvalidOperationException("No se pueden agregar jugadores cuando la partida ya inició.");
+                    throw new InvalidOperationException(MensajesError.Cliente.PartidaYaIniciada);
                 }
 
-                if (_jugadores.ContainsKey(idConexion))
-                {
-                    _jugadores[idConexion].NombreUsuario = nombreUsuario;
-                    _jugadores[idConexion].EsHost = esHost;
-                    _logger.InfoFormat("Jugador con conexión {0} actualizado como {1} (Host: {2}).", idConexion, nombreUsuario, esHost);
-                    return;
-                }
-
-                var jugador = new JugadorPartida
-                {
-                    IdConexion = idConexion,
-                    NombreUsuario = nombreUsuario,
-                    EsHost = esHost,
-                    PuntajeTotal = 0,
-                    EsDibujante = false,
-                    YaAdivino = false
-                };
-
-                _jugadores.Add(idConexion, jugador);
-
-                _logger.InfoFormat("Jugador {0} agregado a la partida. Total jugadores: {1}.", nombreUsuario, _jugadores.Count);
+                _gestorJugadores.Agregar(id, nombre, esHost);
             }
         }
 
-        public void RemoverJugador(string idConexion)
+        /// <summary>
+        /// Remueve a un jugador y maneja la logica de desconexion (cancelacion o avance de turno).
+        /// </summary>
+        /// <param name="id">Identificador de conexion del jugador.</param>
+        public void RemoverJugador(string id)
         {
-            if (string.IsNullOrWhiteSpace(idConexion))
-            {
-                return;
-            }
-
-            ResultadoPartidaDTO resultadoCancelacion = null;
-            bool jugadorEraDibujante = false;
-            bool debeAvanzarTurno = false;
+            bool eraDibujante;
+            bool debeCancelar = false;
+            bool debeAvanzar = false;
+            bool eraHost;
+            string mensajeCancelacion = null;
 
             lock (_sincronizacion)
             {
-                if (_jugadores.TryGetValue(idConexion, out var jugadorRemovido) && _jugadores.Remove(idConexion))
+                eraHost = _gestorJugadores.EsHost(id);
+                if (!_gestorJugadores.Remover(id, out eraDibujante))
                 {
-                    _logger.InfoFormat("Jugador con conexión {0} removido de la partida.", idConexion);
-
-                    jugadorEraDibujante = jugadorRemovido.EsDibujante;
-
-                    if (_estadoActual == EstadoPartida.Jugando)
+                    return;
+                }
+                if (_estadoActual == EstadoPartida.Jugando)
+                {
+                    if (!_gestorJugadores.HaySuficientesJugadores)
                     {
-                        ActualizarColaDibujantes(idConexion);
-                        debeAvanzarTurno = jugadorEraDibujante;
+                        debeCancelar = true;
+                        mensajeCancelacion = eraHost
+                            ? MensajesError.Cliente.PartidaCanceladaHostSalio
+                            : MensajesError.Cliente.PartidaCanceladaFaltaJugadores;
                     }
-
-                    if (_estadoActual == EstadoPartida.Jugando && _jugadores.Count < 2)
+                    else if (eraDibujante)
                     {
-                        _estadoActual = EstadoPartida.Finalizada;
-                        DetenerTimers();
-
-                        resultadoCancelacion = new ResultadoPartidaDTO
-                        {
-                            Clasificacion = ObtenerClasificacion(),
-                            Mensaje = MensajeCancelacionFaltaJugadores
-                        };
+                        debeAvanzar = true;
                     }
                 }
             }
 
-            if (resultadoCancelacion != null)
+            if (debeCancelar)
             {
-                FinPartida?.Invoke(resultadoCancelacion);
+                CancelarPartida(mensajeCancelacion);
             }
-            else if (debeAvanzarTurno)
+            else if (debeAvanzar)
             {
-                FinalizarRonda();
-            }
-        }
-
-        private void ActualizarColaDibujantes(string idConexionRemovida)
-        {
-            if (_colaDibujantes.Count == 0)
-            {
-                return;
-            }
-
-            var colaActualizada = _colaDibujantes
-                .Where(id => !id.Equals(idConexionRemovida, StringComparison.Ordinal) && _jugadores.ContainsKey(id))
-                .ToList();
-
-            _colaDibujantes.Clear();
-
-            foreach (var id in colaActualizada)
-            {
-                _colaDibujantes.Enqueue(id);
+                FinalizarRondaActual();
             }
         }
 
+        /// <summary>
+        /// Inicia el flujo de juego de la partida.
+        /// </summary>
+        /// <param name="idSolicitante">ID del usuario que solicita el inicio.</param>
         public void IniciarPartida(string idSolicitante)
         {
             lock (_sincronizacion)
             {
-                if (_estadoActual != EstadoPartida.EnSalaEspera)
-                {
-                    throw new InvalidOperationException("La partida ya fue iniciada.");
-                }
-
-                if (_jugadores.Count < 2)
-                {
-                    throw new InvalidOperationException("Se requieren al menos dos jugadores para iniciar la partida.");
-                }
-
-                if (!_jugadores.TryGetValue(idSolicitante, out var solicitante))
-                {
-                    throw new KeyNotFoundException("El solicitante no está registrado en la partida.");
-                }
-
-                if (!solicitante.EsHost)
-                {
-                    var exception = new SecurityException("Solo el host puede iniciar la partida.");
-                    _logger.Warn("Intento de inicio de partida por un usuario no autorizado.", exception);
-                    throw exception;
-                }
-
+                ValidarInicioPartida(idSolicitante);
                 _estadoActual = EstadoPartida.Jugando;
-                _logger.Info("Partida iniciada correctamente.");
             }
 
             PartidaIniciada?.Invoke();
-            IniciarNuevaRonda();
+            PrepararSiguienteRonda();
         }
 
-        public void ProcesarMensaje(string idConexion, string mensaje)
+        /// <summary>
+        /// Procesa un mensaje de chat, verificando si es un intento de adivinanza o charla normal.
+        /// </summary>
+        /// <param name="id">ID del emisor.</param>
+        /// <param name="mensaje">Contenido del mensaje.</param>
+        public void ProcesarMensaje(string id, string mensaje)
         {
-            if (string.IsNullOrWhiteSpace(idConexion))
+            if (EsMensajeInvalido(id, mensaje))
             {
-                throw new ArgumentException("El identificador de conexión es obligatorio.", nameof(idConexion));
-            }
-
-            if (MensajeExcedeLimite(mensaje))
-            {
-                _logger.WarnFormat(
-                    "Mensaje rechazado por exceder {0} palabras. Jugador: {1}",
-                    LimitePalabrasMensaje,
-                    idConexion);
                 return;
             }
 
             JugadorPartida jugador;
-            bool acierto;
-            bool debeFinalizarRonda = false;
-            int puntosObtenidos = 0;
-
             lock (_sincronizacion)
             {
-                if (!_jugadores.TryGetValue(idConexion, out jugador))
+                jugador = _gestorJugadores.Obtener(id);
+                if (jugador == null)
                 {
-                    throw new KeyNotFoundException("El jugador no existe en la partida.");
+                    return;
                 }
             }
 
@@ -297,49 +253,79 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                 return;
             }
 
-            if (_estadoActual != EstadoPartida.Jugando)
-            {
-                return;
-            }
+            ProcesarIntentoAdivinanza(jugador, mensaje);
+        }
 
-            if (jugador.EsDibujante)
+        /// <summary>
+        /// Procesa y retransmite un trazo de dibujo si proviene del dibujante actual.
+        /// </summary>
+        /// <param name="id">ID del emisor.</param>
+        /// <param name="trazo">Objeto de transferencia con datos del trazo.</param>
+        public void ProcesarTrazo(string id, TrazoDTO trazo)
+        {
+            lock (_sincronizacion)
             {
-                return;
+                var jugador = _gestorJugadores.Obtener(id);
+                if (_estadoActual == EstadoPartida.Jugando && jugador != null 
+                    && jugador.EsDibujante)
+                {
+                    TrazoRecibido?.Invoke(trazo);
+                }
             }
+        }
+
+        /// <summary>
+        /// Obtiene una copia segura de la lista de jugadores actuales en la partida.
+        /// </summary>
+        public IEnumerable<JugadorPartida> ObtenerJugadores()
+        {
+            lock (_sincronizacion)
+            {
+                return _gestorJugadores.ObtenerCopiaLista();
+            }
+        }
+
+        private void ValidarInicioPartida(string id)
+        {
+            if (_estadoActual != EstadoPartida.EnSalaEspera)
+            {
+                throw new InvalidOperationException(MensajesError.Cliente.PartidaYaIniciada);
+            }
+            if (!_gestorJugadores.HaySuficientesJugadores)
+            {
+                throw new InvalidOperationException(MensajesError.Cliente.FaltanJugadores);
+            }
+            if (!_gestorJugadores.EsHost(id))
+            {
+                throw new SecurityException(MensajesError.Cliente.SoloHost);
+            }
+        }
+
+        private void ProcesarIntentoAdivinanza(JugadorPartida jugador, string mensaje)
+        {
+            bool acierto = false;
+            int puntos = 0;
+            bool finRonda = false;
 
             lock (_sincronizacion)
             {
-                if (jugador.YaAdivino)
+                if (JugadorPuedeAdivinar(jugador))
                 {
-                    return;
-                }
-
-                acierto = CatalogoCancionesLogico.ValidarRespuesta(_cancionActualId, mensaje);
-
-                if (!acierto && EsMensajeAcierto(mensaje, out int puntosCliente))
-                {
-                    acierto = true;
-                    puntosObtenidos = puntosCliente;
-                }
-
-                if (acierto)
-                {
-                    jugador.YaAdivino = true;
-                    puntosObtenidos = puntosObtenidos > 0 ? puntosObtenidos : CalcularSegundosRestantes();
-                    jugador.PuntajeTotal += puntosObtenidos;
-                    debeFinalizarRonda = TodosAdivinaron();
+                    acierto = VerificarAcierto(mensaje, out puntos);
+                    if (acierto)
+                    {
+                        RegistrarAcierto(jugador, puntos);
+                        finRonda = _gestorJugadores.TodosAdivinaron();
+                    }
                 }
             }
 
             if (acierto)
             {
-                _logger.InfoFormat("Jugador {0} adivinó la canción y obtuvo {1} puntos.", jugador.NombreUsuario, puntosObtenidos);
-                JugadorAdivino?.Invoke(jugador.NombreUsuario, puntosObtenidos);
-
-                if (debeFinalizarRonda)
+                JugadorAdivino?.Invoke(jugador.NombreUsuario, puntos);
+                if (finRonda)
                 {
-                    _logger.Info("Todos los jugadores han adivinado. Finalizando ronda anticipadamente.");
-                    FinalizarRondaPorTodosAdivinaron();
+                    FinalizarRondaAnticipada();
                 }
             }
             else
@@ -348,380 +334,243 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             }
         }
 
-        private static bool MensajeExcedeLimite(string mensaje)
+        private bool JugadorPuedeAdivinar(JugadorPartida jugador)
         {
-            if (string.IsNullOrWhiteSpace(mensaje))
-            {
-                return false;
-            }
-
-            var palabras = mensaje.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
-            return palabras.Length > LimitePalabrasMensaje;
+            return _estadoActual == EstadoPartida.Jugando && !jugador.EsDibujante 
+                && !jugador.YaAdivino;
         }
 
-        private static bool EsMensajeAcierto(string mensaje, out int puntos)
+        private bool VerificarAcierto(string mensaje, out int puntos)
         {
             puntos = 0;
+            bool esCorrecto = _catalogoCanciones.ValidarRespuesta(_cancionActualId, mensaje);
 
-            if (string.IsNullOrWhiteSpace(mensaje))
+            if (!esCorrecto && EsMensajeAciertoProtocolo(mensaje, out int pts))
             {
-                return false;
+                esCorrecto = true;
+                puntos = pts;
             }
 
+            if (esCorrecto && puntos == 0)
+            {
+                puntos = _gestorTiempos.CalcularPuntosPorTiempo();
+            }
+
+            return esCorrecto;
+        }
+
+        private void RegistrarAcierto(JugadorPartida jugador, int puntos)
+        {
+            jugador.YaAdivino = true;
+            jugador.PuntajeTotal += puntos;
+        }
+
+        private void PrepararSiguienteRonda()
+        {
+            RondaDTO rondaDto = null;
+            bool finJuego = false;
+
+            lock (_sincronizacion)
+            {
+                if (_estadoActual != EstadoPartida.Jugando)
+                {
+                    return;
+                }
+
+                if (!_gestorJugadores.QuedanDibujantesPendientes())
+                {
+                    if (_rondaActual >= _totalRondas)
+                    {
+                        finJuego = true;
+                    }
+                    else
+                    {
+                        _rondaActual++;
+                        _gestorJugadores.PrepararColaDibujantes();
+                    }
+                }
+
+                if (!finJuego)
+                {
+                    _gestorJugadores.SeleccionarSiguienteDibujante();
+                    var cancion = _catalogoCanciones.ObtenerCancionAleatoria(_idiomaCanciones, 
+                        _cancionesUsadas);
+                    _cancionActualId = cancion.Id;
+                    _cancionesUsadas.Add(cancion.Id);
+
+                    rondaDto = CrearRondaDto(cancion);
+                    IniciarTimerRondaConRetardo();
+                }
+                else
+                {
+                    _estadoActual = EstadoPartida.Finalizada;
+                }
+            }
+
+            if (finJuego)
+            {
+                NotificarFinPartida();
+            }
+            else
+            {
+                InicioRonda?.Invoke(rondaDto);
+            }
+        }
+
+        private void IniciarTimerRondaConRetardo()
+        {
+            Task.Delay(TiempoOverlayClienteSegundos * 1000).ContinueWith(_ =>
+            {
+                lock (_sincronizacion)
+                {
+                    if (_estadoActual == EstadoPartida.Jugando)
+                    {
+                        _gestorTiempos.IniciarRonda();
+                    }
+                }
+            });
+        }
+
+        private void FinalizarRondaActual(bool forzarPorAciertos = false)
+        {
+            lock (_sincronizacion)
+            {
+                if (_estadoActual != EstadoPartida.Jugando)
+                {
+                    return;
+                }
+                if (_rondaFinalizadaPorAciertos && !forzarPorAciertos)
+                {
+                    return;
+                }
+                _gestorTiempos.DetenerTodo();
+            }
+
+            FinRonda?.Invoke();
+            EvaluarContinuidadPartida();
+        }
+
+        private void FinalizarRondaAnticipada()
+        {
+            bool yaFinalizada;
+
+            lock (_sincronizacion)
+            {
+                yaFinalizada = _rondaFinalizadaPorAciertos;
+                _rondaFinalizadaPorAciertos = true;
+            }
+
+            if (!yaFinalizada)
+            {
+                FinalizarRondaActual(true);
+            }
+        }
+
+        private void EvaluarContinuidadPartida()
+        {
+            bool esFin = false;
+            lock (_sincronizacion)
+            {
+                if (_estadoActual == EstadoPartida.Finalizada ||
+                    (_rondaActual >= _totalRondas && 
+                    !_gestorJugadores.QuedanDibujantesPendientes()))
+                {
+                    _estadoActual = EstadoPartida.Finalizada;
+                    esFin = true;
+                }
+                else
+                {
+                    _rondaFinalizadaPorAciertos = false;
+                    _gestorTiempos.IniciarTransicion();
+                }
+            }
+
+            if (esFin)
+            {
+                NotificarFinPartida();
+            }
+        }
+
+        private void CancelarPartida(string mensajeCancelacion)
+        {
+            bool debeNotificar = false;
+
+            lock (_sincronizacion)
+            {
+                if (_estadoActual == EstadoPartida.Finalizada)
+                {
+                    return;
+                }
+
+                _estadoActual = EstadoPartida.Finalizada;
+                _gestorTiempos.DetenerTodo();
+                debeNotificar = true;
+            }
+
+            if (debeNotificar)
+            {
+                FinPartida?.Invoke(new ResultadoPartidaDTO
+                {
+                    Clasificacion = _gestorJugadores.GenerarClasificacion(),
+                    Mensaje = mensajeCancelacion
+                        ?? MensajesError.Cliente.PartidaCanceladaFaltaJugadores
+                });
+            }
+        }
+
+        private void NotificarFinPartida()
+        {
+            FinPartida?.Invoke(new ResultadoPartidaDTO
+            {
+                Clasificacion = _gestorJugadores.GenerarClasificacion()
+            });
+        }
+
+        private void SuscribirEventosTiempo()
+        {
+            _gestorTiempos.TiempoRondaAgotado += () => FinalizarRondaActual();
+            _gestorTiempos.TiempoTransicionAgotado += PrepararSiguienteRonda;
+        }
+
+        private bool EsMensajeInvalido(string id, string mensaje)
+        {
+            return string.IsNullOrWhiteSpace(id) ||
+                   string.IsNullOrWhiteSpace(mensaje) ||
+                   mensaje.Split(' ').Length > LimitePalabrasMensaje;
+        }
+
+        private static bool EsMensajeAciertoProtocolo(string mensaje, out int puntos)
+        {
+            puntos = 0;
             if (!mensaje.StartsWith("ACIERTO:", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
 
             var partes = mensaje.Split(':');
-            if (partes.Length >= 3 && 
-                !string.IsNullOrWhiteSpace(partes[2]) && 
-                int.TryParse(partes[2], out int puntosParseados) &&
-                puntosParseados > 0)
-            {
-                puntos = puntosParseados;
-            }
-
-            return true;
-        }
-
-        public void ProcesarTrazo(string idConexion, TrazoDTO trazo)
-        {
-            if (trazo == null)
-            {
-                throw new ArgumentNullException(nameof(trazo));
-            }
-
-            lock (_sincronizacion)
-            {
-                if (_estadoActual != EstadoPartida.Jugando || !_jugadores.TryGetValue(idConexion, out var jugador))
-                {
-                    return;
-                }
-
-                if (!jugador.EsDibujante)
-                {
-                    return;
-                }
-            }
-
-            TrazoRecibido?.Invoke(trazo);
-        }
-
-        private void IniciarNuevaRonda()
-        {
-            RondaDTO ronda = null;
-            bool debeFinalizar = false;
-
-            lock (_sincronizacion)
-            {
-                if (_estadoActual != EstadoPartida.Jugando)
-                {
-                    return;
-                }
-
-                if (_colaDibujantes.Count == 0)
-                {
-                    if (_rondaActual >= _cantidadRondas)
-                    {
-                        _estadoActual = EstadoPartida.Finalizada;
-                        debeFinalizar = true;
-                    }
-                    else
-                    {
-                        PrepararColaDibujantes();
-                        _rondaActual++;
-                    }
-                }
-
-                if (!debeFinalizar)
-                {
-                    SeleccionarDibujante();
-                    var cancion = ObtenerCancionParaRonda();
-
-                    var versionInicio = ++_versionInicioRonda;
-                    ProgramarInicioCronometro(versionInicio);
-                    ronda = CrearRondaDto(cancion);
-                }
-            }
-
-            if (debeFinalizar)
-            {
-                NotificarFinPartida();
-                return;
-            }
-
-            InicioRonda?.Invoke(ronda);
-        }
-
-        private void ProgramarInicioCronometro(int versionInicio)
-        {
-            _timerRonda.Stop();
-            _timerRonda.Interval = _tiempoRondaSegundos * 1000;
-
-            Task.Run(async () =>
-            {
-                await Task.Delay(TiempoOverlayClienteSegundos * 1000).ConfigureAwait(false);
-
-                lock (_sincronizacion)
-                {
-                    if (_estadoActual != EstadoPartida.Jugando || versionInicio != _versionInicioRonda)
-                    {
-                        return;
-                    }
-
-                    _inicioRonda = DateTime.UtcNow;
-                    _timerRonda.Stop();
-                    _timerRonda.Start();
-                }
-            });
-        }
-
-        private void PrepararColaDibujantes()
-        {
-            _colaDibujantes.Clear();
-
-            foreach (var jugador in _jugadores.Keys.OrderBy(_ => _random.Next()))
-            {
-                _colaDibujantes.Enqueue(jugador);
-            }
-        }
-
-        private void SeleccionarDibujante()
-        {
-            foreach (var jugador in _jugadores.Values)
-            {
-                jugador.EsDibujante = false;
-                jugador.YaAdivino = false;
-            }
-
-            while (_colaDibujantes.Count > 0)
-            {
-                var idDibujante = _colaDibujantes.Dequeue();
-
-                if (_jugadores.TryGetValue(idDibujante, out var dibujante))
-                {
-                    dibujante.EsDibujante = true;
-                    dibujante.YaAdivino = true;
-                    return;
-                }
-            }
-
-            throw new InvalidOperationException("No hay dibujantes disponibles para la ronda.");
-        }
-
-        private Cancion ObtenerCancionParaRonda()
-        {
-            var cancion = CatalogoCancionesLogico.ObtenerCancionAleatoria(_idiomaCanciones, _cancionesUsadas);
-            _cancionActualId = cancion.Id;
-            _cancionesUsadas.Add(cancion.Id);
-            _logger.InfoFormat("Canción {0} seleccionada para la ronda {1}.", cancion.Nombre, _rondaActual);
-            return cancion;
+            return partes.Length >= 3 && int.TryParse(partes[2], out puntos) && puntos > 0;
         }
 
         private RondaDTO CrearRondaDto(Cancion cancion)
         {
-            string pistaArtista = null;
-            string pistaGenero = null;
-            var dificultadNormalizada = _dificultad.ToLowerInvariant();
-
-            if (dificultadNormalizada.Equals("facil", StringComparison.OrdinalIgnoreCase))
+            string genero = null, artista = null;
+            if (_dificultad.Equals("facil", StringComparison.OrdinalIgnoreCase))
             {
-                pistaArtista = cancion.Artista;
-                pistaGenero = cancion.Genero;
+                artista = cancion.Artista;
             }
-            else if (dificultadNormalizada.Equals("media", StringComparison.OrdinalIgnoreCase))
+            if (!_dificultad.Equals("dificil", StringComparison.OrdinalIgnoreCase))
             {
-                pistaGenero = cancion.Genero;
+                genero = cancion.Genero;
             }
 
             return new RondaDTO
             {
                 IdCancion = cancion.Id,
                 Rol = RolDibujante,
-                PistaArtista = pistaArtista,
-                PistaGenero = pistaGenero,
-                TiempoSegundos = _tiempoRondaSegundos
+                PistaArtista = artista,
+                PistaGenero = genero,
+                TiempoSegundos = _duracionRondaSegundos
             };
-        }
-
-        private bool TodosAdivinaron()
-        {
-            var adivinadores = _jugadores.Values.Where(jugador => !jugador.EsDibujante).ToList();
-            
-            if (adivinadores.Count == 0)
-            {
-                return true;
-            }
-
-            return adivinadores.All(jugador => jugador.YaAdivino);
-        }
-
-        private int CalcularSegundosRestantes()
-        {
-            if (_inicioRonda == default)
-            {
-                return _tiempoRondaSegundos;
-            }
-
-            var transcurrido = (int)(DateTime.UtcNow - _inicioRonda).TotalSeconds;
-            var restante = _tiempoRondaSegundos - transcurrido;
-            return Math.Max(0, restante);
-        }
-
-        private void OnTiempoRondaCumplido(object sender, ElapsedEventArgs e)
-        {
-            FinalizarRonda();
-        }
-
-        private void OnTransicionRondaCompletada(object sender, ElapsedEventArgs e)
-        {
-            ContinuarDespuesDeTransicion();
-        }
-
-        private void FinalizarRondaPorTodosAdivinaron()
-        {
-            bool partidaFinalizada;
-            List<ClasificacionUsuarioDTO> clasificacion;
-
-            lock (_sincronizacion)
-            {
-                if (_estadoActual != EstadoPartida.Jugando)
-                {
-                    return;
-                }
-
-                DetenerTimers();
-                _rondaTerminadaPorTodosAdivinaron = true;
-
-                partidaFinalizada = EsUltimaRonda();
-                clasificacion = ObtenerClasificacion();
-
-                if (partidaFinalizada)
-                {
-                    _estadoActual = EstadoPartida.Finalizada;
-                }
-            }
-
-            FinRonda?.Invoke();
-
-            if (partidaFinalizada)
-            {
-                NotificarFinPartidaConClasificacion(clasificacion);
-            }
-            else
-            {
-                _timerTransicionRonda.Start();
-            }
-        }
-
-        private void ContinuarDespuesDeTransicion()
-        {
-            lock (_sincronizacion)
-            {
-                _timerTransicionRonda.Stop();
-                _rondaTerminadaPorTodosAdivinaron = false;
-
-                if (_estadoActual != EstadoPartida.Jugando)
-                {
-                    return;
-                }
-            }
-
-            IniciarNuevaRonda();
-        }
-
-        private void FinalizarRonda()
-        {
-            bool partidaFinalizada;
-            List<ClasificacionUsuarioDTO> clasificacion;
-
-            lock (_sincronizacion)
-            {
-                if (_estadoActual != EstadoPartida.Jugando)
-                {
-                    return;
-                }
-
-                if (_rondaTerminadaPorTodosAdivinaron)
-                {
-                    return;
-                }
-
-                DetenerTimers();
-
-                partidaFinalizada = EsUltimaRonda();
-                clasificacion = ObtenerClasificacion();
-
-                if (partidaFinalizada)
-                {
-                    _estadoActual = EstadoPartida.Finalizada;
-                }
-            }
-
-            FinRonda?.Invoke();
-
-            if (partidaFinalizada)
-            {
-                NotificarFinPartidaConClasificacion(clasificacion);
-            }
-            else
-            {
-                _timerTransicionRonda.Start();
-            }
-        }
-
-        private void DetenerTimers()
-        {
-            _timerRonda.Stop();
-            _timerTransicionRonda.Stop();
-            _inicioRonda = default;
-        }
-
-        private bool EsUltimaRonda()
-        {
-            return _colaDibujantes.Count == 0 && _rondaActual >= _cantidadRondas;
-        }
-
-        private void NotificarFinPartidaConClasificacion(List<ClasificacionUsuarioDTO> clasificacion)
-        {
-            FinPartida?.Invoke(new ResultadoPartidaDTO
-            {
-                Clasificacion = clasificacion
-            });
-        }
-
-        private List<ClasificacionUsuarioDTO> ObtenerClasificacion()
-        {
-            return _jugadores.Values
-                .Select(jugador => new ClasificacionUsuarioDTO
-                {
-                    Usuario = jugador.NombreUsuario,
-                    Puntos = jugador.PuntajeTotal,
-                    RondasGanadas = 0
-                })
-                .OrderByDescending(j => j.Puntos)
-                .ToList();
-        }
-
-        private void NotificarFinPartida()
-        {
-            List<ClasificacionUsuarioDTO> clasificacion;
-
-            lock (_sincronizacion)
-            {
-                clasificacion = ObtenerClasificacion();
-            }
-
-            FinPartida?.Invoke(new ResultadoPartidaDTO
-            {
-                Clasificacion = clasificacion
-            });
-        }
-
-        private bool QuedaSoloHost()
-        {
-            return _jugadores.Count == 1 && _jugadores.Values.All(jugador => jugador.EsHost);
         }
     }
 }

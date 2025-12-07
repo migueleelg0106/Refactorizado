@@ -1,3 +1,4 @@
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System.Threading.Tasks;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
@@ -19,6 +20,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
         Task<DTOs.ResultadoRegistroCuentaDTO> MostrarDialogoAsync(
             string descripcion,
             string tokenCodigo,
-            ICodigoVerificacionServicio codigoVerificacionServicio);
+            ICodigoVerificacionServicio codigoVerificacionServicio,
+            IAvisoServicio avisoServicio,
+            ILocalizadorServicio localizadorServicio,
+            ISonidoManejador sonidoManejador);
     }
 }

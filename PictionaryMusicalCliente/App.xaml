@@ -1,8 +1,7 @@
 ﻿<Application x:Class="PictionaryMusicalCliente.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:PictionaryMusicalCliente"
-             StartupUri="/Vista/InicioSesion.xaml">
+             xmlns:local="clr-namespace:PictionaryMusicalCliente">
     <Application.Resources>
         <Style TargetType="Button">
             <Setter Property="Cursor" Value="Hand"/>

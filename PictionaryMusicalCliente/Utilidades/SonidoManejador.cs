@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Media;
 using log4net;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.ClienteServicios
 {
@@ -9,17 +10,16 @@ namespace PictionaryMusicalCliente.ClienteServicios
     /// Provee métodos para reproducir efectos de sonido (SFX) cortos, respetando
     /// la preferencia de silencio del usuario.
     /// </summary>
-    public static class SonidoManejador
+    public class SonidoManejador : ISonidoManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private const double VolumenPredeterminado = 1.0;
 
         /// <summary>
         /// Indica si los efectos de sonido están silenciados por preferencia del usuario.
         /// </summary>
-        public static bool Silenciado
+        public bool Silenciado
         {
             get => Properties.Settings.Default.efectosSilenciados;
             set
@@ -38,47 +38,25 @@ namespace PictionaryMusicalCliente.ClienteServicios
         /// </summary>
         /// <param name="nombreArchivo">Nombre del archivo con extensión.</param>
         /// <param name="volumen">Volumen de 0.0 a 1.0 (por defecto 1.0)</param>
-        public static void ReproducirSonido(string nombreArchivo, 
+        public void ReproducirSonido(string nombreArchivo, 
             double volumen = VolumenPredeterminado)
         {
-            if (Silenciado)
+            if (Silenciado || string.IsNullOrWhiteSpace(nombreArchivo))
             {
                 return;
             }
 
             try
             {
-                string rutaSonido = Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "Recursos",
-                    nombreArchivo);
+                string rutaSonido = ObtenerRutaAbsoluta(nombreArchivo);
 
                 if (!File.Exists(rutaSonido))
                 {
-                    _logger.WarnFormat("Sonido SFX no encontrado: {0}",
-                        rutaSonido);
+                    _logger.WarnFormat("Sonido SFX no encontrado: {0}", rutaSonido);
                     return;
                 }
 
-                var player = new MediaPlayer();
-                player.Open(new Uri(rutaSonido, UriKind.Absolute));
-                player.Volume = Math.Max(0, Math.Min(VolumenPredeterminado, volumen));
-
-                player.MediaEnded += (s, e) =>
-                {
-                    try
-                    {
-                        player.Stop();
-                        player.Close();
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        _logger.WarnFormat("Error limpiando reproductor SFX: {0}",
-                            ex.Message);
-                    }
-                };
-
-                player.Play();
+                IniciarReproductor(rutaSonido, volumen);
             }
             catch (ArgumentException argEx)
             {
@@ -105,7 +83,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         /// <summary>
         /// Reproduce el sonido estándar de clic de boton.
         /// </summary>
-        public static void ReproducirClick()
+        public void ReproducirClick()
         {
             ReproducirSonido("piano_boton.mp3");
         }
@@ -113,7 +91,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
         /// <summary>
         /// Reproduce el sonido estándar de error.
         /// </summary>
-        public static void ReproducirError()
+        public void ReproducirError()
         {
             ReproducirSonido("error.mp3", 0.8);
         }
@@ -121,9 +99,40 @@ namespace PictionaryMusicalCliente.ClienteServicios
         /// <summary>
         /// Reproduce el sonido estándar de éxito o confirmacion.
         /// </summary>
-        public static void ReproducirExito()
+        public void ReproducirExito()
         {
             ReproducirSonido("exito.mp3", 0.7);
+        }
+
+        private void IniciarReproductor(string ruta, double volumen)
+        {
+            var player = new MediaPlayer();
+            player.Open(new Uri(ruta, UriKind.Absolute));
+            player.Volume = Math.Max(0, Math.Min(VolumenPredeterminado, volumen));
+
+            player.MediaEnded += (s, e) => LimpiarReproductor(player);
+            player.Play();
+        }
+
+        private void LimpiarReproductor(MediaPlayer player)
+        {
+            try
+            {
+                player.Stop();
+                player.Close();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("Error limpiando reproductor SFX.", ex);
+            }
+        }
+
+        private static string ObtenerRutaAbsoluta(string nombreArchivo)
+        {
+            return Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Recursos",
+                nombreArchivo);
         }
     }
 }

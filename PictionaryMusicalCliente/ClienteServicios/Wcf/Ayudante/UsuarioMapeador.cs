@@ -1,5 +1,6 @@
-using log4net;
-using PictionaryMusicalCliente.Sesiones;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Modelo;
+using System;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
@@ -7,26 +8,31 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
     /// <summary>
     /// Expone operaciones auxiliares para mantener sincronizada la sesion del usuario.
     /// </summary>
-    public static class UsuarioMapeador
+    public class UsuarioMapeador : IUsuarioMapeador
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(UsuarioMapeador));
+        private readonly IUsuarioAutenticado _usuarioSesion;
 
+        /// <summary>
+        /// Inicializa el mapeador inyectando la sesion actual.
+        /// </summary>
+        public UsuarioMapeador(IUsuarioAutenticado usuarioSesion)
+        {
+            _usuarioSesion = usuarioSesion ??
+                throw new ArgumentNullException(nameof(usuarioSesion));
+        }
         /// <summary>
         /// Actualiza la sesion del usuario actual a partir del DTO recibido del servidor.
         /// </summary>
         /// <param name="dto">Datos del usuario autenticado.</param>
-        public static void ActualizarSesion(DTOs.UsuarioDTO dto)
+        public void ActualizarSesion(DTOs.UsuarioDTO dto)
         {
             if (dto == null)
             {
-                _logger.Info("Cerrando sesión local de usuario (DTO nulo).");
-                SesionUsuarioActual.CerrarSesion();
+                _usuarioSesion.Limpiar();
                 return;
             }
 
-            _logger.InfoFormat("Actualizando sesión local para usuario: {0}", 
-                dto.NombreUsuario);
-            SesionUsuarioActual.EstablecerUsuario(dto);
+            _usuarioSesion.CargarDesdeDTO(dto);
         }
     }
 }

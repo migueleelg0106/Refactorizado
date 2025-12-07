@@ -2,7 +2,6 @@
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 {
@@ -20,6 +20,8 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ISonidoManejador _sonidoManejador;
+        private readonly IAvisoServicio _avisoServicio;
 
         private readonly IClasificacionServicio _clasificacionServicio;
         private IReadOnlyList<DTOs.ClasificacionUsuarioDTO> _clasificacionOriginal;
@@ -31,29 +33,35 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         /// </summary>
         /// <param name="clasificacionServicio">Servicio para obtener los datos del ranking.
         /// </param>
-        public ClasificacionVistaModelo(IClasificacionServicio clasificacionServicio)
+        public ClasificacionVistaModelo(IClasificacionServicio clasificacionServicio,
+            IAvisoServicio avisoServicio,
+            ISonidoManejador sonidoManejador)
         {
             _clasificacionServicio = clasificacionServicio ??
                 throw new ArgumentNullException(nameof(clasificacionServicio));
+            _avisoServicio = avisoServicio ??
+                throw new ArgumentNullException(nameof(avisoServicio));
+            _sonidoManejador = sonidoManejador ??
+                throw new ArgumentNullException(nameof(sonidoManejador));
 
             _clasificacionOriginal = Array.Empty<DTOs.ClasificacionUsuarioDTO>();
             _clasificacion = new ObservableCollection<DTOs.ClasificacionUsuarioDTO>();
 
             OrdenarPorRondasComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 OrdenarPorRondas();
             }, _ => PuedeOrdenar());
 
             OrdenarPorPuntosComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 OrdenarPorPuntos();
             }, _ => PuedeOrdenar());
 
             CerrarComando = new ComandoDelegado(_ =>
             {
-                SonidoManejador.ReproducirClick();
+                _sonidoManejador.ReproducirClick();
                 CerrarAccion?.Invoke();
             });
         }
@@ -134,7 +142,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             catch (ServicioExcepcion ex)
             {
                 _logger.Error("Error al obtener clasificación.", ex);
-                AvisoAyudante.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+                _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {

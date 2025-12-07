@@ -3,7 +3,8 @@ using System.Runtime.Serialization;
 namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
 {
     /// <summary>
-    /// Objeto de transferencia de datos para el resultado de una solicitud de codigo de verificacion.
+    /// Objeto de transferencia de datos para el resultado de una solicitud de codigo de 
+    /// verificacion.
     /// Contiene informacion sobre el envio del codigo y posibles conflictos.
     /// </summary>
     [DataContract]

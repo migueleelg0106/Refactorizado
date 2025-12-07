@@ -4,7 +4,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos.DTOs
 {
     /// <summary>
     /// Objeto de transferencia de datos para el resultado de un intento de inicio de sesion.
-    /// Contiene informacion sobre el exito o fallo del inicio de sesion y datos del usuario autenticado.
+    /// Contiene informacion sobre el exito o fallo del inicio de sesion y datos del usuario 
+    /// autenticado.
     /// </summary>
     [DataContract]
     public class ResultadoInicioSesionDTO

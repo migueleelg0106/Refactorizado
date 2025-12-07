@@ -1,13 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using PictionaryMusicalCliente.ClienteServicios.Wcf;
-using PictionaryMusicalCliente.ClienteServicios.Dialogos;
-using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.InicioSesion;
 
-namespace PictionaryMusicalCliente
+namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
     /// Ventana de registro para nuevos usuarios.
@@ -17,28 +15,36 @@ namespace PictionaryMusicalCliente
         private readonly CreacionCuentaVistaModelo _vistaModelo;
 
         /// <summary>
-        /// Inicializa la ventana de registro con todas sus dependencias de servicio.
+        /// Constructor por defecto, solo para uso del diseñador/XAML. 
+        /// La aplicación debe usar el constructor que recibe dependencias.
         /// </summary>
         public CreacionCuenta()
         {
+        }
+
+        /// <summary>
+        /// Inicializa la ventana inyectando el ViewModel con sus dependencias resueltas.
+        /// </summary>
+        /// <param name="vistaModelo">Logica de negocio para el registro.</param>
+        public CreacionCuenta(CreacionCuentaVistaModelo vistaModelo)
+        {
+            if (vistaModelo == null)
+            {
+                throw new ArgumentNullException(nameof(vistaModelo));
+            }
+
             InitializeComponent();
 
-            var codigoVerificacionServicio = new CodigoVerificacionServicio();
-            var cuentaServicio = new CuentaServicio();
-            var seleccionarAvatarServicio = new SeleccionAvatarDialogoServicio();
-            var verificarCodigoDialogoServicio = new VerificacionCodigoDialogoServicio();
-
-            _vistaModelo = new CreacionCuentaVistaModelo(
-                codigoVerificacionServicio,
-                cuentaServicio,
-                seleccionarAvatarServicio,
-                verificarCodigoDialogoServicio);
-
-            _vistaModelo.CerrarAccion = Close;
-            _vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
-            _vistaModelo.MostrarMensaje = AvisoAyudante.Mostrar;
+            _vistaModelo = vistaModelo;
+            ConfigurarInteracciones();
 
             DataContext = _vistaModelo;
+        }
+
+        private void ConfigurarInteracciones()
+        {
+            _vistaModelo.CerrarAccion = Close;
+            _vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
         }
 
         private void PasswordBoxChanged(object sender, RoutedEventArgs e)
@@ -57,35 +63,22 @@ namespace PictionaryMusicalCliente
             ControlVisual.RestablecerEstadoCampo(campoTextoCorreo);
             ControlVisual.RestablecerEstadoCampo(campoContrasenaContrasena);
 
-            if (camposInvalidos == null)
-            {
-                return;
-            }
+            if (camposInvalidos == null) return;
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Usuario)))
-            {
                 ControlVisual.MarcarCampoInvalido(campoTextoUsuario);
-            }
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Nombre)))
-            {
                 ControlVisual.MarcarCampoInvalido(campoTextoNombre);
-            }
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Apellido)))
-            {
                 ControlVisual.MarcarCampoInvalido(campoTextoApellido);
-            }
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Correo)))
-            {
                 ControlVisual.MarcarCampoInvalido(campoTextoCorreo);
-            }
 
             if (camposInvalidos.Contains(nameof(_vistaModelo.Contrasena)))
-            {
                 ControlVisual.MarcarCampoInvalido(campoContrasenaContrasena);
-            }
         }
     }
 }

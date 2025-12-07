@@ -1,14 +1,14 @@
 using log4net;
-using Datos.Modelo;
-using PictionaryMusicalServidor.Datos.Utilidades;
+using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
+using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
+using PictionaryMusicalServidor.Servicios.Servicios.Notificadores;
 using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Data.Entity.Core;
 using System.Linq;
 using System.ServiceModel;
@@ -23,55 +23,64 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// </summary>
     public class InvitacionesManejador : IInvitacionesManejador
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(InvitacionesManejador));
+        private static readonly ILog _logger =
+            LogManager.GetLogger(typeof(InvitacionesManejador));
+
         private static readonly TimeSpan RegexTimeout = TimeSpan.FromMilliseconds(500);
 
         private static readonly Regex CorreoRegex = new Regex(
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant,RegexTimeout);
+            RegexOptions.Compiled | RegexOptions.CultureInvariant,
+            RegexTimeout);
+
+        private readonly IContextoFactoria _contextoFactory;
+        private readonly ISalasManejador _salasManejador;
+        private readonly ICorreoInvitacionNotificador _correoNotificador;
+
+        public InvitacionesManejador() : this(
+            new ContextoFactoria(),
+            new SalasManejador(),
+            new CorreoInvitacionNotificador())
+        {
+        }
+
+        public InvitacionesManejador(
+            IContextoFactoria contextoFactory,
+            ISalasManejador salasManejador,
+            ICorreoInvitacionNotificador correoNotificador)
+        {
+            _contextoFactory = contextoFactory
+                ?? throw new ArgumentNullException(nameof(contextoFactory));
+
+            _salasManejador = salasManejador
+                ?? throw new ArgumentNullException(nameof(salasManejador));
+
+            _correoNotificador = correoNotificador
+                ?? throw new ArgumentNullException(nameof(correoNotificador));
+        }
 
         /// <summary>
         /// Envia una invitacion a una sala de juego a un usuario via correo electronico.
-        /// Valida el correo, verifica que la sala exista y que el usuario no este ya en la sala.
         /// </summary>
-        /// <param name="invitacion">Datos de la invitacion con codigo de sala y correo destino.</param>
-        /// <returns>Resultado del envio indicando exito o fallo con mensaje descriptivo.</returns>
-        public async Task<ResultadoOperacionDTO> EnviarInvitacionAsync(InvitacionSalaDTO invitacion)
+        public async Task<ResultadoOperacionDTO> EnviarInvitacionAsync(
+            InvitacionSalaDTO invitacion)
         {
             try
             {
-                ValidarSolicitud(invitacion);
+                ValidarDatosEntrada(invitacion);
 
                 string codigoSala = invitacion.CodigoSala.Trim();
                 string correo = invitacion.Correo.Trim();
-                string idioma = invitacion.Idioma;
 
-                var sala = SalasManejador.ObtenerSalaPorCodigo(codigoSala);
-                ValidarSala(sala);
+                var sala = ObtenerYValidarSala(codigoSala);
 
-                if (sala.Jugadores != null && sala.Jugadores.Count > 0 && await UsuarioYaEnSalaAsync(correo, sala))
+                if (await VerificarUsuarioEnSala(correo, sala))
                 {
-                    throw new InvalidOperationException(MensajesError.Cliente.CorreoJugadorEnSala);
+                    throw new InvalidOperationException(
+                        MensajesError.Cliente.CorreoJugadorEnSala);
                 }
 
-                bool enviado = await CorreoInvitacionNotificador.EnviarInvitacionAsync(
-                    correo,
-                    sala.Codigo,
-                    sala.Creador,
-                    idioma).ConfigureAwait(false);
-
-                if (!enviado)
-                {
-                    return CrearFallo(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
-                }
-
-                _logger.InfoFormat("Invitación enviada a '{0}' para la sala {1}.", correo, codigoSala);
-
-                return new ResultadoOperacionDTO
-                {
-                    OperacionExitosa = true,
-                    Mensaje = MensajesError.Cliente.InvitacionEnviadaExito
-                };
+                return await EjecutarEnvioCorreo(correo, sala, invitacion.Idioma);
             }
             catch (FaultException)
             {
@@ -79,85 +88,127 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
             catch (ArgumentException ex)
             {
-                _logger.Warn("Operación inválida al enviar invitación. Estado inconsistente o validación fallida.", ex);
+                _logger.Warn("Datos invalidos al enviar invitacion.", ex);
                 return CrearFallo(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn("Operación inválida al enviar invitación. Estado inconsistente o validación fallida.", ex);
+                _logger.Warn("Operacion invalida al enviar invitacion.", ex);
                 return CrearFallo(ex.Message);
             }
             catch (EntityException ex)
             {
-                _logger.Error("Error de base de datos al enviar invitación. Fallo en la consulta de verificación de usuario.", ex);
+                _logger.Error("Error de base de datos al enviar invitacion.", ex);
                 return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
             catch (DataException ex)
             {
-                _logger.Error("Error de datos al enviar invitación. No se pudo procesar la información del destinatario.", ex);
+                _logger.Error("Error de datos al enviar invitacion.", ex);
                 return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
-            catch (Exception ex)
+            catch (RegexMatchTimeoutException ex)
             {
-                _logger.Error("Operación inválida al enviar invitación. Estado inconsistente o validación fallida.", ex);
+                _logger.Error("Timeout al validar el formato del correo de invitacion.", ex);
+                return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
+            }
+            catch (AggregateException ex)
+            {
+                _logger.Error("Error inesperado al enviar invitacion.", ex);
                 return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
             }
         }
 
-        private static void ValidarSolicitud(InvitacionSalaDTO invitacion)
+        private void ValidarDatosEntrada(InvitacionSalaDTO invitacion)
+        {
+            ValidarNulosVacios(invitacion);
+            ValidarFormatoCorreo(invitacion.Correo);
+        }
+
+        private void ValidarNulosVacios(InvitacionSalaDTO invitacion)
         {
             if (invitacion == null)
             {
-                throw new ArgumentException(MensajesError.Cliente.SolicitudInvitacionInvalida);
+                throw new ArgumentException(
+                    MensajesError.Cliente.SolicitudInvitacionInvalida);
             }
 
-            string codigoSala = invitacion.CodigoSala?.Trim();
-            string correo = invitacion.Correo?.Trim();
-
-            if (string.IsNullOrWhiteSpace(codigoSala) || string.IsNullOrWhiteSpace(correo))
+            if (string.IsNullOrWhiteSpace(invitacion.CodigoSala) ||
+                string.IsNullOrWhiteSpace(invitacion.Correo))
             {
-                throw new ArgumentException(MensajesError.Cliente.DatosInvitacionInvalidos);
+                throw new ArgumentException(
+                    MensajesError.Cliente.DatosInvitacionInvalidos);
             }
+        }
 
-            if (!CorreoRegex.IsMatch(correo))
+        private void ValidarFormatoCorreo(string correo)
+        {
+            if (!CorreoRegex.IsMatch(correo.Trim()))
             {
                 throw new ArgumentException(MensajesError.Cliente.CorreoInvalido);
             }
         }
 
-        private static void ValidarSala(dynamic sala)
+        private SalaDTO ObtenerYValidarSala(string codigoSala)
         {
+            var sala = _salasManejador.ObtenerSalaPorCodigo(codigoSala);
             if (sala == null)
             {
                 throw new InvalidOperationException(MensajesError.Cliente.SalaNoEncontrada);
             }
+            return sala;
         }
 
-        private static async Task<bool> UsuarioYaEnSalaAsync(string correo, dynamic sala)
+        private async Task<bool> VerificarUsuarioEnSala(string correo, SalaDTO sala)
         {
-            using (var contexto = CrearContexto())
+            if (sala.Jugadores == null || sala.Jugadores.Count == 0)
             {
-                var usuario = await contexto.Usuario
-                    .Include(u => u.Jugador)
-                    .FirstOrDefaultAsync(u => u.Jugador.Correo == correo);
+                return false;
+            }
+
+            return await UsuarioYaEnSalaAsync(correo, sala.Jugadores);
+        }
+
+        private async Task<bool> UsuarioYaEnSalaAsync(
+            string correo,
+            IEnumerable<string> jugadoresSala)
+        {
+            using (var contexto = _contextoFactory.CrearContexto())
+            {
+                IUsuarioRepositorio repositorio = new UsuarioRepositorio(contexto);
+                var usuario = await repositorio.ObtenerPorCorreoAsync(correo);
 
                 if (string.IsNullOrWhiteSpace(usuario?.Nombre_Usuario))
                 {
                     return false;
                 }
 
-                var listaJugadores = (IEnumerable<string>)sala.Jugadores;
-
-                return listaJugadores.Contains(usuario.Nombre_Usuario, StringComparer.OrdinalIgnoreCase);
+                return jugadoresSala.Contains(
+                    usuario.Nombre_Usuario,
+                    StringComparer.OrdinalIgnoreCase);
             }
         }
 
-        private static BaseDatosPruebaEntities CrearContexto()
+        private async Task<ResultadoOperacionDTO> EjecutarEnvioCorreo(
+            string correo,
+            SalaDTO sala,
+            string idioma)
         {
-            string cadenaConexion = Conexion.ObtenerConexion();
-            return string.IsNullOrWhiteSpace(cadenaConexion)
-                ? new BaseDatosPruebaEntities()
-                : new BaseDatosPruebaEntities(cadenaConexion);
+            bool enviado = await _correoNotificador.EnviarInvitacionAsync(
+                correo,
+                sala.Codigo,
+                sala.Creador,
+                idioma).ConfigureAwait(false);
+
+            if (!enviado)
+            {
+                return CrearFallo(MensajesError.Cliente.ErrorEnviarInvitacionCorreo);
+            }
+
+            return new ResultadoOperacionDTO
+            {
+                OperacionExitosa = true,
+                Mensaje = MensajesError.Cliente.InvitacionEnviadaExito
+            };
         }
 
         private static ResultadoOperacionDTO CrearFallo(string mensaje)

@@ -1,6 +1,8 @@
-﻿using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
+using PictionaryMusicalServidor.Servicios.Servicios.Notificadores;
 using log4net;
 using System;
+using PictionaryMusicalServidor.Servicios.Servicios.Utilidades;
+using PictionaryMusicalServidor.Servicios.Contratos;
 
 namespace PictionaryMusicalServidor.Servicios.Servicios
 {
@@ -8,17 +10,25 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// Servicio interno para el envio de notificaciones de codigos de verificacion.
     /// Gestiona el envio de codigos por correo electronico a usuarios.
     /// </summary>
-    internal static class NotificacionCodigosServicio
+    public class NotificacionCodigosServicio : INotificacionCodigosServicio
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(NotificacionCodigosServicio));
-        private static ICodigoVerificacionNotificador _notificador = new CorreoCodigoVerificacionNotificador();
+        private static readonly ILog _logger =
+            LogManager.GetLogger(typeof(NotificacionCodigosServicio));
+
+        private readonly ICodigoVerificacionNotificador _notificador;
 
         /// <summary>
-        /// Configura el notificador que se usara para enviar codigos de verificacion.
-        /// Permite inyectar una implementacion personalizada del notificador.
+        /// Constructor por defecto para WCF.
         /// </summary>
-        /// <param name="notificador">Instancia del notificador a usar, o null para usar el predeterminado.</param>
-        public static void ConfigurarNotificador(ICodigoVerificacionNotificador notificador)
+        public NotificacionCodigosServicio() : this(new CorreoCodigoVerificacionNotificador())
+        {
+        }
+
+        /// <summary>
+        /// Constructor con inyeccion de dependencias.
+        /// </summary>
+        /// <param name="notificador">Instancia del notificador a usar.</param>
+        public NotificacionCodigosServicio(ICodigoVerificacionNotificador notificador)
         {
             _notificador = notificador ?? new CorreoCodigoVerificacionNotificador();
         }
@@ -30,8 +40,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <param name="correoDestino">Direccion de correo electronico del destinatario.</param>
         /// <param name="codigo">Codigo de verificacion a enviar.</param>
         /// <param name="usuarioDestino">Nombre del usuario destinatario.</param>
+        /// <param name="idioma">Idioma para el correo.</param>
         /// <returns>True si el codigo fue enviado exitosamente, false en caso contrario.</returns>
-        public static bool EnviarNotificacion(string correoDestino, string codigo, string usuarioDestino, string idioma)
+        public bool EnviarNotificacion(
+            string correoDestino,
+            string codigo,
+            string usuarioDestino,
+            string idioma)
         {
             if (string.IsNullOrWhiteSpace(correoDestino) || string.IsNullOrWhiteSpace(codigo))
             {
@@ -40,8 +55,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
+                var tarea = _notificador?.NotificarAsync(
+                    correoDestino,
+                    codigo,
+                    usuarioDestino,
+                    idioma);
 
-                var tarea = _notificador?.NotificarAsync(correoDestino, codigo, usuarioDestino, idioma);
                 if (tarea == null)
                 {
                     return false;
@@ -49,9 +68,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 return tarea.GetAwaiter().GetResult();
             }
-            catch (Exception ex)
+            catch (AggregateException ex)
             {
-                _logger.Error(string.Format("Error crítico al enviar notificación a {0}.", correoDestino), ex);
+                _logger.Error("Error critico al enviar notificacion de codigo.", ex);
+                return false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.Error("Error critico al enviar notificacion de codigo.", ex);
                 return false;
             }
         }

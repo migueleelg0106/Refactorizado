@@ -5,7 +5,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
 {
     /// <summary>
     /// Contrato de servicio para la gestion de codigos de verificacion.
-    /// Proporciona operaciones para solicitar, reenviar y confirmar codigos de verificacion y recuperacion.
+    /// Proporciona operaciones para solicitar, reenviar y confirmar codigos de verificacion y 
+    /// recuperacion.
     /// </summary>
     [ServiceContract]
     public interface ICodigoVerificacionManejador
@@ -24,7 +25,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <param name="solicitud">Datos para el reenvio del codigo de verificacion.</param>
         /// <returns>Resultado del reenvio del codigo de verificacion.</returns>
         [OperationContract]
-        ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion(ReenvioCodigoVerificacionDTO solicitud);
+        ResultadoSolicitudCodigoDTO ReenviarCodigoVerificacion
+            (ReenvioCodigoVerificacionDTO solicitud);
 
         /// <summary>
         /// Confirma el codigo de verificacion ingresado para registro.
@@ -40,7 +42,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// <param name="solicitud">Datos de la solicitud de recuperacion de cuenta.</param>
         /// <returns>Resultado de la solicitud del codigo de recuperacion.</returns>
         [OperationContract]
-        ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion(SolicitudRecuperarCuentaDTO solicitud);
+        ResultadoSolicitudRecuperacionDTO SolicitarCodigoRecuperacion
+            (SolicitudRecuperarCuentaDTO solicitud);
 
         /// <summary>
         /// Confirma el codigo de verificacion ingresado para recuperacion.

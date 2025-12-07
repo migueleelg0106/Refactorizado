@@ -7,18 +7,8 @@ namespace PictionaryMusicalCliente.Modelo
     /// Representa al usuario autenticado actualmente en el cliente (Singleton).
     /// Mantiene el estado global de la sesion del usuario.
     /// </summary>
-    public sealed class UsuarioAutenticado
+    public class UsuarioAutenticado : IUsuarioAutenticado
     {
-        private static readonly Lazy<UsuarioAutenticado> _instancia =
-            new(() => new UsuarioAutenticado());
-
-        /// <summary>
-        /// Obtiene la instancia unica del usuario autenticado.
-        /// </summary>
-        public static UsuarioAutenticado Instancia => _instancia.Value;
-
-        private UsuarioAutenticado() { }
-
         /// <summary>
         /// Identificador unico de la cuenta de usuario.
         /// </summary>
@@ -91,17 +81,8 @@ namespace PictionaryMusicalCliente.Modelo
                 throw new ArgumentNullException(nameof(dto));
             }
 
-            IdUsuario = dto.UsuarioId;
-            JugadorId = dto.JugadorId;
-            NombreUsuario = dto.NombreUsuario;
-            Nombre = dto.Nombre;
-            Apellido = dto.Apellido;
-            Correo = dto.Correo;
-            AvatarId = dto.AvatarId;
-            Instagram = dto.Instagram;
-            Facebook = dto.Facebook;
-            X = dto.X;
-            Discord = dto.Discord;
+            AsignarDatosPrincipales(dto);
+            AsignarRedesSociales(dto);
         }
 
         /// <summary>
@@ -121,6 +102,30 @@ namespace PictionaryMusicalCliente.Modelo
             Facebook = null;
             X = null;
             Discord = null;
+        }
+
+        /// <summary>
+        /// Indica si el usuario esta autenticado en el sistema.
+        /// </summary>
+        public bool EstaAutenticado => IdUsuario > 0;
+
+        private void AsignarDatosPrincipales(DTOs.UsuarioDTO dto)
+        {
+            IdUsuario = dto.UsuarioId;
+            JugadorId = dto.JugadorId;
+            NombreUsuario = dto.NombreUsuario;
+            Nombre = dto.Nombre;
+            Apellido = dto.Apellido;
+            Correo = dto.Correo;
+            AvatarId = dto.AvatarId;
+        }
+
+        private void AsignarRedesSociales(DTOs.UsuarioDTO dto)
+        {
+            Instagram = dto.Instagram;
+            Facebook = dto.Facebook;
+            X = dto.X;
+            Discord = dto.Discord;
         }
     }
 }

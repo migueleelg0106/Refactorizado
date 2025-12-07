@@ -15,7 +15,8 @@ namespace PictionaryMusicalServidor.Servicios.Contratos
         /// Inicia sesion de un usuario en el sistema.
         /// </summary>
         /// <param name="credenciales">Credenciales de inicio de sesion del usuario.</param>
-        /// <returns>Resultado del inicio de sesion con informacion del usuario autenticado.</returns>
+        /// <returns>Resultado del inicio de sesion con informacion del usuario autenticado.
+        /// </returns>
         [OperationContract]
         ResultadoInicioSesionDTO IniciarSesion(CredencialesInicioSesionDTO credenciales);
     }

@@ -56,6 +56,18 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/ExpulsarJugador", ReplyAction="http://tempuri.org/ISalasManejador/ExpulsarJugadorResponse")]
         System.Threading.Tasks.Task ExpulsarJugadorAsync(string codigoSala, string nombreHost, string nombreJugadorAExpulsar);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/ObtenerSalaPorCodigo", ReplyAction="http://tempuri.org/ISalasManejador/ObtenerSalaPorCodigoResponse")]
+        PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO ObtenerSalaPorCodigo(string codigoSala);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/ObtenerSalaPorCodigo", ReplyAction="http://tempuri.org/ISalasManejador/ObtenerSalaPorCodigoResponse")]
+        System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO> ObtenerSalaPorCodigoAsync(string codigoSala);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciada", ReplyAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciadaResponse")]
+        void MarcarPartidaComoIniciada(string codigoSala);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciada", ReplyAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciadaResponse")]
+        System.Threading.Tasks.Task MarcarPartidaComoIniciadaAsync(string codigoSala);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -162,6 +174,22 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         public System.Threading.Tasks.Task ExpulsarJugadorAsync(string codigoSala, string nombreHost, string nombreJugadorAExpulsar) {
             return base.Channel.ExpulsarJugadorAsync(codigoSala, nombreHost, nombreJugadorAExpulsar);
+        }
+        
+        public PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO ObtenerSalaPorCodigo(string codigoSala) {
+            return base.Channel.ObtenerSalaPorCodigo(codigoSala);
+        }
+        
+        public System.Threading.Tasks.Task<PictionaryMusicalServidor.Servicios.Contratos.DTOs.SalaDTO> ObtenerSalaPorCodigoAsync(string codigoSala) {
+            return base.Channel.ObtenerSalaPorCodigoAsync(codigoSala);
+        }
+        
+        public void MarcarPartidaComoIniciada(string codigoSala) {
+            base.Channel.MarcarPartidaComoIniciada(codigoSala);
+        }
+        
+        public System.Threading.Tasks.Task MarcarPartidaComoIniciadaAsync(string codigoSala) {
+            return base.Channel.MarcarPartidaComoIniciadaAsync(codigoSala);
         }
     }
 }

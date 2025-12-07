@@ -2,7 +2,7 @@ using System.Windows;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Perfil;
 
-namespace PictionaryMusicalCliente
+namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
     /// Ventana para el ingreso y validacion de codigos de verificacion (correo/recuperacion).
