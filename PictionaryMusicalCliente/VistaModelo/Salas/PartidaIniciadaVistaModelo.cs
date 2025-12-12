@@ -23,9 +23,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private readonly ISonidoManejador _sonidoManejador;
 
         private readonly ICancionManejador _cancionManejador;
-        private readonly DispatcherTimer _overlayTimer;
-        private readonly DispatcherTimer _temporizadorAlarma;
-        private readonly DispatcherTimer _temporizador;
+        private DispatcherTimer _overlayTimer;
+        private DispatcherTimer _temporizadorAlarma;
+        private DispatcherTimer _temporizador;
         private readonly Dictionary<int, CancionCatalogo> _catalogoAudio;
 
         private bool _juegoIniciado;

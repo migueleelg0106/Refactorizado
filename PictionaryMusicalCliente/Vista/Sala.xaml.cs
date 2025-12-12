@@ -433,8 +433,7 @@ namespace PictionaryMusicalCliente.Vista
                 App.Localizador,
                 _sonidos,
                 mensaje);
-            var ventana = new ExpulsionJugador(vm) { Owner = this };
-            return ventana.ShowDialog() == true;
+            return App.VentanaServicio.MostrarVentanaDialogo(vm) == true;
         }
 
         private ResultadoReporteJugador SolicitarDatosReporte(string nombreJugador)
@@ -444,12 +443,8 @@ namespace PictionaryMusicalCliente.Vista
                 App.Localizador,
                 _sonidos,
                 nombreJugador);
-            var ventana = new ReportarJugador(vistaModelo)
-            {
-                Owner = this
-            };
 
-            bool? resultado = ventana.ShowDialog();
+            bool? resultado = App.VentanaServicio.MostrarVentanaDialogo(vistaModelo);
 
             return new ResultadoReporteJugador
             {
@@ -478,11 +473,7 @@ namespace PictionaryMusicalCliente.Vista
 
             void MostrarVentana()
             {
-                var ventana = new InvitarAmigos(vistaModelo)
-                {
-                    Owner = this
-                };
-                ventana.ShowDialog();
+                App.VentanaServicio.MostrarVentanaDialogo(vistaModelo);
             }
 
             if (!Dispatcher.CheckAccess())

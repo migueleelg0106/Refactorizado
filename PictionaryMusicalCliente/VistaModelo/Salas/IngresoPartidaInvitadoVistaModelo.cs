@@ -172,7 +172,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
         private string GenerarNombreInvitado(
-            string cultura,
+            System.Globalization.CultureInfo cultura,
             HashSet<string> nombresReservados)
         {
             return _nombreInvitadoGenerador.Generar(cultura, nombresReservados);

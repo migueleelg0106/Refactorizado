@@ -171,12 +171,13 @@ namespace PictionaryMusicalCliente.Vista
         private void AbrirPerfil()
         {
             var vmPerfil = new PerfilVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
                 _perfilServicio,
                 _selectAvatar,
                 _cambioPass,
                 _recuperacion,
                 _aviso,
-                _traductor,
                 _sonidos,
                 _usuarioSesion,
                 _avatares,
@@ -184,7 +185,7 @@ namespace PictionaryMusicalCliente.Vista
                 _imagenesPerfil);
 
             vmPerfil.SolicitarReinicioSesion = ReiniciarAplicacion;
-            MostrarDialogo(new Perfil(vmPerfil));
+            App.VentanaServicio.MostrarVentanaDialogo(vmPerfil);
         }
 
         private void AbrirAjustes()

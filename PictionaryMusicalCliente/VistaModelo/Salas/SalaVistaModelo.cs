@@ -164,7 +164,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _reportesServicio = reportesServicio;
             _sonidoManejador = sonidoManejador;
             _avisoServicio = avisoServicio;
-            _localizador = _localizador;
             _invitacionSalaServicio = invitacionSalaServicio;
             _usuarioSesion = usuarioSesion;
             _fabricaClientes = fabricaClientes;
