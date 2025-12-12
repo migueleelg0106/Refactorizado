@@ -18,9 +18,6 @@ using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 {
-    /// <summary>
-    /// Controla la logica de la pantalla de inicio de sesion y recuperacion de cuenta.
-    /// </summary>
     public class InicioSesionVistaModelo : BaseVistaModelo
     {
         private static readonly ILog _logger = LogManager.GetLogger(
@@ -32,14 +29,10 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private readonly ILocalizacionServicio _localizacionServicio;
         private readonly ISonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
-        private readonly ILocalizadorServicio _localizador;
         private readonly INombreInvitadoGenerador _generadorNombres;
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly Func<ISalasServicio> _salasServicioFactory;
 
-        /// <summary>
-        /// Nombre de la propiedad de contrasena para validaciones.
-        /// </summary>
         public const string CampoContrasena = "Contrasena";
 
         private string _identificador;
@@ -47,21 +40,21 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private bool _estaProcesando;
         private ObservableCollection<IdiomaOpcion> _idiomasDisponibles;
         private IdiomaOpcion _idiomaSeleccionado;
+        private bool _sesionIniciada;
 
-        /// <summary>
-        /// Inicializa el ViewModel con los servicios requeridos.
-        /// </summary>
         public InicioSesionVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
             IInicioSesionServicio inicioSesionServicio,
             ICambioContrasenaServicio cambioContrasenaServicio,
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
             ILocalizacionServicio localizacionServicio,
-            ILocalizadorServicio localizador,
-            IAvisoServicio avisoServicio,
             ISonidoManejador sonidoManejador,
+            IAvisoServicio avisoServicio,
             INombreInvitadoGenerador generadorNombres,
             IUsuarioAutenticado usuarioSesion,
             Func<ISalasServicio> salasServicioFactory)
+            : base(ventana, localizador)
         {
             _inicioSesionServicio = inicioSesionServicio ??
                 throw new ArgumentNullException(nameof(inicioSesionServicio));
@@ -73,8 +66,6 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 throw new ArgumentNullException(nameof(localizacionServicio));
             _salasServicioFactory = salasServicioFactory ??
                 throw new ArgumentNullException(nameof(salasServicioFactory));
-            _localizador = localizador ??
-                throw new ArgumentNullException(nameof(localizador));
             _avisoServicio = avisoServicio ??
                 throw new ArgumentNullException(nameof(avisoServicio));
             _sonidoManejador = sonidoManejador ??
@@ -111,27 +102,18 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             CargarIdiomas();
         }
 
-        /// <summary>
-        /// Correo electronico o nombre de usuario.
-        /// </summary>
         public string Identificador
         {
             get => _identificador;
             set => EstablecerPropiedad(ref _identificador, value);
         }
 
-        /// <summary>
-        /// Lista de idiomas disponibles para internacionalización.
-        /// </summary>
         public ObservableCollection<IdiomaOpcion> IdiomasDisponibles
         {
             get => _idiomasDisponibles;
             private set => EstablecerPropiedad(ref _idiomasDisponibles, value);
         }
 
-        /// <summary>
-        /// Idioma seleccionado de la lista de idiomas.
-        /// </summary>
         public IdiomaOpcion IdiomaSeleccionado
         {
             get => _idiomaSeleccionado;
@@ -143,11 +125,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 }
             }
         }
-        /// <summary>
-        /// Indica si existe una operación de red o lógica en curso.
-        /// Al cambiar su valor, notifica a los comandos para bloquear o desbloquear la 
-        /// interacción en la interfaz.
-        /// </summary>
+
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -162,172 +140,162 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             }
         }
 
-        /// <summary>
-        /// Comando asíncrono encargado de validar las credenciales e iniciar la sesión del 
-        /// usuario.
-        /// </summary>
+        public bool SesionIniciada
+        {
+            get => _sesionIniciada;
+            private set => EstablecerPropiedad(ref _sesionIniciada, value);
+        }
+
         public IComandoAsincrono IniciarSesionComando { get; }
-
-        /// <summary>
-        /// Comando asíncrono para iniciar el flujo de recuperación de contraseña en caso de 
-        /// olvido.
-        /// </summary>
         public IComandoAsincrono RecuperarCuentaComando { get; }
-
-        /// <summary>
-        /// Comando para navegar hacia la ventana de registro de una nueva cuenta.
-        /// </summary>
         public ICommand AbrirCrearCuentaComando { get; }
-
-        /// <summary>
-        /// Comando asíncrono para permitir el acceso limitado como invitado para unirse a una 
-        /// partida.
-        /// </summary>
         public IComandoAsincrono IniciarSesionInvitadoComando { get; }
 
-        /// <summary>
-        /// Delegado que invoca la apertura visual de la ventana de creación de cuenta.
-        /// </summary>
         public Action AbrirCrearCuenta { get; set; }
-
-        /// <summary>
-        /// Delegado que se ejecuta tras un inicio de sesión exitoso, transportando los datos del 
-        /// usuario autenticado.
-        /// </summary>
         public Action<DTOs.ResultadoInicioSesionDTO> InicioSesionCompletado { get; set; }
-
-        /// <summary>
-        /// Delegado para solicitar el cierre de la ventana actual desde la lógica de negocio.
-        /// </summary>
         public Action CerrarAccion { get; set; }
-
-        /// <summary>
-        /// Delegado para notificar a la vista qué campos específicos fallaron la validación para 
-        /// resaltar su borde.
-        /// </summary>
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
-
-        /// <summary>
-        /// Delegado para mostrar el diálogo de ingreso de código de sala para usuarios invitados.
-        /// </summary>
         public Action<IngresoPartidaInvitadoVistaModelo> MostrarIngresoInvitado { get; set; }
+        public Action<DTOs.SalaDTO, ISalasServicio, string> AbrirVentanaJuegoInvitado 
+            { get; set; }
 
-        /// <summary>
-        /// Delegado para realizar la navegación a la ventana de juego una vez que el invitado se 
-        /// ha unido exitosamente.
-        /// </summary>
-        public Action<DTOs.SalaDTO, ISalasServicio, string> AbrirVentanaJuegoInvitado { get; set; }
-
-        /// <summary>
-        /// Asigna manualmente la contraseña desde el control PasswordBox para evitar el enlace de
-        /// datos inseguro.
-        /// </summary>
-        /// <param name="contrasena">La contraseña en texto plano capturada del control.</param>
         public void EstablecerContrasena(string contrasena)
         {
             _contrasena = contrasena;
         }
 
-        private Task IniciarSesionInvitadoAsync()
+        private async Task IniciarSesionInvitadoAsync()
         {
-            ISalasServicio salasServicio = null;
-
-            try
+            await EjecutarOperacionAsync(async () =>
             {
-                salasServicio = _salasServicioFactory?.Invoke();
+                ISalasServicio salasServicio = CrearServicioSalas();
 
-                if (salasServicio == null)
+                if (!ValidarServicioSalas(salasServicio))
                 {
-					_logger.Error("La fábrica de servicios devolvió un servicio de salas nulo.");
-                    _sonidoManejador.ReproducirError();
-                    _avisoServicio.Mostrar(Lang.errorTextoNoEncuentraPartida);
-                    return Task.CompletedTask;
+                    return;
                 }
 
-                var vistaModelo = new IngresoPartidaInvitadoVistaModelo(_localizacionServicio,
-                    salasServicio, _avisoServicio, _sonidoManejador, _generadorNombres);
+                var vistaModelo = CrearVistaModeloIngresoInvitado(salasServicio);
 
-                vistaModelo.SalaUnida = (sala, nombreInvitado) =>
+                if (!MostrarDialogoIngresoInvitado(vistaModelo))
                 {
-                    _logger.InfoFormat("Invitado {0} se unió a sala {1}",
-                        nombreInvitado, sala.Codigo);
-                    AbrirVentanaJuegoInvitado?.Invoke(sala, salasServicio, nombreInvitado);
-                };
-
-                if (MostrarIngresoInvitado == null)
-                {
-                    _sonidoManejador.ReproducirError();
-                    _avisoServicio.Mostrar(Lang.errorTextoNoEncuentraPartida);
                     salasServicio.Dispose();
-                    return Task.CompletedTask;
+                    return;
                 }
 
-                MostrarIngresoInvitado(vistaModelo);
-
-                if (!vistaModelo.SeUnioSala)
+                if (vistaModelo.SeUnioSala)
+                {
+                    UnirseASalaComoInvitado(vistaModelo, salasServicio);
+                }
+                else
                 {
                     salasServicio.Dispose();
                 }
-            }
-            catch (Exception ex)
+            }, ManejarErrorInicioInvitado);
+        }
+
+        private ISalasServicio CrearServicioSalas()
+        {
+            return _salasServicioFactory?.Invoke();
+        }
+
+        private bool ValidarServicioSalas(ISalasServicio servicio)
+        {
+            if (servicio == null)
             {
-                // Capturamos Exception general aqui solo para limpiar el recurso y loguear
-                // dado que factory.Invoke() podria lanzar excepciones no tipadas.
-                _logger.Error("Error crítico al iniciar flujo de invitado.", ex);
-                salasServicio?.Dispose();
-                _sonidoManejador.ReproducirError();
-                _avisoServicio.Mostrar(Lang.errorTextoNoEncuentraPartida);
+                _logger.Error("La fabrica de servicios devolvio un servicio de salas nulo.");
+                MostrarErrorInvitadoGenerico();
+                return false;
             }
 
-            return Task.CompletedTask;
+            return true;
+        }
+
+        private IngresoPartidaInvitadoVistaModelo CrearVistaModeloIngresoInvitado(
+            ISalasServicio salasServicio)
+        {
+            return new IngresoPartidaInvitadoVistaModelo(
+                _ventana,
+                _localizador,
+                _localizacionServicio,
+                salasServicio,
+                _avisoServicio,
+                _sonidoManejador,
+                _generadorNombres);
+        }
+
+        private void UnirseASalaComoInvitado(
+            IngresoPartidaInvitadoVistaModelo vistaModelo,
+            ISalasServicio salasServicio)
+        {
+            _logger.InfoFormat("Invitado {0} se unio a sala {1}",
+                vistaModelo.NombreInvitadoGenerado, vistaModelo.SalaUnida?.Codigo);
+            AbrirVentanaJuegoInvitado?.Invoke(
+                vistaModelo.SalaUnida,
+                salasServicio,
+                vistaModelo.NombreInvitadoGenerado);
+        }
+
+        private bool MostrarDialogoIngresoInvitado(
+            IngresoPartidaInvitadoVistaModelo vistaModelo)
+        {
+            if (MostrarIngresoInvitado == null)
+            {
+                _logger.Error("MostrarIngresoInvitado es nulo, no se puede mostrar dialogo.");
+                MostrarErrorInvitadoGenerico();
+                return false;
+            }
+
+            MostrarIngresoInvitado(vistaModelo);
+            return true;
+        }
+
+        private void ManejarErrorInicioInvitado(Exception ex)
+        {
+            _logger.Error("Error critico al iniciar flujo de invitado.", ex);
+            MostrarErrorInvitadoGenerico();
+        }
+
+        private void MostrarErrorInvitadoGenerico()
+        {
+            _sonidoManejador.ReproducirError();
+            _avisoServicio.Mostrar(Lang.errorTextoNoEncuentraPartida);
         }
 
         private async Task IniciarSesionAsync()
         {
-            var (esValido, identificadorTrimmed) = ValidarEntradasYMostrarErrores();
-            if (!esValido)
+            var camposInvalidos = ValidarCamposInicioSesion();
+
+            if (camposInvalidos.Any())
             {
                 _sonidoManejador.ReproducirError();
-                _logger.Warn("Intento de inicio de sesión con campos vacíos.");
+                _logger.Warn("Intento de inicio de sesion con campos vacios.");
                 return;
             }
 
             EstaProcesando = true;
 
-            try
+            await EjecutarOperacionAsync(async () =>
             {
-                var solicitud = new DTOs.CredencialesInicioSesionDTO
-                {
-                    Identificador = identificadorTrimmed,
-                    Contrasena = _contrasena
-                };
+                var solicitud = CrearCredenciales();
+                _logger.InfoFormat("Intentando iniciar sesion para: {0}", solicitud.Identificador);
 
-                _logger.InfoFormat("Intentando iniciar sesión para: {0}",
-                    identificadorTrimmed);
-                DTOs.ResultadoInicioSesionDTO resultado = await _inicioSesionServicio
-                    .IniciarSesionAsync(solicitud).ConfigureAwait(true);
+                DTOs.ResultadoInicioSesionDTO resultado = await EnviarCredencialesAlServidorAsync(
+                    solicitud);
 
                 ProcesarResultadoInicioSesion(resultado);
-            }
-            catch (ServicioExcepcion ex)
-            {
-                _logger.Error("Excepción de servicio durante inicio de sesión.", ex);
-                _sonidoManejador.ReproducirError();
-                _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoServidorInicioSesion);
-            }
-            finally
-            {
-                EstaProcesando = false;
-            }
+            });
+
+            EstaProcesando = false;
         }
 
-        private (bool EsValido, string IdentificadorTrimmed) ValidarEntradasYMostrarErrores()
+        private List<string> ValidarCamposInicioSesion()
         {
             string identificador = Identificador?.Trim();
             bool identificadorIngresado = !string.IsNullOrWhiteSpace(identificador);
             bool contrasenaIngresada = !string.IsNullOrWhiteSpace(_contrasena);
 
-            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
+            LimpiarErroresVisuales();
 
             var camposInvalidos = new List<string>();
 
@@ -343,19 +311,44 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (camposInvalidos.Any())
             {
-                MostrarCamposInvalidos?.Invoke(camposInvalidos);
+                MarcarCamposInvalidosEnUI(camposInvalidos);
                 _avisoServicio.Mostrar(Lang.errorTextoCamposInvalidosGenerico);
-                return (false, null);
             }
 
-            return (true, identificador);
+            return camposInvalidos;
+        }
+
+        private void LimpiarErroresVisuales()
+        {
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
+        }
+
+        private void MarcarCamposInvalidosEnUI(List<string> campos)
+        {
+            MostrarCamposInvalidos?.Invoke(campos);
+        }
+
+        private DTOs.CredencialesInicioSesionDTO CrearCredenciales()
+        {
+            return new DTOs.CredencialesInicioSesionDTO
+            {
+                Identificador = Identificador?.Trim(),
+                Contrasena = _contrasena
+            };
+        }
+
+        private async Task<DTOs.ResultadoInicioSesionDTO> EnviarCredencialesAlServidorAsync(
+            DTOs.CredencialesInicioSesionDTO solicitud)
+        {
+            return await _inicioSesionServicio.IniciarSesionAsync(solicitud)
+                .ConfigureAwait(true);
         }
 
         private void ProcesarResultadoInicioSesion(DTOs.ResultadoInicioSesionDTO resultado)
         {
             if (resultado == null)
             {
-                _logger.Error("El servicio de inicio de sesión retornó null.");
+                _logger.Error("El servicio de inicio de sesion retorno null.");
                 _sonidoManejador.ReproducirError();
                 _avisoServicio.Mostrar(Lang.errorTextoServidorInicioSesion);
                 return;
@@ -363,23 +356,28 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
             if (!resultado.InicioSesionExitoso)
             {
-                _logger.WarnFormat("Inicio de sesión fallido. Mensaje servidor: {0}",
+                _logger.WarnFormat("Inicio de sesion fallido. Mensaje servidor: {0}",
                     resultado.Mensaje);
                 _sonidoManejador.ReproducirError();
                 MostrarErrorInicioSesion(resultado);
                 return;
             }
 
+            ValidarYCargarUsuarioAutenticado(resultado);
+            _sonidoManejador.ReproducirExito();
+            SesionIniciada = true;
+            InicioSesionCompletado?.Invoke(resultado);
+            CerrarAccion?.Invoke();
+        }
+
+        private void ValidarYCargarUsuarioAutenticado(DTOs.ResultadoInicioSesionDTO resultado)
+        {
             if (resultado.Usuario != null)
             {
-                _logger.InfoFormat("Sesión establecida exitosamente para ID: {0}", 
+                _logger.InfoFormat("Sesion establecida exitosamente para ID: {0}",
                     resultado.Usuario.UsuarioId);
                 _usuarioSesion.CargarDesdeDTO(resultado.Usuario);
             }
-
-            _sonidoManejador.ReproducirExito();
-            InicioSesionCompletado?.Invoke(resultado);
-            CerrarAccion?.Invoke();
         }
 
         private void MostrarErrorInicioSesion(DTOs.ResultadoInicioSesionDTO resultado)
@@ -399,49 +397,65 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
         private async Task RecuperarCuentaAsync()
         {
+            if (!ValidarIdentificadorRecuperacion())
+            {
+                return;
+            }
+
+            EstaProcesando = true;
+
+            await EjecutarOperacionAsync(async () =>
+            {
+                string identificador = Identificador?.Trim();
+                _logger.InfoFormat("Solicitando recuperacion de cuenta para: {0}",
+                    identificador);
+
+                DTOs.ResultadoOperacionDTO resultado = await SolicitarRecuperacionCuentaAsync(
+                    identificador);
+
+                ProcesarResultadoRecuperacion(resultado);
+            });
+
+            EstaProcesando = false;
+        }
+
+        private bool ValidarIdentificadorRecuperacion()
+        {
             string identificador = Identificador?.Trim();
 
             if (string.IsNullOrWhiteSpace(identificador))
             {
                 _sonidoManejador.ReproducirError();
                 _avisoServicio.Mostrar(Lang.errorTextoIdentificadorRecuperacionRequerido);
-                return;
+                return false;
             }
 
-            EstaProcesando = true;
+            return true;
+        }
 
-            try
+        private async Task<DTOs.ResultadoOperacionDTO> SolicitarRecuperacionCuentaAsync(
+            string identificador)
+        {
+            return await _recuperacionCuentaDialogoServicio.RecuperarCuentaAsync(
+                identificador, _cambioContrasenaServicio).ConfigureAwait(true);
+        }
+
+        private void ProcesarResultadoRecuperacion(DTOs.ResultadoOperacionDTO resultado)
+        {
+            if (resultado?.OperacionExitosa == false &&
+                !string.IsNullOrWhiteSpace(resultado.Mensaje))
             {
-                _logger.InfoFormat("Solicitando recuperación de cuenta para: {0}", 
-                    identificador);
-                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
-                    .RecuperarCuentaAsync(identificador, _cambioContrasenaServicio).
-                    ConfigureAwait(true);
-
-                if (resultado?.OperacionExitosa == false && !string.IsNullOrWhiteSpace
-                    (resultado.Mensaje))
-                {
-                    _logger.WarnFormat("Recuperación fallida o cancelada: {0}",
-                        resultado.Mensaje);
-                    _sonidoManejador.ReproducirError();
-                    string mensajeLocalizado = _localizador.Localizar(
-                        resultado.Mensaje,
-                        Lang.errorTextoCuentaNoRegistrada);
-
-                    _avisoServicio.Mostrar(mensajeLocalizado);
-                }
-            }
-            catch (ServicioExcepcion ex)
-            {
-                _logger.Error("Error al intentar recuperar cuenta.", ex);
+                _logger.WarnFormat("Recuperacion fallida o cancelada: {0}", resultado.Mensaje);
                 _sonidoManejador.ReproducirError();
-                _avisoServicio.Mostrar(ex.Message ??
-                    Lang.errorTextoServidorSolicitudCambioContrasena);
+
+                string mensajeLocalizado = LocalizarMensajeRecuperacion(resultado.Mensaje);
+                _avisoServicio.Mostrar(mensajeLocalizado);
             }
-            finally
-            {
-                EstaProcesando = false;
-            }
+        }
+
+        private string LocalizarMensajeRecuperacion(string mensaje)
+        {
+            return _localizador.Localizar(mensaje, Lang.errorTextoCuentaNoRegistrada);
         }
 
         private void CargarIdiomas()

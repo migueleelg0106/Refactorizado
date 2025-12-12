@@ -1,12 +1,10 @@
 using log4net;
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
-using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -23,7 +21,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         private readonly IAmigosServicio _amigosServicio;
         private readonly ISonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
-        private readonly ILocalizadorServicio _localizadorServicio;
         private readonly IUsuarioAutenticado _usuarioSesion;
         private string _nombreUsuarioBusqueda;
         private bool _estaProcesando;
@@ -31,12 +28,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         /// <summary>
         /// Inicializa el ViewModel con el servicio de amigos.
         /// </summary>
+        /// <param name="ventana">Servicio para gestionar ventanas.</param>
+        /// <param name="localizador">Servicio de localizacion.</param>
         /// <param name="amigosServicio">Servicio para operaciones de red.</param>
-        public BusquedaAmigoVistaModelo(IAmigosServicio amigosServicio,
+        /// <param name="sonidoManejador">Servicio de sonido.</param>
+        /// <param name="avisoServicio">Servicio de avisos.</param>
+        /// <param name="usuarioSesion">Usuario en sesion.</param>
+        public BusquedaAmigoVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            IAmigosServicio amigosServicio,
             ISonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio,
-            ILocalizadorServicio localizadorServicio,
             IUsuarioAutenticado usuarioSesion)
+            : base(ventana, localizador)
         {
             _amigosServicio = amigosServicio ??
                 throw new ArgumentNullException(nameof(amigosServicio));
@@ -44,8 +49,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 throw new ArgumentNullException(nameof(sonidoManejador));
             _avisoServicio = avisoServicio ??
                 throw new ArgumentNullException(nameof(avisoServicio));
-            _localizadorServicio = localizadorServicio ??
-                throw new ArgumentNullException(nameof(localizadorServicio));
             _usuarioSesion = usuarioSesion ??
                 throw new ArgumentNullException(nameof(usuarioSesion));
 
@@ -58,7 +61,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             CancelarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                Cancelado?.Invoke();
+                _ventana.CerrarVentana(this);
             });
         }
 
@@ -102,16 +105,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         /// </summary>
         public ICommand CancelarComando { get; }
 
-        /// <summary>
-        /// Evento disparado cuando la solicitud se envia con exito.
-        /// </summary>
-        public Action SolicitudEnviada { get; set; }
-
-        /// <summary>
-        /// Evento disparado al cancelar.
-        /// </summary>
-        public Action Cancelado { get; set; }
-
         private bool PuedeEnviarSolicitud()
         {
             return !EstaProcesando
@@ -131,14 +124,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             if (string.IsNullOrWhiteSpace(usuarioActual))
             {
-                _logger.Warn("Intento de enviar solicitud sin usuario actual en sesión.");
+                _logger.Warn("Intento de enviar solicitud sin usuario actual en sesion.");
                 _avisoServicio.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
                 return;
             }
 
             EstaProcesando = true;
 
-            try
+            await EjecutarOperacionAsync(async () =>
             {
                 _logger.InfoFormat("Enviando solicitud de amistad de {0} a {1}",
                     usuarioActual, nombreAmigo);
@@ -148,30 +141,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
                 _sonidoManejador.ReproducirExito();
                 _avisoServicio.Mostrar(Lang.amigosTextoSolicitudEnviada);
-                SolicitudEnviada?.Invoke();
-            }
-            catch (FaultException ex)
+                _ventana.CerrarVentana(this);
+            },
+            ex =>
             {
-                _logger.ErrorFormat("Error WCF (Fault) al enviar solicitud a {0}.",
-                    nombreAmigo, ex);
+                _logger.ErrorFormat("Error al enviar solicitud a {0}.", nombreAmigo, ex);
                 _sonidoManejador.ReproducirError();
-
-                string mensajeError = _localizadorServicio.Localizar(
+                
+                string mensajeError = _localizador.Localizar(
                     ex.Message,
                     Lang.errorTextoErrorProcesarSolicitud);
                 _avisoServicio.Mostrar(mensajeError);
-            }
-            catch (ServicioExcepcion ex)
-            {
-                _logger.ErrorFormat("Error de servicio al enviar solicitud a {0}.",
-                    nombreAmigo, ex);
-                _sonidoManejador.ReproducirError(); 
-                _avisoServicio.Mostrar(ex.Message);
-            }
-            finally
-            {
+                
                 EstaProcesando = false;
-            }
+            });
+
+            EstaProcesando = false;
         }
     }
 }

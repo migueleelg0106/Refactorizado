@@ -1,7 +1,7 @@
-﻿using PictionaryMusicalCliente.ClienteServicios;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+﻿using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 {
@@ -31,11 +30,18 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         /// <summary>
         /// Inicializa el ViewModel con el servicio de clasificacion.
         /// </summary>
-        /// <param name="clasificacionServicio">Servicio para obtener los datos del ranking.
-        /// </param>
-        public ClasificacionVistaModelo(IClasificacionServicio clasificacionServicio,
+        /// <param name="ventana">Servicio para gestionar ventanas.</param>
+        /// <param name="localizador">Servicio de localizacion.</param>
+        /// <param name="clasificacionServicio">Servicio para obtener los datos del ranking.</param>
+        /// <param name="avisoServicio">Servicio de avisos.</param>
+        /// <param name="sonidoManejador">Servicio de sonido.</param>
+        public ClasificacionVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            IClasificacionServicio clasificacionServicio,
             IAvisoServicio avisoServicio,
             ISonidoManejador sonidoManejador)
+            : base(ventana, localizador)
         {
             _clasificacionServicio = clasificacionServicio ??
                 throw new ArgumentNullException(nameof(clasificacionServicio));
@@ -62,7 +68,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             CerrarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                CerrarAccion?.Invoke();
+                _ventana.CerrarVentana(this);
             });
         }
 
@@ -118,36 +124,29 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         public IComandoNotificable CerrarComando { get; }
 
         /// <summary>
-        /// Accion para cerrar la vista asociada.
-        /// </summary>
-        public Action CerrarAccion { get; set; }
-
-        /// <summary>
         /// Recupera la informacion de clasificacion desde el servicio.
         /// </summary>
         public async Task CargarClasificacionAsync()
         {
             EstaCargando = true;
 
-            try
+            await EjecutarOperacionAsync(async () =>
             {
-				_logger.Info("Solicitando tabla de clasificación al servidor.");
+				_logger.Info("Solicitando tabla de clasificacion al servidor.");
                 IReadOnlyList<DTOs.ClasificacionUsuarioDTO> clasificacion =
                     await _clasificacionServicio.ObtenerTopJugadoresAsync().ConfigureAwait(true);
 
                 _clasificacionOriginal = clasificacion ?? Array.Empty
                     <DTOs.ClasificacionUsuarioDTO>();
                 ActualizarClasificacion(_clasificacionOriginal);
-            }
-            catch (ServicioExcepcion ex)
+            },
+            ex =>
             {
-                _logger.Error("Error al obtener clasificación.", ex);
+                _logger.Error("Error al obtener clasificacion.", ex);
                 _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
-            }
-            finally
-            {
-                EstaCargando = false;
-            }
+            });
+
+            EstaCargando = false;
         }
 
         private void ActualizarClasificacion(

@@ -1,31 +1,32 @@
-﻿using System;
-using System.Windows.Input;
-using log4net;
+﻿using log4net;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using System;
+using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
     /// <summary>
-    /// Controla la lógica de la ventana para reportar a un jugador.
+    /// Controla la logica de la ventana para reportar a un jugador.
     /// </summary>
     public class ReportarJugadorVistaModelo : BaseVistaModelo
     {
         private static readonly ILog Logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private ISonidoManejador _sonidoManejador;
-
+        private readonly ISonidoManejador _sonidoManejador;
+        private readonly string _nombreJugador;
         private string _motivo;
         private string _mensajeError;
 
-        /// <summary>
-        /// Inicializa la instancia con el nombre del jugador a reportar.
-        /// </summary>
-        public ReportarJugadorVistaModelo(string nombreJugador,
-            ISonidoManejador sonidoManejador)
+        public ReportarJugadorVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            ISonidoManejador sonidoManejador,
+            string nombreJugador)
+            : base(ventana, localizador)
         {
-            NombreJugador = nombreJugador;
+            _nombreJugador = nombreJugador;
             _sonidoManejador = sonidoManejador ??
                 throw new ArgumentNullException(nameof(sonidoManejador));
 
@@ -38,62 +39,46 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     return;
                 }
 
-                Logger.InfoFormat("Usuario confirmó reporte contra: {0}", NombreJugador);
+                Logger.InfoFormat("Usuario confirmo reporte contra: {0}", 
+                    _nombreJugador);
                 MensajeError = string.Empty;
-                Cerrar?.Invoke(true);
+                DialogResult = true;
+                _ventana.CerrarVentana(this);
             });
 
             CancelarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                Logger.Info("Usuario canceló el reporte de jugador.");
-                Cerrar?.Invoke(false);
+                Logger.Info("Usuario cancelo el reporte de jugador.");
+                DialogResult = false;
+                _ventana.CerrarVentana(this);
             });
         }
 
-        /// <summary>
-        /// Nombre del jugador que será reportado.
-        /// </summary>
-        public string NombreJugador { get; }
+        public string NombreJugador => _nombreJugador;
 
-        /// <summary>
-        /// Mensaje descriptivo que indica a quién se reportará.
-        /// </summary>
         public string DescripcionReporte => string.Format(
             Lang.reportarJugadorTextoDescripcion,
-            NombreJugador);
+            _nombreJugador);
 
-        /// <summary>
-        /// Motivo descrito por el usuario.
-        /// </summary>
         public string Motivo
         {
             get => _motivo;
             set => EstablecerPropiedad(ref _motivo, value);
         }
 
-        /// <summary>
-        /// Mensaje de error a mostrar al usuario.
-        /// </summary>
         public string MensajeError
         {
             get => _mensajeError;
             private set => EstablecerPropiedad(ref _mensajeError, value);
         }
 
-        /// <summary>
-        /// Comando para confirmar y enviar el reporte.
-        /// </summary>
         public ICommand ReportarComando { get; }
 
-        /// <summary>
-        /// Comando para cancelar y cerrar la ventana.
-        /// </summary>
         public ICommand CancelarComando { get; }
 
-        /// <summary>
-        /// Acción para cerrar la ventana y retornar el resultado.
-        /// </summary>
-        public Action<bool?> Cerrar { get; set; }
+        public bool? DialogResult { get; private set; }
+
+        public string MotivoReporte => Motivo;
     }
 }

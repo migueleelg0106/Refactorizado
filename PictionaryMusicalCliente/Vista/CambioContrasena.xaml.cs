@@ -7,31 +7,31 @@ using PictionaryMusicalCliente.VistaModelo.Perfil;
 namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
-    /// Ventana para gestionar el cambio de contraseña del usuario.
+    /// Ventana para gestionar el cambio de contrasena del usuario.
     /// </summary>
     public partial class CambioContrasena : Window
     {
         /// <summary>
-        /// Inicializa la ventana.
+        /// Constructor por defecto. VentanaServicio asigna el DataContext.
         /// </summary>
         public CambioContrasena()
         {
             InitializeComponent();
+            
+            if (DataContext is CambioContrasenaVistaModelo vistaModelo)
+            {
+                vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
+            }
+            
+            DataContextChanged += CambioContrasena_DataContextChanged;
         }
 
-        /// <summary>
-        /// Asigna la vista modelo y configura los delegados de interacción visual.
-        /// </summary>
-        /// <param name="vistaModelo">La lógica de negocio para el cambio de contraseña.</param>
-        public void ConfigurarVistaModelo(CambioContrasenaVistaModelo vistaModelo)
+        private void CambioContrasena_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (vistaModelo == null)
+            if (e.NewValue is CambioContrasenaVistaModelo vistaModelo)
             {
-                return;
+                vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
             }
-
-            vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
-            DataContext = vistaModelo;
         }
 
         private void ContrasenaNuevaPasswordChanged(object sender, RoutedEventArgs e)

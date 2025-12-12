@@ -1,17 +1,16 @@
-using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
@@ -30,14 +29,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         private readonly string _usuarioActual;
         private bool _estaProcesando;
 
-        /// <summary>
-        /// Inicializa el ViewModel y se suscribe a eventos de actualizacion.
-        /// </summary>
-        /// <param name="amigosServicio">Servicio para operaciones de amistad.</param>
-        public SolicitudesVistaModelo(IAmigosServicio amigosServicio,
+        public SolicitudesVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            IAmigosServicio amigosServicio,
             ISonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio,
             IUsuarioAutenticado usuarioSesion)
+            : base(ventana, localizador)
         {
             _amigosServicio = amigosServicio ??
                 throw new ArgumentNullException(nameof(amigosServicio));
@@ -66,37 +65,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             CerrarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                Cerrar?.Invoke();
+                _ventana.CerrarVentana(this);
             });
 
             _amigosServicio.SolicitudesActualizadas += SolicitudesActualizadas;
             ActualizarSolicitudes(_amigosServicio.SolicitudesPendientes);
         }
 
-        /// <summary>
-        /// Coleccion observable de solicitudes para enlazar a la vista.
-        /// </summary>
         public ObservableCollection<SolicitudAmistadEntrada> Solicitudes { get; }
 
-        /// <summary>
-        /// Comando para aceptar una solicitud de amistad.
-        /// </summary>
         public IComandoAsincrono AceptarSolicitudComando { get; }
 
-        /// <summary>
-        /// Comando para rechazar o cancelar una solicitud de amistad.
-        /// </summary>
         public IComandoAsincrono RechazarSolicitudComando { get; }
 
-        /// <summary>
-        /// Comando para cerrar la ventana.
-        /// </summary>
         public ICommand CerrarComando { get; }
-
-        /// <summary>
-        /// Accion delegada para cerrar la ventana desde la vista.
-        /// </summary>
-        public Action Cerrar { get; set; }
 
         /// <inheritdoc />
         public void Dispose()
@@ -204,7 +186,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             EstaProcesando = true;
 
-            try
+            await EjecutarOperacionAsync(async () =>
             {
                 _logger.InfoFormat("Aceptando solicitud de amistad de: {0}",
                     entrada.Solicitud.UsuarioEmisor);
@@ -214,17 +196,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
                 _sonidoManejador.ReproducirExito();
                 _avisoServicio.Mostrar(Lang.amigosTextoSolicitudAceptada);
-            }
-            catch (ServicioExcepcion ex)
+            },
+            ex =>
             {
                 _logger.Error("Error al aceptar solicitud de amistad.", ex);
                 _sonidoManejador.ReproducirError();
                 _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
-            }
-            finally
-            {
-                EstaProcesando = false;
-            }
+            });
+
+            EstaProcesando = false;
         }
 
         private async Task RechazarSolicitudAsync(SolicitudAmistadEntrada entrada)
@@ -237,7 +217,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
             EstaProcesando = true;
 
-            try
+            await EjecutarOperacionAsync(async () =>
             {
                 _logger.InfoFormat("Rechazando/Cancelando solicitud con: {0}",
                     entrada.NombreUsuario);
@@ -247,17 +227,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
                 _sonidoManejador.ReproducirExito();
                 _avisoServicio.Mostrar(Lang.amigosTextoSolicitudCancelada);
-            }
-            catch (ServicioExcepcion ex)
+            },
+            ex =>
             {
                 _logger.Error("Error al rechazar/cancelar solicitud de amistad.", ex);
                 _sonidoManejador.ReproducirError();
                 _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
-            }
-            finally
-            {
-                EstaProcesando = false;
-            }
+            });
+
+            EstaProcesando = false;
         }
 
         private static void EjecutarEnDispatcher(Action accion)

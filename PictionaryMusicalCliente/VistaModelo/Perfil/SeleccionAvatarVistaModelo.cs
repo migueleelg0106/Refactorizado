@@ -1,13 +1,12 @@
+using log4net;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using log4net;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Perfil
 {
@@ -20,16 +19,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IAvisoServicio _avisoServicio;
         private readonly ISonidoManejador _sonidoManejador;
-
         private ObjetoAvatar _avatarSeleccionado;
 
-        /// <summary>
-        /// Inicializa el ViewModel con la lista de avatares disponibles.
-        /// </summary>
-        /// <param name="avatares">Lista de objetos avatar cargados.</param>
-        public SeleccionAvatarVistaModelo(IEnumerable<ObjetoAvatar> avatares,
+        public SeleccionAvatarVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            IEnumerable<ObjetoAvatar> avatares,
             IAvisoServicio avisoServicio,
             ISonidoManejador sonidoManejador)
+            : base(ventana, localizador)
         {
             _avisoServicio = avisoServicio ??
                 throw new ArgumentNullException(nameof(avisoServicio));
@@ -48,40 +46,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             });
         }
 
-        /// <summary>
-        /// Coleccion de avatares para mostrar en la grilla de seleccion.
-        /// </summary>
         public ObservableCollection<ObjetoAvatar> Avatares { get; }
 
-        /// <summary>
-        /// El avatar actualmente seleccionado por el usuario.
-        /// </summary>
         public ObjetoAvatar AvatarSeleccionado
         {
             get => _avatarSeleccionado;
             set => EstablecerPropiedad(ref _avatarSeleccionado, value);
         }
 
-        /// <summary>
-        /// Comando para confirmar la eleccion y cerrar el dialogo.
-        /// </summary>
         public ICommand ConfirmarSeleccionComando { get; }
 
-        /// <summary>
-        /// Accion que se ejecuta al confirmar, pasando el avatar seleccionado.
-        /// </summary>
-        public Action<ObjetoAvatar> SeleccionConfirmada { get; set; }
-
-        /// <summary>
-        /// Accion para cerrar la ventana.
-        /// </summary>
-        public Action CerrarAccion { get; set; }
+        public ObjetoAvatar AvatarConfirmado { get; private set; }
 
         private void ConfirmarSeleccion()
         {
             if (AvatarSeleccionado == null)
             {
-				_logger.Warn("Intento de confirmar selección sin avatar elegido.");
+				_logger.Warn("Intento de confirmar seleccion sin avatar elegido.");
                 _sonidoManejador.ReproducirError();
                 _avisoServicio.Mostrar(Lang.errorTextoSeleccionAvatarValido);
                 return;
@@ -89,8 +70,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             _logger.InfoFormat("Avatar seleccionado: ID {0}",
                 AvatarSeleccionado.Id);
-            SeleccionConfirmada?.Invoke(AvatarSeleccionado);
-            CerrarAccion?.Invoke();
+            AvatarConfirmado = AvatarSeleccionado;
+            _ventana.CerrarVentana(this);
         }
     }
 }

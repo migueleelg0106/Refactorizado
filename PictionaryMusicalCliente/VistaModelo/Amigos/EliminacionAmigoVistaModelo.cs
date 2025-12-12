@@ -1,9 +1,9 @@
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using log4net;
 using System;
 using System.Windows.Input;
-using log4net;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
@@ -15,76 +15,48 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly ISonidoManejador _sonidoManejador;
+        private readonly string _nombreAmigo;
 
-        public EliminacionAmigoVistaModelo(ISonidoManejador sonidoManejador,
+        public EliminacionAmigoVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            ISonidoManejador sonidoManejador,
             string nombreAmigo)
+            : base(ventana, localizador)
         {
             _sonidoManejador = sonidoManejador ??
                 throw new ArgumentNullException(nameof(sonidoManejador));
+            _nombreAmigo = nombreAmigo;
+            
             MensajeConfirmacion = string.IsNullOrWhiteSpace(nombreAmigo)
                 ? Lang.eliminarAmigoTextoConfirmacion
                 : string.Concat(Lang.eliminarAmigoTextoConfirmacion, nombreAmigo, "?");
+            
             AceptarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                _logger.InfoFormat("Usuario confirmó la eliminación del amigo: {0}",
-                    nombreAmigo);
-                Cerrar?.Invoke(true);
+                _logger.InfoFormat("Usuario confirmo la eliminacion del amigo: {0}",
+                    _nombreAmigo);
+                DialogResult = true;
+                _ventana.CerrarVentana(this);
             });
+            
             CancelarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                _logger.InfoFormat("Usuario canceló la eliminación del amigo: {0}",
-                    nombreAmigo);
-                Cerrar?.Invoke(false);
+                _logger.InfoFormat("Usuario cancelo la eliminacion del amigo: {0}",
+                    _nombreAmigo);
+                DialogResult = false;
+                _ventana.CerrarVentana(this);
             });
         }
 
-        /// <summary>
-        /// Inicializa el ViewModel construyendo el mensaje de confirmacion.
-        /// </summary>
-        /// <param name="nombreAmigo">Nombre del usuario a eliminar.</param>
-        public EliminacionAmigoVistaModelo(string nombreAmigo)
-        {
-            MensajeConfirmacion = string.IsNullOrWhiteSpace(nombreAmigo)
-                ? Lang.eliminarAmigoTextoConfirmacion
-                : string.Concat(Lang.eliminarAmigoTextoConfirmacion, nombreAmigo, "?");
-
-            AceptarComando = new ComandoDelegado(_ =>
-            {
-                _sonidoManejador.ReproducirClick();
-                _logger.InfoFormat("Usuario confirmó la eliminación del amigo: {0}",
-                    nombreAmigo);
-                Cerrar?.Invoke(true);
-            });
-
-            CancelarComando = new ComandoDelegado(_ =>
-            {
-                _sonidoManejador.ReproducirClick();
-                _logger.InfoFormat("Usuario canceló la eliminación del amigo: {0}",
-                    nombreAmigo);
-                Cerrar?.Invoke(false);
-            });
-        }
-
-        /// <summary>
-        /// Mensaje completo a mostrar al usuario.
-        /// </summary>
         public string MensajeConfirmacion { get; }
 
-        /// <summary>
-        /// Comando para confirmar la eliminacion.
-        /// </summary>
         public ICommand AceptarComando { get; }
 
-        /// <summary>
-        /// Comando para cancelar la operacion.
-        /// </summary>
         public ICommand CancelarComando { get; }
 
-        /// <summary>
-        /// Accion para cerrar el dialogo retornando el resultado (true=confirmado).
-        /// </summary>
-        public Action<bool?> Cerrar { get; set; }
+        public bool? DialogResult { get; private set; }
     }
 }

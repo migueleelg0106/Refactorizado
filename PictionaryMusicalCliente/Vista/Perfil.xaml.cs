@@ -9,44 +9,41 @@ using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.Vista
 {
-    /// <summary>
-    /// Ventana de gestion del perfil de usuario.
-    /// </summary>
     public partial class Perfil : Window
     {
-        private readonly PerfilVistaModelo _vistaModelo;
-
-        /// <summary>
-        /// Constructor por defecto, solo para uso del diseñador/XAML. 
-        /// La aplicacion debe usar el constructor que recibe dependencias.
-        /// </summary>
         public Perfil()
         {
-        }
-
-        /// <summary>
-        /// Inicializa la ventana inyectando el ViewModel configurado.
-        /// </summary>
-        /// <param name="vistaModelo">Logica de negocio del perfil.</param>
-        public Perfil(PerfilVistaModelo vistaModelo)
-        {
-            _vistaModelo = vistaModelo ?? throw new ArgumentNullException(nameof(vistaModelo));
-
             InitializeComponent();
-
-            ConfigurarInteraccion();
-            DataContext = _vistaModelo;
+            DataContextChanged += Perfil_DataContextChanged;
         }
 
-        private void ConfigurarInteraccion()
+        private void Perfil_DataContextChanged(
+            object sender, 
+            DependencyPropertyChangedEventArgs e)
         {
-            _vistaModelo.CerrarAccion = Close;
-            _vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
+            if (e.NewValue is PerfilVistaModelo vistaModelo)
+            {
+                vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
+                Loaded += Perfil_LoadedAsync;
+                Closed += Perfil_Closed;
+            }
         }
 
         private async void Perfil_LoadedAsync(object sender, RoutedEventArgs e)
         {
-            await _vistaModelo.CargarPerfilAsync().ConfigureAwait(true);
+            if (DataContext is PerfilVistaModelo vistaModelo)
+            {
+                await vistaModelo.CargarPerfilAsync().ConfigureAwait(true);
+            }
+        }
+
+        private void Perfil_Closed(object sender, EventArgs e)
+        {
+            if (DataContext is PerfilVistaModelo vistaModelo && 
+                vistaModelo.RequiereReinicioSesion)
+            {
+                Application.Current.Shutdown();
+            }
         }
 
         private void PopupRedSocial_Opened(object sender, EventArgs e)

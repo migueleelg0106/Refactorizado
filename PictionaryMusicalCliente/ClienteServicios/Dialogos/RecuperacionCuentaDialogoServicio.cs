@@ -170,36 +170,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             ICambioContrasenaServicio servicio)
         {
             var ventana = new CambioContrasena();
-            var vistaModelo = new CambioContrasenaVistaModelo(token, servicio, _avisoServicio, 
-                _validadorEntrada, _sonidoManejador);
+            var vistaModelo = new CambioContrasenaVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                token,
+                servicio,
+                _avisoServicio, 
+                _validadorEntrada,
+                _sonidoManejador);
             var finalizacion = new TaskCompletionSource<DTOs.ResultadoOperacionDTO>();
 
-            ConfigurarEventosVistaModelo(vistaModelo, ventana, finalizacion);
             ConfigurarCierreVentana(ventana, finalizacion);
 
-            ventana.ConfigurarVistaModelo(vistaModelo);
+            ventana.DataContext = vistaModelo;
             ventana.ShowDialog();
 
             return finalizacion.Task;
-        }
-
-        private void ConfigurarEventosVistaModelo(
-            CambioContrasenaVistaModelo vistaModelo,
-            CambioContrasena ventana,
-            TaskCompletionSource<DTOs.ResultadoOperacionDTO> tcs)
-        {
-            vistaModelo.CambioContrasenaCompletado = resultado =>
-            {
-                _logger.Info("Cambio de contrasena completado.");
-                tcs.TrySetResult(resultado ?? CrearExitoDefecto());
-                ventana.Close();
-            };
-
-            vistaModelo.Cancelado = () =>
-            {
-                tcs.TrySetResult(null);
-                ventana.Close();
-            };
         }
 
         private void ConfigurarCierreVentana(

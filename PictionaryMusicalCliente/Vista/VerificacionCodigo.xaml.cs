@@ -1,35 +1,29 @@
-using System.Windows;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Perfil;
+using System.Windows;
 
 namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
-    /// Ventana para el ingreso y validacion de codigos de verificacion (correo/recuperacion).
+    /// Ventana para el ingreso y validacion de codigos de verificacion 
+    /// (correo/recuperacion).
     /// </summary>
     public partial class VerificacionCodigo : Window
     {
-        /// <summary>
-        /// Inicializa la ventana.
-        /// </summary>
         public VerificacionCodigo()
         {
             InitializeComponent();
+            DataContextChanged += VerificacionCodigo_DataContextChanged;
         }
 
-        /// <summary>
-        /// Configura el contexto de datos y los delegados de interaccion visual.
-        /// </summary>
-        /// <param name="vistaModelo">La logica de negocio para la verificacion.</param>
-        public void ConfigurarVistaModelo(VerificacionCodigoVistaModelo vistaModelo)
+        private void VerificacionCodigo_DataContextChanged(
+            object sender, 
+            DependencyPropertyChangedEventArgs e)
         {
-            if (vistaModelo == null)
+            if (e.NewValue is VerificacionCodigoVistaModelo vistaModelo)
             {
-                return;
+                vistaModelo.MarcarCodigoInvalido = MarcarCodigoInvalido;
             }
-
-            vistaModelo.MarcarCodigoInvalido = MarcarCodigoInvalido;
-            DataContext = vistaModelo;
         }
 
         private void MarcarCodigoInvalido(bool invalido)
@@ -40,7 +34,8 @@ namespace PictionaryMusicalCliente.Vista
             }
             else
             {
-                ControlVisual.RestablecerEstadoCampo(campoTextoCodigoVerificacion);
+                ControlVisual.RestablecerEstadoCampo(
+                    campoTextoCodigoVerificacion);
             }
         }
     }

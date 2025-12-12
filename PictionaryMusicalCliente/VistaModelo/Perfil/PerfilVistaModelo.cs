@@ -1,10 +1,10 @@
-﻿using PictionaryMusicalCliente.ClienteServicios;
+﻿using log4net;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,16 +13,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
-
 
 namespace PictionaryMusicalCliente.VistaModelo.Perfil
 {
-    /// <summary>
-    /// Gestiona la logica de negocio para la edicion y visualizacion del perfil de usuario.
-    /// </summary>
     public class PerfilVistaModelo : BaseVistaModelo
     {
         private static readonly ILog _logger = LogManager.GetLogger(
@@ -37,16 +31,17 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private readonly IPerfilServicio _perfilServicio;
         private readonly ISeleccionarAvatarServicio _seleccionarAvatarServicio;
         private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
-        private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogoServicio;
+        private readonly IRecuperacionCuentaServicio 
+            _recuperacionCuentaDialogoServicio;
         private readonly IAvisoServicio _avisoServicio;
-        private readonly ILocalizadorServicio _localizador;
         private readonly ISonidoManejador _sonidoManejador;
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly ICatalogoAvatares _catalogoAvatares;
         private readonly ICatalogoImagenesPerfil _catalogoPerfil;
         private readonly IValidadorEntrada _validadorEntrada;
 
-        private readonly Dictionary<string, RedSocialItemVistaModelo> _redesPorNombre;
+        private readonly Dictionary<string, RedSocialItemVistaModelo> 
+            _redesPorNombre;
 
         private int _usuarioId;
         private string _usuario;
@@ -59,21 +54,20 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private bool _estaProcesando;
         private bool _estaCambiandoContrasena;
 
-        /// <summary>
-        /// Inicializa el ViewModel con los servicios requeridos.
-        /// </summary>
         public PerfilVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
             IPerfilServicio perfilServicio,
             ISeleccionarAvatarServicio seleccionarAvatarServicio,
             ICambioContrasenaServicio cambioContrasenaServicio,
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
             IAvisoServicio avisoServicio,
-            ILocalizadorServicio localizador,
             ISonidoManejador sonidoManejador,
             IUsuarioAutenticado usuarioSesion,
             ICatalogoAvatares catalogoAvatares,
             IValidadorEntrada validadorEntrada,
             ICatalogoImagenesPerfil catalogoPerfil)
+            : base(ventana, localizador)
         {
             _perfilServicio = perfilServicio ??
                 throw new ArgumentNullException(nameof(perfilServicio));
@@ -82,11 +76,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             _cambioContrasenaServicio = cambioContrasenaServicio ??
                 throw new ArgumentNullException(nameof(cambioContrasenaServicio));
             _recuperacionCuentaDialogoServicio = recuperacionCuentaDialogoServicio ??
-                throw new ArgumentNullException(nameof(recuperacionCuentaDialogoServicio));
+                throw new ArgumentNullException(
+                    nameof(recuperacionCuentaDialogoServicio));
             _avisoServicio = avisoServicio ??
                 throw new ArgumentNullException(nameof(avisoServicio));
-            _localizador = localizador ??
-                throw new ArgumentNullException(nameof(localizador));
             _sonidoManejador = sonidoManejador ??
                 throw new ArgumentNullException(nameof(sonidoManejador));
             _usuarioSesion = usuarioSesion ??
@@ -124,76 +117,54 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             CerrarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                CerrarAccion?.Invoke();
+                _ventana.CerrarVentana(this);
             });
         }
 
-        /// <summary>
-        /// Nombre de usuario (Solo lectura).
-        /// </summary>
         public string Usuario 
         { 
             get => _usuario;
             private set => EstablecerPropiedad(ref _usuario, value);
         }
-        /// <summary>
-        /// Correo electronico (Solo lectura).
-        /// </summary>
+
         public string Correo
         {
             get => _correo;
             private set => EstablecerPropiedad(ref _correo, value);
         }
-        /// <summary>
-        /// Nombre personal del usuario.
-        /// </summary>
+
         public string Nombre
         {
             get => _nombre;
             set => EstablecerPropiedad(ref _nombre, value);
         }
-        /// <summary>
-        /// Apellido del usuario.
-        /// </summary>
+
         public string Apellido
         {
             get => _apellido;
             set => EstablecerPropiedad(ref _apellido, value);
         }
-        /// <summary>
-        /// Nombre del avatar seleccionado actualmente.
-        /// </summary>
+
         public string AvatarSeleccionadoNombre
         {
             get => _avatarSeleccionadoNombre;
             private set => EstablecerPropiedad(ref _avatarSeleccionadoNombre, value);
         }
-        /// <summary>
-        /// ID del avatar seleccionado.
-        /// </summary>
+
         public int AvatarSeleccionadoId
         {
             get => _avatarSeleccionadoId;
             private set => EstablecerPropiedad(ref _avatarSeleccionadoId, value);
         }
-        /// <summary>
-        /// Imagen del avatar seleccionado.
-        /// </summary>
+
         public ImageSource AvatarSeleccionadoImagen
         {
             get => _avatarSeleccionadoImagen;
             private set => EstablecerPropiedad(ref _avatarSeleccionadoImagen, value);
         }
-        /// <summary>
-        /// Coleccion de redes sociales editables.
-        /// </summary>
-        public ObservableCollection<RedSocialItemVistaModelo> RedesSociales
-        {
-            get;
-        }
-        /// <summary>
-        /// Indica si hay una operacion de guardado o carga en curso.
-        /// </summary>
+
+        public ObservableCollection<RedSocialItemVistaModelo> RedesSociales { get; }
+
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -201,15 +172,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             {
                 if (EstablecerPropiedad(ref _estaProcesando, value))
                 {
-                    ((IComandoNotificable)GuardarCambiosComando).NotificarPuedeEjecutar();
-                    ((IComandoNotificable)SeleccionarAvatarComando).NotificarPuedeEjecutar();
-                    ((IComandoNotificable)CambiarContrasenaComando).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)GuardarCambiosComando)
+                        .NotificarPuedeEjecutar();
+                    ((IComandoNotificable)SeleccionarAvatarComando)
+                        .NotificarPuedeEjecutar();
+                    ((IComandoNotificable)CambiarContrasenaComando)
+                        .NotificarPuedeEjecutar();
                 }
             }
         }
-        /// <summary>
-        /// Indica si el dialogo de cambio de contrasena esta activo.
-        /// </summary>
+
         public bool EstaCambiandoContrasena
         {
             get => _estaCambiandoContrasena;
@@ -217,83 +189,89 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             {
                 if (EstablecerPropiedad(ref _estaCambiandoContrasena, value))
                 {
-                    ((IComandoNotificable)CambiarContrasenaComando).NotificarPuedeEjecutar();
+                    ((IComandoNotificable)CambiarContrasenaComando)
+                        .NotificarPuedeEjecutar();
                 }
             }
         }
 
-        /// <summary>
-        /// Acción para solicitar a la vista el reinicio de la sesión tras un cambio de contraseña.
-        /// </summary>
-        public Action SolicitarReinicioSesion { get; set; }
-        /// <summary>
-        /// Comando para guardar los cambios realizados en el perfil.
-        /// </summary>
         public IComandoAsincrono GuardarCambiosComando { get; }
-        /// <summary>
-        /// Comando para abrir el selector de avatares.
-        /// </summary>
+
         public IComandoAsincrono SeleccionarAvatarComando { get; }
-        /// <summary>
-        /// Comando para iniciar el flujo de cambio de contrasena.
-        /// </summary>
+
         public IComandoAsincrono CambiarContrasenaComando { get; }
-        /// <summary>
-        /// Comando para cerrar la ventana.
-        /// </summary>
+
         public ICommand CerrarComando { get; }
-        /// <summary>
-        /// Accion para cerrar la ventana desde la vista.
-        /// </summary>
-        public Action CerrarAccion { get; set; }
-        /// <summary>
-        /// Accion para notificar campos invalidos a la vista.
-        /// </summary>
+
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
 
+        public bool RequiereReinicioSesion { get; private set; }
 
-        /// <summary>
-        /// Carga los datos del perfil del usuario actual desde el servidor.
-        /// </summary>
         public async Task CargarPerfilAsync()
         {
-            if (_usuarioSesion == null || _usuarioSesion.IdUsuario <= 0)
+            if (!ValidarSesionActiva())
             {
-				_logger.Warn("Intento de cargar perfil sin sesión válida.");
-                _sonidoManejador.ReproducirError();
-                _avisoServicio.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
-                CerrarAccion?.Invoke();
                 return;
             }
 
             EstaProcesando = true;
 
-            try
+            await EjecutarOperacionAsync(async () =>
             {
-                DTOs.UsuarioDTO perfil = await _perfilServicio
-                    .ObtenerPerfilAsync(_usuarioSesion.IdUsuario).ConfigureAwait(true);
-
-                if (perfil == null)
+                DTOs.UsuarioDTO perfil = await ObtenerPerfilDesdeServidorAsync();
+                
+                if (!ValidarPerfilObtenido(perfil))
                 {
-                    _logger.ErrorFormat("Perfil obtenido es nulo para ID: {0}",
-                        _usuarioSesion.IdUsuario);
-                    _sonidoManejador.ReproducirError();
-                    _avisoServicio.Mostrar(Lang.errorTextoServidorObtenerPerfil);
                     return;
                 }
 
                 AplicarPerfil(perfil);
-            }
-            catch (ServicioExcepcion ex)
+            },
+            ex =>
             {
                 _logger.Error("Error de servicio al obtener perfil.", ex);
                 _sonidoManejador.ReproducirError();
-                _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoServidorObtenerPerfil);
-            }
-            finally
-            {
+                _avisoServicio.Mostrar(ex.Message ?? 
+                    Lang.errorTextoServidorObtenerPerfil);
                 EstaProcesando = false;
+            });
+
+            EstaProcesando = false;
+        }
+
+        private bool ValidarSesionActiva()
+        {
+            if (_usuarioSesion == null || _usuarioSesion.IdUsuario <= 0)
+            {
+                _logger.Warn("Intento de cargar perfil sin sesion valida.");
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(Lang.errorTextoPerfilActualizarInformacion);
+                _ventana.CerrarVentana(this);
+                return false;
             }
+
+            return true;
+        }
+
+        private async Task<DTOs.UsuarioDTO> ObtenerPerfilDesdeServidorAsync()
+        {
+            return await _perfilServicio
+                .ObtenerPerfilAsync(_usuarioSesion.IdUsuario)
+                .ConfigureAwait(true);
+        }
+
+        private bool ValidarPerfilObtenido(DTOs.UsuarioDTO perfil)
+        {
+            if (perfil == null)
+            {
+                _logger.ErrorFormat("Perfil obtenido es nulo para ID: {0}",
+                    _usuarioSesion.IdUsuario);
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(Lang.errorTextoServidorObtenerPerfil);
+                return false;
+            }
+
+            return true;
         }
 
         private async Task SeleccionarAvatarAsync()
@@ -311,33 +289,102 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
         private async Task GuardarCambiosAsync()
         {
-            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
-            LimpiarErroresRedesSociales();
+            LimpiarEstadosValidacion();
 
-            var (sonCamposValidos, errorCampos, camposInvalidos) = ValidarCamposPrincipales();
-            var (sonRedesValidas, errorRedes) = ValidarRedesSociales();
-
-            if (!sonCamposValidos || !sonRedesValidas)
+            if (!ValidarDatosFormulario(out var camposInvalidos))
             {
-                _sonidoManejador.ReproducirError();
-                var todosInvalidos = camposInvalidos ?? Enumerable.Empty<string>();
-                if (!sonRedesValidas)
-                {
-                    todosInvalidos = todosInvalidos.Concat(new[] { "RedesSociales" });
-                }
-
-                MostrarCamposInvalidos?.Invoke(todosInvalidos.ToList());
-
-                string mensajeMostrar = Lang.errorTextoCamposInvalidosGenerico;
-                if (todosInvalidos.Count() == 1)
-                {
-                    mensajeMostrar = errorCampos ?? errorRedes ?? mensajeMostrar;
-                }
-                _avisoServicio.Mostrar(mensajeMostrar);
+                MostrarErroresValidacion(camposInvalidos);
                 return;
             }
 
-            var solicitud = new DTOs.ActualizacionPerfilDTO
+            DTOs.ActualizacionPerfilDTO solicitud = CrearSolicitudActualizacion();
+            EstaProcesando = true;
+
+            await EjecutarOperacionAsync(async () =>
+            {
+                DTOs.ResultadoOperacionDTO resultado = 
+                    await EnviarActualizacionAsync(solicitud);
+                
+                ProcesarResultadoActualizacion(resultado);
+            },
+            ex =>
+            {
+                _logger.Error("Excepcion de servicio al actualizar perfil.", ex);
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(ex.Message ?? 
+                    Lang.errorTextoServidorActualizarPerfil);
+                EstaProcesando = false;
+            });
+
+            EstaProcesando = false;
+        }
+
+        private void LimpiarEstadosValidacion()
+        {
+            MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
+            LimpiarErroresRedesSociales();
+        }
+
+        private bool ValidarDatosFormulario(out List<string> camposInvalidos)
+        {
+            var (sonCamposValidos, errorCampos, invalidos) = 
+                ValidarCamposPrincipales();
+            var (sonRedesValidas, errorRedes) = ValidarRedesSociales();
+
+            camposInvalidos = invalidos ?? new List<string>();
+            
+            if (!sonRedesValidas)
+            {
+                camposInvalidos.Add("RedesSociales");
+            }
+
+            return sonCamposValidos && sonRedesValidas;
+        }
+
+        private void MostrarErroresValidacion(List<string> camposInvalidos)
+        {
+            _sonidoManejador.ReproducirError();
+            MostrarCamposInvalidos?.Invoke(camposInvalidos);
+
+            string mensaje = ObtenerMensajeError(camposInvalidos);
+            _avisoServicio.Mostrar(mensaje);
+        }
+
+        private string ObtenerMensajeError(List<string> camposInvalidos)
+        {
+            if (camposInvalidos == null || camposInvalidos.Count == 0)
+            {
+                return Lang.errorTextoCamposInvalidosGenerico;
+            }
+
+            if (camposInvalidos.Count == 1)
+            {
+                return ValidarCampoIndividual(camposInvalidos[0]);
+            }
+
+            return Lang.errorTextoCamposInvalidosGenerico;
+        }
+
+        private string ValidarCampoIndividual(string campo)
+        {
+            if (campo == nameof(Nombre))
+            {
+                return _validadorEntrada.ValidarNombre(Nombre?.Trim())?.Mensaje 
+                    ?? Lang.errorTextoCamposInvalidosGenerico;
+            }
+            
+            if (campo == nameof(Apellido))
+            {
+                return _validadorEntrada.ValidarApellido(Apellido?.Trim())?.Mensaje 
+                    ?? Lang.errorTextoCamposInvalidosGenerico;
+            }
+
+            return Lang.errorTextoCamposInvalidosGenerico;
+        }
+
+        private DTOs.ActualizacionPerfilDTO CrearSolicitudActualizacion()
+        {
+            return new DTOs.ActualizacionPerfilDTO
             {
                 UsuarioId = _usuarioId,
                 Nombre = Nombre.Trim(),
@@ -348,52 +395,48 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 X = ObtenerIdentificador(RedSocialX),
                 Discord = ObtenerIdentificador(RedSocialDiscord)
             };
+        }
 
-            EstaProcesando = true;
+        private async Task<DTOs.ResultadoOperacionDTO> 
+            EnviarActualizacionAsync(DTOs.ActualizacionPerfilDTO solicitud)
+        {
+            _logger.InfoFormat("Guardando cambios de perfil para usuario ID: {0}",
+                _usuarioId);
+            
+            return await _perfilServicio
+                .ActualizarPerfilAsync(solicitud)
+                .ConfigureAwait(true);
+        }
 
-            try
+        private void ProcesarResultadoActualizacion(
+            DTOs.ResultadoOperacionDTO resultado)
+        {
+            if (resultado == null)
             {
-                _logger.InfoFormat("Guardando cambios de perfil para usuario ID: {0}",
-                    _usuarioId);
-                DTOs.ResultadoOperacionDTO resultado = await _perfilServicio
-                    .ActualizarPerfilAsync(solicitud).ConfigureAwait(true);
-
-                if (resultado == null)
-                {
-                    _logger.Error("El servicio de actualización de perfil devolvió null.");
-                    _sonidoManejador.ReproducirError();
-                    _avisoServicio.Mostrar(Lang.errorTextoServidorActualizarPerfil);
-                    return;
-                }
-
-                string mensajeResultado = _localizador.Localizar(
-                    resultado.Mensaje,
-                    resultado.OperacionExitosa
-                        ? Lang.avisoTextoPerfilActualizado
-                        : Lang.errorTextoActualizarPerfil);
-
-                _avisoServicio.Mostrar(mensajeResultado);
-
-                if (resultado.OperacionExitosa)
-                {
-                    _sonidoManejador.ReproducirExito();
-                    ActualizarSesion();
-                }
-                else
-                {
-                    _logger.WarnFormat("Error al guardar perfil: {0}",
-                        resultado.Mensaje);
-                }
-            }
-            catch (ServicioExcepcion ex)
-            {
-                _logger.Error("Excepción de servicio al actualizar perfil.", ex);
+                _logger.Error(
+                    "El servicio de actualizacion de perfil devolvio null.");
                 _sonidoManejador.ReproducirError();
-                _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoServidorActualizarPerfil);
+                _avisoServicio.Mostrar(Lang.errorTextoServidorActualizarPerfil);
+                return;
             }
-            finally
+
+            string mensajeResultado = _localizador.Localizar(
+                resultado.Mensaje,
+                resultado.OperacionExitosa
+                    ? Lang.avisoTextoPerfilActualizado
+                    : Lang.errorTextoActualizarPerfil);
+
+            _avisoServicio.Mostrar(mensajeResultado);
+
+            if (resultado.OperacionExitosa)
             {
-                EstaProcesando = false;
+                _sonidoManejador.ReproducirExito();
+                ActualizarSesion();
+            }
+            else
+            {
+                _logger.WarnFormat("Error al guardar perfil: {0}",
+                    resultado.Mensaje);
             }
         }
 
@@ -472,50 +515,77 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
         private async Task CambiarContrasenaAsync()
         {
-            if (string.IsNullOrWhiteSpace(Correo))
+            if (!ValidarCorreoParaCambioContrasena())
             {
-                _sonidoManejador.ReproducirError();
-                _avisoServicio.Mostrar(Lang.errorTextoIniciarCambioContrasena);
                 return;
             }
 
             EstaProcesando = true;
             EstaCambiandoContrasena = true;
 
-            try
+            await EjecutarOperacionAsync(async () =>
             {
-                _logger.InfoFormat("Iniciando solicitud de cambio de contraseña para: {0}",
+                _logger.InfoFormat(
+                    "Iniciando solicitud de cambio de contrasena para: {0}",
                     Correo);
-                DTOs.ResultadoOperacionDTO resultado = await _recuperacionCuentaDialogoServicio
-                    .RecuperarCuentaAsync(
-                        Correo,
-                        _cambioContrasenaServicio).ConfigureAwait(true);
+                
+                DTOs.ResultadoOperacionDTO resultado = 
+                    await SolicitarCambioContrasenaAsync();
 
-                if (resultado?.OperacionExitosa == false &&
-                    !string.IsNullOrWhiteSpace(resultado.Mensaje))
-                {
-                    _logger.WarnFormat("Error en cambio de contraseña: {0}",
-                        resultado.Mensaje);
-                    _sonidoManejador.ReproducirError();
-                    _avisoServicio.Mostrar(resultado.Mensaje);
-                }
-                else if (resultado?.OperacionExitosa == true)
-                {
-                    _logger.Info("Cambio de contraseña finalizado correctamente.");
-                    _sonidoManejador.ReproducirExito();
-                    FinalizarSesionPorCambioContrasena();
-                }
-            }
-            catch (ServicioExcepcion ex)
+                ProcesarResultadoCambioContrasena(resultado);
+            },
+            ex =>
             {
-                _logger.Error("Excepción al cambiar contraseña.", ex);
+                _logger.Error("Excepcion al cambiar contrasena.", ex);
                 _sonidoManejador.ReproducirError();
-                _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoIniciarCambioContrasena);
-            }
-            finally
-            {
+                _avisoServicio.Mostrar(ex.Message ?? 
+                    Lang.errorTextoIniciarCambioContrasena);
                 EstaCambiandoContrasena = false;
                 EstaProcesando = false;
+            });
+
+            EstaCambiandoContrasena = false;
+            EstaProcesando = false;
+        }
+
+        private bool ValidarCorreoParaCambioContrasena()
+        {
+            if (string.IsNullOrWhiteSpace(Correo))
+            {
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(Lang.errorTextoIniciarCambioContrasena);
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<DTOs.ResultadoOperacionDTO> 
+            SolicitarCambioContrasenaAsync()
+        {
+            return await _recuperacionCuentaDialogoServicio
+                .RecuperarCuentaAsync(
+                    Correo,
+                    _cambioContrasenaServicio)
+                .ConfigureAwait(true);
+        }
+
+        private void ProcesarResultadoCambioContrasena(
+            DTOs.ResultadoOperacionDTO resultado)
+        {
+            if (resultado?.OperacionExitosa == false &&
+                !string.IsNullOrWhiteSpace(resultado.Mensaje))
+            {
+                _logger.WarnFormat("Error en cambio de contrasena: {0}",
+                    resultado.Mensaje);
+                _sonidoManejador.ReproducirError();
+                _avisoServicio.Mostrar(resultado.Mensaje);
+            }
+            else if (resultado?.OperacionExitosa == true)
+            {
+                _logger.Info("Cambio de contrasena finalizado correctamente.");
+                _sonidoManejador.ReproducirExito();
+                FinalizarSesionPorCambioContrasena();
             }
         }
 
@@ -523,7 +593,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         {
             _avisoServicio.Mostrar(Lang.avisoTextoReinicioSesion);
             _usuarioSesion.Limpiar();
-            SolicitarReinicioSesion?.Invoke();
+            RequiereReinicioSesion = true;
+            _ventana.CerrarVentana(this);
         }
 
         private void AplicarPerfil(DTOs.UsuarioDTO perfil)
@@ -647,46 +718,31 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             _usuarioSesion.CargarDesdeDTO(perfil);
         }
 
-        /// <summary>
-        /// Representa una red social editable en la vista.
-        /// </summary>
-        /// <param name="nombre">Nombre de la red social.</param>
-        /// <param name="icono">Icono representativo.</param>
-        public class RedSocialItemVistaModelo(string nombre, ImageSource icono) : BaseVistaModelo
+        public class RedSocialItemVistaModelo
         {
             private string _identificador;
             private bool _tieneError;
 
-            /// <summary>
-            /// Nombre de la red social.
-            /// </summary>
-            public string Nombre {
-                get;
-            } = nombre ??
-                throw new ArgumentNullException(nameof(nombre));
-
-            /// <summary>
-            /// Icono de la red social.
-            /// </summary>
-            public ImageSource RutaIcono {
-                get;
-            } = icono;
-
-            /// <summary>
-            /// ID en esa red.
-            /// </summary>
-            public string Identificador {
-                get => _identificador;
-                set => EstablecerPropiedad(ref _identificador, value);
+            public RedSocialItemVistaModelo(string nombre, ImageSource icono)
+            {
+                Nombre = nombre ?? throw new ArgumentNullException(nameof(nombre));
+                RutaIcono = icono;
             }
 
-            /// <summary>
-            /// Indica si el valor ingresado es invalido.
-            /// </summary>
+            public string Nombre { get; }
+
+            public ImageSource RutaIcono { get; }
+
+            public string Identificador
+            {
+                get => _identificador;
+                set => _identificador = value;
+            }
+
             public bool TieneError
             {
                 get => _tieneError;
-                set => EstablecerPropiedad(ref _tieneError, value);
+                set => _tieneError = value;
             }
         }
     }
