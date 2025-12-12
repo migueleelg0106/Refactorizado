@@ -268,12 +268,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                     StringComparison.Ordinal);
         }
 
-        private async Task ManejarCodigoExpiradoAsync(
+        private Task ManejarCodigoExpiradoAsync(
             DTOs.ResultadoRegistroCuentaDTO resultado)
         {
             _logger.Info("Codigo expirado detectado durante verificacion.");
             DetenerTemporizadores();
             FinalizarConResultado(resultado, false);
+            return Task.CompletedTask;
         }
 
         private void ManejarVerificacionExitosa(

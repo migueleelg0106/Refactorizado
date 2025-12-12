@@ -95,9 +95,6 @@ namespace PictionaryMusicalCliente.Utilidades
 
             switch (vistaModelo)
             {
-                case InicioSesionVistaModelo:
-                    ventana = new InicioSesion();
-                    break;
                 case CreacionCuentaVistaModelo:
                     ventana = new CreacionCuenta();
                     break;
@@ -140,17 +137,11 @@ namespace PictionaryMusicalCliente.Utilidades
                 case ReportarJugadorVistaModelo:
                     ventana = new ReportarJugador();
                     break;
-                case SalaVistaModelo:
-                    ventana = new Sala();
-                    break;
                 case TerminacionSesionVistaModelo:
                     ventana = new TerminacionSesion();
                     break;
                 case ClasificacionVistaModelo:
                     ventana = new Clasificacion();
-                    break;
-                case VentanaPrincipalVistaModelo:
-                    ventana = new VentanaPrincipal();
                     break;
                 default:
                     throw new InvalidOperationException($"No existe vista registrada para {
