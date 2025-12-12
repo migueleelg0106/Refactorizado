@@ -1,20 +1,20 @@
-﻿using PictionaryMusicalCliente.ClienteServicios;
+﻿using log4net;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
     /// <summary>
-    /// Controla el flujo para que un usuario invitado se una a una partida mediante codigo.
+    /// Controla el flujo para que un usuario invitado se una a una partida 
+    /// mediante codigo.
     /// </summary>
     public class IngresoPartidaInvitadoVistaModelo : BaseVistaModelo
     {
@@ -32,17 +32,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private bool _estaProcesando;
         private string _codigoSala;
 
-        /// <summary>
-        /// Inicializa el ViewModel.
-        /// </summary>
-        /// <param name="localizacionServicio">Servicio para obtener la cultura actual.</param>
-        /// <param name="salasServicio">Servicio para unirse a la sala.</param>
         public IngresoPartidaInvitadoVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
             ILocalizacionServicio localizacionServicio,
             ISalasServicio salasServicio,
             IAvisoServicio avisoServicio,
             ISonidoManejador sonidoManejador,
             INombreInvitadoGenerador nombreInvitadoGenerador)
+            : base(ventana, localizador)
         {
             _localizacionServicio = localizacionServicio ??
                 throw new ArgumentNullException(nameof(localizacionServicio));
@@ -64,23 +62,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             CancelarComando = new ComandoDelegado(() =>
             {
                 _sonidoManejador.ReproducirClick();
-                CerrarVentana?.Invoke();
+                _ventana.CerrarVentana(this);
             }, () => !EstaProcesando);
-            _avisoServicio = avisoServicio;
         }
 
-        /// <summary>
-        /// Codigo de sala ingresado por el usuario.
-        /// </summary>
         public string CodigoSala
         {
             get => _codigoSala;
             set => EstablecerPropiedad(ref _codigoSala, value);
         }
 
-        /// <summary>
-        /// Indica si hay una operacion de union en curso.
-        /// </summary>
         public bool EstaProcesando
         {
             get => _estaProcesando;
@@ -94,131 +85,186 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Indica si el proceso de union fue exitoso.
-        /// </summary>
         public bool SeUnioSala { get; private set; }
 
-        /// <summary>
-        /// Comando para intentar unirse a la sala.
-        /// </summary>
         public IComandoAsincrono UnirseSalaComando { get; }
 
-        /// <summary>
-        /// Comando para cancelar y cerrar el dialogo.
-        /// </summary>
         public ICommand CancelarComando { get; }
 
-        /// <summary>
-        /// Accion para cerrar la ventana.
-        /// </summary>
-        public Action CerrarVentana { get; set; }
+        public DTOs.SalaDTO SalaUnida { get; private set; }
 
-        /// <summary>
-        /// Evento disparado al unirse correctamente, devolviendo los datos de la sala y el 
-        /// nombre generado.
-        /// </summary>
-        public Action<DTOs.SalaDTO, string> SalaUnida { get; set; }
+        public string NombreInvitadoGenerado { get; private set; }
 
         private async Task UnirseSalaComoInvitadoAsync()
         {
-            if (EstaProcesando)
+            if (EstaProcesando || !ValidarCodigoSala())
             {
                 return;
             }
 
+            await IntentarUnirseSalaAsync(CodigoSala.Trim()).ConfigureAwait(true);
+        }
+
+        private bool ValidarCodigoSala()
+        {
             string codigo = CodigoSala?.Trim();
             if (string.IsNullOrWhiteSpace(codigo))
             {
                 _sonidoManejador.ReproducirError();
                 _avisoServicio.Mostrar(Lang.unirseSalaTextoVacio);
-                return;
+                return false;
             }
 
-            await IntentarUnirseSalaAsync(codigo).ConfigureAwait(true);
+            return true;
         }
 
         private async Task IntentarUnirseSalaAsync(string codigo)
         {
-            try
+            EstaProcesando = true;
+
+            await EjecutarOperacionAsync(async () =>
             {
-                EstaProcesando = true;
+                await BuscarNombreUnicoYUnirseAsync(codigo).ConfigureAwait(true);
+            },
+            ex =>
+            {
+                _logger.Error("Error al intentar unirse a la sala.", ex);
+                EstaProcesando = false;
+            });
 
-                var nombresReservados = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                var culturaActual = _localizacionServicio?.CulturaActual;
-                const int maxIntentos = 20;
+            EstaProcesando = false;
+        }
 
-                for (int intento = 0; intento < maxIntentos; intento++)
+        private async Task BuscarNombreUnicoYUnirseAsync(string codigo)
+        {
+            var nombresReservados = new HashSet<string>(
+                StringComparer.OrdinalIgnoreCase);
+            var culturaActual = _localizacionServicio?.CulturaActual;
+            const int maxIntentos = 20;
+
+            for (int intento = 0; intento < maxIntentos; intento++)
+            {
+                string nombreInvitado = GenerarNombreInvitado(
+                    culturaActual, 
+                    nombresReservados);
+
+                if (string.IsNullOrWhiteSpace(nombreInvitado))
                 {
-                    string nombreInvitado = _nombreInvitadoGenerador.Generar(
-                        culturaActual,
-                        nombresReservados);
-
-                    if (string.IsNullOrWhiteSpace(nombreInvitado))
-                    {
-						_logger.Warn("Generador de nombres retornó vacío/nulo.");
-                        break;
-                    }
-
-                    ResultadoUnionInvitado resultado = await IntentarUnirseAsync(
-                        codigo,
-                        nombreInvitado).ConfigureAwait(true);
-
-                    switch (resultado.Estado)
-                    {
-                        case EstadoUnionInvitado.Exito:
-                            _logger.InfoFormat("Invitado unido exitosamente: {0}",
-                                nombreInvitado);
-                            _sonidoManejador.ReproducirExito();
-                            SeUnioSala = true;
-                            SalaUnida?.Invoke(resultado.Sala, nombreInvitado);
-                            CerrarVentana?.Invoke();
-                            return;
-
-                        case EstadoUnionInvitado.NombreDuplicado:
-                            _logger.InfoFormat("Nombre duplicado '{0}', reintentando...",
-                                nombreInvitado);
-                            nombresReservados.Add(nombreInvitado);
-                            if (resultado.JugadoresActuales != null)
-                            {
-                                foreach (string jugador in resultado.JugadoresActuales)
-                                {
-                                    nombresReservados.Add(jugador);
-                                }
-                            }
-                            continue;
-
-                        case EstadoUnionInvitado.SalaLlena:
-                            _logger.Warn("Intento de unirse a sala llena.");
-                            _sonidoManejador.ReproducirError();
-                            _avisoServicio.Mostrar(Lang.errorTextoSalaLlena);
-                            return;
-
-                        case EstadoUnionInvitado.SalaNoEncontrada:
-                            _logger.WarnFormat("Sala no encontrada: {0}",
-                                codigo);
-                            _sonidoManejador.ReproducirError();
-                            _avisoServicio.Mostrar(Lang.errorTextoNoEncuentraPartida);
-                            return;
-
-                        case EstadoUnionInvitado.Error:
-                            _logger.ErrorFormat("Error al unirse: {0}",
-                                resultado.Mensaje);
-                            _sonidoManejador.ReproducirError();
-                            _avisoServicio.Mostrar(
-                                resultado.Mensaje ?? Lang.errorTextoNoEncuentraPartida);
-                            return;
-                    }
+                    _logger.Warn("Generador de nombres retorno vacio/nulo.");
+                    break;
                 }
 
-                _logger.Error("Se agotaron los intentos de generar nombre único.");
-                _sonidoManejador.ReproducirError();
-                _avisoServicio.Mostrar(Lang.errorTextoNombresInvitadoAgotados);
+                ResultadoUnionInvitado resultado = await IntentarUnirseAsync(
+                    codigo,
+                    nombreInvitado).ConfigureAwait(true);
+
+                if (await ProcesarResultadoUnionAsync(
+                    resultado, 
+                    nombreInvitado, 
+                    nombresReservados))
+                {
+                    return;
+                }
             }
-            finally
+
+            MostrarErrorIntentosAgotados();
+        }
+
+        private string GenerarNombreInvitado(
+            string cultura,
+            HashSet<string> nombresReservados)
+        {
+            return _nombreInvitadoGenerador.Generar(cultura, nombresReservados);
+        }
+
+        private async Task<bool> ProcesarResultadoUnionAsync(
+            ResultadoUnionInvitado resultado,
+            string nombreInvitado,
+            HashSet<string> nombresReservados)
+        {
+            switch (resultado.Estado)
             {
-                EstaProcesando = false;
+                case EstadoUnionInvitado.Exito:
+                    MarcarUnionExitosa(resultado.Sala, nombreInvitado);
+                    return true;
+
+                case EstadoUnionInvitado.NombreDuplicado:
+                    AgregarNombresReservados(nombreInvitado, 
+                        resultado.JugadoresActuales, 
+                        nombresReservados);
+                    return false;
+
+                case EstadoUnionInvitado.SalaLlena:
+                    MostrarErrorSalaLlena();
+                    return true;
+
+                case EstadoUnionInvitado.SalaNoEncontrada:
+                    MostrarErrorSalaNoEncontrada();
+                    return true;
+
+                case EstadoUnionInvitado.Error:
+                    MostrarError(resultado.Mensaje);
+                    return true;
+
+                default:
+                    return false;
             }
+        }
+
+        private void MarcarUnionExitosa(DTOs.SalaDTO sala, string nombreInvitado)
+        {
+            _logger.InfoFormat("Invitado unido exitosamente: {0}", nombreInvitado);
+            _sonidoManejador.ReproducirExito();
+            SeUnioSala = true;
+            SalaUnida = sala;
+            NombreInvitadoGenerado = nombreInvitado;
+            _ventana.CerrarVentana(this);
+        }
+
+        private void AgregarNombresReservados(
+            string nombreInvitado,
+            IReadOnlyCollection<string> jugadoresActuales,
+            HashSet<string> nombresReservados)
+        {
+            _logger.InfoFormat("Nombre duplicado '{0}', reintentando...", 
+                nombreInvitado);
+            nombresReservados.Add(nombreInvitado);
+            
+            if (jugadoresActuales != null)
+            {
+                foreach (string jugador in jugadoresActuales)
+                {
+                    nombresReservados.Add(jugador);
+                }
+            }
+        }
+
+        private void MostrarErrorSalaLlena()
+        {
+            _logger.Warn("Intento de unirse a sala llena.");
+            _sonidoManejador.ReproducirError();
+            _avisoServicio.Mostrar(Lang.errorTextoSalaLlena);
+        }
+
+        private void MostrarErrorSalaNoEncontrada()
+        {
+            _logger.WarnFormat("Sala no encontrada: {0}", CodigoSala);
+            _sonidoManejador.ReproducirError();
+            _avisoServicio.Mostrar(Lang.errorTextoNoEncuentraPartida);
+        }
+
+        private void MostrarError(string mensaje)
+        {
+            _logger.ErrorFormat("Error al unirse: {0}", mensaje);
+            _sonidoManejador.ReproducirError();
+            _avisoServicio.Mostrar(mensaje ?? Lang.errorTextoNoEncuentraPartida);
+        }
+
+        private void MostrarErrorIntentosAgotados()
+        {
+            _logger.Error("Se agotaron los intentos de generar nombre unico.");
+            _sonidoManejador.ReproducirError();
+            _avisoServicio.Mostrar(Lang.errorTextoNombresInvitadoAgotados);
         }
 
         private async Task<ResultadoUnionInvitado> IntentarUnirseAsync(
