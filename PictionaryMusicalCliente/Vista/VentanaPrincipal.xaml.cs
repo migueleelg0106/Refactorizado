@@ -161,8 +161,7 @@ namespace PictionaryMusicalCliente.Vista
             _vistaModelo.AbrirComoJugar = () => MostrarDialogo(new ComoJugar());
             _vistaModelo.AbrirClasificacion = AbrirClasificacion;
             _vistaModelo.AbrirBuscarAmigo = AbrirBuscarAmigo;
-            _vistaModelo.AbrirSolicitudes = () =>
-                MostrarDialogo(new Solicitudes(_amigos, _sonidos, _aviso, _usuarioSesion));
+            _vistaModelo.AbrirSolicitudes = AbrirSolicitudes;
             _vistaModelo.ConfirmarEliminarAmigo = MostrarConfirmacionEliminar;
             _vistaModelo.IniciarJuego = sala => MostrarVentanaJuego(sala);
             _vistaModelo.UnirseSala = sala => MostrarVentanaJuego(sala);
@@ -244,6 +243,18 @@ namespace PictionaryMusicalCliente.Vista
                 amigo);
             App.VentanaServicio.MostrarVentanaDialogo(eliminacionVM);
             return eliminacionVM.DialogResult;
+        }
+
+        private void AbrirSolicitudes()
+        {
+            var solicitudesVM = new VistaModelo.Amigos.SolicitudesVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                _amigos,
+                _sonidos,
+                _aviso,
+                _usuarioSesion);
+            App.VentanaServicio.MostrarVentanaDialogo(solicitudesVM);
         }
 
         private void MostrarDialogo(Window ventana)
