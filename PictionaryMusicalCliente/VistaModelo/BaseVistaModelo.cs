@@ -16,7 +16,7 @@ namespace PictionaryMusicalCliente.VistaModelo
     public abstract class BaseVistaModelo : INotifyPropertyChanged
     {
         protected readonly IVentanaServicio _ventana;
-        private readonly ILocalizadorServicio _localizador;
+        protected readonly ILocalizadorServicio _localizador;
 
         /// <summary>
         /// Evento para notificar cambios en las propiedades a la interfaz de usuario.

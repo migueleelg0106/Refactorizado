@@ -26,7 +26,8 @@ namespace PictionaryMusicalCliente.Vista
             DataContextChanged += CambioContrasena_DataContextChanged;
         }
 
-        private void CambioContrasena_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void CambioContrasena_DataContextChanged(object sender,
+            DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is CambioContrasenaVistaModelo vistaModelo)
             {
