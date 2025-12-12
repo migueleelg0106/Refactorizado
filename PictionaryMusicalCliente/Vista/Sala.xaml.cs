@@ -115,6 +115,8 @@ namespace PictionaryMusicalCliente.Vista
             _navegarInicioSesion = navegarInicioSesion;
 
             _vistaModelo = new SalaVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
                 sala,
                 _salaServicio,
                 _invitacionesServicio,
@@ -123,7 +125,6 @@ namespace PictionaryMusicalCliente.Vista
                 _reportesServicio,
                 _sonidos,
                 _avisoServicio,
-                _traductor,
                 _usuarioSesion,
                 _invitacionesSalaServicio,
                 _fabricaWcf,
