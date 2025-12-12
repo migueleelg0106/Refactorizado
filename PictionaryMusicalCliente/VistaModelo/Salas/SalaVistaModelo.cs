@@ -23,10 +23,6 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
-    /// <summary>
-    /// Coordina la logica de la sala anterior al inicio de la partida.
-    /// Gestiona jugadores, invitaciones, codigo de sala y eventos de la UI.
-    /// </summary>
     public class SalaVistaModelo : BaseVistaModelo, ICursoPartidaManejadorCallback
     {
         private static readonly ILog _logger = LogManager.GetLogger(
@@ -76,20 +72,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private const int LimiteCaracteresChat = 150;
         private const double PorcentajePuntosDibujante = 0.2;
 
-        /// <summary>
-        /// Define los destinos posibles al salir de la partida.
-        /// </summary>
         public enum DestinoNavegacion
         {
-            /// <summary>Regresa al inicio de sesion (para invitados).</summary>
-            InicioSesion,
-            /// <summary>Regresa al menu principal (para usuarios registrados).</summary>
-            VentanaPrincipal
-        }
-
-        /// <summary>
-        /// Inicializa la VistaModelo con todos los servicios necesarios para el juego.
-        /// </summary>
         /// <param name="sala">Datos de la sala actual.</param>
         /// <param name="salasServicio">Servicio de comunicacion de salas.</param>
         /// <param name="invitacionesServicio">Servicio para invitar usuarios.</param>
@@ -98,6 +82,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         /// <param name="nombreJugador">Nombre del jugador actual (opcional).</param>
         /// <param name="esInvitado">Indica si el usuario es invitado.</param>
         public SalaVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
             DTOs.SalaDTO sala,
             ISalasServicio salasServicio,
             IInvitacionesServicio invitacionesServicio,
@@ -106,61 +92,108 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             IReportesServicio reportesServicio,
             ISonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio,
-            ILocalizadorServicio localizador,
             IUsuarioAutenticado usuarioSesion,
             IInvitacionSalaServicio invitacionSalaServicio,
             IWcfClienteFabrica fabricaClientes,
             ICancionManejador cancionManejador,
             string nombreJugador = null,
             bool esInvitado = false)
+            : base(ventana, localizador)
         {
-            _sala = sala ?? throw new ArgumentNullException(nameof(sala));
-            _salasServicio = salasServicio ??
-                throw new ArgumentNullException(nameof(salasServicio));
-            _reportesServicio = reportesServicio ??
-                throw new ArgumentNullException(nameof(reportesServicio));
-            _sonidoManejador = sonidoManejador ??
-                throw new ArgumentNullException(nameof(sonidoManejador));
-            _avisoServicio = avisoServicio ??
-                throw new ArgumentNullException(nameof(avisoServicio));
-            _localizador = localizador ??
-                throw new ArgumentNullException(nameof(localizador));
-            _invitacionSalaServicio = invitacionSalaServicio ??
-                throw new ArgumentNullException(nameof(invitacionSalaServicio));
-            _usuarioSesion = usuarioSesion ??
-                throw new ArgumentNullException(nameof(usuarioSesion));
-            _fabricaClientes = fabricaClientes ??
-                throw new ArgumentNullException(nameof(fabricaClientes));
-            _cancionManejador = cancionManejador ??
-                throw new ArgumentNullException(nameof(cancionManejador));
+            ValidarDependencias(sala, salasServicio, reportesServicio, sonidoManejador,
+                avisoServicio, invitacionSalaServicio, usuarioSesion, fabricaClientes,
+                cancionManejador);
 
-            if (invitacionSalaServicio == null)
-            {
-                throw new ArgumentNullException(nameof(invitacionSalaServicio), 
-                    "El servicio de invitacion de sala es requerido.");
-            }
-            _invitacionSalaServicio = invitacionSalaServicio;
+            AsignarServicios(salasServicio, reportesServicio, sonidoManejador, avisoServicio,
+                invitacionSalaServicio, usuarioSesion, fabricaClientes, cancionManejador);
 
+            _sala = sala;
             _esInvitado = esInvitado;
             _nombreUsuarioSesion = !string.IsNullOrWhiteSpace(nombreJugador)
                 ? nombreJugador
                 : _usuarioSesion.NombreUsuario ?? string.Empty;
-            _esHost = string.Equals(_sala.Creador, _nombreUsuarioSesion, StringComparison.OrdinalIgnoreCase);
+            _esHost = string.Equals(_sala.Creador, _nombreUsuarioSesion,
+                StringComparison.OrdinalIgnoreCase);
             _idJugador = ObtenerIdentificadorJugador();
 
+            InicializarColecciones();
+            InicializarViewModelsHijos();
+            ConfigurarEventosViewModels();
+            InicializarEstadoInicial();
+            SuscribirEventosServicio();
+            InicializarComandos();
+            ConfigurarPermisos();
+            InicializarProxyPartida();
+        }
+
+        private void ValidarDependencias(DTOs.SalaDTO sala, ISalasServicio salasServicio,
+            IReportesServicio reportesServicio, ISonidoManejador sonidoManejador,
+            IAvisoServicio avisoServicio, IInvitacionSalaServicio invitacionSalaServicio,
+            IUsuarioAutenticado usuarioSesion, IWcfClienteFabrica fabricaClientes,
+            ICancionManejador cancionManejador)
+        {
+            if (sala == null) throw new ArgumentNullException(nameof(sala));
+            if (salasServicio == null) throw new ArgumentNullException(nameof(salasServicio));
+            if (reportesServicio == null)
+                throw new ArgumentNullException(nameof(reportesServicio));
+            if (sonidoManejador == null)
+                throw new ArgumentNullException(nameof(sonidoManejador));
+            if (avisoServicio == null) throw new ArgumentNullException(nameof(avisoServicio));
+            if (invitacionSalaServicio == null)
+                throw new ArgumentNullException(nameof(invitacionSalaServicio));
+            if (usuarioSesion == null)
+                throw new ArgumentNullException(nameof(usuarioSesion));
+            if (fabricaClientes == null)
+                throw new ArgumentNullException(nameof(fabricaClientes));
+            if (cancionManejador == null)
+                throw new ArgumentNullException(nameof(cancionManejador));
+        }
+
+        private void AsignarServicios(ISalasServicio salasServicio,
+            IReportesServicio reportesServicio, ISonidoManejador sonidoManejador,
+            IAvisoServicio avisoServicio, IInvitacionSalaServicio invitacionSalaServicio,
+            IUsuarioAutenticado usuarioSesion, IWcfClienteFabrica fabricaClientes,
+            ICancionManejador cancionManejador)
+        {
+            _salasServicio = salasServicio;
+            _reportesServicio = reportesServicio;
+            _sonidoManejador = sonidoManejador;
+            _avisoServicio = avisoServicio;
+            _localizador = _localizador;
+            _invitacionSalaServicio = invitacionSalaServicio;
+            _usuarioSesion = usuarioSesion;
+            _fabricaClientes = fabricaClientes;
+            _cancionManejador = cancionManejador;
+        }
+
+        private void InicializarColecciones()
+        {
             _amigosInvitados = new HashSet<int>();
-            _adivinadoresQuienYaAcertaron = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            _adivinadoresQuienYaAcertaron =
+                new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             _nombreDibujanteActual = string.Empty;
             _rondaTerminadaTemprano = false;
+        }
 
-            _partidaVistaModelo = new PartidaIniciadaVistaModelo(_sonidoManejador,
+        private void InicializarViewModelsHijos()
+        {
+            _partidaVistaModelo = new PartidaIniciadaVistaModelo(
+                _ventana,
+                _localizador,
+                _sonidoManejador,
                 _cancionManejador);
             _chatVistaModelo = CrearChatVistaModelo();
+        }
 
+        private void ConfigurarEventosViewModels()
+        {
             _chatVistaModelo.PropertyChanged += ChatVistaModelo_PropertyChanged;
             _partidaVistaModelo.PropertyChanged += PartidaIniciadaVistaModelo_PropertyChanged;
             ConfigurarPartidaVistaModelo();
+        }
 
+        private void InicializarEstadoInicial()
+        {
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
             _botonIniciarPartidaHabilitado = _esHost;
             _mostrarBotonIniciarPartida = _esHost;
@@ -168,20 +201,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _jugadores = new ObservableCollection<JugadorElemento>();
             ActualizarJugadores(_sala.Jugadores);
             _puedeInvitarPorCorreo = true;
+        }
 
+        private void SuscribirEventosServicio()
+        {
             _salasServicio.JugadorSeUnio += SalasServicio_JugadorSeUnio;
             _salasServicio.JugadorSalio += SalasServicio_JugadorSalio;
             _salasServicio.JugadorExpulsado += SalasServicio_JugadorExpulsado;
             _salasServicio.SalaActualizada += SalasServicio_SalaActualizada;
             _salasServicio.SalaCancelada += SalasServicio_SalaCancelada;
+        }
 
-            InicializarComandos();
-
+        private void ConfigurarPermisos()
+        {
             PuedeInvitarPorCorreo = !_esInvitado;
             PuedeInvitarAmigos = !_esInvitado;
             _chatVistaModelo.PuedeEscribir = true;
-
-            InicializarProxyPartida();
         }
 
         private void ConfigurarPartidaVistaModelo()
@@ -212,7 +247,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 EjecutarRegistrarAciertoAsync);
             var chatReglas = new ChatReglasPartida(chatAciertos);
 
-            return new ChatVistaModelo(chatMensajeria, chatReglas);
+            return new ChatVistaModelo(_ventana, _localizador, chatMensajeria, chatReglas);
         }
 
 
@@ -240,252 +275,156 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _chatVistaModelo.EsPartidaIniciada = juegoIniciado;
         }
 
-        /// <summary>
-        /// VistaModelo que coordina la logica de la partida iniciada.
-        /// </summary>
         public PartidaIniciadaVistaModelo PartidaVistaModelo => _partidaVistaModelo;
 
-        /// <summary>
-        /// VistaModelo que coordina la logica del chat.
-        /// </summary>
         public ChatVistaModelo ChatVistaModelo => _chatVistaModelo;
 
-        /// <summary>
-        /// Indica si la partida ha comenzado.
-        /// </summary>
         public bool JuegoIniciado => _partidaVistaModelo.JuegoIniciado;
 
-        /// <summary>
-        /// Indica si el usuario actual es el anfitrion de la sala.
-        /// </summary>
         public bool EsHost => _esHost;
 
-        /// <summary>
-        /// Numero de la ronda actual.
-        /// </summary>
         public int NumeroRondaActual => _partidaVistaModelo.NumeroRondaActual;
 
-        /// <summary>
-        /// Grosor del trazo del pincel.
-        /// </summary>
         public double Grosor
         {
             get => _partidaVistaModelo.Grosor;
             set => _partidaVistaModelo.Grosor = value;
         }
 
-        /// <summary>
-        /// Color actual del pincel.
-        /// </summary>
         public Color Color
         {
             get => _partidaVistaModelo.Color;
             set => _partidaVistaModelo.Color = value;
         }
 
-        /// <summary>
-        /// Texto a mostrar en el temporizador.
-        /// </summary>
         public string TextoContador => _partidaVistaModelo.TextoContador;
 
-        /// <summary>
-        /// Color del texto del temporizador (para alertas).
-        /// </summary>
         public Brush ColorContador => _partidaVistaModelo.ColorContador;
 
-        /// <summary>
-        /// Indica si se debe mostrar la informacion de la ronda y el temporizador.
-        /// </summary>
         public bool MostrarEstadoRonda => _partidaVistaModelo.MostrarEstadoRonda;
 
-        /// <summary>
-        /// Indica si la herramienta seleccionada es el lapiz.
-        /// </summary>
         public bool EsHerramientaLapiz
         {
             get => _partidaVistaModelo.EsHerramientaLapiz;
             set => _partidaVistaModelo.EsHerramientaLapiz = value;
         }
 
-        /// <summary>
-        /// Indica si la herramienta seleccionada es el borrador.
-        /// </summary>
         public bool EsHerramientaBorrador
         {
             get => _partidaVistaModelo.EsHerramientaBorrador;
             set => _partidaVistaModelo.EsHerramientaBorrador = value;
         }
 
-        /// <summary>
-        /// Visibilidad del area de dibujo.
-        /// </summary>
         public Visibility VisibilidadCuadriculaDibujo
         {
             get => _partidaVistaModelo.VisibilidadCuadriculaDibujo;
             set => _partidaVistaModelo.VisibilidadCuadriculaDibujo = value;
         }
 
-        /// <summary>
-        /// Visibilidad del overlay para quien dibuja.
-        /// </summary>
         public Visibility VisibilidadOverlayDibujante
         {
             get => _partidaVistaModelo.VisibilidadOverlayDibujante;
             set => _partidaVistaModelo.VisibilidadOverlayDibujante = value;
         }
 
-        /// <summary>
-        /// Visibilidad del overlay para quien adivina.
-        /// </summary>
         public Visibility VisibilidadOverlayAdivinador
         {
             get => _partidaVistaModelo.VisibilidadOverlayAdivinador;
             set => _partidaVistaModelo.VisibilidadOverlayAdivinador = value;
         }
 
-        /// <summary>
-        /// Visibilidad del overlay de tiempo terminado.
-        /// </summary>
         public Visibility VisibilidadOverlayAlarma
         {
             get => _partidaVistaModelo.VisibilidadOverlayAlarma;
             set => _partidaVistaModelo.VisibilidadOverlayAlarma = value;
         }
 
-        /// <summary>
-        /// Visibilidad de la palabra a adivinar en la interfaz.
-        /// </summary>
         public Visibility VisibilidadPalabraAdivinar
         {
             get => _partidaVistaModelo.VisibilidadPalabraAdivinar;
             set => _partidaVistaModelo.VisibilidadPalabraAdivinar = value;
         }
 
-        /// <summary>
-        /// Visibilidad de la informacion de la cancion.
-        /// </summary>
         public Visibility VisibilidadInfoCancion
         {
             get => _partidaVistaModelo.VisibilidadInfoCancion;
             set => _partidaVistaModelo.VisibilidadInfoCancion = value;
         }
 
-        /// <summary>
-        /// Visibilidad del texto de artista.
-        /// </summary>
         public Visibility VisibilidadArtista
         {
             get => _partidaVistaModelo.VisibilidadArtista;
             set => _partidaVistaModelo.VisibilidadArtista = value;
         }
 
-        /// <summary>
-        /// Visibilidad del texto de genero musical.
-        /// </summary>
         public Visibility VisibilidadGenero
         {
             get => _partidaVistaModelo.VisibilidadGenero;
             set => _partidaVistaModelo.VisibilidadGenero = value;
         }
 
-        /// <summary>
-        /// Palabra que se debe dibujar o adivinar.
-        /// </summary>
         public string PalabraAdivinar
         {
             get => _partidaVistaModelo.PalabraAdivinar;
             set => _partidaVistaModelo.PalabraAdivinar = value;
         }
 
-        /// <summary>
-        /// Color del texto de la palabra a adivinar.
-        /// </summary>
         public Brush ColorPalabraAdivinar
         {
             get => _partidaVistaModelo.ColorPalabraAdivinar;
             set => _partidaVistaModelo.ColorPalabraAdivinar = value;
         }
 
-        /// <summary>
-        /// Nombre del artista de la cancion actual.
-        /// </summary>
         public string TextoArtista
         {
             get => _partidaVistaModelo.TextoArtista;
             set => _partidaVistaModelo.TextoArtista = value;
         }
 
-        /// <summary>
-        /// Genero musical de la cancion actual.
-        /// </summary>
         public string TextoGenero
         {
             get => _partidaVistaModelo.TextoGenero;
             set => _partidaVistaModelo.TextoGenero = value;
         }
 
-        /// <summary>
-        /// Texto que muestra quien es el dibujante actual.
-        /// </summary>
         public string TextoDibujoDe => _partidaVistaModelo.TextoDibujoDe;
 
-        /// <summary>
-        /// Texto del boton de inicio de partida.
-        /// </summary>
         public string TextoBotonIniciarPartida
         {
             get => _textoBotonIniciarPartida;
             set => EstablecerPropiedad(ref _textoBotonIniciarPartida, value);
         }
 
-        /// <summary>
-        /// Estado de habilitacion del boton de inicio.
-        /// </summary>
         public bool BotonIniciarPartidaHabilitado
         {
             get => _botonIniciarPartidaHabilitado;
             set => EstablecerPropiedad(ref _botonIniciarPartidaHabilitado, value);
         }
 
-        /// <summary>
-        /// Controla la visibilidad del boton de inicio de partida.
-        /// </summary>
         public bool MostrarBotonIniciarPartida
         {
             get => _mostrarBotonIniciarPartida;
             private set => EstablecerPropiedad(ref _mostrarBotonIniciarPartida, value);
         }
 
-        /// <summary>
-        /// Codigo unico de la sala actual.
-        /// </summary>
         public string CodigoSala
         {
             get => _codigoSala;
             set => EstablecerPropiedad(ref _codigoSala, value);
         }
 
-        /// <summary>
-        /// Coleccion de jugadores presentes en la sala.
-        /// </summary>
         public ObservableCollection<JugadorElemento> Jugadores
         {
             get => _jugadores;
             set => EstablecerPropiedad(ref _jugadores, value);
         }
 
-        /// <summary>
-        /// Correo electronico ingresado para invitar.
-        /// </summary>
         public string CorreoInvitacion
         {
             get => _correoInvitacion;
             set => EstablecerPropiedad(ref _correoInvitacion, value);
         }
 
-        /// <summary>
-        /// Indica si el usuario tiene permisos para invitar por correo.
-        /// </summary>
         public bool PuedeInvitarPorCorreo
         {
             get => _puedeInvitarPorCorreo;
@@ -499,9 +438,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Indica si el usuario tiene permisos para invitar amigos.
-        /// </summary>
         public bool PuedeInvitarAmigos
         {
             get => _puedeInvitarAmigos;
@@ -514,195 +450,102 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Indica si el usuario actual es un invitado.
-        /// </summary>
         public bool EsInvitado => _esInvitado;
 
-        /// <summary>
-        /// Indica si el jugador actual puede escribir en el chat.
-        /// </summary>
         public bool PuedeEscribir
         {
             get => _chatVistaModelo.PuedeEscribir;
             private set => _chatVistaModelo.PuedeEscribir = value;
         }
 
-        /// <summary>
-        /// Indica si el usuario es el dibujante de la ronda.
-        /// </summary>
         public bool EsDibujante => _partidaVistaModelo.EsDibujante;
 
-        /// <summary>
-        /// Texto del mensaje de chat a enviar.
-        /// </summary>
         public string MensajeChat
         {
             get => _mensajeChat;
             set => EstablecerPropiedad(ref _mensajeChat, LimitarMensajePorCaracteres(value));
         }
 
-        /// <summary>
-        /// Comando para invitar a un usuario por correo.
-        /// </summary>
         public ICommand InvitarCorreoComando { get; private set; }
 
-        /// <summary>
-        /// Comando para abrir la lista de amigos a invitar.
-        /// </summary>
         public IComandoAsincrono InvitarAmigosComando { get; private set; }
 
-        /// <summary>
-        /// Comando para abrir los ajustes de la partida.
-        /// </summary>
         public ICommand AbrirAjustesComando { get; private set; }
 
-        /// <summary>
-        /// Comando para iniciar el juego.
-        /// </summary>
         public ICommand IniciarPartidaComando { get; private set; }
 
-        /// <summary>
-        /// Comando para seleccionar el lapiz como herramienta.
-        /// </summary>
         public ICommand SeleccionarLapizComando => _partidaVistaModelo.SeleccionarLapizComando;
 
-        /// <summary>
-        /// Comando para seleccionar el borrador como herramienta.
-        /// </summary>
         public ICommand SeleccionarBorradorComando => _partidaVistaModelo.SeleccionarBorradorComando;
 
-        /// <summary>
-        /// Comando para cambiar el grosor del trazo.
-        /// </summary>
         public ICommand CambiarGrosorComando => _partidaVistaModelo.CambiarGrosorComando;
 
-        /// <summary>
-        /// Comando para cambiar el color del trazo.
-        /// </summary>
         public ICommand CambiarColorComando => _partidaVistaModelo.CambiarColorComando;
 
-        /// <summary>
-        /// Comando para limpiar el lienzo de dibujo.
-        /// </summary>
         public ICommand LimpiarDibujoComando => _partidaVistaModelo.LimpiarDibujoComando;
 
-        /// <summary>
-        /// Comando para ocultar el overlay de tiempo terminado.
-        /// </summary>
         public ICommand OcultarOverlayAlarmaComando => _partidaVistaModelo.OcultarOverlayAlarmaComando;
 
-        /// <summary>
-        /// Comando para cerrar la ventana de juego.
-        /// </summary>
         public ICommand CerrarVentanaComando { get; private set; }
 
-        /// <summary>
-        /// Comando para enviar un mensaje de chat.
-        /// </summary>
         public ICommand EnviarMensajeChatComando { get; private set; }
 
-        /// <summary>
-        /// Accion para abrir la ventana de ajustes.
-        /// </summary>
         public Action<ICancionManejador> AbrirAjustesPartida { get; set; }
 
-        /// <summary>
-        /// Accion notificar cambio de herramienta a la vista.
-        /// </summary>
         public Action<bool> NotificarCambioHerramienta
         {
             get => _partidaVistaModelo.NotificarCambioHerramienta;
             set => _partidaVistaModelo.NotificarCambioHerramienta = value;
         }
 
-        /// <summary>
-        /// Accion para aplicar estilo visual de lapiz.
-        /// </summary>
         public Action AplicarEstiloLapiz
         {
             get => _partidaVistaModelo.AplicarEstiloLapiz;
             set => _partidaVistaModelo.AplicarEstiloLapiz = value;
         }
 
-        /// <summary>
-        /// Accion para actualizar cursor de goma.
-        /// </summary>
         public Action ActualizarFormaGoma
         {
             get => _partidaVistaModelo.ActualizarFormaGoma;
             set => _partidaVistaModelo.ActualizarFormaGoma = value;
         }
 
-        /// <summary>
-        /// Accion para limpiar el Canvas.
-        /// </summary>
         public Action LimpiarTrazos
         {
             get => _partidaVistaModelo.LimpiarTrazos;
             set => _partidaVistaModelo.LimpiarTrazos = value;
         }
 
-        /// <summary>
-        /// Evento para trazo recibido desde el servidor.
-        /// </summary>
         public event Action<DTOs.TrazoDTO> TrazoRecibidoServidor
         {
             add => _partidaVistaModelo.TrazoRecibidoServidor += value;
             remove => _partidaVistaModelo.TrazoRecibidoServidor -= value;
         }
 
-        /// <summary>
-        /// Evento para notificar mensajes de chat entrantes.
-        /// </summary>
         public event Action<string, string> MensajeChatRecibido
         {
             add => _chatVistaModelo.MensajeChatRecibido += value;
             remove => _chatVistaModelo.MensajeChatRecibido -= value;
         }
 
-        /// <summary>
-        /// Evento para notificar mensajes dorados (aciertos) al chat.
-        /// </summary>
         public event Action<string, string> MensajeDoradoRecibido
         {
             add => _chatVistaModelo.MensajeDoradoRecibido += value;
             remove => _chatVistaModelo.MensajeDoradoRecibido -= value;
         }
 
-        /// <summary>
-        /// Accion para mostrar mensajes al usuario.
-        /// </summary>
         public Action<string> MostrarMensaje { get; set; }
 
-        /// <summary>
-        /// Funcion para solicitar confirmacion al usuario.
-        /// </summary>
         public Func<string, bool> MostrarConfirmacion { get; set; }
 
-        /// <summary>
-        /// Solicita los datos necesarios para enviar un reporte.
-        /// </summary>
         public Func<string, ResultadoReporteJugador> SolicitarDatosReporte { get; set; }
 
-        /// <summary>
-        /// Accion para cerrar la ventana fisica.
-        /// </summary>
         public Action CerrarVentana { get; set; }
 
-        /// <summary>
-        /// Funcion para mostrar el dialogo de invitar amigos.
-        /// </summary>
         public Func<InvitarAmigosVistaModelo, Task> MostrarInvitarAmigos { get; set; }
 
-        /// <summary>
-        /// Accion para navegar a otra vista.
-        /// </summary>
         public Action<DestinoNavegacion> ManejarNavegacion { get; set; }
 
-        /// <summary>
-        /// Funcion para verificar cierre global.
-        /// </summary>
         public Func<bool> ChequearCierreAplicacionGlobal { get; set; }
 
         private DestinoNavegacion ObtenerDestinoSegunSesion()
@@ -934,9 +777,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Envia un trazo al servidor.
-        /// </summary>
         /// <param name="trazo">Datos del trazo a enviar.</param>
         public void EnviarTrazoAlServidor(DTOs.TrazoDTO trazo)
         {
@@ -1010,9 +850,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Procesa la notificacion de que la partida ha iniciado desde el servidor.
-        /// </summary>
         public void NotificarPartidaIniciada()
         {
             var dispatcher = Application.Current?.Dispatcher;
@@ -1032,9 +869,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             });
         }
 
-        /// <summary>
-        /// Procesa la notificacion de inicio de una nueva ronda desde el servidor.
-        /// </summary>
         /// <param name="ronda">Datos de la ronda.</param>
         public void NotificarInicioRonda(DTOs.RondaDTO ronda)
         {
@@ -1046,9 +880,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _partidaVistaModelo.NotificarInicioRonda(ronda, Jugadores?.Count ?? 0);
         }
 
-        /// <summary>
-        /// Procesa la notificacion de que un jugador adivino la cancion.
-        /// </summary>
         /// <param name="nombreJugador">Nombre del jugador que adivino.</param>
         /// <param name="puntos">Puntos obtenidos.</param>
         public void NotificarJugadorAdivino(string nombreJugador, int puntos)
@@ -1128,9 +959,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             return totalAdivinadores > 0 && _adivinadoresQuienYaAcertaron.Count >= totalAdivinadores;
         }
 
-        /// <summary>
-        /// Procesa la notificacion de un mensaje de chat desde el servidor.
-        /// </summary>
         /// <param name="nombreJugador">Nombre del jugador que envio el mensaje.</param>
         /// <param name="mensaje">Contenido del mensaje.</param>
         public void NotificarMensajeChat(string nombreJugador, string mensaje)
@@ -1142,18 +970,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _chatVistaModelo.NotificarMensajeChat(nombreJugador, mensaje);
         }
 
-        /// <summary>
-        /// Procesa la recepcion de un trazo desde el servidor.
-        /// </summary>
         /// <param name="trazo">Datos del trazo.</param>
         public void NotificarTrazoRecibido(DTOs.TrazoDTO trazo)
         {
             _partidaVistaModelo.NotificarTrazoRecibido(trazo);
         }
 
-        /// <summary>
-        /// Procesa la notificacion de fin de ronda desde el servidor.
-        /// </summary>
         public void NotificarFinRonda()
         {
             if (_rondaTerminadaTemprano)
@@ -1164,9 +986,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _partidaVistaModelo.NotificarFinRonda();
         }
 
-        /// <summary>
-        /// Procesa la notificacion de fin de partida desde el servidor.
-        /// </summary>
         /// <param name="resultado">Resultado de la partida.</param>
         public void NotificarFinPartida(DTOs.ResultadoPartidaDTO resultado)
         {
@@ -1717,9 +1536,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Libera los recursos y cierra la conexion con la sala al terminar la partida.
-        /// </summary>
         public async Task FinalizarAsync()
         {
             _partidaVistaModelo.PropertyChanged -= PartidaIniciadaVistaModelo_PropertyChanged;
@@ -1786,17 +1602,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Marca la aplicacion como cerrandose para evitar dialogos de confirmacion adicionales.
-        /// </summary>
         public void NotificarCierreAplicacionCompleta()
         {
             _aplicacionCerrando = true;
         }
 
-        /// <summary>
-        /// Determina si se deben ejecutar acciones de limpieza al cerrar la ventana.
-        /// </summary>
         /// <returns>True si se debe ejecutar la accion, false en caso contrario.</returns>
         public bool DebeEjecutarAccionAlCerrar()
         {
