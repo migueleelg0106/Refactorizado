@@ -7,17 +7,19 @@ using PictionaryMusicalCliente.Utilidades.Abstracciones;
 namespace PictionaryMusicalCliente.ClienteServicios
 {
     /// <summary>
-    /// Provee métodos para reproducir efectos de sonido (SFX) cortos, respetando
+    /// Provee metodos para reproducir efectos de sonido (SFX) cortos, respetando
     /// la preferencia de silencio del usuario.
     /// </summary>
     public class SonidoManejador : ISonidoManejador
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private const double VolumenPredeterminado = 1.0;
+        private bool _desechado;
 
         /// <summary>
-        /// Indica si los efectos de sonido están silenciados por preferencia del usuario.
+        /// Indica si los efectos de sonido estan silenciados por preferencia del usuario.
         /// </summary>
         public bool Silenciado
         {
@@ -33,97 +35,72 @@ namespace PictionaryMusicalCliente.ClienteServicios
         }
 
         /// <summary>
-        /// Reproduce un archivo de sonido ubicado en la carpeta "Recursos" de la aplicación
-        /// si la preferencia de usuario lo permite.
+        /// Reproduce el sonido de click estandar.
         /// </summary>
-        /// <param name="nombreArchivo">Nombre del archivo con extensión.</param>
-        /// <param name="volumen">Volumen de 0.0 a 1.0 (por defecto 1.0)</param>
-        public void ReproducirSonido(string nombreArchivo, 
-            double volumen = VolumenPredeterminado)
+        public void ReproducirClick()
         {
-            if (Silenciado || string.IsNullOrWhiteSpace(nombreArchivo))
+            ReproducirArchivo("piano_boton.MP3");
+        }
+
+        /// <summary>
+        /// Reproduce un sonido de notificacion o exito.
+        /// </summary>
+        public void ReproducirNotificacion()
+        {
+            ReproducirArchivo("exito.MP3");
+        }
+
+        /// <summary>
+        /// Reproduce un sonido de error.
+        /// </summary>
+        public void ReproducirError()
+        {
+            ReproducirArchivo("error.MP3");
+        }
+
+        private void ReproducirArchivo(string nombreArchivo)
+        {
+            if (_desechado || Silenciado)
             {
                 return;
             }
 
             try
             {
-                string rutaSonido = ObtenerRutaAbsoluta(nombreArchivo);
+                var player = new MediaPlayer();
+                string ruta = ObtenerRutaAbsoluta(nombreArchivo);
 
-                if (!File.Exists(rutaSonido))
-                {
-                    _logger.WarnFormat("Sonido SFX no encontrado: {0}", rutaSonido);
-                    return;
-                }
+                player.Open(new Uri(ruta, UriKind.Absolute));
+                player.Volume = VolumenPredeterminado;
 
-                IniciarReproductor(rutaSonido, volumen);
+                player.MediaEnded += (s, e) => LimpiarReproductor(player);
+                player.MediaFailed += (s, e) => LimpiarReproductor(player);
+
+                player.Play();
             }
-            catch (ArgumentException argEx)
+            catch (UriFormatException ex)
             {
-                _logger.ErrorFormat("Argumentos de ruta inválidos para sonido: {0}",
-                    nombreArchivo, argEx);
+                _logger.ErrorFormat("La URI del sonido {0} no es valida: {1}", nombreArchivo, ex);
             }
-            catch (UriFormatException uriEx)
+            catch (InvalidOperationException ex)
             {
-                _logger.ErrorFormat("Formato URI inválido para sonido: {0}",
-                    nombreArchivo, uriEx);
+                _logger.WarnFormat("Operacion invalida al intentar reproducir {0}: {1}", 
+                    nombreArchivo, ex);
             }
-            catch (FileNotFoundException fnfEx)
-            {
-                _logger.ErrorFormat("Archivo perdido antes de reproducir: {0}",
-                    fnfEx.FileName, fnfEx);
-            }
-            catch (InvalidOperationException ioEx)
-            {
-                _logger.ErrorFormat("Error de operación en MediaPlayer SFX: {0}",
-                    ioEx.Message, ioEx);
-            }
-        }
-
-        /// <summary>
-        /// Reproduce el sonido estándar de clic de boton.
-        /// </summary>
-        public void ReproducirClick()
-        {
-            ReproducirSonido("piano_boton.mp3");
-        }
-
-        /// <summary>
-        /// Reproduce el sonido estándar de error.
-        /// </summary>
-        public void ReproducirError()
-        {
-            ReproducirSonido("error.mp3", 0.8);
-        }
-
-        /// <summary>
-        /// Reproduce el sonido estándar de éxito o confirmacion.
-        /// </summary>
-        public void ReproducirExito()
-        {
-            ReproducirSonido("exito.mp3", 0.7);
-        }
-
-        private void IniciarReproductor(string ruta, double volumen)
-        {
-            var player = new MediaPlayer();
-            player.Open(new Uri(ruta, UriKind.Absolute));
-            player.Volume = Math.Max(0, Math.Min(VolumenPredeterminado, volumen));
-
-            player.MediaEnded += (s, e) => LimpiarReproductor(player);
-            player.Play();
         }
 
         private void LimpiarReproductor(MediaPlayer player)
         {
+            if (player == null) return;
+
             try
             {
                 player.Stop();
                 player.Close();
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                _logger.Warn("Error limpiando reproductor SFX.", ex);
+                _logger.Warn("El reproductor no estaba en un estado valido para cerrarse.", ex);
             }
         }
 
@@ -133,6 +110,25 @@ namespace PictionaryMusicalCliente.ClienteServicios
                 AppDomain.CurrentDomain.BaseDirectory,
                 "Recursos",
                 nombreArchivo);
+        }
+
+        /// <summary>
+        /// Libera los recursos utilizados por la instancia.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_desechado)
+            {
+                return;
+            }
+
+            _desechado = true;
         }
     }
 }

@@ -439,6 +439,15 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a EXPULSAR JUGADOR.
+        /// </summary>
+        public static string botonExpulsarJugador {
+            get {
+                return ResourceManager.GetString("botonExpulsarJugador", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a ENVIAR SOLICITUD.
         /// </summary>
         public static string buscarAmigoTextoEnviaSolicitud {

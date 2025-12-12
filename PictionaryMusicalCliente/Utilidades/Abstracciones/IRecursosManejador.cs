@@ -40,16 +40,6 @@ namespace PictionaryMusicalCliente.Utilidades.Abstracciones
         double Volumen { get; set; }
 
         /// <summary>
-        /// Indica si el reproductor esta actualmente emitiendo sonido.
-        /// </summary>
-        bool EstaReproduciendo { get; }
-
-        /// <summary>
-        /// Indica si el volumen esta en cero.
-        /// </summary>
-        bool EstaSilenciado { get; }
-
-        /// <summary>
         /// Alterna el estado de silencio (mute) del reproductor.
         /// </summary>
         bool AlternarSilencio();
@@ -60,16 +50,6 @@ namespace PictionaryMusicalCliente.Utilidades.Abstracciones
         void ReproducirEnBucle(string nombreArchivo);
 
         /// <summary>
-        /// Pausa la reproduccion actual.
-        /// </summary>
-        void Pausar();
-
-        /// <summary>
-        /// Reanudar la reproduccion si estaba pausada.
-        /// </summary>
-        void Reanudar();
-
-        /// <summary>
         /// Detiene completamente la reproduccion y reinicia la posicion.
         /// </summary>
         void Detener();
@@ -78,17 +58,12 @@ namespace PictionaryMusicalCliente.Utilidades.Abstracciones
     /// <summary>
     /// Define el contrato para reproducir efectos de sonido cortos (SFX).
     /// </summary>
-    public interface ISonidoManejador
+    public interface ISonidoManejador : IDisposable
     {
         /// <summary>
         /// Indica si los efectos de sonido estan silenciados por preferencia del usuario.
         /// </summary>
         bool Silenciado { get; set; }
-
-        /// <summary>
-        /// Reproduce un archivo de sonido ubicado en la carpeta Recursos.
-        /// </summary>
-        void ReproducirSonido(string nombreArchivo, double volumen = 1.0);
 
         /// <summary>
         /// Reproduce el sonido estandar de clic de boton.
@@ -103,6 +78,6 @@ namespace PictionaryMusicalCliente.Utilidades.Abstracciones
         /// <summary>
         /// Reproduce el sonido estandar de exito o confirmacion.
         /// </summary>
-        void ReproducirExito();
+        void ReproducirNotificacion();
     }
 }

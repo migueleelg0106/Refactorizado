@@ -1098,4 +1098,7 @@
   <data name="avisoTextoReinicioSesion" xml:space="preserve">
     <value>Hubo un cambio en su cuenta, tiene que volver a iniciar sesión.</value>
   </data>
+  <data name="botonExpulsarJugador" xml:space="preserve">
+    <value>EXPULSAR JUGADOR</value>
+  </data>
 </root>

@@ -66,7 +66,7 @@
                                                     BorderThickness="0"
                                                     Command="{Binding ExpulsarComando}"
                                                     Visibility="{Binding MostrarBotonExpulsar, Converter={StaticResource BooleanoVisibilidadColapsar}}"
-                                                    Cursor="Hand" ToolTip="Expulsar jugador">
+                                                    Cursor="Hand" ToolTip="{x:Static language:Lang.botonExpulsarJugador}">
                                                 <Image Source="/Recursos/Rechazar.png" Width="18"
                                                        Height="18"/>
                                             </Button>

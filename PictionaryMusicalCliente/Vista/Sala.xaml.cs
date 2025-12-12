@@ -3,7 +3,6 @@ using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
-using PictionaryMusicalCliente.VistaModelo.InicioSesion;
 using PictionaryMusicalCliente.VistaModelo.Salas;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using System;
@@ -16,6 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
+using log4net;
 
 namespace PictionaryMusicalCliente.Vista
 {
@@ -24,6 +24,8 @@ namespace PictionaryMusicalCliente.Vista
     /// </summary>
     public partial class Sala : Window
     {
+        private static readonly ILog _logger = LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly SalaVistaModelo _vistaModelo;
         private readonly IAvisoServicio _avisoServicio;
         private readonly ISalasServicio _salaServicio;
@@ -396,19 +398,23 @@ namespace PictionaryMusicalCliente.Vista
             }
 
             _navegacionEjecutada = true;
+            _logger.InfoFormat("EjecutarNavegacion - Destino: {0}", destino);
 
             bool requiereInicioSesion =
                 destino == SalaVistaModelo.DestinoNavegacion.InicioSesion ||
                 !_usuarioSesion.EstaAutenticado;
 
+            _logger.InfoFormat("EjecutarNavegacion - requiereInicioSesion: {0}", requiereInicioSesion);
             if (requiereInicioSesion)
             {
+                _logger.Info("EjecutarNavegacion - Invocando _navegarInicioSesion");
                 _usuarioSesion.Limpiar();
                 _navegarInicioSesion?.Invoke();
             }
 
             if (!requiereInicioSesion)
             {
+                _logger.Info("EjecutarNavegacion - Invocando _navegarMenuPrincipal");
                 _navegarMenuPrincipal?.Invoke();
             }
 

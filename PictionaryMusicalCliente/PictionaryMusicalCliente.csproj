@@ -160,6 +160,7 @@
     <Compile Include="Utilidades\Abstracciones\IRecursosManejador.cs" />
     <Compile Include="Utilidades\Abstracciones\INombreInvitadoGenerador.cs" />
     <Compile Include="Utilidades\Abstracciones\IValidadorEntrada.cs" />
+    <Compile Include="Utilidades\Abstracciones\IVentanaServicio.cs" />
     <Compile Include="Utilidades\CancionManejador.cs" />
     <Compile Include="Utilidades\MusicaManejador.cs" />
     <Compile Include="Utilidades\EntradaNumerica.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="ClienteServicios\Wcf\LocalizadorServicio.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\UsuarioMapeador.cs" />
     <Compile Include="ClienteServicios\Wcf\Ayudante\WcfClienteEjecutor.cs" />
+    <Compile Include="Utilidades\VentanaServicio.cs" />
     <Compile Include="VistaModelo\BaseVistaModelo.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

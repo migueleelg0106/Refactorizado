@@ -17,51 +17,53 @@ namespace PictionaryMusicalServidor.Datos
     {
         private const string MensajeCancionesNoDisponibles = 
             "No hay canciones disponibles para los criterios solicitados.";
+        private const string IdiomaEspanol = "Espanol";
+        private const string IdiomaIngles = "Ingles";
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CatalogoCanciones));
         private static readonly Dictionary<int, Cancion> _canciones = new Dictionary<int, Cancion>
         {
-            { 1, CrearCancion(1, "Gasolina", "Daddy Yankee", "Reggaeton", "Espanol") },
-            { 2, CrearCancion(2, "Bocanada", "Gustavo Cerati", "Rock Alternativo", "Espanol") },
-            { 3, CrearCancion(3, "La Nave Del Olvido", "José José", "Balada", "Espanol") },
-            { 4, CrearCancion(4, "Tiburón", "Proyecto Uno", "Merengue House", "Espanol") },
-            { 5, CrearCancion(5, "Pupilas De Gato", "Luis Miguel", "Pop Latino", "Espanol") },
-            { 6, CrearCancion(6, "El Triste", "José José", "Balada", "Espanol") },
-            { 7, CrearCancion(7, "El Reloj", "Luis Miguel", "Bolero", "Espanol") },
-            { 8, CrearCancion(8, "La Camisa Negra", "Juanes", "Pop Rock", "Espanol") },
-            { 9, CrearCancion(9, "Rosas", "La Oreja de Van Gogh", "Pop", "Espanol") },
-            { 10, CrearCancion(10, "La Bicicleta", "Shakira", "Vallenato Pop", "Espanol") },
-            { 11, CrearCancion(11, "El Taxi", "Pitbull", "Urbano", "Espanol") },
+            { 1, CrearCancion(1, "Gasolina", "Daddy Yankee", "Reggaeton", IdiomaEspanol) },
+            { 2, CrearCancion(2, "Bocanada", "Gustavo Cerati", "Rock Alternativo", IdiomaEspanol) },
+            { 3, CrearCancion(3, "La Nave Del Olvido", "José José", "Balada", IdiomaEspanol) },
+            { 4, CrearCancion(4, "Tiburón", "Proyecto Uno", "Merengue House", IdiomaEspanol) },
+            { 5, CrearCancion(5, "Pupilas De Gato", "Luis Miguel", "Pop Latino", IdiomaEspanol) },
+            { 6, CrearCancion(6, "El Triste", "José José", "Balada", IdiomaEspanol) },
+            { 7, CrearCancion(7, "El Reloj", "Luis Miguel", "Bolero", IdiomaEspanol) },
+            { 8, CrearCancion(8, "La Camisa Negra", "Juanes", "Pop Rock", IdiomaEspanol) },
+            { 9, CrearCancion(9, "Rosas", "La Oreja de Van Gogh", "Pop", IdiomaEspanol) },
+            { 10, CrearCancion(10, "La Bicicleta", "Shakira", "Vallenato Pop", IdiomaEspanol) },
+            { 11, CrearCancion(11, "El Taxi", "Pitbull", "Urbano", IdiomaEspanol) },
             { 12, CrearCancion
-                (12, "La Puerta Negra", "Los Tigres del Norte", "Norteño", "Espanol") },
-            { 13, CrearCancion(13, "Baraja de Oro", "Chalino Sánchez", "Corrido", "Espanol") },
-            { 14, CrearCancion(14, "Los Luchadores", "La Sonora Santanera", "Cumbia", "Espanol") },
-            { 15, CrearCancion(15, "El Oso Polar", "Nelson Kanzela", "Cumbia", "Espanol") },
-            { 16, CrearCancion(16, "El Teléfono", "Wisin & Yandel", "Reggaeton", "Espanol") },
-            { 17, CrearCancion(17, "La Planta", "Caos", "Pop Rock", "Espanol") },
-            { 18, CrearCancion(18, "Lluvia", "Eddie Santiago", "Salsa", "Espanol") },
-            { 19, CrearCancion(19, "Pose", "Daddy Yankee", "Reggaeton", "Espanol") },
-            { 20, CrearCancion(20, "Cama y Mesa", "Roberto Carlos", "Balada", "Espanol") },
+                (12, "La Puerta Negra", "Los Tigres del Norte", "Norteño", IdiomaEspanol) },
+            { 13, CrearCancion(13, "Baraja de Oro", "Chalino Sánchez", "Corrido", IdiomaEspanol) },
+            { 14, CrearCancion(14, "Los Luchadores", "La Sonora Santanera", "Cumbia", IdiomaEspanol) },
+            { 15, CrearCancion(15, "El Oso Polar", "Nelson Kanzela", "Cumbia", IdiomaEspanol) },
+            { 16, CrearCancion(16, "El Teléfono", "Wisin & Yandel", "Reggaeton", IdiomaEspanol) },
+            { 17, CrearCancion(17, "La Planta", "Caos", "Pop Rock", IdiomaEspanol) },
+            { 18, CrearCancion(18, "Lluvia", "Eddie Santiago", "Salsa", IdiomaEspanol) },
+            { 19, CrearCancion(19, "Pose", "Daddy Yankee", "Reggaeton", IdiomaEspanol) },
+            { 20, CrearCancion(20, "Cama y Mesa", "Roberto Carlos", "Balada", IdiomaEspanol) },
 
-            { 21, CrearCancion(21, "Black Or White", "Michael Jackson", "Pop", "Ingles") },
-            { 22, CrearCancion(22, "Don't Stop The Music", "Rihanna", "Dance Pop", "Ingles") },
-            { 23, CrearCancion(23, "Man In The Mirror", "Michael Jackson", "Pop/R&B", "Ingles") },
-            { 24, CrearCancion(24, "Earth Song", "Michael Jackson", "Pop", "Ingles") },
-            { 25, CrearCancion(25, "Redbone", "Childish Gambino", "Funk", "Ingles") },
-            { 26, CrearCancion(26, "The Chain", "Fleetwood Mac", "Rock", "Ingles") },
-            { 27, CrearCancion(27, "Umbrella", "Rihanna", "R&B", "Ingles") },
-            { 28, CrearCancion(28, "Yellow Submarine", "The Beatles", "Pop Rock", "Ingles") },
-            { 29, CrearCancion(29, "Money", "Pink Floyd", "Rock Progresivo", "Ingles") },
-            { 30, CrearCancion(30, "Diamonds", "Rihanna", "Pop", "Ingles") },
-            { 31, CrearCancion(31, "Grenade", "Bruno Mars", "Pop", "Ingles") },
-            { 32, CrearCancion(32, "Scarface", "Paul Engemann", "Synthpop", "Ingles") },
-            { 33, CrearCancion(33, "Animals", "Martin Garrix", "EDM", "Ingles") },
-            { 34, CrearCancion(34, "Hotel California", "Eagles", "Rock", "Ingles") },
-            { 35, CrearCancion(35, "67", "Skrilla", "Hip Hop", "Ingles") },
-            { 36, CrearCancion(36, "Blackbird", "The Beatles", "Folk", "Ingles") },
-            { 37, CrearCancion(37, "Pony", "Ginuwine", "R&B", "Ingles") },
-            { 38, CrearCancion(38, "Rocket Man", "Elton John", "Soft Rock", "Ingles") },
-            { 39, CrearCancion(39, "Starman", "David Bowie", "Glam Rock", "Ingles") },
-            { 40, CrearCancion(40, "Time In A Bottle", "Jim Croce", "Folk", "Ingles") }
+            { 21, CrearCancion(21, "Black Or White", "Michael Jackson", "Pop", IdiomaIngles) },
+            { 22, CrearCancion(22, "Don't Stop The Music", "Rihanna", "Dance Pop", IdiomaIngles) },
+            { 23, CrearCancion(23, "Man In The Mirror", "Michael Jackson", "Pop/R&B", IdiomaIngles) },
+            { 24, CrearCancion(24, "Earth Song", "Michael Jackson", "Pop", IdiomaIngles) },
+            { 25, CrearCancion(25, "Redbone", "Childish Gambino", "Funk", IdiomaIngles) },
+            { 26, CrearCancion(26, "The Chain", "Fleetwood Mac", "Rock", IdiomaIngles) },
+            { 27, CrearCancion(27, "Umbrella", "Rihanna", "R&B", IdiomaIngles) },
+            { 28, CrearCancion(28, "Yellow Submarine", "The Beatles", "Pop Rock", IdiomaIngles) },
+            { 29, CrearCancion(29, "Money", "Pink Floyd", "Rock Progresivo", IdiomaIngles) },
+            { 30, CrearCancion(30, "Diamonds", "Rihanna", "Pop", IdiomaIngles) },
+            { 31, CrearCancion(31, "Grenade", "Bruno Mars", "Pop", IdiomaIngles) },
+            { 32, CrearCancion(32, "Scarface", "Paul Engemann", "Synthpop", IdiomaIngles) },
+            { 33, CrearCancion(33, "Animals", "Martin Garrix", "EDM", IdiomaIngles) },
+            { 34, CrearCancion(34, "Hotel California", "Eagles", "Rock", IdiomaIngles) },
+            { 35, CrearCancion(35, "67", "Skrilla", "Hip Hop", IdiomaIngles) },
+            { 36, CrearCancion(36, "Blackbird", "The Beatles", "Folk", IdiomaIngles) },
+            { 37, CrearCancion(37, "Pony", "Ginuwine", "R&B", IdiomaIngles) },
+            { 38, CrearCancion(38, "Rocket Man", "Elton John", "Soft Rock", IdiomaIngles) },
+            { 39, CrearCancion(39, "Starman", "David Bowie", "Glam Rock", IdiomaIngles) },
+            { 40, CrearCancion(40, "Time In A Bottle", "Jim Croce", "Folk", IdiomaIngles) }
         };
 
         private static readonly object _randomLock = new object();
@@ -191,12 +193,12 @@ namespace PictionaryMusicalServidor.Datos
         {
             if (idiomaEntrada.StartsWith("es", StringComparison.OrdinalIgnoreCase))
             {
-                return "Espanol";
+                return IdiomaEspanol;
             }
 
             if (idiomaEntrada.StartsWith("en", StringComparison.OrdinalIgnoreCase))
             {
-                return "Ingles";
+                return IdiomaIngles;
             }
 
             return idiomaEntrada;

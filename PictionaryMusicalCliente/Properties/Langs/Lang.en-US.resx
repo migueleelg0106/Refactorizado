@@ -1107,4 +1107,7 @@
   <data name="avisoTextoReinicioSesion" xml:space="preserve">
     <value>There was a change in your account, you need to sign in again.</value>
   </data>
+  <data name="botonExpulsarJugador" xml:space="preserve">
+    <value>REMOVE PLAYER</value>
+  </data>
 </root>

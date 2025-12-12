@@ -1,4 +1,5 @@
-﻿using PictionaryMusicalCliente.ClienteServicios;
+﻿using log4net.Config;
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Dialogos;
 using PictionaryMusicalCliente.ClienteServicios.Idiomas;
@@ -11,7 +12,7 @@ using PictionaryMusicalCliente.Properties;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.Utilidades.Idiomas;
-using PictionaryMusicalCliente.Vista;
+using PictionaryMusicalCliente.VistaModelo.InicioSesion;
 using System;
 using System.Globalization;
 using System.Windows;
@@ -20,105 +21,143 @@ namespace PictionaryMusicalCliente
 {
     /// <summary>
     /// Logica de interaccion para App.xaml. Raiz de composicion de la aplicacion.
+    /// Contenedor estatico de servicios principales.
     /// </summary>
     public partial class App : Application
     {
-        private IUsuarioAutenticado _usuarioGlobal;
+        public static IWcfClienteFabrica WcfFabrica { get; private set; }
+        public static IWcfClienteEjecutor WcfEjecutor { get; private set; }
+        public static IManejadorErrorServicio ManejadorError { get; private set; }
+        public static ILocalizadorServicio Localizador { get; private set; }
+        public static ILocalizacionServicio ServicioIdioma { get; private set; }
+        public static IVentanaServicio VentanaServicio { get; private set; }
+        public static IAvisoServicio AvisoServicio { get; private set; }
+
+        public static ISonidoManejador SonidoManejador { get; private set; }
+        public static IMusicaManejador MusicaManejador { get; private set; }
+        public static IValidadorEntrada Validador { get; private set; }
+        public static INombreInvitadoGenerador GeneradorNombres { get; private set; }
+        public static IUsuarioMapeador UsuarioMapeador { get; private set; }
+
+        public static IUsuarioAutenticado UsuarioGlobal { get; private set; }
+        public static ICatalogoAvatares CatalogoAvatares { get; private set; }
+        public static ICatalogoImagenesPerfil CatalogoImagenes { get; private set; }
+
+        public static IInicioSesionServicio InicioSesionServicio { get; private set; }
+        public static ICambioContrasenaServicio CambioContrasenaServicio { get; private set; }
+        public static IRecuperacionCuentaServicio RecuperacionCuentaServicio { get; private set; }
+        public static IPerfilServicio PerfilServicio { get; private set; }
+        public static IClasificacionServicio ClasificacionServicio { get; private set; }
+        public static IInvitacionesServicio InvitacionesServicio { get; private set; }
+        public static IReportesServicio ReportesServicio { get; private set; }
+        public static IListaAmigosServicio ListaAmigosServicio { get; private set; }
+        public static IAmigosServicio AmigosServicio { get; private set; }
+        public static ISalasServicio SalasServicio { get; private set; }
+
+        public static IVerificacionCodigoDialogoServicio VerificacionCodigoDialogo 
+            { get; private set; }
+
+        public static Func<ISalasServicio> FabricaSalas { get; private set; }
 
         /// <inheritdoc />
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            log4net.Config.XmlConfigurator.Configure();
+            XmlConfigurator.Configure();
 
-            IWcfClienteFabrica fabricaWcf = new WcfClienteFabrica();
-            IWcfClienteEjecutor ejecutorWcf = new WcfClienteEjecutor();
-            ISonidoManejador sonidoManejador = new SonidoManejador();
-            IMusicaManejador musicaManejador = new MusicaManejador();
-            IValidadorEntrada validador = new ValidadorEntrada();
-            INombreInvitadoGenerador generadorNombres = new NombreInvitadoGenerador();
+            InicializarServicios();
+            ConfigurarIdioma();
 
-            _usuarioGlobal = new UsuarioAutenticado();
-            ICatalogoAvatares catalogoAvatares = new CatalogoAvataresLocales();
-            ICatalogoImagenesPerfil catalogoImagenes = new CatalogoImagenesPerfilLocales();
+            var inicioSesionVM = new InicioSesionVistaModelo(
+                InicioSesionServicio,
+                RecuperacionCuentaServicio,
+                ServicioIdioma,
+                Localizador,
+                VentanaServicio,
+                SonidoManejador,
+                MusicaManejador,
+                UsuarioGlobal
+            );
 
-            ILocalizadorServicio localizador = new LocalizadorServicio(); 
-            ILocalizacionServicio servicioIdioma = new LocalizacionServicio(); 
-            IManejadorErrorServicio manejadorError = new ManejadorErrorServicio(localizador);
-            IUsuarioMapeador usuarioMapeador = new UsuarioMapeador(_usuarioGlobal);
-            IAvisoServicio avisoServicio = new AvisoServicio();
+            VentanaServicio.MostrarVentana(inicioSesionVM);
+        }
 
+        protected override void OnExit(ExitEventArgs e)
+        {
+            MusicaManejador?.Detener();
+            MusicaManejador?.Dispose();
+            SonidoManejador?.Dispose();
+            AmigosServicio?.Dispose();
+
+            base.OnExit(e);
+        }
+
+        private void InicializarServicios()
+        {
+            WcfFabrica = new WcfClienteFabrica();
+            WcfEjecutor = new WcfClienteEjecutor();
+            Localizador = new LocalizadorServicio();
+            ManejadorError = new ManejadorErrorServicio(Localizador);
+            ServicioIdioma = new LocalizacionServicio();
+            
+            AvisoServicio = new AvisoServicio();
+            VentanaServicio = new VentanaServicio();
+            SonidoManejador = new SonidoManejador();
+            MusicaManejador = new MusicaManejador();
+            Validador = new ValidadorEntrada();
+            GeneradorNombres = new NombreInvitadoGenerador();
+
+            UsuarioGlobal = new UsuarioAutenticado();
+            CatalogoAvatares = new CatalogoAvataresLocales();
+            CatalogoImagenes = new CatalogoImagenesPerfilLocales();
+            UsuarioMapeador = new UsuarioMapeador(UsuarioGlobal);
+
+            InicioSesionServicio = new InicioSesionServicio(
+                WcfEjecutor, WcfFabrica, ManejadorError, UsuarioMapeador, Localizador);
+
+            CambioContrasenaServicio = new CambioContrasenaServicio(
+                WcfEjecutor, WcfFabrica, ManejadorError, Localizador);
+
+            PerfilServicio = new PerfilServicio(
+                WcfEjecutor, WcfFabrica, ManejadorError);
+
+            ClasificacionServicio = new ClasificacionServicio(
+                WcfEjecutor, WcfFabrica, ManejadorError);
+
+            InvitacionesServicio = new InvitacionesServicio(
+                WcfEjecutor, WcfFabrica, ManejadorError, Localizador);
+
+            ReportesServicio = new ReportesServicio(
+                WcfEjecutor, WcfFabrica, ManejadorError, Localizador);
+
+            ListaAmigosServicio = new ListaAmigosServicio(ManejadorError, WcfFabrica);
+
+            AmigosServicio = new AmigosServicio(
+                new SolicitudesAmistadAdministrador(), ManejadorError, WcfFabrica);
+
+            SalasServicio = new SalasServicio(WcfFabrica, ManejadorError);
+            FabricaSalas = () => new SalasServicio(WcfFabrica, ManejadorError);
+
+            FabricaSalas = () => new SalasServicio(WcfFabrica, ManejadorError);
+
+            VerificacionCodigoDialogo = new VerificacionCodigoDialogoServicio();
+
+            RecuperacionCuentaServicio = new RecuperacionCuentaDialogoServicio(
+                VerificacionCodigoDialogo, AvisoServicio,
+                Validador, SonidoManejador, Localizador);
+        }
+
+        private void ConfigurarIdioma()
+        {
             try
             {
-                servicioIdioma.EstablecerIdioma(Settings.Default.idiomaCodigo);
+                ServicioIdioma.EstablecerIdioma(Settings.Default.idiomaCodigo);
             }
             catch (CultureNotFoundException)
             {
-                servicioIdioma.EstablecerCultura(CultureInfo.CurrentUICulture);
+                ServicioIdioma.EstablecerCultura(CultureInfo.CurrentUICulture);
             }
-            this.Resources.Add("Localizacion", new LocalizacionContexto(servicioIdioma));
-
-            IInicioSesionServicio inicioSesionServicio = new InicioSesionServicio(
-                ejecutorWcf, fabricaWcf, manejadorError, usuarioMapeador, localizador);
-
-            ICambioContrasenaServicio cambioPassServicio = new CambioContrasenaServicio(
-                ejecutorWcf, fabricaWcf, manejadorError, localizador);
-
-            IVerificacionCodigoDialogoServicio verifCodigoDialogo =
-                new VerificacionCodigoDialogoServicio();
-
-            IRecuperacionCuentaServicio recupCuentaDialogo =
-                new RecuperacionCuentaDialogoServicio(verifCodigoDialogo, avisoServicio, 
-                validador, sonidoManejador, localizador);
-
-            IPerfilServicio perfilServicio = new PerfilServicio(
-                ejecutorWcf, fabricaWcf, manejadorError);
-
-            IClasificacionServicio clasificacionServicio = new ClasificacionServicio(
-                ejecutorWcf, fabricaWcf, manejadorError);
-
-            IInvitacionesServicio invitacionesServicio = new InvitacionesServicio(
-                ejecutorWcf, fabricaWcf, manejadorError, localizador);
-
-            IReportesServicio reportesServicio = new ReportesServicio(
-                ejecutorWcf, fabricaWcf, manejadorError, localizador);
-
-            IListaAmigosServicio listaAmigosServicio = new ListaAmigosServicio(manejadorError, fabricaWcf);
-
-            IAmigosServicio amigosServicio = new AmigosServicio(
-                new SolicitudesAmistadAdministrador(), manejadorError, fabricaWcf);
-
-            Func<ISalasServicio> fabricaSalas = () =>
-                new SalasServicio(fabricaWcf, manejadorError);
-
-            var ventanaInicio = new InicioSesion(
-                musicaManejador,
-                inicioSesionServicio,
-                cambioPassServicio,
-                recupCuentaDialogo,
-                servicioIdioma,
-                fabricaSalas,
-                fabricaWcf,
-                ejecutorWcf,
-                manejadorError,
-                localizador,
-                avisoServicio,
-                catalogoAvatares,
-                sonidoManejador,
-                validador,
-                _usuarioGlobal,
-                catalogoImagenes,
-                verifCodigoDialogo,
-                generadorNombres,
-                perfilServicio,
-                clasificacionServicio,
-                invitacionesServicio,
-                reportesServicio,
-                listaAmigosServicio,
-                amigosServicio
-            );
-
-            ventanaInicio.Show();
+            this.Resources.Add("Localizacion", new LocalizacionContexto(ServicioIdioma));
         }
     }
 }
