@@ -137,13 +137,14 @@ namespace PictionaryMusicalCliente.Vista
             _musica.ReproducirEnBucle("ventana_principal_musica.mp3");
 
             _vistaModelo = new VentanaPrincipalVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
                 _idioma,
                 _listaAmigos,
                 _amigos,
                 _salas,
                 _sonidos,
-                _usuarioSesion,
-                _traductor);
+                _usuarioSesion);
 
             ConfigurarNavegacion();
             _vistaModelo.MostrarMensaje = _aviso.Mostrar;
