@@ -1,5 +1,4 @@
 using log4net;
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
@@ -17,12 +16,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly ISonidoManejador _sonidoManejador;
 
-        /// <summary>
-        /// Inicializa el ViewModel con el mensaje de confirmacion.
-        /// </summary>
-        /// <param name="mensajeConfirmacion">Texto que se mostrara al usuario.</param>
-        public ExpulsionJugadorVistaModelo(string mensajeConfirmacion,
-            ISonidoManejador sonidoManejador)
+        public ExpulsionJugadorVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            ISonidoManejador sonidoManejador,
+            string mensajeConfirmacion)
+            : base(ventana, localizador)
         {
             _sonidoManejador = sonidoManejador ??
                 throw new ArgumentNullException(nameof(sonidoManejador));
@@ -34,36 +33,26 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             ConfirmarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                _logger.Info("Usuario confirmó la expulsión del jugador.");
-                Cerrar?.Invoke(true);
+                _logger.Info("Usuario confirmo la expulsion del jugador.");
+                DialogResult = true;
+                _ventana.CerrarVentana(this);
             });
 
             CancelarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                _logger.Info("Usuario canceló la expulsión del jugador.");
-                Cerrar?.Invoke(false);
+                _logger.Info("Usuario cancelo la expulsion del jugador.");
+                DialogResult = false;
+                _ventana.CerrarVentana(this);
             });
         }
 
-        /// <summary>
-        /// Mensaje descriptivo sobre a quien se va a expulsar.
-        /// </summary>
         public string MensajeConfirmacion { get; }
 
-        /// <summary>
-        /// Comando para proceder con la expulsion.
-        /// </summary>
         public ICommand ConfirmarComando { get; }
 
-        /// <summary>
-        /// Comando para cancelar la operacion.
-        /// </summary>
         public ICommand CancelarComando { get; }
 
-        /// <summary>
-        /// Accion para cerrar el dialogo retornando la decision del usuario.
-        /// </summary>
-        public Action<bool?> Cerrar { get; set; }
+        public bool? DialogResult { get; private set; }
     }
 }
