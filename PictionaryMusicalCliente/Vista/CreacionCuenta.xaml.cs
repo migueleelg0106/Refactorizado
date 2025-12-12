@@ -1,57 +1,44 @@
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.InicioSesion;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.VistaModelo.InicioSesion;
 
 namespace PictionaryMusicalCliente.Vista
 {
-    /// <summary>
-    /// Ventana de registro para nuevos usuarios.
-    /// </summary>
     public partial class CreacionCuenta : Window
     {
-        private readonly CreacionCuentaVistaModelo _vistaModelo;
-
-        /// <summary>
-        /// Constructor por defecto, solo para uso del diseñador/XAML. 
-        /// La aplicación debe usar el constructor que recibe dependencias.
-        /// </summary>
         public CreacionCuenta()
         {
-        }
-
-        /// <summary>
-        /// Inicializa la ventana inyectando el ViewModel con sus dependencias resueltas.
-        /// </summary>
-        /// <param name="vistaModelo">Logica de negocio para el registro.</param>
-        public CreacionCuenta(CreacionCuentaVistaModelo vistaModelo)
-        {
-            if (vistaModelo == null)
-            {
-                throw new ArgumentNullException(nameof(vistaModelo));
-            }
-
             InitializeComponent();
-
-            _vistaModelo = vistaModelo;
-            ConfigurarInteracciones();
-
-            DataContext = _vistaModelo;
+            DataContextChanged += CreacionCuenta_DataContextChanged;
         }
 
-        private void ConfigurarInteracciones()
+        private void CreacionCuenta_DataContextChanged(
+            object sender,
+            DependencyPropertyChangedEventArgs e)
         {
-            _vistaModelo.CerrarAccion = Close;
-            _vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
+            if (e.NewValue is CreacionCuentaVistaModelo vistaModelo)
+            {
+                vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
+                vistaModelo.MostrarMensaje = mensaje =>
+                {
+                    if (!string.IsNullOrWhiteSpace(mensaje))
+                    {
+                        MessageBox.Show(mensaje, Title, MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+                    }
+                };
+            }
         }
 
         private void PasswordBoxChanged(object sender, RoutedEventArgs e)
         {
-            if (sender is PasswordBox passwordBox)
+            if (sender is PasswordBox passwordBox && 
+                DataContext is CreacionCuentaVistaModelo vistaModelo)
             {
-                _vistaModelo.Contrasena = passwordBox.Password;
+                vistaModelo.Contrasena = passwordBox.Password;
             }
         }
 
@@ -65,20 +52,33 @@ namespace PictionaryMusicalCliente.Vista
 
             if (camposInvalidos == null) return;
 
-            if (camposInvalidos.Contains(nameof(_vistaModelo.Usuario)))
-                ControlVisual.MarcarCampoInvalido(campoTextoUsuario);
+            if (DataContext is CreacionCuentaVistaModelo vistaModelo)
+            {
+                if (camposInvalidos.Contains(nameof(vistaModelo.Usuario)))
+                {
+                    ControlVisual.MarcarCampoInvalido(campoTextoUsuario);
+                }
 
-            if (camposInvalidos.Contains(nameof(_vistaModelo.Nombre)))
-                ControlVisual.MarcarCampoInvalido(campoTextoNombre);
+                if (camposInvalidos.Contains(nameof(vistaModelo.Nombre)))
+                {
+                    ControlVisual.MarcarCampoInvalido(campoTextoNombre);
+                }
 
-            if (camposInvalidos.Contains(nameof(_vistaModelo.Apellido)))
-                ControlVisual.MarcarCampoInvalido(campoTextoApellido);
+                if (camposInvalidos.Contains(nameof(vistaModelo.Apellido)))
+                {
+                    ControlVisual.MarcarCampoInvalido(campoTextoApellido);
+                }
 
-            if (camposInvalidos.Contains(nameof(_vistaModelo.Correo)))
-                ControlVisual.MarcarCampoInvalido(campoTextoCorreo);
+                if (camposInvalidos.Contains(nameof(vistaModelo.Correo)))
+                {
+                    ControlVisual.MarcarCampoInvalido(campoTextoCorreo);
+                }
 
-            if (camposInvalidos.Contains(nameof(_vistaModelo.Contrasena)))
-                ControlVisual.MarcarCampoInvalido(campoContrasenaContrasena);
+                if (camposInvalidos.Contains(nameof(vistaModelo.Contrasena)))
+                {
+                    ControlVisual.MarcarCampoInvalido(campoContrasenaContrasena);
+                }
+            }
         }
     }
 }
