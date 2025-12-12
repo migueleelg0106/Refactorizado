@@ -88,7 +88,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             TaskCompletionSource<ObjetoAvatar> finalizacion)
         {
             var ventana = new SeleccionAvatar();
-            var vistaModelo = new SeleccionAvatarVistaModelo(avatares, _avisoServicio,
+            var vistaModelo = new SeleccionAvatarVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                avatares,
+                _avisoServicio,
                 _sonidoManejador);
 
             ConfigurarPreseleccion(vistaModelo, idAvatarPreseleccionado);
@@ -118,9 +122,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             vistaModelo.SeleccionConfirmada = avatar =>
             {
                 finalizacion.TrySetResult(avatar);
+                ventana.Close();
             };
-
-            vistaModelo.CerrarAccion = () => ventana.Close();
         }
 
         private void ConfigurarEventosVentana(
