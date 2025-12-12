@@ -165,7 +165,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
         {
             if (resultado != null && resultado.OperacionExitosa)
             {
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
                 amigo.MarcarInvitacionEnviada();
                 _registrarAmigoInvitado?.Invoke(amigo.UsuarioId);
                 _avisoServicio.Mostrar(Lang.invitarCorreoTextoEnviado);

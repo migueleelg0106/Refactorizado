@@ -4,6 +4,7 @@ using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
@@ -319,7 +320,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         {
             _logger.InfoFormat("Cuenta creada exitosamente para usuario: {0}",
                 usuario);
-            _sonidoManejador.ReproducirExito();
+            _sonidoManejador.ReproducirNotificacion();
             MostrarMensaje?.Invoke(Lang.crearCuentaTextoExitosoMensaje);
             RegistroExitoso = true;
             _ventana.CerrarVentana(this);

@@ -4,6 +4,7 @@ using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
@@ -430,7 +431,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             if (resultado.OperacionExitosa)
             {
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
                 ActualizarSesion();
             }
             else
@@ -584,7 +585,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             else if (resultado?.OperacionExitosa == true)
             {
                 _logger.Info("Cambio de contrasena finalizado correctamente.");
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
                 FinalizarSesionPorCambioContrasena();
             }
         }

@@ -72,8 +72,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private const int LimiteCaracteresChat = 150;
         private const double PorcentajePuntosDibujante = 0.2;
 
+        /// <summary>
+        /// Define los destinos posibles al salir de la partida.
+        /// </summary>
         public enum DestinoNavegacion
         {
+            InicioSesion,
+            VentanaPrincipal
+        }
+
         /// <param name="sala">Datos de la sala actual.</param>
         /// <param name="salasServicio">Servicio de comunicacion de salas.</param>
         /// <param name="invitacionesServicio">Servicio para invitar usuarios.</param>
@@ -639,7 +646,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             if (resultado.Exitoso)
             {
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
                 MostrarMensaje?.Invoke(resultado.Mensaje);
                 CorreoInvitacion = string.Empty;
                 return;
@@ -1426,7 +1433,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     _nombreUsuarioSesion,
                     nombreJugador).ConfigureAwait(true);
 
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
                 MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoExito);
             }
             catch (Exception ex) when (ex is ServicioExcepcion || ex is ArgumentException)
@@ -1478,7 +1485,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 if (respuesta?.OperacionExitosa == true)
                 {
-                    _sonidoManejador.ReproducirExito();
+                    _sonidoManejador.ReproducirNotificacion();
                     MostrarMensaje?.Invoke(Lang.reportarJugadorTextoExito);
                 }
                 else

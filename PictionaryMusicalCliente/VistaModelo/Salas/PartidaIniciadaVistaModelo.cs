@@ -662,7 +662,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             {
                 AplicarInicioVisualPartida(0);
                 TextoContador = string.Empty;
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
             });
         }
         /// Procesa la notificacion de inicio de una nueva ronda.
@@ -794,7 +794,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             dispatcher.Invoke(() =>
             {
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
 
                 if (string.Equals(
                     nombreJugador,

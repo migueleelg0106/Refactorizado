@@ -194,7 +194,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     entrada.Solicitud.UsuarioEmisor,
                     entrada.Solicitud.UsuarioReceptor).ConfigureAwait(true);
 
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
                 _avisoServicio.Mostrar(Lang.amigosTextoSolicitudAceptada);
             },
             ex =>
@@ -225,7 +225,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     entrada.Solicitud.UsuarioEmisor,
                     entrada.Solicitud.UsuarioReceptor).ConfigureAwait(true);
 
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
                 _avisoServicio.Mostrar(Lang.amigosTextoSolicitudCancelada);
             },
             ex =>

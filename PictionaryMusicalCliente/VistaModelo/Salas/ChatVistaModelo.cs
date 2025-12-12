@@ -4,6 +4,8 @@ using PictionaryMusicalCliente.ClienteServicios.Wcf;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {

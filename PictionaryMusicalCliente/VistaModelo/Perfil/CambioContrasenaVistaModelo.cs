@@ -158,7 +158,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 if (resultado.OperacionExitosa)
                 {
                     _logger.Info("Contrasena actualizada exitosamente.");
-                    _sonidoManejador.ReproducirExito();
+                    _sonidoManejador.ReproducirNotificacion();
                     _avisoServicio.Mostrar(mensaje);
                     _ventana.CerrarVentana(this);
                 }

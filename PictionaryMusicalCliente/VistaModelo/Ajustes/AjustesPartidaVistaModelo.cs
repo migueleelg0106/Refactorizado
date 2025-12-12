@@ -2,6 +2,7 @@
 using System;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 {

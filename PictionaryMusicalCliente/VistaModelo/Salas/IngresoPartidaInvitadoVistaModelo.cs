@@ -1,4 +1,5 @@
 ﻿using log4net;
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
@@ -214,7 +215,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private void MarcarUnionExitosa(DTOs.SalaDTO sala, string nombreInvitado)
         {
             _logger.InfoFormat("Invitado unido exitosamente: {0}", nombreInvitado);
-            _sonidoManejador.ReproducirExito();
+            _sonidoManejador.ReproducirNotificacion();
             SeUnioSala = true;
             SalaUnida = sala;
             NombreInvitadoGenerado = nombreInvitado;

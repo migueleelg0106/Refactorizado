@@ -230,7 +230,7 @@
     <Compile Include="VistaModelo\Amigos\InvitarAmigosVistaModelo.cs" />
     <Compile Include="VistaModelo\Amigos\SolicitudesVistaModelo.cs" />
     <Compile Include="VistaModelo\Perfil\CambioContrasenaVistaModelo.cs" />
-    <Compile Include="VistaModelo\Salas\ReportarJugadorVistaModelo .cs" />
+    <Compile Include="VistaModelo\Salas\ReportarJugadorVistaModelo.cs" />
     <Compile Include="VistaModelo\VentanaPrincipal\ClasificacionVistaModelo.cs" />
     <Compile Include="VistaModelo\Ajustes\AjustesVistaModelo.cs" />
     <Compile Include="VistaModelo\Ajustes\AjustesPartidaVistaModelo.cs" />

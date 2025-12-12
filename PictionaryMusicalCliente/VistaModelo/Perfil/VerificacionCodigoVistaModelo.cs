@@ -276,7 +276,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             DTOs.ResultadoRegistroCuentaDTO resultado)
         {
             _logger.Info("Codigo verificado correctamente.");
-            _sonidoManejador.ReproducirExito();
+            _sonidoManejador.ReproducirNotificacion();
             MarcarCodigoInvalido?.Invoke(false);
             DetenerTemporizadores();
             FinalizarConResultado(resultado, true);
@@ -334,7 +334,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             DTOs.ResultadoSolicitudCodigoDTO resultado)
         {
             _logger.Info("Codigo reenviado exitosamente.");
-            _sonidoManejador.ReproducirExito();
+            _sonidoManejador.ReproducirNotificacion();
             
             if (!string.IsNullOrWhiteSpace(resultado.TokenCodigo))
             {

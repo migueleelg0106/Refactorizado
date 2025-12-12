@@ -139,7 +139,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                     usuarioActual,
                     nombreAmigo).ConfigureAwait(true);
 
-                _sonidoManejador.ReproducirExito();
+                _sonidoManejador.ReproducirNotificacion();
                 _avisoServicio.Mostrar(Lang.amigosTextoSolicitudEnviada);
                 _ventana.CerrarVentana(this);
             },

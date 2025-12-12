@@ -1,4 +1,3 @@
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
@@ -55,28 +54,29 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             IUsuarioAutenticado usuarioSesion)
             : base(ventana, localizador)
         {
-        {
-            _localizacion = localizacionServicio ??
-                throw new ArgumentNullException(nameof(localizacionServicio));
-            _listaAmigosServicio = listaAmigosServicio ??
-                throw new ArgumentNullException(nameof(listaAmigosServicio));
-            _amigosServicio = amigosServicio ??
-                throw new ArgumentNullException(nameof(amigosServicio));
-            _salasServicio = salasServicio ??
-                throw new ArgumentNullException(nameof(salasServicio));
-            _sonidoManejador = sonidoManejador ??
-                throw new ArgumentNullException(nameof(sonidoManejador));
-            _usuarioSesion = usuarioSesion ??
-                throw new ArgumentNullException(nameof(usuarioSesion));
-            _listaAmigosServicio.ListaActualizada += ListaActualizada;
-            _amigosServicio.SolicitudesActualizadas += SolicitudesAmistadActualizadas;
+            {
+                _localizacion = localizacionServicio ??
+                    throw new ArgumentNullException(nameof(localizacionServicio));
+                _listaAmigosServicio = listaAmigosServicio ??
+                    throw new ArgumentNullException(nameof(listaAmigosServicio));
+                _amigosServicio = amigosServicio ??
+                    throw new ArgumentNullException(nameof(amigosServicio));
+                _salasServicio = salasServicio ??
+                    throw new ArgumentNullException(nameof(salasServicio));
+                _sonidoManejador = sonidoManejador ??
+                    throw new ArgumentNullException(nameof(sonidoManejador));
+                _usuarioSesion = usuarioSesion ??
+                    throw new ArgumentNullException(nameof(usuarioSesion));
+                _listaAmigosServicio.ListaActualizada += ListaActualizada;
+                _amigosServicio.SolicitudesActualizadas += SolicitudesAmistadActualizadas;
 
-            _nombreUsuarioSesion = _usuarioSesion.NombreUsuario ?? string.Empty;
+                _nombreUsuarioSesion = _usuarioSesion.NombreUsuario ?? string.Empty;
 
-            CargarDatosUsuario();
-            CargarOpcionesPartida();
+                CargarDatosUsuario();
+                CargarOpcionesPartida();
 
-            InicializarComandos();
+                InicializarComandos();
+            }
         }
 
         private void InicializarComandos()
@@ -535,7 +535,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
         private void MostrarExitoEliminacion()
         {
-            _sonidoManejador.ReproducirExito();
+            _sonidoManejador.ReproducirNotificacion();
             MostrarMensaje?.Invoke(Lang.amigosTextoAmigoEliminado);
         }
 
@@ -607,7 +607,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
         private void NavegarASalaUnida(DTOs.SalaDTO sala)
         {
-            _sonidoManejador.ReproducirExito();
+            _sonidoManejador.ReproducirNotificacion();
             UnirseSala?.Invoke(sala);
         }
 
@@ -677,7 +677,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
         private void NavegarASalaCreada(DTOs.SalaDTO sala)
         {
-            _sonidoManejador.ReproducirExito();
+            _sonidoManejador.ReproducirNotificacion();
             IniciarJuego?.Invoke(sala);
         }
 

@@ -364,7 +364,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             }
 
             ValidarYCargarUsuarioAutenticado(resultado);
-            _sonidoManejador.ReproducirExito();
+            _sonidoManejador.ReproducirNotificacion();
             SesionIniciada = true;
             InicioSesionCompletado?.Invoke(resultado);
             CerrarAccion?.Invoke();

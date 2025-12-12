@@ -4,6 +4,7 @@ using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using log4net;
 using System;
 using System.Windows.Input;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Sesion
 {
