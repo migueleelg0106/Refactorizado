@@ -1,8 +1,9 @@
 ﻿using PictionaryMusicalCliente.Comandos;
+using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using log4net;
 using System;
 using System.Windows.Input;
-using log4net;
-using PictionaryMusicalCliente.Modelo;
 
 namespace PictionaryMusicalCliente.VistaModelo.Sesion
 {
@@ -15,20 +16,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Sesion
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IUsuarioAutenticado _usuarioSesion;
 
-        /// <summary>
-        /// Accion delegada para cerrar el cuadro de dialogo.
-        /// </summary>
-        public Action OcultarDialogo { get; set; }
-
-        /// <summary>
-        /// Accion delegada para ejecutar la logica de cierre y navegacion a la pantalla de inicio.
-        /// </summary>
         public Action EjecutarCierreSesionYNavegacion { get; set; }
 
-        /// <summary>
-        /// Inicializa una nueva instancia del ViewModel.
-        /// </summary>
-        public TerminacionSesionVistaModelo(IUsuarioAutenticado usuarioSesion)
+        public TerminacionSesionVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            IUsuarioAutenticado usuarioSesion)
+            : base(ventana, localizador)
         {
             _usuarioSesion = usuarioSesion 
                 ?? throw new ArgumentNullException(nameof(usuarioSesion));
@@ -49,17 +43,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Sesion
 
         private void EjecutarAceptar()
         {
-            _logger.Info("Usuario confirmó el cierre de sesión.");
+            _logger.Info("Usuario confirmo el cierre de sesion.");
             _usuarioSesion.Limpiar();
             EjecutarCierreSesionYNavegacion?.Invoke();
-
-            OcultarDialogo?.Invoke();
+            _ventana.CerrarVentana(this);
         }
 
         private void EjecutarCancelar()
         {
-            _logger.Info("Usuario canceló el cierre de sesión.");
-            OcultarDialogo?.Invoke();
+            _logger.Info("Usuario cancelo el cierre de sesion.");
+            _ventana.CerrarVentana(this);
         }
     }
 }

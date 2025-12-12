@@ -237,8 +237,13 @@ namespace PictionaryMusicalCliente.Vista
 
         private bool? MostrarConfirmacionEliminar(string amigo)
         {
-            var ventana = new EliminacionAmigo(amigo) { Owner = this };
-            return ventana.ShowDialog();
+            var eliminacionVM = new VistaModelo.Amigos.EliminacionAmigoVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                _sonidos,
+                amigo);
+            App.VentanaServicio.MostrarVentanaDialogo(eliminacionVM);
+            return eliminacionVM.DialogResult;
         }
 
         private void MostrarDialogo(Window ventana)

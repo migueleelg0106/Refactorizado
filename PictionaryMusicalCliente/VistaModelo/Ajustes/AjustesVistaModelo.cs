@@ -86,8 +86,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 
         private void EjecutarCerrarSesion()
         {
-            var terminacionSesionVM = new TerminacionSesionVistaModelo(App.UsuarioGlobal);
-            terminacionSesionVM.OcultarDialogo = () => { };
+            var terminacionSesionVM = new TerminacionSesionVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                App.UsuarioGlobal);
             terminacionSesionVM.EjecutarCierreSesionYNavegacion = () =>
             {
                 _ventana.CerrarVentana(this);
