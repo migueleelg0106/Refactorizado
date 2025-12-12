@@ -15,10 +15,6 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
-    /// <summary>
-    /// Coordina la logica de la partida iniciada, incluyendo dibujo, rondas y temporizadores.
-    /// Gestiona los eventos de la UI relacionados con el juego en curso.
-    /// </summary>
     public class PartidaIniciadaVistaModelo : BaseVistaModelo
     {
         private static readonly ILog _logger = LogManager.GetLogger(
@@ -64,17 +60,28 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private Brush _colorPalabraAdivinar;
         private string _textoDibujoDe;
 
-        /// <summary>
-        /// Inicializa la VistaModelo con los componentes necesarios para el juego.
-        /// </summary>
-        public PartidaIniciadaVistaModelo(ISonidoManejador sonidoManejador,
+        public PartidaIniciadaVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            ISonidoManejador sonidoManejador,
             ICancionManejador cancionManejador)
+            : base(ventana, localizador)
         {
             _cancionManejador = cancionManejador ??
                 throw new ArgumentNullException(nameof(cancionManejador));
+            _sonidoManejador = sonidoManejador ??
+                throw new ArgumentNullException(nameof(sonidoManejador));
+                
             _catalogoAudio = InicializarCatalogoAudio();
             _cronometroRonda = new Stopwatch();
 
+            InicializarEstadoInicial();
+            InicializarTemporizadores();
+            InicializarComandos();
+        }
+
+        private void InicializarEstadoInicial()
+        {
             _numeroRondaActual = 0;
             _grosor = 6;
             _color = Colors.Black;
@@ -97,7 +104,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _nombreCancionActual = string.Empty;
             _archivoCancionActual = string.Empty;
             _textoDibujoDe = string.Empty;
+        }
 
+        private void InicializarTemporizadores()
+        {
             _overlayTimer = new DispatcherTimer();
             _overlayTimer.Interval = TimeSpan.FromSeconds(5);
             _overlayTimer.Tick += OverlayTimer_Tick;
@@ -109,16 +119,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _temporizador = new DispatcherTimer();
             _temporizador.Interval = TimeSpan.FromSeconds(1);
             _temporizador.Tick += Temporizador_Tick;
-
-            _sonidoManejador = sonidoManejador ??
-                throw new ArgumentNullException(nameof(sonidoManejador));
-
-            InicializarComandos();
         }
 
-        /// <summary>
-        /// Indica si la partida ha comenzado.
-        /// </summary>
         public bool JuegoIniciado
         {
             get => _juegoIniciado;
@@ -135,63 +137,42 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Numero de la ronda actual.
-        /// </summary>
         public int NumeroRondaActual
         {
             get => _numeroRondaActual;
             private set => EstablecerPropiedad(ref _numeroRondaActual, value);
         }
 
-        /// <summary>
-        /// Grosor del trazo del pincel.
-        /// </summary>
         public double Grosor
         {
             get => _grosor;
             set => EstablecerPropiedad(ref _grosor, value);
         }
 
-        /// <summary>
-        /// Color actual del pincel.
-        /// </summary>
         public Color Color
         {
             get => _color;
             set => EstablecerPropiedad(ref _color, value);
         }
 
-        /// <summary>
-        /// Texto a mostrar en el temporizador.
-        /// </summary>
         public string TextoContador
         {
             get => _textoContador;
             set => EstablecerPropiedad(ref _textoContador, value);
         }
 
-        /// <summary>
-        /// Color del texto del temporizador (para alertas).
-        /// </summary>
         public Brush ColorContador
         {
             get => _colorContador;
             set => EstablecerPropiedad(ref _colorContador, value);
         }
 
-        /// <summary>
-        /// Indica si se debe mostrar la informacion de la ronda y el temporizador.
-        /// </summary>
         public bool MostrarEstadoRonda
         {
             get => _mostrarEstadoRonda;
             private set => EstablecerPropiedad(ref _mostrarEstadoRonda, value);
         }
 
-        /// <summary>
-        /// Indica si la herramienta seleccionada es el lapiz.
-        /// </summary>
         public bool EsHerramientaLapiz
         {
             get => _esHerramientaLapiz;
@@ -205,9 +186,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Indica si la herramienta seleccionada es el borrador.
-        /// </summary>
         public bool EsHerramientaBorrador
         {
             get => _esHerramientaBorrador;
@@ -224,225 +202,153 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        /// <summary>
-        /// Visibilidad del area de dibujo.
-        /// </summary>
         public Visibility VisibilidadCuadriculaDibujo
         {
             get => _visibilidadCuadriculaDibujo;
             set => EstablecerPropiedad(ref _visibilidadCuadriculaDibujo, value);
         }
 
-        /// <summary>
-        /// Visibilidad del overlay para quien dibuja.
-        /// </summary>
         public Visibility VisibilidadOverlayDibujante
         {
             get => _visibilidadOverlayDibujante;
             set => EstablecerPropiedad(ref _visibilidadOverlayDibujante, value);
         }
 
-        /// <summary>
-        /// Visibilidad del overlay para quien adivina.
-        /// </summary>
         public Visibility VisibilidadOverlayAdivinador
         {
             get => _visibilidadOverlayAdivinador;
             set => EstablecerPropiedad(ref _visibilidadOverlayAdivinador, value);
         }
 
-        /// <summary>
-        /// Visibilidad del overlay de tiempo terminado.
-        /// </summary>
         public Visibility VisibilidadOverlayAlarma
         {
             get => _visibilidadOverlayAlarma;
             set => EstablecerPropiedad(ref _visibilidadOverlayAlarma, value);
         }
 
-        /// <summary>
-        /// Visibilidad de la palabra a adivinar en la interfaz.
-        /// </summary>
         public Visibility VisibilidadPalabraAdivinar
         {
             get => _visibilidadPalabraAdivinar;
             set => EstablecerPropiedad(ref _visibilidadPalabraAdivinar, value);
         }
 
-        /// <summary>
-        /// Visibilidad de la informacion de la cancion.
-        /// </summary>
         public Visibility VisibilidadInfoCancion
         {
             get => _visibilidadInfoCancion;
             set => EstablecerPropiedad(ref _visibilidadInfoCancion, value);
         }
-
-        /// <summary>
         /// Visibilidad del texto de artista.
-        /// </summary>
+
         public Visibility VisibilidadArtista
         {
             get => _visibilidadArtista;
             set => EstablecerPropiedad(ref _visibilidadArtista, value);
         }
-
-        /// <summary>
         /// Visibilidad del texto de genero musical.
-        /// </summary>
+
         public Visibility VisibilidadGenero
         {
             get => _visibilidadGenero;
             set => EstablecerPropiedad(ref _visibilidadGenero, value);
         }
-
-        /// <summary>
         /// Palabra que se debe dibujar o adivinar.
-        /// </summary>
+
         public string PalabraAdivinar
         {
             get => _palabraAdivinar;
             set => EstablecerPropiedad(ref _palabraAdivinar, value);
         }
-
-        /// <summary>
         /// Color del texto de la palabra a adivinar.
-        /// </summary>
+
         public Brush ColorPalabraAdivinar
         {
             get => _colorPalabraAdivinar;
             set => EstablecerPropiedad(ref _colorPalabraAdivinar, value);
         }
-
-        /// <summary>
         /// Nombre del artista de la cancion actual.
-        /// </summary>
+
         public string TextoArtista
         {
             get => _textoArtista;
             set => EstablecerPropiedad(ref _textoArtista, value);
         }
-
-        /// <summary>
         /// Genero musical de la cancion actual.
-        /// </summary>
+
         public string TextoGenero
         {
             get => _textoGenero;
             set => EstablecerPropiedad(ref _textoGenero, value);
         }
-
-        /// <summary>
         /// Texto que muestra quien es el dibujante actual.
-        /// </summary>
+
         public string TextoDibujoDe
         {
             get => _textoDibujoDe;
             set => EstablecerPropiedad(ref _textoDibujoDe, value);
         }
-
-        /// <summary>
         /// Indica si el usuario es el dibujante de la ronda.
-        /// </summary>
+
         public bool EsDibujante
         {
             get => _esDibujante;
             private set => EstablecerPropiedad(ref _esDibujante, value);
         }
-
-        /// <summary>
         /// Manejador de canciones para ajustes de volumen.
-        /// </summary>
+
         public ICancionManejador CancionManejador => _cancionManejador;
-
-        /// <summary>
         /// Comando para seleccionar el lapiz como herramienta.
-        /// </summary>
+
         public ICommand SeleccionarLapizComando { get; private set; }
-
-        /// <summary>
         /// Comando para seleccionar el borrador como herramienta.
-        /// </summary>
+
         public ICommand SeleccionarBorradorComando { get; private set; }
-
-        /// <summary>
         /// Comando para cambiar el grosor del trazo.
-        /// </summary>
+
         public ICommand CambiarGrosorComando { get; private set; }
-
-        /// <summary>
         /// Comando para cambiar el color del trazo.
-        /// </summary>
+
         public ICommand CambiarColorComando { get; private set; }
-
-        /// <summary>
         /// Comando para limpiar el lienzo de dibujo.
-        /// </summary>
+
         public ICommand LimpiarDibujoComando { get; private set; }
-
-        /// <summary>
         /// Comando para ocultar el overlay de tiempo terminado.
-        /// </summary>
+
         public ICommand OcultarOverlayAlarmaComando { get; private set; }
-
-        /// <summary>
         /// Accion para notificar cambio de herramienta a la vista.
-        /// </summary>
+
         public Action<bool> NotificarCambioHerramienta { get; set; }
-
-        /// <summary>
         /// Accion para aplicar estilo visual de lapiz.
-        /// </summary>
+
         public Action AplicarEstiloLapiz { get; set; }
-
-        /// <summary>
         /// Accion para actualizar cursor de goma.
-        /// </summary>
+
         public Action ActualizarFormaGoma { get; set; }
-
-        /// <summary>
         /// Accion para limpiar el Canvas.
-        /// </summary>
+
         public Action LimpiarTrazos { get; set; }
-
-        /// <summary>
         /// Evento para trazo recibido desde el servidor.
-        /// </summary>
+
         public event Action<DTOs.TrazoDTO> TrazoRecibidoServidor;
-
-        /// <summary>
         /// Evento que notifica cuando cambia el estado de juego iniciado.
-        /// </summary>
+
         public event Action<bool> JuegoIniciadoCambiado;
-
-        /// <summary>
         /// Accion para enviar trazo al servidor.
-        /// </summary>
+
         public Action<DTOs.TrazoDTO> EnviarTrazoAlServidor { get; set; }
-
-        /// <summary>
         /// Evento que notifica cuando cambia el estado de poder escribir del jugador.
-        /// </summary>
+
         public event Action<bool> PuedeEscribirCambiado;
-
-        /// <summary>
         /// Evento que notifica cuando cambia el rol de dibujante.
-        /// </summary>
+
         public event Action<bool> EsDibujanteCambiado;
-
-        /// <summary>
         /// Evento que notifica cuando cambia el nombre de la cancion correcta.
-        /// </summary>
+
         public event Action<string> NombreCancionCambiado;
-
-        /// <summary>
         /// Evento que notifica cuando cambia el tiempo restante.
-        /// </summary>
-        public event Action<int> TiempoRestanteCambiado;
 
-        /// <summary>
+        public event Action<int> TiempoRestanteCambiado;
         /// Evento que notifica cuando la celebracion de fin de ronda temprano ha terminado.
-        /// </summary>
+
         public event Action CelebracionFinRondaTerminada;
 
         private void InicializarComandos()
@@ -532,10 +438,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             public string Archivo { get; }
             public string Idioma { get; }
         }
-
-        /// <summary>
         /// Aplica los cambios visuales al iniciar la partida.
-        /// </summary>
+
         /// <param name="totalJugadores">Numero total de jugadores en la sala.</param>
         public void AplicarInicioVisualPartida(int totalJugadores)
         {
@@ -744,10 +648,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             VisibilidadPalabraAdivinar = Visibility.Collapsed;
             VisibilidadInfoCancion = Visibility.Collapsed;
         }
-
-        /// <summary>
         /// Procesa la notificacion de que la partida ha iniciado.
-        /// </summary>
+
         public void NotificarPartidaIniciada()
         {
             var dispatcher = Application.Current?.Dispatcher;
@@ -763,10 +665,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _sonidoManejador.ReproducirExito();
             });
         }
-
-        /// <summary>
         /// Procesa la notificacion de inicio de una nueva ronda.
-        /// </summary>
+
         /// <param name="ronda">Datos de la ronda.</param>
         /// <param name="totalJugadores">Numero total de jugadores.</param>
         public void NotificarInicioRonda(DTOs.RondaDTO ronda, int totalJugadores)
@@ -879,10 +779,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 EjecutarMostrarOverlayAdivinador();
             }
         }
-
-        /// <summary>
         /// Procesa la notificacion de que un jugador adivino la cancion.
-        /// </summary>
+
         /// <param name="nombreJugador">Nombre del jugador que adivino.</param>
         /// <param name="puntos">Puntos obtenidos.</param>
         /// <param name="nombreUsuarioSesion">Nombre del usuario de la sesion actual.</param>
@@ -907,10 +805,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 }
             });
         }
-
-        /// <summary>
         /// Procesa la recepcion de un trazo desde el servidor.
-        /// </summary>
+
         /// <param name="trazo">Datos del trazo.</param>
         public void NotificarTrazoRecibido(DTOs.TrazoDTO trazo)
         {
@@ -922,10 +818,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             dispatcher.Invoke(() => TrazoRecibidoServidor?.Invoke(trazo));
         }
-
-        /// <summary>
         /// Procesa la notificacion de fin de ronda.
-        /// </summary>
+
         public void NotificarFinRonda()
         {
             var dispatcher = Application.Current?.Dispatcher;
@@ -946,11 +840,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 MostrarOverlayAlarma();
             });
         }
-
-        /// <summary>
         /// Procesa el fin de ronda temprano cuando todos los adivinadores acertaron.
         /// Muestra la cancion en azul y la reproduce durante 5 segundos.
-        /// </summary>
+
         public void NotificarFinRondaTemprano()
         {
             var dispatcher = Application.Current?.Dispatcher;
@@ -986,10 +878,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _temporizadorAlarma.Start();
             });
         }
-
-        /// <summary>
         /// Procesa la notificacion de fin de partida.
-        /// </summary>
+
         public void NotificarFinPartida()
         {
             var dispatcher = Application.Current?.Dispatcher;
@@ -1015,10 +905,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 RestablecerPalabraTrasAlarma();
             });
         }
-
-        /// <summary>
         /// Ajusta el progreso de ronda despues de un cambio en jugadores.
-        /// </summary>
+
         /// <param name="totalJugadores">Numero total de jugadores.</param>
         public void AjustarProgresoRondaTrasCambioJugadores(int totalJugadores)
         {
@@ -1052,10 +940,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 NumeroRondaActual++;
             }
         }
-
-        /// <summary>
         /// Detiene todos los temporizadores y libera recursos.
-        /// </summary>
+
         public void Detener()
         {
             _overlayTimer.Stop();
@@ -1064,10 +950,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _cronometroRonda.Stop();
             _cancionManejador.Detener();
         }
-
-        /// <summary>
         /// Reinicia el estado visual para mostrar la sala cancelada.
-        /// </summary>
+
         public void ReiniciarEstadoVisualSalaCancelada()
         {
             _temporizador.Stop();
