@@ -57,7 +57,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
         public ICommand ConfirmarSeleccionComando { get; }
 
-        public ObjetoAvatar AvatarConfirmado { get; private set; }
+        public Action<ObjetoAvatar> SeleccionConfirmada { get; set; }
 
         private void ConfirmarSeleccion()
         {
@@ -71,8 +71,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
             _logger.InfoFormat("Avatar seleccionado: ID {0}",
                 AvatarSeleccionado.Id);
-            AvatarConfirmado = AvatarSeleccionado;
-            _ventana.CerrarVentana(this);
+            SeleccionConfirmada?.Invoke(AvatarSeleccionado);
         }
     }
 }

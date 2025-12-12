@@ -16,10 +16,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
     {
         private static readonly ILog _logger =
             LogManager.GetLogger(typeof(VerificacionCodigoDialogoServicio));
-        private ICodigoVerificacionServicio _codigoVerificacionServicio;
-        private IAvisoServicio _avisoServicio;
-        private ILocalizadorServicio _localizadorServicio;
-        private ISonidoManejador _sonidoManejador;
 
         /// <summary>
         /// Muestra el dialogo de verificacion y retorna el resultado.
@@ -32,52 +28,34 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             ILocalizadorServicio localizadorServicio,
             ISonidoManejador sonidoManejador)
         {
-            _codigoVerificacionServicio = codigoVerificacionServicio ??
+            if (codigoVerificacionServicio == null)
                 throw new ArgumentNullException(nameof(codigoVerificacionServicio));
-            _avisoServicio = avisoServicio ??
+            if (avisoServicio == null)
                 throw new ArgumentNullException(nameof(avisoServicio));
-            _localizadorServicio = localizadorServicio ??
+            if (localizadorServicio == null)
                 throw new ArgumentNullException(nameof(localizadorServicio));
-            _sonidoManejador = sonidoManejador ??
+            if (sonidoManejador == null)
                 throw new ArgumentNullException(nameof(sonidoManejador));
-
-            ValidarServicio(codigoVerificacionServicio);
 
             var finalizacion = new TaskCompletionSource<DTOs.ResultadoRegistroCuentaDTO>();
             var ventana = new VerificacionCodigo();
 
-            var vistaModelo = CrearVistaModelo(
+            var vistaModelo = new VerificacionCodigoVistaModelo(
+                App.VentanaServicio,
+                localizadorServicio,
                 descripcion,
                 tokenCodigo,
-                codigoVerificacionServicio);
+                codigoVerificacionServicio,
+                avisoServicio,
+                sonidoManejador);
 
             ConfigurarEventos(vistaModelo, ventana, finalizacion);
             ConfigurarCierreVentana(ventana, finalizacion);
 
-            ventana.ConfigurarVistaModelo(vistaModelo);
+            ventana.DataContext = vistaModelo;
             ventana.ShowDialog();
 
             return finalizacion.Task;
-        }
-
-        private void ValidarServicio(ICodigoVerificacionServicio servicio)
-        {
-            if (servicio == null)
-            {
-                var ex = new ArgumentNullException(nameof(servicio));
-                _logger.Error("Intento de abrir dialogo de verificacion con servicio nulo.", ex);
-                throw ex;
-            }
-        }
-
-        private VerificacionCodigoVistaModelo CrearVistaModelo(
-            string descripcion,
-            string token,
-            ICodigoVerificacionServicio servicio)
-        {
-            return new VerificacionCodigoVistaModelo(descripcion, token, 
-                _codigoVerificacionServicio, _avisoServicio, 
-                _localizadorServicio, _sonidoManejador);
         }
 
         private void ConfigurarEventos(
