@@ -23,7 +23,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
         private readonly IPerfilServicio _perfilServicio;
         private readonly IValidadorEntrada _validador;
         private readonly ISonidoManejador _sonidoManejador;
-        private readonly ILocalizadorServicio _localizador;
+        private readonly IAvisoServicio _aviso;
         private bool _disposed;
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
             IPerfilServicio perfilServicio,
             IValidadorEntrada validador,
             ISonidoManejador sonidoManejador,
-            ILocalizadorServicio localizador)
+            IAvisoServicio aviso)
         {
             _invitacionesServicio = invitacionesServicio ??
                 throw new ArgumentNullException(nameof(invitacionesServicio));
@@ -47,8 +47,8 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
                 throw new ArgumentNullException(nameof(validador));
             _sonidoManejador = sonidoManejador ??
                 throw new ArgumentNullException(nameof(sonidoManejador));
-            _localizador = localizador ??
-                throw new ArgumentNullException(nameof(localizador));
+            _aviso = aviso ??
+                throw new ArgumentNullException(nameof(aviso));
         }
 
         /// <summary>
@@ -103,11 +103,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
                 }
 
                 var vm = new InvitarAmigosVistaModelo(
+                    App.VentanaServicio,
+                    App.Localizador,
                     amigos,
                     _invitacionesServicio,
                     _perfilServicio,
                     _sonidoManejador,
-                    _localizador,
+                    _aviso,
                     codigoSala,
                     id => amigosInvitados?.Contains(id) ?? false,
                     id => amigosInvitados?.Add(id),

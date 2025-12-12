@@ -166,13 +166,13 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
         private async Task IniciarSesionInvitadoAsync()
         {
-            await EjecutarOperacionAsync(async () =>
+            await EjecutarOperacionAsync(() =>
             {
                 ISalasServicio salasServicio = CrearServicioSalas();
 
                 if (!ValidarServicioSalas(salasServicio))
                 {
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 var vistaModelo = CrearVistaModeloIngresoInvitado(salasServicio);
@@ -180,7 +180,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 if (!MostrarDialogoIngresoInvitado(vistaModelo))
                 {
                     salasServicio.Dispose();
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 if (vistaModelo.SeUnioSala)
@@ -191,6 +191,8 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 {
                     salasServicio.Dispose();
                 }
+
+                return Task.CompletedTask;
             }, ManejarErrorInicioInvitado);
         }
 

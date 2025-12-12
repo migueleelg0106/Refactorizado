@@ -141,6 +141,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
         public Action<bool> MarcarCodigoInvalido { get; set; }
 
+        public Action<DTOs.ResultadoRegistroCuentaDTO> VerificacionCompletada { get; set; }
+
+        public Action Cancelado { get; set; }
+
         public DTOs.ResultadoRegistroCuentaDTO ResultadoVerificacion { get; private set; }
 
         public bool VerificacionExitosa { get; private set; }
@@ -264,12 +268,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                     StringComparison.Ordinal);
         }
 
-        private async Task ManejarCodigoExpiradoAsync(
+        private Task ManejarCodigoExpiradoAsync(
             DTOs.ResultadoRegistroCuentaDTO resultado)
         {
             _logger.Info("Codigo expirado detectado durante verificacion.");
             DetenerTemporizadores();
             FinalizarConResultado(resultado, false);
+            return Task.CompletedTask;
         }
 
         private void ManejarVerificacionExitosa(
@@ -288,6 +293,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         {
             ResultadoVerificacion = resultado;
             VerificacionExitosa = exitoso;
+
+            if (exitoso)
+            {
+                VerificacionCompletada?.Invoke(resultado);
+            }
+
             _ventana.CerrarVentana(this);
         }
 
@@ -359,6 +370,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         {
             _logger.Info("Operacion de verificacion cancelada por el usuario.");
             DetenerTemporizadores();
+            Cancelado?.Invoke(); 
             _ventana.CerrarVentana(this);
         }
 

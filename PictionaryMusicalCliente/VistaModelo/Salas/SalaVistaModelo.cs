@@ -31,24 +31,24 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private static readonly StringComparer ComparadorJugadores =
             StringComparer.OrdinalIgnoreCase;
 
-        private readonly ISalasServicio _salasServicio;
-        private readonly IInvitacionSalaServicio _invitacionSalaServicio;
-        private readonly IReportesServicio _reportesServicio;
-        private readonly ISonidoManejador _sonidoManejador;
-        private readonly IAvisoServicio _avisoServicio;
-        private readonly IUsuarioAutenticado _usuarioSesion;
-        private readonly IWcfClienteFabrica _fabricaClientes;
-        private readonly ICancionManejador _cancionManejador;
+        private ISalasServicio _salasServicio;
+        private IInvitacionSalaServicio _invitacionSalaServicio;
+        private IReportesServicio _reportesServicio;
+        private ISonidoManejador _sonidoManejador;
+        private IAvisoServicio _avisoServicio;
+        private IUsuarioAutenticado _usuarioSesion;
+        private IWcfClienteFabrica _fabricaClientes;
+        private ICancionManejador _cancionManejador;
 
         private readonly DTOs.SalaDTO _sala;
         private readonly string _nombreUsuarioSesion;
         private readonly bool _esInvitado;
-        private readonly HashSet<int> _amigosInvitados;
+        private HashSet<int> _amigosInvitados;
         private readonly bool _esHost;
         private readonly string _idJugador;
 
-        private readonly PartidaIniciadaVistaModelo _partidaVistaModelo;
-        private readonly ChatVistaModelo _chatVistaModelo;
+        private PartidaIniciadaVistaModelo _partidaVistaModelo;
+        private ChatVistaModelo _chatVistaModelo;
 
         private ICursoPartidaManejador _proxyJuego;
 
@@ -164,7 +164,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _reportesServicio = reportesServicio;
             _sonidoManejador = sonidoManejador;
             _avisoServicio = avisoServicio;
-            _localizador = _localizador;
             _invitacionSalaServicio = invitacionSalaServicio;
             _usuarioSesion = usuarioSesion;
             _fabricaClientes = fabricaClientes;

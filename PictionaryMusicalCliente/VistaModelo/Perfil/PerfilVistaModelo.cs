@@ -206,6 +206,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
 
+        public Action SolicitarReinicioSesion { get; set; }
+
         public bool RequiereReinicioSesion { get; private set; }
 
         public async Task CargarPerfilAsync()
@@ -595,6 +597,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             _avisoServicio.Mostrar(Lang.avisoTextoReinicioSesion);
             _usuarioSesion.Limpiar();
             RequiereReinicioSesion = true;
+            SolicitarReinicioSesion?.Invoke();
             _ventana.CerrarVentana(this);
         }
 

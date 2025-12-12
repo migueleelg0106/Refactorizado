@@ -172,13 +172,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
         private string GenerarNombreInvitado(
-            string cultura,
+            System.Globalization.CultureInfo cultura,
             HashSet<string> nombresReservados)
         {
             return _nombreInvitadoGenerador.Generar(cultura, nombresReservados);
         }
 
-        private async Task<bool> ProcesarResultadoUnionAsync(
+        private Task<bool> ProcesarResultadoUnionAsync(
             ResultadoUnionInvitado resultado,
             string nombreInvitado,
             HashSet<string> nombresReservados)
@@ -187,28 +187,28 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             {
                 case EstadoUnionInvitado.Exito:
                     MarcarUnionExitosa(resultado.Sala, nombreInvitado);
-                    return true;
+                    return Task.FromResult(false);
 
                 case EstadoUnionInvitado.NombreDuplicado:
                     AgregarNombresReservados(nombreInvitado, 
                         resultado.JugadoresActuales, 
                         nombresReservados);
-                    return false;
+                    return Task.FromResult(false);
 
                 case EstadoUnionInvitado.SalaLlena:
                     MostrarErrorSalaLlena();
-                    return true;
+                    return Task.FromResult(false);
 
                 case EstadoUnionInvitado.SalaNoEncontrada:
                     MostrarErrorSalaNoEncontrada();
-                    return true;
+                    return Task.FromResult(false);
 
                 case EstadoUnionInvitado.Error:
                     MostrarError(resultado.Mensaje);
-                    return true;
+                    return Task.FromResult(false);
 
                 default:
-                    return false;
+                    return Task.FromResult(false);
             }
         }
 
