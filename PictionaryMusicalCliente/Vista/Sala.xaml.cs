@@ -47,8 +47,8 @@ namespace PictionaryMusicalCliente.Vista
         private bool _navegacionEjecutada;
 
         /// <summary>
-        /// Constructor por defecto, solo para uso del diseñador/XAML. 
-        /// La aplicación debe usar el constructor que recibe dependencias.
+        /// Constructor por defecto, solo para uso del diseï¿½ador/XAML. 
+        /// La aplicaciï¿½n debe usar el constructor que recibe dependencias.
         /// </summary>
         public Sala()
         {
@@ -134,8 +134,12 @@ namespace PictionaryMusicalCliente.Vista
 
             _vistaModelo.AbrirAjustesPartida = manejadorCancion =>
             {
-                var ajustes = new AjustesPartida(_sonidos, manejadorCancion ?? _cancion);
-                ajustes.SalirDePartidaConfirmado = () =>
+                var ajustesVM = new VistaModelo.Ajustes.AjustesPartidaVistaModelo(
+                    App.VentanaServicio,
+                    App.Localizador,
+                    manejadorCancion ?? _cancion,
+                    _sonidos);
+                ajustesVM.SalirPartidaConfirmado = () =>
                 {
                     _vistaModelo.ManejarNavegacion?.Invoke(
                         _vistaModelo.EsInvitado
@@ -143,7 +147,7 @@ namespace PictionaryMusicalCliente.Vista
                             : SalaVistaModelo.DestinoNavegacion.VentanaPrincipal);
                 };
 
-                AbrirDialogo(ajustes);
+                App.VentanaServicio.MostrarVentanaDialogo(ajustesVM);
             };
             _vistaModelo.NotificarCambioHerramienta = EstablecerHerramienta;
             _vistaModelo.AplicarEstiloLapiz = AplicarEstiloLapiz;

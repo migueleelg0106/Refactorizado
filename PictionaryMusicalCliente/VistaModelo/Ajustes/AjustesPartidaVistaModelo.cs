@@ -14,22 +14,23 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         private readonly ISonidoManejador _sonidoManejador;
 
         /// <summary>
-        /// Accion para cerrar la ventana actual.
+        /// Accion para manejar salida confirmada de la partida.
         /// </summary>
-        public Action OcultarVentana { get; set; }
-
-        /// <summary>
-        /// Accion para mostrar el dialogo de confirmacion de salida.
-        /// </summary>
-        public Action MostrarDialogoSalirPartida { get; set; }
+        public Action SalirPartidaConfirmado { get; set; }
 
         /// <summary>
         /// Inicializa el ViewModel con el servicio de control de audio del juego.
         /// </summary>
+        /// <param name="ventana">Servicio para gestionar ventanas.</param>
+        /// <param name="localizador">Servicio de localizacion.</param>
         /// <param name="cancionManejador">Servicio que gestiona la reproduccion de pistas.</param>
         /// <param name="sonidoManejador">Servicio que gestiona los efectos de sonido.</param>
-        public AjustesPartidaVistaModelo(ICancionManejador cancionManejador,
+        public AjustesPartidaVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            ICancionManejador cancionManejador,
             ISonidoManejador sonidoManejador)
+            : base(ventana, localizador)
         {
             _cancionManejador = cancionManejador ??
                 throw new ArgumentNullException(nameof(cancionManejador));
@@ -84,12 +85,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 
         private void EjecutarConfirmar()
         {
-            OcultarVentana?.Invoke();
+            _ventana.CerrarVentana(this);
         }
 
         private void EjecutarSalirPartida()
         {
-            MostrarDialogoSalirPartida?.Invoke();
+            SalirPartidaConfirmado?.Invoke();
         }
     }
 }

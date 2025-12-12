@@ -159,11 +159,8 @@ namespace PictionaryMusicalCliente.Vista
             _vistaModelo.AbrirPerfil = AbrirPerfil;
             _vistaModelo.AbrirAjustes = AbrirAjustes;
             _vistaModelo.AbrirComoJugar = () => MostrarDialogo(new ComoJugar());
-            _vistaModelo.AbrirClasificacion = () =>
-                MostrarDialogo(new Clasificacion(_clasificacion, _aviso, _sonidos));
-            _vistaModelo.AbrirBuscarAmigo = () =>
-                MostrarDialogo(new BusquedaAmigo(_amigos, _sonidos, _aviso, _traductor, 
-                _usuarioSesion));
+            _vistaModelo.AbrirClasificacion = AbrirClasificacion;
+            _vistaModelo.AbrirBuscarAmigo = AbrirBuscarAmigo;
             _vistaModelo.AbrirSolicitudes = () =>
                 MostrarDialogo(new Solicitudes(_amigos, _sonidos, _aviso, _usuarioSesion));
             _vistaModelo.ConfirmarEliminarAmigo = MostrarConfirmacionEliminar;
@@ -192,8 +189,35 @@ namespace PictionaryMusicalCliente.Vista
 
         private void AbrirAjustes()
         {
-            MostrarDialogo(new Ajustes(_musica, _sonidos, _usuarioSesion, 
-                ReiniciarAplicacion));
+            var ajustesVM = new VistaModelo.Ajustes.AjustesVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                _musica,
+                _sonidos);
+            App.VentanaServicio.MostrarVentanaDialogo(ajustesVM);
+        }
+
+        private void AbrirClasificacion()
+        {
+            var clasificacionVM = new ClasificacionVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                _clasificacion,
+                _aviso,
+                _sonidos);
+            App.VentanaServicio.MostrarVentanaDialogo(clasificacionVM);
+        }
+
+        private void AbrirBuscarAmigo()
+        {
+            var busquedaAmigoVM = new VistaModelo.Amigos.BusquedaAmigoVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                _amigos,
+                _sonidos,
+                _aviso,
+                _usuarioSesion);
+            App.VentanaServicio.MostrarVentanaDialogo(busquedaAmigoVM);
         }
 
         private async void VentanaPrincipal_LoadedAsync(object sender, RoutedEventArgs e)

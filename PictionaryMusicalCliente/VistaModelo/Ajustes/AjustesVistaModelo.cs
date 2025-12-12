@@ -1,5 +1,6 @@
 ﻿using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using PictionaryMusicalCliente.VistaModelo.Sesion;
 using System;
 using System.Windows.Input;
 
@@ -14,22 +15,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         private readonly ISonidoManejador _sonidoManejador;
 
         /// <summary>
-        /// Accion para cerrar la ventana de ajustes.
-        /// </summary>
-        public Action OcultarVentana { get; set; }
-
-        /// <summary>
-        /// Accion para abrir el dialogo de cierre de sesion.
-        /// </summary>
-        public Action MostrarDialogoCerrarSesion { get; set; }
-
-        /// <summary>
         /// Inicializa el ViewModel con el manejador de musica global.
         /// </summary>
+        /// <param name="ventana">Servicio para gestionar ventanas.</param>
+        /// <param name="localizador">Servicio de localizacion.</param>
         /// <param name="servicioMusica">Servicio de control de audio.</param>
         /// <param name="sonidoManejador">Servicio que gestiona los efectos de sonido.</param>
-        public AjustesVistaModelo(IMusicaManejador servicioMusica, 
+        public AjustesVistaModelo(
+            IVentanaServicio ventana,
+            ILocalizadorServicio localizador,
+            IMusicaManejador servicioMusica, 
             ISonidoManejador sonidoManejador)
+            : base(ventana, localizador)
         {
             _musicaManejador = servicioMusica ??
                 throw new ArgumentNullException(nameof(servicioMusica));
@@ -84,12 +81,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 
         private void EjecutarConfirmar()
         {
-            OcultarVentana?.Invoke();
+            _ventana.CerrarVentana(this);
         }
 
         private void EjecutarCerrarSesion()
         {
-            MostrarDialogoCerrarSesion?.Invoke();
+            var terminacionSesionVM = new TerminacionSesionVistaModelo(App.UsuarioGlobal);
+            terminacionSesionVM.OcultarDialogo = () => { };
+            terminacionSesionVM.EjecutarCierreSesionYNavegacion = () =>
+            {
+                _ventana.CerrarVentana(this);
+            };
+            _ventana.MostrarVentanaDialogo(terminacionSesionVM);
         }
     }
 }
