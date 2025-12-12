@@ -6,7 +6,6 @@ using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using System;
@@ -37,7 +36,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private readonly IReportesServicio _reportesServicio;
         private readonly ISonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
-        private readonly ILocalizadorServicio _localizador;
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly IWcfClienteFabrica _fabricaClientes;
         private readonly ICancionManejador _cancionManejador;

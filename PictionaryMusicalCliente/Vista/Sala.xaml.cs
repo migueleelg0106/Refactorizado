@@ -428,14 +428,22 @@ namespace PictionaryMusicalCliente.Vista
 
         private bool MostrarConfirmacion(string mensaje)
         {
-            var vm = new ExpulsionJugadorVistaModelo(mensaje, _sonidos);
+            var vm = new ExpulsionJugadorVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                _sonidos,
+                mensaje);
             var ventana = new ExpulsionJugador(vm) { Owner = this };
             return ventana.ShowDialog() == true;
         }
 
         private ResultadoReporteJugador SolicitarDatosReporte(string nombreJugador)
         {
-            var vistaModelo = new ReportarJugadorVistaModelo(nombreJugador, _sonidos);
+            var vistaModelo = new ReportarJugadorVistaModelo(
+                App.VentanaServicio,
+                App.Localizador,
+                _sonidos,
+                nombreJugador);
             var ventana = new ReportarJugador(vistaModelo)
             {
                 Owner = this

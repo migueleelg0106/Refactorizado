@@ -144,7 +144,7 @@ namespace PictionaryMusicalCliente.Vista
 
             var vm = new InicioSesionVistaModelo(
                 App.VentanaServicio,
-                _traductor,
+                App.Localizador,
                 _inicioSesion,
                 _cambioPass,
                 _recuperacion,
@@ -175,8 +175,16 @@ namespace PictionaryMusicalCliente.Vista
                 var verifCodigo = new VerificacionCodigoDialogoServicio();
 
                 var vmCrear = new CreacionCuentaVistaModelo(
-                    codigoServ, cuentaServ, selectAvatar, verifCodigo,
-                    _sonidos, _validador, _avatares, _aviso, _traductor,
+                     App.VentanaServicio,
+                    App.Localizador,
+                    codigoServ,
+                    cuentaServ,
+                    selectAvatar,
+                    verifCodigo,
+                    _sonidos,
+                    _validador,
+                    _avatares,
+                    _aviso,
                     _idioma);
 
                 var ventana = new CreacionCuenta(vmCrear) { Owner = this };

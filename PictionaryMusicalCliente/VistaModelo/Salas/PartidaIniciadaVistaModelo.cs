@@ -1,5 +1,6 @@
 using log4net;
 using PictionaryMusicalCliente.ClienteServicios;
+using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
