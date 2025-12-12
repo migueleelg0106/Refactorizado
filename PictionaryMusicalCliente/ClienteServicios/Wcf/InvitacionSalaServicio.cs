@@ -112,8 +112,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
                     _aviso,
                     codigoSala,
                     id => amigosInvitados?.Contains(id) ?? false,
-                    id => amigosInvitados?.Add(id),
-                    mostrarMensaje ?? (_ => { })
+                    id => amigosInvitados?.Add(id)
                 );
 
                 return InvitacionAmigosResultado.Exito(vm);
