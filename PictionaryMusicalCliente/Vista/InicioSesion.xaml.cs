@@ -143,13 +143,14 @@ namespace PictionaryMusicalCliente.Vista
             _musica.ReproducirEnBucle("inicio_sesion_musica.mp3");
 
             var vm = new InicioSesionVistaModelo(
+                App.VentanaServicio,
+                _traductor,
                 _inicioSesion,
                 _cambioPass,
                 _recuperacion,
                 _idioma,
-                _traductor,
-                _aviso,
                 _sonidos,
+                _aviso,
                 _generadorNombres,
                 _usuarioSesion,
                 _fabricaSalas);
