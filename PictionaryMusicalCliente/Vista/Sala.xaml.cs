@@ -1,7 +1,6 @@
 using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalCliente.VistaModelo.Salas;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;

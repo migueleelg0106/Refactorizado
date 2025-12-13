@@ -5,7 +5,6 @@ using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

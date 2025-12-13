@@ -1,6 +1,5 @@
 ﻿using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Sesion;
 using System;
 using System.Windows.Input;
