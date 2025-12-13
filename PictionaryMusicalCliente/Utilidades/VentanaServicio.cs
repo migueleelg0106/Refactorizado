@@ -95,6 +95,15 @@ namespace PictionaryMusicalCliente.Utilidades
 
             switch (vistaModelo)
             {
+                case InicioSesionVistaModelo:
+                    ventana = new InicioSesion();
+                    break;
+                case VentanaPrincipalVistaModelo:
+                    ventana = new VentanaPrincipal();
+                    break;
+                case SalaVistaModelo:
+                    ventana = new Sala();
+                    break;
                 case CreacionCuentaVistaModelo:
                     ventana = new CreacionCuenta();
                     break;

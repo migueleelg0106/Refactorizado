@@ -1,8 +1,10 @@
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.VistaModelo.Salas;
+using PictionaryMusicalCliente.VistaModelo.VentanaPrincipal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -90,7 +92,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             AbrirCrearCuentaComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                AbrirCrearCuenta?.Invoke();
+                AbrirVentanaCrearCuenta();
             });
 
             IniciarSesionInvitadoComando = new ComandoAsincrono(async _ =>
@@ -151,17 +153,85 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         public ICommand AbrirCrearCuentaComando { get; }
         public IComandoAsincrono IniciarSesionInvitadoComando { get; }
 
-        public Action AbrirCrearCuenta { get; set; }
-        public Action<DTOs.ResultadoInicioSesionDTO> InicioSesionCompletado { get; set; }
-        public Action CerrarAccion { get; set; }
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
-        public Action<IngresoPartidaInvitadoVistaModelo> MostrarIngresoInvitado { get; set; }
-        public Action<DTOs.SalaDTO, ISalasServicio, string> AbrirVentanaJuegoInvitado 
-            { get; set; }
 
         public void EstablecerContrasena(string contrasena)
         {
             _contrasena = contrasena;
+        }
+
+        private void AbrirVentanaCrearCuenta()
+        {
+            var codigoServ = new ClienteServicios.VerificacionCodigoServicio(
+                App.WcfEjecutor, App.WcfFabrica, _localizador, App.ManejadorError);
+            var cuentaServ = new ClienteServicios.CuentaServicio(
+                App.WcfEjecutor, App.WcfFabrica, App.ManejadorError);
+            var selectAvatar = new ClienteServicios.Dialogos.SeleccionAvatarDialogoServicio(
+                _avisoServicio, App.CatalogoAvatares, _sonidoManejador);
+            var verifCodigo = new ClienteServicios.Dialogos.VerificacionCodigoDialogoServicio();
+
+            var vmCrear = new CreacionCuentaVistaModelo(
+                _ventana,
+                _localizador,
+                codigoServ,
+                cuentaServ,
+                selectAvatar,
+                verifCodigo,
+                _sonidoManejador,
+                App.CatalogoAvatares,
+                _avisoServicio,
+                _localizacionServicio);
+
+            _ventana.MostrarVentanaDialogo(vmCrear);
+        }
+
+        private void NavegarAVentanaPrincipal()
+        {
+            App.MusicaManejador.Detener();
+
+            var vmPrincipal = new VentanaPrincipal.VentanaPrincipalVistaModelo(
+                _ventana,
+                _localizador,
+                _localizacionServicio,
+                App.ListaAmigosServicio,
+                App.AmigosServicio,
+                App.SalasServicio,
+                _sonidoManejador,
+                _usuarioSesion);
+
+            _ventana.MostrarVentana(vmPrincipal);
+            _ventana.CerrarVentana(this);
+        }
+
+        private void NavegarAVentanaSala(DTOs.SalaDTO sala, ISalasServicio servicio, string nombre, bool esInvitado)
+        {
+            App.MusicaManejador.Detener();
+
+            var vmSala = new Salas.SalaVistaModelo(
+                _ventana,
+                _localizador,
+                sala,
+                servicio,
+                App.InvitacionesServicio,
+                App.ListaAmigosServicio,
+                App.PerfilServicio,
+                App.ReportesServicio,
+                _sonidoManejador,
+                _avisoServicio,
+                _usuarioSesion,
+                new InvitacionSalaServicio(
+                    App.InvitacionesServicio,
+                    App.ListaAmigosServicio,
+                    App.PerfilServicio,
+                    _sonidoManejador,
+                    _avisoServicio),
+                App.WcfFabrica,
+                new CancionManejador(),
+                nombre,
+                esInvitado);
+
+            _ventana.MostrarVentana(vmSala);
+            _ventana.CerrarVentana(this);
         }
 
         private async Task IniciarSesionInvitadoAsync()
@@ -232,23 +302,17 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         {
             _logger.InfoFormat("Invitado {0} se unio a sala {1}",
                 vistaModelo.NombreInvitadoGenerado, vistaModelo.SalaUnida?.Codigo);
-            AbrirVentanaJuegoInvitado?.Invoke(
+            NavegarAVentanaSala(
                 vistaModelo.SalaUnida,
                 salasServicio,
-                vistaModelo.NombreInvitadoGenerado);
+                vistaModelo.NombreInvitadoGenerado,
+                true);
         }
 
         private bool MostrarDialogoIngresoInvitado(
             IngresoPartidaInvitadoVistaModelo vistaModelo)
         {
-            if (MostrarIngresoInvitado == null)
-            {
-                _logger.Error("MostrarIngresoInvitado es nulo, no se puede mostrar dialogo.");
-                MostrarErrorInvitadoGenerico();
-                return false;
-            }
-
-            MostrarIngresoInvitado(vistaModelo);
+            _ventana.MostrarVentanaDialogo(vistaModelo);
             return true;
         }
 
@@ -368,8 +432,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             ValidarYCargarUsuarioAutenticado(resultado);
             _sonidoManejador.ReproducirNotificacion();
             SesionIniciada = true;
-            InicioSesionCompletado?.Invoke(resultado);
-            CerrarAccion?.Invoke();
+            NavegarAVentanaPrincipal();
         }
 
         private void ValidarYCargarUsuarioAutenticado(DTOs.ResultadoInicioSesionDTO resultado)
