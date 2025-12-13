@@ -2,7 +2,6 @@
 using System.IO;
 using System.Windows.Media;
 using log4net;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.ClienteServicios
 {
@@ -10,7 +9,7 @@ namespace PictionaryMusicalCliente.ClienteServicios
     /// Provee metodos para reproducir efectos de sonido (SFX) cortos, respetando
     /// la preferencia de silencio del usuario.
     /// </summary>
-    public class SonidoManejador : ISonidoManejador
+    public class SonidoManejador : IDisposable
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

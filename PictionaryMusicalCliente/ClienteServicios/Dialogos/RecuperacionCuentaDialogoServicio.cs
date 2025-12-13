@@ -5,7 +5,6 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.Vista;
 using PictionaryMusicalCliente.VistaModelo.Perfil;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -23,21 +22,18 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
         private readonly IVerificacionCodigoDialogoServicio _verificarCodigoDialogoServicio;
         private readonly IAvisoServicio _avisoServicio;
-        private readonly IValidadorEntrada _validadorEntrada;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly ILocalizadorServicio _localizador;
 
         public RecuperacionCuentaDialogoServicio(
             IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio,
-            IAvisoServicio avisoServicio, IValidadorEntrada validadorEntrada,
-            ISonidoManejador sonidoManejador, ILocalizadorServicio localizador)
+            IAvisoServicio avisoServicio,
+            SonidoManejador sonidoManejador, ILocalizadorServicio localizador)
         {
             _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ??
                 throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));
             _avisoServicio = avisoServicio ??
                 throw new ArgumentNullException(nameof(avisoServicio));
-            _validadorEntrada = validadorEntrada ??
-                throw new ArgumentNullException(nameof(validadorEntrada));
             _sonidoManejador = sonidoManejador ??
                 throw new ArgumentNullException(nameof(sonidoManejador));
             _localizador = localizador ??
@@ -175,8 +171,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 App.Localizador,
                 token,
                 servicio,
-                _avisoServicio, 
-                _validadorEntrada,
+                _avisoServicio,
                 _sonidoManejador);
             var finalizacion = new TaskCompletionSource<DTOs.ResultadoOperacionDTO>();
 

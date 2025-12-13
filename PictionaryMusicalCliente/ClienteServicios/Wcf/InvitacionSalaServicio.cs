@@ -2,7 +2,6 @@
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using System;
 using System.Collections.Generic;
@@ -21,8 +20,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
         private readonly IInvitacionesServicio _invitacionesServicio;
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IPerfilServicio _perfilServicio;
-        private readonly IValidadorEntrada _validador;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _aviso;
         private bool _disposed;
 
@@ -33,8 +31,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
             IInvitacionesServicio invitacionesServicio,
             IListaAmigosServicio listaAmigosServicio,
             IPerfilServicio perfilServicio,
-            IValidadorEntrada validador,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             IAvisoServicio aviso)
         {
             _invitacionesServicio = invitacionesServicio ??
@@ -43,8 +40,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
                 throw new ArgumentNullException(nameof(listaAmigosServicio));
             _perfilServicio = perfilServicio ??
                 throw new ArgumentNullException(nameof(perfilServicio));
-            _validador = validador ??
-                throw new ArgumentNullException(nameof(validador));
             _sonidoManejador = sonidoManejador ??
                 throw new ArgumentNullException(nameof(sonidoManejador));
             _aviso = aviso ??
@@ -65,7 +60,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
 
             string correoLimpio = correo?.Trim();
 
-            var validacion = _validador.ValidarCorreo(correoLimpio);
+            var validacion = ValidadorEntrada.ValidarCorreo(correoLimpio);
 
             if (!validacion.OperacionExitosa)
             {

@@ -1,3 +1,4 @@
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Modelo; 
 using PictionaryMusicalCliente.Modelo.Catalogos;
@@ -19,7 +20,7 @@ namespace PictionaryMusicalCliente.Vista
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IMusicaManejador _musica;
+        private readonly MusicaManejador _musica;
         private readonly IListaAmigosServicio _listaAmigos;
         private readonly IAmigosServicio _amigos;
         private readonly ISalasServicio _salas;
@@ -36,8 +37,7 @@ namespace PictionaryMusicalCliente.Vista
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly IInvitacionesServicio _invitaciones;
         private readonly IReportesServicio _reportes;
-        private readonly ISonidoManejador _sonidos;
-        private readonly IValidadorEntrada _validador;
+        private readonly SonidoManejador _sonidos;
         private readonly ILocalizadorServicio _traductor;
         private readonly IWcfClienteFabrica _fabricaWcf;
         private readonly IInvitacionSalaServicio _invitacionSalaServicio;
@@ -58,7 +58,7 @@ namespace PictionaryMusicalCliente.Vista
         /// Inicializa el Lobby con todas las dependencias requeridas.
         /// </summary>
         public VentanaPrincipal(
-            IMusicaManejador musica,
+            MusicaManejador musica,
             IListaAmigosServicio listaAmigos,
             IAmigosServicio amigos,
             ISalasServicio salas,
@@ -74,8 +74,7 @@ namespace PictionaryMusicalCliente.Vista
             IUsuarioAutenticado usuarioSesion,
             IInvitacionesServicio invitaciones,
             IReportesServicio reportes,
-            ISonidoManejador sonidos,
-            IValidadorEntrada validador,
+            SonidoManejador sonidos,
             ILocalizadorServicio traductor,
             IWcfClienteFabrica fabricaWcf,
             IInvitacionSalaServicio invitacionSalaServicio,
@@ -117,8 +116,6 @@ namespace PictionaryMusicalCliente.Vista
                 throw new ArgumentNullException(nameof(reportes));
             _sonidos = sonidos ??
                 throw new ArgumentNullException(nameof(sonidos));
-            _validador = validador ??
-                throw new ArgumentNullException(nameof(validador));
             _traductor = traductor ??
                 throw new ArgumentNullException(nameof(traductor));
             _fabricaWcf = fabricaWcf ??
@@ -180,7 +177,6 @@ namespace PictionaryMusicalCliente.Vista
                 _sonidos,
                 _usuarioSesion,
                 _avatares,
-                _validador,
                 _imagenesPerfil);
 
             vmPerfil.SolicitarReinicioSesion = ReiniciarAplicacion;
@@ -191,9 +187,7 @@ namespace PictionaryMusicalCliente.Vista
         {
             var ajustesVM = new VistaModelo.Ajustes.AjustesVistaModelo(
                 App.VentanaServicio,
-                App.Localizador,
-                _musica,
-                _sonidos);
+                App.Localizador);
             App.VentanaServicio.MostrarVentanaDialogo(ajustesVM);
         }
 
@@ -283,7 +277,7 @@ namespace PictionaryMusicalCliente.Vista
                     _recuperacion, _selectAvatar, _avatares,
                     _clasificacion, _imagenesPerfil, _usuarioSesion,
                     _invitaciones, _reportes, _sonidos,
-                    _validador, _traductor, _fabricaWcf, _invitacionSalaServicio,
+                    _traductor, _fabricaWcf, _invitacionSalaServicio,
                     _navegarInicioSesion);
 
                 nuevaPrincipal.Show();
@@ -298,7 +292,7 @@ namespace PictionaryMusicalCliente.Vista
             var ventanaJuego = new Sala(
                 sala, _salas, _invitaciones, _reportes, _perfilServicio,
                 _listaAmigos, _sonidos, _traductor, _aviso, _usuarioSesion,
-                _validador, _fabricaWcf, new CancionManejador(), _invitacionSalaServicio,
+                _fabricaWcf, new CancionManejador(), _invitacionSalaServicio,
                 false,
                 _usuarioSesion.NombreUsuario,
                 irMenu,
