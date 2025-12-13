@@ -15,11 +15,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioChat {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PictionaryServidorServicioChat.IChatManejador", CallbackContract=typeof(PictionaryMusicalCliente.PictionaryServidorServicioChat.IChatManejadorCallback))]
     public interface IChatManejador {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/Unirse", ReplyAction="http://tempuri.org/IChatManejador/UnirseResponse")]
-        void Unirse(string idSala, string nombreJugador);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/UnirseChatSala", ReplyAction="http://tempuri.org/IChatManejador/UnirseChatSalaResponse")]
+        void UnirseChatSala(string idSala, string nombreJugador);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/Unirse", ReplyAction="http://tempuri.org/IChatManejador/UnirseResponse")]
-        System.Threading.Tasks.Task UnirseAsync(string idSala, string nombreJugador);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/UnirseChatSala", ReplyAction="http://tempuri.org/IChatManejador/UnirseChatSalaResponse")]
+        System.Threading.Tasks.Task UnirseChatSalaAsync(string idSala, string nombreJugador);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManejador/EnviarMensaje")]
         void EnviarMensaje(string idSala, string mensaje, string nombreJugador);
@@ -27,11 +27,11 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioChat {
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManejador/EnviarMensaje")]
         System.Threading.Tasks.Task EnviarMensajeAsync(string idSala, string mensaje, string nombreJugador);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/Salir", ReplyAction="http://tempuri.org/IChatManejador/SalirResponse")]
-        void Salir(string idSala, string nombreJugador);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/SalirChatSala", ReplyAction="http://tempuri.org/IChatManejador/SalirChatSalaResponse")]
+        void SalirChatSala(string idSala, string nombreJugador);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/Salir", ReplyAction="http://tempuri.org/IChatManejador/SalirResponse")]
-        System.Threading.Tasks.Task SalirAsync(string idSala, string nombreJugador);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IChatManejador/SalirChatSala", ReplyAction="http://tempuri.org/IChatManejador/SalirChatSalaResponse")]
+        System.Threading.Tasks.Task SalirChatSalaAsync(string idSala, string nombreJugador);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -75,12 +75,12 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioChat {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public void Unirse(string idSala, string nombreJugador) {
-            base.Channel.Unirse(idSala, nombreJugador);
+        public void UnirseChatSala(string idSala, string nombreJugador) {
+            base.Channel.UnirseChatSala(idSala, nombreJugador);
         }
         
-        public System.Threading.Tasks.Task UnirseAsync(string idSala, string nombreJugador) {
-            return base.Channel.UnirseAsync(idSala, nombreJugador);
+        public System.Threading.Tasks.Task UnirseChatSalaAsync(string idSala, string nombreJugador) {
+            return base.Channel.UnirseChatSalaAsync(idSala, nombreJugador);
         }
         
         public void EnviarMensaje(string idSala, string mensaje, string nombreJugador) {
@@ -91,12 +91,12 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioChat {
             return base.Channel.EnviarMensajeAsync(idSala, mensaje, nombreJugador);
         }
         
-        public void Salir(string idSala, string nombreJugador) {
-            base.Channel.Salir(idSala, nombreJugador);
+        public void SalirChatSala(string idSala, string nombreJugador) {
+            base.Channel.SalirChatSala(idSala, nombreJugador);
         }
         
-        public System.Threading.Tasks.Task SalirAsync(string idSala, string nombreJugador) {
-            return base.Channel.SalirAsync(idSala, nombreJugador);
+        public System.Threading.Tasks.Task SalirChatSalaAsync(string idSala, string nombreJugador) {
+            return base.Channel.SalirChatSalaAsync(idSala, nombreJugador);
         }
     }
 }

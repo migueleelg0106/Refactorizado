@@ -27,20 +27,20 @@
       <xsd:import schemaLocation="http://localhost:8525/Pictionary/Chat?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="IChatManejador_Unirse_InputMessage">
-    <wsdl:part name="parameters" element="tns:Unirse" />
+  <wsdl:message name="IChatManejador_UnirseChatSala_InputMessage">
+    <wsdl:part name="parameters" element="tns:UnirseChatSala" />
   </wsdl:message>
-  <wsdl:message name="IChatManejador_Unirse_OutputMessage">
-    <wsdl:part name="parameters" element="tns:UnirseResponse" />
+  <wsdl:message name="IChatManejador_UnirseChatSala_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UnirseChatSalaResponse" />
   </wsdl:message>
   <wsdl:message name="IChatManejador_EnviarMensaje_InputMessage">
     <wsdl:part name="parameters" element="tns:EnviarMensaje" />
   </wsdl:message>
-  <wsdl:message name="IChatManejador_Salir_InputMessage">
-    <wsdl:part name="parameters" element="tns:Salir" />
+  <wsdl:message name="IChatManejador_SalirChatSala_InputMessage">
+    <wsdl:part name="parameters" element="tns:SalirChatSala" />
   </wsdl:message>
-  <wsdl:message name="IChatManejador_Salir_OutputMessage">
-    <wsdl:part name="parameters" element="tns:SalirResponse" />
+  <wsdl:message name="IChatManejador_SalirChatSala_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SalirChatSalaResponse" />
   </wsdl:message>
   <wsdl:message name="IChatManejador_RecibirMensaje_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:RecibirMensaje" />
@@ -52,16 +52,16 @@
     <wsdl:part name="parameters" element="tns:NotificarJugadorSalio" />
   </wsdl:message>
   <wsdl:portType name="IChatManejador">
-    <wsdl:operation name="Unirse">
-      <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/Unirse" message="tns:IChatManejador_Unirse_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/UnirseResponse" message="tns:IChatManejador_Unirse_OutputMessage" />
+    <wsdl:operation name="UnirseChatSala">
+      <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/UnirseChatSala" message="tns:IChatManejador_UnirseChatSala_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/UnirseChatSalaResponse" message="tns:IChatManejador_UnirseChatSala_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="EnviarMensaje">
       <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/EnviarMensaje" message="tns:IChatManejador_EnviarMensaje_InputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="Salir">
-      <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/Salir" message="tns:IChatManejador_Salir_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/SalirResponse" message="tns:IChatManejador_Salir_OutputMessage" />
+    <wsdl:operation name="SalirChatSala">
+      <wsdl:input wsaw:Action="http://tempuri.org/IChatManejador/SalirChatSala" message="tns:IChatManejador_SalirChatSala_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/SalirChatSalaResponse" message="tns:IChatManejador_SalirChatSala_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="RecibirMensaje">
       <wsdl:output wsaw:Action="http://tempuri.org/IChatManejador/RecibirMensaje" message="tns:IChatManejador_RecibirMensaje_OutputCallbackMessage" />
@@ -76,8 +76,8 @@
   <wsdl:binding name="WSDualHttpBinding_IChatManejador" type="tns:IChatManejador">
     <wsp:PolicyReference URI="#WSDualHttpBinding_IChatManejador_policy" />
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="Unirse">
-      <soap12:operation soapAction="http://tempuri.org/IChatManejador/Unirse" style="document" />
+    <wsdl:operation name="UnirseChatSala">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/UnirseChatSala" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -91,8 +91,8 @@
         <soap12:body use="literal" />
       </wsdl:input>
     </wsdl:operation>
-    <wsdl:operation name="Salir">
-      <soap12:operation soapAction="http://tempuri.org/IChatManejador/Salir" style="document" />
+    <wsdl:operation name="SalirChatSala">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/SalirChatSala" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -122,8 +122,8 @@
   <wsdl:binding name="NetTcpBinding_IChatManejador" type="tns:IChatManejador">
     <wsp:PolicyReference URI="#NetTcpBinding_IChatManejador_policy" />
     <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
-    <wsdl:operation name="Unirse">
-      <soap12:operation soapAction="http://tempuri.org/IChatManejador/Unirse" style="document" />
+    <wsdl:operation name="UnirseChatSala">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/UnirseChatSala" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -137,8 +137,8 @@
         <soap12:body use="literal" />
       </wsdl:input>
     </wsdl:operation>
-    <wsdl:operation name="Salir">
-      <soap12:operation soapAction="http://tempuri.org/IChatManejador/Salir" style="document" />
+    <wsdl:operation name="SalirChatSala">
+      <soap12:operation soapAction="http://tempuri.org/IChatManejador/SalirChatSala" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

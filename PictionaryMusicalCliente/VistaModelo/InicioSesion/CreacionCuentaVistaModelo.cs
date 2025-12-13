@@ -5,6 +5,7 @@ using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -26,7 +27,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private readonly IVerificacionCodigoDialogoServicio 
             _verificarCodigoDialogoServicio;
         private readonly ILocalizacionServicio _localizacionServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly ICatalogoAvatares _catalogoAvatares;
         private readonly IAvisoServicio _avisoServicio;
 
@@ -48,7 +49,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             ICuentaServicio cuentaServicio,
             ISeleccionarAvatarServicio seleccionarAvatarServicio,
             IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             ICatalogoAvatares catalogoAvatares,
             IAvisoServicio avisoServicio,
             ILocalizacionServicio localizacionServicio = null)

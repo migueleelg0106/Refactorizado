@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 {
@@ -19,7 +20,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
 
         private readonly IClasificacionServicio _clasificacionServicio;
@@ -40,7 +41,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             ILocalizadorServicio localizador,
             IClasificacionServicio clasificacionServicio,
             IAvisoServicio avisoServicio,
-            ISonidoManejador sonidoManejador)
+            SonidoManejador sonidoManejador)
             : base(ventana, localizador)
         {
             _clasificacionServicio = clasificacionServicio ??

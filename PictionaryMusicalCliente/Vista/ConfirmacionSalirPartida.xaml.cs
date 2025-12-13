@@ -1,6 +1,5 @@
 ﻿using System.Windows;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
-using PictionaryMusicalCliente.VistaModelo.Salas;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.Vista
 {
@@ -9,7 +8,7 @@ namespace PictionaryMusicalCliente.Vista
     /// </summary>
     public partial class ConfirmacionSalirPartida : Window
     {
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
 
         /// <summary>
         /// Constructor por defecto, solo para uso del diseñador/XAML. 
@@ -22,7 +21,7 @@ namespace PictionaryMusicalCliente.Vista
         /// <summary>
         /// Inicializa el dialogo.
         /// </summary>
-        public ConfirmacionSalirPartida(ISonidoManejador sonidoManejador)
+        public ConfirmacionSalirPartida(SonidoManejador sonidoManejador)
         {
             InitializeComponent();
             _sonidoManejador = sonidoManejador;

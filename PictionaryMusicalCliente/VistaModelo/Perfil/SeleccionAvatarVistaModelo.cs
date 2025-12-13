@@ -3,6 +3,7 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IAvisoServicio _avisoServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private ObjetoAvatar _avatarSeleccionado;
 
         public SeleccionAvatarVistaModelo(
@@ -27,7 +28,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             ILocalizadorServicio localizador,
             IEnumerable<ObjetoAvatar> avatares,
             IAvisoServicio avisoServicio,
-            ISonidoManejador sonidoManejador)
+            SonidoManejador sonidoManejador)
             : base(ventana, localizador)
         {
             _avisoServicio = avisoServicio ??

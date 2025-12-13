@@ -2,6 +2,7 @@ using log4net;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
 
         private readonly IInvitacionesServicio _invitacionesServicio;
         private readonly IPerfilServicio _perfilServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
         private readonly string _codigoSala;
         private readonly Action<int> _registrarAmigoInvitado;
@@ -33,7 +34,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             IEnumerable<DTOs.AmigoDTO> amigos,
             IInvitacionesServicio invitacionesServicio,
             IPerfilServicio perfilServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio,
             string codigoSala,
             Func<int, bool> amigoInvitado,
@@ -221,14 +222,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     public class AmigoInvitacionItemVistaModelo
     {
         private readonly InvitarAmigosVistaModelo _padre;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private bool _invitacionEnviada;
         private bool _estaProcesando;
 
         public AmigoInvitacionItemVistaModelo(
             DTOs.AmigoDTO amigo,
             InvitarAmigosVistaModelo padre,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             bool invitacionEnviada)
         {
             if (amigo == null)

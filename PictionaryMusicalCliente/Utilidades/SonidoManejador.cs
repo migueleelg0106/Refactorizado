@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Media;
 using log4net;
 
-namespace PictionaryMusicalCliente.ClienteServicios
+namespace PictionaryMusicalCliente.Utilidades
 {
     /// <summary>
     /// Provee metodos para reproducir efectos de sonido (SFX) cortos, respetando

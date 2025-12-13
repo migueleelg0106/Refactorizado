@@ -68,6 +68,12 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciada", ReplyAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciadaResponse")]
         System.Threading.Tasks.Task MarcarPartidaComoIniciadaAsync(string codigoSala);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoFinalizada", ReplyAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoFinalizadaResponse")]
+        void MarcarPartidaComoFinalizada(string codigoSala);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoFinalizada", ReplyAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoFinalizadaResponse")]
+        System.Threading.Tasks.Task MarcarPartidaComoFinalizadaAsync(string codigoSala);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -190,6 +196,14 @@ namespace PictionaryMusicalCliente.PictionaryServidorServicioSalas {
         
         public System.Threading.Tasks.Task MarcarPartidaComoIniciadaAsync(string codigoSala) {
             return base.Channel.MarcarPartidaComoIniciadaAsync(codigoSala);
+        }
+        
+        public void MarcarPartidaComoFinalizada(string codigoSala) {
+            base.Channel.MarcarPartidaComoFinalizada(codigoSala);
+        }
+        
+        public System.Threading.Tasks.Task MarcarPartidaComoFinalizadaAsync(string codigoSala) {
+            return base.Channel.MarcarPartidaComoFinalizadaAsync(codigoSala);
         }
     }
 }

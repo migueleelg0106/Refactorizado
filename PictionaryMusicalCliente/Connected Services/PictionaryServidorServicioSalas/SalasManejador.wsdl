@@ -83,6 +83,12 @@
   <wsdl:message name="ISalasManejador_MarcarPartidaComoIniciada_OutputMessage">
     <wsdl:part name="parameters" element="tns:MarcarPartidaComoIniciadaResponse" />
   </wsdl:message>
+  <wsdl:message name="ISalasManejador_MarcarPartidaComoFinalizada_InputMessage">
+    <wsdl:part name="parameters" element="tns:MarcarPartidaComoFinalizada" />
+  </wsdl:message>
+  <wsdl:message name="ISalasManejador_MarcarPartidaComoFinalizada_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MarcarPartidaComoFinalizadaResponse" />
+  </wsdl:message>
   <wsdl:message name="ISalasManejador_NotificarJugadorSeUnio_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:NotificarJugadorSeUnio" />
   </wsdl:message>
@@ -137,6 +143,10 @@
     <wsdl:operation name="MarcarPartidaComoIniciada">
       <wsdl:input wsaw:Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciada" message="tns:ISalasManejador_MarcarPartidaComoIniciada_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciadaResponse" message="tns:ISalasManejador_MarcarPartidaComoIniciada_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="MarcarPartidaComoFinalizada">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoFinalizada" message="tns:ISalasManejador_MarcarPartidaComoFinalizada_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/MarcarPartidaComoFinalizadaResponse" message="tns:ISalasManejador_MarcarPartidaComoFinalizada_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="NotificarJugadorSeUnio">
       <wsdl:output wsaw:Action="http://tempuri.org/ISalasManejador/NotificarJugadorSeUnio" message="tns:ISalasManejador_NotificarJugadorSeUnio_OutputCallbackMessage" />
@@ -234,6 +244,15 @@
     </wsdl:operation>
     <wsdl:operation name="MarcarPartidaComoIniciada">
       <soap12:operation soapAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciada" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MarcarPartidaComoFinalizada">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoFinalizada" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -355,6 +374,15 @@
     </wsdl:operation>
     <wsdl:operation name="MarcarPartidaComoIniciada">
       <soap12:operation soapAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoIniciada" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MarcarPartidaComoFinalizada">
+      <soap12:operation soapAction="http://tempuri.org/ISalasManejador/MarcarPartidaComoFinalizada" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

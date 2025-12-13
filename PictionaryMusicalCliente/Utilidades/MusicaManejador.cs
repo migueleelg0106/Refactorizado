@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Media;
 using log4net;
 
-namespace PictionaryMusicalCliente.ClienteServicios
+namespace PictionaryMusicalCliente.Utilidades
 {
     /// <summary>
     /// Controla la reproduccion de musica de fondo en la aplicacion.

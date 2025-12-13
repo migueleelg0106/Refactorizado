@@ -5,6 +5,7 @@ using log4net;
 using System;
 using System.Windows.Input;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
@@ -15,13 +16,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly string _nombreAmigo;
 
         public EliminacionAmigoVistaModelo(
             IVentanaServicio ventana,
             ILocalizadorServicio localizador,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             string nombreAmigo)
             : base(ventana, localizador)
         {

@@ -2,6 +2,7 @@
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Windows.Input;
@@ -15,7 +16,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
     {
         private static readonly ILog Logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly string _nombreJugador;
         private string _motivo;
         private string _mensajeError;
@@ -23,7 +24,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public ReportarJugadorVistaModelo(
             IVentanaServicio ventana,
             ILocalizadorServicio localizador,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             string nombreJugador)
             : base(ventana, localizador)
         {

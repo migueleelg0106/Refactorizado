@@ -1,4 +1,3 @@
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
@@ -15,6 +14,7 @@ using System.Windows.Input;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 {
@@ -27,7 +27,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
         private readonly IRecuperacionCuentaServicio _recuperacionCuentaDialogoServicio;
         private readonly ILocalizacionServicio _localizacionServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
         private readonly INombreInvitadoGenerador _generadorNombres;
         private readonly IUsuarioAutenticado _usuarioSesion;
@@ -49,7 +49,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             ICambioContrasenaServicio cambioContrasenaServicio,
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
             ILocalizacionServicio localizacionServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio,
             INombreInvitadoGenerador generadorNombres,
             IUsuarioAutenticado usuarioSesion,

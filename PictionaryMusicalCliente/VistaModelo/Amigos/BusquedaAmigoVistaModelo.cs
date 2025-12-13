@@ -3,6 +3,7 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IAmigosServicio _amigosServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
         private readonly IUsuarioAutenticado _usuarioSesion;
         private string _nombreUsuarioBusqueda;
@@ -38,7 +39,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             IVentanaServicio ventana,
             ILocalizadorServicio localizador,
             IAmigosServicio amigosServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio,
             IUsuarioAutenticado usuarioSesion)
             : base(ventana, localizador)

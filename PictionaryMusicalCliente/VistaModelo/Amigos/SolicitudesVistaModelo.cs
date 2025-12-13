@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.VistaModelo.Amigos
 {
@@ -23,7 +24,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IAmigosServicio _amigosServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly string _usuarioActual;
@@ -33,7 +34,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             IVentanaServicio ventana,
             ILocalizadorServicio localizador,
             IAmigosServicio amigosServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio,
             IUsuarioAutenticado usuarioSesion)
             : base(ventana, localizador)

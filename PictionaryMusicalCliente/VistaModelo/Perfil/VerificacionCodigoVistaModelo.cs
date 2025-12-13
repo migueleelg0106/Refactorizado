@@ -2,6 +2,7 @@ using log4net;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IAvisoServicio _avisoServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
 
         private const int SegundosEsperaReenvio = 30;
         private static readonly TimeSpan TiempoExpiracionCodigo = 
@@ -44,7 +45,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             string tokenCodigo,
             ICodigoVerificacionServicio codigoVerificacionServicio,
             IAvisoServicio avisoServicio,
-            ISonidoManejador sonidoManejador)
+            SonidoManejador sonidoManejador)
             : base(ventana, localizador)
         {
             Descripcion = descripcion ?? 

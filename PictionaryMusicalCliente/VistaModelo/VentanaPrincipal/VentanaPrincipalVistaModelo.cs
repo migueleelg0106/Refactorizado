@@ -12,6 +12,7 @@ using System.Windows.Input;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 {
@@ -38,7 +39,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IAmigosServicio _amigosServicio;
         private readonly ISalasServicio _salasServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IUsuarioAutenticado _usuarioSesion;
 
         private bool _suscripcionActiva;
@@ -50,7 +51,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             IListaAmigosServicio listaAmigosServicio,
             IAmigosServicio amigosServicio,
             ISalasServicio salasServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             IUsuarioAutenticado usuarioSesion)
             : base(ventana, localizador)
         {

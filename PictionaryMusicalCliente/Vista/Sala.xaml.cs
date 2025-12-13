@@ -15,6 +15,7 @@ using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using log4net;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.Vista
 {

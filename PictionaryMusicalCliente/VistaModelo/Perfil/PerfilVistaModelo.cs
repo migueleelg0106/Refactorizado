@@ -5,6 +5,7 @@ using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Modelo.Catalogos;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,7 +35,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private readonly IRecuperacionCuentaServicio 
             _recuperacionCuentaDialogoServicio;
         private readonly IAvisoServicio _avisoServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly ICatalogoAvatares _catalogoAvatares;
         private readonly ICatalogoImagenesPerfil _catalogoPerfil;
@@ -61,7 +62,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             ICambioContrasenaServicio cambioContrasenaServicio,
             IRecuperacionCuentaServicio recuperacionCuentaDialogoServicio,
             IAvisoServicio avisoServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             IUsuarioAutenticado usuarioSesion,
             ICatalogoAvatares catalogoAvatares,
             ICatalogoImagenesPerfil catalogoPerfil)

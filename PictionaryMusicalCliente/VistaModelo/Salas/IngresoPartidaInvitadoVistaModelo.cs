@@ -3,6 +3,7 @@ using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private readonly ISalasServicio _salasServicio;
         private readonly ILocalizacionServicio _localizacionServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
         private readonly INombreInvitadoGenerador _nombreInvitadoGenerador;
 
@@ -39,7 +40,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             ILocalizacionServicio localizacionServicio,
             ISalasServicio salasServicio,
             IAvisoServicio avisoServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             INombreInvitadoGenerador nombreInvitadoGenerador)
             : base(ventana, localizador)
         {

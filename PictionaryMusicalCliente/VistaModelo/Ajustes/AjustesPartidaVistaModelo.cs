@@ -3,6 +3,7 @@ using System;
 using System.Windows.Input;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 {
@@ -11,8 +12,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
     /// </summary>
     public class AjustesPartidaVistaModelo : BaseVistaModelo
     {
-        private readonly ICancionManejador _cancionManejador;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly CancionManejador _cancionManejador;
+        private readonly SonidoManejador _sonidoManejador;
 
         /// <summary>
         /// Accion para manejar salida confirmada de la partida.
@@ -29,8 +30,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         public AjustesPartidaVistaModelo(
             IVentanaServicio ventana,
             ILocalizadorServicio localizador,
-            ICancionManejador cancionManejador,
-            ISonidoManejador sonidoManejador)
+            CancionManejador cancionManejador,
+            SonidoManejador sonidoManejador)
             : base(ventana, localizador)
         {
             _cancionManejador = cancionManejador ??

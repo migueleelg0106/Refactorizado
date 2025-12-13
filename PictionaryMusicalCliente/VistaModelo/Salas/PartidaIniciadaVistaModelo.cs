@@ -1,5 +1,4 @@
 using log4net;
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Properties.Langs;
@@ -20,9 +19,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
 
-        private readonly ICancionManejador _cancionManejador;
+        private readonly CancionManejador _cancionManejador;
         private DispatcherTimer _overlayTimer;
         private DispatcherTimer _temporizadorAlarma;
         private DispatcherTimer _temporizador;
@@ -64,8 +63,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public PartidaIniciadaVistaModelo(
             IVentanaServicio ventana,
             ILocalizadorServicio localizador,
-            ISonidoManejador sonidoManejador,
-            ICancionManejador cancionManejador)
+            SonidoManejador sonidoManejador,
+            CancionManejador cancionManejador)
             : base(ventana, localizador)
         {
             _cancionManejador = cancionManejador ??
@@ -296,7 +295,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
         /// Manejador de canciones para ajustes de volumen.
 
-        public ICancionManejador CancionManejador => _cancionManejador;
+        public CancionManejador CancionManejador => _cancionManejador;
         /// Comando para seleccionar el lapiz como herramienta.
 
         public ICommand SeleccionarLapizComando { get; private set; }

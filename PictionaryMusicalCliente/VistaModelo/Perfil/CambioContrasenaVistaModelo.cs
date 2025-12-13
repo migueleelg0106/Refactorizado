@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
+using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.VistaModelo.Perfil
 {
@@ -21,7 +22,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
 
         private readonly string _tokenCodigo;
         private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
 
         private string _nuevaContrasena;
@@ -43,7 +44,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             string tokenCodigo,
             ICambioContrasenaServicio cambioContrasenaServicio,
             IAvisoServicio avisoServicio,
-            ISonidoManejador sonidoManejador)
+            SonidoManejador sonidoManejador)
             : base(ventana, localizador)
         {
             _tokenCodigo = tokenCodigo ?? throw new ArgumentNullException(nameof(tokenCodigo));

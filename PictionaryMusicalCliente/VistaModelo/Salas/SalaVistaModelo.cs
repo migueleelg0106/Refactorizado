@@ -6,6 +6,7 @@ using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using System;
@@ -34,11 +35,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private ISalasServicio _salasServicio;
         private IInvitacionSalaServicio _invitacionSalaServicio;
         private IReportesServicio _reportesServicio;
-        private ISonidoManejador _sonidoManejador;
+        private SonidoManejador _sonidoManejador;
         private IAvisoServicio _avisoServicio;
         private IUsuarioAutenticado _usuarioSesion;
         private IWcfClienteFabrica _fabricaClientes;
-        private ICancionManejador _cancionManejador;
+        private CancionManejador _cancionManejador;
 
         private readonly DTOs.SalaDTO _sala;
         private readonly string _nombreUsuarioSesion;
@@ -95,12 +96,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             IListaAmigosServicio listaAmigosServicio,
             IPerfilServicio perfilServicio,
             IReportesServicio reportesServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio,
             IUsuarioAutenticado usuarioSesion,
             IInvitacionSalaServicio invitacionSalaServicio,
             IWcfClienteFabrica fabricaClientes,
-            ICancionManejador cancionManejador,
+            CancionManejador cancionManejador,
             string nombreJugador = null,
             bool esInvitado = false)
             : base(ventana, localizador)
@@ -132,10 +133,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
         private void ValidarDependencias(DTOs.SalaDTO sala, ISalasServicio salasServicio,
-            IReportesServicio reportesServicio, ISonidoManejador sonidoManejador,
+            IReportesServicio reportesServicio, SonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio, IInvitacionSalaServicio invitacionSalaServicio,
             IUsuarioAutenticado usuarioSesion, IWcfClienteFabrica fabricaClientes,
-            ICancionManejador cancionManejador)
+            CancionManejador cancionManejador)
         {
             if (sala == null) throw new ArgumentNullException(nameof(sala));
             if (salasServicio == null) throw new ArgumentNullException(nameof(salasServicio));
@@ -155,10 +156,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
         private void AsignarServicios(ISalasServicio salasServicio,
-            IReportesServicio reportesServicio, ISonidoManejador sonidoManejador,
+            IReportesServicio reportesServicio, SonidoManejador sonidoManejador,
             IAvisoServicio avisoServicio, IInvitacionSalaServicio invitacionSalaServicio,
             IUsuarioAutenticado usuarioSesion, IWcfClienteFabrica fabricaClientes,
-            ICancionManejador cancionManejador)
+            CancionManejador cancionManejador)
         {
             _salasServicio = salasServicio;
             _reportesServicio = reportesServicio;
@@ -494,7 +495,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         public ICommand EnviarMensajeChatComando { get; private set; }
 
-        public Action<ICancionManejador> AbrirAjustesPartida { get; set; }
+        public Action<CancionManejador> AbrirAjustesPartida { get; set; }
 
         public Action<bool> NotificarCambioHerramienta
         {

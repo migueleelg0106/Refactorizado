@@ -10,7 +10,7 @@ using PictionaryMusicalCliente.VistaModelo.Perfil;
 using System.Windows.Markup;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Vista;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 {
@@ -23,12 +23,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             LogManager.GetLogger(typeof(SeleccionAvatarDialogoServicio));
         private readonly IAvisoServicio _avisoServicio;
         private readonly ICatalogoAvatares _catalogoAvatares;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
 
         public SeleccionAvatarDialogoServicio(
             IAvisoServicio avisoServicio,
             ICatalogoAvatares catalogoAvatares,
-            ISonidoManejador sonidoManejador)
+            SonidoManejador sonidoManejador)
         {
             _avisoServicio = avisoServicio ??
                 throw new ArgumentNullException(nameof(avisoServicio));

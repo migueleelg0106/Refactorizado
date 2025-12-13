@@ -5,7 +5,7 @@ using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Perfil;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.Vista;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 {
@@ -26,7 +26,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             ICodigoVerificacionServicio codigoVerificacionServicio,
             IAvisoServicio avisoServicio,
             ILocalizadorServicio localizadorServicio,
-            ISonidoManejador sonidoManejador)
+            SonidoManejador sonidoManejador)
         {
             if (codigoVerificacionServicio == null)
                 throw new ArgumentNullException(nameof(codigoVerificacionServicio));
