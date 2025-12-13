@@ -67,7 +67,7 @@ namespace PictionaryMusicalCliente
             InicializarServicios();
             ConfigurarIdioma();
 
-            var inicioSesionVM = new InicioSesionVistaModelo(
+            var inicioSesionVM = new VistaModelo.InicioSesion.InicioSesionVistaModelo(
                 VentanaServicio,
                 Localizador,
                 InicioSesionServicio,

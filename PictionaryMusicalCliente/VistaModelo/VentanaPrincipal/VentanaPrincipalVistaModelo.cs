@@ -1,7 +1,13 @@
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
+using PictionaryMusicalCliente.VistaModelo.Ajustes;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
+using PictionaryMusicalCliente.VistaModelo.InicioSesion;
+using PictionaryMusicalCliente.VistaModelo.Perfil;
+using PictionaryMusicalCliente.VistaModelo.Salas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -79,27 +85,27 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             AbrirPerfilComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                AbrirPerfil?.Invoke();
+                EjecutarAbrirPerfil();
             });
             AbrirAjustesComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                AbrirAjustes?.Invoke();
+                EjecutarAbrirAjustes();
             });
             AbrirComoJugarComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                AbrirComoJugar?.Invoke();
+                EjecutarAbrirComoJugar();
             });
             AbrirClasificacionComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                AbrirClasificacion?.Invoke();
+                EjecutarAbrirClasificacion();
             });
             AbrirBuscarAmigoComando = new ComandoDelegado(_ =>
             {
                 _sonidoManejador.ReproducirClick();
-                AbrirBuscarAmigo?.Invoke();
+                EjecutarAbrirBuscarAmigo();
             });
             AbrirSolicitudesComando = new ComandoDelegado(_ =>
             {
@@ -235,16 +241,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         public IComandoAsincrono UnirseSalaComando { get; }
         public IComandoAsincrono IniciarJuegoComando { get; }
 
-        public Action AbrirPerfil { get; set; }
-        public Action AbrirAjustes { get; set; }
-        public Action AbrirComoJugar { get; set; }
-        public Action AbrirClasificacion { get; set; }
-        public Action AbrirBuscarAmigo { get; set; }
-        public Action AbrirSolicitudes { get; set; }
-        public Func<string, bool?> ConfirmarEliminarAmigo { get; set; }
-        public Action<DTOs.SalaDTO> UnirseSala { get; set; }
-        public Action<DTOs.SalaDTO> IniciarJuego { get; set; }
-        public Action<string> MostrarMensaje { get; set; }
+
 
         public async Task InicializarAsync()
         {
@@ -499,8 +496,13 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
         private bool SolicitarConfirmacionEliminacion(string nombreAmigo)
         {
-            bool? confirmar = ConfirmarEliminarAmigo?.Invoke(nombreAmigo);
-            return confirmar == true;
+            var eliminacionVM = new Amigos.EliminacionAmigoVistaModelo(
+                _ventana,
+                _localizador,
+                _sonidoManejador,
+                nombreAmigo);
+            _ventana.MostrarVentanaDialogo(eliminacionVM);
+            return eliminacionVM.DialogResult == true;
         }
 
         private bool ValidarSesionActivaParaEliminar()
@@ -512,7 +514,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         {
             _logger.Warn("Intento de eliminar amigo sin sesion activa.");
             _sonidoManejador.ReproducirError();
-            MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+            App.AvisoServicio.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
         }
 
         private async Task EliminarAmigoEnServidorAsync(string nombreAmigo)
@@ -531,7 +533,84 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private void MostrarExitoEliminacion()
         {
             _sonidoManejador.ReproducirNotificacion();
-            MostrarMensaje?.Invoke(Lang.amigosTextoAmigoEliminado);
+            App.AvisoServicio.Mostrar(Lang.amigosTextoAmigoEliminado);
+        }
+
+        private void EjecutarAbrirPerfil()
+        {
+            var vmPerfil = new Perfil.PerfilVistaModelo(
+                _ventana,
+                _localizador,
+                App.PerfilServicio,
+                new ClienteServicios.Dialogos.SeleccionAvatarDialogoServicio(
+                    App.AvisoServicio, App.CatalogoAvatares, _sonidoManejador),
+                App.CambioContrasenaServicio,
+                App.RecuperacionCuentaServicio,
+                App.AvisoServicio,
+                _sonidoManejador,
+                _usuarioSesion,
+                App.CatalogoAvatares,
+                App.CatalogoImagenes);
+
+            vmPerfil.SolicitarReinicioSesion = () => ReiniciarAplicacion();
+            _ventana.MostrarVentanaDialogo(vmPerfil);
+        }
+
+        private void ReiniciarAplicacion()
+        {
+            _usuarioSesion.Limpiar();
+            var vmInicio = new InicioSesion.InicioSesionVistaModelo(
+                _ventana,
+                _localizador,
+                App.InicioSesionServicio,
+                App.CambioContrasenaServicio,
+                App.RecuperacionCuentaServicio,
+                _localizacion,
+                _sonidoManejador,
+                App.AvisoServicio,
+                App.GeneradorNombres,
+                _usuarioSesion,
+                App.FabricaSalas);
+            _ventana.MostrarVentana(vmInicio);
+            _ventana.CerrarVentana(this);
+        }
+
+        private void EjecutarAbrirAjustes()
+        {
+            var ajustesVM = new Ajustes.AjustesVistaModelo(
+                _ventana,
+                _localizador);
+            _ventana.MostrarVentanaDialogo(ajustesVM);
+        }
+
+        private void EjecutarAbrirComoJugar()
+        {
+            // ComoJugar no tiene ViewModel, se abre directamente desde código
+            // Esta funcionalidad se maneja en el code-behind
+            App.AvisoServicio.Mostrar(Lang.principalTextoComoJugar);
+        }
+
+        private void EjecutarAbrirClasificacion()
+        {
+            var clasificacionVM = new ClasificacionVistaModelo(
+                _ventana,
+                _localizador,
+                App.ClasificacionServicio,
+                App.AvisoServicio,
+                _sonidoManejador);
+            _ventana.MostrarVentanaDialogo(clasificacionVM);
+        }
+
+        private void EjecutarAbrirBuscarAmigo()
+        {
+            var busquedaAmigoVM = new Amigos.BusquedaAmigoVistaModelo(
+                _ventana,
+                _localizador,
+                _amigosServicio,
+                _sonidoManejador,
+                App.AvisoServicio,
+                _usuarioSesion);
+            _ventana.MostrarVentanaDialogo(busquedaAmigoVM);
         }
 
         private void EjecutarAbrirSolicitudes()
@@ -540,11 +619,18 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
             if (solicitudesPendientes == null || solicitudesPendientes.Count == 0)
             {
-                MostrarMensaje?.Invoke(Lang.amigosAvisoSinSolicitudesPendientes);
+                App.AvisoServicio.Mostrar(Lang.amigosAvisoSinSolicitudesPendientes);
                 return;
             }
 
-            AbrirSolicitudes?.Invoke();
+            var solicitudesVM = new Amigos.SolicitudesVistaModelo(
+                _ventana,
+                _localizador,
+                _amigosServicio,
+                _sonidoManejador,
+                App.AvisoServicio,
+                _usuarioSesion);
+            _ventana.MostrarVentanaDialogo(solicitudesVM);
         }
 
         private async Task UnirseSalaInternoAsync()
@@ -578,7 +664,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private void ManejarErrorCodigoInvalido()
         {
             _sonidoManejador.ReproducirError();
-            MostrarMensaje?.Invoke(Lang.unirseSalaTextoVacio);
+            App.AvisoServicio.Mostrar(Lang.unirseSalaTextoVacio);
         }
 
         private bool ValidarSesionActivaParaUnirse()
@@ -589,7 +675,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private void ManejarErrorSesionInactivaUnirse()
         {
             _sonidoManejador.ReproducirError();
-            MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+            App.AvisoServicio.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
         }
 
         private async Task<DTOs.SalaDTO> UnirseSalaEnServidorAsync(string codigo)
@@ -603,7 +689,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private void NavegarASalaUnida(DTOs.SalaDTO sala)
         {
             _sonidoManejador.ReproducirNotificacion();
-            UnirseSala?.Invoke(sala);
+            NavegarASala(sala, false);
         }
 
         private async Task IniciarJuegoInternoAsync()
@@ -636,7 +722,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private void ManejarErrorConfiguracionInvalida()
         {
             _sonidoManejador.ReproducirError();
-            MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+            App.AvisoServicio.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
         }
 
         private bool ValidarSesionActivaParaIniciar()
@@ -647,7 +733,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private void ManejarErrorSesionInactivaIniciar()
         {
             _sonidoManejador.ReproducirError();
-            MostrarMensaje?.Invoke(Lang.errorTextoErrorProcesarSolicitud);
+            App.AvisoServicio.Mostrar(Lang.errorTextoErrorProcesarSolicitud);
         }
 
         private DTOs.ConfiguracionPartidaDTO CrearConfiguracionPartida()
@@ -673,7 +759,40 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private void NavegarASalaCreada(DTOs.SalaDTO sala)
         {
             _sonidoManejador.ReproducirNotificacion();
-            IniciarJuego?.Invoke(sala);
+            NavegarASala(sala, false);
+        }
+
+        private void NavegarASala(DTOs.SalaDTO sala, bool esInvitado)
+        {
+            App.MusicaManejador.Detener();
+
+            var invitacionSalaServicio = new InvitacionSalaServicio(
+                App.InvitacionesServicio,
+                _listaAmigosServicio,
+                App.PerfilServicio,
+                _sonidoManejador,
+                App.AvisoServicio);
+
+            var vmSala = new Salas.SalaVistaModelo(
+                _ventana,
+                _localizador,
+                sala,
+                _salasServicio,
+                App.InvitacionesServicio,
+                _listaAmigosServicio,
+                App.PerfilServicio,
+                App.ReportesServicio,
+                _sonidoManejador,
+                App.AvisoServicio,
+                _usuarioSesion,
+                invitacionSalaServicio,
+                App.WcfFabrica,
+                new CancionManejador(),
+                _usuarioSesion.NombreUsuario,
+                esInvitado);
+
+            _ventana.MostrarVentana(vmSala);
+            _ventana.CerrarVentana(this);
         }
 
         private bool PuedeIniciarJuego()
