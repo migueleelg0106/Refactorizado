@@ -186,9 +186,7 @@ namespace PictionaryMusicalCliente.Vista
         {
             var ajustesVM = new VistaModelo.Ajustes.AjustesVistaModelo(
                 App.VentanaServicio,
-                App.Localizador,
-                _musica,
-                _sonidos);
+                App.Localizador);
             App.VentanaServicio.MostrarVentanaDialogo(ajustesVM);
         }
 

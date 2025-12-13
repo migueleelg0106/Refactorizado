@@ -12,28 +12,16 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
     /// </summary>
     public class AjustesVistaModelo : BaseVistaModelo
     {
-        private readonly IMusicaManejador _musicaManejador;
-        private readonly ISonidoManejador _sonidoManejador;
-
         /// <summary>
-        /// Inicializa el ViewModel con el manejador de musica global.
+        /// Inicializa el ViewModel para configuracion global de la aplicacion.
         /// </summary>
         /// <param name="ventana">Servicio para gestionar ventanas.</param>
         /// <param name="localizador">Servicio de localizacion.</param>
-        /// <param name="servicioMusica">Servicio de control de audio.</param>
-        /// <param name="sonidoManejador">Servicio que gestiona los efectos de sonido.</param>
         public AjustesVistaModelo(
             IVentanaServicio ventana,
-            ILocalizadorServicio localizador,
-            IMusicaManejador servicioMusica, 
-            ISonidoManejador sonidoManejador)
+            ILocalizadorServicio localizador)
             : base(ventana, localizador)
         {
-            _musicaManejador = servicioMusica ??
-                throw new ArgumentNullException(nameof(servicioMusica));
-            _sonidoManejador = sonidoManejador ?? 
-                throw new ArgumentNullException(nameof(sonidoManejador));
-
             ConfirmarComando = new ComandoDelegado(_ => EjecutarConfirmar());
             CerrarSesionComando = new ComandoDelegado(_ => EjecutarCerrarSesion());
         }
@@ -43,12 +31,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         /// </summary>
         public double Volumen
         {
-            get => _musicaManejador.Volumen;
+            get => App.MusicaManejador.Volumen;
             set
             {
-                if (Math.Abs(_musicaManejador.Volumen - value) > 0.0001)
+                if (Math.Abs(App.MusicaManejador.Volumen - value) > 0.0001)
                 {
-                    _musicaManejador.Volumen = value;
+                    App.MusicaManejador.Volumen = value;
                     NotificarCambio(nameof(Volumen));
                 }
             }
@@ -59,12 +47,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         /// </summary>
         public bool SonidosSilenciados
         {
-            get => _sonidoManejador.Silenciado;
+            get => App.SonidoManejador.Silenciado;
             set
             {
-                if (_sonidoManejador.Silenciado != value)
+                if (App.SonidoManejador.Silenciado != value)
                 {
-                    _sonidoManejador.Silenciado = value;
+                    App.SonidoManejador.Silenciado = value;
                     NotificarCambio(nameof(SonidosSilenciados));
                 }
             }
