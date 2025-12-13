@@ -27,14 +27,14 @@ namespace PictionaryMusicalCliente.Vista
             _sonidoManejador = sonidoManejador;
         }
 
-        private void BotonAceptarSalirPartida(object sender, RoutedEventArgs e)
+        private void AlHacerClicEnBotonAceptarSalirPartida(object remitente, RoutedEventArgs argumentosEvento)
         {
             _sonidoManejador?.ReproducirClick();
             DialogResult = true;
             Close();
         }
 
-        private void BotonCancelarSalirPartida(object sender, RoutedEventArgs e)
+        private void AlHacerClicEnBotonCancelarSalirPartida(object remitente, RoutedEventArgs argumentosEvento)
         {
             _sonidoManejador?.ReproducirClick();
             DialogResult = false;

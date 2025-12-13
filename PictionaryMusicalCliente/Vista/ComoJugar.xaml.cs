@@ -15,7 +15,7 @@ namespace PictionaryMusicalCliente.Vista
             InitializeComponent();
         }
 
-        private void BotonRegresar(object sender, RoutedEventArgs e)
+        private void AlHacerClicEnBotonRegresar(object remitente, RoutedEventArgs argumentosEvento)
         {
             Close();
         }
