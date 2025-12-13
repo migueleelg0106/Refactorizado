@@ -14,22 +14,22 @@ namespace PictionaryMusicalCliente.Vista
         public Perfil()
         {
             InitializeComponent();
-            DataContextChanged += Perfil_DataContextChanged;
+            DataContextChanged += AlCambiarContextoDeDatosPerfil;
         }
 
-        private void Perfil_DataContextChanged(
-            object sender, 
-            DependencyPropertyChangedEventArgs e)
+        private void AlCambiarContextoDeDatosPerfil(
+            object remitente, 
+            DependencyPropertyChangedEventArgs argumentosEvento)
         {
-            if (e.NewValue is PerfilVistaModelo vistaModelo)
+            if (argumentosEvento.NewValue is PerfilVistaModelo vistaModelo)
             {
                 vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
-                Loaded += Perfil_LoadedAsync;
-                Closed += Perfil_Closed;
+                Loaded += AlCargarPerfilAsync;
+                Closed += AlCerrarPerfil;
             }
         }
 
-        private async void Perfil_LoadedAsync(object sender, RoutedEventArgs e)
+        private async void AlCargarPerfilAsync(object remitente, RoutedEventArgs argumentosEvento)
         {
             if (DataContext is PerfilVistaModelo vistaModelo)
             {
@@ -37,7 +37,7 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void Perfil_Closed(object sender, EventArgs e)
+        private void AlCerrarPerfil(object remitente, EventArgs argumentosEvento)
         {
             if (DataContext is PerfilVistaModelo vistaModelo && 
                 vistaModelo.RequiereReinicioSesion)
@@ -46,25 +46,25 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void PopupRedSocial_Opened(object sender, EventArgs e)
+        private void AlAbrirPopupRedSocial(object remitente, EventArgs argumentosEvento)
         {
-            if (sender is Popup popup &&
-                popup.Child is Border border &&
-                border.Child is TextBox textBox)
+            if (remitente is Popup ventanaEmergente &&
+                ventanaEmergente.Child is Border borde &&
+                borde.Child is TextBox cajaTexto)
             {
-                textBox.Focus();
-                textBox.CaretIndex = textBox.Text?.Length ?? 0;
+                cajaTexto.Focus();
+                cajaTexto.CaretIndex = cajaTexto.Text?.Length ?? 0;
             }
         }
 
-        private void RedSocialTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void AlPresionarTeclaEnCajaTextoRedSocial(object remitente, KeyEventArgs argumentosEvento)
         {
-            if (sender is TextBox textBox &&
-                textBox.Tag is ToggleButton toggle &&
-                (e.Key == Key.Enter || e.Key == Key.Return || e.Key == Key.Escape))
+            if (remitente is TextBox cajaTexto &&
+                cajaTexto.Tag is ToggleButton botonAlternar &&
+                (argumentosEvento.Key == Key.Enter || argumentosEvento.Key == Key.Return || argumentosEvento.Key == Key.Escape))
             {
-                toggle.IsChecked = false;
-                e.Handled = true;
+                botonAlternar.IsChecked = false;
+                argumentosEvento.Handled = true;
             }
         }
 

@@ -15,27 +15,27 @@ namespace PictionaryMusicalCliente.Vista
         public VentanaPrincipal()
         {
             InitializeComponent();
-            Loaded += VentanaPrincipal_Loaded;
-            Closed += VentanaPrincipal_Closed;
+            Loaded += AlCargarVentanaPrincipal;
+            Closed += AlCerrarVentanaPrincipal;
         }
 
-        private async void VentanaPrincipal_Loaded(object sender, RoutedEventArgs e)
+        private async void AlCargarVentanaPrincipal(object sender, RoutedEventArgs e)
         {
-            if (DataContext is VentanaPrincipalVistaModelo vm)
+            if (DataContext is VentanaPrincipalVistaModelo vistaModelo)
             {
                 App.MusicaManejador.ReproducirEnBucle("ventana_principal_musica.mp3");
-                await vm.InicializarAsync().ConfigureAwait(true);
+                await vistaModelo.InicializarAsync().ConfigureAwait(true);
             }
         }
 
-        private async void VentanaPrincipal_Closed(object sender, EventArgs e)
+        private async void AlCerrarVentanaPrincipal(object sender, EventArgs e)
         {
-            Loaded -= VentanaPrincipal_Loaded;
-            Closed -= VentanaPrincipal_Closed;
+            Loaded -= AlCargarVentanaPrincipal;
+            Closed -= AlCerrarVentanaPrincipal;
 
-            if (DataContext is VentanaPrincipalVistaModelo vm)
+            if (DataContext is VentanaPrincipalVistaModelo vistaModelo)
             {
-                await vm.FinalizarAsync().ConfigureAwait(false);
+                await vistaModelo.FinalizarAsync().ConfigureAwait(false);
             }
 
             App.MusicaManejador.Detener();

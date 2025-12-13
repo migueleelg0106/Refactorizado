@@ -31,28 +31,28 @@ namespace PictionaryMusicalCliente.Vista
         public Sala()
         {
             InitializeComponent();
-            Loaded += Sala_Loaded;
-            Closing += Sala_Closing;
-            Closed += Sala_Closed;
+            Loaded += AlCargarSala;
+            Closing += AlCerrarSeSala;
+            Closed += AlCerrarSala;
         }
 
-        private void Sala_Loaded(object sender, RoutedEventArgs e)
+        private void AlCargarSala(object sender, RoutedEventArgs e)
         {
-            if (DataContext is SalaVistaModelo vm)
+            if (DataContext is SalaVistaModelo vistaModelo)
             {
-                vm.NotificarCambioHerramienta = EstablecerHerramienta;
-                vm.AplicarEstiloLapiz = AplicarEstiloLapiz;
-                vm.ActualizarFormaGoma = ActualizarFormaGoma;
-                vm.LimpiarTrazos = LimpiarLienzo;
-                vm.MostrarConfirmacion = MostrarConfirmacion;
-                vm.SolicitarDatosReporte = SolicitarDatosReporte;
-                vm.MostrarInvitarAmigos = MostrarInvitarAmigosAsync;
-                vm.CerrarVentana = () => Close();
-                vm.ChequearCierreAplicacionGlobal = DebeCerrarAplicacionPorCierreDeVentana;
+                vistaModelo.NotificarCambioHerramienta = EstablecerHerramienta;
+                vistaModelo.AplicarEstiloLapiz = AplicarEstiloLapiz;
+                vistaModelo.ActualizarFormaGoma = ActualizarFormaGoma;
+                vistaModelo.LimpiarTrazos = LimpiarLienzo;
+                vistaModelo.MostrarConfirmacion = MostrarConfirmacion;
+                vistaModelo.SolicitarDatosReporte = SolicitarDatosReporte;
+                vistaModelo.MostrarInvitarAmigos = MostrarInvitarAmigosAsync;
+                vistaModelo.CerrarVentana = () => Close();
+                vistaModelo.ChequearCierreAplicacionGlobal = DebeCerrarAplicacionPorCierreDeVentana;
 
-                vm.TrazoRecibidoServidor += VistaModelo_TrazoRecibidoServidor;
-                vm.MensajeChatRecibido += VistaModelo_MensajeChatRecibido;
-                vm.MensajeDoradoRecibido += VistaModelo_MensajeDoradoRecibido;
+                vistaModelo.TrazoRecibidoServidor += AlRecibirTrazoDelServidor;
+                vistaModelo.MensajeChatRecibido += AlRecibirMensajeChat;
+                vistaModelo.MensajeDoradoRecibido += AlRecibirMensajeDorado;
 
                 RegistrarEventosLienzo();
             }
@@ -65,51 +65,51 @@ namespace PictionaryMusicalCliente.Vista
                 return;
             }
 
-            inkLienzoDibujo.StrokeCollected += Ink_StrokeCollected;
-            inkLienzoDibujo.PreviewMouseLeftButtonDown += Ink_PreviewMouseLeftButtonDown;
-            inkLienzoDibujo.PreviewMouseMove += Ink_PreviewMouseMove;
-            inkLienzoDibujo.PreviewMouseLeftButtonUp += Ink_PreviewMouseLeftButtonUp;
+            inkLienzoDibujo.StrokeCollected += AlRecolectarTrazoEnLienzo;
+            inkLienzoDibujo.PreviewMouseLeftButtonDown += AlPresionarBotonIzquierdoEnLienzo;
+            inkLienzoDibujo.PreviewMouseMove += AlMoverRatonEnLienzo;
+            inkLienzoDibujo.PreviewMouseLeftButtonUp += AlSoltarBotonIzquierdoEnLienzo;
         }
 
-        private void Ink_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        private void AlRecolectarTrazoEnLienzo(object sender, InkCanvasStrokeCollectedEventArgs argumentosEvento)
         {
-            if (e.Stroke == null || !(DataContext is SalaVistaModelo vm) || !vm.EsDibujante)
+            if (argumentosEvento.Stroke == null || !(DataContext is SalaVistaModelo vistaModelo) || !vistaModelo.EsDibujante)
             {
                 return;
             }
 
-            var trazo = ConvertirStrokeATrazo(e.Stroke, false);
-            vm.EnviarTrazoAlServidor(trazo);
+            var trazo = ConvertirStrokeATrazo(argumentosEvento.Stroke, false);
+            vistaModelo.EnviarTrazoAlServidor(trazo);
         }
 
-        private void Ink_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void AlPresionarBotonIzquierdoEnLienzo(object sender, MouseButtonEventArgs argumentosEvento)
         {
-            if (DataContext is SalaVistaModelo vm && vm.EsDibujante && vm.EsHerramientaBorrador)
+            if (DataContext is SalaVistaModelo vistaModelo && vistaModelo.EsDibujante && vistaModelo.EsHerramientaBorrador)
             {
                 _borradoEnProgreso = true;
                 _puntosBorrador.Clear();
-                _puntosBorrador.Add(e.GetPosition(inkLienzoDibujo));
+                _puntosBorrador.Add(argumentosEvento.GetPosition(inkLienzoDibujo));
             }
         }
 
-        private void Ink_PreviewMouseMove(object sender, MouseEventArgs e)
+        private void AlMoverRatonEnLienzo(object sender, MouseEventArgs argumentosEvento)
         {
             if (_borradoEnProgreso)
             {
-                _puntosBorrador.Add(e.GetPosition(inkLienzoDibujo));
+                _puntosBorrador.Add(argumentosEvento.GetPosition(inkLienzoDibujo));
             }
         }
 
-        private void Ink_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void AlSoltarBotonIzquierdoEnLienzo(object sender, MouseButtonEventArgs argumentosEvento)
         {
-            if (_borradoEnProgreso && DataContext is SalaVistaModelo vm)
+            if (_borradoEnProgreso && DataContext is SalaVistaModelo vistaModelo)
             {
                 _borradoEnProgreso = false;
 
-                var trazo = ConvertirPuntosATrazoBorrador(_puntosBorrador, vm.Grosor);
+                var trazo = ConvertirPuntosATrazoBorrador(_puntosBorrador, vistaModelo.Grosor);
                 if (trazo != null)
                 {
-                    vm.EnviarTrazoAlServidor(trazo);
+                    vistaModelo.EnviarTrazoAlServidor(trazo);
                 }
 
                 _puntosBorrador.Clear();
@@ -158,7 +158,7 @@ namespace PictionaryMusicalCliente.Vista
             };
         }
 
-        private void VistaModelo_TrazoRecibidoServidor(TrazoDTO trazo)
+        private void AlRecibirTrazoDelServidor(TrazoDTO trazo)
         {
             if (trazo == null || inkLienzoDibujo == null)
             {
@@ -239,27 +239,27 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void Sala_Closing(object sender, CancelEventArgs e)
+        private void AlCerrarSeSala(object sender, CancelEventArgs argumentosEvento)
         {
-            if (DataContext is SalaVistaModelo vm && vm.CerrarVentanaComando.CanExecute(null))
+            if (DataContext is SalaVistaModelo vistaModelo && vistaModelo.CerrarVentanaComando.CanExecute(null))
             {
-                vm.CerrarVentanaComando.Execute(null);
+                vistaModelo.CerrarVentanaComando.Execute(null);
             }
         }
 
-        private async void Sala_Closed(object sender, EventArgs e)
+        private async void AlCerrarSala(object sender, EventArgs argumentosEvento)
         {
-            Loaded -= Sala_Loaded;
-            Closed -= Sala_Closed;
-            Closing -= Sala_Closing;
+            Loaded -= AlCargarSala;
+            Closed -= AlCerrarSala;
+            Closing -= AlCerrarSeSala;
 
-            if (DataContext is SalaVistaModelo vm)
+            if (DataContext is SalaVistaModelo vistaModelo)
             {
-                vm.TrazoRecibidoServidor -= VistaModelo_TrazoRecibidoServidor;
-                vm.MensajeChatRecibido -= VistaModelo_MensajeChatRecibido;
-                vm.MensajeDoradoRecibido -= VistaModelo_MensajeDoradoRecibido;
+                vistaModelo.TrazoRecibidoServidor -= AlRecibirTrazoDelServidor;
+                vistaModelo.MensajeChatRecibido -= AlRecibirMensajeChat;
+                vistaModelo.MensajeDoradoRecibido -= AlRecibirMensajeDorado;
 
-                await vm.FinalizarAsync().ConfigureAwait(false);
+                await vistaModelo.FinalizarAsync().ConfigureAwait(false);
             }
         }
 
@@ -420,12 +420,12 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void VistaModelo_MensajeChatRecibido(string nombreJugador, string mensaje)
+        private void AlRecibirMensajeChat(string nombreJugador, string mensaje)
         {
             AgregarMensajeAlChat(nombreJugador, mensaje, Colors.Black);
         }
 
-        private void VistaModelo_MensajeDoradoRecibido(string nombreJugador, string mensaje)
+        private void AlRecibirMensajeDorado(string nombreJugador, string mensaje)
         {
             AgregarMensajeAlChat(nombreJugador, mensaje, Colors.Goldenrod);
         }

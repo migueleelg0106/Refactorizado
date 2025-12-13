@@ -12,14 +12,14 @@ namespace PictionaryMusicalCliente.Vista
         public CreacionCuenta()
         {
             InitializeComponent();
-            DataContextChanged += CreacionCuenta_DataContextChanged;
+            DataContextChanged += AlCambiarContextoDeDatosCreacionCuenta;
         }
 
-        private void CreacionCuenta_DataContextChanged(
-            object sender,
-            DependencyPropertyChangedEventArgs e)
+        private void AlCambiarContextoDeDatosCreacionCuenta(
+            object remitente,
+            DependencyPropertyChangedEventArgs argumentosEvento)
         {
-            if (e.NewValue is CreacionCuentaVistaModelo vistaModelo)
+            if (argumentosEvento.NewValue is CreacionCuentaVistaModelo vistaModelo)
             {
                 vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
                 vistaModelo.MostrarMensaje = mensaje =>
@@ -33,12 +33,12 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void PasswordBoxChanged(object sender, RoutedEventArgs e)
+        private void AlCambiarContrasena(object remitente, RoutedEventArgs argumentosEvento)
         {
-            if (sender is PasswordBox passwordBox && 
+            if (remitente is PasswordBox cajaContrasena && 
                 DataContext is CreacionCuentaVistaModelo vistaModelo)
             {
-                vistaModelo.Contrasena = passwordBox.Password;
+                vistaModelo.Contrasena = cajaContrasena.Password;
             }
         }
 
