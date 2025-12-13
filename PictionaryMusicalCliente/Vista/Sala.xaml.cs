@@ -265,12 +265,12 @@ namespace PictionaryMusicalCliente.Vista
 
         private bool MostrarConfirmacion(string mensaje)
         {
-            var vm = new ExpulsionJugadorVistaModelo(
+            var vistaModelo = new ExpulsionJugadorVistaModelo(
                 App.VentanaServicio,
                 App.Localizador,
                 _sonidos,
                 mensaje);
-            return App.VentanaServicio.MostrarVentanaDialogo(vm) == true;
+            return App.VentanaServicio.MostrarVentanaDialogo(vistaModelo) == true;
         }
 
         private ResultadoReporteJugador SolicitarDatosReporte(string nombreJugador)
@@ -345,16 +345,16 @@ namespace PictionaryMusicalCliente.Vista
 
         private void AplicarEstiloLapiz()
         {
-            if (inkLienzoDibujo == null || !(DataContext is SalaVistaModelo vm))
+            if (inkLienzoDibujo == null || !(DataContext is SalaVistaModelo vistaModelo))
             {
                 return;
             }
 
             inkLienzoDibujo.DefaultDrawingAttributes = new DrawingAttributes
             {
-                Color = vm.Color,
-                Width = vm.Grosor,
-                Height = vm.Grosor,
+                Color = vistaModelo.Color,
+                Width = vistaModelo.Grosor,
+                Height = vistaModelo.Grosor,
                 FitToCurve = false,
                 IgnorePressure = true
             };
@@ -362,12 +362,12 @@ namespace PictionaryMusicalCliente.Vista
 
         private void ActualizarFormaGoma()
         {
-            if (inkLienzoDibujo == null || !(DataContext is SalaVistaModelo vm))
+            if (inkLienzoDibujo == null || !(DataContext is SalaVistaModelo vistaModelo))
             {
                 return;
             }
 
-            var tamano = Math.Max(1, vm.Grosor);
+            var tamano = Math.Max(1, vistaModelo.Grosor);
             inkLienzoDibujo.EraserShape = new EllipseStylusShape(tamano, tamano);
         }
 
@@ -407,16 +407,16 @@ namespace PictionaryMusicalCliente.Vista
             return true;
         }
 
-        private void CampoTextoChat_KeyDown(object sender, KeyEventArgs e)
+        private void AlPresionarTeclaEnCampoTextoChat(object remitente, KeyEventArgs argumentosEvento)
         {
-            if ((e.Key == Key.Enter || e.Key == Key.Return) && DataContext is SalaVistaModelo vm)
+            if ((argumentosEvento.Key == Key.Enter || argumentosEvento.Key == Key.Return) && DataContext is SalaVistaModelo vistaModelo)
             {
-                if (vm.EnviarMensajeChatComando?.CanExecute(null) == true)
+                if (vistaModelo.EnviarMensajeChatComando?.CanExecute(null) == true)
                 {
-                    vm.EnviarMensajeChatComando.Execute(null);
+                    vistaModelo.EnviarMensajeChatComando.Execute(null);
                 }
 
-                e.Handled = true;
+                argumentosEvento.Handled = true;
             }
         }
 

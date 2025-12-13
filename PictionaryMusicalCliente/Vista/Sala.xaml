@@ -361,7 +361,7 @@
             <TextBox x:Name="campoTextoChat" Grid.Row="2" Background="LightYellow" BorderBrush="Black" 
                      BorderThickness="1"
                      Text="{Binding MensajeChat, UpdateSourceTrigger=PropertyChanged}"
-                     IsEnabled="{Binding PuedeEscribir}" KeyDown="CampoTextoChat_KeyDown"
+                     IsEnabled="{Binding PuedeEscribir}" KeyDown="AlPresionarTeclaEnCampoTextoChat"
                      MaxLength="150"/>
         </Grid>
     </Grid>
