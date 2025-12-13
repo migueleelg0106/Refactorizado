@@ -1,5 +1,4 @@
 ﻿using log4net.Config;
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Dialogos;
 using PictionaryMusicalCliente.ClienteServicios.Idiomas;
@@ -67,7 +66,7 @@ namespace PictionaryMusicalCliente
             InicializarServicios();
             ConfigurarIdioma();
 
-            var inicioSesionVM = new VistaModelo.InicioSesion.InicioSesionVistaModelo(
+            var inicioSesionVM = new InicioSesionVistaModelo(
                 VentanaServicio,
                 Localizador,
                 InicioSesionServicio,

@@ -1,13 +1,7 @@
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
-using PictionaryMusicalCliente.VistaModelo.Ajustes;
-using PictionaryMusicalCliente.VistaModelo.Amigos;
-using PictionaryMusicalCliente.VistaModelo.InicioSesion;
-using PictionaryMusicalCliente.VistaModelo.Perfil;
-using PictionaryMusicalCliente.VistaModelo.Salas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +13,7 @@ using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.ClienteServicios.Wcf;
 
 namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 {
@@ -585,7 +580,6 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
         private void EjecutarAbrirComoJugar()
         {
-            // ComoJugar is a simple informational window without a ViewModel
             var comoJugar = new Vista.ComoJugar();
             comoJugar.ShowDialog();
         }

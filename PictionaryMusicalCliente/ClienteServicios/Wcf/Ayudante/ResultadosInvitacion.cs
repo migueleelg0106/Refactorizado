@@ -1,6 +1,6 @@
 ﻿using PictionaryMusicalCliente.VistaModelo.Amigos;
 
-namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
 {
     /// <summary>
     /// Resultado estandarizado de las invitaciones por correo.

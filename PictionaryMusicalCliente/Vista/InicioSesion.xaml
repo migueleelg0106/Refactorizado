@@ -6,8 +6,7 @@
         Title="{Binding [tituloTextoInicioSesion], Source={StaticResource Localizacion}}" 
         Height="650" Width="800"
         WindowStartupLocation="CenterScreen"
-        Background="White"
-        Closed="InicioSesion_Cerrado">
+        Background="White">
 
     <Window.Resources>
         <convertidores:ConvertidorBooleanoInverso x:Key="BooleanoInverso"/>

@@ -1,3 +1,6 @@
+using PictionaryMusicalCliente.Modelo;
+using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalCliente.VistaModelo.Salas;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using System;
@@ -20,6 +23,7 @@ namespace PictionaryMusicalCliente.Vista
     {
         private readonly List<Point> _puntosBorrador = new();
         private bool _borradoEnProgreso;
+        private SonidoManejador _sonidos = App.SonidoManejador;
 
         /// <summary>
         /// Constructor por defecto. VentanaServicio asigna el DataContext.

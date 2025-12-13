@@ -1,5 +1,6 @@
 ﻿using log4net;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
+using PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
@@ -7,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
+namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
     /// <summary>
     /// Encapsula la logica de invitaciones para reducir la carga del ViewModel principal.

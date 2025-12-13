@@ -1,10 +1,8 @@
-using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.VistaModelo.Salas;
-using PictionaryMusicalCliente.VistaModelo.VentanaPrincipal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +15,7 @@ using log4net;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
+using PictionaryMusicalCliente.ClienteServicios.Wcf;
 
 namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 {
@@ -162,9 +161,9 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
         private void AbrirVentanaCrearCuenta()
         {
-            var codigoServ = new ClienteServicios.VerificacionCodigoServicio(
+            var codigoServ = new ClienteServicios.Wcf.VerificacionCodigoServicio(
                 App.WcfEjecutor, App.WcfFabrica, _localizador, App.ManejadorError);
-            var cuentaServ = new ClienteServicios.CuentaServicio(
+            var cuentaServ = new ClienteServicios.Wcf.CuentaServicio(
                 App.WcfEjecutor, App.WcfFabrica, App.ManejadorError);
             var selectAvatar = new ClienteServicios.Dialogos.SeleccionAvatarDialogoServicio(
                 _avisoServicio, App.CatalogoAvatares, _sonidoManejador);
