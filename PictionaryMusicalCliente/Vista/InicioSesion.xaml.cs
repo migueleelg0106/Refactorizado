@@ -1,3 +1,4 @@
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.ClienteServicios.Dialogos;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
@@ -23,9 +24,9 @@ namespace PictionaryMusicalCliente.Vista
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IMusicaManejador _musica;
+        private readonly MusicaManejador _musica;
         private readonly IUsuarioAutenticado _usuarioSesion;
-        private readonly ISonidoManejador _sonidos;
+        private readonly SonidoManejador _sonidos;
         private readonly ILocalizadorServicio _traductor;
         private readonly IAvisoServicio _aviso;
 
@@ -56,7 +57,7 @@ namespace PictionaryMusicalCliente.Vista
         /// Inicializa la ventana recibiendo todas las dependencias del sistema.
         /// </summary>
         public InicioSesion(
-            IMusicaManejador musica,
+            MusicaManejador musica,
             IInicioSesionServicio inicioSesion,
             ICambioContrasenaServicio cambioPass,
             IRecuperacionCuentaServicio recuperacion,
@@ -68,7 +69,7 @@ namespace PictionaryMusicalCliente.Vista
             ILocalizadorServicio traductor,
             IAvisoServicio aviso,
             ICatalogoAvatares avatares,
-            ISonidoManejador sonidos,
+            SonidoManejador sonidos,
             IUsuarioAutenticado usuarioSesion,
             ICatalogoImagenesPerfil imagenesPerfil,
             IVerificacionCodigoDialogoServicio verifCodigo,

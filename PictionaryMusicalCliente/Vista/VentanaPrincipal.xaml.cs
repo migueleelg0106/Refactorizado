@@ -1,3 +1,4 @@
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Modelo; 
 using PictionaryMusicalCliente.Modelo.Catalogos;
@@ -19,7 +20,7 @@ namespace PictionaryMusicalCliente.Vista
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IMusicaManejador _musica;
+        private readonly MusicaManejador _musica;
         private readonly IListaAmigosServicio _listaAmigos;
         private readonly IAmigosServicio _amigos;
         private readonly ISalasServicio _salas;
@@ -36,7 +37,7 @@ namespace PictionaryMusicalCliente.Vista
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly IInvitacionesServicio _invitaciones;
         private readonly IReportesServicio _reportes;
-        private readonly ISonidoManejador _sonidos;
+        private readonly SonidoManejador _sonidos;
         private readonly ILocalizadorServicio _traductor;
         private readonly IWcfClienteFabrica _fabricaWcf;
         private readonly IInvitacionSalaServicio _invitacionSalaServicio;
@@ -57,7 +58,7 @@ namespace PictionaryMusicalCliente.Vista
         /// Inicializa el Lobby con todas las dependencias requeridas.
         /// </summary>
         public VentanaPrincipal(
-            IMusicaManejador musica,
+            MusicaManejador musica,
             IListaAmigosServicio listaAmigos,
             IAmigosServicio amigos,
             ISalasServicio salas,
@@ -73,7 +74,7 @@ namespace PictionaryMusicalCliente.Vista
             IUsuarioAutenticado usuarioSesion,
             IInvitacionesServicio invitaciones,
             IReportesServicio reportes,
-            ISonidoManejador sonidos,
+            SonidoManejador sonidos,
             ILocalizadorServicio traductor,
             IWcfClienteFabrica fabricaWcf,
             IInvitacionSalaServicio invitacionSalaServicio,

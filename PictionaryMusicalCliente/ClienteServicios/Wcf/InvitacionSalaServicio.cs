@@ -20,7 +20,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
         private readonly IInvitacionesServicio _invitacionesServicio;
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly IPerfilServicio _perfilServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _aviso;
         private bool _disposed;
 
@@ -31,7 +31,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Implementacion
             IInvitacionesServicio invitacionesServicio,
             IListaAmigosServicio listaAmigosServicio,
             IPerfilServicio perfilServicio,
-            ISonidoManejador sonidoManejador,
+            SonidoManejador sonidoManejador,
             IAvisoServicio aviso)
         {
             _invitacionesServicio = invitacionesServicio ??

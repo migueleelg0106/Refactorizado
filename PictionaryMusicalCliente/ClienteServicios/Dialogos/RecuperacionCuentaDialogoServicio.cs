@@ -22,13 +22,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
         private readonly IVerificacionCodigoDialogoServicio _verificarCodigoDialogoServicio;
         private readonly IAvisoServicio _avisoServicio;
-        private readonly ISonidoManejador _sonidoManejador;
+        private readonly SonidoManejador _sonidoManejador;
         private readonly ILocalizadorServicio _localizador;
 
         public RecuperacionCuentaDialogoServicio(
             IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio,
             IAvisoServicio avisoServicio,
-            ISonidoManejador sonidoManejador, ILocalizadorServicio localizador)
+            SonidoManejador sonidoManejador, ILocalizadorServicio localizador)
         {
             _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ??
                 throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));

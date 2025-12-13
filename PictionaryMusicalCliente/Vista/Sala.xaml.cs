@@ -1,7 +1,7 @@
+using PictionaryMusicalCliente.ClienteServicios;
 using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
 using PictionaryMusicalCliente.Modelo;
 using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalCliente.VistaModelo.Salas;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -36,8 +36,8 @@ namespace PictionaryMusicalCliente.Vista
         private readonly ILocalizadorServicio _traductor;
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly IWcfClienteFabrica _fabricaWcf;
-        private readonly ISonidoManejador _sonidos;
-        private readonly ICancionManejador _cancion;
+        private readonly SonidoManejador _sonidos;
+        private readonly CancionManejador _cancion;
         private readonly IInvitacionSalaServicio _invitacionesSalaServicio;
         private readonly Action _navegarMenuPrincipal;
         private readonly Action _navegarInicioSesion;
@@ -63,12 +63,12 @@ namespace PictionaryMusicalCliente.Vista
             IReportesServicio reportesServicio,
             IPerfilServicio perfilServicio,
             IListaAmigosServicio listaAmigosServicio,
-            ISonidoManejador sonidos,
+            SonidoManejador sonidos,
             ILocalizadorServicio traductor,
             IAvisoServicio avisoServicio,
             IUsuarioAutenticado usuarioSesion,
             IWcfClienteFabrica fabricaWcf,
-            ICancionManejador cancion,
+            CancionManejador cancion,
             IInvitacionSalaServicio invitacionesSalaServicio,
             bool esInvitado,
             string nombreJugador,

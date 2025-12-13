@@ -2,14 +2,13 @@
 using System.IO;
 using System.Windows.Media;
 using log4net;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.Utilidades
 {
     /// <summary>
     /// Maneja la reproduccion de canciones especificas del juego.
     /// </summary>
-    public class CancionManejador : ICancionManejador
+    public class CancionManejador : IDisposable
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
