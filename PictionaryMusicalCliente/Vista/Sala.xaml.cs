@@ -1,7 +1,3 @@
-using PictionaryMusicalCliente.ClienteServicios;
-using PictionaryMusicalCliente.ClienteServicios.Abstracciones;
-using PictionaryMusicalCliente.Modelo;
-using PictionaryMusicalCliente.VistaModelo.Amigos;
 using PictionaryMusicalCliente.VistaModelo.Salas;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using System;
@@ -14,8 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
-using log4net;
-using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.Vista
 {
@@ -24,152 +18,40 @@ namespace PictionaryMusicalCliente.Vista
     /// </summary>
     public partial class Sala : Window
     {
-        private static readonly ILog _logger = LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly SalaVistaModelo _vistaModelo;
-        private readonly IAvisoServicio _avisoServicio;
-        private readonly ISalasServicio _salaServicio;
-        private readonly IInvitacionesServicio _invitacionesServicio;
-        private readonly IReportesServicio _reportesServicio;
-        private readonly IPerfilServicio _perfilServicio;
-        private readonly IListaAmigosServicio _listaAmigosServicio;
-        private readonly ILocalizadorServicio _traductor;
-        private readonly IUsuarioAutenticado _usuarioSesion;
-        private readonly IWcfClienteFabrica _fabricaWcf;
-        private readonly SonidoManejador _sonidos;
-        private readonly CancionManejador _cancion;
-        private readonly IInvitacionSalaServicio _invitacionesSalaServicio;
-        private readonly Action _navegarMenuPrincipal;
-        private readonly Action _navegarInicioSesion;
         private readonly List<Point> _puntosBorrador = new();
         private bool _borradoEnProgreso;
-        private bool _navegacionEjecutada;
 
         /// <summary>
-        /// Constructor por defecto, solo para uso del dise�ador/XAML. 
-        /// La aplicaci�n debe usar el constructor que recibe dependencias.
+        /// Constructor por defecto. VentanaServicio asigna el DataContext.
         /// </summary>
         public Sala()
         {
+            InitializeComponent();
+            Loaded += Sala_Loaded;
+            Closing += Sala_Closing;
+            Closed += Sala_Closed;
         }
 
-        /// <summary>
-        /// Inicializa la partida con la configuracion de la sala y el usuario.
-        /// </summary>
-        public Sala(
-            SalaDTO sala,
-            ISalasServicio salasServicio,
-            IInvitacionesServicio invitacionesServicio,
-            IReportesServicio reportesServicio,
-            IPerfilServicio perfilServicio,
-            IListaAmigosServicio listaAmigosServicio,
-            SonidoManejador sonidos,
-            ILocalizadorServicio traductor,
-            IAvisoServicio avisoServicio,
-            IUsuarioAutenticado usuarioSesion,
-            IWcfClienteFabrica fabricaWcf,
-            CancionManejador cancion,
-            IInvitacionSalaServicio invitacionesSalaServicio,
-            bool esInvitado,
-            string nombreJugador,
-            Action navegarMenuPrincipal,
-            Action navegarInicioSesion)
+        private void Sala_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-
-            _avisoServicio = avisoServicio ?? 
-                throw new ArgumentNullException(nameof(avisoServicio));
-            _sonidos = sonidos ??
-                throw new ArgumentNullException(nameof(sonidos));
-            _cancion = cancion ??
-                throw new ArgumentNullException(nameof(cancion));
-            _salaServicio = salasServicio ??
-                throw new ArgumentNullException(nameof(salasServicio));
-            _invitacionesServicio = invitacionesServicio ??
-                throw new ArgumentNullException(nameof(invitacionesServicio));
-            _reportesServicio = reportesServicio ??
-                throw new ArgumentNullException(nameof(reportesServicio));
-            _perfilServicio = perfilServicio ??
-                throw new ArgumentNullException(nameof(perfilServicio));
-            _listaAmigosServicio = listaAmigosServicio ??
-                throw new ArgumentNullException(nameof(listaAmigosServicio));
-            _traductor = traductor ??
-                throw new ArgumentNullException(nameof(traductor));
-            _usuarioSesion = usuarioSesion ??
-                throw new ArgumentNullException(nameof(usuarioSesion));
-            _fabricaWcf = fabricaWcf ??
-                throw new ArgumentNullException(nameof(fabricaWcf));
-            _invitacionesSalaServicio = invitacionesSalaServicio ??
-                throw new ArgumentNullException(nameof(invitacionesSalaServicio));
-
-            if (salasServicio == null)
+            if (DataContext is SalaVistaModelo vm)
             {
-                throw new ArgumentNullException(nameof(salasServicio));
+                vm.NotificarCambioHerramienta = EstablecerHerramienta;
+                vm.AplicarEstiloLapiz = AplicarEstiloLapiz;
+                vm.ActualizarFormaGoma = ActualizarFormaGoma;
+                vm.LimpiarTrazos = LimpiarLienzo;
+                vm.MostrarConfirmacion = MostrarConfirmacion;
+                vm.SolicitarDatosReporte = SolicitarDatosReporte;
+                vm.MostrarInvitarAmigos = MostrarInvitarAmigosAsync;
+                vm.CerrarVentana = () => Close();
+                vm.ChequearCierreAplicacionGlobal = DebeCerrarAplicacionPorCierreDeVentana;
+
+                vm.TrazoRecibidoServidor += VistaModelo_TrazoRecibidoServidor;
+                vm.MensajeChatRecibido += VistaModelo_MensajeChatRecibido;
+                vm.MensajeDoradoRecibido += VistaModelo_MensajeDoradoRecibido;
+
+                RegistrarEventosLienzo();
             }
-
-            _navegarMenuPrincipal = navegarMenuPrincipal;
-            _navegarInicioSesion = navegarInicioSesion;
-
-            _vistaModelo = new SalaVistaModelo(
-                App.VentanaServicio,
-                App.Localizador,
-                sala,
-                _salaServicio,
-                _invitacionesServicio,
-                _listaAmigosServicio,
-                _perfilServicio,
-                _reportesServicio,
-                _sonidos,
-                _avisoServicio,
-                _usuarioSesion,
-                _invitacionesSalaServicio,
-                _fabricaWcf,
-                _cancion,
-                nombreJugador,
-                esInvitado
-                );
-
-            _vistaModelo.AbrirAjustesPartida = manejadorCancion =>
-            {
-                var ajustesVM = new VistaModelo.Ajustes.AjustesPartidaVistaModelo(
-                    App.VentanaServicio,
-                    App.Localizador,
-                    manejadorCancion ?? _cancion,
-                    _sonidos);
-                ajustesVM.SalirPartidaConfirmado = () =>
-                {
-                    _vistaModelo.ManejarNavegacion?.Invoke(
-                        _vistaModelo.EsInvitado
-                            ? SalaVistaModelo.DestinoNavegacion.InicioSesion
-                            : SalaVistaModelo.DestinoNavegacion.VentanaPrincipal);
-                };
-
-                App.VentanaServicio.MostrarVentanaDialogo(ajustesVM);
-            };
-            _vistaModelo.NotificarCambioHerramienta = EstablecerHerramienta;
-            _vistaModelo.AplicarEstiloLapiz = AplicarEstiloLapiz;
-            _vistaModelo.ActualizarFormaGoma = ActualizarFormaGoma;
-            _vistaModelo.LimpiarTrazos = LimpiarLienzo;
-            _vistaModelo.MostrarMensaje = _avisoServicio.Mostrar;
-            _vistaModelo.MostrarConfirmacion = MostrarConfirmacion;
-            _vistaModelo.SolicitarDatosReporte = SolicitarDatosReporte;
-            _vistaModelo.MostrarInvitarAmigos = MostrarInvitarAmigosAsync;
-
-            _vistaModelo.ManejarNavegacion = EjecutarNavegacion;
-            _vistaModelo.CerrarVentana = () => Close();
-
-            _vistaModelo.ChequearCierreAplicacionGlobal = DebeCerrarAplicacionPorCierreDeVentana;
-
-            _vistaModelo.TrazoRecibidoServidor += VistaModelo_TrazoRecibidoServidor;
-            _vistaModelo.MensajeChatRecibido += VistaModelo_MensajeChatRecibido;
-            _vistaModelo.MensajeDoradoRecibido += VistaModelo_MensajeDoradoRecibido;
-
-            DataContext = _vistaModelo;
-
-            RegistrarEventosLienzo();
-
-            Closing += VentanaJuego_Closing;
-            Closed += VentanaJuego_ClosedAsync;
         }
 
         private void RegistrarEventosLienzo()
@@ -187,53 +69,47 @@ namespace PictionaryMusicalCliente.Vista
 
         private void Ink_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
         {
-            if (!_vistaModelo.EsDibujante || e.Stroke == null)
+            if (e.Stroke == null || !(DataContext is SalaVistaModelo vm) || !vm.EsDibujante)
             {
                 return;
             }
 
             var trazo = ConvertirStrokeATrazo(e.Stroke, false);
-            _vistaModelo.EnviarTrazoAlServidor(trazo);
+            vm.EnviarTrazoAlServidor(trazo);
         }
 
         private void Ink_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (!_vistaModelo.EsDibujante || !_vistaModelo.EsHerramientaBorrador)
+            if (DataContext is SalaVistaModelo vm && vm.EsDibujante && vm.EsHerramientaBorrador)
             {
-                return;
+                _borradoEnProgreso = true;
+                _puntosBorrador.Clear();
+                _puntosBorrador.Add(e.GetPosition(inkLienzoDibujo));
             }
-
-            _borradoEnProgreso = true;
-            _puntosBorrador.Clear();
-            _puntosBorrador.Add(e.GetPosition(inkLienzoDibujo));
         }
 
         private void Ink_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (!_borradoEnProgreso)
+            if (_borradoEnProgreso)
             {
-                return;
+                _puntosBorrador.Add(e.GetPosition(inkLienzoDibujo));
             }
-
-            _puntosBorrador.Add(e.GetPosition(inkLienzoDibujo));
         }
 
         private void Ink_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (!_borradoEnProgreso)
+            if (_borradoEnProgreso && DataContext is SalaVistaModelo vm)
             {
-                return;
+                _borradoEnProgreso = false;
+
+                var trazo = ConvertirPuntosATrazoBorrador(_puntosBorrador, vm.Grosor);
+                if (trazo != null)
+                {
+                    vm.EnviarTrazoAlServidor(trazo);
+                }
+
+                _puntosBorrador.Clear();
             }
-
-            _borradoEnProgreso = false;
-
-            var trazo = ConvertirPuntosATrazoBorrador(_puntosBorrador, _vistaModelo.Grosor);
-            if (trazo != null)
-            {
-                _vistaModelo.EnviarTrazoAlServidor(trazo);
-            }
-
-            _puntosBorrador.Clear();
         }
 
         private static TrazoDTO ConvertirPuntosATrazoBorrador(IEnumerable<Point> puntos, double grosor)
@@ -359,67 +235,28 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void VentanaJuego_Closing(object sender, CancelEventArgs e)
+        private void Sala_Closing(object sender, CancelEventArgs e)
         {
-            if (_vistaModelo.CerrarVentanaComando.CanExecute(null))
+            if (DataContext is SalaVistaModelo vm && vm.CerrarVentanaComando.CanExecute(null))
             {
-                _vistaModelo.CerrarVentanaComando.Execute(null);
+                vm.CerrarVentanaComando.Execute(null);
             }
         }
 
-        private async void VentanaJuego_ClosedAsync(object sender, EventArgs e)
+        private async void Sala_Closed(object sender, EventArgs e)
         {
-            Closed -= VentanaJuego_ClosedAsync;
-            Closing -= VentanaJuego_Closing;
+            Loaded -= Sala_Loaded;
+            Closed -= Sala_Closed;
+            Closing -= Sala_Closing;
 
-            _vistaModelo.TrazoRecibidoServidor -= VistaModelo_TrazoRecibidoServidor;
-            _vistaModelo.MensajeChatRecibido -= VistaModelo_MensajeChatRecibido;
-            _vistaModelo.MensajeDoradoRecibido -= VistaModelo_MensajeDoradoRecibido;
-
-            await _vistaModelo.FinalizarAsync().ConfigureAwait(false);
-
-            if (_vistaModelo.DebeEjecutarAccionAlCerrar())
+            if (DataContext is SalaVistaModelo vm)
             {
-                Dispatcher.Invoke(() =>
-                {
-                    var destino = _usuarioSesion.EstaAutenticado
-                        ? SalaVistaModelo.DestinoNavegacion.VentanaPrincipal
-                        : SalaVistaModelo.DestinoNavegacion.InicioSesion;
+                vm.TrazoRecibidoServidor -= VistaModelo_TrazoRecibidoServidor;
+                vm.MensajeChatRecibido -= VistaModelo_MensajeChatRecibido;
+                vm.MensajeDoradoRecibido -= VistaModelo_MensajeDoradoRecibido;
 
-                    EjecutarNavegacion(destino);
-                });
+                await vm.FinalizarAsync().ConfigureAwait(false);
             }
-        }
-
-        private void EjecutarNavegacion(SalaVistaModelo.DestinoNavegacion destino)
-        {
-            if (_navegacionEjecutada)
-            {
-                return;
-            }
-
-            _navegacionEjecutada = true;
-            _logger.InfoFormat("EjecutarNavegacion - Destino: {0}", destino);
-
-            bool requiereInicioSesion =
-                destino == SalaVistaModelo.DestinoNavegacion.InicioSesion ||
-                !_usuarioSesion.EstaAutenticado;
-
-            _logger.InfoFormat("EjecutarNavegacion - requiereInicioSesion: {0}", requiereInicioSesion);
-            if (requiereInicioSesion)
-            {
-                _logger.Info("EjecutarNavegacion - Invocando _navegarInicioSesion");
-                _usuarioSesion.Limpiar();
-                _navegarInicioSesion?.Invoke();
-            }
-
-            if (!requiereInicioSesion)
-            {
-                _logger.Info("EjecutarNavegacion - Invocando _navegarMenuPrincipal");
-                _navegarMenuPrincipal?.Invoke();
-            }
-
-            Close();
         }
 
         private bool MostrarConfirmacion(string mensaje)
@@ -483,13 +320,12 @@ namespace PictionaryMusicalCliente.Vista
 
         private void EstablecerHerramienta(bool esLapiz)
         {
-            var lienzoTinta = (InkCanvas)this.FindName("inkLienzoDibujo");
-            if (lienzoTinta == null)
+            if (inkLienzoDibujo == null)
             {
                 return;
             }
 
-            lienzoTinta.EditingMode = esLapiz
+            inkLienzoDibujo.EditingMode = esLapiz
                 ? InkCanvasEditingMode.Ink
                 : InkCanvasEditingMode.EraseByPoint;
 
@@ -505,17 +341,16 @@ namespace PictionaryMusicalCliente.Vista
 
         private void AplicarEstiloLapiz()
         {
-            var lienzoTinta = (InkCanvas)this.FindName("inkLienzoDibujo");
-            if (lienzoTinta == null || _vistaModelo == null)
+            if (inkLienzoDibujo == null || !(DataContext is SalaVistaModelo vm))
             {
                 return;
             }
 
-            lienzoTinta.DefaultDrawingAttributes = new DrawingAttributes
+            inkLienzoDibujo.DefaultDrawingAttributes = new DrawingAttributes
             {
-                Color = _vistaModelo.Color,
-                Width = _vistaModelo.Grosor,
-                Height = _vistaModelo.Grosor,
+                Color = vm.Color,
+                Width = vm.Grosor,
+                Height = vm.Grosor,
                 FitToCurve = false,
                 IgnorePressure = true
             };
@@ -523,14 +358,13 @@ namespace PictionaryMusicalCliente.Vista
 
         private void ActualizarFormaGoma()
         {
-            var lienzoTinta = (InkCanvas)this.FindName("inkLienzoDibujo");
-            if (lienzoTinta == null || _vistaModelo == null)
+            if (inkLienzoDibujo == null || !(DataContext is SalaVistaModelo vm))
             {
                 return;
             }
 
-            var tamano = Math.Max(1, _vistaModelo.Grosor);
-            lienzoTinta.EraserShape = new EllipseStylusShape(tamano, tamano);
+            var tamano = Math.Max(1, vm.Grosor);
+            inkLienzoDibujo.EraserShape = new EllipseStylusShape(tamano, tamano);
         }
 
         private void LimpiarLienzo()
@@ -571,11 +405,11 @@ namespace PictionaryMusicalCliente.Vista
 
         private void CampoTextoChat_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter || e.Key == Key.Return)
+            if ((e.Key == Key.Enter || e.Key == Key.Return) && DataContext is SalaVistaModelo vm)
             {
-                if (_vistaModelo.EnviarMensajeChatComando?.CanExecute(null) == true)
+                if (vm.EnviarMensajeChatComando?.CanExecute(null) == true)
                 {
-                    _vistaModelo.EnviarMensajeChatComando.Execute(null);
+                    vm.EnviarMensajeChatComando.Execute(null);
                 }
 
                 e.Handled = true;

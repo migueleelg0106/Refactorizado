@@ -8,7 +8,10 @@ using PictionaryMusicalCliente.PictionaryServidorServicioCursoPartida;
 using PictionaryMusicalCliente.Properties.Langs;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
+using PictionaryMusicalCliente.VistaModelo.Ajustes;
 using PictionaryMusicalCliente.VistaModelo.Amigos;
+using PictionaryMusicalCliente.VistaModelo.InicioSesion;
+using PictionaryMusicalCliente.VistaModelo.VentanaPrincipal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -495,8 +498,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         public ICommand EnviarMensajeChatComando { get; private set; }
 
-        public Action<CancionManejador> AbrirAjustesPartida { get; set; }
-
         public Action<bool> NotificarCambioHerramienta
         {
             get => _partidaVistaModelo.NotificarCambioHerramienta;
@@ -539,8 +540,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             remove => _chatVistaModelo.MensajeDoradoRecibido -= value;
         }
 
-        public Action<string> MostrarMensaje { get; set; }
-
         public Func<string, bool> MostrarConfirmacion { get; set; }
 
         public Func<string, ResultadoReporteJugador> SolicitarDatosReporte { get; set; }
@@ -548,8 +547,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public Action CerrarVentana { get; set; }
 
         public Func<InvitarAmigosVistaModelo, Task> MostrarInvitarAmigos { get; set; }
-
-        public Action<DestinoNavegacion> ManejarNavegacion { get; set; }
 
         public Func<bool> ChequearCierreAplicacionGlobal { get; set; }
 
@@ -645,13 +642,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             if (resultado.Exitoso)
             {
                 _sonidoManejador.ReproducirNotificacion();
-                MostrarMensaje?.Invoke(resultado.Mensaje);
+                _avisoServicio.Mostrar(resultado.Mensaje);
                 CorreoInvitacion = string.Empty;
                 return;
             }
 
             _sonidoManejador.ReproducirError();
-            MostrarMensaje?.Invoke(resultado.Mensaje);
+            _avisoServicio.Mostrar(resultado.Mensaje);
         }
 
         private async Task EjecutarInvitarAmigosAsync()
@@ -661,13 +658,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     _codigoSala,
                     _nombreUsuarioSesion,
                     _amigosInvitados,
-                    mensaje => MostrarMensaje?.Invoke(mensaje))
+                    mensaje => _avisoServicio.Mostrar(mensaje))
                 .ConfigureAwait(true);
 
             if (!resultado.Exitoso)
             {
                 _sonidoManejador.ReproducirError();
-                MostrarMensaje?.Invoke(resultado.Mensaje);
+                _avisoServicio.Mostrar(resultado.Mensaje);
                 return;
             }
 
@@ -679,7 +676,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void EjecutarAbrirAjustes()
         {
-            AbrirAjustesPartida?.Invoke(_partidaVistaModelo.CancionManejador);
+            AbrirAjustesPartida();
         }
 
         private static string LimitarMensajePorCaracteres(string mensaje)
@@ -1041,7 +1038,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 {
                     if (!string.IsNullOrWhiteSpace(mensaje))
                     {
-                        MostrarMensaje?.Invoke(mensaje);
+                        _avisoServicio.Mostrar(mensaje);
                     }
 
                     var destino = ObtenerDestinoSegunSesion();
@@ -1051,7 +1048,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                         _aplicacionCerrando = true;
                     }
 
-                    ManejarNavegacion?.Invoke(destino);
+                    Navegar(destino);
                     return;
                 }
 
@@ -1066,7 +1063,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             string mensajeResultado = esGanador ? Lang.partidaTextoGanasteMensaje : Lang.partidaTextoPerdisteMensaje;
 
             string mensajeFinal = $"{titulo}\n{mensajeResultado}";
-            MostrarMensaje?.Invoke(mensajeFinal);
+            _avisoServicio.Mostrar(mensajeFinal);
 
             var destino = ObtenerDestinoSegunSesion();
 
@@ -1075,7 +1072,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _aplicacionCerrando = true;
             }
 
-            ManejarNavegacion?.Invoke(destino);
+            Navegar(destino);
         }
 
         private bool DeterminarSiEsGanador(DTOs.ResultadoPartidaDTO resultado)
@@ -1222,9 +1219,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                         _aplicacionCerrando = true;
                     }
 
-                    ManejarNavegacion?.Invoke(destino);
+                    Navegar(destino);
 
-                    MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoFuisteExpulsado);
+                    _avisoServicio.Mostrar(Lang.expulsarJugadorTextoFuisteExpulsado);
                 }
                 else
                 {
@@ -1432,14 +1429,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     nombreJugador).ConfigureAwait(true);
 
                 _sonidoManejador.ReproducirNotificacion();
-                MostrarMensaje?.Invoke(Lang.expulsarJugadorTextoExito);
+                _avisoServicio.Mostrar(Lang.expulsarJugadorTextoExito);
             }
             catch (Exception ex) when (ex is ServicioExcepcion || ex is ArgumentException)
             {
                 _logger.ErrorFormat("Error al expulsar jugador {0}.",
 					nombreJugador, ex);
                 _sonidoManejador.ReproducirError();
-                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoExpulsarJugador);
+                _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoExpulsarJugador);
             }
         }
 
@@ -1463,7 +1460,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             if (string.IsNullOrWhiteSpace(resultado.Motivo))
             {
-                MostrarMensaje?.Invoke(Lang.reportarJugadorTextoMotivoRequerido);
+                _avisoServicio.Mostrar(Lang.reportarJugadorTextoMotivoRequerido);
                 return;
             }
 
@@ -1484,12 +1481,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 if (respuesta?.OperacionExitosa == true)
                 {
                     _sonidoManejador.ReproducirNotificacion();
-                    MostrarMensaje?.Invoke(Lang.reportarJugadorTextoExito);
+                    _avisoServicio.Mostrar(Lang.reportarJugadorTextoExito);
                 }
                 else
                 {
                     _sonidoManejador.ReproducirError();
-                    MostrarMensaje?.Invoke(
+                    _avisoServicio.Mostrar(
                         respuesta?.Mensaje ?? Lang.errorTextoReportarJugador);
                 }
             }
@@ -1497,7 +1494,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             {
                 _logger.ErrorFormat("Error al reportar jugador {0}.", nombreJugador, ex);
                 _sonidoManejador.ReproducirError();
-                MostrarMensaje?.Invoke(ex.Message ?? Lang.errorTextoReportarJugador);
+                _avisoServicio.Mostrar(ex.Message ?? Lang.errorTextoReportarJugador);
             }
         }
 
@@ -1522,8 +1519,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _aplicacionCerrando = true;
             }
 
-            ManejarNavegacion?.Invoke(destino);
-            MostrarMensaje?.Invoke(Lang.partidaTextoHostCanceloSala);
+            Navegar(destino);
+            _avisoServicio.Mostrar(Lang.partidaTextoHostCanceloSala);
         }
 
         private static void EjecutarEnDispatcher(Action accion)
@@ -1616,6 +1613,62 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public bool DebeEjecutarAccionAlCerrar()
         {
             return !_aplicacionCerrando;
+        }
+
+        private void Navegar(DestinoNavegacion destino)
+        {
+            CerrarVentana?.Invoke();
+
+            if (destino == DestinoNavegacion.InicioSesion)
+            {
+                _usuarioSesion.Limpiar();
+                var vmInicio = new InicioSesion.InicioSesionVistaModelo(
+                    _ventana,
+                    _localizador,
+                    App.InicioSesionServicio,
+                    App.CambioContrasenaServicio,
+                    App.RecuperacionCuentaServicio,
+                    App.ServicioIdioma,
+                    _sonidoManejador,
+                    _avisoServicio,
+                    App.GeneradorNombres,
+                    _usuarioSesion,
+                    App.FabricaSalas);
+                _ventana.MostrarVentana(vmInicio);
+            }
+            else
+            {
+                var vmPrincipal = new VentanaPrincipal.VentanaPrincipalVistaModelo(
+                    _ventana,
+                    _localizador,
+                    App.ServicioIdioma,
+                    App.ListaAmigosServicio,
+                    App.AmigosServicio,
+                    App.SalasServicio,
+                    _sonidoManejador,
+                    _usuarioSesion);
+                _ventana.MostrarVentana(vmPrincipal);
+            }
+        }
+
+        private void AbrirAjustesPartida()
+        {
+            var ajustesVM = new Ajustes.AjustesPartidaVistaModelo(
+                _ventana,
+                _localizador,
+                _cancionManejador,
+                _sonidoManejador);
+            ajustesVM.SalirPartidaConfirmado = () =>
+            {
+                var destino = ObtenerDestinoSegunSesion();
+                if (destino == DestinoNavegacion.InicioSesion)
+                {
+                    _aplicacionCerrando = true;
+                }
+                Navegar(destino);
+            };
+
+            _ventana.MostrarVentanaDialogo(ajustesVM);
         }
     }
 }
