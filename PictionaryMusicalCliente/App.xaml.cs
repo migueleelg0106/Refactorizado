@@ -33,8 +33,8 @@ namespace PictionaryMusicalCliente
         public static IVentanaServicio VentanaServicio { get; private set; }
         public static IAvisoServicio AvisoServicio { get; private set; }
 
-        public static ISonidoManejador SonidoManejador { get; private set; }
-        public static IMusicaManejador MusicaManejador { get; private set; }
+        public static SonidoManejador SonidoManejador { get; private set; }
+        public static MusicaManejador MusicaManejador { get; private set; }
         public static INombreInvitadoGenerador GeneradorNombres { get; private set; }
         public static IUsuarioMapeador UsuarioMapeador { get; private set; }
 

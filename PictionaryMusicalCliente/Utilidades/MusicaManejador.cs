@@ -2,14 +2,13 @@
 using System.IO;
 using System.Windows.Media;
 using log4net;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 
 namespace PictionaryMusicalCliente.ClienteServicios
 {
     /// <summary>
     /// Controla la reproduccion de musica de fondo en la aplicacion.
     /// </summary>
-    public class MusicaManejador : IMusicaManejador
+    public class MusicaManejador : IDisposable
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
