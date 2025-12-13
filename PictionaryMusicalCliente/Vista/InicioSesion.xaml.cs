@@ -39,7 +39,6 @@ namespace PictionaryMusicalCliente.Vista
         private readonly IWcfClienteFabrica _fabrica;
         private readonly IManejadorErrorServicio _manejadorError;
         private readonly ICatalogoAvatares _avatares;
-        private readonly IValidadorEntrada _validador;
         private readonly ICatalogoImagenesPerfil _imagenesPerfil;
         private readonly IVerificacionCodigoDialogoServicio _verifCodigo;
 
@@ -70,7 +69,6 @@ namespace PictionaryMusicalCliente.Vista
             IAvisoServicio aviso,
             ICatalogoAvatares avatares,
             ISonidoManejador sonidos,
-            IValidadorEntrada validador,
             IUsuarioAutenticado usuarioSesion,
             ICatalogoImagenesPerfil imagenesPerfil,
             IVerificacionCodigoDialogoServicio verifCodigo,
@@ -100,8 +98,6 @@ namespace PictionaryMusicalCliente.Vista
                 throw new ArgumentNullException(nameof(avatares));
             _sonidos = sonidos ??
                 throw new ArgumentNullException(nameof(sonidos));
-            _validador = validador ??
-                throw new ArgumentNullException(nameof(validador));
             _usuarioSesion = usuarioSesion ??
                 throw new ArgumentNullException(nameof(usuarioSesion));
             _idioma = idioma ??
@@ -182,7 +178,6 @@ namespace PictionaryMusicalCliente.Vista
                     selectAvatar,
                     verifCodigo,
                     _sonidos,
-                    _validador,
                     _avatares,
                     _aviso,
                     _idioma);
@@ -211,7 +206,7 @@ namespace PictionaryMusicalCliente.Vista
             _musica.Detener();
 
             var invitacionSalaServicio = new InvitacionSalaServicio(
-                _invitaciones, _listaAmigos, _perfil, _validador, _sonidos, _aviso);
+                _invitaciones, _listaAmigos, _perfil, _sonidos, _aviso);
 
             var principal = new VentanaPrincipal(
                 _musica, _listaAmigos, _amigos,
@@ -219,7 +214,7 @@ namespace PictionaryMusicalCliente.Vista
                 _idioma, _aviso, _perfil, _cambioPass, _recuperacion,
                 new SeleccionAvatarDialogoServicio(_aviso, _avatares, _sonidos),
                 _avatares, _clasif, _imagenesPerfil, _usuarioSesion,
-                _invitaciones, _reportes, _sonidos, _validador, _traductor,
+                _invitaciones, _reportes, _sonidos, _traductor,
                 _fabrica,
                 invitacionSalaServicio,
                 CrearVentanaInicioSesion
@@ -247,7 +242,6 @@ namespace PictionaryMusicalCliente.Vista
                 _aviso,
                 _avatares,
                 _sonidos,
-                _validador,
                 _usuarioSesion,
                 _imagenesPerfil,
                 _verifCodigo,
@@ -273,7 +267,7 @@ namespace PictionaryMusicalCliente.Vista
 
             var cancionManejador = new CancionManejador();
             var invitacionSalaServicio = new InvitacionSalaServicio(
-                _invitaciones, _listaAmigos, _perfil, _validador, _sonidos, _aviso);
+                _invitaciones, _listaAmigos, _perfil, _sonidos, _aviso);
 
             Action irInicioSesion = () =>
             {
@@ -288,7 +282,7 @@ namespace PictionaryMusicalCliente.Vista
 
             var ventanaJuego = new Sala(
                 sala, servicio, _invitaciones, _reportes, _perfil, _listaAmigos,
-                _sonidos, _traductor, _aviso, _usuarioSesion, _validador,
+                _sonidos, _traductor, _aviso, _usuarioSesion,
                 _fabrica,
                 cancionManejador,
                 invitacionSalaServicio,

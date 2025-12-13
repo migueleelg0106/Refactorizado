@@ -35,7 +35,6 @@ namespace PictionaryMusicalCliente
 
         public static ISonidoManejador SonidoManejador { get; private set; }
         public static IMusicaManejador MusicaManejador { get; private set; }
-        public static IValidadorEntrada Validador { get; private set; }
         public static INombreInvitadoGenerador GeneradorNombres { get; private set; }
         public static IUsuarioMapeador UsuarioMapeador { get; private set; }
 
@@ -107,7 +106,6 @@ namespace PictionaryMusicalCliente
             VentanaServicio = new VentanaServicio();
             SonidoManejador = new SonidoManejador();
             MusicaManejador = new MusicaManejador();
-            Validador = new ValidadorEntrada();
             GeneradorNombres = new NombreInvitadoGenerador();
 
             UsuarioGlobal = new UsuarioAutenticado();
@@ -147,7 +145,7 @@ namespace PictionaryMusicalCliente
 
             RecuperacionCuentaServicio = new RecuperacionCuentaDialogoServicio(
                 VerificacionCodigoDialogo, AvisoServicio,
-                Validador, SonidoManejador, Localizador);
+                SonidoManejador, Localizador);
         }
 
         private void ConfigurarIdioma()

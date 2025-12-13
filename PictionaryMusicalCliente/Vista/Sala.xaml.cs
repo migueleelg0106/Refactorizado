@@ -35,7 +35,6 @@ namespace PictionaryMusicalCliente.Vista
         private readonly IListaAmigosServicio _listaAmigosServicio;
         private readonly ILocalizadorServicio _traductor;
         private readonly IUsuarioAutenticado _usuarioSesion;
-        private readonly IValidadorEntrada _validadorEntrada;
         private readonly IWcfClienteFabrica _fabricaWcf;
         private readonly ISonidoManejador _sonidos;
         private readonly ICancionManejador _cancion;
@@ -68,7 +67,6 @@ namespace PictionaryMusicalCliente.Vista
             ILocalizadorServicio traductor,
             IAvisoServicio avisoServicio,
             IUsuarioAutenticado usuarioSesion,
-            IValidadorEntrada validadorEntrada,
             IWcfClienteFabrica fabricaWcf,
             ICancionManejador cancion,
             IInvitacionSalaServicio invitacionesSalaServicio,
@@ -99,8 +97,6 @@ namespace PictionaryMusicalCliente.Vista
                 throw new ArgumentNullException(nameof(traductor));
             _usuarioSesion = usuarioSesion ??
                 throw new ArgumentNullException(nameof(usuarioSesion));
-            _validadorEntrada = validadorEntrada ??
-                throw new ArgumentNullException(nameof(validadorEntrada));
             _fabricaWcf = fabricaWcf ??
                 throw new ArgumentNullException(nameof(fabricaWcf));
             _invitacionesSalaServicio = invitacionesSalaServicio ??

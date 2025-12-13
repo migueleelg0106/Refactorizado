@@ -39,7 +39,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private readonly IUsuarioAutenticado _usuarioSesion;
         private readonly ICatalogoAvatares _catalogoAvatares;
         private readonly ICatalogoImagenesPerfil _catalogoPerfil;
-        private readonly IValidadorEntrada _validadorEntrada;
 
         private readonly Dictionary<string, RedSocialItemVistaModelo> 
             _redesPorNombre;
@@ -66,7 +65,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             ISonidoManejador sonidoManejador,
             IUsuarioAutenticado usuarioSesion,
             ICatalogoAvatares catalogoAvatares,
-            IValidadorEntrada validadorEntrada,
             ICatalogoImagenesPerfil catalogoPerfil)
             : base(ventana, localizador)
         {
@@ -85,8 +83,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 throw new ArgumentNullException(nameof(sonidoManejador));
             _usuarioSesion = usuarioSesion ??
                 throw new ArgumentNullException(nameof(usuarioSesion));
-            _validadorEntrada = validadorEntrada ??
-                throw new ArgumentNullException(nameof(validadorEntrada));
             _catalogoAvatares = catalogoAvatares ??
                 throw new ArgumentNullException(nameof(catalogoAvatares));
             _catalogoPerfil = catalogoPerfil ??
@@ -372,13 +368,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         {
             if (campo == nameof(Nombre))
             {
-                return _validadorEntrada.ValidarNombre(Nombre?.Trim())?.Mensaje 
+                return ValidadorEntrada.ValidarNombre(Nombre?.Trim())?.Mensaje 
                     ?? Lang.errorTextoCamposInvalidosGenerico;
             }
             
             if (campo == nameof(Apellido))
             {
-                return _validadorEntrada.ValidarApellido(Apellido?.Trim())?.Mensaje 
+                return ValidadorEntrada.ValidarApellido(Apellido?.Trim())?.Mensaje 
                     ?? Lang.errorTextoCamposInvalidosGenerico;
             }
 
@@ -450,13 +446,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             string primerError = null;
 
             ValidarCampo(
-                _validadorEntrada.ValidarNombre(Nombre?.Trim()),
+                ValidadorEntrada.ValidarNombre(Nombre?.Trim()),
                 nameof(Nombre),
                 camposInvalidos,
                 ref primerError);
 
             ValidarCampo(
-                _validadorEntrada.ValidarApellido(Apellido?.Trim()),
+                ValidadorEntrada.ValidarApellido(Apellido?.Trim()),
                 nameof(Apellido),
                 camposInvalidos,
                 ref primerError);

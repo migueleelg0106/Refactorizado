@@ -28,7 +28,6 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             _verificarCodigoDialogoServicio;
         private readonly ILocalizacionServicio _localizacionServicio;
         private readonly ISonidoManejador _sonidoManejador;
-        private readonly IValidadorEntrada _validadorEntrada;
         private readonly ICatalogoAvatares _catalogoAvatares;
         private readonly IAvisoServicio _avisoServicio;
 
@@ -51,7 +50,6 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             ISeleccionarAvatarServicio seleccionarAvatarServicio,
             IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio,
             ISonidoManejador sonidoManejador,
-            IValidadorEntrada validadorEntrada,
             ICatalogoAvatares catalogoAvatares,
             IAvisoServicio avisoServicio,
             ILocalizacionServicio localizacionServicio = null)
@@ -70,8 +68,6 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 throw new ArgumentNullException(nameof(sonidoManejador));
             _catalogoAvatares = catalogoAvatares ??
                 throw new ArgumentNullException(nameof(catalogoAvatares));
-            _validadorEntrada = validadorEntrada ??
-                throw new ArgumentNullException(nameof(validadorEntrada));
             _localizacionServicio = localizacionServicio;
             _avisoServicio = avisoServicio ??
                 throw new ArgumentNullException(nameof(avisoServicio));
@@ -382,15 +378,15 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             List<string> camposInvalidos,
             ref string primerMensajeError)
         {
-            ValidarCampo(_validadorEntrada.ValidarUsuario(Usuario),
+            ValidarCampo(ValidadorEntrada.ValidarUsuario(Usuario),
                 nameof(Usuario), camposInvalidos, ref primerMensajeError);
-            ValidarCampo(_validadorEntrada.ValidarNombre(Nombre),
+            ValidarCampo(ValidadorEntrada.ValidarNombre(Nombre),
                 nameof(Nombre), camposInvalidos, ref primerMensajeError);
-            ValidarCampo(_validadorEntrada.ValidarApellido(Apellido),
+            ValidarCampo(ValidadorEntrada.ValidarApellido(Apellido),
                 nameof(Apellido), camposInvalidos, ref primerMensajeError);
-            ValidarCampo(_validadorEntrada.ValidarCorreo(Correo),
+            ValidarCampo(ValidadorEntrada.ValidarCorreo(Correo),
                 nameof(Correo), camposInvalidos, ref primerMensajeError);
-            ValidarCampo(_validadorEntrada.ValidarContrasena(Contrasena),
+            ValidarCampo(ValidadorEntrada.ValidarContrasena(Contrasena),
                 nameof(Contrasena), camposInvalidos, ref primerMensajeError);
 
             if (AvatarSeleccionadoId <= 0)

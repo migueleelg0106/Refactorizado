@@ -24,7 +24,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         private readonly ICambioContrasenaServicio _cambioContrasenaServicio;
         private readonly ISonidoManejador _sonidoManejador;
         private readonly IAvisoServicio _avisoServicio;
-        private readonly IValidadorEntrada _validadorEntrada;
 
         private string _nuevaContrasena;
         private string _confirmacionContrasena;
@@ -38,7 +37,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         /// <param name="tokenCodigo">El codigo de verificacion validado previamente.</param>
         /// <param name="cambioContrasenaServicio">Servicio para ejecutar la actualizacion.</param>
         /// <param name="avisoServicio">Servicio de avisos.</param>
-        /// <param name="validadorEntrada">Validador de entradas.</param>
         /// <param name="sonidoManejador">Servicio de sonido.</param>
         public CambioContrasenaVistaModelo(
             IVentanaServicio ventana,
@@ -46,7 +44,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             string tokenCodigo,
             ICambioContrasenaServicio cambioContrasenaServicio,
             IAvisoServicio avisoServicio,
-            IValidadorEntrada validadorEntrada,
             ISonidoManejador sonidoManejador)
             : base(ventana, localizador)
         {
@@ -55,8 +52,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 throw new ArgumentNullException(nameof(cambioContrasenaServicio));
             _avisoServicio = avisoServicio ??
                 throw new ArgumentNullException(nameof(avisoServicio));
-            _validadorEntrada = validadorEntrada ??
-                throw new ArgumentNullException(nameof(validadorEntrada));
             _sonidoManejador = sonidoManejador ??
                 throw new ArgumentNullException(nameof(sonidoManejador));
 
@@ -199,7 +194,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 return camposInvalidos;
             }
 
-            DTOs.ResultadoOperacionDTO validacion = _validadorEntrada.ValidarContrasena(
+            DTOs.ResultadoOperacionDTO validacion = ValidadorEntrada.ValidarContrasena(
                 NuevaContrasena);
 
             if (validacion?.OperacionExitosa != true)
