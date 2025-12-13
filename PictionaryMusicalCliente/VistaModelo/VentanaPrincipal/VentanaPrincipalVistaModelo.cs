@@ -585,9 +585,9 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
         private void EjecutarAbrirComoJugar()
         {
-            // ComoJugar no tiene ViewModel, se abre directamente desde código
-            // Esta funcionalidad se maneja en el code-behind
-            App.AvisoServicio.Mostrar(Lang.principalTextoComoJugar);
+            // ComoJugar is a simple informational window without a ViewModel
+            var comoJugar = new Vista.ComoJugar();
+            comoJugar.ShowDialog();
         }
 
         private void EjecutarAbrirClasificacion()

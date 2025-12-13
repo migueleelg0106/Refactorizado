@@ -1219,7 +1219,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                         _aplicacionCerrando = true;
                     }
 
-                    ManejarNavegacion?.Invoke(destino);
+                    Navegar(destino);
 
                     _avisoServicio.Mostrar(Lang.expulsarJugadorTextoFuisteExpulsado);
                 }
@@ -1519,7 +1519,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _aplicacionCerrando = true;
             }
 
-            ManejarNavegacion?.Invoke(destino);
+            Navegar(destino);
             _avisoServicio.Mostrar(Lang.partidaTextoHostCanceloSala);
         }
 
