@@ -686,11 +686,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
                 _nombreUsuarioSesion).ConfigureAwait(true);
         }
 
-        private void NavegarASalaUnida(DTOs.SalaDTO sala)
-        {
-            _sonidoManejador.ReproducirNotificacion();
-            NavegarASala(sala, false);
-        }
+
 
         private async Task IniciarJuegoInternoAsync()
         {
@@ -759,7 +755,13 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
         private void NavegarASalaCreada(DTOs.SalaDTO sala)
         {
             _sonidoManejador.ReproducirNotificacion();
-            NavegarASala(sala, false);
+            NavegarASala(sala, esInvitado: false);
+        }
+
+        private void NavegarASalaUnida(DTOs.SalaDTO sala)
+        {
+            _sonidoManejador.ReproducirNotificacion();
+            NavegarASala(sala, esInvitado: false);
         }
 
         private void NavegarASala(DTOs.SalaDTO sala, bool esInvitado)

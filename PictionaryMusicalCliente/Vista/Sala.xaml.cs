@@ -69,11 +69,13 @@ namespace PictionaryMusicalCliente.Vista
 
         private void Ink_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
         {
-            if (DataContext is SalaVistaModelo vm && vm.EsDibujante && e.Stroke != null)
+            if (e.Stroke == null || !(DataContext is SalaVistaModelo vm) || !vm.EsDibujante)
             {
-                var trazo = ConvertirStrokeATrazo(e.Stroke, false);
-                vm.EnviarTrazoAlServidor(trazo);
+                return;
             }
+
+            var trazo = ConvertirStrokeATrazo(e.Stroke, false);
+            vm.EnviarTrazoAlServidor(trazo);
         }
 
         private void Ink_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

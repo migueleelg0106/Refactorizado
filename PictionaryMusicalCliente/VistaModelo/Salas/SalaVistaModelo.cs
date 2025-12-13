@@ -1651,7 +1651,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        public void AbrirAjustesPartida()
+        private void AbrirAjustesPartida()
         {
             var ajustesVM = new Ajustes.AjustesPartidaVistaModelo(
                 _ventana,
