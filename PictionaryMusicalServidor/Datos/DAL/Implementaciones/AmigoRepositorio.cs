@@ -40,9 +40,9 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
         {
             try
             {
-                return _contexto.Amigo.Any(a =>
-                    (a.UsuarioEmisor == usuarioAId && a.UsuarioReceptor == usuarioBId) ||
-                    (a.UsuarioEmisor == usuarioBId && a.UsuarioReceptor == usuarioAId));
+                return _contexto.Amigo.Any(relacion =>
+                    (relacion.UsuarioEmisor == usuarioAId && relacion.UsuarioReceptor == usuarioBId) ||
+                    (relacion.UsuarioEmisor == usuarioBId && relacion.UsuarioReceptor == usuarioAId));
             }
             catch (DbUpdateException excepcion)
             {
@@ -105,9 +105,9 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
         {
             try
             {
-                return _contexto.Amigo.FirstOrDefault(a =>
-                    (a.UsuarioEmisor == usuarioAId && a.UsuarioReceptor == usuarioBId) ||
-                    (a.UsuarioEmisor == usuarioBId && a.UsuarioReceptor == usuarioAId));
+                return _contexto.Amigo.FirstOrDefault(relacion =>
+                    (relacion.UsuarioEmisor == usuarioAId && relacion.UsuarioReceptor == usuarioBId) ||
+                    (relacion.UsuarioEmisor == usuarioBId && relacion.UsuarioReceptor == usuarioAId));
             }
             catch (DbUpdateException excepcion)
             {
@@ -321,7 +321,7 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
                 }
 
                 return _contexto.Usuario
-                    .Where(u => amigosIds.Contains(u.idUsuario))
+                    .Where(usuario => amigosIds.Contains(usuario.idUsuario))
                     .ToList();
             }
             catch (DbUpdateException excepcion)

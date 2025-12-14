@@ -49,8 +49,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
-                var solicitudes = repo.ObtenerSolicitudesPendientes(usuarioId);
+                var repositorioAmigos = _repositorioFactoria.CrearAmigoRepositorio(contexto);
+                var solicitudes = repositorioAmigos.ObtenerSolicitudesPendientes(usuarioId);
 
                 if (solicitudes == null || solicitudes.Count == 0)
                 {
@@ -80,14 +80,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
-                if (repo.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
+                var repositorioAmigos = _repositorioFactoria.CrearAmigoRepositorio(contexto);
+                if (repositorioAmigos.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
                 {
                     throw new InvalidOperationException(
                         MensajesError.Cliente.RelacionAmistadExistente);
                 }
 
-                repo.CrearSolicitud(usuarioEmisorId, usuarioReceptorId);
+                repositorioAmigos.CrearSolicitud(usuarioEmisorId, usuarioReceptorId);
             }
         }
 
@@ -104,11 +104,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
-                var relacion = repo.ObtenerRelacion(usuarioEmisorId, usuarioReceptorId);
+                var repositorioAmigos = _repositorioFactoria.CrearAmigoRepositorio(contexto);
+                var relacion = repositorioAmigos.ObtenerRelacion(usuarioEmisorId, usuarioReceptorId);
 
                 ValidarSolicitudParaAceptar(relacion, usuarioReceptorId);
-                repo.ActualizarEstado(relacion, true);
+                repositorioAmigos.ActualizarEstado(relacion, true);
             }
         }
 
@@ -129,8 +129,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
-                var relacion = repo.ObtenerRelacion(usuarioAId, usuarioBId);
+                var repositorioAmigos = _repositorioFactoria.CrearAmigoRepositorio(contexto);
+                var relacion = repositorioAmigos.ObtenerRelacion(usuarioAId, usuarioBId);
 
                 if (relacion == null)
                 {
@@ -138,7 +138,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                         MensajesError.Cliente.RelacionAmistadNoExiste);
                 }
 
-                repo.EliminarRelacion(relacion);
+                repositorioAmigos.EliminarRelacion(relacion);
                 return relacion;
             }
         }
@@ -153,8 +153,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
-                var amigos = repo.ObtenerAmigos(usuarioId);
+                var repositorioAmigos = _repositorioFactoria.CrearAmigoRepositorio(contexto);
+                var amigos = repositorioAmigos.ObtenerAmigos(usuarioId);
 
                 if (amigos == null)
                 {

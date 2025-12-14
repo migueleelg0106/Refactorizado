@@ -239,12 +239,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _partidaVistaModelo.TiempoRestanteCambiado += valor =>
                 _chatVistaModelo.TiempoRestante = valor;
             _partidaVistaModelo.EnviarTrazoAlServidor = EnviarTrazoAlServidor;
-            _partidaVistaModelo.CelebracionFinRondaTerminada += OnCelebracionFinRondaTerminada;
-        }
-
-        private void OnCelebracionFinRondaTerminada()
-        {
-            _rondaTerminadaTemprano = false;
         }
 
         private ChatVistaModelo CrearChatVistaModelo()
@@ -1212,6 +1206,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.Info("Este usuario ha sido expulsado de la sala.");
+                    _avisoServicio.Mostrar(Lang.expulsarJugadorTextoFuisteExpulsado);
                     var destino = ObtenerDestinoSegunSesion();
 
                     if (destino == DestinoNavegacion.InicioSesion)
@@ -1220,8 +1215,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     }
 
                     Navegar(destino);
-
-                    _avisoServicio.Mostrar(Lang.expulsarJugadorTextoFuisteExpulsado);
                 }
                 else
                 {
@@ -1511,6 +1504,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _partidaVistaModelo.ReiniciarEstadoVisualSalaCancelada();
             BotonIniciarPartidaHabilitado = false;
             Jugadores.Clear();
+            _avisoServicio.Mostrar(Lang.partidaTextoHostCanceloSala);
 
             var destino = ObtenerDestinoSegunSesion();
 
@@ -1520,7 +1514,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
 
             Navegar(destino);
-            _avisoServicio.Mostrar(Lang.partidaTextoHostCanceloSala);
         }
 
         private static void EjecutarEnDispatcher(Action accion)
@@ -1541,7 +1534,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         public async Task FinalizarAsync()
         {
             _partidaVistaModelo.PropertyChanged -= PartidaIniciadaVistaModelo_PropertyChanged;
-            _partidaVistaModelo.CelebracionFinRondaTerminada -= OnCelebracionFinRondaTerminada;
 
             _partidaVistaModelo.Detener();
 

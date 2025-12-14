@@ -245,9 +245,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     _clientesPorSala[idSala] = clientesSala;
                 }
 
-                var clienteExistente = clientesSala.Find(c =>
+                var clienteExistente = clientesSala.Find(clienteChat =>
                     string.Equals(
-                        c.NombreJugador,
+                        clienteChat.NombreJugador,
                         nombreJugador,
                         StringComparison.OrdinalIgnoreCase));
 
@@ -261,8 +261,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
 
                 return clientesSala
-                    .Where(c => !string.Equals(
-                        c.NombreJugador,
+                    .Where(clienteChat => !string.Equals(
+                        clienteChat.NombreJugador,
                         nombreJugador,
                         StringComparison.OrdinalIgnoreCase))
                     .ToList();
@@ -302,9 +302,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     return new List<ClienteChat>();
                 }
 
-                var clienteRemovido = clientesSala.RemoveAll(c =>
+                var clienteRemovido = clientesSala.RemoveAll(clienteChat =>
                     string.Equals(
-                        c.NombreJugador,
+                        clienteChat.NombreJugador,
                         nombreJugador,
                         StringComparison.OrdinalIgnoreCase)) > 0;
 
@@ -432,9 +432,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 if (_clientesPorSala.TryGetValue(idSala, out var clientesSala))
                 {
-                    clientesSala.RemoveAll(c =>
+                    clientesSala.RemoveAll(clienteChat =>
                         string.Equals(
-                            c.NombreJugador,
+                            clienteChat.NombreJugador,
                             nombreJugador,
                             StringComparison.OrdinalIgnoreCase));
 

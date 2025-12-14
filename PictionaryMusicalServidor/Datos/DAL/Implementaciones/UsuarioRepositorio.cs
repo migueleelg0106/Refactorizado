@@ -225,8 +225,8 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
                     .Where(usuarioEntidad => usuarioEntidad.Jugador.Correo == correo)
                     .ToList();
 
-                return usuariosCandidatos.FirstOrDefault(u =>
-                    string.Equals(u.Jugador?.Correo, correo, StringComparison.Ordinal));
+                return usuariosCandidatos.FirstOrDefault(usuarioCandidato =>
+                    string.Equals(usuarioCandidato.Jugador?.Correo, correo, StringComparison.Ordinal));
             }
             catch (DbUpdateException excepcion)
             {
