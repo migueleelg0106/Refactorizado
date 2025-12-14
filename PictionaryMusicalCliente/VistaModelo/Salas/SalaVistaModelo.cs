@@ -70,6 +70,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private bool _rondaTerminadaTemprano;
         private string _mensajeChat;
         private bool _salaCancelada;
+        private bool _expulsionProcesada;
 
         private const int LimiteCaracteresChat = 150;
         private const double PorcentajePuntosDibujante = 0.2;
@@ -1200,16 +1201,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     _nombreUsuarioSesion,
                     StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.Info("Este usuario ha sido expulsado de la sala.");
-                    _avisoServicio.Mostrar(Lang.expulsarJugadorTextoFuisteExpulsado);
-                    var destino = ObtenerDestinoSegunSesion();
-
-                    if (destino == DestinoNavegacion.InicioSesion)
-                    {
-                        _aplicacionCerrando = true;
-                    }
-
-                    Navegar(destino);
+                    ManejarExpulsionPropia();
                 }
                 else
                 {
@@ -1243,11 +1235,43 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                         _sala.Creador,
                         StringComparison.OrdinalIgnoreCase)) == true;
 
+                bool usuarioSiguePresente = sala.Jugadores?.Any(jugador =>
+                    string.Equals(
+                        jugador,
+                        _nombreUsuarioSesion,
+                        StringComparison.OrdinalIgnoreCase)) == true;
+
+                if (!_expulsionProcesada && !usuarioSiguePresente)
+                {
+                    ManejarExpulsionPropia();
+                    return;
+                }
+
                 if (!anfitrionSiguePresente)
                 {
                     CancelarSalaPorAnfitrion();
                 }
             });
+        }
+
+        private void ManejarExpulsionPropia()
+        {
+            if (_expulsionProcesada)
+            {
+                return;
+            }
+
+            _expulsionProcesada = true;
+            _logger.Info("Este usuario ha sido expulsado de la sala.");
+            _avisoServicio.Mostrar(Lang.expulsarJugadorTextoFuisteExpulsado);
+            var destino = ObtenerDestinoSegunSesion();
+
+            if (destino == DestinoNavegacion.InicioSesion)
+            {
+                _aplicacionCerrando = true;
+            }
+
+            Navegar(destino);
         }
 
         private void ActualizarJugadores(IEnumerable<string> jugadores)

@@ -270,7 +270,8 @@ namespace PictionaryMusicalCliente.Vista
                 App.Localizador,
                 _sonidos,
                 mensaje);
-            return App.VentanaServicio.MostrarVentanaDialogo(vistaModelo) == true;
+            App.VentanaServicio.MostrarVentanaDialogo(vistaModelo);
+            return vistaModelo.DialogResult == true;
         }
 
         private ResultadoReporteJugador SolicitarDatosReporte(string nombreJugador)
@@ -280,24 +281,13 @@ namespace PictionaryMusicalCliente.Vista
                 App.Localizador,
                 _sonidos,
                 nombreJugador);
-            bool? resultado = App.VentanaServicio.MostrarVentanaDialogo(vistaModelo);
+            App.VentanaServicio.MostrarVentanaDialogo(vistaModelo);
 
             return new ResultadoReporteJugador
             {
-                Confirmado = resultado == true,
+                Confirmado = vistaModelo.DialogResult == true,
                 Motivo = vistaModelo.Motivo
             };
-        }
-
-        private void AbrirDialogo(Window ventana)
-        {
-            if (ventana == null)
-            {
-                return;
-            }
-
-            ventana.Owner = this;
-            ventana.ShowDialog();
         }
 
         private async Task MostrarInvitarAmigosAsync(InvitarAmigosVistaModelo vistaModelo)
