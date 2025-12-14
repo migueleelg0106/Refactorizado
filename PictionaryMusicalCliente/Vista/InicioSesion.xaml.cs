@@ -19,24 +19,24 @@ namespace PictionaryMusicalCliente.Vista
         public InicioSesion()
         {
             InitializeComponent();
-            Loaded += InicioSesion_Loaded;
-            Closed += InicioSesion_Closed;
+            Loaded += AlCargarInicioSesion;
+            Closed += AlCerrarInicioSesion;
         }
 
-        private void InicioSesion_Loaded(object sender, RoutedEventArgs e)
+        private void AlCargarInicioSesion(object sender, RoutedEventArgs e)
         {
-            if (DataContext is InicioSesionVistaModelo vm)
+            if (DataContext is InicioSesionVistaModelo vistaModelo)
             {
-                vm.MostrarCamposInvalidos = MarcarCamposInvalidos;
+                vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
                 App.MusicaManejador.ReproducirEnBucle("inicio_sesion_musica.mp3");
             }
         }
 
-        private void PasswordBoxChanged(object sender, RoutedEventArgs e)
+        private void AlCambiarContrasena(object sender, RoutedEventArgs e)
         {
-            if (DataContext is InicioSesionVistaModelo vm && sender is PasswordBox pb)
+            if (DataContext is InicioSesionVistaModelo vistaModelo && sender is PasswordBox cajaContrasena)
             {
-                vm.EstablecerContrasena(pb.Password);
+                vistaModelo.EstablecerContrasena(cajaContrasena.Password);
             }
         }
 
@@ -56,18 +56,18 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void InicioSesion_Closed(object sender, EventArgs e)
+        private void AlCerrarInicioSesion(object sender, EventArgs e)
         {
-            Loaded -= InicioSesion_Loaded;
-            Closed -= InicioSesion_Closed;
+            Loaded -= AlCargarInicioSesion;
+            Closed -= AlCerrarInicioSesion;
         }
 
-        private void BotonAudio_Click(object sender, RoutedEventArgs e)
+        private void AlHacerClicEnBotonAudio(object sender, RoutedEventArgs e)
         {
-            bool silenciado = App.MusicaManejador.AlternarSilencio();
-            string ruta = silenciado ? "Audio_Apagado.png" : "Audio_Encendido.png";
+            bool estaSilenciado = App.MusicaManejador.AlternarSilencio();
+            string rutaImagen = estaSilenciado ? "Audio_Apagado.png" : "Audio_Encendido.png";
             imagenBotonAudio.Source = new BitmapImage(
-                new Uri($"/Recursos/{ruta}", UriKind.Relative));
+                new Uri($"/Recursos/{rutaImagen}", UriKind.Relative));
         }
     }
 }

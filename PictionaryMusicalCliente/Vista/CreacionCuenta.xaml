@@ -125,7 +125,7 @@
 
                     <PasswordBox x:Name="campoContrasenaContrasena" Height="25" 
                                  FontFamily="Comic Sans MS" MaxLength="15"
-                                 PasswordChanged="PasswordBoxChanged"/>
+                                 PasswordChanged="AlCambiarContrasena"/>
                 </StackPanel>
 
                 <TextBlock Text="{x:Static language:Lang.globalTextoEspecificaContrasena}"

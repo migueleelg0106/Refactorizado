@@ -25,7 +25,7 @@ namespace PictionaryMusicalCliente.Vista
             bloqueTextoMensaje.Text = mensaje;
         }
 
-        private void BotonAceptar(object sender, RoutedEventArgs e)
+        private void AlHacerClicEnBotonAceptar(object remitente, RoutedEventArgs argumentosEvento)
         {
             Close();
         }

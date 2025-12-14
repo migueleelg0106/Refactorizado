@@ -136,7 +136,7 @@
                                                Placement="Top" AllowsTransparency="True"
                                                PopupAnimation="Fade" StaysOpen="False"
                                                IsOpen="{Binding IsChecked, ElementName=toggleRedSocial, Mode=TwoWay}"
-                                               Opened="PopupRedSocial_Opened">
+                                               Opened="AlAbrirPopupRedSocial">
                                             <Border Background="White" CornerRadius="6" 
                                                     Padding="8" MinWidth="160">
                                                 <Border.Style>
@@ -155,7 +155,7 @@
                                                          Text="{Binding Identificador, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                          MaxLength="50"
                                                          Tag="{Binding ElementName=toggleRedSocial}"
-                                                         KeyDown="RedSocialTextBox_KeyDown" />
+                                                         KeyDown="AlPresionarTeclaEnCajaTextoRedSocial" />
                                             </Border>
                                         </Popup>
                                     </Grid>

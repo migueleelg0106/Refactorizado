@@ -352,13 +352,13 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             DificultadSeleccionada = DificultadesDisponibles.FirstOrDefault();
         }
 
-        private void ListaActualizada(object sender, IReadOnlyList<DTOs.AmigoDTO> amigos)
+        private void ListaActualizada(object remitente, IReadOnlyList<DTOs.AmigoDTO> amigos)
         {
             EjecutarEnDispatcher(() => ActualizarAmigos(amigos));
         }
 
         private void SolicitudesAmistadActualizadas(
-            object sender,
+            object remitente,
             IReadOnlyCollection<DTOs.SolicitudAmistadDTO> solicitudes)
         {
             _ = ActualizarListaAmigosDesdeServidorAsync();

@@ -11,12 +11,12 @@ namespace PictionaryMusicalCliente.Vista
         public Solicitudes()
         {
             InitializeComponent();
-            Closed += Solicitudes_Closed;
+            Closed += AlCerrarSolicitudes;
         }
 
-        private void Solicitudes_Closed(object sender, System.EventArgs e)
+        private void AlCerrarSolicitudes(object remitente, System.EventArgs argumentosEvento)
         {
-            Closed -= Solicitudes_Closed;
+            Closed -= AlCerrarSolicitudes;
             if (DataContext is SolicitudesVistaModelo vistaModelo)
             {
                 vistaModelo.Dispose();

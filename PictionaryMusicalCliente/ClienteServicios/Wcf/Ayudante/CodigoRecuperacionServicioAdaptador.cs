@@ -39,10 +39,10 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf.Ayudante
         public Task<DTOs.ResultadoSolicitudCodigoDTO> SolicitarCodigoRegistroAsync(
             DTOs.NuevaCuentaDTO solicitud)
         {
-            var ex = new NotSupportedException
+            var excepcion = new NotSupportedException
                 ("No se puede solicitar registro desde el adaptador de recuperacion.");
-            _logger.Error("Operacion no soportada invocada.", ex);
-            throw ex;
+            _logger.Error("Operacion no soportada invocada.", excepcion);
+            throw excepcion;
         }
 
         /// <summary>

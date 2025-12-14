@@ -551,7 +551,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             FinalizarAlarma();
         }
 
-        private void OverlayTimer_Tick(object sender, EventArgs e)
+        private void OverlayTimer_Tick(object remitente, EventArgs argumentosEvento)
         {
             _overlayTimer.Stop();
             VisibilidadOverlayDibujante = Visibility.Collapsed;
@@ -588,7 +588,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _temporizador.Start();
         }
 
-        private void Temporizador_Tick(object sender, EventArgs e)
+        private void Temporizador_Tick(object remitente, EventArgs argumentosEvento)
         {
             var tiempoTranscurrido = (int)_cronometroRonda.Elapsed.TotalSeconds;
             _contador = Math.Max(0, _tiempoRondaSegundos - tiempoTranscurrido);
@@ -610,7 +610,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        private void TemporizadorAlarma_Tick(object sender, EventArgs e)
+        private void TemporizadorAlarma_Tick(object remitente, EventArgs argumentosEvento)
         {
             FinalizarAlarma();
         }

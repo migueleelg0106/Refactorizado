@@ -24,7 +24,7 @@
 
         <Button HorizontalAlignment="Left" VerticalAlignment="Top" 
                 Margin="20,20,0,0" Width="69" Height="69"
-                Click="BotonAudio_Click" Cursor="Hand"
+                Click="AlHacerClicEnBotonAudio" Cursor="Hand"
                 Background="Transparent" BorderThickness="0">
             <Button.Style>
                 <Style TargetType="Button">
@@ -108,7 +108,7 @@
 
                 <PasswordBox x:Name="campoContrasenaContrasena" Height="30" FontFamily="Comic Sans MS" 
                              Grid.Row="3" MaxLength="15"
-                             PasswordChanged="PasswordBoxChanged"/>
+                             PasswordChanged="AlCambiarContrasena"/>
 
                 <Label Content="{Binding [inicioSesionTextoOlvidasteContrasena], Source={StaticResource Localizacion}}"
                        FontFamily="Comic Sans MS"

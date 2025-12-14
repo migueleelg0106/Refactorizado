@@ -13,14 +13,14 @@ namespace PictionaryMusicalCliente.Vista
         public VerificacionCodigo()
         {
             InitializeComponent();
-            DataContextChanged += VerificacionCodigo_DataContextChanged;
+            DataContextChanged += AlCambiarContextoDeDatosVerificacionCodigo;
         }
 
-        private void VerificacionCodigo_DataContextChanged(
-            object sender, 
-            DependencyPropertyChangedEventArgs e)
+        private void AlCambiarContextoDeDatosVerificacionCodigo(
+            object remitente, 
+            DependencyPropertyChangedEventArgs argumentosEvento)
         {
-            if (e.NewValue is VerificacionCodigoVistaModelo vistaModelo)
+            if (argumentosEvento.NewValue is VerificacionCodigoVistaModelo vistaModelo)
             {
                 vistaModelo.MarcarCodigoInvalido = MarcarCodigoInvalido;
             }

@@ -14,10 +14,10 @@ namespace PictionaryMusicalCliente.Vista
         public Clasificacion()
         {
             InitializeComponent();
-            Loaded += Clasificacion_LoadedAsync;
+            Loaded += AlCargarClasificacionAsync;
         }
 
-        private async void Clasificacion_LoadedAsync(object sender, RoutedEventArgs e)
+        private async void AlCargarClasificacionAsync(object remitente, RoutedEventArgs argumentosEvento)
         {
             if (DataContext is ClasificacionVistaModelo vistaModelo)
             {

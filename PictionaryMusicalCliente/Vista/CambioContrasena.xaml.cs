@@ -23,33 +23,33 @@ namespace PictionaryMusicalCliente.Vista
                 vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
             }
             
-            DataContextChanged += CambioContrasena_DataContextChanged;
+            DataContextChanged += AlCambiarContextoDeDatosCambioContrasena;
         }
 
-        private void CambioContrasena_DataContextChanged(object sender,
-            DependencyPropertyChangedEventArgs e)
+        private void AlCambiarContextoDeDatosCambioContrasena(object remitente,
+            DependencyPropertyChangedEventArgs argumentosEvento)
         {
-            if (e.NewValue is CambioContrasenaVistaModelo vistaModelo)
+            if (argumentosEvento.NewValue is CambioContrasenaVistaModelo vistaModelo)
             {
                 vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
             }
         }
 
-        private void ContrasenaNuevaPasswordChanged(object sender, RoutedEventArgs e)
+        private void AlCambiarContrasenaNueva(object remitente, RoutedEventArgs argumentosEvento)
         {
             if (DataContext is CambioContrasenaVistaModelo vistaModelo &&
-                sender is PasswordBox passwordBox)
+                remitente is PasswordBox cajaContrasena)
             {
-                vistaModelo.NuevaContrasena = passwordBox.Password;
+                vistaModelo.NuevaContrasena = cajaContrasena.Password;
             }
         }
 
-        private void ContrasenaConfirmacionPasswordChanged(object sender, RoutedEventArgs e)
+        private void AlCambiarContrasenaConfirmacion(object remitente, RoutedEventArgs argumentosEvento)
         {
             if (DataContext is CambioContrasenaVistaModelo vistaModelo &&
-                sender is PasswordBox passwordBox)
+                remitente is PasswordBox cajaContrasena)
             {
-                vistaModelo.ConfirmacionContrasena = passwordBox.Password;
+                vistaModelo.ConfirmacionContrasena = cajaContrasena.Password;
             }
         }
 

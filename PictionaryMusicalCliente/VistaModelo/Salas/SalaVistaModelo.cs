@@ -259,10 +259,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         }
 
 
-        private void ChatVistaModelo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ChatVistaModelo_PropertyChanged(object remitente, PropertyChangedEventArgs argumentosEvento)
         {
             if (string.Equals(
-                e.PropertyName,
+                argumentosEvento.PropertyName,
                 nameof(ChatVistaModelo.PuedeEscribir),
                 StringComparison.Ordinal))
             {
@@ -270,9 +270,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        private void PartidaIniciadaVistaModelo_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void PartidaIniciadaVistaModelo_PropertyChanged(object remitente, System.ComponentModel.PropertyChangedEventArgs argumentosEvento)
         {
-            NotificarCambio(e.PropertyName);
+            NotificarCambio(argumentosEvento.PropertyName);
         }
 
         private void OnJuegoIniciadoCambiado(bool juegoIniciado)
@@ -1124,7 +1124,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             return true;
         }
 
-        private void SalasServicio_JugadorSeUnio(object sender, string nombreJugador)
+        private void SalasServicio_JugadorSeUnio(object remitente, string nombreJugador)
         {
             EjecutarEnDispatcher(() =>
             {
@@ -1152,7 +1152,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             });
         }
 
-        private void SalasServicio_JugadorSalio(object sender, string nombreJugador)
+        private void SalasServicio_JugadorSalio(object remitente, string nombreJugador)
         {
             EjecutarEnDispatcher(() =>
             {
@@ -1186,7 +1186,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             });
         }
 
-        private void SalasServicio_SalaCancelada(object sender, string codigoSala)
+        private void SalasServicio_SalaCancelada(object remitente, string codigoSala)
         {
             EjecutarEnDispatcher(() =>
             {
@@ -1202,7 +1202,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             });
         }
 
-        private void SalasServicio_JugadorExpulsado(object sender, string nombreJugador)
+        private void SalasServicio_JugadorExpulsado(object remitente, string nombreJugador)
         {
             EjecutarEnDispatcher(() =>
             {
@@ -1236,7 +1236,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             });
         }
 
-        private void SalasServicio_SalaActualizada(object sender, DTOs.SalaDTO sala)
+        private void SalasServicio_SalaActualizada(object remitente, DTOs.SalaDTO sala)
         {
             if (sala == null || !string.Equals(
                 sala.Codigo,

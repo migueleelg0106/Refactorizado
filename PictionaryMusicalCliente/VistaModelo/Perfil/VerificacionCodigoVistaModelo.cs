@@ -389,7 +389,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             _temporizadorExpiracion.Start();
         }
 
-        private void TemporizadorReenvioTick(object sender, EventArgs e)
+        private void TemporizadorReenvioTick(object remitente, EventArgs argumentosEvento)
         {
             if (_segundosRestantes <= 0)
             {
@@ -403,7 +403,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             ActualizarTextoReenvio();
         }
 
-        private void TemporizadorExpiracionTick(object sender, EventArgs e)
+        private void TemporizadorExpiracionTick(object remitente, EventArgs argumentosEvento)
         {
             _logger.Info("El tiempo de validez del codigo ha expirado.");
             _temporizadorExpiracion.Stop();

@@ -57,24 +57,24 @@ namespace PictionaryMusicalCliente.Utilidades
             }
         }
 
-        private static void ValidarEntrada(object sender, TextCompositionEventArgs e)
+        private static void ValidarEntrada(object remitente, TextCompositionEventArgs argumentosEvento)
         {
-            e.Handled = !EsTextoNumerico(e.Text);
+            argumentosEvento.Handled = !EsTextoNumerico(argumentosEvento.Text);
         }
 
-        private static void ManejarPegado(object sender, DataObjectPastingEventArgs e)
+        private static void ManejarPegado(object remitente, DataObjectPastingEventArgs argumentosEvento)
         {
-            if (!e.DataObject.GetDataPresent(DataFormats.Text))
+            if (!argumentosEvento.DataObject.GetDataPresent(DataFormats.Text))
             {
-                e.CancelCommand();
+                argumentosEvento.CancelCommand();
                 return;
             }
 
-            string textoPegado = e.DataObject.GetData(DataFormats.Text) as string ?? string.Empty;
+            string textoPegado = argumentosEvento.DataObject.GetData(DataFormats.Text) as string ?? string.Empty;
 
             if (!EsTextoNumerico(textoPegado))
             {
-                e.CancelCommand();
+                argumentosEvento.CancelCommand();
             }
         }
 

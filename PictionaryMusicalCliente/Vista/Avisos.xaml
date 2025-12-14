@@ -24,7 +24,7 @@
                         FontFamily="Comic Sans MS" FontWeight="Bold"
                         Background="White" BorderBrush="Black"
                         HorizontalAlignment="Center" IsDefault="True"
-                        Click="BotonAceptar"/>
+                        Click="AlHacerClicEnBotonAceptar"/>
             </StackPanel>
         </Border>
     </Grid>
