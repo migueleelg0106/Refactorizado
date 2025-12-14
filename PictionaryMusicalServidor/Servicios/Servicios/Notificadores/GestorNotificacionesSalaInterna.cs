@@ -122,6 +122,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 EjecutarSeguro(() => callback.NotificarJugadorExpulsado(codigoSala, nombreExpulsado));
             }
 
+            // Notificar al jugador expulsado directamente (ya fue removido de la lista)
+            if (callbackExpulsado != null)
+            {
+                EjecutarSeguro(() => callbackExpulsado.NotificarJugadorExpulsado(codigoSala, nombreExpulsado));
+            }
+
             // Notificar la salida y actualización de sala
             var destinatarios = ObtenerDestinatariosExcluyendo(nombreExpulsado);
             foreach (var callback in destinatarios)
