@@ -7,6 +7,7 @@ using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -219,12 +220,14 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
     /// <summary>
     /// Representa un item individual en la lista de amigos para invitar.
     /// </summary>
-    public class AmigoInvitacionItemVistaModelo
+    public class AmigoInvitacionItemVistaModelo : INotifyPropertyChanged
     {
         private readonly InvitarAmigosVistaModelo _padre;
         private readonly SonidoManejador _sonidoManejador;
         private bool _invitacionEnviada;
         private bool _estaProcesando;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public AmigoInvitacionItemVistaModelo(
             DTOs.AmigoDTO amigo,
@@ -263,6 +266,10 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 if (_invitacionEnviada != value)
                 {
                     _invitacionEnviada = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(
+                        nameof(InvitacionEnviada)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(
+                        nameof(TextoBoton)));
                     InvitarComando.NotificarPuedeEjecutar();
                 }
             }
@@ -276,6 +283,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
                 if (_estaProcesando != value)
                 {
                     _estaProcesando = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(
+                        nameof(EstaProcesando)));
                     InvitarComando.NotificarPuedeEjecutar();
                 }
             }

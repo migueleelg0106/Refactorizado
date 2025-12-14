@@ -106,7 +106,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
         private string ObtenerCodigoIdiomaActual()
         {
-            return _localizador.Localizar(null, null) ?? "es-MX";
+            var culturaActual = Lang.Culture;
+            if (culturaActual != null)
+            {
+                return culturaActual.Name;
+            }
+
+            return System.Globalization.CultureInfo.CurrentUICulture.Name;
         }
     }
 }
