@@ -6,7 +6,7 @@
         Height="420"
         Width="420"
         Background="Wheat"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterScreen">
     <Grid Margin="10">
         <Border Background="White" BorderBrush="Black" BorderThickness="2" CornerRadius="6">
             <DockPanel Margin="12">

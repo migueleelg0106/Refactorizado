@@ -4,7 +4,7 @@
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
         Title="{x:Static language:Lang.reportarJugadorTextoTitulo}"
         Height="290" Width="360"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent"
         ShowInTaskbar="False">
     <Grid>

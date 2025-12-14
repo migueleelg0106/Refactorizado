@@ -148,10 +148,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Amigos
             {
                 _logger.ErrorFormat("Error al enviar solicitud a {0}.", nombreAmigo, ex);
                 _sonidoManejador.ReproducirError();
-                
-                string mensajeError = _localizador.Localizar(
-                    ex.Message,
-                    Lang.errorTextoErrorProcesarSolicitud);
+
+                string mensajeError = ex.Message ?? Lang.errorTextoErrorProcesarSolicitud;
                 _avisoServicio.Mostrar(mensajeError);
                 
                 EstaProcesando = false;

@@ -4,7 +4,7 @@
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
         Title="{x:Static language:Lang.expulsarJugadorTextoTitulo}"
         Height="220" Width="330"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent"
         ShowInTaskbar="False">
 
