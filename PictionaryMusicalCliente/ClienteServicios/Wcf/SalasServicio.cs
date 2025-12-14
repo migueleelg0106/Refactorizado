@@ -192,6 +192,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             catch (Exception ex)
             {
                 ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                throw;
             }
             finally
             {
