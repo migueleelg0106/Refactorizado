@@ -100,13 +100,13 @@
     <Compile Include="Contratos\IReportesManejador.cs" />
     <Compile Include="Contratos\ISalasManejadorCallback.cs" />
     <Compile Include="Contratos\ISalasManejador.cs" />
+    <Compile Include="LogicaNegocio\GestorTiemposPartida.cs" />
     <Compile Include="Servicios\ReportesManejador.cs" />
     <Compile Include="Servicios\Utilidades\IContextoFactoria.cs" />
     <Compile Include="Contratos\IVerificacionRegistroServicio.cs" />
     <Compile Include="LogicaNegocio\ControladorPartida.cs" />
     <Compile Include="LogicaNegocio\EstadoPartida.cs" />
     <Compile Include="LogicaNegocio\GestorJugadoresPartida.cs" />
-    <Compile Include="LogicaNegocio\GestorTiempoPartida.cs" />
     <Compile Include="LogicaNegocio\JugadorPartida.cs" />
     <Compile Include="Contratos\DTOs\ActualizacionContrasenaDTO.cs" />
     <Compile Include="Contratos\DTOs\ClasificacionUsuarioDTO.cs" />
@@ -161,8 +161,10 @@
     <Compile Include="Servicios\Notificadores\CorreoInvitacionNotificador.cs" />
     <Compile Include="Servicios\Notificadores\ICodigoVerificacionNotificador.cs" />
     <Compile Include="Servicios\Utilidades\CodigoVerificacionGenerador.cs" />
+    <Compile Include="Servicios\Utilidades\IRepositorioFactoria.cs" />
     <Compile Include="Servicios\Utilidades\IValidadorNombreUsuario.cs" />
     <Compile Include="Servicios\Utilidades\ManejadorCallback.cs" />
+    <Compile Include="Servicios\Utilidades\RepositorioFactoria.cs" />
     <Compile Include="Servicios\Utilidades\TokenGenerador.cs" />
     <Compile Include="Servicios\Utilidades\ValidadorNombreUsuario.cs" />
     <Compile Include="Servicios\VerificacionRegistroServicio.cs" />

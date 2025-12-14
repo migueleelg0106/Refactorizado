@@ -5,7 +5,7 @@ using System.Data.Entity.Core;
 using System.ServiceModel;
 using Datos.Modelo;
 using log4net;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
+using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
@@ -21,19 +21,35 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ReportesManejador));
 
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
         private readonly IValidadorNombreUsuario _validadorUsuario;
 
-        public ReportesManejador() : this(new ContextoFactoria(), new ValidadorNombreUsuario())
+        /// <summary>
+        /// Constructor por defecto para uso en WCF.
+        /// </summary>
+        public ReportesManejador() : this(
+            new ContextoFactoria(), 
+            new RepositorioFactoria(), 
+            new ValidadorNombreUsuario())
         {
         }
 
+        /// <summary>
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
+        /// </summary>
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        /// <param name="validadorUsuario">Validador de nombres de usuario.</param>
         public ReportesManejador(
-            IContextoFactoria contextoFactory,
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria,
             IValidadorNombreUsuario validadorUsuario)
         {
-            _contextoFactory = contextoFactory ??
-                throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria ??
+                throw new ArgumentNullException(nameof(contextoFactoria));
+            _repositorioFactoria = repositorioFactoria ??
+                throw new ArgumentNullException(nameof(repositorioFactoria));
             _validadorUsuario = validadorUsuario ??
                 throw new ArgumentNullException(nameof(validadorUsuario));
         }
@@ -51,10 +67,11 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 ValidarSolicitud(reporte);
                 string motivoNormalizado = EntradaComunValidador.NormalizarTexto(reporte.Motivo);
 
-                using (var contexto = _contextoFactory.CrearContexto())
+                using (var contexto = _contextoFactoria.CrearContexto())
                 {
                     var idsUsuarios = ObtenerIdentificadoresUsuarios(contexto, reporte);
-                    var reporteRepositorio = new ReporteRepositorio(contexto);
+                    var reporteRepositorio = 
+                        _repositorioFactoria.CrearReporteRepositorio(contexto);
 
                     if (idsUsuarios.IdReportante == idsUsuarios.IdReportado)
                     {
@@ -156,7 +173,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                var usuarioRepositorio = 
+                    _repositorioFactoria.CrearUsuarioRepositorio(contexto);
                 var reportante = usuarioRepositorio.ObtenerPorNombreUsuario(
                     EntradaComunValidador.NormalizarTexto(reporte.NombreUsuarioReportante));
                 var reportado = usuarioRepositorio.ObtenerPorNombreUsuario(

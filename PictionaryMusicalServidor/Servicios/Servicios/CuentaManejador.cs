@@ -2,7 +2,6 @@ using PictionaryMusicalServidor.Servicios.Contratos;
 using System;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using Datos.Modelo;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Linq;
@@ -23,23 +22,38 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     {
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CuentaManejador));
 
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
         private readonly IVerificacionRegistroServicio _verificacionServicio;
 
+        /// <summary>
+        /// Constructor por defecto para uso en WCF.
+        /// </summary>
         public CuentaManejador() : this(
             new ContextoFactoria(),
+            new RepositorioFactoria(),
             new VerificacionRegistroServicio(
                 new ContextoFactoria(),
                 new NotificacionCodigosServicio(new CorreoCodigoVerificacionNotificador())))
         {
         }
 
+        /// <summary>
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
+        /// </summary>
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        /// <param name="verificacionServicio">Servicio de verificacion de registro.</param>
         public CuentaManejador(
-            IContextoFactoria contextoFactory,
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria,
             IVerificacionRegistroServicio verificacionServicio)
         {
-            _contextoFactory = contextoFactory ??
-                throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria ??
+                throw new ArgumentNullException(nameof(contextoFactoria));
+
+            _repositorioFactoria = repositorioFactoria ??
+                throw new ArgumentNullException(nameof(repositorioFactoria));
 
             _verificacionServicio = verificacionServicio ??
                 throw new ArgumentNullException(nameof(verificacionServicio));
@@ -63,7 +77,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (var contexto = _contextoFactory.CrearContexto())
+                using (var contexto = _contextoFactoria.CrearContexto())
                 {
                     var validacionNegocio = VerificarReglasDeNegocio(contexto, nuevaCuenta);
                     if (!validacionNegocio.RegistroExitoso)
@@ -220,10 +234,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             using (var transaccion = contexto.Database.BeginTransaction())
             {
-                var clasificacionRepositorio = new ClasificacionRepositorio(contexto);
+                var clasificacionRepositorio = 
+                    _repositorioFactoria.CrearClasificacionRepositorio(contexto);
                 var clasificacion = clasificacionRepositorio.CrearClasificacionInicial();
 
-                var jugadorRepositorio = new JugadorRepositorio(contexto);
+                var jugadorRepositorio = 
+                    _repositorioFactoria.CrearJugadorRepositorio(contexto);
                 var jugador = jugadorRepositorio.CrearJugador(new Jugador
                 {
                     Nombre = nuevaCuenta.Nombre,
@@ -233,7 +249,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     Clasificacion_idClasificacion = clasificacion.idClasificacion
                 });
 
-                var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                var usuarioRepositorio = 
+                    _repositorioFactoria.CrearUsuarioRepositorio(contexto);
                 var usuarioCreado = usuarioRepositorio.CrearUsuario(new Usuario
                 {
                     Nombre_Usuario = nuevaCuenta.Usuario,

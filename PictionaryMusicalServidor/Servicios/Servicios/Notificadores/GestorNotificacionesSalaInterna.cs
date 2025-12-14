@@ -17,7 +17,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         private static readonly ILog _logger = 
             LogManager.GetLogger(typeof(GestorNotificacionesSalaInterna));
         private readonly Dictionary<string, ISalasManejadorCallback> _callbacks;
-        private readonly object _sync = new object();
+        private readonly object _sincronizacion = new object();
 
         /// <summary>
         /// Inicializa una nueva instancia del gestor de notificaciones.
@@ -33,7 +33,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// </summary>
         public void Registrar(string nombreUsuario, ISalasManejadorCallback callback)
         {
-            lock (_sync)
+            lock (_sincronizacion)
             {
                 _callbacks[nombreUsuario] = callback;
             }
@@ -44,7 +44,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// </summary>
         public void Remover(string nombreUsuario)
         {
-            lock (_sync)
+            lock (_sincronizacion)
             {
                 _callbacks.Remove(nombreUsuario);
             }
@@ -55,7 +55,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// </summary>
         public ISalasManejadorCallback ObtenerCallback(string nombreUsuario)
         {
-            lock (_sync)
+            lock (_sincronizacion)
             {
                 if (_callbacks.TryGetValue(nombreUsuario, out var callback))
                 {
@@ -70,7 +70,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         /// </summary>
         public void Limpiar()
         {
-            lock (_sync)
+            lock (_sincronizacion)
             {
                 _callbacks.Clear();
             }
@@ -131,7 +131,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
         private List<ISalasManejadorCallback> ObtenerDestinatariosExcluyendo
             (string usuarioExcluido)
         {
-            lock (_sync)
+            lock (_sincronizacion)
             {
                 return _callbacks
                     .Where(callbackRegistrado => !string.Equals(callbackRegistrado.Key, usuarioExcluido,
@@ -143,7 +143,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
 
         private List<ISalasManejadorCallback> ObtenerTodosLosDestinatarios()
         {
-            lock (_sync)
+            lock (_sincronizacion)
             {
                 return _callbacks.Values.ToList();
             }

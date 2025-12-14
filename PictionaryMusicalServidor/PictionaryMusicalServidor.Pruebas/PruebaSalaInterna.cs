@@ -86,12 +86,12 @@ namespace PictionaryMusicalServidor.Pruebas
         }
 
         [TestMethod]
-        public void Prueba_ToDto_DeberiaConvertirCorrectamente()
+        public void Prueba_ConvertirADto_DeberiaConvertirCorrectamente()
         {
             var configuracion = CrearConfiguracionPrueba();
             var sala = new SalaInterna("ABCD", "Usuario1", configuracion);
             
-            var dto = sala.ToDto();
+            var dto = sala.ConvertirADto();
 
             Assert.AreEqual("ABCD", dto.Codigo);
             Assert.AreEqual("Usuario1", dto.Creador);
@@ -280,16 +280,16 @@ namespace PictionaryMusicalServidor.Pruebas
         }
 
         [TestMethod]
-        public void Prueba_ToDto_DeberiaCrearCopiaIndependiente()
+        public void Prueba_ConvertirADto_DeberiaCrearCopiaIndependiente()
         {
             var sala = new SalaInterna("ABCD", "Usuario1", CrearConfiguracionPrueba());
             var callback = new SalasCallbackMock();
 
             sala.AgregarJugador("Usuario1", callback, false);
-            var dto1 = sala.ToDto();
+            var dto1 = sala.ConvertirADto();
             
             sala.AgregarJugador("Usuario2", callback, false);
-            var dto2 = sala.ToDto();
+            var dto2 = sala.ConvertirADto();
 
             // Los DTOs deben tener listas independientes
             Assert.AreEqual(1, dto1.Jugadores.Count);

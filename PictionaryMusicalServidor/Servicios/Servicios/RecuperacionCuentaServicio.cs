@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using Datos.Modelo;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -31,18 +30,39 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             _solicitudesRecuperacion =
             new ConcurrentDictionary<string, SolicitudRecuperacionPendiente>();
 
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
         private readonly INotificacionCodigosServicio _notificacionServicio;
 
+        /// <summary>
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
+        /// </summary>
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        /// <param name="notificacionServicio">Servicio de notificacion de codigos.</param>
         public RecuperacionCuentaServicio(
-            IContextoFactoria contextoFactory,
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria,
             INotificacionCodigosServicio notificacionServicio)
         {
-            _contextoFactory = contextoFactory ??
-                throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria ??
+                throw new ArgumentNullException(nameof(contextoFactoria));
+
+            _repositorioFactoria = repositorioFactoria ??
+                throw new ArgumentNullException(nameof(repositorioFactoria));
 
             _notificacionServicio = notificacionServicio ??
                 throw new ArgumentNullException(nameof(notificacionServicio));
+        }
+
+        /// <summary>
+        /// Constructor por defecto para uso en WCF (compatibilidad hacia atras).
+        /// </summary>
+        public RecuperacionCuentaServicio(
+            IContextoFactoria contextoFactoria,
+            INotificacionCodigosServicio notificacionServicio) 
+            : this(contextoFactoria, new RepositorioFactoria(), notificacionServicio)
+        {
         }
 
         /// <summary>
@@ -171,9 +191,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private Usuario BuscarUsuarioParaRecuperacion(string identificador)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
-                IUsuarioRepositorio repositorio = new UsuarioRepositorio(contexto);
+                IUsuarioRepositorio repositorio = 
+                    _repositorioFactoria.CrearUsuarioRepositorio(contexto);
                 string idNormalizado = EntradaComunValidador.NormalizarTexto(identificador);
                 var usuarioPorNombre = repositorio.ObtenerPorNombreConJugador(idNormalizado);
 
@@ -236,7 +257,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static void LimpiarSolicitudesRecuperacion(int usuarioId)
         {
             var registros = _solicitudesRecuperacion
-                .Where(pair => pair.Value.UsuarioId == usuarioId)
+                .Where(solicitud => solicitud.Value.UsuarioId == usuarioId)
                 .ToList();
 
             foreach (var registro in registros)
@@ -369,9 +390,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                using (var contexto = _contextoFactory.CrearContexto())
+                using (var contexto = _contextoFactoria.CrearContexto())
                 {
-                    IUsuarioRepositorio repositorio = new UsuarioRepositorio(contexto);
+                    IUsuarioRepositorio repositorio = 
+                        _repositorioFactoria.CrearUsuarioRepositorio(contexto);
                     string hash = BCrypt.Net.BCrypt.HashPassword(nuevaContrasena);
 
                     repositorio.ActualizarContrasena(usuarioId, hash);

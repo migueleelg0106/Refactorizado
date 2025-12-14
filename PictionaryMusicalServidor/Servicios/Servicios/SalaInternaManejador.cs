@@ -63,7 +63,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// Genera un objeto de transferencia de datos (DTO) con el estado actual de la sala.
         /// <returns>Instancia de SalaDTO.</returns>
         /// </summary>
-        public SalaDTO ToDto()
+        public SalaDTO ConvertirADto()
         {
             lock (_sincrono)
             {
@@ -94,7 +94,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 if (_jugadores.Contains(nombreUsuario))
                 {
                     _gestorNotificaciones.Registrar(nombreUsuario, callback);
-                    return ToDto();
+                    return ConvertirADto();
                 }
 
                 ValidarCapacidad();
@@ -104,10 +104,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 if (notificar)
                 {
-                    _gestorNotificaciones.NotificarIngreso(Codigo, nombreUsuario, ToDto());
+                    _gestorNotificaciones.NotificarIngreso(Codigo, nombreUsuario, ConvertirADto());
                 }
 
-                return ToDto();
+                return ConvertirADto();
             }
         }
 
@@ -134,13 +134,13 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <summary>
         /// Expulsa forzosamente a un jugador de la sala si el solicitante es el creador.
         /// </summary>
-        /// <param name="nombreHost">Nombre de quien solicita la expulsion.</param>
+        /// <param name="nombreAnfitrion">Nombre de quien solicita la expulsion.</param>
         /// <param name="nombreJugadorAExpulsar">Nombre del jugador a expulsar.</param>
-        public void ExpulsarJugador(string nombreHost, string nombreJugadorAExpulsar)
+        public void ExpulsarJugador(string nombreAnfitrion, string nombreJugadorAExpulsar)
         {
             lock (_sincrono)
             {
-                ValidarPermisosExpulsion(nombreHost, nombreJugadorAExpulsar);
+                ValidarPermisosExpulsion(nombreAnfitrion, nombreJugadorAExpulsar);
 
                 var callbackExpulsado = _gestorNotificaciones.ObtenerCallback(
                     nombreJugadorAExpulsar);
@@ -152,7 +152,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     Codigo,
                     nombreJugadorAExpulsar,
                     callbackExpulsado,
-                    ToDto());
+                    ConvertirADto());
             }
         }
 
@@ -164,9 +164,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             }
         }
 
-        private void ValidarPermisosExpulsion(string nombreHost, string objetivo)
+        private void ValidarPermisosExpulsion(string nombreAnfitrion, string objetivo)
         {
-            if (!string.Equals(nombreHost, Creador, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(nombreAnfitrion, Creador, StringComparison.OrdinalIgnoreCase))
             {
                 throw new FaultException(MensajesError.Cliente.SalaExpulsionRestringida);
             }
@@ -196,7 +196,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 return;
             }
 
-            var salaActualizada = ToDto();
+            var salaActualizada = ConvertirADto();
 
             _gestorNotificaciones.NotificarSalida(Codigo, nombreUsuario, salaActualizada);
 

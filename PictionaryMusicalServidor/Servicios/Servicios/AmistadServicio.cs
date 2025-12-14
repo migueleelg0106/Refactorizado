@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using Datos.Modelo;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -16,16 +15,29 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
     /// </summary>
     public class AmistadServicio : IAmistadServicio
     {
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
 
         /// <summary>
-        /// Constructor que inyecta la factoria de contextos.
+        /// Constructor por defecto para uso en WCF.
         /// </summary>
-        /// <param name="contextoFactory">Factoria para crear contextos de base de datos.</param>
-        public AmistadServicio(IContextoFactoria contextoFactory)
+        public AmistadServicio() : this(new ContextoFactoria(), new RepositorioFactoria())
         {
-            _contextoFactory = contextoFactory ?? 
-                throw new ArgumentNullException(nameof(contextoFactory));
+        }
+
+        /// <summary>
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
+        /// </summary>
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        public AmistadServicio(
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria)
+        {
+            _contextoFactoria = contextoFactoria ?? 
+                throw new ArgumentNullException(nameof(contextoFactoria));
+            _repositorioFactoria = repositorioFactoria ??
+                throw new ArgumentNullException(nameof(repositorioFactoria));
         }
 
         /// <summary>
@@ -35,9 +47,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <returns>Lista de solicitudes de amistad pendientes como DTOs.</returns>
         public List<SolicitudAmistadDTO> ObtenerSolicitudesPendientesDTO(int usuarioId)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = new AmigoRepositorio(contexto);
+                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
                 var solicitudes = repo.ObtenerSolicitudesPendientes(usuarioId);
 
                 if (solicitudes == null || solicitudes.Count == 0)
@@ -66,9 +78,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     MensajesError.Cliente.SolicitudAmistadMismoUsuario);
             }
 
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = new AmigoRepositorio(contexto);
+                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
                 if (repo.ExisteRelacion(usuarioEmisorId, usuarioReceptorId))
                 {
                     throw new InvalidOperationException(
@@ -90,9 +102,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// fue aceptada.</exception>
         public void AceptarSolicitud(int usuarioEmisorId, int usuarioReceptorId)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = new AmigoRepositorio(contexto);
+                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
                 var relacion = repo.ObtenerRelacion(usuarioEmisorId, usuarioReceptorId);
 
                 ValidarSolicitudParaAceptar(relacion, usuarioReceptorId);
@@ -115,9 +127,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 throw new InvalidOperationException(MensajesError.Cliente.ErrorEliminarAmistad);
             }
 
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = new AmigoRepositorio(contexto);
+                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
                 var relacion = repo.ObtenerRelacion(usuarioAId, usuarioBId);
 
                 if (relacion == null)
@@ -139,9 +151,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         /// <returns>Lista de amigos como DTOs, o lista vacia si no hay amigos.</returns>
         public List<AmigoDTO> ObtenerAmigosDTO(int usuarioId)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var repo = new AmigoRepositorio(contexto);
+                var repo = _repositorioFactoria.CrearAmigoRepositorio(contexto);
                 var amigos = repo.ObtenerAmigos(usuarioId);
 
                 if (amigos == null)

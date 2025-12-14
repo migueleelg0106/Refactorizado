@@ -1,6 +1,5 @@
 using Datos.Modelo;
 using log4net;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.Servicios.Constantes;
@@ -29,33 +28,47 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private readonly ManejadorCallback<IAmigosManejadorCallback> _manejadorCallback;
         private readonly INotificadorAmigos _notificador;
         private readonly INotificadorListaAmigos _notificadorListaAmigos;
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
         private readonly IAmistadServicio _amistadServicio;
         private readonly IValidadorNombreUsuario _validadorUsuario;
 
+        /// <summary>
+        /// Constructor por defecto para uso en WCF.
+        /// </summary>
         public AmigosManejador() : this(
             new ContextoFactoria(),
-            new AmistadServicio(new ContextoFactoria()),
+            new RepositorioFactoria(),
+            new AmistadServicio(),
             new NotificadorListaAmigos(
                 new ManejadorCallback<IListaAmigosManejadorCallback>(
                     StringComparer.OrdinalIgnoreCase),
-                new AmistadServicio(new ContextoFactoria()),
-                new UsuarioRepositorio(new ContextoFactoria().CrearContexto())),
+                new AmistadServicio(),
+                new RepositorioFactoria()),
             new ValidadorNombreUsuario())
         {
         }
 
         /// <summary>
-        /// Constructor por defecto para compatibilidad con WCF.
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
         /// </summary>
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        /// <param name="amistadServicio">Servicio de amistad.</param>
+        /// <param name="notificadorLista">Notificador de lista de amigos.</param>
+        /// <param name="validadorUsuario">Validador de nombres de usuario.</param>
         public AmigosManejador(
-            IContextoFactoria contextoFactory,
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria,
             IAmistadServicio amistadServicio,
             INotificadorListaAmigos notificadorLista,
             IValidadorNombreUsuario validadorUsuario)
         {
-            _contextoFactory = contextoFactory ??
-                throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria ??
+                throw new ArgumentNullException(nameof(contextoFactoria));
+
+            _repositorioFactoria = repositorioFactoria ??
+                throw new ArgumentNullException(nameof(repositorioFactoria));
 
             _amistadServicio = amistadServicio ??
                 throw new ArgumentNullException(nameof(amistadServicio));
@@ -301,9 +314,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private (int IdUsuario, string NombreNormalizado) ObtenerDatosUsuarioSuscripcion(
             string nombreUsuario)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                var usuarioRepositorio = 
+                    _repositorioFactoria.CrearUsuarioRepositorio(contexto);
                 var usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
 
                 if (usuario == null)
@@ -350,7 +364,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             string nombreEmisor,
             string nombreReceptor)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
                 var (emisor, receptor) = ObtenerUsuariosParaInteraccion(
                     contexto,
@@ -368,7 +382,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 string nombreEmisor,
                 string nombreReceptor)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
                 var (usuarioEmisor, usuarioReceptor) = ObtenerUsuariosParaInteraccion(
                     contexto,
@@ -395,7 +409,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             string nombreA,
             string nombreB)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
                 var (usuarioA, usuarioB) = ObtenerUsuariosParaInteraccion(
                     contexto,
@@ -428,7 +442,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             string nombreEmisor,
             string nombreReceptor)
         {
-            var usuarioRepositorio = new UsuarioRepositorio(contexto);
+            var usuarioRepositorio = 
+                _repositorioFactoria.CrearUsuarioRepositorio(contexto);
             var usuarioEmisor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreEmisor);
             var usuarioReceptor = usuarioRepositorio.ObtenerPorNombreUsuario(nombreReceptor);
 

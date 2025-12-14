@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.ServiceModel;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using Datos.Modelo;
 using log4net;
 using PictionaryMusicalServidor.Servicios.Contratos;
@@ -28,38 +27,47 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             LogManager.GetLogger(typeof(ListaAmigosManejador));
 
         private readonly ManejadorCallback<IListaAmigosManejadorCallback> _manejadorCallback;
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
         private readonly IAmistadServicio _amistadServicio;
         private readonly INotificadorListaAmigos _notificador;
         private readonly IValidadorNombreUsuario _validadorUsuario;
 
         /// <summary>
-        /// Constructor vacio utilizado por el Host de WCF.
-        /// Inicializa las dependencias manualmente.
+        /// Constructor por defecto para uso en WCF.
         /// </summary>
         public ListaAmigosManejador() : this(
             new ContextoFactoria(),
-            new AmistadServicio(new ContextoFactoria()),
+            new RepositorioFactoria(),
+            new AmistadServicio(),
             new NotificadorListaAmigos(
                 new ManejadorCallback<IListaAmigosManejadorCallback>(
                     StringComparer.OrdinalIgnoreCase),
-                new AmistadServicio(new ContextoFactoria()),
-                new UsuarioRepositorio(new ContextoFactoria().CrearContexto())),
+                new AmistadServicio(),
+                new RepositorioFactoria()),
             new ValidadorNombreUsuario())
         {
         }
 
         /// <summary>
-        /// Constructor principal.
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
         /// </summary>
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        /// <param name="amistadServicio">Servicio de amistad.</param>
+        /// <param name="notificador">Notificador de lista de amigos.</param>
+        /// <param name="validadorUsuario">Validador de nombres de usuario.</param>
         public ListaAmigosManejador(
-            IContextoFactoria contextoFactory,
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria,
             IAmistadServicio amistadServicio,
             INotificadorListaAmigos notificador,
             IValidadorNombreUsuario validadorUsuario)
         {
-            _contextoFactory = contextoFactory ??
-                throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria ??
+                throw new ArgumentNullException(nameof(contextoFactoria));
+            _repositorioFactoria = repositorioFactoria ??
+                throw new ArgumentNullException(nameof(repositorioFactoria));
             _amistadServicio = amistadServicio ??
                 throw new ArgumentNullException(nameof(amistadServicio));
             _validadorUsuario = validadorUsuario ??
@@ -198,9 +206,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private List<AmigoDTO> ObtenerAmigosPorNombre(string nombreUsuario)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
-                var usuarioRepositorio = new UsuarioRepositorio(contexto);
+                var usuarioRepositorio = 
+                    _repositorioFactoria.CrearUsuarioRepositorio(contexto);
                 Usuario usuario = usuarioRepositorio.ObtenerPorNombreUsuario(nombreUsuario);
 
                 if (usuario == null)

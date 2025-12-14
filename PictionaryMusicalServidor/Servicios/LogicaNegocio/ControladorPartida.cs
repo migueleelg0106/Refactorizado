@@ -173,12 +173,12 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             bool eraDibujante;
             bool debeCancelar = false;
             bool debeAvanzar = false;
-            bool eraHost;
+            bool eraAnfitrion;
             string mensajeCancelacion = null;
 
             lock (_sincronizacion)
             {
-                eraHost = _gestorJugadores.EsHost(id);
+                eraAnfitrion = _gestorJugadores.EsHost(id);
                 if (!_gestorJugadores.Remover(id, out eraDibujante))
                 {
                     return;
@@ -188,7 +188,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     if (!_gestorJugadores.HaySuficientesJugadores)
                     {
                         debeCancelar = true;
-                        mensajeCancelacion = eraHost
+                        mensajeCancelacion = eraAnfitrion
                             ? MensajesError.Cliente.PartidaCanceladaHostSalio
                             : MensajesError.Cliente.PartidaCanceladaFaltaJugadores;
                     }
@@ -345,10 +345,10 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
             puntos = 0;
             bool esCorrecto = _catalogoCanciones.ValidarRespuesta(_cancionActualId, mensaje);
 
-            if (!esCorrecto && EsMensajeAciertoProtocolo(mensaje, out int pts))
+            if (!esCorrecto && EsMensajeAciertoProtocolo(mensaje, out int puntosProtocolo))
             {
                 esCorrecto = true;
-                puntos = pts;
+                puntos = puntosProtocolo;
             }
 
             if (esCorrecto && puntos == 0)

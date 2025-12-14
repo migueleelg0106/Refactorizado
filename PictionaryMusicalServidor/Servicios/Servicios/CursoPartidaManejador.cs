@@ -1,6 +1,6 @@
 using log4net;
 using PictionaryMusicalServidor.Datos;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
+using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalServidor.Servicios.LogicaNegocio;
@@ -42,24 +42,40 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private static readonly object _sincronizacion = new object();
 
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
         private readonly ISalasManejador _salasManejador;
         private readonly ICatalogoCanciones _catalogoCanciones;
 
+        /// <summary>
+        /// Constructor por defecto para uso en WCF.
+        /// </summary>
         public CursoPartidaManejador() : this(
             new ContextoFactoria(),
+            new RepositorioFactoria(),
             new SalasManejador(),
             new CatalogoCanciones())
         {
         }
 
+        /// <summary>
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
+        /// </summary>
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        /// <param name="salasManejador">Manejador de salas.</param>
+        /// <param name="catalogoCanciones">Catalogo de canciones.</param>
         public CursoPartidaManejador(
-            IContextoFactoria contextoFactory,
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria,
             ISalasManejador salasManejador,
             ICatalogoCanciones catalogoCanciones)
         {
-            _contextoFactory = contextoFactory
-                ?? throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria
+                ?? throw new ArgumentNullException(nameof(contextoFactoria));
+
+            _repositorioFactoria = repositorioFactoria
+                ?? throw new ArgumentNullException(nameof(repositorioFactoria));
 
             _salasManejador = salasManejador
                 ?? throw new ArgumentNullException(nameof(salasManejador));
@@ -227,7 +243,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private void ManejarPartidaIniciada(string idSala)
         {
-            NotificarCallbacks(idSala, cb => cb.NotificarPartidaIniciada());
+            NotificarCallbacks(idSala, callback => callback.NotificarPartidaIniciada());
         }
 
         private void ManejarInicioRonda(
@@ -274,9 +290,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             string nombreDibujante,
             Datos.Entidades.Cancion cancionActual)
         {
-            var datosJugador = jugadoresEstado.FirstOrDefault(j =>
+            var datosJugador = jugadoresEstado.FirstOrDefault(jugador =>
                 string.Equals(
-                    j.IdConexion,
+                    jugador.IdConexion,
                     idJugador,
                     StringComparison.OrdinalIgnoreCase));
 
@@ -347,24 +363,24 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             NotificarCallbacks(
                 idSala,
-                cb => cb.NotificarJugadorAdivino(jugador, puntos));
+                callback => callback.NotificarJugadorAdivino(jugador, puntos));
         }
 
         private void ManejarMensajeChat(string idSala, string jugador, string mensaje)
         {
             NotificarCallbacks(
                 idSala,
-                cb => cb.NotificarMensajeChat(jugador, mensaje));
+                callback => callback.NotificarMensajeChat(jugador, mensaje));
         }
 
         private void ManejarTrazoRecibido(string idSala, TrazoDTO trazo)
         {
-            NotificarCallbacks(idSala, cb => cb.NotificarTrazoRecibido(trazo));
+            NotificarCallbacks(idSala, callback => callback.NotificarTrazoRecibido(trazo));
         }
 
         private void ManejarFinRonda(string idSala)
         {
-            NotificarCallbacks(idSala, cb => cb.NotificarFinRonda());
+            NotificarCallbacks(idSala, callback => callback.NotificarFinRonda());
         }
 
         private void ManejarFinPartida(
@@ -374,7 +390,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             _salasManejador.MarcarPartidaComoFinalizada(idSala);
             Task.Run(() => ActualizarClasificacionPartida(controlador, resultado));
-            NotificarCallbacks(idSala, cb => cb.NotificarFinPartida(resultado));
+            NotificarCallbacks(idSala, callback => callback.NotificarFinPartida(resultado));
         }
 
         private void ActualizarClasificacionPartida(
@@ -405,9 +421,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (var contexto = _contextoFactory.CrearContexto())
+                using (var contexto = _contextoFactoria.CrearContexto())
                 {
-                    var clasificacionRepositorio = new ClasificacionRepositorio(contexto);
+                    var clasificacionRepositorio = 
+                        _repositorioFactoria.CrearClasificacionRepositorio(contexto);
 
                     foreach (var jugador in jugadoresFinales)
                     {
@@ -483,7 +500,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         }
 
         private void PersistirEstadisticasJugador(
-            ClasificacionRepositorio repositorio,
+            IClasificacionRepositorio repositorio,
             JugadorPartida jugador,
             HashSet<string> ganadores)
         {

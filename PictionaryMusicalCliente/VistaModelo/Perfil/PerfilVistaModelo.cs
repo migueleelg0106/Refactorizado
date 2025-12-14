@@ -9,6 +9,7 @@ using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -718,7 +719,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
             _usuarioSesion.CargarDesdeDTO(perfil);
         }
 
-        public class RedSocialItemVistaModelo : System.ComponentModel.INotifyPropertyChanged
+        public class RedSocialItemVistaModelo : INotifyPropertyChanged
         {
             private string _identificador;
             private bool _tieneError;
@@ -729,7 +730,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                 RutaIcono = icono;
             }
 
-            public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+            public event PropertyChangedEventHandler PropertyChanged;
 
             public string Nombre { get; }
 
@@ -744,7 +745,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                     {
                         _identificador = value;
                         PropertyChanged?.Invoke(this, 
-                            new System.ComponentModel.PropertyChangedEventArgs(nameof(Identificador)));
+                            new PropertyChangedEventArgs(nameof(Identificador)));
                     }
                 }
             }
@@ -758,7 +759,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                     {
                         _tieneError = value;
                         PropertyChanged?.Invoke(this, 
-                            new System.ComponentModel.PropertyChangedEventArgs(nameof(TieneError)));
+                            new PropertyChangedEventArgs(nameof(TieneError)));
                     }
                 }
             }

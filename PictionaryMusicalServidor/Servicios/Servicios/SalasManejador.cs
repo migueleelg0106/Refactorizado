@@ -92,7 +92,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 _notificador.NotificarListaSalasATodos();
 
-                return sala.ToDto();
+                return sala.ConvertirADto();
             }
             catch (ArgumentException excepcion)
             {
@@ -205,7 +205,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                return _salas.Values.Select(sala => sala.ToDto()).ToList();
+                return _salas.Values.Select(sala => sala.ConvertirADto()).ToList();
             }
             catch (InvalidOperationException excepcion)
             {
@@ -411,7 +411,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             if (_salas.TryGetValue(codigoSala.Trim(), out var sala))
             {
-                return sala.ToDto();
+                return sala.ConvertirADto();
             }
 
             throw new InvalidOperationException(MensajesError.Cliente.SalaNoEncontrada);

@@ -106,7 +106,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         public void PrepararColaDibujantes()
         {
             _colaDibujantes.Clear();
-            var idsAleatorios = _jugadores.Keys.OrderBy(x => _random.Next()).ToList();
+            var idsAleatorios = _jugadores.Keys.OrderBy(idJugador => _random.Next()).ToList();
 
             foreach (var id in idsAleatorios)
             {

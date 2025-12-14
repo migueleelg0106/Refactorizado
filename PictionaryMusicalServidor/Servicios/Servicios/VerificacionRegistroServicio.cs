@@ -28,17 +28,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private static readonly ConcurrentDictionary<string, byte> _verificacionesConfirmadas =
             new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase);
 
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
         private readonly INotificacionCodigosServicio _notificacionCodigosServicio;
 
         /// <summary>
         /// Constructor con inyeccion de dependencias.
         /// </summary>
-        public VerificacionRegistroServicio(IContextoFactoria contextoFactory,
+        public VerificacionRegistroServicio(IContextoFactoria contextoFactoria,
             INotificacionCodigosServicio notificacionCodigosServicio)
         {
-            _contextoFactory = contextoFactory ??
-                throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria ??
+                throw new ArgumentNullException(nameof(contextoFactoria));
 
             _notificacionCodigosServicio = notificacionCodigosServicio ??
                 throw new ArgumentNullException(nameof(notificacionCodigosServicio));
@@ -200,7 +200,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private (bool DisponibilidadExitosa, ResultadoSolicitudCodigoDTO Resultado)
             VerificarDisponibilidadCuenta(NuevaCuentaDTO nuevaCuenta)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
                 bool usuarioRegistrado = contexto.Usuario.Any(
                     usuario => usuario.Nombre_Usuario == nuevaCuenta.Usuario);

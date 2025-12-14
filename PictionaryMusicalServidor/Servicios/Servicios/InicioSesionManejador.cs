@@ -1,6 +1,5 @@
 using Datos.Modelo;
 using log4net;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -25,16 +24,29 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private const int LimiteReportesParaBaneo = 3;
 
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
 
-        public InicioSesionManejador() : this(new ContextoFactoria())
+        /// <summary>
+        /// Constructor por defecto para uso en WCF.
+        /// </summary>
+        public InicioSesionManejador() : this(new ContextoFactoria(), new RepositorioFactoria())
         {
         }
 
-        public InicioSesionManejador(IContextoFactoria contextoFactory)
+        /// <summary>
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
+        /// </summary>
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        public InicioSesionManejador(
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria)
         {
-            _contextoFactory = contextoFactory ??
-                throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria ??
+                throw new ArgumentNullException(nameof(contextoFactoria));
+            _repositorioFactoria = repositorioFactoria ??
+                throw new ArgumentNullException(nameof(repositorioFactoria));
         }
 
         /// <summary>
@@ -58,7 +70,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
             try
             {
-                using (var contexto = _contextoFactory.CrearContexto())
+                using (var contexto = _contextoFactoria.CrearContexto())
                 {
                     return ProcesarAutenticacion(contexto, credenciales);
                 }
@@ -185,7 +197,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
         private bool UsuarioAlcanzoLimiteReportes(BaseDatosPruebaEntities contexto, int usuarioId)
         {
-            IReporteRepositorio reporteRepositorio = new ReporteRepositorio(contexto);
+            IReporteRepositorio reporteRepositorio = 
+                _repositorioFactoria.CrearReporteRepositorio(contexto);
             int totalReportes = reporteRepositorio.ContarReportesRecibidos(usuarioId);
 
             return totalReportes >= LimiteReportesParaBaneo;
@@ -228,7 +241,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             BaseDatosPruebaEntities contexto,
             string nombreUsuario)
         {
-            IUsuarioRepositorio repositorio = new UsuarioRepositorio(contexto);
+            IUsuarioRepositorio repositorio = 
+                _repositorioFactoria.CrearUsuarioRepositorio(contexto);
             return repositorio.ObtenerPorNombreUsuario(nombreUsuario);
         }
 
@@ -236,7 +250,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             BaseDatosPruebaEntities contexto,
             string correo)
         {
-            IUsuarioRepositorio repositorio = new UsuarioRepositorio(contexto);
+            IUsuarioRepositorio repositorio = 
+                _repositorioFactoria.CrearUsuarioRepositorio(contexto);
             var usuario = repositorio.ObtenerPorCorreo(correo);
 
             if (usuario == null)

@@ -279,7 +279,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 EjecutarNotificacionSegura(
                     idSala,
                     cliente,
-                    cb => cb.NotificarJugadorUnido(nombreJugador));
+                    callback => callback.NotificarJugadorUnido(nombreJugador));
             }
         }
 
@@ -334,7 +334,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 EjecutarNotificacionSegura(
                     idSala,
                     cliente,
-                    cb => cb.NotificarJugadorSalio(nombreJugador));
+                    callback => callback.NotificarJugadorSalio(nombreJugador));
             }
         }
 

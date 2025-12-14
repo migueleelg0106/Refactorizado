@@ -1,5 +1,4 @@
 using log4net;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -33,24 +32,40 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             RegexOptions.Compiled | RegexOptions.CultureInvariant,
             RegexTimeout);
 
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
         private readonly ISalasManejador _salasManejador;
         private readonly ICorreoInvitacionNotificador _correoNotificador;
 
+        /// <summary>
+        /// Constructor por defecto para uso en WCF.
+        /// </summary>
         public InvitacionesManejador() : this(
             new ContextoFactoria(),
+            new RepositorioFactoria(),
             new SalasManejador(),
             new CorreoInvitacionNotificador())
         {
         }
 
+        /// <summary>
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
+        /// </summary>
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        /// <param name="salasManejador">Manejador de salas.</param>
+        /// <param name="correoNotificador">Notificador de correos de invitacion.</param>
         public InvitacionesManejador(
-            IContextoFactoria contextoFactory,
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria,
             ISalasManejador salasManejador,
             ICorreoInvitacionNotificador correoNotificador)
         {
-            _contextoFactory = contextoFactory
-                ?? throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria
+                ?? throw new ArgumentNullException(nameof(contextoFactoria));
+
+            _repositorioFactoria = repositorioFactoria
+                ?? throw new ArgumentNullException(nameof(repositorioFactoria));
 
             _salasManejador = salasManejador
                 ?? throw new ArgumentNullException(nameof(salasManejador));
@@ -178,9 +193,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             string correo,
             IEnumerable<string> jugadoresSala)
         {
-            using (var contexto = _contextoFactory.CrearContexto())
+            using (var contexto = _contextoFactoria.CrearContexto())
             {
-                IUsuarioRepositorio repositorio = new UsuarioRepositorio(contexto);
+                IUsuarioRepositorio repositorio = 
+                    _repositorioFactoria.CrearUsuarioRepositorio(contexto);
                 var usuario = await repositorio.ObtenerPorCorreoAsync(correo);
 
                 if (string.IsNullOrWhiteSpace(usuario?.Nombre_Usuario))

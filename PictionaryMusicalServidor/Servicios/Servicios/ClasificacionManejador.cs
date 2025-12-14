@@ -1,6 +1,5 @@
 using Datos.Modelo;
 using log4net;
-using PictionaryMusicalServidor.Datos.DAL.Implementaciones;
 using PictionaryMusicalServidor.Datos.DAL.Interfaces;
 using PictionaryMusicalServidor.Servicios.Contratos;
 using PictionaryMusicalServidor.Servicios.Contratos.DTOs;
@@ -22,19 +21,31 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         private const int LimiteTopJugadores = 10;
         private static readonly ILog _logger = 
             LogManager.GetLogger(typeof(ClasificacionManejador));
-        private readonly IContextoFactoria _contextoFactory;
+        private readonly IContextoFactoria _contextoFactoria;
+        private readonly IRepositorioFactoria _repositorioFactoria;
 
-        public ClasificacionManejador() : this(new ContextoFactoria()) 
+        /// <summary>
+        /// Constructor por defecto para uso en WCF.
+        /// </summary>
+        public ClasificacionManejador() : this(
+            new ContextoFactoria(), 
+            new RepositorioFactoria()) 
         { 
         }
 
         /// <summary>
-        /// Constructor con inyeccion de dependencias.
+        /// Constructor con inyeccion de dependencias para pruebas unitarias.
         /// </summary>
-        public ClasificacionManejador(IContextoFactoria contextoFactory)
+        /// <param name="contextoFactoria">Factoria para crear contextos de base de datos.</param>
+        /// <param name="repositorioFactoria">Factoria para crear repositorios.</param>
+        public ClasificacionManejador(
+            IContextoFactoria contextoFactoria,
+            IRepositorioFactoria repositorioFactoria)
         {
-            _contextoFactory = contextoFactory
-                ?? throw new ArgumentNullException(nameof(contextoFactory));
+            _contextoFactoria = contextoFactoria
+                ?? throw new ArgumentNullException(nameof(contextoFactoria));
+            _repositorioFactoria = repositorioFactoria
+                ?? throw new ArgumentNullException(nameof(repositorioFactoria));
         }
 
         /// <summary>
@@ -48,10 +59,10 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
         {
             try
             {
-                using (var contexto = _contextoFactory.CrearContexto())
+                using (var contexto = _contextoFactoria.CrearContexto())
                 {
                     IClasificacionRepositorio repositorio =
-                        new ClasificacionRepositorio(contexto);
+                        _repositorioFactoria.CrearClasificacionRepositorio(contexto);
 
                     IList<Usuario> usuarios = repositorio.ObtenerMejoresJugadores(
                         LimiteTopJugadores);
