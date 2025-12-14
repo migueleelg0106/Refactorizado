@@ -244,8 +244,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void OnCelebracionFinRondaTerminada()
         {
-            // No reseteamos _rondaTerminadaTemprano aquí porque el servidor aún puede 
-            // llamar NotificarFinRonda() y necesitamos saber que ya terminó temprano
+            // No reseteamos _rondaTerminadaTemprano aqui porque el servidor aun puede 
+            // llamar NotificarFinRonda() y necesitamos saber que ya termino temprano
         }
 
         private ChatVistaModelo CrearChatVistaModelo()
