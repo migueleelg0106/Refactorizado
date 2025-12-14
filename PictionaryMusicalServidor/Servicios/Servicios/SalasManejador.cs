@@ -366,7 +366,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     throw new FaultException(MensajesError.Cliente.SalaNoEncontrada);
                 }
 
+                _logger.InfoFormat(
+                    "Expulsando jugador '{0}' de la sala '{1}' por solicitud del anfitrion '{2}'.",
+                    nombreJugadorAExpulsar.Trim(), codigoSala.Trim(), nombreHost.Trim());
+
                 sala.ExpulsarJugador(nombreHost.Trim(), nombreJugadorAExpulsar.Trim());
+
+                _logger.InfoFormat(
+                    "Jugador '{0}' expulsado exitosamente de la sala '{1}'.",
+                    nombreJugadorAExpulsar.Trim(), codigoSala.Trim());
 
                 if (sala.DebeEliminarse)
                 {
