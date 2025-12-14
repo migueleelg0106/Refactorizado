@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:language="clr-namespace:PictionaryMusicalCliente.Properties.Langs"
         Title="{x:Static language:Lang.globalTextoClasificacion}" Height="460" Width="700"
-        Loaded="Clasificacion_LoadedAsync"
+        Loaded="AlCargarClasificacionAsync"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent">
     <Grid>
