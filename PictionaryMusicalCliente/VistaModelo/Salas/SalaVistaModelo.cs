@@ -1015,11 +1015,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     return;
                 }
 
-                if (esCancelacionPorFaltaDeJugadores && !_esHost)
-                {
-                    return;
-                }
-
                 _partidaVistaModelo.NotificarFinPartida();
                 BotonIniciarPartidaHabilitado = false;
 
