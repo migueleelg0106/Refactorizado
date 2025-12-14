@@ -533,7 +533,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 ?? CultureInfo.CurrentUICulture?.Name);
         }
 
-        private void LocalizacionServicioEnIdiomaActualizado(object sender, EventArgs e)
+        private void LocalizacionServicioEnIdiomaActualizado(object remitente, EventArgs argumentosEvento)
         {
             ActualizarIdiomasDisponibles(_localizacionServicio.CulturaActual?.Name);
         }

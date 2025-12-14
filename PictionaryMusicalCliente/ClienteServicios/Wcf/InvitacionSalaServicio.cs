@@ -98,7 +98,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     return InvitacionAmigosResultado.Fallo(Lang.invitarAmigosTextoSinAmigos);
                 }
 
-                var vm = new InvitarAmigosVistaModelo(
+                var vistaModelo = new InvitarAmigosVistaModelo(
                     App.VentanaServicio,
                     App.Localizador,
                     amigos,
@@ -111,7 +111,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     id => amigosInvitados?.Add(id)
                 );
 
-                return InvitacionAmigosResultado.Exito(vm);
+                return InvitacionAmigosResultado.Exito(vistaModelo);
             }
             catch (Exception ex)
             {

@@ -114,7 +114,7 @@ namespace PictionaryMusicalCliente.Utilidades
             return !estaSilenciado;
         }
 
-        private void EnMedioTerminado(object sender, EventArgs e)
+        private void EnMedioTerminado(object remitente, EventArgs argumentosEvento)
         {
             if (!_desechado && _estaReproduciendo)
             {
@@ -123,16 +123,16 @@ namespace PictionaryMusicalCliente.Utilidades
                     _reproductor.Position = TimeSpan.Zero;
                     _reproductor.Play();
                 }
-                catch (InvalidOperationException ex)
+                catch (InvalidOperationException excepcion)
                 {
-                    _logger.Warn("Error al reiniciar el bucle de musica.", ex);
+                    _logger.Warn("Error al reiniciar el bucle de musica.", excepcion);
                 }
             }
         }
 
-        private void EnMedioFallido(object sender, ExceptionEventArgs e)
+        private void EnMedioFallido(object remitente, ExceptionEventArgs argumentosEvento)
         {
-            _logger.ErrorFormat("Fallo critico en MediaPlayer de musica: {0}", e.ErrorException);
+            _logger.ErrorFormat("Fallo critico en MediaPlayer de musica: {0}", argumentosEvento.ErrorException);
             _estaReproduciendo = false;
         }
 
