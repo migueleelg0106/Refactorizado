@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using PictionaryMusicalCliente.Utilidades;
 
 namespace PictionaryMusicalCliente.Vista
 {
@@ -8,37 +7,13 @@ namespace PictionaryMusicalCliente.Vista
     /// </summary>
     public partial class ConfirmacionSalirPartida : Window
     {
-        private readonly SonidoManejador _sonidoManejador;
-
         /// <summary>
         /// Constructor por defecto, solo para uso del diseñador/XAML. 
         /// La aplicación debe usar el constructor que recibe dependencias.
         /// </summary>
         public ConfirmacionSalirPartida()
         {
-        }
-
-        /// <summary>
-        /// Inicializa el dialogo.
-        /// </summary>
-        public ConfirmacionSalirPartida(SonidoManejador sonidoManejador)
-        {
             InitializeComponent();
-            _sonidoManejador = sonidoManejador;
-        }
-
-        private void AlHacerClicEnBotonAceptarSalirPartida(object remitente, RoutedEventArgs argumentosEvento)
-        {
-            _sonidoManejador?.ReproducirClick();
-            DialogResult = true;
-            Close();
-        }
-
-        private void AlHacerClicEnBotonCancelarSalirPartida(object remitente, RoutedEventArgs argumentosEvento)
-        {
-            _sonidoManejador?.ReproducirClick();
-            DialogResult = false;
-            Close();
         }
     }
 }
