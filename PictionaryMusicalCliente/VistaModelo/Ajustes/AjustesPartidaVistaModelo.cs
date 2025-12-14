@@ -92,7 +92,15 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 
         private void EjecutarSalirPartida()
         {
-            SalirPartidaConfirmado?.Invoke();
+            var confirmacionVM = new ConfirmacionSalirPartidaVistaModelo(
+                _ventana,
+                _localizador);
+            confirmacionVM.EjecutarSalidaPartidaYNavegacion = () =>
+            {
+                SalirPartidaConfirmado?.Invoke();
+                _ventana.CerrarVentana(this);
+            };
+            _ventana.MostrarVentanaDialogo(confirmacionVM);
         }
     }
 }
