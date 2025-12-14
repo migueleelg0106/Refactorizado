@@ -188,7 +188,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             {
                 case EstadoUnionInvitado.Exito:
                     MarcarUnionExitosa(resultado.Sala, nombreInvitado);
-                    return Task.FromResult(false);
+                    return Task.FromResult(true);
 
                 case EstadoUnionInvitado.NombreDuplicado:
                     AgregarNombresReservados(nombreInvitado, 
@@ -198,18 +198,18 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 case EstadoUnionInvitado.SalaLlena:
                     MostrarErrorSalaLlena();
-                    return Task.FromResult(false);
+                    return Task.FromResult(true);
 
                 case EstadoUnionInvitado.SalaNoEncontrada:
                     MostrarErrorSalaNoEncontrada();
-                    return Task.FromResult(false);
+                    return Task.FromResult(true);
 
                 case EstadoUnionInvitado.Error:
                     MostrarError(resultado.Mensaje);
-                    return Task.FromResult(false);
+                    return Task.FromResult(true);
 
                 default:
-                    return Task.FromResult(false);
+                    return Task.FromResult(true);
             }
         }
 

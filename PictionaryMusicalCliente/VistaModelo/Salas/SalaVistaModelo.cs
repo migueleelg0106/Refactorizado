@@ -244,7 +244,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void OnCelebracionFinRondaTerminada()
         {
-            _rondaTerminadaTemprano = false;
+            // No reseteamos _rondaTerminadaTemprano aquí porque el servidor aún puede 
+            // llamar NotificarFinRonda() y necesitamos saber que ya terminó temprano
         }
 
         private ChatVistaModelo CrearChatVistaModelo()
@@ -1212,6 +1213,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.Info("Este usuario ha sido expulsado de la sala.");
+                    
+                    _avisoServicio.Mostrar(Lang.expulsarJugadorTextoFuisteExpulsado);
+                    
                     var destino = ObtenerDestinoSegunSesion();
 
                     if (destino == DestinoNavegacion.InicioSesion)
@@ -1220,8 +1224,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     }
 
                     Navegar(destino);
-
-                    _avisoServicio.Mostrar(Lang.expulsarJugadorTextoFuisteExpulsado);
                 }
                 else
                 {
@@ -1512,6 +1514,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             BotonIniciarPartidaHabilitado = false;
             Jugadores.Clear();
 
+            _avisoServicio.Mostrar(Lang.partidaTextoHostCanceloSala);
+            
             var destino = ObtenerDestinoSegunSesion();
 
             if (destino == DestinoNavegacion.InicioSesion)
@@ -1520,7 +1524,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
 
             Navegar(destino);
-            _avisoServicio.Mostrar(Lang.partidaTextoHostCanceloSala);
         }
 
         private static void EjecutarEnDispatcher(Action accion)
