@@ -34,34 +34,43 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
         {
             try
             {
-                return _contexto.Reporte.Any(r => r.idReportante == idReportante
-                    && r.idReportado == idReportado);
+                return _contexto.Reporte.Any(reporte => reporte.idReportante == idReportante
+                    && reporte.idReportado == idReportado);
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
                 _logger.ErrorFormat(
                     "Error al verificar existencia del reporte entre {0} y {1}.",
                     idReportante,
                     idReportado,
-                    ex);
+                    excepcion);
                 throw;
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
                 _logger.ErrorFormat(
                     "Error al verificar existencia del reporte entre {0} y {1}.",
                     idReportante,
                     idReportado,
-                    ex);
+                    excepcion);
                 throw;
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
                 _logger.ErrorFormat(
                     "Error al verificar existencia del reporte entre {0} y {1}.",
                     idReportante,
                     idReportado,
-                    ex);
+                    excepcion);
+                throw;
+            }
+            catch (Exception excepcion)
+            {
+                _logger.ErrorFormat(
+                    "Error al verificar existencia del reporte entre {0} y {1}.",
+                    idReportante,
+                    idReportado,
+                    excepcion);
                 throw;
             }
         }
@@ -75,9 +84,9 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
         {
             if (reporte == null)
             {
-                var ex = new ArgumentNullException(nameof(reporte));
-                _logger.Error("Se intento crear un reporte nulo.", ex);
-                throw ex;
+                var excepcion = new ArgumentNullException(nameof(reporte));
+                _logger.Error("Se intento crear un reporte nulo.", excepcion);
+                throw excepcion;
             }
 
             try
@@ -86,19 +95,24 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
                 _contexto.SaveChanges();
                 return entidad;
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
-                _logger.Error("Error al guardar el reporte en la base de datos.", ex);
+                _logger.Error("Error al guardar el reporte en la base de datos.", excepcion);
                 throw;
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error al guardar el reporte en la base de datos.", ex);
+                _logger.Error("Error al guardar el reporte en la base de datos.", excepcion);
                 throw;
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error al guardar el reporte en la base de datos.", ex);
+                _logger.Error("Error al guardar el reporte en la base de datos.", excepcion);
+                throw;
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error al guardar el reporte en la base de datos.", excepcion);
                 throw;
             }
         }
@@ -118,21 +132,26 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 
             try
             {
-                return _contexto.Reporte.Count(r => r.idReportado == idReportado);
+                return _contexto.Reporte.Count(reporte => reporte.idReportado == idReportado);
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
-                _logger.ErrorFormat("Error al contar reportes del usuario {0}.", idReportado, ex);
+                _logger.ErrorFormat("Error al contar reportes del usuario {0}.", idReportado, excepcion);
                 throw;
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.ErrorFormat("Error al contar reportes del usuario {0}.", idReportado, ex);
+                _logger.ErrorFormat("Error al contar reportes del usuario {0}.", idReportado, excepcion);
                 throw;
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.ErrorFormat("Error al contar reportes del usuario {0}.", idReportado, ex);
+                _logger.ErrorFormat("Error al contar reportes del usuario {0}.", idReportado, excepcion);
+                throw;
+            }
+            catch (Exception excepcion)
+            {
+                _logger.ErrorFormat("Error al contar reportes del usuario {0}.", idReportado, excepcion);
                 throw;
             }
         }

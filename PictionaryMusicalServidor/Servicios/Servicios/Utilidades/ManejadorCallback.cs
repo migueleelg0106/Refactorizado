@@ -126,21 +126,25 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
             {
                 accionNotificacion(callback);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
                 _logger.ErrorFormat("Error de comunicacion al notificar a '{0}'. Desuscribiendo.",
-                    nombreUsuario, ex);
+                    nombreUsuario, excepcion);
                     Desuscribir(nombreUsuario);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
                 _logger.ErrorFormat("Timeout al notificar a '{0}'. Desuscribiendo.",
-                    nombreUsuario, ex);
+                    nombreUsuario, excepcion);
                     Desuscribir(nombreUsuario);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Warn("Operacion invalida en comunicacion WCF.", ex);
+                _logger.Warn("Operacion invalida en comunicacion WCF.", excepcion);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Warn("Operacion invalida en comunicacion WCF.", excepcion);
             }
         }
     }

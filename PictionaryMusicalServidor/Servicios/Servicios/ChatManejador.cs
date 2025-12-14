@@ -72,28 +72,34 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 ConfigurarEventosCanal(idSalaNormalizado, nombreNormalizado);
             }
-            catch (FaultException)
+            catch (FaultException excepcion)
             {
+                _logger.Warn("Error de validacion al unirse al chat.", excepcion);
                 throw;
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Datos invalidos al unirse al chat.", ex);
-                throw new FaultException(ex.Message);
+                _logger.Warn("Datos invalidos al unirse al chat.", excepcion);
+                throw new FaultException(excepcion.Message);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion al unirse al chat.", ex);
+                _logger.Error("Error de comunicacion al unirse al chat.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperado);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Tiempo de espera agotado al unirse al chat.", ex);
+                _logger.Error("Tiempo de espera agotado al unirse al chat.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperado);
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException excepcion)
             {
-                _logger.Error("Error inesperado al unirse al chat.", ex);
+                _logger.Error("Error inesperado al unirse al chat.", excepcion);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperado);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error inesperado al unirse al chat.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperado);
             }
         }
@@ -130,28 +136,34 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     nombreNormalizado,
                     mensajeNormalizado);
             }
-            catch (FaultException)
+            catch (FaultException excepcion)
             {
+                _logger.Warn("Error de validacion al enviar mensaje de chat.", excepcion);
                 throw;
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Datos invalidos al enviar mensaje.", ex);
-                throw new FaultException(ex.Message);
+                _logger.Warn("Datos invalidos al enviar mensaje.", excepcion);
+                throw new FaultException(excepcion.Message);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion al enviar mensaje de chat.", ex);
+                _logger.Error("Error de comunicacion al enviar mensaje de chat.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperado);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Tiempo de espera agotado al enviar mensaje de chat.", ex);
+                _logger.Error("Tiempo de espera agotado al enviar mensaje de chat.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperado);
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException excepcion)
             {
-                _logger.Error("Error inesperado al enviar mensaje de chat.", ex);
+                _logger.Error("Error inesperado al enviar mensaje de chat.", excepcion);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperado);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error inesperado al enviar mensaje de chat.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperado);
             }
         }
@@ -178,28 +190,34 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 RemoverCliente(idSalaNormalizado, nombreNormalizado);
             }
-            catch (FaultException)
+            catch (FaultException excepcion)
             {
+                _logger.Warn("Error de validacion al salir del chat.", excepcion);
                 throw;
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Datos invalidos al salir del chat.", ex);
-                throw new FaultException(ex.Message);
+                _logger.Warn("Datos invalidos al salir del chat.", excepcion);
+                throw new FaultException(excepcion.Message);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion al salir del chat.", ex);
+                _logger.Error("Error de comunicacion al salir del chat.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperado);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Tiempo de espera agotado al salir del chat.", ex);
+                _logger.Error("Tiempo de espera agotado al salir del chat.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperado);
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException excepcion)
             {
-                _logger.Error("Error inesperado al salir del chat.", ex);
+                _logger.Error("Error inesperado al salir del chat.", excepcion);
+                throw new FaultException(MensajesError.Cliente.ErrorInesperado);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error inesperado al salir del chat.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorInesperado);
             }
         }
@@ -382,21 +400,28 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
             {
                 accion(cliente.Callback);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Warn("Error de comunicacion con cliente. Removiendo callback.", ex);
+                _logger.Warn("Error de comunicacion con cliente. Removiendo callback.", excepcion);
                 RemoverClienteSinNotificar(idSala, cliente.NombreJugador);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Warn("Timeout al notificar cliente. Removiendo callback.", ex);
+                _logger.Warn("Timeout al notificar cliente. Removiendo callback.", excepcion);
                 RemoverClienteSinNotificar(idSala, cliente.NombreJugador);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
                 _logger.Warn(
                     "Operacion invalida en canal WCF. Removiendo callback.",
-                    ex);
+                    excepcion);
+                RemoverClienteSinNotificar(idSala, cliente.NombreJugador);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Warn(
+                    "Operacion invalida en canal WCF. Removiendo callback.",
+                    excepcion);
                 RemoverClienteSinNotificar(idSala, cliente.NombreJugador);
             }
         }

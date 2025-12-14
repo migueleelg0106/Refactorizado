@@ -37,18 +37,24 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
         {
             try
             {
-                return _contexto.Jugador.Any(j => j.Correo == correo);
+                return _contexto.Jugador.Any(jugador => jugador.Correo == correo);
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
                 _logger.ErrorFormat("Error al verificar existencia del correo '{0}'.",
-                    correo, ex);
+                    correo, excepcion);
                 throw;
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
                 _logger.ErrorFormat("Error al verificar existencia del correo '{0}'.",
-                    correo, ex);
+                    correo, excepcion);
+                throw;
+            }
+            catch (Exception excepcion)
+            {
+                _logger.ErrorFormat("Error al verificar existencia del correo '{0}'.",
+                    correo, excepcion);
                 throw;
             }
         }
@@ -64,9 +70,9 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
         {
             if (jugador == null)
             {
-                var ex = new ArgumentNullException(nameof(jugador));
-                _logger.Error("Intento de crear un jugador nulo.", ex);
-                throw ex;
+                var excepcion = new ArgumentNullException(nameof(jugador));
+                _logger.Error("Intento de crear un jugador nulo.", excepcion);
+                throw excepcion;
             }
 
             try
@@ -76,16 +82,22 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 
                 return entidad;
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
                 _logger.ErrorFormat("Error al guardar el jugador con correo '{0}'.",
-                    jugador.Correo, ex);
+                    jugador.Correo, excepcion);
                 throw;
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
                 _logger.ErrorFormat("Error al guardar el jugador con correo '{0}'.",
-                    jugador.Correo, ex);
+                    jugador.Correo, excepcion);
+                throw;
+            }
+            catch (Exception excepcion)
+            {
+                _logger.ErrorFormat("Error al guardar el jugador con correo '{0}'.",
+                    jugador.Correo, excepcion);
                 throw;
             }
         }

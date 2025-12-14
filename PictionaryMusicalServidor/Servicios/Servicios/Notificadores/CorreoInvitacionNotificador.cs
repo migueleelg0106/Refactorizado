@@ -112,24 +112,29 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
 
                 return true;
             }
-            catch (SmtpException ex)
+            catch (SmtpException excepcion)
             {
-                _logger.Error("Error SMTP al enviar correo electronico.", ex);
+                _logger.Error("Error SMTP al enviar correo electronico.", excepcion);
                 return false;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Error("Operacion invalida al enviar correo.", ex);
+                _logger.Error("Operacion invalida al enviar correo.", excepcion);
                 return false;
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Error("Argumentos invalidos para enviar correo.", ex);
+                _logger.Error("Argumentos invalidos para enviar correo.", excepcion);
                 return false;
             }
-            catch (FormatException ex)
+            catch (FormatException excepcion)
             {
-                _logger.Error("Formato de correo invalido al enviar invitacion.", ex);
+                _logger.Error("Formato de correo invalido al enviar invitacion.", excepcion);
+                return false;
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Formato de correo invalido al enviar invitacion.", excepcion);
                 return false;
             }
         }

@@ -52,29 +52,34 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     return ConstruirPerfilDTO(usuario);
                 }
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Operacion invalida al obtener perfil.", ex);
-                throw new FaultException(ex.Message);
+                _logger.Warn("Operacion invalida al obtener perfil.", excepcion);
+                throw new FaultException(excepcion.Message);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Warn("Operacion invalida al obtener perfil.", ex);
-                throw new FaultException(ex.Message);
+                _logger.Warn("Operacion invalida al obtener perfil.", excepcion);
+                throw new FaultException(excepcion.Message);
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
-                _logger.Error("Error de actualizacion al obtener perfil.", ex);
+                _logger.Error("Error de actualizacion al obtener perfil.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorObtenerPerfil);
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error de base de datos al obtener perfil.", ex);
+                _logger.Error("Error de base de datos al obtener perfil.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorObtenerPerfil);
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error de datos al obtener perfil.", ex);
+                _logger.Error("Error de datos al obtener perfil.", excepcion);
+                throw new FaultException(MensajesError.Cliente.ErrorObtenerPerfil);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error de datos al obtener perfil.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorObtenerPerfil);
             }
         }
@@ -103,39 +108,44 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     Mensaje = MensajesError.Cliente.PerfilActualizadoExito
                 };
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Operacion invalida al actualizar perfil.", ex);
-                return CrearResultadoFallo(ex.Message);
+                _logger.Warn("Operacion invalida al actualizar perfil.", excepcion);
+                return CrearResultadoFallo(excepcion.Message);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Warn("Operacion invalida al actualizar perfil.", ex);
-                return CrearResultadoFallo(ex.Message);
+                _logger.Warn("Operacion invalida al actualizar perfil.", excepcion);
+                return CrearResultadoFallo(excepcion.Message);
             }
-            catch (DbEntityValidationException ex)
+            catch (DbEntityValidationException excepcion)
             {
-                _logger.Error("Validacion de entidad fallida al actualizar perfil.", ex);
+                _logger.Error("Validacion de entidad fallida al actualizar perfil.", excepcion);
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException excepcion)
             {
-                _logger.Error("Error de concurrencia al actualizar perfil.", ex);
+                _logger.Error("Error de concurrencia al actualizar perfil.", excepcion);
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
-                _logger.Error("Error de actualizacion de BD al actualizar perfil.", ex);
+                _logger.Error("Error de actualizacion de BD al actualizar perfil.", excepcion);
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error de base de datos al actualizar perfil.", ex);
+                _logger.Error("Error de base de datos al actualizar perfil.", excepcion);
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error de datos al actualizar perfil.", ex);
+                _logger.Error("Error de datos al actualizar perfil.", excepcion);
+                return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error de datos al actualizar perfil.", excepcion);
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorActualizarPerfil);
             }
         }

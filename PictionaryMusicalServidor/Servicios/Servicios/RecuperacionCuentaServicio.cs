@@ -380,14 +380,19 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _solicitudesRecuperacion.TryRemove(token, out _);
                 return new ResultadoOperacionDTO { OperacionExitosa = true };
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error al actualizar contrasena.", ex);
+                _logger.Error("Error al actualizar contrasena.", excepcion);
                 return CrearFalloOperacion(MensajesError.Cliente.ErrorActualizarContrasena);
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error al actualizar contrasena.", ex);
+                _logger.Error("Error al actualizar contrasena.", excepcion);
+                return CrearFalloOperacion(MensajesError.Cliente.ErrorActualizarContrasena);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error al actualizar contrasena.", excepcion);
                 return CrearFalloOperacion(MensajesError.Cliente.ErrorActualizarContrasena);
             }
         }

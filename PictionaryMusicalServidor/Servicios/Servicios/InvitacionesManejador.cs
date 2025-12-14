@@ -82,38 +82,44 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 return await EjecutarEnvioCorreo(correo, sala, invitacion.Idioma);
             }
-            catch (FaultException)
+            catch (FaultException excepcion)
             {
+                _logger.Warn("Error de validacion al enviar invitacion.", excepcion);
                 throw;
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Datos invalidos al enviar invitacion.", ex);
-                return CrearFallo(ex.Message);
+                _logger.Warn("Datos invalidos al enviar invitacion.", excepcion);
+                return CrearFallo(excepcion.Message);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Warn("Operacion invalida al enviar invitacion.", ex);
-                return CrearFallo(ex.Message);
+                _logger.Warn("Operacion invalida al enviar invitacion.", excepcion);
+                return CrearFallo(excepcion.Message);
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error de base de datos al enviar invitacion.", ex);
+                _logger.Error("Error de base de datos al enviar invitacion.", excepcion);
                 return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error de datos al enviar invitacion.", ex);
+                _logger.Error("Error de datos al enviar invitacion.", excepcion);
                 return CrearFallo(MensajesError.Cliente.ErrorProcesarInvitacion);
             }
-            catch (RegexMatchTimeoutException ex)
+            catch (RegexMatchTimeoutException excepcion)
             {
-                _logger.Error("Timeout al validar el formato del correo de invitacion.", ex);
+                _logger.Error("Timeout al validar el formato del correo de invitacion.", excepcion);
                 return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
             }
-            catch (AggregateException ex)
+            catch (AggregateException excepcion)
             {
-                _logger.Error("Error inesperado al enviar invitacion.", ex);
+                _logger.Error("Error inesperado al enviar invitacion.", excepcion);
+                return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error inesperado al enviar invitacion.", excepcion);
                 return CrearFallo(MensajesError.Cliente.ErrorInesperadoInvitacion);
             }
         }

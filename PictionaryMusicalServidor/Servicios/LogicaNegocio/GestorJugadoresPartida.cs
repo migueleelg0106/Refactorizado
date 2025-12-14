@@ -143,8 +143,8 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
         /// <returns>True si todos han adivinado, False si falta alguno.</returns>
         public bool TodosAdivinaron()
         {
-            var adivinadores = _jugadores.Values.Where(j => !j.EsDibujante).ToList();
-            return adivinadores.Count > 0 && adivinadores.All(j => j.YaAdivino);
+            var adivinadores = _jugadores.Values.Where(jugador => !jugador.EsDibujante).ToList();
+            return adivinadores.Count > 0 && adivinadores.All(jugador => jugador.YaAdivino);
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace PictionaryMusicalServidor.Servicios.LogicaNegocio
                     Usuario = jugador.NombreUsuario,
                     Puntos = jugador.PuntajeTotal
                 })
-                .OrderByDescending(j => j.Puntos)
+                .OrderByDescending(jugador => jugador.Puntos)
                 .ToList();
         }
 

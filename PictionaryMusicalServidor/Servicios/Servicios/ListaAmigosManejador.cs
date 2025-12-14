@@ -92,35 +92,42 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 _notificador.NotificarLista(nombreUsuario, amigosActuales);
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (ArgumentOutOfRangeException excepcion)
             {
-                _logger.Warn("Identificador invalido al suscribirse a la lista de amigos.", ex);
-                throw new FaultException(ex.Message);
+                _logger.Warn("Identificador invalido al suscribirse a la lista de amigos.", excepcion);
+                throw new FaultException(excepcion.Message);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Datos invalidos al suscribirse a la lista de amigos.", ex);
-                throw new FaultException(ex.Message);
+                _logger.Warn("Datos invalidos al suscribirse a la lista de amigos.", excepcion);
+                throw new FaultException(excepcion.Message);
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
                 _logger.Error(
                     "Error de datos al suscribirse. Fallo recuperar lista de amigos.",
-                    ex);
+                    excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
                 _logger.Error(
                     "Error de datos al suscribirse. Fallo recuperar lista de amigos.",
-                    ex);
+                    excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
                 _logger.Error(
                     "Error de datos al suscribirse. Fallo recuperar lista de amigos.",
-                    ex);
+                    excepcion);
+                throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error(
+                    "Error de datos al suscribirse. Fallo recuperar lista de amigos.",
+                    excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorSuscripcionAmigos);
             }
         }
@@ -137,10 +144,15 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _validadorUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
                 _manejadorCallback.Desuscribir(nombreUsuario);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Datos invalidos al cancelar suscripcion.", ex);
-                throw new FaultException(ex.Message);
+                _logger.Warn("Datos invalidos al cancelar suscripcion.", excepcion);
+                throw new FaultException(excepcion.Message);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Warn("Datos invalidos al cancelar suscripcion.", excepcion);
+                throw new FaultException(excepcion.Message);
             }
         }
 
@@ -157,24 +169,29 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 _validadorUsuario.Validar(nombreUsuario, nameof(nombreUsuario));
                 return ObtenerAmigosPorNombre(nombreUsuario);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Datos invalidos al obtener la lista de amigos.", ex);
-                throw new FaultException(ex.Message);
+                _logger.Warn("Datos invalidos al obtener la lista de amigos.", excepcion);
+                throw new FaultException(excepcion.Message);
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
-                _logger.Error("Error inesperado al obtener la lista de amigos.", ex);
+                _logger.Error("Error inesperado al obtener la lista de amigos.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error inesperado al obtener la lista de amigos.", ex);
+                _logger.Error("Error inesperado al obtener la lista de amigos.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error inesperado al obtener la lista de amigos.", ex);
+                _logger.Error("Error inesperado al obtener la lista de amigos.", excepcion);
+                throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error inesperado al obtener la lista de amigos.", excepcion);
                 throw new FaultException(MensajesError.Cliente.ErrorRecuperarListaAmigos);
             }
         }

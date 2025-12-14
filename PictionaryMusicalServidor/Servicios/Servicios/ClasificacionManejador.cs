@@ -56,27 +56,32 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     IList<Usuario> usuarios = repositorio.ObtenerMejoresJugadores(
                         LimiteTopJugadores);
 
-                    return usuarios.Select(u => new ClasificacionUsuarioDTO
+                    return usuarios.Select(usuario => new ClasificacionUsuarioDTO
                     {
-                        Usuario = u.Nombre_Usuario,
-                        Puntos = u.Jugador.Clasificacion.Puntos_Ganados ?? 0,
-                        RondasGanadas = u.Jugador.Clasificacion.Rondas_Ganadas ?? 0
+                        Usuario = usuario.Nombre_Usuario,
+                        Puntos = usuario.Jugador.Clasificacion.Puntos_Ganados ?? 0,
+                        RondasGanadas = usuario.Jugador.Clasificacion.Rondas_Ganadas ?? 0
                     }).ToList();
                 }
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error de base de datos al obtener la clasificacion.", ex);
+                _logger.Error("Error de base de datos al obtener la clasificacion.", excepcion);
                 return new List<ClasificacionUsuarioDTO>();
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error de datos al obtener la clasificacion.", ex);
+                _logger.Error("Error de datos al obtener la clasificacion.", excepcion);
                 return new List<ClasificacionUsuarioDTO>();
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Error("Operacion invalida al obtener la clasificacion.", ex);
+                _logger.Error("Operacion invalida al obtener la clasificacion.", excepcion);
+                return new List<ClasificacionUsuarioDTO>();
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Operacion invalida al obtener la clasificacion.", excepcion);
                 return new List<ClasificacionUsuarioDTO>();
             }
         }

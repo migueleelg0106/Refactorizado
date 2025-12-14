@@ -134,9 +134,9 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             lock (_sync)
             {
                 return _callbacks
-                    .Where(x => !string.Equals(x.Key, usuarioExcluido, 
+                    .Where(callbackRegistrado => !string.Equals(callbackRegistrado.Key, usuarioExcluido,
                         StringComparison.OrdinalIgnoreCase))
-                    .Select(x => x.Value)
+                    .Select(callbackRegistrado => callbackRegistrado.Value)
                     .ToList();
             }
         }
@@ -164,17 +164,21 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             {
                 accion();
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Warn("Error de comunicacion al notificar cliente en sala.", ex);
+                _logger.Warn("Error de comunicacion al notificar cliente en sala.", excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Warn("Tiempo de espera agotado al notificar cliente en sala.", ex);
+                _logger.Warn("Tiempo de espera agotado al notificar cliente en sala.", excepcion);
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException excepcion)
             {
-                _logger.Error("Error inesperado al ejecutar notificacion WCF en sala.", ex);
+                _logger.Error("Error inesperado al ejecutar notificacion WCF en sala.", excepcion);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error inesperado al ejecutar notificacion WCF en sala.", excepcion);
             }
         }
 

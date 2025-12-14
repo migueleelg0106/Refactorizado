@@ -38,25 +38,25 @@ namespace PictionaryMusicalServidor.HostServidor
                     "Todos los servicios estan arriba y escuchando. Presiona ENTER para salir.");
                 Console.ReadLine();
             }
-            catch (AddressAccessDeniedException ex)
+            catch (AddressAccessDeniedException excepcion)
             {
-                _logger.Error("Permisos insuficientes para abrir los puertos de red.", ex);
+                _logger.Error("Permisos insuficientes para abrir los puertos de red.", excepcion);
             }
-            catch (AddressAlreadyInUseException ex)
+            catch (AddressAlreadyInUseException excepcion)
             {
-                _logger.Error("Uno o mas puertos ya estan en uso por otra aplicacion.", ex);
+                _logger.Error("Uno o mas puertos ya estan en uso por otra aplicacion.", excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Tiempo de espera agotado al iniciar los servicios.", ex);
+                _logger.Error("Tiempo de espera agotado al iniciar los servicios.", excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion al iniciar el host WCF.", ex);
+                _logger.Error("Error de comunicacion al iniciar el host WCF.", excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Fatal("Error critico inesperado al iniciar el servidor.", ex);
+                _logger.Fatal("Error critico inesperado al iniciar el servidor.", excepcion);
             }
             finally
             {
@@ -137,19 +137,19 @@ namespace PictionaryMusicalServidor.HostServidor
                     host.Close();
                 }
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Warn("Cierre no limpio por error de comunicacion; abortando host.", ex);
+                _logger.Warn("Cierre no limpio por error de comunicacion; abortando host.", excepcion);
                 host.Abort();
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Warn("Cierre no limpio por tiempo de espera; abortando host.", ex);
+                _logger.Warn("Cierre no limpio por tiempo de espera; abortando host.", excepcion);
                 host.Abort();
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error inesperado al intentar cerrar un host.", ex);
+                _logger.Error("Error inesperado al intentar cerrar un host.", excepcion);
                 host.Abort();
             }
         }

@@ -48,30 +48,34 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 List<AmigoDTO> amigos = ObtenerAmigosPorNombre(nombreUsuario);
                 NotificarLista(nombreUsuario, amigos);
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
                 _logger.Warn("No se pudo obtener la lista de amigos del usuario para notificar.", 
-                    ex);
+                    excepcion);
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (ArgumentOutOfRangeException excepcion)
             {
                 _logger.Warn(
-                    "Identificador invalido al actualizar la lista de amigos del usuario.", ex);
+                    "Identificador invalido al actualizar la lista de amigos del usuario.", excepcion);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
                 _logger.Warn("Datos invalidos al actualizar la lista de amigos del usuario.", 
-                    ex);
+                    excepcion);
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
                 _logger.Error(
                     "Error de datos al obtener lista de amigos. Fallo en la consulta de amigos del usuario.", 
-                    ex);
+                    excepcion);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Warn("Error inesperado al obtener la lista de amigos del usuario.", ex);
+                _logger.Warn("Error inesperado al obtener la lista de amigos del usuario.", excepcion);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Warn("Error inesperado al obtener la lista de amigos del usuario.", excepcion);
             }
         }
 

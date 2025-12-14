@@ -87,34 +87,39 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                     };
                 }
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
-                _logger.Warn("Validacion fallida al registrar reporte.", ex);
-                return CrearResultadoFallo(ex.Message);
+                _logger.Warn("Validacion fallida al registrar reporte.", excepcion);
+                return CrearResultadoFallo(excepcion.Message);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException excepcion)
             {
-                _logger.Warn("Datos invalidos al registrar reporte.", ex);
-                return CrearResultadoFallo(ex.Message);
+                _logger.Warn("Datos invalidos al registrar reporte.", excepcion);
+                return CrearResultadoFallo(excepcion.Message);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Warn("Operacion invalida al registrar reporte.", ex);
-                return CrearResultadoFallo(ex.Message);
+                _logger.Warn("Operacion invalida al registrar reporte.", excepcion);
+                return CrearResultadoFallo(excepcion.Message);
             }
-            catch (KeyNotFoundException ex)
+            catch (KeyNotFoundException excepcion)
             {
-                _logger.Warn("No se encontraron usuarios al registrar reporte.", ex);
+                _logger.Warn("No se encontraron usuarios al registrar reporte.", excepcion);
                 return CrearResultadoFallo(MensajesError.Cliente.UsuariosNoEncontrados);
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error de base de datos al registrar reporte.", ex);
+                _logger.Error("Error de base de datos al registrar reporte.", excepcion);
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorCrearReporte);
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error de datos al registrar reporte.", ex);
+                _logger.Error("Error de datos al registrar reporte.", excepcion);
+                return CrearResultadoFallo(MensajesError.Cliente.ErrorCrearReporte);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error de datos al registrar reporte.", excepcion);
                 return CrearResultadoFallo(MensajesError.Cliente.ErrorCrearReporte);
             }
         }
@@ -165,9 +170,14 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
 
                 return (reportante.idUsuario, reportado.idUsuario);
             }
-            catch (KeyNotFoundException ex)
+            catch (KeyNotFoundException excepcion)
             {
-                _logger.Warn("Intento de reporte con usuarios no registrados.", ex);
+                _logger.Warn("Intento de reporte con usuarios no registrados.", excepcion);
+                throw new FaultException(MensajesError.Cliente.UsuariosEspecificadosNoExisten);
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Warn("Intento de reporte con usuarios no registrados.", excepcion);
                 throw new FaultException(MensajesError.Cliente.UsuariosEspecificadosNoExisten);
             }
         }

@@ -50,19 +50,24 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
 
                 return clasificacion;
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
-                _logger.Error("Error al crear la clasificacion inicial.", ex);
+                _logger.Error("Error al crear la clasificacion inicial.", excepcion);
                 throw;
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error al crear la clasificacion inicial.", ex);
+                _logger.Error("Error al crear la clasificacion inicial.", excepcion);
                 throw;
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error al crear la clasificacion inicial.", ex);
+                _logger.Error("Error al crear la clasificacion inicial.", excepcion);
+                throw;
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error al crear la clasificacion inicial.", excepcion);
                 throw;
             }
         }
@@ -78,8 +83,8 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             try
             {
                 var jugador = _contexto.Jugador
-                    .Include(j => j.Clasificacion)
-                    .FirstOrDefault(j => j.idJugador == jugadorId);
+                    .Include(jugadorEntidad => jugadorEntidad.Clasificacion)
+                    .FirstOrDefault(jugadorEntidad => jugadorEntidad.idJugador == jugadorId);
 
                 if (jugador?.Clasificacion == null)
                 {
@@ -101,28 +106,36 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
                 _contexto.SaveChanges();
                 return true;
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
                 _logger.ErrorFormat(
                     "Error al actualizar la clasificacion del jugador con ID {0}.",
                     jugadorId,
-                    ex);
+                    excepcion);
                 throw;
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
                 _logger.ErrorFormat(
                     "Error al actualizar la clasificacion del jugador con ID {0}.",
                     jugadorId,
-                    ex);
+                    excepcion);
                 throw;
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
                 _logger.ErrorFormat(
                     "Error al actualizar la clasificacion del jugador con ID {0}.",
                     jugadorId,
-                    ex);
+                    excepcion);
+                throw;
+            }
+            catch (Exception excepcion)
+            {
+                _logger.ErrorFormat(
+                    "Error al actualizar la clasificacion del jugador con ID {0}.",
+                    jugadorId,
+                    excepcion);
                 throw;
             }
         }
@@ -135,27 +148,32 @@ namespace PictionaryMusicalServidor.Datos.DAL.Implementaciones
             try
             {
                 return _contexto.Usuario
-                    .Include(u => u.Jugador.Clasificacion)
-                    .Where(u => u.Jugador != null && u.Jugador.Clasificacion != null)
-                    .OrderByDescending(u => u.Jugador.Clasificacion.Puntos_Ganados)
-                    .ThenByDescending(u => u.Jugador.Clasificacion.Rondas_Ganadas)
-                    .ThenBy(u => u.Nombre_Usuario)
+                    .Include(usuario => usuario.Jugador.Clasificacion)
+                    .Where(usuario => usuario.Jugador != null && usuario.Jugador.Clasificacion != null)
+                    .OrderByDescending(usuario => usuario.Jugador.Clasificacion.Puntos_Ganados)
+                    .ThenByDescending(usuario => usuario.Jugador.Clasificacion.Rondas_Ganadas)
+                    .ThenBy(usuario => usuario.Nombre_Usuario)
                     .Take(cantidad)
                     .ToList();
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException excepcion)
             {
-                _logger.Error("Error al consultar los mejores jugadores.", ex);
+                _logger.Error("Error al consultar los mejores jugadores.", excepcion);
                 throw;
             }
-            catch (EntityException ex)
+            catch (EntityException excepcion)
             {
-                _logger.Error("Error al consultar los mejores jugadores.", ex);
+                _logger.Error("Error al consultar los mejores jugadores.", excepcion);
                 throw;
             }
-            catch (DataException ex)
+            catch (DataException excepcion)
             {
-                _logger.Error("Error al consultar los mejores jugadores.", ex);
+                _logger.Error("Error al consultar los mejores jugadores.", excepcion);
+                throw;
+            }
+            catch (Exception excepcion)
+            {
+                _logger.Error("Error al consultar los mejores jugadores.", excepcion);
                 throw;
             }
         }
