@@ -1604,8 +1604,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void Navegar(DestinoNavegacion destino)
         {
-            CerrarVentana?.Invoke();
-
             if (destino == DestinoNavegacion.InicioSesion)
             {
                 _usuarioSesion.Limpiar();
@@ -1636,6 +1634,8 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     _usuarioSesion);
                 _ventana.MostrarVentana(vmPrincipal);
             }
+
+            CerrarVentana?.Invoke();
         }
 
         private void AbrirAjustesPartida()
