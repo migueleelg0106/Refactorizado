@@ -3,6 +3,7 @@ using PictionaryMusicalCliente.Comandos;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.VistaModelo.Sesion;
 using System;
+using System.Linq;
 using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.VistaModelo.Ajustes
@@ -81,9 +82,41 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
                 App.UsuarioGlobal);
             terminacionSesionVM.EjecutarCierreSesionYNavegacion = () =>
             {
-                _ventana.CerrarVentana(this);
+                NavegarAInicioSesion();
             };
             _ventana.MostrarVentanaDialogo(terminacionSesionVM);
+        }
+
+        private void NavegarAInicioSesion()
+        {
+            App.MusicaManejador.Detener();
+
+            var inicioSesionVM = new InicioSesion.InicioSesionVistaModelo(
+                _ventana,
+                _localizador,
+                App.InicioSesionServicio,
+                App.CambioContrasenaServicio,
+                App.RecuperacionCuentaServicio,
+                App.ServicioIdioma,
+                App.SonidoManejador,
+                App.AvisoServicio,
+                App.GeneradorNombres,
+                App.UsuarioGlobal,
+                App.FabricaSalas);
+
+            _ventana.MostrarVentana(inicioSesionVM);
+            
+            CerrarVentanaPrincipal();
+            _ventana.CerrarVentana(this);
+        }
+
+        private void CerrarVentanaPrincipal()
+        {
+            var ventanaPrincipal = System.Windows.Application.Current.Windows
+                .OfType<System.Windows.Window>()
+                .FirstOrDefault(v => v.DataContext is VentanaPrincipal.VentanaPrincipalVistaModelo);
+            
+            ventanaPrincipal?.Close();
         }
     }
 }

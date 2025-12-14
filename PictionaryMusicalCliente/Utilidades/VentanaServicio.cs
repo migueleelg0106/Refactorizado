@@ -113,6 +113,9 @@ namespace PictionaryMusicalCliente.Utilidades
                 case AjustesVistaModelo:
                     ventana = new Ajustes();
                     break;
+                case ConfirmacionSalirPartidaVistaModelo:
+                    ventana = new ConfirmacionSalirPartida();
+                    break;
                 case BusquedaAmigoVistaModelo:
                     ventana = new BusquedaAmigo();
                     break;

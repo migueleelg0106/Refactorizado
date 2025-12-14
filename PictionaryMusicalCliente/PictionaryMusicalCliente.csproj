@@ -232,6 +232,7 @@
     <Compile Include="VistaModelo\VentanaPrincipal\ClasificacionVistaModelo.cs" />
     <Compile Include="VistaModelo\Ajustes\AjustesVistaModelo.cs" />
     <Compile Include="VistaModelo\Ajustes\AjustesPartidaVistaModelo.cs" />
+    <Compile Include="VistaModelo\Ajustes\ConfirmacionSalirPartidaVistaModelo.cs" />
     <Compile Include="VistaModelo\InicioSesion\InicioSesionVistaModelo.cs" />
     <Compile Include="VistaModelo\Perfil\PerfilVistaModelo.cs" />
     <Compile Include="VistaModelo\Perfil\SeleccionAvatarVistaModelo.cs" />
