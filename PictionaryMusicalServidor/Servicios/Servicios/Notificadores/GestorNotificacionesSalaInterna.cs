@@ -112,17 +112,17 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             ISalasManejadorCallback callbackExpulsado, SalaDTO salaActualizada)
         {
             _logger.InfoFormat(
-                "Notificando expulsion de '{0}' en sala '{1}' a todos los clientes.",
+                "Notificando expulsión de '{0}' en sala '{1}' a todos los clientes.",
                 nombreExpulsado, codigoSala);
 
-            // Notificar a TODOS los clientes (incluyendo el host) sobre la expulsion
+            // Notificar a TODOS los clientes (incluyendo el host) sobre la expulsión
             var todosLosDestinatarios = ObtenerTodosLosDestinatarios();
             foreach (var callback in todosLosDestinatarios)
             {
                 EjecutarSeguro(() => callback.NotificarJugadorExpulsado(codigoSala, nombreExpulsado));
             }
 
-            // Notificar la salida y actualizacion de sala
+            // Notificar la salida y actualización de sala
             var destinatarios = ObtenerDestinatariosExcluyendo(nombreExpulsado);
             foreach (var callback in destinatarios)
             {
@@ -130,7 +130,7 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
             }
 
             _logger.InfoFormat(
-                "Expulsion de '{0}' notificada a todos los clientes en sala '{1}'.",
+                "Expulsión de '{0}' notificada a todos los clientes en sala '{1}'.",
                 nombreExpulsado, codigoSala);
         }
 
