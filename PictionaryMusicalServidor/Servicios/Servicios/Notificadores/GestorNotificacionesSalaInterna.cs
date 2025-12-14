@@ -115,14 +115,18 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Notificadores
                 "Notificando expulsión de '{0}' en sala '{1}' a todos los clientes.",
                 nombreExpulsado, codigoSala);
 
-            // Notificar a TODOS los clientes (incluyendo el host) sobre la expulsión
             var todosLosDestinatarios = ObtenerTodosLosDestinatarios();
             foreach (var callback in todosLosDestinatarios)
             {
                 EjecutarSeguro(() => callback.NotificarJugadorExpulsado(codigoSala, nombreExpulsado));
             }
 
-            // Notificar la salida y actualización de sala
+            if (callbackExpulsado != null)
+            {
+                EjecutarSeguro(() => callbackExpulsado.NotificarJugadorExpulsado(codigoSala,
+                    nombreExpulsado));
+            }
+
             var destinatarios = ObtenerDestinatariosExcluyendo(nombreExpulsado);
             foreach (var callback in destinatarios)
             {
