@@ -504,7 +504,6 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                     _resultadoSolicitudCodigo.TokenCodigo,
                     _codigoVerificacionServicio,
                     _avisoServicio,
-                    _localizador,
                     _sonidoManejador)
                 .ConfigureAwait(true);
 

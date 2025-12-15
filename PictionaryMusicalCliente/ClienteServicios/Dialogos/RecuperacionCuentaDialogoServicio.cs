@@ -118,7 +118,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 token,
                 adaptador,
                 _avisoServicio,
-                _localizador,
                 _sonidoManejador).ConfigureAwait(true);
 
             var validacion = ValidarRespuestaVerificacion(respuestaDialogo);
@@ -202,15 +201,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             {
                 OperacionExitosa = false,
                 Mensaje = string.IsNullOrWhiteSpace(mensajeServer) ? fallback : mensajeServer
-            };
-        }
-
-        private static DTOs.ResultadoOperacionDTO CrearExitoDefecto()
-        {
-            return new DTOs.ResultadoOperacionDTO
-            {
-                OperacionExitosa = true,
-                Mensaje = Lang.avisoTextoContrasenaActualizada
             };
         }
     }

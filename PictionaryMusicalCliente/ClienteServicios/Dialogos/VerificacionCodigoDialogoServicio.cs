@@ -25,15 +25,12 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             string tokenCodigo,
             ICodigoVerificacionServicio codigoVerificacionServicio,
             IAvisoServicio avisoServicio,
-            ILocalizadorServicio localizadorServicio,
             SonidoManejador sonidoManejador)
         {
             if (codigoVerificacionServicio == null)
                 throw new ArgumentNullException(nameof(codigoVerificacionServicio));
             if (avisoServicio == null)
                 throw new ArgumentNullException(nameof(avisoServicio));
-            if (localizadorServicio == null)
-                throw new ArgumentNullException(nameof(localizadorServicio));
             if (sonidoManejador == null)
                 throw new ArgumentNullException(nameof(sonidoManejador));
 
@@ -42,7 +39,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             var vistaModelo = new VerificacionCodigoVistaModelo(
                 App.VentanaServicio,
-                localizadorServicio,
+                App.Localizador,
                 descripcion,
                 tokenCodigo,
                 codigoVerificacionServicio,

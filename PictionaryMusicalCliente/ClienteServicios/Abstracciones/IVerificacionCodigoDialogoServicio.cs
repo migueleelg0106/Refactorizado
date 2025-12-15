@@ -1,5 +1,4 @@
 using PictionaryMusicalCliente.Utilidades;
-using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using System.Threading.Tasks;
 using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
@@ -23,7 +22,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
             string tokenCodigo,
             ICodigoVerificacionServicio codigoVerificacionServicio,
             IAvisoServicio avisoServicio,
-            ILocalizadorServicio localizadorServicio,
             SonidoManejador sonidoManejador);
     }
 }
