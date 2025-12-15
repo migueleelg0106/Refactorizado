@@ -51,7 +51,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private readonly bool _esHost;
         private readonly string _idJugador;
 
-        private PartidaIniciadaVistaModelo _partidaVistaModelo;
+        private PartidaVistaModelo _partidaVistaModelo;
         private ChatVistaModelo _chatVistaModelo;
 
         private ICursoPartidaManejador _proxyJuego;
@@ -186,7 +186,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void InicializarViewModelsHijos()
         {
-            _partidaVistaModelo = new PartidaIniciadaVistaModelo(
+            _partidaVistaModelo = new PartidaVistaModelo(
                 _ventana,
                 _localizador,
                 _sonidoManejador,
@@ -197,7 +197,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private void ConfigurarEventosViewModels()
         {
             _chatVistaModelo.PropertyChanged += ChatVistaModelo_PropertyChanged;
-            _partidaVistaModelo.PropertyChanged += PartidaIniciadaVistaModelo_PropertyChanged;
+            _partidaVistaModelo.PropertyChanged += PartidaVistaModelo_PropertyChanged;
             ConfigurarPartidaVistaModelo();
         }
 
@@ -265,7 +265,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        private void PartidaIniciadaVistaModelo_PropertyChanged(object remitente, System.ComponentModel.PropertyChangedEventArgs argumentosEvento)
+        private void PartidaVistaModelo_PropertyChanged(object remitente, System.ComponentModel.PropertyChangedEventArgs argumentosEvento)
         {
             NotificarCambio(argumentosEvento.PropertyName);
         }
@@ -278,7 +278,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _chatVistaModelo.EsPartidaIniciada = juegoIniciado;
         }
 
-        public PartidaIniciadaVistaModelo PartidaVistaModelo => _partidaVistaModelo;
+        public PartidaVistaModelo PartidaVistaModelo => _partidaVistaModelo;
 
         public ChatVistaModelo ChatVistaModelo => _chatVistaModelo;
 
@@ -1552,7 +1552,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         public async Task FinalizarAsync()
         {
-            _partidaVistaModelo.PropertyChanged -= PartidaIniciadaVistaModelo_PropertyChanged;
+            _partidaVistaModelo.PropertyChanged -= PartidaVistaModelo_PropertyChanged;
 
             _partidaVistaModelo.Detener();
 
