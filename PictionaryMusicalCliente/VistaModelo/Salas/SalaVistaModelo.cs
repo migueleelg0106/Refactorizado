@@ -704,7 +704,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() =>
+            dispatcher.BeginInvoke(new Action(() =>
             {
                 AplicarInicioVisualPartida();
                 _partidaVistaModelo.NotificarPartidaIniciada();
@@ -712,7 +712,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 TextoBotonIniciarPartida = string.Empty;
                 PuedeInvitarAmigos = false;
                 PuedeInvitarPorCorreo = false;
-            });
+            }));
         }
 
         /// <param name="ronda">Datos de la ronda.</param>
@@ -736,7 +736,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() =>
+            dispatcher.BeginInvoke(new Action(() =>
             {
                 if (Jugadores != null && puntos > 0)
                 {
@@ -768,7 +768,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 _chatVistaModelo.NotificarJugadorAdivinoEnChat(nombreJugador);
                 _partidaVistaModelo.NotificarJugadorAdivino(nombreJugador, puntos, _nombreUsuarioSesion);
-            });
+            }));
         }
 
         private void AgregarPuntosAlDibujante(int puntosBonusDibujante)
@@ -858,7 +858,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 mensaje = _localizador.Localizar(mensaje, mensaje);
             }
 
-            dispatcher.Invoke(() =>
+            dispatcher.BeginInvoke(new Action(() =>
             {
                 if (_salaCancelada)
                 {
@@ -892,7 +892,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 }
 
                 MostrarResultadoFinalPartida(resultado);
-            });
+            }));
         }
 
         private void MostrarResultadoFinalPartida(DTOs.ResultadoPartidaDTO resultado)
