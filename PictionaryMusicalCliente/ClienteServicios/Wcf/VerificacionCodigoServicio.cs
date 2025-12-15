@@ -52,7 +52,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 throw new ArgumentNullException(nameof(solicitud));
             }
 
-            solicitud.Idioma ??= _localizador.Localizar(null, null) ?? "es-MX";
+            solicitud.Idioma ??= ObtenerIdiomaActual();
 
             DTOs.ResultadoSolicitudCodigoDTO resultado = await EjecutarOperacionAsync(
                 async () =>
@@ -179,6 +179,17 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     Lang.errorTextoErrorProcesarSolicitud,
                     ex);
             }
+        }
+
+        private string ObtenerIdiomaActual()
+        {
+            var culturaActual = Lang.Culture;
+            if (culturaActual != null)
+            {
+                return culturaActual.Name;
+            }
+
+            return System.Globalization.CultureInfo.CurrentUICulture.Name;
         }
     }
 }
