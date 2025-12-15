@@ -51,7 +51,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private readonly bool _esHost;
         private readonly string _idJugador;
 
-        private PartidaIniciadaVistaModelo _partidaVistaModelo;
+        private PartidaVistaModelo _partidaVistaModelo;
         private ChatVistaModelo _chatVistaModelo;
 
         private ICursoPartidaManejador _proxyJuego;
@@ -186,7 +186,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void InicializarViewModelsHijos()
         {
-            _partidaVistaModelo = new PartidaIniciadaVistaModelo(
+            _partidaVistaModelo = new PartidaVistaModelo(
                 _ventana,
                 _localizador,
                 _sonidoManejador,
@@ -197,7 +197,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private void ConfigurarEventosViewModels()
         {
             _chatVistaModelo.PropertyChanged += ChatVistaModelo_PropertyChanged;
-            _partidaVistaModelo.PropertyChanged += PartidaIniciadaVistaModelo_PropertyChanged;
+            _partidaVistaModelo.PropertyChanged += PartidaVistaModelo_PropertyChanged;
             ConfigurarPartidaVistaModelo();
         }
 
@@ -265,7 +265,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
         }
 
-        private void PartidaIniciadaVistaModelo_PropertyChanged(object remitente, System.ComponentModel.PropertyChangedEventArgs argumentosEvento)
+        private void PartidaVistaModelo_PropertyChanged(object remitente, System.ComponentModel.PropertyChangedEventArgs argumentosEvento)
         {
             NotificarCambio(argumentosEvento.PropertyName);
         }
@@ -278,119 +278,13 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _chatVistaModelo.EsPartidaIniciada = juegoIniciado;
         }
 
-        public PartidaIniciadaVistaModelo PartidaVistaModelo => _partidaVistaModelo;
+        public PartidaVistaModelo PartidaVM => _partidaVistaModelo;
 
-        public ChatVistaModelo ChatVistaModelo => _chatVistaModelo;
+        public ChatVistaModelo ChatVM => _chatVistaModelo;
 
         public bool JuegoIniciado => _partidaVistaModelo.JuegoIniciado;
 
         public bool EsHost => _esHost;
-
-        public int NumeroRondaActual => _partidaVistaModelo.NumeroRondaActual;
-
-        public double Grosor
-        {
-            get => _partidaVistaModelo.Grosor;
-            set => _partidaVistaModelo.Grosor = value;
-        }
-
-        public Color Color
-        {
-            get => _partidaVistaModelo.Color;
-            set => _partidaVistaModelo.Color = value;
-        }
-
-        public string TextoContador => _partidaVistaModelo.TextoContador;
-
-        public Brush ColorContador => _partidaVistaModelo.ColorContador;
-
-        public bool MostrarEstadoRonda => _partidaVistaModelo.MostrarEstadoRonda;
-
-        public bool EsHerramientaLapiz
-        {
-            get => _partidaVistaModelo.EsHerramientaLapiz;
-            set => _partidaVistaModelo.EsHerramientaLapiz = value;
-        }
-
-        public bool EsHerramientaBorrador
-        {
-            get => _partidaVistaModelo.EsHerramientaBorrador;
-            set => _partidaVistaModelo.EsHerramientaBorrador = value;
-        }
-
-        public Visibility VisibilidadCuadriculaDibujo
-        {
-            get => _partidaVistaModelo.VisibilidadCuadriculaDibujo;
-            set => _partidaVistaModelo.VisibilidadCuadriculaDibujo = value;
-        }
-
-        public Visibility VisibilidadOverlayDibujante
-        {
-            get => _partidaVistaModelo.VisibilidadOverlayDibujante;
-            set => _partidaVistaModelo.VisibilidadOverlayDibujante = value;
-        }
-
-        public Visibility VisibilidadOverlayAdivinador
-        {
-            get => _partidaVistaModelo.VisibilidadOverlayAdivinador;
-            set => _partidaVistaModelo.VisibilidadOverlayAdivinador = value;
-        }
-
-        public Visibility VisibilidadOverlayAlarma
-        {
-            get => _partidaVistaModelo.VisibilidadOverlayAlarma;
-            set => _partidaVistaModelo.VisibilidadOverlayAlarma = value;
-        }
-
-        public Visibility VisibilidadPalabraAdivinar
-        {
-            get => _partidaVistaModelo.VisibilidadPalabraAdivinar;
-            set => _partidaVistaModelo.VisibilidadPalabraAdivinar = value;
-        }
-
-        public Visibility VisibilidadInfoCancion
-        {
-            get => _partidaVistaModelo.VisibilidadInfoCancion;
-            set => _partidaVistaModelo.VisibilidadInfoCancion = value;
-        }
-
-        public Visibility VisibilidadArtista
-        {
-            get => _partidaVistaModelo.VisibilidadArtista;
-            set => _partidaVistaModelo.VisibilidadArtista = value;
-        }
-
-        public Visibility VisibilidadGenero
-        {
-            get => _partidaVistaModelo.VisibilidadGenero;
-            set => _partidaVistaModelo.VisibilidadGenero = value;
-        }
-
-        public string PalabraAdivinar
-        {
-            get => _partidaVistaModelo.PalabraAdivinar;
-            set => _partidaVistaModelo.PalabraAdivinar = value;
-        }
-
-        public Brush ColorPalabraAdivinar
-        {
-            get => _partidaVistaModelo.ColorPalabraAdivinar;
-            set => _partidaVistaModelo.ColorPalabraAdivinar = value;
-        }
-
-        public string TextoArtista
-        {
-            get => _partidaVistaModelo.TextoArtista;
-            set => _partidaVistaModelo.TextoArtista = value;
-        }
-
-        public string TextoGenero
-        {
-            get => _partidaVistaModelo.TextoGenero;
-            set => _partidaVistaModelo.TextoGenero = value;
-        }
-
-        public string TextoDibujoDe => _partidaVistaModelo.TextoDibujoDe;
 
         public string TextoBotonIniciarPartida
         {
@@ -477,63 +371,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         public ICommand IniciarPartidaComando { get; private set; }
 
-        public ICommand SeleccionarLapizComando => _partidaVistaModelo.SeleccionarLapizComando;
-
-        public ICommand SeleccionarBorradorComando => _partidaVistaModelo.SeleccionarBorradorComando;
-
-        public ICommand CambiarGrosorComando => _partidaVistaModelo.CambiarGrosorComando;
-
-        public ICommand CambiarColorComando => _partidaVistaModelo.CambiarColorComando;
-
-        public ICommand LimpiarDibujoComando => _partidaVistaModelo.LimpiarDibujoComando;
-
-        public ICommand OcultarOverlayAlarmaComando => _partidaVistaModelo.OcultarOverlayAlarmaComando;
-
         public ICommand CerrarVentanaComando { get; private set; }
 
         public ICommand EnviarMensajeChatComando { get; private set; }
-
-        public Action<bool> NotificarCambioHerramienta
-        {
-            get => _partidaVistaModelo.NotificarCambioHerramienta;
-            set => _partidaVistaModelo.NotificarCambioHerramienta = value;
-        }
-
-        public Action AplicarEstiloLapiz
-        {
-            get => _partidaVistaModelo.AplicarEstiloLapiz;
-            set => _partidaVistaModelo.AplicarEstiloLapiz = value;
-        }
-
-        public Action ActualizarFormaGoma
-        {
-            get => _partidaVistaModelo.ActualizarFormaGoma;
-            set => _partidaVistaModelo.ActualizarFormaGoma = value;
-        }
-
-        public Action LimpiarTrazos
-        {
-            get => _partidaVistaModelo.LimpiarTrazos;
-            set => _partidaVistaModelo.LimpiarTrazos = value;
-        }
-
-        public event Action<DTOs.TrazoDTO> TrazoRecibidoServidor
-        {
-            add => _partidaVistaModelo.TrazoRecibidoServidor += value;
-            remove => _partidaVistaModelo.TrazoRecibidoServidor -= value;
-        }
-
-        public event Action<string, string> MensajeChatRecibido
-        {
-            add => _chatVistaModelo.MensajeChatRecibido += value;
-            remove => _chatVistaModelo.MensajeChatRecibido -= value;
-        }
-
-        public event Action<string, string> MensajeDoradoRecibido
-        {
-            add => _chatVistaModelo.MensajeDoradoRecibido += value;
-            remove => _chatVistaModelo.MensajeDoradoRecibido -= value;
-        }
 
         public Func<string, bool> MostrarConfirmacion { get; set; }
 
@@ -1552,7 +1392,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         public async Task FinalizarAsync()
         {
-            _partidaVistaModelo.PropertyChanged -= PartidaIniciadaVistaModelo_PropertyChanged;
+            _partidaVistaModelo.PropertyChanged -= PartidaVistaModelo_PropertyChanged;
 
             _partidaVistaModelo.Detener();
 

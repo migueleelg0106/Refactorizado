@@ -239,7 +239,7 @@
     <Compile Include="VistaModelo\InicioSesion\CreacionCuentaVistaModelo.cs" />
     <Compile Include="VistaModelo\Sesion\TerminacionSesionVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\SalaVistaModelo.cs" />
-    <Compile Include="VistaModelo\Salas\PartidaIniciadaVistaModelo.cs" />
+    <Compile Include="VistaModelo\Salas\PartidaVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\ChatVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\ExpulsionJugadorVistaModelo.cs" />
     <Compile Include="VistaModelo\Salas\IngresoPartidaInvitadoVistaModelo.cs" />
@@ -259,6 +259,12 @@
     </Compile>
     <Compile Include="Vista\CambioContrasena.xaml.cs">
       <DependentUpon>CambioContrasena.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\Chat.xaml.cs">
+      <DependentUpon>Chat.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\Partida.xaml.cs">
+      <DependentUpon>Partida.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vista\ReportarJugador.xaml.cs">
       <DependentUpon>ReportarJugador.xaml</DependentUpon>
@@ -557,6 +563,14 @@
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Vista\CambioContrasena.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Chat.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Partida.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
