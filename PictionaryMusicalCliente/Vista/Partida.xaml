@@ -17,20 +17,18 @@
             <RowDefinition Height="90"/>
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Row="0" Background="Red" LastChildFill="False">
+        <DockPanel Grid.Row="0" Background="Red" LastChildFill="False"
+                   Visibility="{Binding MostrarEstadoRonda, Converter={StaticResource BooleanoVisibilidadColapsar}}">
             <TextBlock Text="{x:Static language:Lang.partidaTextoRonda}"
                        Foreground="Black" FontSize="18" VerticalAlignment="Center"
-                       Margin="10,0,0,0" FontFamily="Comic Sans MS" DockPanel.Dock="Left"
-                       Visibility="{Binding MostrarEstadoRonda, Converter={StaticResource BooleanoVisibilidadColapsar}}"/>
+                       Margin="10,0,0,0" FontFamily="Comic Sans MS" DockPanel.Dock="Left"/>
 
             <TextBlock Text="{Binding NumeroRondaActual}" Foreground="Black" FontSize="18" FontWeight="Bold"
                        VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Comic Sans MS"
-                       DockPanel.Dock="Left"
-                       Visibility="{Binding MostrarEstadoRonda, Converter={StaticResource BooleanoVisibilidadColapsar}}"/>
+                       DockPanel.Dock="Left"/>
 
             <Grid DockPanel.Dock="Right" HorizontalAlignment="Right"
-                  VerticalAlignment="Center" Margin="0,0,20,0"
-                  Visibility="{Binding MostrarEstadoRonda, Converter={StaticResource BooleanoVisibilidadColapsar}}">
+                  VerticalAlignment="Center" Margin="0,0,20,0">
                 <Ellipse Width="50" Height="50" Fill="White" Stroke="Black" StrokeThickness="2"/>
                 <TextBlock x:Name="bloqueTextoContador" Text="{Binding TextoContador}" FontSize="20"
                            FontWeight="Bold" Foreground="{Binding ColorContador}"
@@ -143,15 +141,15 @@
 
                 <Button x:Name="botonIniciarPartida"
                         Grid.Row="1"
-                        Content="{Binding TextoBotonIniciarPartida}"
-                        IsEnabled="{Binding BotonIniciarPartidaHabilitado}"
-                        Visibility="{Binding MostrarBotonIniciarPartida, Converter={StaticResource BooleanoVisibilidadColapsar}}"
+                        Content="{Binding DataContext.TextoBotonIniciarPartida, RelativeSource={RelativeSource AncestorType=Window}}"
+                        IsEnabled="{Binding DataContext.BotonIniciarPartidaHabilitado, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Visibility="{Binding DataContext.MostrarBotonIniciarPartida, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanoVisibilidadColapsar}}"
                         Width="150" Height="42"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Margin="0,8,0,10"
                         FontFamily="Comic Sans MS" FontWeight="Bold"
                         Background="White" BorderBrush="Black"
-                        Command="{Binding IniciarPartidaComando}"/>
+                        Command="{Binding DataContext.IniciarPartidaComando, RelativeSource={RelativeSource AncestorType=Window}}"/>
             </Grid>
         </Border>
 
@@ -205,7 +203,8 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="2" Background="Red">
+        <Grid Grid.Row="2" Background="Red"
+              Visibility="{Binding MostrarEstadoRonda, Converter={StaticResource BooleanoVisibilidadColapsar}}">
             <Grid x:Name="cuadriculaInfoCancion" Background="Transparent"
                   HorizontalAlignment="Center" VerticalAlignment="Center"
                   Visibility="{Binding VisibilidadInfoCancion}">
