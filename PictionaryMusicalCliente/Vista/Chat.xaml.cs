@@ -33,9 +33,6 @@ namespace PictionaryMusicalCliente.Vista
         {
             if ((argumentosEvento.Key == Key.Enter || argumentosEvento.Key == Key.Return))
             {
-                // El binding actualiza MensajeChat en SalaVistaModelo
-                // SalaVistaModelo maneja el comando EnviarMensajeChatComando
-                // Necesitamos acceder al SalaVistaModelo a través del DataContext padre
                 var ventana = Window.GetWindow(this);
                 if (ventana?.DataContext is SalaVistaModelo salaVM)
                 {
