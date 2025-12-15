@@ -15,7 +15,7 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 
 namespace PictionaryMusicalCliente.VistaModelo.Salas
 {
-    public class PartidaIniciadaVistaModelo : BaseVistaModelo
+    public class PartidaVistaModelo : BaseVistaModelo
     {
         private static readonly ILog _logger = LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -60,7 +60,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private Brush _colorPalabraAdivinar;
         private string _textoDibujoDe;
 
-        public PartidaIniciadaVistaModelo(
+        public PartidaVistaModelo(
             IVentanaServicio ventana,
             ILocalizadorServicio localizador,
             SonidoManejador sonidoManejador,

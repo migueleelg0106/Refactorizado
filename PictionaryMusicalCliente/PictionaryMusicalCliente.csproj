@@ -302,6 +302,12 @@
     <Compile Include="Vista\IngresoPartidaInvitado.xaml.cs">
       <DependentUpon>IngresoPartidaInvitado.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Vista\Chat.xaml.cs">
+      <DependentUpon>Chat.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\Partida.xaml.cs">
+      <DependentUpon>Partida.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Vista\Sala.xaml.cs">
       <DependentUpon>Sala.xaml</DependentUpon>
     </Compile>
@@ -615,6 +621,14 @@
     <Page Include="Vista\IngresoPartidaInvitado.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Chat.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vista\Partida.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Vista\Sala.xaml">
       <SubType>Designer</SubType>
