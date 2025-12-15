@@ -39,11 +39,8 @@ namespace PictionaryMusicalCliente.Vista
 
         private void AlCerrarPerfil(object remitente, EventArgs argumentosEvento)
         {
-            if (DataContext is PerfilVistaModelo vistaModelo && 
-                vistaModelo.RequiereReinicioSesion)
-            {
-                Application.Current.Shutdown();
-            }
+            // La navegacion al login es manejada por SolicitarReinicioSesion callback
+            // No es necesario hacer shutdown aqui
         }
 
         private void AlAbrirPopupRedSocial(object remitente, EventArgs argumentosEvento)

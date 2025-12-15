@@ -242,6 +242,12 @@ namespace PictionaryMusicalServidor.Servicios.Servicios
                 }
 
                 sala.RemoverJugador(nombreUsuario.Trim());
+
+                if (sala.DebeEliminarse)
+                {
+                    _salas.TryRemove(codigoSala.Trim(), out _);
+                }
+
                 _notificador.NotificarListaSalasATodos();
             }
             catch (FaultException excepcion)
