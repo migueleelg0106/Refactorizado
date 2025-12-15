@@ -14,18 +14,18 @@ namespace PictionaryMusicalCliente.Vista
     /// <summary>
     /// UserControl para el tablero de juego (partida iniciada).
     /// </summary>
-    public partial class PartidaView : UserControl
+    public partial class Partida : UserControl
     {
         private readonly List<Point> _puntosBorrador = new();
         private bool _borradoEnProgreso;
 
-        public PartidaView()
+        public Partida()
         {
             InitializeComponent();
-            Loaded += AlCargarPartidaView;
+            Loaded += AlCargarPartida;
         }
 
-        private void AlCargarPartidaView(object sender, RoutedEventArgs e)
+        private void AlCargarPartida(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartidaVistaModelo vistaModelo)
             {
@@ -38,10 +38,10 @@ namespace PictionaryMusicalCliente.Vista
                 RegistrarEventosLienzo();
             }
 
-            Unloaded += AlDescargarPartidaView;
+            Unloaded += AlDescargarPartida;
         }
 
-        private void AlDescargarPartidaView(object sender, RoutedEventArgs e)
+        private void AlDescargarPartida(object sender, RoutedEventArgs e)
         {
             if (DataContext is PartidaVistaModelo vistaModelo)
             {

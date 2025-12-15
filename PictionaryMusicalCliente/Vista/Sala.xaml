@@ -123,10 +123,10 @@
 
         </Grid>
 
-        <local:PartidaView Grid.Column="1" 
-                           DataContext="{Binding PartidaVM}"/>
+        <local:Partida Grid.Column="1" 
+                       DataContext="{Binding PartidaVM}"/>
 
-        <local:ChatView Grid.Column="2" 
-                        DataContext="{Binding}"/>
+        <local:Chat Grid.Column="2" 
+                    DataContext="{Binding}"/>
     </Grid>
 </Window>

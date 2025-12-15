@@ -9,15 +9,15 @@ namespace PictionaryMusicalCliente.Vista
     /// <summary>
     /// UserControl para el chat de la sala.
     /// </summary>
-    public partial class ChatView : UserControl
+    public partial class Chat : UserControl
     {
-        public ChatView()
+        public Chat()
         {
             InitializeComponent();
-            Loaded += AlCargarChatView;
+            Loaded += AlCargarChat;
         }
 
-        private void AlCargarChatView(object sender, RoutedEventArgs e)
+        private void AlCargarChat(object sender, RoutedEventArgs e)
         {
             if (DataContext is SalaVistaModelo vistaModelo)
             {
@@ -25,10 +25,10 @@ namespace PictionaryMusicalCliente.Vista
                 vistaModelo.MensajeDoradoRecibido += AlRecibirMensajeDorado;
             }
 
-            Unloaded += AlDescargarChatView;
+            Unloaded += AlDescargarChat;
         }
 
-        private void AlDescargarChatView(object sender, RoutedEventArgs e)
+        private void AlDescargarChat(object sender, RoutedEventArgs e)
         {
             if (DataContext is SalaVistaModelo vistaModelo)
             {
