@@ -25,7 +25,6 @@ namespace PictionaryMusicalCliente.Vista
             {
                 vistaModelo.MostrarCamposInvalidos = MarcarCamposInvalidos;
                 Loaded += AlCargarPerfilAsync;
-                Closed += AlCerrarPerfil;
             }
         }
 
@@ -34,15 +33,6 @@ namespace PictionaryMusicalCliente.Vista
             if (DataContext is PerfilVistaModelo vistaModelo)
             {
                 await vistaModelo.CargarPerfilAsync().ConfigureAwait(true);
-            }
-        }
-
-        private void AlCerrarPerfil(object remitente, EventArgs argumentosEvento)
-        {
-            if (DataContext is PerfilVistaModelo vistaModelo && 
-                vistaModelo.RequiereReinicioSesion)
-            {
-                Application.Current.Shutdown();
             }
         }
 

@@ -411,11 +411,11 @@ aciertan o cuando se acaba el tiempo.
     <value>GUARDAR CAMBIOS</value>
   </data>
   <data name="cambiarContrasenaTextoIngresaNuevaContrasena" xml:space="preserve">
-    <value>Ingrese la nueva contrasena: 
+    <value>Ingrese la nueva contraseña: 
 </value>
   </data>
   <data name="cambiarContrasenaTextoConfirmeContrasena" xml:space="preserve">
-    <value>Confirme su contrasena
+    <value>Confirme su contraseña
 </value>
   </data>
   <data name="cambiarContrasenaTextoCodigoVerificacion" xml:space="preserve">
@@ -489,7 +489,7 @@ aciertan o cuando se acaba el tiempo.
     <value>No hay suficientes jugadores para seguir jugando, se canceló la partida.</value>
   </data>
   <data name="avisoTextoCodigoDescripcionCambio" xml:space="preserve">
-    <value>Ingresa el código que enviamos para confirmar el cambio de contrasena.</value>
+    <value>Ingresa el código que enviamos para confirmar el cambio de contraseña.</value>
   </data>
   <data name="avisoTextoCodigoDescripcionCorreo" xml:space="preserve">
     <value>Ingresa el código de verificación enviado a {0}.</value>
@@ -498,7 +498,7 @@ aciertan o cuando se acaba el tiempo.
     <value>Ingresa el código de verificación que enviamos a tu correo.</value>
   </data>
   <data name="avisoTextoCodigoDescripcionRecuperacion" xml:space="preserve">
-    <value>Ingresa el código que enviamos para restablecer tu contrasena.</value>
+    <value>Ingresa el código que enviamos para restablecer tu contraseña.</value>
   </data>
   <data name="avisoTextoCodigoReenviado" xml:space="preserve">
     <value>Se envió un nuevo código a su correo electrónico.</value>
@@ -507,7 +507,7 @@ aciertan o cuando se acaba el tiempo.
     <value>Código verificado correctamente.</value>
   </data>
   <data name="avisoTextoContrasenaActualizada" xml:space="preserve">
-    <value>La contrasena se actualizó correctamente.</value>
+    <value>La contraseña se actualizó correctamente.</value>
   </data>
   <data name="avisoTextoPerfilActualizado" xml:space="preserve">
     <value>Los datos del perfil se actualizaron correctamente.</value>
@@ -603,7 +603,7 @@ aciertan o cuando se acaba el tiempo.
     <value>El código de verificación ha expirado. Solicite uno nuevo.</value>
   </data>
   <data name="avisoTextoCodigoVerificadoCambio" xml:space="preserve">
-    <value>Código verificado correctamente. Continúe con el cambio de contrasena.</value>
+    <value>Código verificado correctamente. Continúe con el cambio de contraseña.</value>
   </data>
   <data name="errorTextoSolicitudRecuperacionVigente" xml:space="preserve">
     <value>No hay una solicitud de recuperación vigente.</value>
