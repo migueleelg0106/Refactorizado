@@ -764,7 +764,6 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 VisibilidadGenero = DeterminarVisibilidadPista(TextoGenero);
                 VisibilidadInfoCancion = Visibility.Visible;
 
-                // Mostrar únicamente overlay del dibujante
                 VisibilidadOverlayAdivinador = Visibility.Collapsed;
                 VisibilidadOverlayDibujante = Visibility.Visible;
 
