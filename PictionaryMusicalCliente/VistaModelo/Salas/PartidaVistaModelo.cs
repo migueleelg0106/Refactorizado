@@ -658,12 +658,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() =>
+            dispatcher.BeginInvoke(new Action(() =>
             {
                 AplicarInicioVisualPartida(0);
                 TextoContador = string.Empty;
                 _sonidoManejador.ReproducirNotificacion();
-            });
+            }));
         }
         /// Procesa la notificacion de inicio de una nueva ronda.
 
@@ -677,7 +677,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() =>
+            dispatcher.BeginInvoke(new Action(() =>
             {
                 if (ronda == null)
                 {
@@ -693,7 +693,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 }
 
                 ProcesarInicioRonda(ronda);
-            });
+            }));
         }
 
         private void ProcesarInicioRonda(DTOs.RondaDTO ronda)
@@ -792,7 +792,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() =>
+            dispatcher.BeginInvoke(new Action(() =>
             {
                 _sonidoManejador.ReproducirNotificacion();
 
@@ -803,7 +803,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 {
                     PuedeEscribirCambiado?.Invoke(false);
                 }
-            });
+            }));
         }
         /// Procesa la recepcion de un trazo desde el servidor.
 
@@ -816,7 +816,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() => TrazoRecibidoServidor?.Invoke(trazo));
+            dispatcher.BeginInvoke(new Action(() => TrazoRecibidoServidor?.Invoke(trazo)));
         }
         /// Procesa la notificacion de fin de ronda.
 
@@ -828,7 +828,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() =>
+            dispatcher.BeginInvoke(new Action(() =>
             {
                 _temporizador.Stop();
                 _overlayTimer.Stop();
@@ -838,7 +838,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 MostrarEstadoRonda = false;
                 TextoContador = string.Empty;
                 MostrarOverlayAlarma();
-            });
+            }));
         }
         /// Procesa el fin de ronda temprano cuando todos los adivinadores acertaron.
         /// Muestra la cancion en azul y la reproduce durante 5 segundos.
@@ -851,7 +851,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() =>
+            dispatcher.BeginInvoke(new Action(() =>
             {
                 _temporizador.Stop();
                 _overlayTimer.Stop();
@@ -876,7 +876,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _alarmaActiva = true;
                 _temporizadorAlarma.Stop();
                 _temporizadorAlarma.Start();
-            });
+            }));
         }
         /// Procesa la notificacion de fin de partida.
 
@@ -888,7 +888,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return;
             }
 
-            dispatcher.Invoke(() =>
+            dispatcher.BeginInvoke(new Action(() =>
             {
                 _temporizador.Stop();
                 _overlayTimer.Stop();
@@ -903,7 +903,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 _rondaPendiente = null;
                 VisibilidadOverlayAlarma = Visibility.Collapsed;
                 RestablecerPalabraTrasAlarma();
-            });
+            }));
         }
         /// Ajusta el progreso de ronda despues de un cambio en jugadores.
 
