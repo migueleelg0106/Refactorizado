@@ -114,7 +114,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             }
         }
 
-        private void ConfigurarEventosViewModel(
+        private static void ConfigurarEventosViewModel(
             SeleccionAvatarVistaModelo vistaModelo,
             Window ventana,
             TaskCompletionSource<ObjetoAvatar> finalizacion)
@@ -126,7 +126,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             };
         }
 
-        private void ConfigurarEventosVentana(
+        private static void ConfigurarEventosVentana(
             Window ventana,
             TaskCompletionSource<ObjetoAvatar> finalizacion)
         {
@@ -139,7 +139,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             };
         }
 
-        private void ManejarErrorXaml(
+        private static void ManejarErrorXaml(
             Exception excepcion,
             TaskCompletionSource<ObjetoAvatar> finalizacion)
         {
@@ -150,7 +150,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                     excepcion));
         }
 
-        private void ManejarErrorInvalido(
+        private static void ManejarErrorInvalido(
             Exception excepcion,
             TaskCompletionSource<ObjetoAvatar> finalizacion)
         {

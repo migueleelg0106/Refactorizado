@@ -5,7 +5,7 @@ using System.Windows;
 namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
-    /// Ventana principal (Lobby) que gestiona la creacion de partidas y navegacion.
+    /// Ventana principal que gestiona la creacion de partidas y navegacion.
     /// </summary>
     public partial class VentanaPrincipal : Window
     {

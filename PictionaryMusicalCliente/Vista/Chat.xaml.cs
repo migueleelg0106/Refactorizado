@@ -35,12 +35,10 @@ namespace PictionaryMusicalCliente.Vista
             if (argumentosEvento.Key == Key.Enter || argumentosEvento.Key == Key.Return)
             {
                 var ventana = Window.GetWindow(this);
-                if (ventana?.DataContext is SalaVistaModelo salaVistaModelo)
+                if (ventana?.DataContext is SalaVistaModelo salaVistaModelo && 
+                    salaVistaModelo.EnviarMensajeChatComando?.CanExecute(null) == true)
                 {
-                    if (salaVistaModelo.EnviarMensajeChatComando?.CanExecute(null) == true)
-                    {
-                        salaVistaModelo.EnviarMensajeChatComando.Execute(null);
-                    }
+                    salaVistaModelo.EnviarMensajeChatComando.Execute(null);
                 }
 
                 argumentosEvento.Handled = true;

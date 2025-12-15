@@ -55,7 +55,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             return finalizacion.Task;
         }
 
-        private void ConfigurarEventos(
+        private static void ConfigurarEventos(
             VerificacionCodigoVistaModelo vistaModelo,
             VerificacionCodigo ventana,
             TaskCompletionSource<DTOs.ResultadoRegistroCuentaDTO> finalizacion)
@@ -74,7 +74,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             };
         }
 
-        private void ConfigurarCierreVentana(
+        private static void ConfigurarCierreVentana(
             VerificacionCodigo ventana,
             TaskCompletionSource<DTOs.ResultadoRegistroCuentaDTO> finalizacion)
         {

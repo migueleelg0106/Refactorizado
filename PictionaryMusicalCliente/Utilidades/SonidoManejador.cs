@@ -91,7 +91,7 @@ namespace PictionaryMusicalCliente.Utilidades
             }
         }
 
-        private void LimpiarReproductor(MediaPlayer reproductor)
+        private static void LimpiarReproductor(MediaPlayer reproductor)
         {
             if (reproductor == null) return;
 

@@ -69,7 +69,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Idiomas
             CultureInfo.DefaultThreadCurrentUICulture = cultura;
         }
 
-        private void PersistirPreferencia(CultureInfo cultura)
+        private static void PersistirPreferencia(CultureInfo cultura)
         {
             if (Settings.Default.idiomaCodigo != cultura.Name)
             {

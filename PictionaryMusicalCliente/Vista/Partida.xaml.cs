@@ -183,12 +183,12 @@ namespace PictionaryMusicalCliente.Vista
                 IgnorePressure = true
             };
 
-            var línea = new Stroke(puntos)
+            var linea = new Stroke(puntos)
             {
                 DrawingAttributes = atributos
             };
 
-            inkLienzoDibujo.Strokes.Add(línea);
+            inkLienzoDibujo.Strokes.Add(linea);
         }
 
         private void AplicarBorradoRemoto(TrazoDTO trazo)

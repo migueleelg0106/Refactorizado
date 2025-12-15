@@ -23,12 +23,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
         private readonly IVerificacionCodigoDialogoServicio _verificarCodigoDialogoServicio;
         private readonly IAvisoServicio _avisoServicio;
         private readonly SonidoManejador _sonidoManejador;
-        private readonly ILocalizadorServicio _localizador;
 
         public RecuperacionCuentaDialogoServicio(
             IVerificacionCodigoDialogoServicio verificarCodigoDialogoServicio,
             IAvisoServicio avisoServicio,
-            SonidoManejador sonidoManejador, ILocalizadorServicio localizador)
+            SonidoManejador sonidoManejador)
         {
             _verificarCodigoDialogoServicio = verificarCodigoDialogoServicio ??
                 throw new ArgumentNullException(nameof(verificarCodigoDialogoServicio));
@@ -36,8 +35,6 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 throw new ArgumentNullException(nameof(avisoServicio));
             _sonidoManejador = sonidoManejador ??
                 throw new ArgumentNullException(nameof(sonidoManejador));
-            _localizador = localizador ??
-                throw new ArgumentNullException(nameof(localizador));
         }
 
         /// <summary>
@@ -45,11 +42,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
         /// </summary>
         public async Task<DTOs.ResultadoOperacionDTO> RecuperarCuentaAsync(
             string identificador,
-            ICambioContrasenaServicio servicio)
+            ICambioContrasenaServicio cambioContrasenaServicio)
         {
-            if (servicio == null) throw new ArgumentNullException(nameof(servicio));
+            if (cambioContrasenaServicio == null) throw new ArgumentNullException(
+                nameof(cambioContrasenaServicio));
 
-            var resultadoSolicitud = await ProcesarSolicitudCodigo(identificador, servicio);
+            var resultadoSolicitud = await ProcesarSolicitudCodigo(identificador,
+                cambioContrasenaServicio);
             if (!resultadoSolicitud.Exito)
             {
                 return resultadoSolicitud.Error;
@@ -57,7 +56,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             var resultadoVerificacion = await ProcesarVerificacionCodigo(
                 resultadoSolicitud.Token,
-                servicio);
+                cambioContrasenaServicio);
 
             if (!resultadoVerificacion.Exito)
             {
@@ -66,7 +65,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
 
             return await ProcesarCambioContrasena(
                 resultadoSolicitud.Token,
-                servicio);
+                cambioContrasenaServicio);
         }
 
         private async Task<(bool Exito, string Token, DTOs.ResultadoOperacionDTO Error)>
@@ -85,7 +84,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             return (true, respuestaServidor.TokenCodigo, null);
         }
 
-        private (bool Exito, DTOs.ResultadoOperacionDTO Error) ValidarRespuestaSolicitud(
+        private static (bool Exito, DTOs.ResultadoOperacionDTO Error) ValidarRespuestaSolicitud(
             DTOs.ResultadoSolicitudRecuperacionDTO respuesta)
         {
             if (respuesta == null)
@@ -131,13 +130,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             return (true, null);
         }
 
-        private ICodigoVerificacionServicio CrearAdaptadorVerificacion(
+        private static ICodigoVerificacionServicio CrearAdaptadorVerificacion(
             ICambioContrasenaServicio servicio)
         {
             return new CodigoRecuperacionServicioAdaptador(servicio);
         }
 
-        private (bool Exito, DTOs.ResultadoOperacionDTO Error) ValidarRespuestaVerificacion(
+        private static (bool Exito, DTOs.ResultadoOperacionDTO Error) ValidarRespuestaVerificacion(
             DTOs.ResultadoRegistroCuentaDTO respuesta)
         {
             if (respuesta == null)
@@ -192,7 +191,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             return finalizacion.Task;
         }
 
-        private void ConfigurarCierreVentana(
+        private static void ConfigurarCierreVentana(
             CambioContrasena ventana,
             TaskCompletionSource<DTOs.ResultadoOperacionDTO> tcs)
         {

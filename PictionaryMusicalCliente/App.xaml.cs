@@ -144,7 +144,7 @@ namespace PictionaryMusicalCliente
 
             RecuperacionCuentaServicio = new RecuperacionCuentaDialogoServicio(
                 VerificacionCodigoDialogo, AvisoServicio,
-                SonidoManejador, Localizador);
+                SonidoManejador);
         }
 
         private void ConfigurarIdioma()

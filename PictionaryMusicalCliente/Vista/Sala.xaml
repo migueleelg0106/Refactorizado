@@ -125,7 +125,7 @@
 
         <Grid Grid.Column="1" Margin="8">
             <Grid Visibility="{Binding JuegoIniciado, Converter={StaticResource BooleanoVisibilidadColapsar}}">
-                <local:Partida DataContext="{Binding PartidaVM}"/>
+                <local:Partida DataContext="{Binding PartidaVistaModelo}"/>
             </Grid>
 
             <Image Source="/Recursos/PictionaryMusicalLogo.png"
@@ -161,7 +161,7 @@
         </Grid>
 
         <Grid Grid.Column="2" Margin="8">
-            <local:Chat DataContext="{Binding ChatVM}"/>
+            <local:Chat DataContext="{Binding ChatVistaModelo}"/>
         </Grid>
     </Grid>
 </Window>

@@ -6,8 +6,16 @@ using System.Windows.Controls;
 
 namespace PictionaryMusicalCliente.Vista
 {
+    /// <summary>
+    /// Logica de interaccion para la ventana de creacion de una nueva cuenta de usuario.
+    /// Gestiona la visualizacion de errores y la comunicacion con el ViewModel.
+    /// </summary>
     public partial class CreacionCuenta : Window
     {
+        /// <summary>
+        /// Inicializa una nueva instancia de la ventana de Creacion de Cuenta.
+        /// Configura el evento de cambio de contexto de datos para inyectar dependencias visuales.
+        /// </summary>
         public CreacionCuenta()
         {
             InitializeComponent();

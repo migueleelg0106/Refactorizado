@@ -14,7 +14,7 @@ namespace PictionaryMusicalCliente.Vista
     /// </summary>
     public partial class Sala : Window
     {
-        private SonidoManejador _sonidos = App.SonidoManejador;
+        private readonly SonidoManejador _sonidos = App.SonidoManejador;
 
         /// <summary>
         /// Constructor por defecto. VentanaServicio asigna el DataContext.

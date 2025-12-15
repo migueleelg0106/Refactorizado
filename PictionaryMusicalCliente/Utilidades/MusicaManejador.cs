@@ -158,10 +158,11 @@ namespace PictionaryMusicalCliente.Utilidades
                     _reproductor.Stop();
                     _reproductor.Close();
                 }
-                catch (InvalidOperationException) 
+                catch (InvalidOperationException excepcion) 
                 {
                     _logger.Warn(
-                        "El reproductor de musica no estaba en un estado valido para cerrarse.");
+                        "El reproductor de musica no estaba en un estado valido para cerrarse.",
+                        excepcion);
                 }
             }
 

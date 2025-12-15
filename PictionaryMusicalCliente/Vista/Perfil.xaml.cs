@@ -9,8 +9,17 @@ using System.Windows.Input;
 
 namespace PictionaryMusicalCliente.Vista
 {
+    /// <summary>
+    /// Logica de interaccion para la ventana de Perfil de usuario.
+    /// Permite la visualizacion y edicion de los datos del jugador, asi como la interaccion con
+    /// elementos de redes sociales.
+    /// </summary>
     public partial class Perfil : Window
     {
+        /// <summary>
+        /// Inicializa una nueva instancia de la ventana de Perfil.
+        /// Suscribe el evento para la carga inicial de datos desde el ViewModel.
+        /// </summary>
         public Perfil()
         {
             InitializeComponent();

@@ -77,7 +77,7 @@ namespace PictionaryMusicalCliente.Utilidades
             aviso.ShowDialog();
         }
 
-        private void ConfigurarPropietario(Window ventanaHija)
+        private static void ConfigurarPropietario(Window ventanaHija)
         {
             if (Application.Current != null &&
                 Application.Current.MainWindow != null &&
@@ -87,7 +87,7 @@ namespace PictionaryMusicalCliente.Utilidades
             }
         }
 
-        private Window CrearVentana(object vistaModelo)
+        private static Window CrearVentana(object vistaModelo)
         {
             if (vistaModelo == null) throw new ArgumentNullException(nameof(vistaModelo));
 
