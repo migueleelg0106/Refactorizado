@@ -63,35 +63,36 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     correoDestino, codigoSala);
                 return resultado;
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
-                _logger.Warn("El servidor rechazo la invitacion.", ex);
-                string mensaje = _manejadorError.ObtenerMensaje(ex, Lang.errorTextoEnviarCorreo);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                _logger.Warn("El servidor rechazo la invitacion.", excepcion);
+                string mensaje = _manejadorError.ObtenerMensaje(excepcion, 
+                    Lang.errorTextoEnviarCorreo);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error WCF al enviar invitacion.", ex);
+                _logger.Error("Error WCF al enviar invitacion.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Timeout al enviar invitacion.", ex);
+                _logger.Error("Timeout al enviar invitacion.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error inesperado en invitaciones.", ex);
+                _logger.Error("Error inesperado en invitaciones.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
-                    ex);
+                    excepcion);
             }
         }
 

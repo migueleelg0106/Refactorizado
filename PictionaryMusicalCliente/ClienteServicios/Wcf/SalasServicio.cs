@@ -103,12 +103,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 var sala = await cliente.CrearSalaAsync(nombreCreador, configuracion)
                     .ConfigureAwait(false);
 
-                _logger.InfoFormat("Sala creada por '{0}'. Codigo: {1}", nombreCreador, sala.Codigo);
+                _logger.InfoFormat("Sala creada por '{0}'. Codigo: {1}", nombreCreador, 
+                    sala.Codigo);
                 return sala;
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                ManejarExcepcionServicio(excepcion, Lang.errorTextoErrorProcesarSolicitud);
                 throw;
             }
             finally
@@ -132,9 +133,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     .ConfigureAwait(false);
                 return sala;
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                ManejarExcepcionServicio(excepcion, Lang.errorTextoErrorProcesarSolicitud);
                 throw;
             }
             finally
@@ -160,9 +161,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 await _cliente.AbandonarSalaAsync(codigoSala, nombreUsuario).ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                ManejarExcepcionServicio(excepcion, Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {
@@ -189,9 +190,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     nombreHost,
                     nombreJugadorAExpulsar).ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                ManejarExcepcionServicio(excepcion, Lang.errorTextoErrorProcesarSolicitud);
                 throw;
             }
             finally
@@ -215,9 +216,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 _suscrito = true;
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                ManejarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                ManejarExcepcionServicio(excepcion, Lang.errorTextoErrorProcesarSolicitud);
             }
             finally
             {
@@ -238,9 +239,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 await _cliente.CancelarSuscripcionListaSalasAsync().ConfigureAwait(false);
                 _suscrito = false;
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Warn("Error al cancelar suscripcion de salas.", ex);
+                _logger.Warn("Error al cancelar suscripcion de salas.", excepcion);
             }
             finally
             {
@@ -347,9 +348,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     Task.Run(async () =>
                         await _cliente.CancelarSuscripcionListaSalasAsync()).Wait(2000);
                 }
-                catch (Exception ex)
+                catch (Exception excepcion)
                 {
-                    _logger.Warn("Error al cerrar suscripcion de salas en Dispose.", ex);
+                    _logger.Warn("Error al cerrar suscripcion de salas en Dispose.", excepcion);
                 }
             }
         }
@@ -393,39 +394,41 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             }
         }
 
-        private void ManejarExcepcionServicio(Exception ex, string mensajeDefault)
+        private void ManejarExcepcionServicio(Exception excepcion, string mensajePredeterminado)
         {
-            if (ex is CommunicationException || ex is TimeoutException)
+            if (excepcion is CommunicationException || excepcion is TimeoutException)
             {
                 CerrarCliente();
             }
 
-            if (ex is FaultException fe)
+            if (excepcion is FaultException faultExcepcion)
             {
-                string msg = _manejadorError.ObtenerMensaje(fe, mensajeDefault);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, msg, fe);
+                string mensaje = _manejadorError.ObtenerMensaje(faultExcepcion,
+                    mensajePredeterminado);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje,
+                    faultExcepcion);
             }
 
-            if (ex is CommunicationException || ex is EndpointNotFoundException)
+            if (excepcion is CommunicationException || excepcion is EndpointNotFoundException)
             {
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
 
-            if (ex is TimeoutException)
+            if (excepcion is TimeoutException)
             {
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
 
             throw new ServicioExcepcion(
                 TipoErrorServicio.OperacionInvalida,
-                mensajeDefault,
-                ex);
+                mensajePredeterminado,
+                excepcion);
         }
 
         private static void ValidarCreacionSala(
@@ -458,14 +461,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             if (salas == null) return Array.Empty<DTOs.SalaDTO>();
 
             var lista = salas
-                .Where(s => s != null && !string.IsNullOrWhiteSpace(s.Codigo))
-                .Select(s => new DTOs.SalaDTO
+                .Where(sala => sala != null && !string.IsNullOrWhiteSpace(sala.Codigo))
+                .Select(sala => new DTOs.SalaDTO
                 {
-                    Codigo = s.Codigo,
-                    Creador = s.Creador,
-                    Configuracion = s.Configuracion,
-                    Jugadores = s.Jugadores != null
-                        ? new List<string>(s.Jugadores)
+                    Codigo = sala.Codigo,
+                    Creador = sala.Creador,
+                    Configuracion = sala.Configuracion,
+                    Jugadores = sala.Jugadores != null
+                        ? new List<string>(sala.Jugadores)
                         : new List<string>()
                 })
                 .ToList();

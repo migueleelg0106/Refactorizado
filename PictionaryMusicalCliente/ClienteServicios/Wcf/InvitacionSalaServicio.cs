@@ -113,11 +113,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 return InvitacionAmigosResultado.Exito(vistaModelo);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error al obtener lista de amigos para invitar.", ex);
+                _logger.Error("Error al obtener lista de amigos para invitar.", excepcion);
                 return InvitacionAmigosResultado.Fallo(
-                    ex.Message ?? Lang.errorTextoErrorProcesarSolicitud);
+                    excepcion.Message ?? Lang.errorTextoErrorProcesarSolicitud);
             }
         }
 
@@ -148,9 +148,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 return InvitacionCorreoResultado.Fallo(
                     resultado?.Mensaje ?? Lang.errorTextoEnviarCorreo);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error al procesar envio de correo.", ex);
+                _logger.Error("Error al procesar envio de correo.", excepcion);
                 return InvitacionCorreoResultado.Fallo(Lang.errorTextoErrorProcesarSolicitud);
             }
         }

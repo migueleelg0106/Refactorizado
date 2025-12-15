@@ -35,13 +35,15 @@ namespace PictionaryMusicalCliente.Vista
                 vistaModelo.SolicitarDatosReporte = SolicitarDatosReporte;
                 vistaModelo.MostrarInvitarAmigos = MostrarInvitarAmigosAsync;
                 vistaModelo.CerrarVentana = () => Close();
-                vistaModelo.ChequearCierreAplicacionGlobal = DebeCerrarAplicacionPorCierreDeVentana;
+                vistaModelo.ChequearCierreAplicacionGlobal = 
+                    DebeCerrarAplicacionPorCierreDeVentana;
             }
         }
 
         private void AlCerrarSeSala(object sender, CancelEventArgs argumentosEvento)
         {
-            if (DataContext is SalaVistaModelo vistaModelo && vistaModelo.CerrarVentanaComando.CanExecute(null))
+            if (DataContext is SalaVistaModelo vistaModelo && 
+                vistaModelo.CerrarVentanaComando.CanExecute(null))
             {
                 vistaModelo.CerrarVentanaComando.Execute(null);
             }
@@ -108,8 +110,6 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-
-
         private bool DebeCerrarAplicacionPorCierreDeVentana()
         {
             var aplicacion = Application.Current;
@@ -135,7 +135,5 @@ namespace PictionaryMusicalCliente.Vista
 
             return true;
         }
-
-
     }
 }

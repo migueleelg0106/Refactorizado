@@ -54,37 +54,37 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 RegistrarLogResultado(resultado, solicitud.Correo);
                 return resultado;
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
-                _logger.Warn("Servidor rechazo el registro (Validacion/Negocio).", ex);
+                _logger.Warn("Servidor rechazo el registro (Validacion/Negocio).", excepcion);
                 string mensaje = _manejadorError.ObtenerMensaje(
-                    ex,
+                    excepcion,
                     Lang.errorTextoRegistrarCuentaMasTarde);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion al registrar cuenta.", ex);
+                _logger.Error("Error de comunicacion al registrar cuenta.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Timeout al registrar cuenta.", ex);
+                _logger.Error("Timeout al registrar cuenta.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error inesperado al registrar cuenta.", ex);
+                _logger.Error("Error inesperado al registrar cuenta.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
-                    ex);
+                    excepcion);
             }
         }
 

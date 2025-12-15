@@ -37,15 +37,15 @@ namespace PictionaryMusicalCliente.Utilidades
         }
 
         private static void OnSoloNumerosChanged(
-            DependencyObject d,
-            DependencyPropertyChangedEventArgs e)
+            DependencyObject dependencia,
+            DependencyPropertyChangedEventArgs argumentosEvento)
         {
-            if (d is not TextBox cuadroTexto)
+            if (dependencia is not TextBox cuadroTexto)
             {
                 return;
             }
 
-            if (e.NewValue is bool habilitar && habilitar)
+            if (argumentosEvento.NewValue is bool habilitar && habilitar)
             {
                 cuadroTexto.PreviewTextInput += ValidarEntrada;
                 DataObject.AddPastingHandler(cuadroTexto, ManejarPegado);
@@ -57,12 +57,14 @@ namespace PictionaryMusicalCliente.Utilidades
             }
         }
 
-        private static void ValidarEntrada(object remitente, TextCompositionEventArgs argumentosEvento)
+        private static void ValidarEntrada(object remitente, 
+            TextCompositionEventArgs argumentosEvento)
         {
             argumentosEvento.Handled = !EsTextoNumerico(argumentosEvento.Text);
         }
 
-        private static void ManejarPegado(object remitente, DataObjectPastingEventArgs argumentosEvento)
+        private static void ManejarPegado(object remitente, 
+            DataObjectPastingEventArgs argumentosEvento)
         {
             if (!argumentosEvento.DataObject.GetDataPresent(DataFormats.Text))
             {
@@ -70,7 +72,8 @@ namespace PictionaryMusicalCliente.Utilidades
                 return;
             }
 
-            string textoPegado = argumentosEvento.DataObject.GetData(DataFormats.Text) as string ?? string.Empty;
+            string textoPegado = argumentosEvento.DataObject.GetData(DataFormats.Text) 
+                as string ?? string.Empty;
 
             if (!EsTextoNumerico(textoPegado))
             {

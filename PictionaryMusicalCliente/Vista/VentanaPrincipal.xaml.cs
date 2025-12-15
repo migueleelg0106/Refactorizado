@@ -19,7 +19,8 @@ namespace PictionaryMusicalCliente.Vista
             Closed += AlCerrarVentanaPrincipal;
         }
 
-        private async void AlCargarVentanaPrincipal(object sender, RoutedEventArgs e)
+        private async void AlCargarVentanaPrincipal(object remitente,
+            RoutedEventArgs argumentosEvento)
         {
             if (DataContext is VentanaPrincipalVistaModelo vistaModelo)
             {
@@ -28,7 +29,8 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private async void AlCerrarVentanaPrincipal(object sender, EventArgs e)
+        private async void AlCerrarVentanaPrincipal(object remitente,
+            EventArgs argumentosEvento)
         {
             Loaded -= AlCargarVentanaPrincipal;
             Closed -= AlCerrarVentanaPrincipal;

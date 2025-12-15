@@ -42,43 +42,43 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 DTOs.UsuarioDTO perfil = await _ejecutor.EjecutarAsincronoAsync(
                     _fabricaClientes.CrearClientePerfil(),
-                    c => c.ObtenerPerfilAsync(usuarioId)
+                    cliente => cliente.ObtenerPerfilAsync(usuarioId)
                 ).ConfigureAwait(false);
 
                 _logger.InfoFormat("Perfil obtenido para ID: {0}", usuarioId);
                 return perfil;
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
                 _logger.WarnFormat("Fallo al obtener perfil para ID {0}.", usuarioId);
                 string mensaje = _manejadorError.ObtenerMensaje(
-                    ex,
+                    excepcion,
                     Lang.errorTextoServidorObtenerPerfil);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion al obtener perfil.", ex);
+                _logger.Error("Error de comunicacion al obtener perfil.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.avisoTextoComunicacionServidorSesion,
-                    ex);
+                    excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Timeout al obtener perfil.", ex);
+                _logger.Error("Timeout al obtener perfil.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.avisoTextoServidorTiempoSesion,
-                    ex);
+                    excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error inesperado en perfil.", ex);
+                _logger.Error("Error inesperado en perfil.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoPerfilActualizarInformacion,
-                    ex);
+                    excepcion);
             }
         }
 
@@ -97,7 +97,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 DTOs.ResultadoOperacionDTO resultado = await _ejecutor.EjecutarAsincronoAsync(
                     _fabricaClientes.CrearClientePerfil(),
-                    c => c.ActualizarPerfilAsync(solicitud)
+                    cliente => cliente.ActualizarPerfilAsync(solicitud)
                 ).ConfigureAwait(false);
 
                 RegistrarLogActualizacion(resultado, solicitud.UsuarioId);
@@ -108,37 +108,37 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     Mensaje = resultado?.Mensaje
                 };
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
-                _logger.Warn("Error de servidor al actualizar perfil.", ex);
+                _logger.Warn("Error de servidor al actualizar perfil.", excepcion);
                 string mensaje = _manejadorError.ObtenerMensaje(
-                    ex,
+                    excepcion,
                     Lang.errorTextoServidorActualizarPerfil);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion al actualizar perfil.", ex);
+                _logger.Error("Error de comunicacion al actualizar perfil.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Timeout al actualizar perfil.", ex);
+                _logger.Error("Timeout al actualizar perfil.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error inesperado al actualizar perfil.", ex);
+                _logger.Error("Error inesperado al actualizar perfil.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
-                    ex);
+                    excepcion);
             }
         }
 

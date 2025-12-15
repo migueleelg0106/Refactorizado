@@ -23,7 +23,7 @@ namespace PictionaryMusicalCliente.Utilidades
         public CancionManejador()
         {
             _reproductor = new MediaPlayer();
-            _reproductor.MediaEnded += (s, e) => EstaReproduciendo = false;
+            _reproductor.MediaEnded += (remitente, argumentosEvento) => EstaReproduciendo = false;
             _reproductor.Volume = ObtenerVolumenGuardado();
         }
 
@@ -76,9 +76,9 @@ namespace PictionaryMusicalCliente.Utilidades
                     _logger.ErrorFormat("Archivo de audio no encontrado: {0}", ruta);
                 }
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                ManejarExcepcionReproduccion(ex, nombreArchivo);
+                ManejarExcepcionReproduccion(excepcion, nombreArchivo);
             }
         }
 
@@ -92,9 +92,9 @@ namespace PictionaryMusicalCliente.Utilidades
                 _reproductor.Stop();
                 EstaReproduciendo = false;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Error("Error al intentar detener la reproduccion.", ex);
+                _logger.Error("Error al intentar detener la reproduccion.", excepcion);
             }
         }
 
@@ -122,11 +122,11 @@ namespace PictionaryMusicalCliente.Utilidades
                     _reproductor.Stop();
                     _reproductor.Close();
                 }
-                catch (Exception ex)
+                catch (Exception excepcion)
                 {
                     // Se usa Exception aqui para evitar fugas en el Dispose, 
                     // pero se loguea como advertencia.
-                    _logger.Warn("Excepcion durante Dispose de CancionManejador.", ex);
+                    _logger.Warn("Excepcion durante Dispose de CancionManejador.", excepcion);
                 }
             }
             _desechado = true;
@@ -149,19 +149,19 @@ namespace PictionaryMusicalCliente.Utilidades
             _logger.InfoFormat("Reproduciendo: {0}", nombre);
         }
 
-        private static void ManejarExcepcionReproduccion(Exception ex, string nombre)
+        private static void ManejarExcepcionReproduccion(Exception excepcion, string nombre)
         {
-            if (ex is UriFormatException)
+            if (excepcion is UriFormatException)
             {
                 _logger.ErrorFormat("URI invalido para cancion: {0}", nombre);
             }
-            else if (ex is InvalidOperationException)
+            else if (excepcion is InvalidOperationException)
             {
                 _logger.ErrorFormat("Error de operacion en reproductor para: {0}", nombre);
             }
             else
             {
-                _logger.ErrorFormat("Error inesperado reproduciendo {0}: {1}", nombre, ex);
+                _logger.ErrorFormat("Error inesperado reproduciendo {0}: {1}", nombre, excepcion);
             }
         }
 

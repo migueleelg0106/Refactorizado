@@ -66,40 +66,43 @@ namespace PictionaryMusicalCliente.Utilidades
 
             try
             {
-                var player = new MediaPlayer();
+                var reproductor = new MediaPlayer();
                 string ruta = ObtenerRutaAbsoluta(nombreArchivo);
 
-                player.Open(new Uri(ruta, UriKind.Absolute));
-                player.Volume = VolumenPredeterminado;
+                reproductor.Open(new Uri(ruta, UriKind.Absolute));
+                reproductor.Volume = VolumenPredeterminado;
 
-                player.MediaEnded += (s, e) => LimpiarReproductor(player);
-                player.MediaFailed += (s, e) => LimpiarReproductor(player);
+                reproductor.MediaEnded += (remitente, argumentosEvento) => 
+                    LimpiarReproductor(reproductor);
+                reproductor.MediaFailed += (remitente, argumentosEvento) => 
+                    LimpiarReproductor(reproductor);
 
-                player.Play();
+                reproductor.Play();
             }
-            catch (UriFormatException ex)
+            catch (UriFormatException excepcion)
             {
-                _logger.ErrorFormat("La URI del sonido {0} no es valida: {1}", nombreArchivo, ex);
+                _logger.ErrorFormat("La URI del sonido {0} no es valida: {1}", nombreArchivo,
+                    excepcion);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
                 _logger.WarnFormat("Operacion invalida al intentar reproducir {0}: {1}", 
-                    nombreArchivo, ex);
+                    nombreArchivo, excepcion);
             }
         }
 
-        private void LimpiarReproductor(MediaPlayer player)
+        private void LimpiarReproductor(MediaPlayer reproductor)
         {
-            if (player == null) return;
+            if (reproductor == null) return;
 
             try
             {
-                player.Stop();
-                player.Close();
+                reproductor.Stop();
+                reproductor.Close();
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Warn("El reproductor no estaba en un estado valido para cerrarse.", ex);
+                _logger.Warn("El reproductor no estaba en un estado valido para cerrarse.", excepcion);
             }
         }
 

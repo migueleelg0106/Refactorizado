@@ -44,7 +44,8 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void AlCambiarContrasenaConfirmacion(object remitente, RoutedEventArgs argumentosEvento)
+        private void AlCambiarContrasenaConfirmacion(object remitente, 
+            RoutedEventArgs argumentosEvento)
         {
             if (DataContext is CambioContrasenaVistaModelo vistaModelo &&
                 remitente is PasswordBox cajaContrasena)

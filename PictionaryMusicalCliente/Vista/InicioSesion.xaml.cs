@@ -34,7 +34,8 @@ namespace PictionaryMusicalCliente.Vista
 
         private void AlCambiarContrasena(object sender, RoutedEventArgs e)
         {
-            if (DataContext is InicioSesionVistaModelo vistaModelo && sender is PasswordBox cajaContrasena)
+            if (DataContext is InicioSesionVistaModelo vistaModelo && sender is 
+                PasswordBox cajaContrasena)
             {
                 vistaModelo.EstablecerContrasena(cajaContrasena.Password);
             }

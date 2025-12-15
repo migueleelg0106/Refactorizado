@@ -13,7 +13,8 @@ namespace PictionaryMusicalCliente.Utilidades
     /// </summary>
     public class NombreInvitadoGenerador : INombreInvitadoGenerador
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(NombreInvitadoGenerador));
+        private static readonly ILog _logger = 
+            LogManager.GetLogger(typeof(NombreInvitadoGenerador));
         private readonly object _sync = new();
         private readonly Random _random = new();
 
@@ -53,11 +54,13 @@ namespace PictionaryMusicalCliente.Utilidades
         {
             string opciones = Lang.ResourceManager.GetString("invitadoNombres", cultura);
 
-            if (string.IsNullOrWhiteSpace(opciones) && !cultura.Equals(CultureInfo.InvariantCulture))
+            if (string.IsNullOrWhiteSpace(opciones) && 
+                !cultura.Equals(CultureInfo.InvariantCulture))
             {
                 _logger.WarnFormat("Falta recurso 'invitadoNombres' en {0}, usando Invariant.",
                     cultura);
-                return Lang.ResourceManager.GetString("invitadoNombres", CultureInfo.InvariantCulture);
+                return Lang.ResourceManager.GetString("invitadoNombres",
+                    CultureInfo.InvariantCulture);
             }
 
             return opciones;

@@ -50,37 +50,37 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 return clasificacion ?? Array.Empty<DTOs.ClasificacionUsuarioDTO>();
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
-                _logger.Warn("Fallo al obtener clasificacion desde servidor.", ex);
+                _logger.Warn("Fallo al obtener clasificacion desde servidor.", excepcion);
                 string mensaje = _manejadorError.ObtenerMensaje(
-                    ex,
+                    excepcion,
                     Lang.errorTextoErrorProcesarSolicitud);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion al obtener clasificacion.", ex);
+                _logger.Error("Error de comunicacion al obtener clasificacion.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Timeout al obtener clasificacion.", ex);
+                _logger.Error("Timeout al obtener clasificacion.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error inesperado en clasificacion.", ex);
+                _logger.Error("Error inesperado en clasificacion.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
-                    ex);
+                    excepcion);
             }
         }
     }

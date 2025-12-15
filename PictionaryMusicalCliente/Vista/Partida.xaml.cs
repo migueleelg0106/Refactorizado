@@ -12,7 +12,7 @@ using System.Windows.Media;
 namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
-    /// Control de usuario para el area de juego de la partida (tablero de dibujo).
+    /// Control de usuario para el area de juego de la partida (lienzo).
     /// </summary>
     public partial class Partida : UserControl
     {
@@ -56,20 +56,24 @@ namespace PictionaryMusicalCliente.Vista
             inkLienzoDibujo.PreviewMouseLeftButtonUp += AlSoltarBotonIzquierdoEnLienzo;
         }
 
-        private void AlRecolectarTrazoEnLienzo(object sender, InkCanvasStrokeCollectedEventArgs argumentosEvento)
+        private void AlRecolectarTrazoEnLienzo(object sender,
+            InkCanvasStrokeCollectedEventArgs argumentosEvento)
         {
-            if (argumentosEvento.Stroke == null || !(DataContext is PartidaVistaModelo vistaModelo) || !vistaModelo.EsDibujante)
+            if (argumentosEvento.Stroke == null || !(DataContext is PartidaVistaModelo vistaModelo)
+                || !vistaModelo.EsDibujante)
             {
                 return;
             }
 
-            var trazo = ConvertirStrokeATrazo(argumentosEvento.Stroke, false);
+            var trazo = ConvertirLineaATrazo(argumentosEvento.Stroke, false);
             vistaModelo.EnviarTrazoAlServidor?.Invoke(trazo);
         }
 
-        private void AlPresionarBotonIzquierdoEnLienzo(object sender, MouseButtonEventArgs argumentosEvento)
+        private void AlPresionarBotonIzquierdoEnLienzo(object sender,
+            MouseButtonEventArgs argumentosEvento)
         {
-            if (DataContext is PartidaVistaModelo vistaModelo && vistaModelo.EsDibujante && vistaModelo.EsHerramientaBorrador)
+            if (DataContext is PartidaVistaModelo vistaModelo && vistaModelo.EsDibujante
+                && vistaModelo.EsHerramientaBorrador)
             {
                 _borradoEnProgreso = true;
                 _puntosBorrador.Clear();
@@ -85,7 +89,8 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void AlSoltarBotonIzquierdoEnLienzo(object sender, MouseButtonEventArgs argumentosEvento)
+        private void AlSoltarBotonIzquierdoEnLienzo(object sender, 
+            MouseButtonEventArgs argumentosEvento)
         {
             if (_borradoEnProgreso && DataContext is PartidaVistaModelo vistaModelo)
             {
@@ -101,7 +106,8 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private static TrazoDTO ConvertirPuntosATrazoBorrador(IEnumerable<Point> puntos, double grosor)
+        private static TrazoDTO ConvertirPuntosATrazoBorrador(IEnumerable<Point> puntos, 
+            double grosor)
         {
             if (puntos == null)
             {
@@ -116,29 +122,29 @@ namespace PictionaryMusicalCliente.Vista
 
             return new TrazoDTO
             {
-                PuntosX = listaPuntos.Select(p => p.X).ToArray(),
-                PuntosY = listaPuntos.Select(p => p.Y).ToArray(),
+                PuntosX = listaPuntos.Select(puntos => puntos.X).ToArray(),
+                PuntosY = listaPuntos.Select(puntos => puntos.Y).ToArray(),
                 ColorHex = Colors.Transparent.ToString(),
                 Grosor = grosor,
                 EsBorrado = true
             };
         }
 
-        private static TrazoDTO ConvertirStrokeATrazo(Stroke stroke, bool esBorrado)
+        private static TrazoDTO ConvertirLineaATrazo(Stroke linea, bool esBorrado)
         {
-            if (stroke == null)
+            if (linea == null)
             {
                 return null;
             }
 
-            var puntos = stroke.StylusPoints;
+            var puntos = linea.StylusPoints;
 
             return new TrazoDTO
             {
-                PuntosX = puntos.Select(p => p.X).ToArray(),
-                PuntosY = puntos.Select(p => p.Y).ToArray(),
-                ColorHex = ColorAHex(stroke.DrawingAttributes.Color),
-                Grosor = stroke.DrawingAttributes.Width,
+                PuntosX = puntos.Select(puntos => puntos.X).ToArray(),
+                PuntosY = puntos.Select(puntos => puntos.Y).ToArray(),
+                ColorHex = ColorAHex(linea.DrawingAttributes.Color),
+                Grosor = linea.DrawingAttributes.Width,
                 EsBorrado = esBorrado
             };
         }
@@ -169,19 +175,20 @@ namespace PictionaryMusicalCliente.Vista
 
             var atributos = new DrawingAttributes
             {
-                Color = (Color)ColorConverter.ConvertFromString(trazo.ColorHex ?? Colors.Black.ToString()),
+                Color = (Color)ColorConverter.ConvertFromString(trazo.ColorHex ?? 
+                    Colors.Black.ToString()),
                 Width = trazo.Grosor,
                 Height = trazo.Grosor,
                 FitToCurve = false,
                 IgnorePressure = true
             };
 
-            var stroke = new Stroke(puntos)
+            var línea = new Stroke(puntos)
             {
                 DrawingAttributes = atributos
             };
 
-            inkLienzoDibujo.Strokes.Add(stroke);
+            inkLienzoDibujo.Strokes.Add(línea);
         }
 
         private void AplicarBorradoRemoto(TrazoDTO trazo)
@@ -210,12 +217,12 @@ namespace PictionaryMusicalCliente.Vista
 
             var tamano = Math.Max(1, trazo.Grosor);
             var formaBorrador = new EllipseStylusShape(tamano, tamano);
-            var strokesActuales = inkLienzoDibujo.Strokes.ToList();
+            var lineasActuales = inkLienzoDibujo.Strokes.ToList();
 
-            foreach (var stroke in strokesActuales)
+            foreach (var linea in lineasActuales)
             {
-                var resultado = stroke.GetEraseResult(puntosTrayectoria, formaBorrador);
-                inkLienzoDibujo.Strokes.Remove(stroke);
+                var resultado = linea.GetEraseResult(puntosTrayectoria, formaBorrador);
+                inkLienzoDibujo.Strokes.Remove(linea);
 
                 if (resultado != null && resultado.Count > 0)
                 {

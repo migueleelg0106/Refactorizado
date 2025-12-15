@@ -81,9 +81,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 _cliente = cliente;
                 _usuarioSuscrito = nombreUsuario;
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                ManejarErrorSuscripcion(ex);
+                ManejarErrorSuscripcion(excepcion);
             }
             finally
             {
@@ -135,10 +135,10 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
                 return lista;
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
                 if (esTemporal) cliente.Abort();
-                throw ConvertirExcepcion(ex);
+                throw ConvertirExcepcion(excepcion);
             }
             finally
             {
@@ -189,9 +189,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 }
                 CerrarClienteSeguro(cliente);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Warn("Error al cancelar suscripcion.", ex);
+                _logger.Warn("Error al cancelar suscripcion.", excepcion);
                 cliente.Abort();
             }
         }
@@ -204,36 +204,37 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             throw ConvertirExcepcion(ex);
         }
 
-        private Exception ConvertirExcepcion(Exception ex)
+        private Exception ConvertirExcepcion(Exception excepcion)
         {
-            if (ex is FaultException fe)
+            if (excepcion is FaultException faultExcepcion)
             {
-                string msg = _manejadorError.ObtenerMensaje(
-                    fe,
+                string mensaje = _manejadorError.ObtenerMensaje(
+                    faultExcepcion,
                     Lang.errorTextoErrorProcesarSolicitud);
-                return new ServicioExcepcion(TipoErrorServicio.FallaServicio, msg, fe);
+                return new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, 
+                    faultExcepcion);
             }
 
-            if (ex is CommunicationException || ex is EndpointNotFoundException)
+            if (excepcion is CommunicationException || excepcion is EndpointNotFoundException)
             {
                 return new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
 
-            if (ex is TimeoutException)
+            if (excepcion is TimeoutException)
             {
                 return new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
 
             return new ServicioExcepcion(
                 TipoErrorServicio.Desconocido,
                 Lang.errorTextoErrorProcesarSolicitud,
-                ex);
+                excepcion);
         }
 
         private PictionaryServidorServicioListaAmigos.ListaAmigosManejadorClient CrearCliente()

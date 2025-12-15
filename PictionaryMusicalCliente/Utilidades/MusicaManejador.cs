@@ -28,7 +28,6 @@ namespace PictionaryMusicalCliente.Utilidades
             _reproductor.MediaEnded += EnMedioTerminado;
             _reproductor.MediaFailed += EnMedioFallido;
 
-            // Cargar volumen guardado o default
             double volumenGuardado = Properties.Settings.Default.volumenMusica;
             if (double.IsNaN(volumenGuardado) || double.IsInfinity(volumenGuardado))
             {
@@ -74,14 +73,14 @@ namespace PictionaryMusicalCliente.Utilidades
                 _reproductor.Play();
                 _estaReproduciendo = true;
             }
-            catch (UriFormatException ex)
+            catch (UriFormatException excepcion)
             {
-                _logger.ErrorFormat("URI de musica invalida ({0}): {1}", nombreArchivo, ex);
+                _logger.ErrorFormat("URI de musica invalida ({0}): {1}", nombreArchivo, excepcion);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
                 _logger.WarnFormat("No se pudo iniciar la musica ({0}) por estado invalido: {1}", 
-                    nombreArchivo, ex);
+                    nombreArchivo, excepcion);
             }
         }
 
@@ -97,9 +96,9 @@ namespace PictionaryMusicalCliente.Utilidades
                 _reproductor.Stop();
                 _estaReproduciendo = false;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException excepcion)
             {
-                _logger.Warn("Error al detener el reproductor de musica.", ex);
+                _logger.Warn("Error al detener el reproductor de musica.", excepcion);
             }
         }
         

@@ -60,7 +60,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     var cliente = _fabricaClientes.CrearClienteVerificacion();
                     return await _ejecutor.EjecutarAsincronoAsync(
                         cliente,
-                        c => c.SolicitarCodigoVerificacionAsync(solicitud));
+                        cliente => cliente.SolicitarCodigoVerificacionAsync(solicitud));
                 },
                 Lang.errorTextoServidorSolicitudCodigo).ConfigureAwait(false);
 
@@ -93,7 +93,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     var cliente = _fabricaClientes.CrearClienteVerificacion();
                     return await _ejecutor.EjecutarAsincronoAsync(
                         cliente,
-                        c => c.ConfirmarCodigoVerificacionAsync(solicitud));
+                        cliente => cliente.ConfirmarCodigoVerificacionAsync(solicitud));
                 },
                 Lang.errorTextoServidorValidarCodigo).ConfigureAwait(false);
 
@@ -124,7 +124,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     var cliente = _fabricaClientes.CrearClienteCuenta();
                     return await _ejecutor.EjecutarAsincronoAsync(
                         cliente,
-                        c => c.ReenviarCodigoVerificacionAsync(solicitud));
+                        cliente => cliente.ReenviarCodigoVerificacionAsync(solicitud));
                 },
                 Lang.errorTextoServidorReenviarCodigo).ConfigureAwait(false);
 
@@ -139,45 +139,45 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 return await operacion().ConfigureAwait(false);
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
-                _logger.WarnFormat("Error de logica del servidor: {0}", ex);
+                _logger.WarnFormat("Error de logica del servidor: {0}", excepcion);
                 string mensaje = _errorServicio.ObtenerMensaje(
-                    ex,
+                    excepcion,
                     mensajeErrorPredeterminado);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
-            catch (EndpointNotFoundException ex)
+            catch (EndpointNotFoundException excepcion)
             {
-                _logger.Error("Endpoint no encontrado.", ex);
+                _logger.Error("Endpoint no encontrado.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Timeout en servicio.", ex);
+                _logger.Error("Timeout en servicio.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion.", ex);
+                _logger.Error("Error de comunicacion.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error inesperado.", ex);
+                _logger.Error("Error inesperado.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
-                    ex);
+                    excepcion);
             }
         }
 

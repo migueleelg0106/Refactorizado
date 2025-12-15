@@ -17,7 +17,8 @@ namespace PictionaryMusicalCliente.Vista
             Loaded += AlCargarClasificacionAsync;
         }
 
-        private async void AlCargarClasificacionAsync(object remitente, RoutedEventArgs argumentosEvento)
+        private async void AlCargarClasificacionAsync(object remitente,
+            RoutedEventArgs argumentosEvento)
         {
             if (DataContext is ClasificacionVistaModelo vistaModelo)
             {

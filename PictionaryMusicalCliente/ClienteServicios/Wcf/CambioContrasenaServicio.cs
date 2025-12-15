@@ -158,35 +158,35 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 return await operacion().ConfigureAwait(false);
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
-                _logger.WarnFormat("Falla controlada en cambio de contrasena: {0}", ex);
-                string mensaje = _manejadorError.ObtenerMensaje(ex, mensajeError);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                _logger.WarnFormat("Falla controlada en cambio de contrasena: {0}", excepcion);
+                string mensaje = _manejadorError.ObtenerMensaje(excepcion, mensajeError);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion WCF.", ex);
+                _logger.Error("Error de comunicacion WCF.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Timeout WCF.", ex);
+                _logger.Error("Timeout WCF.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error inesperado en servicio.", ex);
+                _logger.Error("Error inesperado en servicio.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
-                    ex);
+                    excepcion);
             }
         }
 

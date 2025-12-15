@@ -47,11 +47,13 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void AlPresionarTeclaEnCajaTextoRedSocial(object remitente, KeyEventArgs argumentosEvento)
+        private void AlPresionarTeclaEnCajaTextoRedSocial(object remitente,
+            KeyEventArgs argumentosEvento)
         {
             if (remitente is TextBox cajaTexto &&
                 cajaTexto.Tag is ToggleButton botonAlternar &&
-                (argumentosEvento.Key == Key.Enter || argumentosEvento.Key == Key.Return || argumentosEvento.Key == Key.Escape))
+                (argumentosEvento.Key == Key.Enter || argumentosEvento.Key == Key.Return || 
+                    argumentosEvento.Key == Key.Escape))
             {
                 botonAlternar.IsChecked = false;
                 argumentosEvento.Handled = true;

@@ -61,37 +61,37 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 ProcesarResultadoSesion(resultado);
                 return resultado;
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
-                _logger.Warn("Error de logica servidor en inicio de sesion.", ex);
+                _logger.Warn("Error de logica servidor en inicio de sesion.", excepcion);
                 string mensaje = _manejadorError.ObtenerMensaje(
-                    ex,
+                    excepcion,
                     Lang.errorTextoServidorInicioSesion);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error WCF en inicio de sesion.", ex);
+                _logger.Error("Error WCF en inicio de sesion.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Timeout en inicio de sesion.", ex);
+                _logger.Error("Timeout en inicio de sesion.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Error inesperado en inicio de sesion.", ex);
+                _logger.Error("Error inesperado en inicio de sesion.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoErrorProcesarSolicitud,
-                    ex);
+                    excepcion);
             }
         }
 

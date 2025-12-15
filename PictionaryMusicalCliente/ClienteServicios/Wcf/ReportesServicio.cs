@@ -49,43 +49,43 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 DTOs.ResultadoOperacionDTO resultado = await _ejecutor.EjecutarAsincronoAsync(
                     _fabricaClientes.CrearClienteReportes(),
-                    c => c.ReportarJugadorAsync(reporte)
+                    cliente => cliente.ReportarJugadorAsync(reporte)
                 ).ConfigureAwait(false);
 
                 ProcesarResultadoReporte(resultado, reporte);
                 return resultado;
             }
-            catch (FaultException ex)
+            catch (FaultException excepcion)
             {
-                _logger.Warn("Fallo al reportar jugador (FaultException).", ex);
+                _logger.Warn("Fallo al reportar jugador (FaultException).", excepcion);
                 string mensaje = _manejadorError.ObtenerMensaje(
-                    ex,
+                    excepcion,
                     Lang.errorTextoReportarJugador);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
-            catch (CommunicationException ex)
+            catch (CommunicationException excepcion)
             {
-                _logger.Error("Error de comunicacion al enviar reporte de jugador.", ex);
+                _logger.Error("Error de comunicacion al enviar reporte de jugador.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.avisoTextoComunicacionServidorSesion,
-                    ex);
+                    excepcion);
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException excepcion)
             {
-                _logger.Error("Timeout al enviar reporte de jugador.", ex);
+                _logger.Error("Timeout al enviar reporte de jugador.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.avisoTextoServidorTiempoSesion,
-                    ex);
+                    excepcion);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Operacion invalida al enviar reporte de jugador.", ex);
+                _logger.Error("Operacion invalida al enviar reporte de jugador.", excepcion);
                 throw new ServicioExcepcion(
                     TipoErrorServicio.OperacionInvalida,
                     Lang.errorTextoReportarJugador,
-                    ex);
+                    excepcion);
             }
         }
 

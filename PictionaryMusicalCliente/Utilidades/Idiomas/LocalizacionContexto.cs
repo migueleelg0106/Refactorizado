@@ -56,7 +56,8 @@ namespace PictionaryMusicalCliente.Utilidades.Idiomas
             }
         }
 
-        private void LocalizacionServicioEnIdiomaActualizado(object remitente, EventArgs argumentosEvento)
+        private void LocalizacionServicioEnIdiomaActualizado(object remitente, 
+            EventArgs argumentosEvento)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
         }

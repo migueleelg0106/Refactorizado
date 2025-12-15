@@ -233,9 +233,9 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 await SuscribirNuevoClienteAsync(usuario);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Error("Fallo critico al reconectar suscripcion.", ex);
+                _logger.Error("Fallo critico al reconectar suscripcion.", excepcion);
             }
         }
 
@@ -253,11 +253,11 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 await cliente.SuscribirAsync(nombreUsuario).ConfigureAwait(false);
                 NotificarSolicitudesActualizadas();
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
                 cliente.Abort();
                 LimpiarEstadoLocal();
-                LanzarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+                LanzarExcepcionServicio(excepcion, Lang.errorTextoErrorProcesarSolicitud);
             }
         }
 

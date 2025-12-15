@@ -29,9 +29,10 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-        private void AlPresionarTeclaEnCampoTextoChat(object remitente, KeyEventArgs argumentosEvento)
+        private void AlPresionarTeclaEnCampoTextoChat(object remitente, 
+            KeyEventArgs argumentosEvento)
         {
-            if ((argumentosEvento.Key == Key.Enter || argumentosEvento.Key == Key.Return))
+            if (argumentosEvento.Key == Key.Enter || argumentosEvento.Key == Key.Return)
             {
                 var ventana = Window.GetWindow(this);
                 if (ventana?.DataContext is SalaVistaModelo salaVistaModelo)
