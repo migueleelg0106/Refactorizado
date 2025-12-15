@@ -260,6 +260,12 @@
     <Compile Include="Vista\CambioContrasena.xaml.cs">
       <DependentUpon>CambioContrasena.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Vista\Chat.xaml.cs">
+      <DependentUpon>Chat.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vista\Partida.xaml.cs">
+      <DependentUpon>Partida.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Vista\ReportarJugador.xaml.cs">
       <DependentUpon>ReportarJugador.xaml</DependentUpon>
     </Compile>
@@ -557,6 +563,14 @@
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Vista\CambioContrasena.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Chat.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Vista\Partida.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
