@@ -13,10 +13,10 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         private readonly ILocalizadorServicio _localizador;
 
         /// <summary>
-        /// Inicializa una nueva instancia del manejador de errores con el servicio de localización
+        /// Inicializa una nueva instancia del manejador de errores con el servicio de localizacion
         /// necesario.
         /// </summary>
-        /// <param name="localizador">El servicio encargado de traducir los mensajes extraídos.
+        /// <param name="localizador">El servicio encargado de traducir los mensajes extraidos.
         /// </param>
         /// <exception cref="ArgumentNullException">Se lanza si el localizador es nulo.</exception>
         public ManejadorErrorServicio(ILocalizadorServicio localizador)

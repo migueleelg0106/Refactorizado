@@ -491,13 +491,13 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
         private bool SolicitarConfirmacionEliminacion(string nombreAmigo)
         {
-            var eliminacionVM = new Amigos.EliminacionAmigoVistaModelo(
+            var eliminacionVistaModelo = new Amigos.EliminacionAmigoVistaModelo(
                 _ventana,
                 _localizador,
                 _sonidoManejador,
                 nombreAmigo);
-            _ventana.MostrarVentanaDialogo(eliminacionVM);
-            return eliminacionVM.DialogResult == true;
+            _ventana.MostrarVentanaDialogo(eliminacionVistaModelo);
+            return eliminacionVistaModelo.DialogResult == true;
         }
 
         private bool ValidarSesionActivaParaEliminar()
@@ -533,7 +533,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
         private void EjecutarAbrirPerfil()
         {
-            var vmPerfil = new Perfil.PerfilVistaModelo(
+            var perfilVistaModelo = new Perfil.PerfilVistaModelo(
                 _ventana,
                 _localizador,
                 App.PerfilServicio,
@@ -547,14 +547,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
                 App.CatalogoAvatares,
                 App.CatalogoImagenes);
 
-            vmPerfil.SolicitarReinicioSesion = () => ReiniciarAplicacion();
-            _ventana.MostrarVentanaDialogo(vmPerfil);
+            perfilVistaModelo.SolicitarReinicioSesion = () => ReiniciarAplicacion();
+            _ventana.MostrarVentanaDialogo(perfilVistaModelo);
         }
 
         private void ReiniciarAplicacion()
         {
             _usuarioSesion.Limpiar();
-            var vmInicio = new InicioSesion.InicioSesionVistaModelo(
+            var inicioVistaModelo = new InicioSesion.InicioSesionVistaModelo(
                 _ventana,
                 _localizador,
                 App.InicioSesionServicio,
@@ -566,16 +566,16 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
                 App.GeneradorNombres,
                 _usuarioSesion,
                 App.FabricaSalas);
-            _ventana.MostrarVentana(vmInicio);
+            _ventana.MostrarVentana(inicioVistaModelo);
             _ventana.CerrarVentana(this);
         }
 
         private void EjecutarAbrirAjustes()
         {
-            var ajustesVM = new Ajustes.AjustesVistaModelo(
+            var ajustesVistaModelo = new Ajustes.AjustesVistaModelo(
                 _ventana,
                 _localizador);
-            _ventana.MostrarVentanaDialogo(ajustesVM);
+            _ventana.MostrarVentanaDialogo(ajustesVistaModelo);
         }
 
         private void EjecutarAbrirComoJugar()
@@ -586,25 +586,25 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
 
         private void EjecutarAbrirClasificacion()
         {
-            var clasificacionVM = new ClasificacionVistaModelo(
+            var clasificacionVistaModelo = new ClasificacionVistaModelo(
                 _ventana,
                 _localizador,
                 App.ClasificacionServicio,
                 App.AvisoServicio,
                 _sonidoManejador);
-            _ventana.MostrarVentanaDialogo(clasificacionVM);
+            _ventana.MostrarVentanaDialogo(clasificacionVistaModelo);
         }
 
         private void EjecutarAbrirBuscarAmigo()
         {
-            var busquedaAmigoVM = new Amigos.BusquedaAmigoVistaModelo(
+            var busquedaAmigoVistaModelo = new Amigos.BusquedaAmigoVistaModelo(
                 _ventana,
                 _localizador,
                 _amigosServicio,
                 _sonidoManejador,
                 App.AvisoServicio,
                 _usuarioSesion);
-            _ventana.MostrarVentanaDialogo(busquedaAmigoVM);
+            _ventana.MostrarVentanaDialogo(busquedaAmigoVistaModelo);
         }
 
         private void EjecutarAbrirSolicitudes()
@@ -617,14 +617,14 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
                 return;
             }
 
-            var solicitudesVM = new Amigos.SolicitudesVistaModelo(
+            var solicitudesVistaModelo = new Amigos.SolicitudesVistaModelo(
                 _ventana,
                 _localizador,
                 _amigosServicio,
                 _sonidoManejador,
                 App.AvisoServicio,
                 _usuarioSesion);
-            _ventana.MostrarVentanaDialogo(solicitudesVM);
+            _ventana.MostrarVentanaDialogo(solicitudesVistaModelo);
         }
 
         private async Task UnirseSalaInternoAsync()
@@ -769,7 +769,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
                 _sonidoManejador,
                 App.AvisoServicio);
 
-            var vmSala = new Salas.SalaVistaModelo(
+            var salaVistaModelo = new Salas.SalaVistaModelo(
                 _ventana,
                 _localizador,
                 sala,
@@ -787,7 +787,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
                 _usuarioSesion.NombreUsuario,
                 esInvitado);
 
-            _ventana.MostrarVentana(vmSala);
+            _ventana.MostrarVentana(salaVistaModelo);
             _ventana.CerrarVentana(this);
         }
 

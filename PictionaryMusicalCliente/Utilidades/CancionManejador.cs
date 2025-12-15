@@ -52,9 +52,9 @@ namespace PictionaryMusicalCliente.Utilidades
         public bool EstaReproduciendo { get; private set; }
 
         /// <summary>
-        /// Reproduce una canción ubicada en la carpeta 'Recursos'.
+        /// Reproduce una cancion ubicada en la carpeta 'Recursos'.
         /// </summary>
-        /// <param name="nombreArchivo">Nombre del archivo con extensión.</param>
+        /// <param name="nombreArchivo">Nombre del archivo con extension.</param>
         public void Reproducir(string nombreArchivo)
         {
             if (string.IsNullOrWhiteSpace(nombreArchivo))
@@ -83,7 +83,7 @@ namespace PictionaryMusicalCliente.Utilidades
         }
 
         /// <summary>
-        /// Detiene la reproducción actual.
+        /// Detiene la reproduccion actual.
         /// </summary>
         public void Detener()
         {
@@ -94,7 +94,7 @@ namespace PictionaryMusicalCliente.Utilidades
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Error("Error al intentar detener la reproducción.", ex);
+                _logger.Error("Error al intentar detener la reproduccion.", ex);
             }
         }
 

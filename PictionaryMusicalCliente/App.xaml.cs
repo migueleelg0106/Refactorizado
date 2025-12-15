@@ -66,7 +66,7 @@ namespace PictionaryMusicalCliente
             InicializarServicios();
             ConfigurarIdioma();
 
-            var inicioSesionVM = new InicioSesionVistaModelo(
+            var inicioSesionVistaModelo = new InicioSesionVistaModelo(
                 VentanaServicio,
                 Localizador,
                 InicioSesionServicio,
@@ -80,7 +80,7 @@ namespace PictionaryMusicalCliente
                 FabricaSalas
             );
 
-            VentanaServicio.MostrarVentana(inicioSesionVM);
+            VentanaServicio.MostrarVentana(inicioSesionVistaModelo);
         }
 
         protected override void OnExit(ExitEventArgs e)

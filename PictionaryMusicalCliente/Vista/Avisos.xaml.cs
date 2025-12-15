@@ -3,13 +3,13 @@
 namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
-    /// Ventana emergente genérica para mostrar mensajes informativos o de error al usuario.
+    /// Ventana emergente generica para mostrar mensajes informativos o de error al usuario.
     /// </summary>
     public partial class Avisos : Window
     {
         /// <summary>
         /// Constructor por defecto, solo para uso del disenador/XAML. 
-        /// La aplicación debe usar el constructor que recibe dependencias.
+        /// La aplicacion debe usar el constructor que recibe dependencias.
         /// </summary>
         public Avisos()
         {

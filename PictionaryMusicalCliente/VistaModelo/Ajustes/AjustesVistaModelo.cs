@@ -44,7 +44,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
         }
 
         /// <summary>
-        /// Indica si los efectos de sonido están silenciados en la aplicación.
+        /// Indica si los efectos de sonido estan silenciados en la aplicacion.
         /// </summary>
         public bool SonidosSilenciados
         {
@@ -76,22 +76,22 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
 
         private void EjecutarCerrarSesion()
         {
-            var terminacionSesionVM = new TerminacionSesionVistaModelo(
+            var terminacionSesionVistaModelo = new TerminacionSesionVistaModelo(
                 App.VentanaServicio,
                 App.Localizador,
                 App.UsuarioGlobal);
-            terminacionSesionVM.EjecutarCierreSesionYNavegacion = () =>
+            terminacionSesionVistaModelo.EjecutarCierreSesionYNavegacion = () =>
             {
                 NavegarAInicioSesion();
             };
-            _ventana.MostrarVentanaDialogo(terminacionSesionVM);
+            _ventana.MostrarVentanaDialogo(terminacionSesionVistaModelo);
         }
 
         private void NavegarAInicioSesion()
         {
             App.MusicaManejador.Detener();
 
-            var inicioSesionVM = new InicioSesion.InicioSesionVistaModelo(
+            var inicioSesionVistaModelo = new InicioSesion.InicioSesionVistaModelo(
                 _ventana,
                 _localizador,
                 App.InicioSesionServicio,
@@ -104,7 +104,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Ajustes
                 App.UsuarioGlobal,
                 App.FabricaSalas);
 
-            _ventana.MostrarVentana(inicioSesionVM);
+            _ventana.MostrarVentana(inicioSesionVistaModelo);
             
             CerrarVentanaPrincipal();
             _ventana.CerrarVentana(this);

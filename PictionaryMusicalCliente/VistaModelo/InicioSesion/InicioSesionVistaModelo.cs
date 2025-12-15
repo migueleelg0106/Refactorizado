@@ -16,6 +16,7 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 using PictionaryMusicalCliente.Utilidades.Abstracciones;
 using PictionaryMusicalCliente.Utilidades;
 using PictionaryMusicalCliente.ClienteServicios.Wcf;
+using PictionaryMusicalCliente.ClienteServicios.Dialogos;
 
 namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 {
@@ -134,9 +135,9 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
             {
                 if (EstablecerPropiedad(ref _estaProcesando, value))
                 {
-                    ((IComandoNotificable)IniciarSesionComando).NotificarPuedeEjecutar();
-                    ((IComandoNotificable)RecuperarCuentaComando).NotificarPuedeEjecutar();
-                    ((IComandoNotificable)IniciarSesionInvitadoComando).NotificarPuedeEjecutar();
+                    IniciarSesionComando.NotificarPuedeEjecutar();
+                    RecuperarCuentaComando.NotificarPuedeEjecutar();
+                    IniciarSesionInvitadoComando.NotificarPuedeEjecutar();
                 }
             }
         }
@@ -161,15 +162,15 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
 
         private void AbrirVentanaCrearCuenta()
         {
-            var codigoServ = new ClienteServicios.Wcf.VerificacionCodigoServicio(
+            var codigoServ = new VerificacionCodigoServicio(
                 App.WcfEjecutor, App.WcfFabrica, _localizador, App.ManejadorError);
-            var cuentaServ = new ClienteServicios.Wcf.CuentaServicio(
+            var cuentaServ = new CuentaServicio(
                 App.WcfEjecutor, App.WcfFabrica, App.ManejadorError);
-            var selectAvatar = new ClienteServicios.Dialogos.SeleccionAvatarDialogoServicio(
+            var selectAvatar = new SeleccionAvatarDialogoServicio(
                 _avisoServicio, App.CatalogoAvatares, _sonidoManejador);
-            var verifCodigo = new ClienteServicios.Dialogos.VerificacionCodigoDialogoServicio();
+            var verifCodigo = new VerificacionCodigoDialogoServicio();
 
-            var vmCrear = new CreacionCuentaVistaModelo(
+            var crearCuentaVistaModelo = new CreacionCuentaVistaModelo(
                 _ventana,
                 _localizador,
                 codigoServ,
@@ -181,14 +182,14 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 _avisoServicio,
                 _localizacionServicio);
 
-            _ventana.MostrarVentanaDialogo(vmCrear);
+            _ventana.MostrarVentanaDialogo(crearCuentaVistaModelo);
         }
 
         private void NavegarAVentanaPrincipal()
         {
             App.MusicaManejador.Detener();
 
-            var vmPrincipal = new VentanaPrincipal.VentanaPrincipalVistaModelo(
+            var principalVistaModelo = new VentanaPrincipal.VentanaPrincipalVistaModelo(
                 _ventana,
                 _localizador,
                 _localizacionServicio,
@@ -198,7 +199,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 _sonidoManejador,
                 _usuarioSesion);
 
-            _ventana.MostrarVentana(vmPrincipal);
+            _ventana.MostrarVentana(principalVistaModelo);
             _ventana.CerrarVentana(this);
         }
 
@@ -206,7 +207,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         {
             App.MusicaManejador.Detener();
 
-            var vmSala = new Salas.SalaVistaModelo(
+            var salaVistaModelo = new Salas.SalaVistaModelo(
                 _ventana,
                 _localizador,
                 sala,
@@ -229,7 +230,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
                 nombre,
                 esInvitado);
 
-            _ventana.MostrarVentana(vmSala);
+            _ventana.MostrarVentana(salaVistaModelo);
             _ventana.CerrarVentana(this);
         }
 

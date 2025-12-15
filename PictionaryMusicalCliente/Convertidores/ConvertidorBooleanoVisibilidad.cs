@@ -6,7 +6,7 @@ using System.Windows.Data;
 namespace PictionaryMusicalCliente.Convertidores
 {
     /// <summary>
-    /// Convierte valores booleanos a <see cref="Visibility"/> permitiendo inversión y selección
+    /// Convierte valores booleanos a <see cref="Visibility"/> permitiendo inversion y seleccion
     /// del estado cuando el valor es falso.
     /// </summary>
     public class ConvertidorBooleanoVisibilidad : IValueConverter
@@ -18,7 +18,7 @@ namespace PictionaryMusicalCliente.Convertidores
 
         /// <summary>
         /// Indica si se debe devolver <see cref="Visibility.Collapsed"/> cuando el valor es falso.
-        /// Si es <c>false</c> se devolverá <see cref="Visibility.Hidden"/>.
+        /// Si es <c>false</c> se devolvera <see cref="Visibility.Hidden"/>.
         /// </summary>
         public bool ColapsarCuandoEsFalso { get; set; } = true;
 

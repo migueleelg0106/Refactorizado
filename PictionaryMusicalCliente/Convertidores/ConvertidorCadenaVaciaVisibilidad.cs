@@ -6,13 +6,13 @@ using System.Windows.Data;
 namespace PictionaryMusicalCliente.Convertidores
 {
     /// <summary>
-    /// Convierte una cadena a <see cref="Visibility"/> mostrando el elemento únicamente
+    /// Convierte una cadena a <see cref="Visibility"/> mostrando el elemento unicamente
     /// cuando existe contenido en la cadena.
     /// </summary>
     public class ConvertidorCadenaVaciaVisibilidad : IValueConverter
     {
         /// <summary>
-        /// Indica si se debe invertir el resultado de la conversión.
+        /// Indica si se debe invertir el resultado de la conversion.
         /// </summary>
         public bool Invertir { get; set; }
 

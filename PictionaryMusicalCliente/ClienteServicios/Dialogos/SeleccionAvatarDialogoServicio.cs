@@ -57,13 +57,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
                 {
                     MostrarVentanaAvatar(avatares, idAvatar, finalizacion);
                 }
-                catch (XamlParseException ex)
+                catch (XamlParseException excepcion)
                 {
-                    ManejarErrorXaml(ex, finalizacion);
+                    ManejarErrorXaml(excepcion, finalizacion);
                 }
-                catch (InvalidOperationException ex)
+                catch (InvalidOperationException excepcion)
                 {
-                    ManejarErrorInvalido(ex, finalizacion);
+                    ManejarErrorInvalido(excepcion, finalizacion);
                 }
             });
 
@@ -140,22 +140,22 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
         }
 
         private void ManejarErrorXaml(
-            Exception ex,
+            Exception excepcion,
             TaskCompletionSource<ObjetoAvatar> finalizacion)
         {
-            _logger.Error("Error XAML al cargar la interfaz de seleccion de avatar.", ex);
+            _logger.Error("Error XAML al cargar la interfaz de seleccion de avatar.", excepcion);
             finalizacion.TrySetException(
                 new InvalidOperationException(
                     "Error al cargar la interfaz de seleccion de avatar.",
-                    ex));
+                    excepcion));
         }
 
         private void ManejarErrorInvalido(
-            Exception ex,
+            Exception excepcion,
             TaskCompletionSource<ObjetoAvatar> finalizacion)
         {
-            _logger.Error("Operacion invalida al mostrar dialogo de avatar.", ex);
-            finalizacion.TrySetException(ex);
+            _logger.Error("Operacion invalida al mostrar dialogo de avatar.", excepcion);
+            finalizacion.TrySetException(excepcion);
         }
     }
 }

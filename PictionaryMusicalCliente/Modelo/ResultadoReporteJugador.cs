@@ -6,7 +6,7 @@
     public class ResultadoReporteJugador
     {
         /// <summary>
-        /// Indica si el usuario confirmó el envío del reporte.
+        /// Indica si el usuario confirmo el envio del reporte.
         /// </summary>
         public bool Confirmado { get; set; }
 

@@ -249,7 +249,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         {
             if (string.IsNullOrWhiteSpace(mensaje))
             {
-                return ObtenerMensajeFallback(mensajePredeterminado);
+                return ObtenerMensajePredeterminado(mensajePredeterminado);
             }
 
             string mensajeNormalizado = mensaje.Trim();
@@ -264,7 +264,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 return mensajeEstatico;
             }
 
-            return ObtenerMensajeFallback(mensajePredeterminado);
+            return ObtenerMensajePredeterminado(mensajePredeterminado);
         }
 
         private bool TryLocalizarMensajeDinamico(string mensaje, out string traducido)
@@ -328,7 +328,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             return false;
         }
 
-        private string ObtenerMensajeFallback(string mensajePredeterminado)
+        private string ObtenerMensajePredeterminado(string mensajePredeterminado)
         {
             if (!string.IsNullOrWhiteSpace(mensajePredeterminado))
             {

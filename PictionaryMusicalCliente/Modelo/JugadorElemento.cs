@@ -49,7 +49,7 @@ namespace PictionaryMusicalCliente.Modelo
 
 
         /// <summary>
-        /// Determina si el botón de reportar debe ser visible para este elemento.
+        /// Determina si el boton de reportar debe ser visible para este elemento.
         /// Visible para cualquier jugador distinto al usuario actual.
         /// </summary>
         public bool MostrarBotonReportar
@@ -59,7 +59,7 @@ namespace PictionaryMusicalCliente.Modelo
         }
 
         /// <summary>
-        /// Comando a ejecutar al presionar el botón de reportar.
+        /// Comando a ejecutar al presionar el boton de reportar.
         /// </summary>
         public ICommand ReportarComando
         {

@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace PictionaryMusicalCliente.Comandos
 {
     /// <summary>
-    /// Implementación de comando que coordina la ejecución de operaciones asincrónicas.
+    /// Implementacion de comando que coordina la ejecucion de operaciones asincronicas.
     /// </summary>
     public class ComandoAsincrono : IComandoAsincrono
     {
@@ -15,11 +15,11 @@ namespace PictionaryMusicalCliente.Comandos
         private bool _estaEjecutando;
 
         /// <summary>
-        /// Inicializa una nueva instancia del comando asincrónico.
+        /// Inicializa una nueva instancia del comando asincronico.
         /// </summary>
-        /// <param name="ejecutarAsincrono">Función que representa la ejecución del comando.
+        /// <param name="ejecutarAsincrono">Funcion que representa la ejecucion del comando.
         /// </param>
-        /// <param name="puedeEjecutar">Función opcional para validar ejecución.</param>
+        /// <param name="puedeEjecutar">Funcion opcional para validar ejecucion.</param>
         public ComandoAsincrono(Func<Task> ejecutarAsincrono, Func<bool> puedeEjecutar = null)
             : this(
                   ejecutarAsincrono != null ? new Func<object, Task>(_ => ejecutarAsincrono()) 
@@ -29,11 +29,11 @@ namespace PictionaryMusicalCliente.Comandos
         }
 
         /// <summary>
-        /// Inicializa una nueva instancia del comando asincrónico con acceso al parámetro.
+        /// Inicializa una nueva instancia del comando asincronico con acceso al parametro.
         /// </summary>
-        /// <param name="ejecutarAsincrono">Función que representa la ejecución del comando.
+        /// <param name="ejecutarAsincrono">Funcion que representa la ejecucion del comando.
         /// </param>
-        /// <param name="puedeEjecutar">Función opcional para validar ejecución.</param>
+        /// <param name="puedeEjecutar">Funcion opcional para validar ejecucion.</param>
         public ComandoAsincrono(
             Func<object, Task> ejecutarAsincrono,
             Predicate<object> puedeEjecutar = null)

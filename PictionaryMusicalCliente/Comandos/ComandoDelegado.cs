@@ -4,7 +4,7 @@ using System.Windows.Input;
 namespace PictionaryMusicalCliente.Comandos
 {
     /// <summary>
-    /// Implementación básica de <see cref="ICommand"/> que permite enlazar acciones
+    /// Implementacion basica de <see cref="ICommand"/> que permite enlazar acciones
     /// desde la vista modelo hacia la vista.
     /// </summary>
     public class ComandoDelegado : IComandoNotificable
@@ -13,10 +13,10 @@ namespace PictionaryMusicalCliente.Comandos
         private readonly Predicate<object> _puedeEjecutar;
 
         /// <summary>
-        /// Inicializa una nueva instancia del comando con acciones sin parámetros.
+        /// Inicializa una nueva instancia del comando con acciones sin parametros.
         /// </summary>
-        /// <param name="ejecutar">Acción a ejecutar.</param>
-        /// <param name="puedeEjecutar">Función opcional para determinar validacion.</param>
+        /// <param name="ejecutar">Accion a ejecutar.</param>
+        /// <param name="puedeEjecutar">Funcion opcional para determinar validacion.</param>
         public ComandoDelegado(Action ejecutar, Func<bool> puedeEjecutar = null)
             : this(
                   ejecutar != null ? new Action<object>(_ => ejecutar()) : null,
@@ -27,8 +27,8 @@ namespace PictionaryMusicalCliente.Comandos
         /// <summary>
         /// Inicializa una nueva instancia del comando.
         /// </summary>
-        /// <param name="ejecutar">Acción a ejecutar.</param>
-        /// <param name="puedeEjecutar">Función opcional para determinar validacion.</param>
+        /// <param name="ejecutar">Accion a ejecutar.</param>
+        /// <param name="puedeEjecutar">Funcion opcional para determinar validacion.</param>
         public ComandoDelegado(
             Action<object> ejecutar,
             Predicate<object> puedeEjecutar = null)

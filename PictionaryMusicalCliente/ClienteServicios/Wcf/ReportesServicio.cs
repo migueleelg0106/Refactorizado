@@ -9,7 +9,7 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
     /// <summary>
-    /// Gestiona el envío de reportes de jugadores hacia el servidor.
+    /// Gestiona el envio de reportes de jugadores hacia el servidor.
     /// </summary>
     public class ReportesServicio : IReportesServicio
     {

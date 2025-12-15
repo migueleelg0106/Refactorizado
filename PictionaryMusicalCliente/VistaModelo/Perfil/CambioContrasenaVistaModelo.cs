@@ -116,6 +116,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
         /// </summary>
         public Action<IList<string>> MostrarCamposInvalidos { get; set; }
 
+        /// <summary>
+        /// Accion que notifica el resultado final del proceso de cambio de contrasena.
+        /// </summary>
+        public Action<DTOs.ResultadoOperacionDTO> CambioContrasenaFinalizada { get; set; }
+
         private async Task ConfirmarAsync()
         {
             MostrarCamposInvalidos?.Invoke(Array.Empty<string>());
@@ -155,6 +160,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Perfil
                     _logger.Info("Contrasena actualizada exitosamente.");
                     _sonidoManejador.ReproducirNotificacion();
                     _avisoServicio.Mostrar(mensaje);
+                    CambioContrasenaFinalizada?.Invoke(resultado);
                     _ventana.CerrarVentana(this);
                 }
                 else

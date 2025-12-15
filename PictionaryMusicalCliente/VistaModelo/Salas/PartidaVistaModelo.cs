@@ -416,7 +416,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 return cancion;
             }
 
-            _logger.WarnFormat("No se encontró la canción con id {0} en el catálogo local.", idCancion);
+            _logger.WarnFormat("No se encontro la cancion con id {0} en el catalogo local.", idCancion);
             return null;
         }
 
@@ -751,7 +751,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     : string.Format("Artista: {0}", ronda.PistaArtista);
                 TextoGenero = string.IsNullOrWhiteSpace(ronda.PistaGenero)
                     ? string.Empty
-                    : string.Format("Género: {0}", ronda.PistaGenero);
+                    : string.Format("Genero: {0}", ronda.PistaGenero);
                 VisibilidadArtista = DeterminarVisibilidadPista(TextoArtista);
                 VisibilidadGenero = DeterminarVisibilidadPista(TextoGenero);
                 VisibilidadInfoCancion = Visibility.Visible;
@@ -770,7 +770,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     : string.Format("Artista: {0}", ronda.PistaArtista);
                 TextoGenero = string.IsNullOrWhiteSpace(ronda.PistaGenero)
                     ? string.Empty
-                    : string.Format("Género: {0}", ronda.PistaGenero);
+                    : string.Format("Genero: {0}", ronda.PistaGenero);
                 VisibilidadArtista = DeterminarVisibilidadPista(TextoArtista);
                 VisibilidadGenero = DeterminarVisibilidadPista(TextoGenero);
                 VisibilidadInfoCancion = Visibility.Visible;

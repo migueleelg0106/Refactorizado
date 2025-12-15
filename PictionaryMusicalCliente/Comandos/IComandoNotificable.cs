@@ -4,12 +4,12 @@ namespace PictionaryMusicalCliente.Comandos
 {
     /// <summary>
     /// Define la interfaz base para los comandos que permiten notificar cambios
-    /// en la disponibilidad de ejecución.
+    /// en la disponibilidad de ejecucion.
     /// </summary>
     public interface IComandoNotificable : ICommand
     {
         /// <summary>
-        /// Fuerza la reevaluación del estado de ejecución del comando.
+        /// Fuerza la reevaluacion del estado de ejecucion del comando.
         /// </summary>
         void NotificarPuedeEjecutar();
     }

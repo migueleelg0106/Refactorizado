@@ -253,7 +253,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarJugadorSeUnio(string codigoSala, string nombreJugador)
         {
-            _logger.InfoFormat("Callback recibido: '{0}' se unió a la sala '{1}'.", 
+            _logger.InfoFormat("Callback recibido: '{0}' se unio a la sala '{1}'.", 
                 nombreJugador, codigoSala);
             JugadorSeUnio?.Invoke(this, nombreJugador);
         }
@@ -263,7 +263,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarJugadorSalio(string codigoSala, string nombreJugador)
         {
-            _logger.InfoFormat("Callback recibido: '{0}' salió de la sala '{1}'.",
+            _logger.InfoFormat("Callback recibido: '{0}' salio de la sala '{1}'.",
                 nombreJugador, codigoSala);
             JugadorSalio?.Invoke(this, nombreJugador);
         }
@@ -283,7 +283,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         /// </summary>
         public void NotificarSalaCancelada(string codigoSala)
         {
-            _logger.InfoFormat("Callback recibido: la sala '{0}' fue cancelada por el anfitrión.",
+            _logger.InfoFormat("Callback recibido: la sala '{0}' fue cancelada por el anfitrion.",
                 codigoSala);
             SalaCancelada?.Invoke(this, codigoSala);
         }

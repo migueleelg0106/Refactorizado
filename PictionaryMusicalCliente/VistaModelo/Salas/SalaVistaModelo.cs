@@ -281,9 +281,9 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _chatVistaModelo.EsPartidaIniciada = juegoIniciado;
         }
 
-        public PartidaVistaModelo PartidaVM => _partidaVistaModelo;
+        public PartidaVistaModelo PartidaVistaModelo => _partidaVistaModelo;
 
-        public ChatVistaModelo ChatVM => _chatVistaModelo;
+        public ChatVistaModelo ChatVistaModelo => _chatVistaModelo;
 
         public bool JuegoIniciado => _partidaVistaModelo.JuegoIniciado;
 
@@ -441,11 +441,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
             catch (CommunicationException ex)
             {
-                _logger.Error("Error de comunicación al suscribir al jugador en la partida.", ex);
+                _logger.Error("Error de comunicacion al suscribir al jugador en la partida.", ex);
             }
             catch (TimeoutException ex)
             {
-                _logger.Error("Se agotó el tiempo para inicializar el proxy de partida.", ex);
+                _logger.Error("Se agoto el tiempo para inicializar el proxy de partida.", ex);
             }
             catch (Exception ex)
             {
@@ -1016,7 +1016,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
                 if (jugadorExistente != null)
                 {
-                    _logger.InfoFormat("Jugador salió de la sala: {0}",
+                    _logger.InfoFormat("Jugador salio de la sala: {0}",
                                                 nombreJugador);
                     Jugadores.Remove(jugadorExistente);
                     AjustarProgresoRondaTrasCambioJugadores();
@@ -1282,7 +1282,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
             try
             {
-                _logger.InfoFormat("Solicitando expulsión de: {0}",
+                _logger.InfoFormat("Solicitando expulsion de: {0}",
 					nombreJugador);
                 await _salasServicio.ExpulsarJugadorAsync(
                     _codigoSala,
@@ -1367,7 +1367,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
 
             _salaCancelada = true;
-            _logger.Warn("La sala se canceló porque el anfitrión abandonó la partida.");
+            _logger.Warn("La sala se cancelo porque el anfitrion abandono la partida.");
 
             _partidaVistaModelo.ReiniciarEstadoVisualSalaCancelada();
             BotonIniciarPartidaHabilitado = false;
@@ -1427,7 +1427,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
             catch (CommunicationException ex)
             {
-                _logger.Warn("Error de comunicación al cerrar el canal de partida.", ex);
+                _logger.Warn("Error de comunicacion al cerrar el canal de partida.", ex);
                 (_proxyJuego as ICommunicationObject)?.Abort();
             }
             catch (TimeoutException ex)
@@ -1437,7 +1437,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
             catch (InvalidOperationException ex)
             {
-                _logger.Warn("Operación inválida al cerrar el canal de partida.", ex);
+                _logger.Warn("Operacion invalida al cerrar el canal de partida.", ex);
                 (_proxyJuego as ICommunicationObject)?.Abort();
             }
             finally
@@ -1458,7 +1458,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 }
                 catch (ServicioExcepcion ex)
                 {
-                    _logger.WarnFormat("Error al abandonar sala en finalización: {0}",
+                    _logger.WarnFormat("Error al abandonar sala en finalizacion: {0}",
 						ex.Message);
                 }
             }
@@ -1480,7 +1480,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             if (destino == DestinoNavegacion.InicioSesion)
             {
                 _usuarioSesion.Limpiar();
-                var vmInicio = new InicioSesion.InicioSesionVistaModelo(
+                var inicioVistaModelo = new InicioSesionVistaModelo(
                     _ventana,
                     _localizador,
                     App.InicioSesionServicio,
@@ -1492,11 +1492,11 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     App.GeneradorNombres,
                     _usuarioSesion,
                     App.FabricaSalas);
-                _ventana.MostrarVentana(vmInicio);
+                _ventana.MostrarVentana(inicioVistaModelo);
             }
             else
             {
-                var vmPrincipal = new VentanaPrincipal.VentanaPrincipalVistaModelo(
+                var principalVistaModelo = new VentanaPrincipalVistaModelo(
                     _ventana,
                     _localizador,
                     App.ServicioIdioma,
@@ -1505,7 +1505,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                     App.SalasServicio,
                     _sonidoManejador,
                     _usuarioSesion);
-                _ventana.MostrarVentana(vmPrincipal);
+                _ventana.MostrarVentana(principalVistaModelo);
             }
 
             CerrarVentana?.Invoke();
@@ -1513,12 +1513,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
 
         private void AbrirAjustesPartida()
         {
-            var ajustesVM = new Ajustes.AjustesPartidaVistaModelo(
+            var ajustesVistaModelo = new Ajustes.AjustesPartidaVistaModelo(
                 _ventana,
                 _localizador,
                 _cancionManejador,
                 _sonidoManejador);
-            ajustesVM.SalirPartidaConfirmado = () =>
+            ajustesVistaModelo.SalirPartidaConfirmado = () =>
             {
                 var destino = ObtenerDestinoSegunSesion();
                 if (destino == DestinoNavegacion.InicioSesion)
@@ -1528,7 +1528,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
                 Navegar(destino);
             };
 
-            _ventana.MostrarVentanaDialogo(ajustesVM);
+            _ventana.MostrarVentanaDialogo(ajustesVistaModelo);
         }
     }
 }

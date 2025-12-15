@@ -304,7 +304,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             }
             catch (ServicioExcepcion ex)
             {
-                _logger.Error("Excepción de servicio al intentar unirse como invitado.", ex);
+                _logger.Error("Excepcion de servicio al intentar unirse como invitado.", ex);
                 string mensaje;
                 if (string.IsNullOrWhiteSpace(ex?.Message))
                 {

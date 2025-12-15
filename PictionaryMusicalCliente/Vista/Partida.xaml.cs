@@ -12,7 +12,7 @@ using System.Windows.Media;
 namespace PictionaryMusicalCliente.Vista
 {
     /// <summary>
-    /// Control de usuario para el área de juego de la partida (tablero de dibujo).
+    /// Control de usuario para el area de juego de la partida (tablero de dibujo).
     /// </summary>
     public partial class Partida : UserControl
     {

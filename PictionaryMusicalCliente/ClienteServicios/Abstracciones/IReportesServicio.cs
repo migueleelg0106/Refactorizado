@@ -9,7 +9,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Abstracciones
     public interface IReportesServicio
     {
         /// <summary>
-        /// Envía un reporte de jugador al servidor.
+        /// Envia un reporte de jugador al servidor.
         /// </summary>
         /// <param name="reporte">Datos del reporte a enviar.</param>
         Task<DTOs.ResultadoOperacionDTO> ReportarJugadorAsync(DTOs.ReporteJugadorDTO reporte);

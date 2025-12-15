@@ -39,8 +39,6 @@ namespace PictionaryMusicalCliente.Vista
             }
         }
 
-
-
         private void AlCerrarSeSala(object sender, CancelEventArgs argumentosEvento)
         {
             if (DataContext is SalaVistaModelo vistaModelo && vistaModelo.CerrarVentanaComando.CanExecute(null))

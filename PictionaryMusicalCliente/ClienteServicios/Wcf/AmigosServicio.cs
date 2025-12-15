@@ -198,14 +198,14 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                 await operacion(cliente).ConfigureAwait(false);
                 if (esTemporal) CerrarClienteSeguro(cliente);
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                await ManejarErrorOperacionAsync(ex, cliente, esTemporal);
+                await ManejarErrorOperacionAsync(excepcion, cliente, esTemporal);
             }
         }
 
         private async Task ManejarErrorOperacionAsync(
-            Exception ex,
+            Exception excepcion,
             ICommunicationObject cliente,
             bool esTemporal)
         {
@@ -213,13 +213,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
             {
                 cliente.Abort();
             }
-            else if (EsErrorComunicacion(ex))
+            else if (EsErrorComunicacion(excepcion))
             {
                 _logger.Warn("Error comunicacion permanente. Intentando reconexion.");
                 await IntentarReconexionAsync();
             }
 
-            LanzarExcepcionServicio(ex, Lang.errorTextoErrorProcesarSolicitud);
+            LanzarExcepcionServicio(excepcion, Lang.errorTextoErrorProcesarSolicitud);
         }
 
         private async Task IntentarReconexionAsync()
@@ -287,42 +287,42 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
                     await cliente.CancelarSuscripcionAsync(usuario).ConfigureAwait(false);
                 }
             }
-            catch (Exception ex)
+            catch (Exception excepcion)
             {
-                _logger.Warn("No se pudo cancelar suscripcion en servidor.", ex);
+                _logger.Warn("No se pudo cancelar suscripcion en servidor.", excepcion);
             }
         }
 
-        private void LanzarExcepcionServicio(Exception ex, string mensajeDefault)
+        private void LanzarExcepcionServicio(Exception excepcion, string mensajeDefault)
         {
-            if (ex is FaultException fault)
+            if (excepcion is FaultException fault)
             {
                 string mensaje = _manejadorError.ObtenerMensaje(fault, mensajeDefault);
-                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, ex);
+                throw new ServicioExcepcion(TipoErrorServicio.FallaServicio, mensaje, excepcion);
             }
 
-            if (ex is TimeoutException)
+            if (excepcion is TimeoutException)
             {
                 throw new ServicioExcepcion(
                     TipoErrorServicio.TiempoAgotado,
                     Lang.errorTextoServidorTiempoAgotado,
-                    ex);
+                    excepcion);
             }
 
-            if (EsErrorComunicacion(ex))
+            if (EsErrorComunicacion(excepcion))
             {
                 throw new ServicioExcepcion(
                     TipoErrorServicio.Comunicacion,
                     Lang.errorTextoServidorNoDisponible,
-                    ex);
+                    excepcion);
             }
 
-            throw new ServicioExcepcion(TipoErrorServicio.Desconocido, mensajeDefault, ex);
+            throw new ServicioExcepcion(TipoErrorServicio.Desconocido, mensajeDefault, excepcion);
         }
 
-        private static bool EsErrorComunicacion(Exception ex)
+        private static bool EsErrorComunicacion(Exception excepcion)
         {
-            return ex is CommunicationException || ex is EndpointNotFoundException;
+            return excepcion is CommunicationException || excepcion is EndpointNotFoundException;
         }
 
         private void LimpiarEstadoLocal()

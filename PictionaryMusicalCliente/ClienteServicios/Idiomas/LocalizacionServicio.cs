@@ -30,7 +30,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Idiomas
         public CultureInfo CulturaActual { get; private set; }
 
         /// <summary>
-        /// Establece el idioma usando un codigo de cultura (ej. "es-MX").
+        /// Establece el idioma usando un codigo de cultura.
         /// </summary>
         public void EstablecerIdioma(string codigoIdioma)
         {

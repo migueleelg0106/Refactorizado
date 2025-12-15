@@ -175,6 +175,16 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             var finalizacion = new TaskCompletionSource<DTOs.ResultadoOperacionDTO>();
 
             ConfigurarCierreVentana(ventana, finalizacion);
+            
+            vistaModelo.CambioContrasenaFinalizada = resultado =>
+            {
+                if (finalizacion.Task.IsCompleted)
+                {
+                    return;
+                }
+
+                finalizacion.TrySetResult(resultado);
+            };
 
             ventana.DataContext = vistaModelo;
             ventana.ShowDialog();
@@ -195,12 +205,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Dialogos
             };
         }
 
-        private static DTOs.ResultadoOperacionDTO CrearError(string mensajeServer, string fallback)
+        private static DTOs.ResultadoOperacionDTO CrearError(string mensajeServer, 
+            string contingencia)
         {
             return new DTOs.ResultadoOperacionDTO
             {
                 OperacionExitosa = false,
-                Mensaje = string.IsNullOrWhiteSpace(mensajeServer) ? fallback : mensajeServer
+                Mensaje = string.IsNullOrWhiteSpace(mensajeServer) ? contingencia : mensajeServer
             };
         }
     }
