@@ -174,7 +174,7 @@
   <data name="globalTextoUsuario" xml:space="preserve">
     <value>Username</value>
   </data>
-  <data name="idiomaTextoEspañol" xml:space="preserve">
+  <data name="idiomaTextoEspanol" xml:space="preserve">
     <value>Spanish</value>
   </data>
   <data name="idiomaTextoIdioma" xml:space="preserve">
@@ -196,7 +196,7 @@
   <data name="inicioSesionTextoOlvidasteContrasena" xml:space="preserve">
     <value>Forgot password?</value>
   </data>
-  <data name="TagEspañol" xml:space="preserve">
+  <data name="TagEspanol" xml:space="preserve">
     <value>es-MX</value>
   </data>
   <data name="TagIngles" xml:space="preserve">

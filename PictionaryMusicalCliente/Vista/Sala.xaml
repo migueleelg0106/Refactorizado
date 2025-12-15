@@ -127,16 +127,37 @@
             <Grid Visibility="{Binding JuegoIniciado, Converter={StaticResource BooleanoVisibilidadColapsar}}">
                 <local:Partida DataContext="{Binding PartidaVM}"/>
             </Grid>
-            
+
+            <Image Source="/Recursos/PictionaryMusicalLogo.png"
+                   Visibility="{Binding MostrarLogo, Converter={StaticResource BooleanoVisibilidadColapsar}}"
+                   HorizontalAlignment="Center" VerticalAlignment="Top"
+                   Margin="0,20,0,0" Height="500" Stretch="Uniform" Width="500"
+                   RenderTransformOrigin="0.5,0.5">
+                <Image.RenderTransform>
+                    <RotateTransform Angle="0"/>
+                </Image.RenderTransform>
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimation 
+                                    Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)" 
+                                    From="-5" To="5" Duration="0:0:2" AutoReverse="True"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+
             <Button x:Name="botonIniciarPartida"
                     Content="{Binding TextoBotonIniciarPartida}"
                     IsEnabled="{Binding BotonIniciarPartidaHabilitado}"
                     Visibility="{Binding MostrarBotonIniciarPartida, Converter={StaticResource BooleanoVisibilidadColapsar}}"
                     Width="150" Height="42"
-                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    HorizontalAlignment="Center" VerticalAlignment="Top"
                     FontFamily="Comic Sans MS" FontWeight="Bold"
                     Background="White" BorderBrush="Black"
-                    Command="{Binding IniciarPartidaComando}"/>
+                    Command="{Binding IniciarPartidaComando}" Margin="0,530,0,0"/>
         </Grid>
 
         <Grid Grid.Column="2" Margin="8">

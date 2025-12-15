@@ -118,6 +118,8 @@ namespace PictionaryMusicalServidor.Servicios.Servicios.Utilidades
         private string ObtenerAsunto(string idiomaNormalizado)
         {
             string asuntoConfigurado = ObtenerConfiguracion(
+                string.Format("CorreoAsunto.{0}", idiomaNormalizado),
+                string.Format("Correo.Codigo.Asunto.{0}", idiomaNormalizado),
                 "CorreoAsunto",
                 "Correo.Codigo.Asunto");
 

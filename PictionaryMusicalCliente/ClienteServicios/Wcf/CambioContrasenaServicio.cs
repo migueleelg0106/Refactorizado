@@ -9,7 +9,7 @@ using DTOs = PictionaryMusicalServidor.Servicios.Contratos.DTOs;
 namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 {
     /// <summary>
-    /// Provee servicios para el flujo de recuperacion y cambio de contraseña.
+    /// Provee servicios para el flujo de recuperacion y cambio de contrasena.
     /// </summary>
     public class CambioContrasenaServicio : ICambioContrasenaServicio
     {
@@ -126,7 +126,7 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
         }
 
         /// <summary>
-        /// Establece la nueva contraseña despues de haber verificado el codigo.
+        /// Establece la nueva contrasena despues de haber verificado el codigo.
         /// </summary>
         public async Task<DTOs.ResultadoOperacionDTO> ActualizarContrasenaAsync(
             string tokenCodigo,
@@ -228,7 +228,13 @@ namespace PictionaryMusicalCliente.ClienteServicios.Wcf
 
         private string ObtenerIdiomaActual()
         {
-            return _localizador.Localizar(null, null) ?? "es-MX";
+            var culturaActual = Lang.Culture;
+            if (culturaActual != null)
+            {
+                return culturaActual.Name;
+            }
+
+            return System.Globalization.CultureInfo.CurrentUICulture.Name;
         }
 
         private static DTOs.ResultadoSolicitudRecuperacionDTO MapearResultadoSolicitudRecuperacion(

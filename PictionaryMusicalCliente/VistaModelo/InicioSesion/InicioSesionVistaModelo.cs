@@ -542,7 +542,7 @@ namespace PictionaryMusicalCliente.VistaModelo.InicioSesion
         {
             var opciones = new[]
             {
-                new IdiomaOpcion("es-MX", Lang.idiomaTextoEspañol),
+                new IdiomaOpcion("es-MX", Lang.idiomaTextoEspanol),
                 new IdiomaOpcion("en-US", Lang.idiomaTextoIngles)
             };
 

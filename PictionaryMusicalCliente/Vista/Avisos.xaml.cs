@@ -8,7 +8,7 @@ namespace PictionaryMusicalCliente.Vista
     public partial class Avisos : Window
     {
         /// <summary>
-        /// Constructor por defecto, solo para uso del diseñador/XAML. 
+        /// Constructor por defecto, solo para uso del disenador/XAML. 
         /// La aplicación debe usar el constructor que recibe dependencias.
         /// </summary>
         public Avisos()

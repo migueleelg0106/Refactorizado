@@ -335,7 +335,7 @@ namespace PictionaryMusicalCliente.VistaModelo.VentanaPrincipal
             IdiomasDisponibles = new ObservableCollection<IdiomaOpcion>(
                 new[]
                 {
-                    new IdiomaOpcion("es-MX", Lang.idiomaTextoEspañol),
+                    new IdiomaOpcion("es-MX", Lang.idiomaTextoEspanol),
                     new IdiomaOpcion("en-US", Lang.idiomaTextoIngles),
                     new IdiomaOpcion("mixto", Lang.principalTextoMixto)
                 });

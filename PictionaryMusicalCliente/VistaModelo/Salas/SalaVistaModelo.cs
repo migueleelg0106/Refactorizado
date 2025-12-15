@@ -59,6 +59,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private string _textoBotonIniciarPartida;
         private bool _botonIniciarPartidaHabilitado;
         private bool _mostrarBotonIniciarPartida;
+        private bool _mostrarLogo;
         private string _codigoSala;
         private ObservableCollection<JugadorElemento> _jugadores;
         private string _correoInvitacion;
@@ -206,6 +207,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
             _textoBotonIniciarPartida = Lang.partidaAdminTextoIniciarPartida;
             _botonIniciarPartidaHabilitado = _esHost;
             _mostrarBotonIniciarPartida = _esHost;
+            _mostrarLogo = true;
             _codigoSala = _sala.Codigo;
             _jugadores = new ObservableCollection<JugadorElemento>();
             ActualizarJugadores(_sala.Jugadores);
@@ -273,6 +275,7 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         private void OnJuegoIniciadoCambiado(bool juegoIniciado)
         {
             MostrarBotonIniciarPartida = _esHost && !juegoIniciado;
+            MostrarLogo = !juegoIniciado;
             ActualizarVisibilidadBotonesExpulsion();
             ActualizarVisibilidadBotonesReporte();
             _chatVistaModelo.EsPartidaIniciada = juegoIniciado;
@@ -302,6 +305,12 @@ namespace PictionaryMusicalCliente.VistaModelo.Salas
         {
             get => _mostrarBotonIniciarPartida;
             private set => EstablecerPropiedad(ref _mostrarBotonIniciarPartida, value);
+        }
+
+        public bool MostrarLogo
+        {
+            get => _mostrarLogo;
+            private set => EstablecerPropiedad(ref _mostrarLogo, value);
         }
 
         public string CodigoSala

@@ -151,7 +151,7 @@
     <value>CANCELAR</value>
   </data>
   <data name="globalTextoContrasena" xml:space="preserve">
-    <value>Contraseña</value>
+    <value>Contrasena</value>
   </data>
   <data name="globalTextoCorreo" xml:space="preserve">
     <value>Correo electrónico</value>
@@ -160,7 +160,7 @@
     <value>CREAR CUENTA</value>
   </data>
   <data name="globalTextoEspecificaContrasena" xml:space="preserve">
-    <value>La contraseña debe tener mínimo 8 caracteres y máximo 15, así como contener mínimo una mayúscula, un número y un carácter especial</value>
+    <value>La contrasena debe tener mínimo 8 caracteres y máximo 15, así como contener mínimo una mayúscula, un número y un carácter especial</value>
   </data>
   <data name="globalTextoNombre" xml:space="preserve">
     <value>Nombre</value>
@@ -174,8 +174,8 @@
   <data name="globalTextoUsuario" xml:space="preserve">
     <value>Usuario</value>
   </data>
-  <data name="idiomaTextoEspañol" xml:space="preserve">
-    <value>Español</value>
+  <data name="idiomaTextoEspanol" xml:space="preserve">
+    <value>Espanol</value>
   </data>
   <data name="idiomaTextoIdioma" xml:space="preserve">
     <value>Idioma</value>
@@ -193,9 +193,9 @@
     <value>ENTRAR COMO INVITADO</value>
   </data>
   <data name="inicioSesionTextoOlvidasteContrasena" xml:space="preserve">
-    <value>¿Olvidaste tu contraseña?</value>
+    <value>¿Olvidaste tu contrasena?</value>
   </data>
-  <data name="TagEspañol" xml:space="preserve">
+  <data name="TagEspanol" xml:space="preserve">
     <value>en-MX</value>
   </data>
   <data name="TagIngles" xml:space="preserve">
@@ -397,16 +397,16 @@
     <value>Agrega alguna red social:</value>
   </data>
   <data name="perfilTextoCambiarContrasena" xml:space="preserve">
-    <value>CAMBIAR CONTRASEÑA</value>
+    <value>CAMBIAR CONTRASEnA</value>
   </data>
   <data name="perfilTextoGuardarCambios" xml:space="preserve">
     <value>GUARDAR CAMBIOS</value>
   </data>
   <data name="cambiarContrasenaTextoIngresaNuevaContrasena" xml:space="preserve">
-    <value>Ingrese la nueva contraseña: </value>
+    <value>Ingrese la nueva contrasena: </value>
   </data>
   <data name="cambiarContrasenaTextoConfirmeContrasena" xml:space="preserve">
-    <value>Confirme su contraseña</value>
+    <value>Confirme su contrasena</value>
   </data>
   <data name="cambiarContrasenaTextoCodigoVerificacion" xml:space="preserve">
     <value>Ingrese el código de verificación enviado a su correo:</value>
@@ -445,7 +445,7 @@
     <value>EXPULSAR</value>
   </data>
   <data name="expulsarTextoRazonExpulsion" xml:space="preserve">
-    <value>Añade la razón de la expulsión…</value>
+    <value>Anade la razón de la expulsión…</value>
   </data>
   <data name="invitarAmigosTextoInvitarAmigos" xml:space="preserve">
     <value>INVITAR AMIGOS</value>
@@ -478,7 +478,7 @@
     <value>No hay suficientes jugadores para seguir jugando, se canceló la partida.</value>
   </data>
   <data name="avisoTextoCodigoDescripcionCambio" xml:space="preserve">
-    <value>Ingresa el código que enviamos para confirmar el cambio de contraseña.</value>
+    <value>Ingresa el código que enviamos para confirmar el cambio de contrasena.</value>
   </data>
   <data name="avisoTextoCodigoDescripcionCorreo" xml:space="preserve">
     <value>Ingresa el código de verificación enviado a {0}.</value>
@@ -487,7 +487,7 @@
     <value>Ingresa el código de verificación que enviamos a tu correo.</value>
   </data>
   <data name="avisoTextoCodigoDescripcionRecuperacion" xml:space="preserve">
-    <value>Ingresa el código que enviamos para restablecer tu contraseña.</value>
+    <value>Ingresa el código que enviamos para restablecer tu contrasena.</value>
   </data>
   <data name="avisoTextoCodigoReenviado" xml:space="preserve">
     <value>Se envió un nuevo código a su correo electrónico.</value>
@@ -496,7 +496,7 @@
     <value>Código verificado correctamente.</value>
   </data>
   <data name="avisoTextoContrasenaActualizada" xml:space="preserve">
-    <value>La contraseña se actualizó correctamente.</value>
+    <value>La contrasena se actualizó correctamente.</value>
   </data>
   <data name="avisoTextoPerfilActualizado" xml:space="preserve">
     <value>Los datos del perfil se actualizaron correctamente.</value>
@@ -514,7 +514,7 @@
     <value>Ocurrió un problema de comunicación con el servidor. Se mostrarán los datos actuales de la sesión.</value>
   </data>
   <data name="errorTextoActualizarContrasena" xml:space="preserve">
-    <value>No se pudo actualizar la contraseña. Intente nuevamente.</value>
+    <value>No se pudo actualizar la contrasena. Intente nuevamente.</value>
   </data>
   <data name="errorTextoActualizarPerfil" xml:space="preserve">
     <value>No se pudo actualizar el perfil. Intente nuevamente.</value>
@@ -535,13 +535,13 @@
     <value>Ingrese el código de verificación enviado a su correo.</value>
   </data>
   <data name="errorTextoContrasenaFormato" xml:space="preserve">
-    <value>La contraseña debe tener de 8 a 15 caracteres con al menos una mayúscula, un número y un carácter especial.</value>
+    <value>La contrasena debe tener de 8 a 15 caracteres con al menos una mayúscula, un número y un carácter especial.</value>
   </data>
   <data name="errorTextoConfirmacionContrasenaRequerida" xml:space="preserve">
-    <value>Ingrese y confirme la nueva contraseña.</value>
+    <value>Ingrese y confirme la nueva contrasena.</value>
   </data>
   <data name="errorTextoContrasenasNoCoinciden" xml:space="preserve">
-    <value>Las contraseñas no coinciden.</value>
+    <value>Las contrasenas no coinciden.</value>
   </data>
   <data name="errorTextoCorreoInvalido" xml:space="preserve">
     <value>Ingrese un correo electrónico válido.</value>
@@ -553,7 +553,7 @@
     <value>No se encontró una cuenta con el usuario o correo proporcionado.</value>
   </data>
   <data name="errorTextoDeterminarUsuarioCambioContrasena" xml:space="preserve">
-    <value>No se pudo determinar el usuario actual para cambiar la contraseña.</value>
+    <value>No se pudo determinar el usuario actual para cambiar la contrasena.</value>
   </data>
   <data name="errorTextoEnvioCodigoVerificacionDatos" xml:space="preserve">
     <value>No se pudo enviar el código de verificación. Verifique la información e intente de nuevo.</value>
@@ -592,7 +592,7 @@
     <value>El código de verificación ha expirado. Solicite uno nuevo.</value>
   </data>
   <data name="avisoTextoCodigoVerificadoCambio" xml:space="preserve">
-    <value>Código verificado correctamente. Continúe con el cambio de contraseña.</value>
+    <value>Código verificado correctamente. Continúe con el cambio de contrasena.</value>
   </data>
   <data name="errorTextoSolicitudRecuperacionVigente" xml:space="preserve">
     <value>No hay una solicitud de recuperación vigente.</value>
@@ -628,28 +628,28 @@
     <value>MusicoFeliz|BuenDibujante|MelodiaMagica|RitmoCreativo|ArtistaSonriente|NotaImaginativa|CancionJuguetona|PincelMelodico|AcordeLudico|VersoColorido|BateriaFantastica|TrovadorLuz|HarmonicoAlegre|CantorBrillante|BailarinArmonioso</value>
   </data>
   <data name="errorTextoIdentificadorRecuperacionRequerido" xml:space="preserve">
-    <value>Ingrese el usuario o correo registrado para recuperar la contraseña.</value>
+    <value>Ingrese el usuario o correo registrado para recuperar la contrasena.</value>
   </data>
   <data name="errorTextoIdentificadorRedSocialLongitud" xml:space="preserve">
     <value>El identificador de {0} no debe exceder {1} caracteres.</value>
   </data>
   <data name="errorTextoIniciarCambioContrasena" xml:space="preserve">
-    <value>No se pudo iniciar el proceso de cambio de contraseña. Intente nuevamente.</value>
+    <value>No se pudo iniciar el proceso de cambio de contrasena. Intente nuevamente.</value>
   </data>
   <data name="errorTextoIniciarRecuperacion" xml:space="preserve">
-    <value>No se pudo iniciar la recuperación de contraseña. Intente nuevamente.</value>
+    <value>No se pudo iniciar la recuperación de contrasena. Intente nuevamente.</value>
   </data>
   <data name="errorTextoPerfilActualizarInformacion" xml:space="preserve">
     <value>No fue posible obtener la información actualizada del perfil.</value>
   </data>
   <data name="errorTextoPrepararSolicitudCambioContrasena" xml:space="preserve">
-    <value>Ocurrió un error al preparar la solicitud de cambio de contraseña.</value>
+    <value>Ocurrió un error al preparar la solicitud de cambio de contrasena.</value>
   </data>
   <data name="errorTextoSeleccionAvatarValido" xml:space="preserve">
     <value>Selecciona un avatar válido antes de guardar los cambios.</value>
   </data>
   <data name="errorTextoServidorActualizarContrasena" xml:space="preserve">
-    <value>El servidor reportó un error al actualizar la contraseña.</value>
+    <value>El servidor reportó un error al actualizar la contrasena.</value>
   </data>
   <data name="errorTextoServidorActualizarPerfil" xml:space="preserve">
     <value>El servidor reportó un error al actualizar el perfil.</value>
@@ -661,7 +661,7 @@
     <value>No se pudo obtener la información del avatar seleccionado.</value>
   </data>
   <data name="errorTextoServidorInicioRecuperacion" xml:space="preserve">
-    <value>El servidor reportó un error al iniciar la recuperación de contraseña.</value>
+    <value>El servidor reportó un error al iniciar la recuperación de contrasena.</value>
   </data>
   <data name="errorTextoServidorInicioSesion" xml:space="preserve">
     <value>El servidor reportó un error al iniciar sesión.</value>
@@ -676,7 +676,7 @@
     <value>El servidor reportó un error al reenviar el código.</value>
   </data>
   <data name="errorTextoServidorSolicitudCambioContrasena" xml:space="preserve">
-    <value>El servidor reportó un error al solicitar el cambio de contraseña.</value>
+    <value>El servidor reportó un error al solicitar el cambio de contrasena.</value>
   </data>
   <data name="errorTextoServidorTiempoAgotado" xml:space="preserve">
     <value>El servidor tardó demasiado tiempo en responder. Intente más tarde.</value>
@@ -793,7 +793,7 @@
     <value>La configuración de la partida es obligatoria.</value>
   </data>
   <data name="contrasenaRegistroInvalida" xml:space="preserve">
-    <value>La contraseña debe tener entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un carácter especial.</value>
+    <value>La contrasena debe tener entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un carácter especial.</value>
   </data>
   <data name="correoInvalido" xml:space="preserve">
     <value>El correo electrónico no es válido.</value>
@@ -805,7 +805,7 @@
     <value>El correo electrónico es obligatorio, debe tener un formato válido y no debe exceder 50 caracteres.</value>
   </data>
   <data name="credencialesIncorrectas" xml:space="preserve">
-    <value>Usuario o contraseña incorrectos.</value>
+    <value>Usuario o contrasena incorrectos.</value>
   </data>
   <data name="credencialesInvalidas" xml:space="preserve">
     <value>Las credenciales proporcionadas no son válidas.</value>
@@ -832,7 +832,7 @@
     <value>La dificultad es obligatoria.</value>
   </data>
   <data name="errorActualizarContrasena" xml:space="preserve">
-    <value>No fue posible actualizar la contraseña.</value>
+    <value>No fue posible actualizar la contrasena.</value>
   </data>
   <data name="errorActualizarPerfil" xml:space="preserve">
     <value>No fue posible actualizar el perfil. Por favor, intente nuevamente.</value>

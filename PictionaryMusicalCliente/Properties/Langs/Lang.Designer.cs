@@ -295,7 +295,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ingresa el código que enviamos para confirmar el cambio de contraseña..
+        ///   Busca una cadena traducida similar a Ingresa el código que enviamos para confirmar el cambio de contrasena..
         /// </summary>
         public static string avisoTextoCodigoDescripcionCambio {
             get {
@@ -322,7 +322,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ingresa el código que enviamos para restablecer tu contraseña..
+        ///   Busca una cadena traducida similar a Ingresa el código que enviamos para restablecer tu contrasena..
         /// </summary>
         public static string avisoTextoCodigoDescripcionRecuperacion {
             get {
@@ -358,7 +358,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Código verificado correctamente. Continúe con el cambio de contraseña..
+        ///   Busca una cadena traducida similar a Código verificado correctamente. Continúe con el cambio de contrasena..
         /// </summary>
         public static string avisoTextoCodigoVerificadoCambio {
             get {
@@ -385,7 +385,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a La contraseña se actualizó correctamente..
+        ///   Busca una cadena traducida similar a La contrasena se actualizó correctamente..
         /// </summary>
         public static string avisoTextoContrasenaActualizada {
             get {
@@ -475,7 +475,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Confirme su contraseña.
+        ///   Busca una cadena traducida similar a Confirme su contrasena.
         /// </summary>
         public static string cambiarContrasenaTextoConfirmeContrasena {
             get {
@@ -484,7 +484,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ingrese la nueva contraseña: .
+        ///   Busca una cadena traducida similar a Ingrese la nueva contrasena: .
         /// </summary>
         public static string cambiarContrasenaTextoIngresaNuevaContrasena {
             get {
@@ -628,7 +628,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a La contraseña debe tener entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un carácter especial..
+        ///   Busca una cadena traducida similar a La contrasena debe tener entre 8 y 15 caracteres, incluir una letra mayúscula, un número y un carácter especial..
         /// </summary>
         public static string contrasenaRegistroInvalida {
             get {
@@ -691,7 +691,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Usuario o contraseña incorrectos..
+        ///   Busca una cadena traducida similar a Usuario o contrasena incorrectos..
         /// </summary>
         public static string credencialesIncorrectas {
             get {
@@ -835,7 +835,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No fue posible actualizar la contraseña..
+        ///   Busca una cadena traducida similar a No fue posible actualizar la contrasena..
         /// </summary>
         public static string errorActualizarContrasena {
             get {
@@ -1105,7 +1105,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se pudo actualizar la contraseña. Intente nuevamente..
+        ///   Busca una cadena traducida similar a No se pudo actualizar la contrasena. Intente nuevamente..
         /// </summary>
         public static string errorTextoActualizarContrasena {
             get {
@@ -1213,7 +1213,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ingrese y confirme la nueva contraseña..
+        ///   Busca una cadena traducida similar a Ingrese y confirme la nueva contrasena..
         /// </summary>
         public static string errorTextoConfirmacionContrasenaRequerida {
             get {
@@ -1222,7 +1222,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a La contraseña debe tener de 8 a 15 caracteres con al menos una mayúscula, un número y un carácter especial..
+        ///   Busca una cadena traducida similar a La contrasena debe tener de 8 a 15 caracteres con al menos una mayúscula, un número y un carácter especial..
         /// </summary>
         public static string errorTextoContrasenaFormato {
             get {
@@ -1231,7 +1231,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Las contraseñas no coinciden..
+        ///   Busca una cadena traducida similar a Las contrasenas no coinciden..
         /// </summary>
         public static string errorTextoContrasenasNoCoinciden {
             get {
@@ -1321,7 +1321,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se pudo determinar el usuario actual para cambiar la contraseña..
+        ///   Busca una cadena traducida similar a No se pudo determinar el usuario actual para cambiar la contrasena..
         /// </summary>
         public static string errorTextoDeterminarUsuarioCambioContrasena {
             get {
@@ -1375,7 +1375,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ingrese el usuario o correo registrado para recuperar la contraseña..
+        ///   Busca una cadena traducida similar a Ingrese el usuario o correo registrado para recuperar la contrasena..
         /// </summary>
         public static string errorTextoIdentificadorRecuperacionRequerido {
             get {
@@ -1411,7 +1411,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se pudo iniciar el proceso de cambio de contraseña. Intente nuevamente..
+        ///   Busca una cadena traducida similar a No se pudo iniciar el proceso de cambio de contrasena. Intente nuevamente..
         /// </summary>
         public static string errorTextoIniciarCambioContrasena {
             get {
@@ -1420,7 +1420,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a No se pudo iniciar la recuperación de contraseña. Intente nuevamente..
+        ///   Busca una cadena traducida similar a No se pudo iniciar la recuperación de contrasena. Intente nuevamente..
         /// </summary>
         public static string errorTextoIniciarRecuperacion {
             get {
@@ -1501,7 +1501,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Ocurrió un error al preparar la solicitud de cambio de contraseña..
+        ///   Busca una cadena traducida similar a Ocurrió un error al preparar la solicitud de cambio de contrasena..
         /// </summary>
         public static string errorTextoPrepararSolicitudCambioContrasena {
             get {
@@ -1555,7 +1555,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El servidor reportó un error al actualizar la contraseña..
+        ///   Busca una cadena traducida similar a El servidor reportó un error al actualizar la contrasena..
         /// </summary>
         public static string errorTextoServidorActualizarContrasena {
             get {
@@ -1591,7 +1591,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El servidor reportó un error al iniciar la recuperación de contraseña..
+        ///   Busca una cadena traducida similar a El servidor reportó un error al iniciar la recuperación de contrasena..
         /// </summary>
         public static string errorTextoServidorInicioRecuperacion {
             get {
@@ -1636,7 +1636,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a El servidor reportó un error al solicitar el cambio de contraseña..
+        ///   Busca una cadena traducida similar a El servidor reportó un error al solicitar el cambio de contrasena..
         /// </summary>
         public static string errorTextoServidorSolicitudCambioContrasena {
             get {
@@ -1888,7 +1888,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Añade la razón de la expulsión….
+        ///   Busca una cadena traducida similar a Anade la razón de la expulsión….
         /// </summary>
         public static string expulsarTextoRazonExpulsion {
             get {
@@ -1978,7 +1978,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Contraseña.
+        ///   Busca una cadena traducida similar a Contrasena.
         /// </summary>
         public static string globalTextoContrasena {
             get {
@@ -2014,7 +2014,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a La contraseña debe tener mínimo 8 caracteres y máximo 15, así como contener mínimo una mayúscula, un número y un carácter especial.
+        ///   Busca una cadena traducida similar a La contrasena debe tener mínimo 8 caracteres y máximo 15, así como contener mínimo una mayúscula, un número y un carácter especial.
         /// </summary>
         public static string globalTextoEspecificaContrasena {
             get {
@@ -2140,11 +2140,11 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Español.
+        ///   Busca una cadena traducida similar a Espanol.
         /// </summary>
-        public static string idiomaTextoEspañol {
+        public static string idiomaTextoEspanol {
             get {
-                return ResourceManager.GetString("idiomaTextoEspañol", resourceCulture);
+                return ResourceManager.GetString("idiomaTextoEspanol", resourceCulture);
             }
         }
         
@@ -2194,7 +2194,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ¿Olvidaste tu contraseña?.
+        ///   Busca una cadena traducida similar a ¿Olvidaste tu contrasena?.
         /// </summary>
         public static string inicioSesionTextoOlvidasteContrasena {
             get {
@@ -2536,7 +2536,7 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a CAMBIAR CONTRASEÑA.
+        ///   Busca una cadena traducida similar a CAMBIAR CONTRASEnA.
         /// </summary>
         public static string perfilTextoCambiarContrasena {
             get {
@@ -2907,9 +2907,9 @@ namespace PictionaryMusicalCliente.Properties.Langs {
         /// <summary>
         ///   Busca una cadena traducida similar a en-MX.
         /// </summary>
-        public static string TagEspañol {
+        public static string TagEspanol {
             get {
-                return ResourceManager.GetString("TagEspañol", resourceCulture);
+                return ResourceManager.GetString("TagEspanol", resourceCulture);
             }
         }
         
